@@ -1,0 +1,30 @@
+name: DCO
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  dco:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Proveri Signed-off-by na svim commitovima PR-a
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          head="${{ github.event.pull_request.head.sha }}"
+          missing=0
+          for c in $(git rev-list "$base..$head"); do
+            if ! git log -1 --format=%B "$c" | grep -Eqi "^Signed-off-by: .+ <.+@.+>"; then
+              subject=$(git log -1 --format=%s "$c")
+              echo "::error::Commit $c ($subject) nema Signed-off-by red."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "DCO provera neuspešna. Commituj sa: git commit -s"
+            exit 1
+          fi
+          echo "Svi commitovi imaju Signed-off-by (DCO)."

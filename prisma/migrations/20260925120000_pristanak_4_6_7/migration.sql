@@ -1,0 +1,33 @@
+-- Pristanak na akte 4.6.7.
+--
+-- Set 4.6.7 menja dve stvari koje dodiruju svakog člana.
+--
+-- Prvo, program „Posebna briga" postaje „Posebna podrška" i dobija dva osnova —
+-- smanjenu sposobnost (rešenje nadležnog organa kojim je utvrđen stepen
+-- invaliditeta, uključujući rešenje komisije za procenu radne sposobnosti, odnosno
+-- akutnu ili hroničnu bolest zbog koje član ne može ili je bitno ograničen da
+-- učestvuje) i gubitak doma (programi podrške čl. 12).
+--
+-- Drugo, i zbog toga je ponovna saglasnost obavezna: evidentiranje POEN-a po
+-- socijalnom programu se od ovog seta PRIKAZUJE verifikovanim korisnicima, uz
+-- pseudonim, naziv programa i iznos (programi podrške čl. 4, Politika 4.6 i 6).
+-- Do 4.6.3 je akt obećavao suprotno — da se pojedinačno evidentiranje ne
+-- objavljuje. Ko je pristao na taj tekst, pristao je na uži prikaz, pa se
+-- saglasnost mora zatražiti iznova; Uslovi čl. 40 i Politika čl. 16 traže i
+-- obaveštenje bez odlaganja.
+--
+-- 🔴 Bez ovog reda gejt ćuti: `pristanakStatus()` poredi poslednju verziju sa
+-- prihvaćenom, a zatečena 4.6.5 je već prihvaćena. Prekidač
+-- `PRISTANAK_NA_AKTE_TRAZI_SE` je upaljen od 14.09.2026, ali sam po sebi ništa
+-- ne prikazuje.
+--
+-- 🔴 `ON CONFLICT DO NOTHING` — drugi red bi tražio pristanak na verziju koja je
+-- već prihvaćena.
+--
+-- Ide migracijom, ne admin dugmetom: ovde se ne emituje nijedan POEN niti dira
+-- opticaj, pa nema šta da čeka na ljudski potez. Presedan:
+-- `20260810170000_pristanak_4_2_1`, `20260914130000_pristanak_4_6_3` i
+-- `20260916130100_pristanak_4_6_5`.
+INSERT INTO "PolitikaVerzija" ("id", "verzija", "naslov", "efektivnaOd", "kreirao", "createdAt")
+VALUES (gen_random_uuid()::text, '4.6.7', 'Akti KOLO sistema 4.6.7', NOW(), 'migracija-4.6.7', NOW())
+ON CONFLICT ("verzija") DO NOTHING;

@@ -1,0 +1,11 @@
+-- Operativni doprinos dobija sopstveni tip transakcije (R-03, mera M-1).
+--
+-- Do ovog seta su i socijalni programi i operativni doprinos emitovali kao
+-- `EMISIJA_PROGRAM`, pa se u javnom prikazu nisu mogli razdvojiti. M-1 traži da
+-- socijalni programi izađu iz pojedinačnog javnog prikaza (naziv programa je
+-- posebna kategorija po ZZPL čl. 17, a iznos sam invertuje godište i broj dece),
+-- dok operativni doprinos ostaje vidljiv kako jeste.
+--
+-- 🔴 ZASEBAN FAJL: Postgres ne dozvoljava upotrebu nove vrednosti enum-a u istoj
+-- transakciji u kojoj je dodata. Backfill je u narednoj migraciji.
+ALTER TYPE "TransactionType" ADD VALUE IF NOT EXISTS 'EMISIJA_OPERATIVNI';

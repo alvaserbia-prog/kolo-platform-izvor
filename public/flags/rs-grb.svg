@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 18" width="24" height="18" role="img" aria-label="Српска ћирилица — крст са четири оцила">
+  <!-- Odnos stranica 24:18 (4:3) — isti kao kod svih ostalih zastavica u spisku
+       jezika. Ranije je bio 28:19, pa je ova sličica ispadala šira od drugih. -->
+  <!-- Crveno polje (cela zastava) -->
+  <rect x="0" y="0" width="24" height="18" fill="#C6363C"/>
+  <!-- Srpski krst (beo) -->
+  <g fill="#ffffff">
+    <rect x="10.9" y="2.4" width="2.2" height="13.2" rx="0.3"/>
+    <rect x="2.8" y="7.9" width="18.4" height="2.2" rx="0.3"/>
+  </g>
+  <!-- Četiri ocila (slovo „С" oko krsta; otvori okrenuti SPOLJA — ka ivicama) -->
+  <g fill="none" stroke="#ffffff" stroke-width="1.16" stroke-linecap="round">
+    <path transform="translate(6.6 5.2)   scale(-1 1)" d="M1 -1.25 A1.6 1.6 0 1 0 1 1.25"/>
+    <path transform="translate(6.6 12.8)  scale(-1 1)" d="M1 -1.25 A1.6 1.6 0 1 0 1 1.25"/>
+    <path transform="translate(17.4 5.2)"              d="M1 -1.25 A1.6 1.6 0 1 0 1 1.25"/>
+    <path transform="translate(17.4 12.8)"             d="M1 -1.25 A1.6 1.6 0 1 0 1 1.25"/>
+  </g>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="KOLO">
+  <!--
+    Znak za sitne prikaze (favicon, 16–32 px).
+
+    Postojeći `kolo-icon.png` nosi tri figure koje se drže za ruke oko klasa —
+    tačna slika sistema, ali na 16 px se pretvara u mrlju: same ruke su tanje od
+    jednog piksela. Ovaj znak čuva ISTU ideju sa tri oblika umesto osam: tri
+    glave u kolu oko zrna. Ne zamenjuje logotip u zaglavlju, samo mesta gde je
+    logotip nečitak.
+  -->
+  <rect width="64" height="64" rx="14" fill="#0F3D20"/>
+  <!-- zrno u sredini -->
+  <path d="M32 19c6.2 7 6.2 18 0 25-6.2-7-6.2-18 0-25z" fill="#F5B842"/>
+  <!-- tri glave u kolu -->
+  <circle cx="32" cy="13" r="5" fill="#86C97A"/>
+  <circle cx="15.6" cy="42" r="5" fill="#86C97A"/>
+  <circle cx="48.4" cy="42" r="5" fill="#86C97A"/>
+</svg>

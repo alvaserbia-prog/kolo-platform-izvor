@@ -1,0 +1,69 @@
+{
+  "buildCommand": "if [ -n \"$DATABASE_URL\" ]; then prisma migrate deploy; fi && npm run build",
+  "ignoreCommand": "bash scripts/vercel-preskoci-build.sh",
+  "build": {
+    "env": {
+      "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1"
+    }
+  },
+  "git": {
+    "deploymentEnabled": {
+      "*": false,
+      "main": true,
+      "production": true
+    }
+  },
+  "regions": [
+    "fra1"
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/zero-sum",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/nocna-emisija",
+      "schedule": "0 22 * * *"
+    },
+    {
+      "path": "/api/cron/gdpr-cistenje",
+      "schedule": "0 2 1 * *"
+    },
+    {
+      "path": "/api/cron/chat-cistenje",
+      "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/programi-revizija",
+      "schedule": "0 23 * * *"
+    },
+    {
+      "path": "/api/cron/nadzor-integriteta",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/nadzor-predmeti-cistenje",
+      "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/deca-punoletstvo",
+      "schedule": "0 20 * * *"
+    },
+    {
+      "path": "/api/cron/glasanje-zatvaranje",
+      "schedule": "30 0 * * *"
+    },
+    {
+      "path": "/api/cron/nabavke",
+      "schedule": "0 5 * * *"
+    },
+    {
+      "path": "/api/cron/potvrde-uslov",
+      "schedule": "30 5 * * *"
+    },
+    {
+      "path": "/api/cron/gazdinstva",
+      "schedule": "15 4 * * *"
+    }
+  ]
+}

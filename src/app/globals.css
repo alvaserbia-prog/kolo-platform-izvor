@@ -1,0 +1,285 @@
+@import "tailwindcss";
+
+/* ── Naslov stranice ─────────────────────────────────────────────── */
+/* Jedan stil naslova za sve stranice posle prijave (odluka vlasnika
+   22.10.2026): miran, tamnozelen, bez gradijenta. Gradijent nosi samo
+   pozdrav na Početnoj (`.kolo-naslov-pozdrav`). Komponenta koja ga koristi:
+   `src/components/ui/NaslovStranice.tsx`. */
+.kolo-naslov {
+  font-size: clamp(1.625rem, 2vw + 1rem, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-kolo-green-900);
+  text-wrap: balance;
+}
+.kolo-naslov-pozdrav {
+  font-size: clamp(1.875rem, 6vw + 0.75rem, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  background: linear-gradient(120deg, #0F3D20 0%, #2E9D54 55%, #1B6B3A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Veliki broj na kartici (POEN, ZRNO, stanje) ───────────────── */
+/* Broj se NIKAD ne prelama u dva reda i ne izlazi iz kartice: umesto
+   toga se font smanjuje kako broj raste. Meri se ŠIRINA KARTICE (cqi),
+   ne širina ekrana — iste kartice stoje i u dve kolone na telefonu i
+   u širokom rasporedu na ekranu. `--znakova` je broj znakova zapisa
+   (sa razdvojnicima hiljada), postavlja se iz komponente; kad ga nema,
+   pretpostavlja se šest znakova („13.400"). */
+.broj-kartica {
+  container-type: inline-size;
+}
+.broj-kartica-vrednost {
+  font-size: clamp(0.875rem, calc(145cqi / var(--znakova, 6)), 3rem);
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── KOLO Design System ────────────────────────────────────────── */
+
+:root {
+  --background: #FAFAF8;
+  --foreground: #1A1A17;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+  --font-citat: var(--font-source-serif), Georgia, serif;
+}
+
+/* ── KOLO Color Palette ─────────────────────────────────────────── */
+
+@theme {
+  /* Primarna zelena (iz logoa) */
+  /* 🔴 Klasa sa nijansom koja ovde ne postoji ne proizvodi NIKAKAV CSS
+     (Tailwind je tiho preskače) — hover, okvir i podloga tada nestaju bez
+     greške. Brana: `__tests__/dizajn-tokeni-izvor.test.ts`. Nova boja ne
+     ulazi bez izmerenog odnosa upisanog uz definiciju. */
+  --color-kolo-green-900: #0F3D20;
+  --color-kolo-green-800: #15542D;  /* hover primarnog; belo 8,98 : 1 */
+  --color-kolo-green-700: #1B6B3A;  /* belo 6,54 : 1 */
+  --color-kolo-green-600: #237F45;  /* okvir, spinner; belo 5,01 : 1 */
+  --color-kolo-green-500: #2E9D54;
+  --color-kolo-green-200: #B3DFC5;  /* okvir na svetloj zelenoj */
+  --color-kolo-green-100: #E8F5EC;
+  --color-kolo-green-50:  #F3FAF5;  /* najsvetlija podloga */
+
+  /* Zlatna — ZRNO i akcenti.
+     🔴 Zlatni TEKST je isključivo gold-700. gold-600 kao tekst ima 2,54 : 1
+     na beloj i 2,32 : 1 na gold-100 — samo za okvir, ikonicu i ukras.
+     Beli tekst ne ide na zlatnu; zlatno dugme je gold-400 sa green-900
+     tekstom (6,92 : 1). */
+  --color-kolo-gold-700: #92640A;  /* tekst: 5,19 : 1 na beloj, 4,74 : 1 na gold-100 */
+  --color-kolo-gold-600: #D99520;
+  --color-kolo-gold-400: #F5B842;  /* podloga dugmeta sa green-900 tekstom 6,92 : 1 */
+  --color-kolo-gold-200: #F0C060;  /* okvir na svetloj zlatnoj */
+  --color-kolo-gold-100: #FDF4E0;
+  --color-kolo-gold-50:  #FEFAF0;
+
+  /* Neutralne (topla paleta) */
+  --color-kolo-bg:      #FAFAF8;
+  --color-kolo-surface: #FFFFFF;
+  --color-kolo-border:  #E8E6E1;
+  --color-kolo-border-polje: #8C8880;  /* okvir polja za unos: 3,53 : 1 na beloj */
+  --color-kolo-muted:   #6B6860;
+  --color-kolo-text:    #1A1A17;
+
+  /* Oblik i elevacija — jedan radijus za kontrole (dugme, polje), jedan za
+     kartice, jedna senka za karticu i jedna za ono što pluta. */
+  --radius-kontrola: 0.75rem;
+  --radius-kartica:  1rem;
+  --shadow-kartica:  0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-plutajuce: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05);
+
+  /* Širine sadržaja: uska za forme i tekst, široka za mreže i tabele. */
+  --container-uska:   48rem;
+  --container-siroka: 64rem;
+
+  /* Funkcionalne */
+  --color-kolo-danger:       #B33A3A;
+  --color-kolo-danger-light: #FDECEA;
+  --color-kolo-info:         #2B6CB0;
+  --color-kolo-info-light:   #EBF4FF;
+
+  /* ── Dečji prostor (Modul Deca) ────────────────────────────────
+     Osam boja sa detetovog crteža, svaka u tri stope:
+
+       600 — TEKST i podloga dugmeta sa belim tekstom (odnos ≥ 4,8 : 1
+             i na beloj i na `kolo-bg`; izmereno, vrednost u komentaru)
+       400 — velika površina, okvir, ukras (zatečena boja sa crteža)
+       100 — podloga kartice
+
+     🔴 Beli tekst ide ISKLJUČIVO na stopu 600. Zatečena paleta je cela
+     bila u stopi 400 i koristila se kao podloga belog teksta — nijedna
+     od osam boja ne prelazi 4,5 : 1, a četiri padaju i kao krupan tekst
+     („Moji oglasi" 1,98 : 1, „+500 POEN te čeka" 1,98 : 1). Nijansa i
+     zasićenost su zadržane, spuštena je samo svetlina, pa je utisak
+     crteža isti.
+
+     🔴 Nova boja ne ulazi bez izmerenog odnosa upisanog uz definiciju. */
+
+  /* korala — Pijaca, oglasi, glavna radnja */
+  --color-deca-korala-600: #C5401A;  /* belo 5,09 : 1 */
+  --color-deca-korala-400: #E4572E;
+  --color-deca-korala-100: #FDEDE6;
+
+  /* narandža — spisak, sporedne kartice */
+  --color-deca-narandza-600: #AC570B;  /* belo 5,09 : 1 */
+  --color-deca-narandza-400: #F4A259;
+  --color-deca-narandza-100: #FDF1E4;
+
+  /* sunce — JEDINI akcenat „čeka te"; belo na žutoj ne prolazi ni na
+     jednoj svetlini koja ostaje žuta, pa žuta nosi TAMAN tekst */
+  --color-deca-sunce-600: #8F670A;  /* belo 5,11 : 1 */
+  --color-deca-sunce-400: #F2C14E;
+  --color-deca-sunce-100: #FEF6E2;
+  --color-deca-sunce-ink: #6B4A05;  /* tekst NA žutoj: 7,4 : 1 */
+
+  /* trava — škola */
+  --color-deca-trava-600: #557821;  /* belo 5,13 : 1 */
+  --color-deca-trava-400: #8FC93A;
+  --color-deca-trava-100: #EEF8DE;
+
+  /* more — Pričaonica, skener */
+  --color-deca-more-600: #327975;  /* belo 5,09 : 1 */
+  --color-deca-more-400: #4CB5AE;
+  --color-deca-more-100: #E3F5F3;
+
+  /* nebo — POEN */
+  --color-deca-nebo-600: #387499;  /* belo 5,09 : 1 */
+  --color-deca-nebo-400: #3D7EA6;
+  --color-deca-nebo-100: #E8F1F8;
+
+  /* slezova — prijatelji, „ja" */
+  --color-deca-slezova-600: #7F5CB7;  /* belo 5,10 : 1 */
+  --color-deca-slezova-400: #8E6FBF;
+  --color-deca-slezova-100: #F1EBFA;
+
+  /* roze — poruke prijatelja */
+  --color-deca-roze-600: #D0236B;  /* belo 5,08 : 1 */
+  --color-deca-roze-400: #E56399;
+  --color-deca-roze-100: #FCEAF1;
+}
+
+/* ── Dečja meta za prst ──────────────────────────────────────────── */
+/* 🔴 Svaka meta u dečjem prostoru je najmanje 44 × 44 px. Bez izuzetka
+   za „sporedne" radnje — prijava mamljenja nije sporedna radnja, a bila
+   je meta od oko 12 × 30 px. */
+.meta-dete {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+}
+
+/* `.card-shadow` i `.card-shadow-md` su ukinute (22.10.2026): senka kartice je
+   token `shadow-kartica`, a onoga što pluta `shadow-plutajuce`. */
+
+/* ── Dotted background pattern ──────────────────────────────────── */
+
+.dotted-bg {
+  background-image: radial-gradient(circle, #d1cfc9 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* `.box-warning` i `.box-info` su ukinute (22.10.2026): obaveštenje u tekstu
+   stranice crta `src/components/ui/Obavestenje.tsx`. */
+
+/* ── Telo teksta ─────────────────────────────────────────────────── */
+/* 🔴 Bez obostranog poravnanja. Chrome i Android nemaju rečnik za
+   rastavljanje srpskih reči, pa je `justify` u uskim kolonama i na
+   telefonu pravio „reke" belina i razvlačio naslove akata. */
+.text-body {
+  text-align: left;
+  text-wrap: pretty;
+}
+
+/* ── Najmanji tekst na telefonu ──────────────────────────────────── */
+/* `text-xs` (12 px) nosi objašnjenja, uslove i greške na stotinama mesta; na
+   telefonu je to presitno za stariju publiku. Na uskom ekranu je 13 px,
+   a ispod 11 px nema ništa (veličine od 8–10 px su ukinute). */
+@media (max-width: 767px) {
+  :root {
+    --text-xs: 0.8125rem;
+    --text-xs--line-height: 1.35;
+  }
+}
+
+/* ── Sprečavanje iOS auto-zoom-a pri fokusu na polja ──────────────── */
+/* Safari na iOS-u zumira stranicu kad polje ima font < 16px. Forsiramo
+   16px na svim poljima za unos na mobilnim širinama (Tailwind text-sm/xs
+   utility klase imaju veću specifičnost od element-selektora → !important).
+   Desktop tipografija ostaje netaknuta. */
+@media (max-width: 768px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* ── Toast animacija ─────────────────────────────────────────────── */
+
+@keyframes slide-up {
+  from { transform: translateY(1rem); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.25s ease-out;
+}
+
+/* ── Vidljiv fokus ───────────────────────────────────────────────── */
+/* Polja su na više mesta imala `outline-none` uz promenu boje okvira od
+   1px kao jedinu oznaku fokusa — na telefonu i na obojenoj podlozi to se
+   ne vidi. Prsten je zajednički, u zelenoj sistema (6,5 : 1 na beloj), i
+   `:where()` mu drži specifičnost na nuli, pa ga svaka komponenta koja
+   ima svoj fokus i dalje nadjačava. */
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-kolo-green-700);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Na tamnozelenoj podlozi (zaglavlje, sidebar, hero) zeleni prsten ima
+   1,88 : 1 i ne vidi se — tamo je zlatni (6,92 : 1). */
+:where(.bg-kolo-green-900, .bg-kolo-green-700) :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline-color: var(--color-kolo-gold-400);
+}
+
+/* ── Okvir polja za unos ─────────────────────────────────────────── */
+/* `kolo-border` (1,25 : 1) je dovoljan za karticu, ali polje mora da se
+   vidi (≥ 3 : 1). Specifičnost (0,1,1) namerno nadjačava klasu. */
+:is(input, textarea, select).border-kolo-border {
+  border-color: var(--color-kolo-border-polje);
+}
+
+/* ── Poštovanje „manje pokreta" ──────────────────────────────────── */
+/* Podešavanje operativnog sistema kojim korisnik traži da se animacije
+   smanje. Do sada je u celom sajtu bilo poštovano na jednom mestu.
+   Za dete sa ADHD-om ili sa vestibularnom osetljivošću ovo nije ukras. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,11 @@
+-- Tip protivzapisa za jednokratno usklađivanje zatečenih potvrda (dokaz stvarnosti
+-- čl. 7, set 4.6.4).
+--
+-- 🔴 ZASEBAN FAJL, bez ijedne upotrebe: Postgres ne dozvoljava da se nova vrednost
+-- enum-a koristi u istoj transakciji u kojoj je dodata. Isti obrazac kao
+-- `20260913120000_donacija_naplaceno` i `20260911140000_ispravka_nabavka_enum`.
+--
+-- Zaseban tip, a ne `EMISIJA_VERIFIKACIJA` u suprotnom smeru: u istoriji mora da se
+-- vidi da ovo NIJE poništenje lažne potvrde (čl. 20a) nego prelazna radnja, i mora da
+-- se može prebrojati.
+ALTER TYPE "TransactionType" ADD VALUE 'USKLADJIVANJE_POTVRDE';
