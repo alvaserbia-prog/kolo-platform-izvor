@@ -3,7 +3,6 @@
 import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
 import Dugme from "@/components/ui/Dugme";
-import NaslovStranice from "@/components/ui/NaslovStranice";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useState, useCallback, memo } from "react";
@@ -42,9 +41,11 @@ export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc }: Props) {
 
   return (
     <div className="space-y-6">
-      <NaslovStranice
-        naslov={t("naslov")}
-        radnja={
+      {/* Glasanje je deo stranice ZRNO (grupa „Glas u Gornjem Kolu"), pa naslov nije
+          naslov stranice nego podnaslov u toj grupi (C2, urednik, 24.10.2026). */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-sm font-semibold text-kolo-muted">{t("naslov")}</h2>
+
           <div className="flex flex-wrap items-center gap-3">
             <Link href="/glasanje/registar" className="inline-flex min-h-9 items-center text-sm text-kolo-green-700 hover:underline">
               {t("registar_link")}
@@ -60,8 +61,7 @@ export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc }: Props) {
               </Dugme>
             )}
           </div>
-        }
-      />
+      </div>
 
       {mojaGlasackaMoc === 0 && (
         <Obavestenje vrsta="upozorenje">

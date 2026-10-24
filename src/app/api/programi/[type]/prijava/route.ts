@@ -208,7 +208,7 @@ export async function POST(
         enrollmentId,
       },
       naslov: "Zahtev za potvrdu socijalnog programa",
-      tekst: `Korisnik ${korisnik.pseudonim} se prijavio za program „${labelPrograma(programType)}" i navodi tebe kao verifikatora. Potvrdi ispunjenost uslova pod punom odgovornošću, ili obrazloži odbijanje.`,
+      tekst: `Korisnik ${korisnik.pseudonim} se prijavio za program „${labelPrograma(programType)}" i navodi tebe kao verifikatora. Potvrdi ispunjenost uslova ili obrazloži odbijanje.`,
       link: "/programi/potvrde",
       spoljni: {
         kljuc: "notifikacije.zahtev_potvrda_spoljni",

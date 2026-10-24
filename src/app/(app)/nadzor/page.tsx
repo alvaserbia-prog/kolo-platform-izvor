@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 /**
  * /nadzor — stranica za nadzor.
  * Vidljiva samo čuvarima Kola (dokaz stvarnosti čl. 10 st. 2: nadzornik je svaki
@@ -15,6 +16,12 @@ import { getTranslations } from "next-intl/server";
 import Kartica from "@/components/ui/Kartica";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import PraznoStanje from "@/components/ui/PraznoStanje";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("nav");
+  return { title: t("nadzor") };
+}
 
 export default async function NadzorPage() {
   const t = await getTranslations("nadzor");

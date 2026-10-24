@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import OznakaStatusa from "@/components/OznakaStatusa";
 import { prikazStatusa } from "@/lib/status-prikaz";
@@ -20,6 +21,12 @@ import DecjaPocetna from "./DecjaPocetna";
 import { karticaSkoleZaDete } from "@/lib/protokol/skole";
 import { USLOV_RAZMENE } from "@/lib/razmena-brojac-pravila";
 import { klaseDugmeta } from "@/components/ui/Dugme";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("nav");
+  return { title: t("pocetna") };
+}
 
 export default async function PocetnaPage() {
   const session = await getServerSession(authOptions);

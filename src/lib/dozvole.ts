@@ -78,6 +78,29 @@ export function jeAdmin(u?: KorisnikDozvole | null): boolean {
   return u?.admin === ADMIN || u?.admin === SUPERADMIN;
 }
 
+const ZADRUGA = "ZADRUGA";
+
+/**
+ * Zadružni admin — lice koje predloži zadruga (Pravilnik o zadrugama čl. 16;
+ * registar 2026-10, U2). 🔴 NIJE admin: `jeAdmin` ga ne pušta nigde, pa van
+ * zadruge ne vidi ništa. Radi samo u zadruzi iz `adminZadrugaId`.
+ */
+export function jeZadruzniAdmin(u?: KorisnikDozvole | null): boolean {
+  return u?.admin === ZADRUGA;
+}
+
+/**
+ * Radnje u zapisu zadruge i nad njenim zadrugarima (zadruge čl. 7, 9, 16): admin u
+ * svakoj zadruzi, zadružni admin samo u svojoj.
+ */
+export function smeRaditiZaZadrugu(
+  u: (KorisnikDozvole & { adminZadrugaId?: string | null }) | null | undefined,
+  zadrugaId: string,
+): boolean {
+  if (jeAdmin(u)) return true;
+  return jeZadruzniAdmin(u) && !!u?.adminZadrugaId && u.adminZadrugaId === zadrugaId;
+}
+
 /**
  * Upis ishoda nadzora — čuvar Kola (dokaz stvarnosti čl. 10 st. 2: nadzornik je
  * svaki čuvar Kola; Pravilnik čl. 30 st. 2). Čuvar je potvrđen i `NOSILAC_ZRNA`;

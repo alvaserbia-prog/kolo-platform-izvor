@@ -4,6 +4,7 @@ import { greska } from "@/lib/greska-api";
 import { prisma } from "@/lib/prisma";
 import { probajEvidentiratiPotvrde } from "@/lib/protokol/potvrda-poen";
 import { PotvrdaPoenStatus } from "@/generated/prisma/client";
+import { podsetiNaZakasnelePozive } from "@/lib/protokol/zahtev-razgovor";
 
 /**
  * POST /api/cron/potvrde-uslov
@@ -83,8 +84,13 @@ export async function POST(req: NextRequest) {
       `upisanih potvrda: ${upisanoPotvrda}${prekinuto ? " (prekinuto zbog budžeta)" : ""}`,
   );
 
+  // Podsetnik Fondaciji dok ima zakasnelih poziva sa spiska (čl. 4a; odluka vlasnika
+  // 24.10.2026). Ide uz ovaj jutarnji prolaz da ne bi trebao nov cron; ne baca.
+  const zakasnelihPoziva = await podsetiNaZakasnelePozive();
+
   return NextResponse.json({
     ok: true,
+    zakasnelihPoziva,
     obradjenoKorisnika,
     ukupnoSaZabelezenim: redovi.length,
     upisanoPotvrda,

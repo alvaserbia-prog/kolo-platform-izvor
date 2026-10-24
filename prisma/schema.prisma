@@ -173,6 +173,9 @@ enum AdminNivo {
   NONE
   ADMIN
   SUPERADMIN
+  /// Lice koje predloži zadruga (Pravilnik o zadrugama čl. 16, registar 2026-10 U2):
+  /// radi samo u svojoj zadruzi (`User.adminZadrugaId`), van nje ne vidi ništa.
+  ZADRUGA
 }
 
 enum ZrnoZahtevStatus {
@@ -417,6 +420,9 @@ model User {
   verifiedAt             DateTime?
   tipKorisnika           TipKorisnika @default(NEVERIFIKOVAN)
   admin                  AdminNivo    @default(NONE)
+  /// Zadruga za koju radi nalog sa nivoom `ZADRUGA` (zadruge čl. 16). Kod drugih nivoa prazno.
+  adminZadrugaId         String?
+  adminZadruga           Krug?        @relation("ZadruzniAdmini", fields: [adminZadrugaId], references: [id])
   // Oznaka početnog nosioca ZRNA (osnivač). Zaseban marker pored tipKorisnika —
   // status NOSILAC_ZRNA može steći i običan korisnik upisom ZRNA, pa nije pouzdan
   // pokazatelj osnivača. Osnivač NE sme da verifikuje drugog osnivača (anti-malverzacija).
@@ -544,6 +550,7 @@ model User {
   /// i broj telefona se na profilu menjaju, ali ne brišu: porede se sa drugim
   /// nalozima radi sprečavanja višestrukih naloga, a brišu se gašenjem naloga.
   telefonZaPozivAt                 DateTime?
+  poverljivostPozivaAt             DateTime? // izjava o poverljivosti pre prvog otvaranja poziva (dokaz stvarnosti čl. 4a, S2-M1); samo trenutak
   avatar                           String?
   // Izabrani jezik korisnika (next-intl locale): "sr" | "sr-Cyrl" | "en" | "hu".
   // Koristi se za jezik notifikacija/email-ova i podrazumevani prikaz po prijavi.
@@ -1124,6 +1131,7 @@ model Krug {
   /// zadrugama čl. 11). `zadruga = true` znači da je upisana zadruga sa ugovorom
   /// o saradnji; zapis i pragovi ostaju isti, pa se dostignut prag ne ponavlja.
   zadruga        Boolean           @default(false)
+  zadruzniAdmini User[]            @relation("ZadruzniAdmini")
   maticniBroj    String?
   pib            String?
   adresa         String?
@@ -1620,6 +1628,9 @@ model DoprinosOglas {
   predlozeniPoen Int // predloženi POEN za potpuno izvršenje (čl. 5/6) — težinski koeficijent, nije garantovan iznos; 0 = bez ograničenja zbira dnevnih izvršenja
   obrazlozenje   String? // obrazloženje predloženog POEN-a (čl. 6)
   saOdobravanjem Boolean           @default(false) // čl. 14 — prijava primljena tek po izričitom odobrenju plana izvršenja
+  procenaObima   String? // procena obima rada (čl. 5) — opisno, ne sati × iznos; NULL kod zatečenih zadataka
+  opisCeline     String? // šta je jedna celina — deo posla, ne vreme (čl. 5, 6; S1)
+  brojCelina     Int? // broj celina; predlozeniPoen = POEN po celini × brojCelina; NULL = zatečen zadatak (staro pravilo)
   positions      Int               @default(1)
   deadline       DateTime? // rok za prijavu
   status         OglasStatus       @default(ACTIVE)
@@ -1669,6 +1680,7 @@ model OglasEvidencija {
   prijava        OglasPrijava     @relation(fields: [prijavaId], references: [id])
   date           DateTime         @db.Date // dan na koji se odnosi izvršenje
   predlozeniPoen Int // predloženi POEN za ovo dnevno izvršenje (čl. 18) — težina u raspodeli
+  celina         Int? // broj izvršenih celina (čl. 18, S1); predlozeniPoen = celina × POEN po celini; NULL kod zatečenih
   amount         Int              @default(0) // evidentirani POEN nakon noćne raspodele (čl. 24); 0 dok nije obračunato
   dokaz          String? // link/opis dokaza izvršenja (čl. 18)
   description    String
@@ -2009,6 +2021,15 @@ model PokroviteljPrijava {
   ugovorTekst         String
   status              PokroviteljPrijavaStatus @default(CEKA_POTPIS)
   potpisanoAt         DateTime?
+  /// Potpis jednokratnim kodom (donacije čl. 8 st. 1 → čl. 13g st. 4; registar
+  /// 2026-10, F5-M1): kontrolni broj snimljenog teksta i heš koda sa rokom i brojem
+  /// pokušaja. Posle potpisa se heš briše. 🔴 Bez IP adrese i podataka o uređaju.
+  /// Prijave potpisane pre ove izmene (jednim klikom) ostaju bez kontrolnog broja.
+  kontrolniBroj       String?
+  potpisKodHash       String?
+  potpisKodIstice     DateTime?
+  potpisKodPokusaja   Int                      @default(0)
+  potpisKodPoslatAt   DateTime?
   pokroviteljId       String?
   pokrovitelj         Pokrovitelj?             @relation(fields: [pokroviteljId], references: [id])
   /// Upis iz koga je prijava podneta (donacije čl. 6a, čl. 7 st. 1). Podaci o
@@ -2918,20 +2939,20 @@ enum NacinPotvrdeClana {
 /// 🔴 Poništenje potvrde koja je pokrenula lanac NE obara potvrde iz lanca
 /// (`lanacOdId` je samo trag).
 model PotvrdaClana {
-  id               String            @id @default(uuid())
+  id               String             @id @default(uuid())
   verifikacijaId   String
-  verifikacija     VerifikacionaVeza @relation(fields: [verifikacijaId], references: [id], onDelete: Cascade)
+  verifikacija     VerifikacionaVeza  @relation(fields: [verifikacijaId], references: [id], onDelete: Cascade)
   potvrdjeniId     String
-  potvrdjeni       User              @relation("PotvrdaClanaPotvrdjeni", fields: [potvrdjeniId], references: [id], onDelete: Cascade)
+  potvrdjeni       User               @relation("PotvrdaClanaPotvrdjeni", fields: [potvrdjeniId], references: [id], onDelete: Cascade)
   izvor            IzvorPotvrdeClana
   /// Član Kola koji je potvrdio; kod FONDACIJA administrator koji upisuje odluku;
   /// kod LANAC null.
   potvrdioId       String?
-  potvrdio         User?             @relation("PotvrdaClanaPotvrdio", fields: [potvrdioId], references: [id], onDelete: SetNull)
+  potvrdio         User?              @relation("PotvrdaClanaPotvrdio", fields: [potvrdioId], references: [id], onDelete: SetNull)
   /// Potvrda koja je pokrenula automatsku potvrdu lanca (samo kod LANAC).
   lanacOdId        String?
-  lanacOd          PotvrdaClana?     @relation("LanacPotvrda", fields: [lanacOdId], references: [id], onDelete: SetNull)
-  lanacPotvrde     PotvrdaClana[]    @relation("LanacPotvrda")
+  lanacOd          PotvrdaClana?      @relation("LanacPotvrda", fields: [lanacOdId], references: [id], onDelete: SetNull)
+  lanacPotvrde     PotvrdaClana[]     @relation("LanacPotvrda")
   /// Korak u lancu (1..n od potvrđenog člana bez potvrde); samo kod LANAC.
   korak            Int?
   /// Obavezno kod FONDACIJA (odluka sa obrazloženjem).
@@ -2940,8 +2961,8 @@ model PotvrdaClana {
   nacin            NacinPotvrdeClana?
   /// Potvrda onoga ko je potvrdiocu bio uvodilac (čl. 5d st. 3) — izuzetak od čl. 12,
   /// uvek nadzor.
-  premaUvodiocu    Boolean           @default(false)
-  createdAt        DateTime          @default(now())
+  premaUvodiocu    Boolean            @default(false)
+  createdAt        DateTime           @default(now())
   podlezeNadzoru   Boolean
   nadzornikId      String?
   nadzoranAt       DateTime?
@@ -2952,7 +2973,7 @@ model PotvrdaClana {
   ponistioId       String?
   razlogPonistenja String?
   /// = `verifikacijaId` dok potvrda važi; null posle poništenja.
-  aktivnaKljuc     String?           @unique
+  aktivnaKljuc     String?            @unique
 
   @@index([potvrdjeniId])
   @@index([potvrdioId, createdAt])
@@ -3773,25 +3794,25 @@ model IdentitetNaloga {
 /// prepisi fiktivni. Predmet nema dejstvo na naloge primalaca dok se ništa ne utvrdi
 /// i otvara se samo po utvrđenju — nije praćenje prepisa.
 model UtvrdjenjeVisestrukogNaloga {
-  id               String    @id @default(uuid())
-  zadrzaniId       String
-  ugaseniId        String    @unique
+  id                String    @id @default(uuid())
+  zadrzaniId        String
+  ugaseniId         String    @unique
   /// Pseudonim ugašenog naloga u trenutku utvrđenja (nalog prestaje).
-  ugaseniPseudonim String
-  obrazlozenje     String
-  utvrdioId        String
-  utvrdjenoAt      DateTime  @default(now())
+  ugaseniPseudonim  String
+  obrazlozenje      String
+  utvrdioId         String
+  utvrdjenoAt       DateTime  @default(now())
   /// Neto prepis sa ugašenog naloga na zadržani, otpisan tipom
   /// `OTPIS_VISESTRUKI_NALOG` (osmi osnov, Pravilnik čl. 14 st. 3 t. 8). 0 kad
   /// neto prepisa nije bilo.
-  otpisano         Int       @default(0)
-  otpisTxId        String?
+  otpisano          Int       @default(0)
+  otpisTxId         String?
   /// Isključenje lica (Uslovi čl. 28) kad je drugi nalog korišćen za sticanje
   /// POEN-a ili glasa.
-  iskljucen        Boolean   @default(false)
+  iskljucen         Boolean   @default(false)
   /// Nadzorni predmet nad primaocima prepisa sa ugašenog naloga.
-  predmetOtvoren   Boolean   @default(true)
-  predmetBeleska   String?
+  predmetOtvoren    Boolean   @default(true)
+  predmetBeleska    String?
   predmetZatvorioId String?
   predmetZatvorenAt DateTime?
 

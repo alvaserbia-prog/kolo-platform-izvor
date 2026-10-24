@@ -161,9 +161,11 @@ export function proveriPrijavu(u: UnosPrijave): Provera {
 export function tekstIzjave(naziv: string): string {
   return (
     `Izjavljujem da su podaci o gazdinstvu „${naziv}“ tačni, da gazdinstvo postoji ` +
-    `i proizvodi ono što je navedeno i da na njemu radim. Znam da se, ako izjava nije ` +
-    `tačna, odobrenje gazdinstva poništava, doprinos gazdinstva otpisuje, a svi ` +
-    `članovi isključuju iz sistema (Pravilnik o gazdinstvima čl. 12).`
+    `i proizvodi ono što je navedeno i da na njemu radim. Za ono što nudim odgovaram ` +
+    `sam, po propisima koji se na to primenjuju. Znam da se, ako izjava nije ` +
+    `tačna, odobrenje gazdinstva poništava, doprinos gazdinstva otpisuje, a iz ` +
+    `sistema se isključuje onaj ko je lažnu izjavu dao ili za nju znao (Pravilnik o ` +
+    `gazdinstvima čl. 12).`
   );
 }
 

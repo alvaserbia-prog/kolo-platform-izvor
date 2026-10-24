@@ -181,6 +181,8 @@ export function generisiUgovorTekst(p: {
     "Član 2. Donacija je dobrovoljna i bez naknade.",
     "Član 3. Ovaj ugovor ne sadrži odredbe o POENU niti o evidentiranju POENA.",
     "Član 4. Poreske obaveze koje proizlaze iz donacije snosi Donator u skladu sa važećim propisima.",
+    // F5-M1 (registar 2026-10): isti način zaključenja kao ugovor o dobrima (čl. 13g st. 4).
+    "Član 5. Ugovor se zaključuje elektronskim putem na platformi KOLO, potvrdom podnosioca na platformi i unosom jednokratnog koda dostavljenog na njegovu adresu elektronske pošte. Tako zaključen ugovor punovažan je bez pečata i svojeručnog potpisa. Platforma beleži vreme zaključenja i kontrolni broj teksta i dostavlja Donatoru primerak ugovora za štampu.",
     "",
     gazdinstvo
       ? `Potpisom ${p.zastupnikImePrezime} potvrđuje da je nosilac gazdinstva i da prihvata uslove ugovora.`

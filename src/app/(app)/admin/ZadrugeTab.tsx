@@ -7,7 +7,7 @@ import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
-type Zadrugar = { clanstvoId: string; userId: string; pseudonim: string; imePrezime: string | null; od: string };
+type Zadrugar = { clanstvoId: string; userId: string; pseudonim: string; imePrezime: string | null; telefon: string | null; od: string };
 type Zadruga = {
   id: string;
   naziv: string;
@@ -32,13 +32,18 @@ const poen = (n: number) => `${n.toLocaleString("sr-RS")} POEN`;
  * nalogu (čl. 16). Iznos određuje zadruga (čl. 15) — ekran ga samo upisuje, ne
  * predlaže i ne proverava „da li je primeren".
  *
- * 🔴 Ime i prezime zadrugara se vidi SAMO ovde (čl. 19, Registar radnji obrade
- * br. 19); nijedan korisnički ekran ga ne dobija.
+ * 🔴 Ime i prezime i broj telefona zadrugara se vide SAMO ovde (čl. 16, 19,
+ * Registar radnji obrade br. 19); nijedan korisnički ekran ih ne dobija.
+ *
+ * Zadružni admin (U2) vidi ovaj isti ekran na `/admin/zadruga`, samo za svoju
+ * zadrugu (`samoSvoja` iz rute): bez upisa zadruge, prestanka i izdavanja drugoj
+ * zadruzi — to ostaje administratorskom timu Fondacije.
  */
 export default function ZadrugeTab() {
   const t = useTranslations("admin");
   const [zadruge, setZadruge] = useState<Zadruga[]>([]);
   const [krugovi, setKrugovi] = useState<Krug[]>([]);
+  const [samoSvoja, setSamoSvoja] = useState(false);
   const [ucitava, setUcitava] = useState(true);
   const [radi, setRadi] = useState(false);
   const [greska, setGreska] = useState<string | null>(null);
@@ -55,6 +60,7 @@ export default function ZadrugeTab() {
       const d = await res.json();
       setZadruge(d.zadruge ?? []);
       setKrugovi(d.krugovi ?? []);
+      setSamoSvoja(Boolean(d.samoSvoja));
     }
     setUcitava(false);
   }, []);
@@ -129,7 +135,7 @@ export default function ZadrugeTab() {
                   {z.zadrugari.map((c) => (
                     <li key={c.clanstvoId} className="flex items-center justify-between gap-3 rounded-kontrola bg-kolo-bg px-3 py-1.5">
                       <span>
-                        {c.imePrezime ?? "—"} <span className="text-kolo-muted">({c.pseudonim})</span>
+                        {c.imePrezime ?? "—"} <span className="text-kolo-muted">({c.pseudonim}{c.telefon ? ` · ${c.telefon}` : ""})</span>
                       </span>
                       <button
                         disabled={radi}
@@ -173,7 +179,7 @@ export default function ZadrugeTab() {
                     <option value="PRIJEM">{t("zad_osnov_prijem")}</option>
                     <option value="DOPRINOS">{t("zad_osnov_doprinos")}</option>
                     <option value="USLUGA_PRIMLJENA">{t("zad_osnov_usluga")}</option>
-                    <option value="IZDAVANJE">{t("zad_osnov_izdavanje_zadruzi")}</option>
+                    {!samoSvoja && <option value="IZDAVANJE">{t("zad_osnov_izdavanje_zadruzi")}</option>}
                   </select>
                   {zapis.osnov === "IZDAVANJE" ? (
                     <select className={polje} aria-label={t("zad_izaberi_zadrugu")} value={zapis.primalacZadrugaId}
@@ -201,8 +207,8 @@ export default function ZadrugeTab() {
                 </button>
               </div>
 
-              {/* Prestanak (čl. 20) */}
-              <div className="border-t border-kolo-border pt-3">
+              {/* Prestanak (čl. 20) — samo administratorski tim Fondacije */}
+              {!samoSvoja && <div className="border-t border-kolo-border pt-3">
                 <button disabled={radi} className={klaseDugmeta({ varijanta: "opasno" })}
                   onClick={async () => {
                     if (await potvrdi({ poruka: t("zad_prestanak_potvrda", { naziv: z.naziv, iznos: poen(z.zapis) }), opasno: true, dugme: t("zad_prestanak") }))
@@ -210,14 +216,14 @@ export default function ZadrugeTab() {
                   }}>
                   {t("zad_prestanak")}
                 </button>
-              </div>
+              </div>}
             </div>
           )}
         </section>
       ))}
 
-      {/* ── Upis zadruge (čl. 5) ──────────────────────────────────────────── */}
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
+      {/* ── Upis zadruge (čl. 5) — samo administratorski tim Fondacije ─────── */}
+      {!samoSvoja && <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
         <h3 className="font-semibold">{t("zad_upis_naslov")}</h3>
         <p className="mt-1 text-xs text-kolo-muted">{t("zad_upis_opis")}</p>
         <div className="mt-3 grid gap-2 md:grid-cols-2">
@@ -246,7 +252,7 @@ export default function ZadrugeTab() {
           }}>
           {t("zad_upisi_zadrugu")}
         </button>
-      </section>
+      </section>}
     </div>
   );
 }

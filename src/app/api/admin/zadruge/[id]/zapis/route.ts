@@ -3,7 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { jeAdmin } from "@/lib/dozvole";
+import { jeAdmin, smeRaditiZaZadrugu } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
 import {
   zapisIzZadruge,
@@ -23,9 +23,10 @@ import {
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  const me = await prisma.user.findUnique({ where: { id: session.user.id }, select: { admin: true } });
-  if (!jeAdmin(me)) return await greska("Nemate ovlašćenje.", 403);
+  const me = await prisma.user.findUnique({ where: { id: session.user.id }, select: { admin: true, adminZadrugaId: true } });
   const { id } = await params;
+  // Admin u svakoj zadruzi, zadružni admin samo u svojoj (zadruge čl. 16; U2).
+  if (!smeRaditiZaZadrugu(me, id)) return await greska("Nemate ovlašćenje.", 403);
   let body: { osnov?: unknown; pseudonim?: unknown; primalacZadrugaId?: unknown; iznos?: unknown; opis?: unknown };
   try {
     body = await req.json();
@@ -36,6 +37,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (!iznos) return await greska("Iznos mora biti pozitivan ceo broj.", 400);
   try {
     if (body.osnov === "IZDAVANJE") {
+      // Izdavanje tereti zapis DRUGE zadruge, pa ga zadružni admin ne pokreće (U2).
+      if (!jeAdmin(me)) return await greska("Izdavanje drugoj zadruzi upisuje administratorski tim Fondacije.", 403);
       await izdavanjeDrugojZadruzi(id, { primalacZadrugaId: body.primalacZadrugaId, iznos, opis: body.opis });
     } else if (jeOsnovIzZapisa(body.osnov)) {
       await zapisIzZadruge(session.user.id, id, { osnov: body.osnov, pseudonim: body.pseudonim, iznos, opis: body.opis });

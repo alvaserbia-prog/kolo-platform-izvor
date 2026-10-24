@@ -148,6 +148,38 @@ export default function NabavkeKlijent() {
         )}
       </div>
 
+      {/* ── Nabavke u toku ────────────────────────────────────────────────── */}
+      {aktivne.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("nabavke_naslov")}</h2>
+          {aktivne.map((n) => (
+            <Link
+              key={n.id}
+              href={`/nabavke/${n.id}`}
+              className="block rounded-kartica border border-kolo-green-700 bg-kolo-green-50 p-4 shadow-kartica transition-colors hover:bg-kolo-green-100"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-semibold">{n.naziv}</span>
+                <span className="text-sm text-kolo-muted">{t(`status_${n.status}` as never)}</span>
+              </div>
+              {n.poenPoDelu !== null && (
+                <p className="mt-1 text-sm">
+                  {t("kartica_deo", {
+                    velicina: n.velicinaDela ?? 0,
+                    jedinica: n.jedinicaMere ?? "",
+                    poen: n.poenPoDelu.toLocaleString("sr-RS"),
+                  })}
+                </p>
+              )}
+              {n.moja && <p className="mt-1 text-sm font-medium">{t(`moja_${n.moja.status}` as never)}</p>}
+            </Link>
+          ))}
+        </section>
+      )}
+
+      {/* Redosled (C2, uloga 1, 24.10.2026): prvo nabavke u toku, pa predlog i
+          registar predloga, pa završene — ko dođe da vidi šta se nabavlja ne
+          počinje od obrasca. */}
       {/* ── Tvoj predlog (čl. 9) ─────────────────────────────────────────── */}
       <Kartica as="section">
         <h2 className="text-lg font-semibold">{t("predlog_naslov")}</h2>
@@ -196,35 +228,6 @@ export default function NabavkeKlijent() {
         {greska && <Obavestenje vrsta="greska" className="mt-3">{greska}</Obavestenje>}
         {poruka && <Obavestenje vrsta="uspeh" className="mt-3">{poruka}</Obavestenje>}
       </Kartica>
-
-      {/* ── Nabavke u toku ────────────────────────────────────────────────── */}
-      {aktivne.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">{t("nabavke_naslov")}</h2>
-          {aktivne.map((n) => (
-            <Link
-              key={n.id}
-              href={`/nabavke/${n.id}`}
-              className="block rounded-kartica border border-kolo-green-700 bg-kolo-green-50 p-4 shadow-kartica transition-colors hover:bg-kolo-green-100"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="font-semibold">{n.naziv}</span>
-                <span className="text-sm text-kolo-muted">{t(`status_${n.status}` as never)}</span>
-              </div>
-              {n.poenPoDelu !== null && (
-                <p className="mt-1 text-sm">
-                  {t("kartica_deo", {
-                    velicina: n.velicinaDela ?? 0,
-                    jedinica: n.jedinicaMere ?? "",
-                    poen: n.poenPoDelu.toLocaleString("sr-RS"),
-                  })}
-                </p>
-              )}
-              {n.moja && <p className="mt-1 text-sm font-medium">{t(`moja_${n.moja.status}` as never)}</p>}
-            </Link>
-          ))}
-        </section>
-      )}
 
       {/* ── Registar predloga (čl. 10) ────────────────────────────────────── */}
       <Kartica as="section">

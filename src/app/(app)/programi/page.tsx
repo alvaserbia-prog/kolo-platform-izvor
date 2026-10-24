@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
@@ -7,6 +9,12 @@ import { dohvatiPotvrdioceUslova } from "@/lib/protokol/program-potvrda";
 import { ucitajStatus, sme } from "@/lib/protokol/status";
 import { ProgramType } from "@/generated/prisma/client";
 import ProgramiKlijent from "./ProgramiKlijent";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("programi");
+  return { title: t("naslov") };
+}
 
 // PED (operativni doprinos) ide kroz zadatke (/doprinos-oglasi), ne kroz enrollment.
 const SVI_TIPOVI: ProgramType[] = [

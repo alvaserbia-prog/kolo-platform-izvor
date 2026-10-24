@@ -10,7 +10,7 @@ import { rateLimit, klijentIP } from "@/lib/rate-limit";
 import { obavestiAdmineNoviKorisnik } from "@/lib/notifikacije";
 import { posaljiAdminAlert } from "@/lib/adminAlert";
 import { getLocale } from "next-intl/server";
-import { oba, PORUKA_PRISTANAK_OBAVEZAN, upisiPristankeRegistracije } from "@/lib/protokol/pristanak";
+import { oba, PORUKA_PRISTANAK_OBAVEZAN, PORUKA_PUNOLETSTVO_OBAVEZNO, punoletstvoIzjavljeno, upisiPristankeRegistracije } from "@/lib/protokol/pristanak";
 import { posaljiPotvrduAdrese } from "@/lib/protokol/potvrda-adrese";
 
 function generateMemberHash(): string {
@@ -58,6 +58,10 @@ export async function POST(req: NextRequest) {
     // „izvršenje ugovornog odnosa" je osnov za većinu obrada iz Politike čl. 4.
     if (!oba(body.prihvatamUslove, body.prihvatamPolitiku)) {
       return await greska(PORUKA_PRISTANAK_OBAVEZAN, 400);
+    }
+    // D2-M1: izričita izjava o punoletstvu; snima se uz pristanak na Uslove.
+    if (!punoletstvoIzjavljeno(body.punoletan)) {
+      return await greska(PORUKA_PUNOLETSTVO_OBAVEZNO, 400);
     }
     // Mesto je opciono, ali kad se navede mora biti JEDNO naselje iz šifarnika —
     // slobodan tekst („Stanišić (Sombor)") se ne poklapa ni sa filterom po mestu
@@ -113,7 +117,7 @@ export async function POST(req: NextRequest) {
           },
         },
       });
-      await upisiPristankeRegistracije(tx, u.id, jezik, "registracija");
+      await upisiPristankeRegistracije(tx, u.id, jezik, "registracija", { punoletstvo: true });
       return u;
     });
 

@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
@@ -8,6 +10,12 @@ import { IZBOR_UCESNIKA, naStaSeCeka, roditeljiIzReda, ucesnikIzReda } from "@/l
 import { potvrdjenIzPolja } from "@/lib/status-ucesnika-pravila";
 import DeteProfil from "./DeteProfil";
 import { prepisiNaCekanju } from "@/lib/protokol/prepis-odobrenje";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("deca");
+  return { title: t("naslov") };
+}
 
 /**
  * Podešavanja deteta — mesto radnji roditelja (Pravilnik o Modulu Deca, čl. 9 i 10).

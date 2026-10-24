@@ -1108,6 +1108,11 @@ export const MAX_OTVORENIH_PRIJAVA = 5;
  *
  * 🔴 Licu na koje se prijava odnosi NE otkriva se ko je prijavu podneo (st. 3) —
  * obaveštenje mu ne nosi ni id ni pseudonim podnosioca.
+ *
+ * 🔴 Ponovljena prijava (set 4.8.4, registar 2026-10 D4): kada je Fondacija za ovu
+ * vezu već odlučila da je lice roditelj (prijava `NEMA_OSNOVA`), nova prijava se
+ * prima i razmatra, ali veza se njome NE zaustavlja automatski — inače bi se
+ * zaustavljanje u roditeljskom sporu moglo ponavljati bez kraja (čl. 4e poslednji stav).
  */
 export async function prijaviRoditeljstvo(podnosilacId: string, roditeljstvoId: string, opis: string) {
   const tekst = typeof opis === "string" ? opis.trim() : "";
@@ -1129,10 +1134,12 @@ export async function prijaviRoditeljstvo(podnosilacId: string, roditeljstvoId: 
   }
   if (veza.roditeljId === podnosilacId) throw new DecaGreska("Ne prijavljuješ sopstvenu vezu.", 400);
 
-  const [otvorenePodnosioca, istaVeza] = await Promise.all([
+  const [otvorenePodnosioca, istaVeza, vecOdluceno] = await Promise.all([
     prisma.prijavaRoditeljstva.count({ where: { podnosilacId, status: "OTVORENA" } }),
     prisma.prijavaRoditeljstva.count({ where: { podnosilacId, roditeljstvoId, status: "OTVORENA" } }),
+    prisma.prijavaRoditeljstva.count({ where: { roditeljstvoId, status: "NEMA_OSNOVA" } }),
   ]);
+  const zaustavi = vecOdluceno === 0;
   if (istaVeza > 0) throw new DecaGreska("Tvoja prijava za ovu vezu je već u postupku.", 409);
   if (otvorenePodnosioca >= MAX_OTVORENIH_PRIJAVA) {
     throw new DecaGreska("Imaš previše otvorenih prijava. Sačekaj odluku Fondacije.", 429);
@@ -1149,12 +1156,23 @@ export async function prijaviRoditeljstvo(podnosilacId: string, roditeljstvoId: 
       },
       select: { id: true },
     });
-    await tx.roditeljstvo.updateMany({
-      where: { id: veza.id, zaustavljenaAt: null },
-      data: { zaustavljenaAt: new Date() },
-    });
+    if (zaustavi) {
+      await tx.roditeljstvo.updateMany({
+        where: { id: veza.id, zaustavljenaAt: null },
+        data: { zaustavljenaAt: new Date() },
+      });
+    }
     return p;
   });
+
+  if (!zaustavi) {
+    const { posaljiAdminAlert } = await import("@/lib/adminAlert");
+    void posaljiAdminAlert(
+      "Ponovljena prijava lažnog roditeljstva",
+      `Prijava ${prijava.id}: za ovu vezu je već odlučeno da je lice roditelj, pa veza NIJE zaustavljena (čl. 4e poslednji stav). Odluka u Admin → Odluke.`,
+    );
+    return { id: prijava.id };
+  }
 
   // 🔴 Bez podnosioca — ni id ni pseudonim (čl. 4e st. 3).
   await obavesti(veza.roditeljId, {

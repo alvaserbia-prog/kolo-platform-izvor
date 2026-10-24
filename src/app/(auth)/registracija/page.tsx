@@ -45,6 +45,8 @@ export default function RegistracijaPage() {
   const [pseudonimGreska, setPseudonimGreska] = useState<string>("");
   const [uslovi, setUslovi] = useState(false);
   const [privatnost, setPrivatnost] = useState(false);
+  // D2-M1: izričita izjava o punoletstvu (snima se uz pristanak na Uslove).
+  const [punoletan, setPunoletan] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function set(field: string, value: string) {
@@ -88,6 +90,7 @@ export default function RegistracijaPage() {
     if (pseudonimStatus === "checking") return;
     if (form.password.length < 8) { setError(t("greska_lozinka_duljina")); return; }
     if (!uslovi || !privatnost) { setError(t("greska_uslovi")); return; }
+    if (!punoletan) { setError(t("greska_punoletan")); return; }
 
     setLoading(true);
     const res = await fetch("/api/registracija", {
@@ -95,7 +98,7 @@ export default function RegistracijaPage() {
       headers: { "Content-Type": "application/json" },
       // 🔴 Pristanak se šalje serveru i tamo se proverava ponovo (R-06). Kvačica u
       // pretraživaču je obaveštenje čoveku, ne brana — brana je na serveru.
-      body: JSON.stringify({ email: form.email, pseudonim: form.pseudonim, password: form.password, location: mesto.trim() || undefined, prihvatamUslove: uslovi, prihvatamPolitiku: privatnost }),
+      body: JSON.stringify({ email: form.email, pseudonim: form.pseudonim, password: form.password, location: mesto.trim() || undefined, prihvatamUslove: uslovi, prihvatamPolitiku: privatnost, punoletan }),
     });
     const data = await res.json();
     setLoading(false);
@@ -224,6 +227,11 @@ export default function RegistracijaPage() {
               mu to rekli. Verzija se čita iz `verzije-akata.ts` — istog izvora iz
               kog je čita i zapis, pa se to dvoje ne može razići. */}
           <div className="space-y-1 pt-1">
+            <label className="flex items-start gap-3 cursor-pointer py-2 min-h-11">
+              <input type="checkbox" checked={punoletan} onChange={(e) => setPunoletan(e.target.checked)}
+                className="mt-0.5 accent-kolo-green-700 w-5 h-5 shrink-0" />
+              <span className="text-sm text-kolo-text">{t("punoletan")}</span>
+            </label>
             <label className="flex items-start gap-3 cursor-pointer py-2 min-h-11">
               <input type="checkbox" checked={uslovi} onChange={(e) => setUslovi(e.target.checked)}
                 className="mt-0.5 accent-kolo-green-700 w-5 h-5 shrink-0" />

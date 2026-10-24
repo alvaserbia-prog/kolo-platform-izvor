@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { jeAdmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
+import { proveriCelineZadatka } from "@/lib/operativni-celine-pravila";
 
 // PATCH /api/admin/doprinos-oglasi/oglasi/[id] — izmena oglasa.
 // Dozvoljena samo dok se niko nije prijavio (nijedna prijava, u bilo kom statusu):
@@ -31,16 +32,16 @@ export async function PATCH(
     return await greska("Oglas ima prijave — izmena više nije moguća. Zatvorite oglas i kreirajte novi.", 400);
 
   const body = await req.json().catch(() => ({}));
-  const { title, description, predlozeniPoen, obrazlozenje, saOdobravanjem, positions, deadline } = body;
+  const { title, description, poenPoCelini, brojCelina, opisCeline, procenaObima, obrazlozenje, saOdobravanjem, positions, deadline } = body;
 
   if (!title?.trim() || !description?.trim())
     return await greska("Naziv i opis su obavezni.", 400);
 
-  // Prazno = 0 = bez ograničenja (isto kao pri kreiranju).
-  const predlozeni = predlozeniPoen === undefined || predlozeniPoen === null || predlozeniPoen === ""
-    ? 0 : Number(predlozeniPoen);
-  if (predlozeni !== 0 && (!Number.isInteger(predlozeni) || predlozeni < 100 || predlozeni > 10_000_000))
-    return await greska("Maksimalni POEN mora biti ceo broj između 100 i 10.000.000, ili prazno (neograničeno).", 400);
+  // Predloženi POEN se utvrđuje za jednu celinu, uz broj celina, opis celine i
+  // procenu obima rada (čl. 5, 6; S1). Zadatak „bez ograničenja" (0) više ne postoji.
+  const celine = proveriCelineZadatka({ poenPoCelini, brojCelina, opisCeline, procenaObima });
+  if (!celine.ok) return await greska(celine.greska, 400);
+  const predlozeni = celine.predlozeniPoen;
 
   const brMesta = Number(positions ?? 1);
   if (!Number.isInteger(brMesta) || brMesta < 1 || brMesta > 1000)
@@ -52,6 +53,9 @@ export async function PATCH(
       title: title.trim(),
       description: description.trim(),
       predlozeniPoen: predlozeni,
+      brojCelina: celine.brojCelina,
+      opisCeline: celine.opisCeline,
+      procenaObima: celine.procenaObima,
       obrazlozenje: typeof obrazlozenje === "string" && obrazlozenje.trim() ? obrazlozenje.trim() : null,
       saOdobravanjem: Boolean(saOdobravanjem),
       positions: brMesta,
@@ -60,7 +64,7 @@ export async function PATCH(
   });
 
   await logAdminAkcija(session.user.id, "DOPRINOS_OGLAS_IZMENJEN", id,
-    `${izmenjen.title} (${predlozeni > 0 ? `maks ${predlozeni} POEN` : "bez maksimuma POENA"})`);
+    `${izmenjen.title} (${celine.brojCelina} × ${celine.poenPoCelini} POEN)`);
 
   return NextResponse.json({ ok: true, id });
 }

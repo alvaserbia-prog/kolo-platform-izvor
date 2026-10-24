@@ -2,7 +2,7 @@
  * Faza sistema — automatski prelaz iz Faze 1 u Fazu 2 (Pravilnik v3.7.5; gornje_kolo_3_7_6, čl. 3).
  *
  * Faza 1: pravila Protokola postavlja osnivač u saradnji sa Fondacijom.
- * Faza 2: Gornje Kolo postaje upravno telo sistema.
+ * Faza 2: pravila Protokola utvrđuju se na predlog Gornjeg Kola, koji UO usvaja svojim aktom (čl. 42, 51).
  *
  * Prelaz iz Faze 1 u Fazu 2 nastupa AUTOMATSKI po dostizanju praga od 1.000.000
  * evidentiranih POEN-a u sistemu (čl. 44 — obračunski ekvivalent: stanje Protokola

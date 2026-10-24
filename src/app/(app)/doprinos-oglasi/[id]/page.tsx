@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import { redirect, notFound } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import OglasDetalj from "./OglasDetalj";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("doprinosOglasi");
+  return { title: t("naslov") };
+}
 
 export default async function OglasPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
@@ -22,7 +30,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
         where: { userId: session.user.id },
         orderBy: { date: "desc" },
         take: 30,
-        select: { id: true, date: true, predlozeniPoen: true, amount: true, dokaz: true, description: true, status: true },
+        select: { id: true, date: true, predlozeniPoen: true, celina: true, amount: true, dokaz: true, description: true, status: true },
       },
       _count: { select: { prijave: { where: { status: "APPROVED" } } } },
     },
@@ -38,6 +46,9 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
         description: oglas.description,
         source: oglas.source as string,
         predlozeniPoen: oglas.predlozeniPoen,
+        brojCelina: oglas.brojCelina,
+        opisCeline: oglas.opisCeline,
+        procenaObima: oglas.procenaObima,
         obrazlozenje: oglas.obrazlozenje,
         saOdobravanjem: oglas.saOdobravanjem,
         positions: oglas.positions,
@@ -54,6 +65,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
           id: e.id,
           date: e.date.toISOString(),
           predlozeniPoen: e.predlozeniPoen,
+          celina: e.celina,
           amount: e.amount,
           dokaz: e.dokaz,
           description: e.description,

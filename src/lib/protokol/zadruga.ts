@@ -468,6 +468,8 @@ export async function prestanakZadruge(krugId: string) {
       data: { leftAt: sada, imePrezime: null, pristanakAt: null },
     });
     await tx.krug.update({ where: { id: krugId }, data: { prestanakAt: sada, status: "SUSPENDED" } });
+    // Prestankom zadruge prestaje i uloga lica koje je ona predložila (čl. 16; U2).
+    await tx.user.updateMany({ where: { adminZadrugaId: krugId }, data: { admin: "NONE", adminZadrugaId: null } });
     return w.balance;
   });
   return { ponisteno };

@@ -1703,11 +1703,16 @@ export async function dohvatiZabelezenGazdinstva(userId: string) {
 
 /**
  * Čl. 12 — poništenje odobrenja zbog lažne izjave: prestanak po t. 3 čl. 12a
- * (`prestanakGazdinstva(…, "LAZNA_IZJAVA")`) — poništenje i otpis pogađaju i
- * ranije istupele — pa isključenje SVIH tih lica (čl. 12 st. 3). Samo superadmin
- * (isključenje je superadminska odluka).
+ * (`prestanakGazdinstva(…, "LAZNA_IZJAVA")`) — poništenje i otpis pogađaju sve
+ * članove iz perioda izjave, i ranije istupele (čl. 12 st. 2).
+ *
+ * 🔴 Isključenje NIJE kolektivno (set 4.8.4, registar 2026-10 U5; čl. 12 st. 3):
+ * izriče se samo licima koja superadmin označi — onome ko je dao lažnu izjavu, članu
+ * čija je izjava o pristupanju lažna i onome ko je za laž znao. Ostalima se samo
+ * otpisuje doprinos gazdinstva, bez isključenja, i mogu ga ponovo steći (čl. 12a).
+ * Samo superadmin (isključenje je superadminska odluka).
  */
-export async function ponistiZbogLazneIzjave(adminId: string, gazdinstvoId: string, razlog: unknown) {
+export async function ponistiZbogLazneIzjave(adminId: string, gazdinstvoId: string, razlog: unknown, iskljuci: unknown = []) {
   const r = typeof razlog === "string" ? razlog.trim() : "";
   if (!r) throw new GazdinstvoGreska("Razlog je obavezan.");
   const g = await prisma.gazdinstvo.findUnique({
@@ -1717,14 +1722,23 @@ export async function ponistiZbogLazneIzjave(adminId: string, gazdinstvoId: stri
   if (!g) throw new GazdinstvoGreska("Gazdinstvo ne postoji.", 404);
   if (g.status !== GazdinstvoStatus.ODOBRENO) throw new GazdinstvoGreska("Poništava se samo odobreno gazdinstvo.");
 
-  const { pogodjeni, otpisano } = await prestanakGazdinstva(gazdinstvoId, "LAZNA_IZJAVA", { izvrsilacId: adminId, razlog: r });
+  // Za isključenje se sme označiti samo lice koje poništenje pogađa.
+  const kandidati = clanoviZaOtpis(
+    "LAZNA_IZJAVA",
+    await prisma.clanGazdinstva.findMany({ where: { gazdinstvoId, izjavaAt: { not: null } }, select: { userId: true, status: true } }),
+  );
+  const oznaceni = Array.isArray(iskljuci) ? [...new Set(iskljuci.filter((x): x is string => typeof x === "string"))] : [];
+  if (oznaceni.some((id) => !kandidati.includes(id))) {
+    throw new GazdinstvoGreska("Isključenje se izriče samo licu koje je bilo član gazdinstva u periodu izjave.");
+  }
 
-  // Svi koji su bili članovi — i oni koji su u međuvremenu istupili (čl. 12 st. 2–3).
-  for (const userId of pogodjeni) {
+  const { otpisano } = await prestanakGazdinstva(gazdinstvoId, "LAZNA_IZJAVA", { izvrsilacId: adminId, razlog: r });
+
+  for (const userId of oznaceni) {
     await iskljuciKorisnika(adminId, userId, `Lažna izjava o gazdinstvu (Pravilnik o gazdinstvima čl. 12): ${r}`);
   }
   await logAdminAkcija(adminId, "GAZDINSTVO_PONISTENO", gazdinstvoId, `${g.naziv}: ${r}`);
-  return { otpisano, iskljuceno: pogodjeni.length };
+  return { otpisano, iskljuceno: oznaceni.length };
 }
 
 // ─── Prikaz ──────────────────────────────────────────────────────────────────

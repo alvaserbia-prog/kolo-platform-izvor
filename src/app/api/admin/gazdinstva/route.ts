@@ -107,6 +107,15 @@ export async function GET() {
       // Podnosilac — prvi po redu pristupanja (čl. 2); od njegovog statusa zavisi izvod (čl. 4b).
       const podnosilac = clanovi[0] ?? null;
       const { izvodRpg, upravljaId, ...ostalo } = g;
+      // Istupili članovi — i njih pogađa poništenje zbog lažne izjave (čl. 12 st. 2),
+      // pa ih superadmin vidi pri odluci kome se izriče isključenje (st. 3; U5).
+      const istupili = g.status === "ODOBRENO"
+        ? await prisma.clanGazdinstva.findMany({
+            where: { gazdinstvoId: g.id, status: "ISTUPIO" },
+            orderBy: { pristupioAt: "asc" },
+            select: { userId: true, user: { select: { pseudonim: true } } },
+          })
+        : [];
       return {
         ...ostalo,
         podnetoAt: g.podnetoAt?.toISOString() ?? null,
@@ -121,6 +130,7 @@ export async function GET() {
         podnosilacUserId: podnosilac?.userId ?? null,
         odgovaraZaIzjavu: clanovi.find((c) => c.userId === upravljaId)?.user.pseudonim ?? null,
         clanovi,
+        istupili: istupili.map((c) => ({ userId: c.userId, pseudonim: c.user.pseudonim })),
         vazecihOglasa: await brojOglasaUzPrijavu(g.id),
       };
     }),

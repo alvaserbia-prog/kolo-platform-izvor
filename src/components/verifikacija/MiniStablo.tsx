@@ -64,13 +64,19 @@ type Props = {
   };
   /** Oznaka nadzora uz verifikovane (podrazumevano da; graf je ne prikazuje). */
   prikaziNadzor?: boolean;
+  /**
+   * Sopstvena stranica Potvrde (odluka vlasnika, 24.10.2026): koga je nosilac
+   * potvrdio stoji JEDNOM, u spisku sa oznakama ispod (`MojeOznake`, sidro
+   * `#moje-oznake`), pa se ovde umesto mreže imena ispisuje samo broj i veza.
+   */
+  verifikovaniIspod?: boolean;
 };
 
 /**
  * Oznaka nadzora — stoji sa strane pseudonima.
  * „nadzirano" = zelena kvačica (bez teksta); „čeka nadzor" = zlatna oznaka.
  */
-function StatusBadge({ status }: { status: CvorVerifikovani["statusNadzora"] }) {
+export function StatusBadge({ status }: { status: CvorVerifikovani["statusNadzora"] }) {
   const t = useTranslations("verifikacija");
   if (status === "ne-podleze") return null;
   if (status === "nadzirano") {
@@ -135,6 +141,7 @@ export default function MiniStablo({
   onKlik,
   tekstovi,
   prikaziNadzor = true,
+  verifikovaniIspod = false,
 }: Props) {
   const t = useTranslations("verifikacija");
   // Pozivalac sme da nadjača tekst (`tekstovi`/`naslov`); podrazumevano ide prevod.
@@ -184,7 +191,15 @@ export default function MiniStablo({
         </div>
 
         {/* Dole: koga je verifikovao */}
-        {verifikovani.length > 0 && (
+        {verifikovaniIspod && verifikovani.length > 0 && (
+          <>
+            <div className="text-kolo-muted text-lg">↓</div>
+            <a href="#moje-oznake" className="px-3 py-1.5 rounded-xl bg-kolo-bg hover:bg-kolo-green-100 text-sm font-medium text-kolo-green-700">
+              {t("stablo_vidi_ispod", { n: verifikovani.length })}
+            </a>
+          </>
+        )}
+        {!verifikovaniIspod && verifikovani.length > 0 && (
           <>
             <div className="text-kolo-muted text-lg">↓</div>
             <div className="grid grid-cols-2 gap-2 w-full max-w-md">

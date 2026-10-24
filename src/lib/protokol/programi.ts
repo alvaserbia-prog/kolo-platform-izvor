@@ -1,5 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { emitujPoen } from "./emisija";
+import {
+  MAJKE_OSNOVICA, MAJKE_UMANJENJE_PO_GODINI, MAJKE_TRAJANJE_GODINA,
+  STARIJI_OSNOVICA, STARIJI_PO_GODINI, STARIJI_OD_GODINA,
+  POSEBNA_PODRSKA_DNEVNO, SKOLOVANJE_DNEVNO,
+} from "@/lib/programi-iznosi-pravila";
 import { probajEvidentiratiPotvrde } from "./potvrda-poen";
 import { danObracuna } from "./obracunski-dan";
 import { FUNKCIONALNI_PRAG_INDEKSA } from "./dokaz-stvarnosti";
@@ -139,12 +144,12 @@ type StarijiMetadata = { datumRodjenja: string };
 export function izracunajMajke(metadata: unknown, danas: Date): number {
   const m = metadata as MajkeMetadata;
   if (!m?.deca?.length) return 0;
-  const BAZA = 2000;
+  const BAZA = MAJKE_OSNOVICA;
   let total = 0;
   for (let i = 0; i < m.deca.length; i++) {
     const god = godinaRazlike(new Date(m.deca[i].datumRodjenja), danas);
-    if (god >= 20 || god < 0) continue; // van trajanja
-    const bazaSmanjenje = Math.max(0, BAZA - god * 100);
+    if (god >= MAJKE_TRAJANJE_GODINA || god < 0) continue; // van trajanja
+    const bazaSmanjenje = Math.max(0, BAZA - god * MAJKE_UMANJENJE_PO_GODINI);
     total += Math.floor(bazaSmanjenje * koeficijentDeteta(i));
   }
   return total;
@@ -154,8 +159,8 @@ export function izracunajStariji(metadata: unknown, danas: Date): number {
   const m = metadata as StarijiMetadata;
   if (!m?.datumRodjenja) return 0;
   const god = godinaRazlike(new Date(m.datumRodjenja), danas);
-  if (god < 50) return 0;
-  return 1000 + 100 * (god - 50);
+  if (god < STARIJI_OD_GODINA) return 0;
+  return STARIJI_OSNOVICA + STARIJI_PO_GODINI * (god - STARIJI_OD_GODINA);
 }
 
 export function izracunajDnevniIznos(
@@ -167,8 +172,8 @@ export function izracunajDnevniIznos(
   switch (type) {
     case "PODRSKA_MAJKAMA":   return izracunajMajke(metadata, danas);
     case "PODRSKA_STARIJIMA": return izracunajStariji(metadata, danas);
-    case "POSEBNA_BRIGA":     return 2000;
-    case "SKOLOVANJE":        return 2000;
+    case "POSEBNA_BRIGA":     return POSEBNA_PODRSKA_DNEVNO;
+    case "SKOLOVANJE":        return SKOLOVANJE_DNEVNO;
     case "PED":               return 0; // operativni doprinos ne ide kroz enrollment — raspodela iz OglasEvidencija (čl. 24)
   }
 }

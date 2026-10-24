@@ -140,6 +140,9 @@ interface AdminOglasItem {
   obrazlozenje: string | null;
   source: string;
   predlozeniPoen: number;
+  brojCelina: number | null;
+  opisCeline: string | null;
+  procenaObima: string | null;
   saOdobravanjem: boolean;
   positions: number;
   deadline: string | null;
@@ -168,6 +171,7 @@ interface AdminPendingOglasEvidencija {
   oglasTitle: string;
   date: string;
   predlozeniPoen: number;
+  celina: number | null;
   description: string;
   dokaz: string | null;
   createdAt: string;
@@ -259,8 +263,9 @@ const adminNivoLabel = (t: ReturnType<typeof useTranslations<"admin">>): Record<
   NONE: t("admin_nivo_clan"),
   ADMIN: t("admin_nivo_admin"),
   SUPERADMIN: t("admin_nivo_superadmin"),
+  ZADRUGA: t("admin_nivo_zadruga"),
 });
-const ADMIN_NIVOI = ["NONE", "ADMIN", "SUPERADMIN"] as const;
+const ADMIN_NIVOI = ["NONE", "ADMIN", "SUPERADMIN", "ZADRUGA"] as const;
 
 // ACTIVE se namerno NE prikazuje na kartici — to je podrazumevano stanje skoro
 // svakog naloga, pa badge samo pravi šum. Vide se samo odstupanja.
@@ -749,6 +754,7 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
                   </div>
                   <div className="shrink-0 text-right">
                     <p className="text-sm font-bold text-kolo-text">{e.predlozeniPoen.toLocaleString(intlTag(locale))} {t("ped_p_predlozeno")}</p>
+                    {e.celina != null && <p className="text-xs text-kolo-muted">{t("ped_celina", { broj: e.celina })}</p>}
                     <div className="flex gap-2 mt-2">
                       <button onClick={() => odbijEvidenciju(e.id)} disabled={loading === e.id}
                         className={klaseDugmeta({ varijanta: "opasno", velicina: "sm" })}>
@@ -797,7 +803,11 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
   const t = useTranslations("admin");
   const [title, setTitle] = useState(oglas?.title ?? "");
   const [description, setDescription] = useState(oglas?.description ?? "");
-  const [predlozeniPoen, setPredlozeniPoen] = useState(oglas && oglas.predlozeniPoen > 0 ? String(oglas.predlozeniPoen) : "");
+  // Celine (čl. 5, 6; S1): POEN za jednu celinu × broj celina = predloženi POEN zadatka.
+  const [poenPoCelini, setPoenPoCelini] = useState(oglas?.brojCelina ? String(Math.floor(oglas.predlozeniPoen / oglas.brojCelina)) : "");
+  const [brojCelina, setBrojCelina] = useState(oglas?.brojCelina ? String(oglas.brojCelina) : "");
+  const [opisCeline, setOpisCeline] = useState(oglas?.opisCeline ?? "");
+  const [procenaObima, setProcenaObima] = useState(oglas?.procenaObima ?? "");
   const [obrazlozenje, setObrazlozenje] = useState(oglas?.obrazlozenje ?? "");
   const [saOdobravanjem, setSaOdobravanjem] = useState(oglas?.saOdobravanjem ?? false);
   const [positions, setPositions] = useState(oglas ? String(oglas.positions) : "");
@@ -805,12 +815,15 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const predlozeni = Number(predlozeniPoen);
+  const po = Number(poenPoCelini);
+  const broj = Number(brojCelina);
+  const celineOk = Number.isInteger(po) && po >= 1 && Number.isInteger(broj) && broj >= 1;
+  const predlozeni = celineOk ? po * broj : 0;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (predlozeniPoen.trim() !== "" && (!Number.isInteger(predlozeni) || predlozeni < 100)) { setError(t("novi_oglas_poen_validacija")); return; }
+    if (!celineOk || !opisCeline.trim() || !procenaObima.trim()) { setError(t("novi_oglas_celine_validacija")); return; }
     setLoading(true);
     try {
       const res = await fetch(oglas ? `/api/admin/doprinos-oglasi/oglasi/${oglas.id}` : "/api/admin/doprinos-oglasi/oglasi", {
@@ -819,7 +832,10 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
         body: JSON.stringify({
           title: title.trim(),
           description: description.trim(),
-          predlozeniPoen: predlozeniPoen.trim() ? predlozeni : 0,
+          poenPoCelini: po,
+          brojCelina: broj,
+          opisCeline: opisCeline.trim(),
+          procenaObima: procenaObima.trim(),
           obrazlozenje: obrazlozenje.trim() || undefined,
           saOdobravanjem,
           positions: positions.trim() ? Number(positions) : undefined,
@@ -852,10 +868,30 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
       </div>
 
       <div>
-        <label htmlFor="adm-novi-oglas-predlozeni-poen-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_predlozeni_poen_label")}</label>
-        <input id="adm-novi-oglas-predlozeni-poen-label" type="number" min={100} step={100} value={predlozeniPoen} onChange={(e) => setPredlozeniPoen(e.target.value)}
-          placeholder={t("novi_oglas_predlozeni_poen_placeholder")}
+        <label htmlFor="adm-novi-oglas-procena-obima" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_procena_obima_label")}</label>
+        <textarea id="adm-novi-oglas-procena-obima" rows={2} value={procenaObima} onChange={(e) => setProcenaObima(e.target.value)}
+          placeholder={t("novi_oglas_procena_obima_placeholder")}
+          className={KLASE_UNOSA + " resize-none"} />
+      </div>
+
+      <div>
+        <label htmlFor="adm-novi-oglas-opis-celine" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_opis_celine_label")}</label>
+        <input id="adm-novi-oglas-opis-celine" type="text" value={opisCeline} onChange={(e) => setOpisCeline(e.target.value)}
+          placeholder={t("novi_oglas_opis_celine_placeholder")}
           className={KLASE_UNOSA} />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label htmlFor="adm-novi-oglas-poen-po-celini" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_poen_po_celini_label")}</label>
+          <input id="adm-novi-oglas-poen-po-celini" type="number" min={1} step={1} value={poenPoCelini} onChange={(e) => setPoenPoCelini(e.target.value)}
+            className={KLASE_UNOSA} />
+        </div>
+        <div>
+          <label htmlFor="adm-novi-oglas-broj-celina" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_broj_celina_label")}</label>
+          <input id="adm-novi-oglas-broj-celina" type="number" min={1} step={1} value={brojCelina} onChange={(e) => setBrojCelina(e.target.value)}
+            className={KLASE_UNOSA} />
+        </div>
       </div>
 
       <div>
@@ -888,7 +924,7 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
       {error && <Obavestenje vrsta="greska">{error}</Obavestenje>}
 
       <Obavestenje vrsta="upozorenje">
-        {t("novi_oglas_napomena_box", { poen: predlozeniPoen.trim() && predlozeni > 0 ? predlozeni.toLocaleString(intlTag(locale)) : t("ped_neograniceno") })}
+        {t("novi_oglas_napomena_box", { poen: celineOk ? predlozeni.toLocaleString(intlTag(locale)) : "—", broj: celineOk ? broj : "—", po: celineOk ? po.toLocaleString(intlTag(locale)) : "—" })}
       </Obavestenje>
 
       <div className="flex gap-2">
@@ -898,7 +934,7 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
             {t("izmena_oglas_otkazi")}
           </button>
         )}
-        <button type="submit" disabled={loading || !title.trim() || !description.trim()}
+        <button type="submit" disabled={loading || !title.trim() || !description.trim() || !celineOk || !opisCeline.trim() || !procenaObima.trim()}
           className={klaseDugmeta({ varijanta: "primarno", velicina: "lg" }) + " flex-1"}>
           {loading ? (oglas ? t("izmena_oglas_cuvanje") : t("novi_oglas_kreiranje")) : (oglas ? t("izmena_oglas_sacuvaj") : t("novi_oglas_kreiraj"))}
         </button>
@@ -1945,16 +1981,39 @@ function KorisniciTab({ users, onDone, viewerJeSuperadmin, viewerId }: { users: 
   // 🔴 Svaka dodela uloge traži potvrdu — i ADMIN (pre je bila jednim dodirom
   // na pilulu od ~22 px; potvrdu je tražio samo SUPERADMIN).
   async function postaviAdminRolu(userId: string, nivo: string) {
+    // Zadružni admin (U2) se vezuje za jednu upisanu zadrugu — bira se po nazivu.
+    let zadrugaId: string | undefined;
+    if (nivo === "ZADRUGA") {
+      const r = await fetch("/api/admin/zadruge", { cache: "no-store" });
+      const zadruge: { id: string; naziv: string; prestanakAt: string | null }[] =
+        r.ok ? ((await r.json()).zadruge ?? []).filter((z: { prestanakAt: string | null }) => !z.prestanakAt) : [];
+      if (zadruge.length === 0) {
+        await obavesti(t("korisnici_zadruga_nema"));
+        return;
+      }
+      const naziv = await unesi({
+        poruka: t("korisnici_zadruga_izbor", { spisak: zadruge.map((z) => z.naziv).join(", ") }),
+        dugme: t("admin_nivo_zadruga"),
+      });
+      if (!naziv?.trim()) return;
+      const z = zadruge.find((x) => x.naziv.trim().toLowerCase() === naziv.trim().toLowerCase());
+      if (!z) {
+        await obavesti(t("korisnici_zadruga_nepoznata"));
+        return;
+      }
+      zadrugaId = z.id;
+    }
     const poruka =
       nivo === "SUPERADMIN" ? t("korisnici_superadmin_confirm")
       : nivo === "ADMIN" ? t("korisnici_admin_confirm")
+      : nivo === "ZADRUGA" ? t("korisnici_zadruga_confirm")
       : t("korisnici_bez_uloge_confirm");
     if (!(await potvrdi({ poruka, opasno: nivo !== "NONE" }))) return;
     setLoadingId(userId);
     const res = await fetch(`/api/admin/korisnici/${userId}/admin-rola`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nivo }),
+      body: JSON.stringify({ nivo, zadrugaId }),
     });
     const d = await res.json().catch(() => ({}));
     setLoadingId(null);

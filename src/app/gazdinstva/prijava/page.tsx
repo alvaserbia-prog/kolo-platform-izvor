@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { sesija } from "@/lib/sesija";
@@ -9,6 +10,12 @@ import PrijavaForma from "./PrijavaForma";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import { MIN_OGLASA_UZ_PRIJAVU } from "@/lib/gazdinstvo-pravila";
 import Obavestenje from "@/components/ui/Obavestenje";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("gazdinstva");
+  return { title: t("prijava_naslov") };
+}
 
 /**
  * Prijava gazdinstva (Pravilnik o gazdinstvima čl. 4), odnosno izmena prijave

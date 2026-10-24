@@ -64,6 +64,20 @@ export function rokPoziva(naSpiskuOd: Date, upisnikZrna: boolean): Date {
 }
 
 /**
+ * Poziv kasni (crveni krug, odluka vlasnika 24.10.2026): rok iz čl. 4a je prošao, a
+ * niko od članova Kola nije otvorio ime i broj otkako je čovek na spisku. Otvaranje
+ * je jedini trag poziva koji sistem ima — šta je bilo u razgovoru ne beleži.
+ */
+export function jePozivZakasnio(
+  naSpiskuOd: Date,
+  upisnikZrna: boolean,
+  otvorenPosleUlaska: boolean,
+  sada: Date,
+): boolean {
+  return !otvorenPosleUlaska && rokPoziva(naSpiskuOd, upisnikZrna).getTime() < sada.getTime();
+}
+
+/**
  * Redosled spiska za poziv: upisnici ZRNA koji traže potvrdu prvi (čl. 4a), pa svi
  * ostali po vremenu dospeća.
  */

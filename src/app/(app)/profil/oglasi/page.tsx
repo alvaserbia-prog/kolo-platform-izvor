@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import MojiOglasiKlijent from "./MojiOglasiKlijent";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("profil");
+  return { title: t("naslov") };
+}
 
 export default async function MojiOglasiPage() {
   const session = await getServerSession(authOptions);

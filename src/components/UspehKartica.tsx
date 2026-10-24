@@ -13,11 +13,14 @@ export default function UspehKartica({
   opis,
   dugmeTekst,
   onDugme,
+  drugoDugme,
 }: {
   naslov: string;
   opis: React.ReactNode;
   dugmeTekst: string;
   onDugme: () => void;
+  /** Sporedno dugme (npr. „Zatvori"), ispod glavnog. */
+  drugoDugme?: { tekst: string; onKlik: () => void };
 }) {
   return (
     <Kartica padding="lg">
@@ -37,9 +40,16 @@ export default function UspehKartica({
         </div>
         <h2 className="kolo-naslov">{naslov}</h2>
         <p className="text-sm text-kolo-muted max-w-sm mx-auto">{opis}</p>
-        <Dugme onClick={onDugme} velicina="lg">
-          {dugmeTekst}
-        </Dugme>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Dugme onClick={onDugme} velicina="lg">
+            {dugmeTekst}
+          </Dugme>
+          {drugoDugme && (
+            <Dugme onClick={drugoDugme.onKlik} velicina="lg" varijanta="sekundarno">
+              {drugoDugme.tekst}
+            </Dugme>
+          )}
+        </div>
       </div>
     </Kartica>
   );

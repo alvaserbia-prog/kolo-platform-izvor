@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
@@ -11,6 +12,12 @@ import { stanjeNaloga } from "@/lib/protokol/deca";
 import { getTranslations } from "next-intl/server";
 import { prikazStatusa } from "@/lib/status-prikaz";
 import { sme } from "@/lib/status-ucesnika-pravila";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("profil");
+  return { title: t("naslov") };
+}
 
 export default async function ProfilPage() {
   const session = await getServerSession(authOptions);

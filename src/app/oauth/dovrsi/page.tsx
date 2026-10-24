@@ -31,6 +31,8 @@ export default function OAuthDovrsiPage() {
   const [pseudonimStatus, setPseudonimStatus] = useState<"idle" | "checking" | "slobodan" | "zauzet">("idle");
   const [uslovi, setUslovi] = useState(false);
   const [privatnost, setPrivatnost] = useState(false);
+  // D2-M1: izričita izjava o punoletstvu (snima se uz pristanak na Uslove).
+  const [punoletan, setPunoletan] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -73,12 +75,13 @@ export default function OAuthDovrsiPage() {
     if (pseudonimStatus === "zauzet") { setError(t("greska_pseudonim_zauzet")); return; }
     if (pseudonimStatus === "checking") return;
     if (!uslovi || !privatnost) { setError(t("greska_uslovi")); return; }
+    if (!punoletan) { setError(tReg("greska_punoletan")); return; }
 
     setLoading(true);
     const res = await fetch("/api/oauth/dovrsi", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pseudonim: pseudonim.trim(), prihvatamUslove: uslovi, prihvatamPolitiku: privatnost }),
+      body: JSON.stringify({ pseudonim: pseudonim.trim(), prihvatamUslove: uslovi, prihvatamPolitiku: privatnost, punoletan }),
     });
     const data = await res.json();
     setLoading(false);
@@ -140,6 +143,11 @@ export default function OAuthDovrsiPage() {
 
           {/* Checkbox-ovi */}
           <div className="space-y-1 pt-1">
+            <label className="flex items-start gap-3 cursor-pointer py-2 min-h-11">
+              <input type="checkbox" checked={punoletan} onChange={(e) => setPunoletan(e.target.checked)}
+                className="mt-0.5 accent-kolo-green-700 w-5 h-5 shrink-0" />
+              <span className="text-sm text-kolo-text">{tReg("punoletan")}</span>
+            </label>
             <label className="flex items-start gap-3 cursor-pointer py-2 min-h-11">
               <input type="checkbox" checked={uslovi} onChange={(e) => setUslovi(e.target.checked)}
                 className="mt-0.5 accent-kolo-green-700 w-5 h-5 shrink-0" />

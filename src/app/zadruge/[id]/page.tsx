@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation";
@@ -15,6 +16,12 @@ import StatKartica from "@/components/ui/StatKartica";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import Pseudonim from "@/components/Pseudonim";
 import ZadrugaPrepis from "./ZadrugaPrepis";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("zadruge");
+  return { title: t("naslov") };
+}
 
 /**
  * Stranica zadruge — Pravilnik o zadrugama (set 4.7.0).

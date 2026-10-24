@@ -12,7 +12,10 @@ import Pseudonim from "@/components/Pseudonim";
 import Kartica from "@/components/ui/Kartica";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 
-export const metadata = { title: "Registar odluka — KOLO" };
+export async function generateMetadata() {
+  const t = await getTranslations("glasanje");
+  return { title: `${t("registar_naslov")} — KOLO` };
+}
 
 // Registar odluka Gornjeg Kola (Pravilnik o Gornjem Kolu 3.7.6, čl. 21).
 // Nepromenljiv, javno vidljiv pregled svih zatvorenih predloga sa ishodom.

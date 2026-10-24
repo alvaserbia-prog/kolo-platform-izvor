@@ -76,7 +76,8 @@ export default function PrijavaDobra({ upisId, onPoslato }: { upisId: string; on
             <option value="USLUGA">{t("dobra_vrsta_usluga")}</option>
           </select>
         </Polje>
-        <Polje className="md:col-span-2" oznaka={t("dobra_opis_label")}>
+        {/* P2 (registar 2026-10): šta ne može biti predmet vaučera — donacije čl. 13f. */}
+        <Polje className="md:col-span-2" oznaka={t("dobra_opis_label")} pomoc={t("dobra_iskljuceno")}>
           <textarea value={f.opis} onChange={postavi("opis")} rows={2} placeholder={t("dobra_opis_primer")} className={polje} />
         </Polje>
         <Polje oznaka={t("dobra_broj_label")}><input type="number" min={1} value={f.brojVaucera} onChange={postavi("brojVaucera")} className={polje} /></Polje>

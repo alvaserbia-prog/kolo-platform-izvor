@@ -47,6 +47,8 @@ type Gazdinstvo = {
   podnosilacUserId: string | null;
   odgovaraZaIzjavu: string | null;
   clanovi: Clan[];
+  /** Istupili članovi — i njih pogađa poništenje zbog lažne izjave (čl. 12 st. 2). */
+  istupili?: { userId: string; pseudonim: string }[];
   oglasi: { id: string; title: string; category: string; tip: string; seller: { pseudonim: string } }[];
   vazecihOglasa: number;
 };
@@ -84,6 +86,8 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
   const [pristupanja, setPristupanja] = useState<Pristupanje[]>([]);
   const [minOglasa, setMinOglasa] = useState(3);
   const [ucitava, setUcitava] = useState(true);
+  // Ko se isključuje pri poništenju zbog lažne izjave, po gazdinstvu (čl. 12 st. 3; U5).
+  const [iskljuciOznaceni, setIskljuciOznaceni] = useState<Record<string, string[]>>({});
   const [radi, setRadi] = useState(false);
   const [greska, setGreska] = useState<string | null>(null);
   const [razlozi, setRazlozi] = useState<Record<string, string>>({});
@@ -290,6 +294,8 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
 
       {/* ── Prijave na pregledu (čl. 6) ──────────────────────────────────────── */}
       <section className="space-y-3">
+        {/* P3-M1: pregled proverava i zabranjena dobra (gazdinstva čl. 6). */}
+        <p className="text-xs text-kolo-muted">{t("zabranjeno_dobro_podsetnik")}</p>
         <h3 className="font-semibold">{t("gaz_na_pregledu", { n: naPregledu.length })}</h3>
         {naPregledu.length === 0 && <p className="text-sm text-kolo-muted">{t("gaz_nema")}</p>}
         {naPregledu.map((g) => (
@@ -388,13 +394,35 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
                   value={razlog(`x-${g.id}`)}
                   onChange={(e) => postaviRazlog(`x-${g.id}`, e.target.value)}
                 />
+                {/* Isključenje nije kolektivno (čl. 12 st. 3; U5): označava se samo ko je lagao ili znao. */}
+                <fieldset className="space-y-1 text-sm">
+                  <legend className="text-xs text-kolo-muted">{t("gaz_iskljuci_koga")}</legend>
+                  {[
+                    ...g.clanovi.map((c) => ({ userId: c.userId, pseudonim: c.user.pseudonim, istupio: false })),
+                    ...(g.istupili ?? []).map((c) => ({ ...c, istupio: true })),
+                  ].map((c) => (
+                    <label key={c.userId} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={(iskljuciOznaceni[g.id] ?? []).includes(c.userId)}
+                        onChange={(e) =>
+                          setIskljuciOznaceni((p) => {
+                            const bilo = p[g.id] ?? [];
+                            return { ...p, [g.id]: e.target.checked ? [...bilo, c.userId] : bilo.filter((x) => x !== c.userId) };
+                          })
+                        }
+                      />
+                      <span>{c.pseudonim}{c.istupio ? ` · ${t("gaz_istupio")}` : ""}</span>
+                    </label>
+                  ))}
+                </fieldset>
                 <button
                   type="button"
                   className={dugmeOpasno}
                   disabled={radi || !razlog(`x-${g.id}`).trim()}
                   onClick={async () => {
                     if (await potvrdi({ poruka: t("gaz_ponisti_potvrda", { naziv: g.naziv }), opasno: true, dugme: t("gaz_ponisti") })) {
-                      void posalji(`/api/admin/gazdinstva/${g.id}/ponisti`, { razlog: razlog(`x-${g.id}`) });
+                      void posalji(`/api/admin/gazdinstva/${g.id}/ponisti`, { razlog: razlog(`x-${g.id}`), iskljuci: iskljuciOznaceni[g.id] ?? [] });
                     }
                   }}
                 >

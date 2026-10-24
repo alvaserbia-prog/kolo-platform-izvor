@@ -142,6 +142,11 @@ Ulazak otvara kontakt s oglasa, razgovor bez dnevnog ograničenja, programe, zad
         odgovor: `Broj nije ograničen, ograničen je tempo. U jednom danu broje se sve tvoje potvrde i uvođenja, i one s popisa povezanih. Uz treću i četvrtu stiže upozorenje, a peta se ne upisuje i potvrđivanje ti staje do ponoći. Sve ostalo radi kao i inače.`,
       },
       {
+        id: 122,
+        pitanje: `Kako uvesti više ljudi?`,
+        odgovor: `Svatko od vas potvrđuje samo one koje osobno poznaje. U jednom danu sustav prihvaća ograničen broj potvrda jedne osobe, pa rasporedite potvrde kroz nekoliko dana. Što vas je više u Kolu, to brže ide.`,
+      },
+      {
         id: 119,
         pitanje: `Što ako onaj tko me potvrdio ode, ili se utvrdi da je potvrda lažna?`,
         odgovor: `Ako onaj tko te potvrdio ili uveo ugasi račun, tvoj položaj i POEN ostaju. Poništava ih samo utvrđena lažnost, a ona se cijeni po čovjeku i ne prenosi se na one koje je taj čovjek potvrdio.
@@ -501,7 +506,7 @@ Prikaz prestaje kad gospodarstvo prestane, na primjer brisanjem. Obrisati ga mo�
         pitanje: `Što ako je moje gospodarstvo prijavio netko drugi?`,
         odgovor: `Javi se Zakladi. Prijava tuđeg gospodarstva bez znanja njegovih članova smatra se lažnom izjavom.
 
-Kad Zaklada utvrdi da je izjava lažna, odobrenje gospodarstva se poništava i gospodarstvo prestaje: zabilježen doprinos se poništava, a evidentiran doprinos gospodarstva otpisuje se svima koji su bili članovi u razdoblju na koje se lažna izjava odnosi, i onima koji su u međuvremenu istupili, i to i kada im zapis time postane negativan. Svim tim osobama izriče se isključenje iz sustava. Svatko na koga se to odnosi dobiva obavijest i može podnijeti prigovor.`,
+Kad Zaklada utvrdi da je izjava lažna, odobrenje gospodarstva se poništava i gospodarstvo prestaje: zabilježen doprinos se poništava, a evidentiran doprinos gospodarstva otpisuje se svima koji su bili članovi u razdoblju na koje se lažna izjava odnosi, i onima koji su u međuvremenu istupili, i to i kada im zapis time postane negativan. Isključenje iz sustava izriče se samo onome tko je lažnu izjavu dao ili za nju znao; ostalima se samo otpisuje doprinos gospodarstva. Svatko na koga se to odnosi dobiva obavijest i može podnijeti prigovor.`,
       },
     ],
   },
@@ -621,7 +626,7 @@ Prva je smanjena sposobnost: imaš rješenje nadležnog tijela kojim je utvrđen
 
 Druga je gubitak doma: izgubio si dom ili imovinu potrebnu za život u nepogodi, požaru, poplavi ili prisilnoj raseljenosti. Ta osnova traje dvanaest mjeseci od događaja i gasi se sama.
 
-Pri prijavi se traži samo da rješenje POSTOJI — ne njegov sadržaj, ne stupanj, ne ocjena radne sposobnosti, ne dijagnoza, ne medicinska dokumentacija. Kod bolesti i kod gubitka doma dokaz je tvoja izjava pod punom odgovornošću, bez ijedne isprave, uz potvrdu člana Kola koji te osobno poznaje, odnosno Fondacije.
+Pri prijavi se traži samo da rješenje POSTOJI — ne njegov sadržaj, ne stupanj, ne ocjena radne sposobnosti, ne dijagnoza, ne medicinska dokumentacija. Kod bolesti i kod gubitka doma dokaz je tvoja izjava, bez ijedne isprave, uz potvrdu člana Kola koji te osobno poznaje, odnosno Fondacije.
 
 Iznos je fiksan i iznosi 2.000 POEN dnevno, jednak po svim osnovama. Ovaj se program ne isključuje s Podrškom majkama — prima se i jedno i drugo, i kada je oboje povodom istoga djeteta.
 
@@ -643,7 +648,7 @@ Prijava ide po istim pravilima kao za druge socijalne programe: kroz platformu, 
 
 Podatke uneseš u obrazac na platformi: za Podršku Majkama, na primjer, ime djeteta i datum rođenja. Iznos koji ti se upisuje ovisi o broju i dobi djece.
 
-Ispunjenost uvjeta zatim, bez uvida u unesene podatke i pod punom odgovornošću, potvrđuje član Kola koji te osobno poznaje: onaj tko te je potvrdio ili drugi član Kola koji te poznaje. Član Kola koji te je samo uveo u Kolo nakon razgovora telefonom i član bez potvrde to ne mogu; ako takvog člana Kola nema, ispunjenost uvjeta utvrđuje Fondacija. Prijavu potom odobrava Fondacija. Uneseni podaci nisu javni: vidi ih samo onaj tko obrađuje prijavu. Riječ je o osjetljivim podacima, pa se obrađuju samo uz tvoj izričit pristanak, a pristanak možeš povući u svakom trenutku, tada prestaje i automatski upis POEN-a.
+Ispunjenost uvjeta zatim, bez uvida u unesene podatke, potvrđuje član Kola koji te osobno poznaje: onaj tko te je potvrdio ili drugi član Kola koji te poznaje. Član Kola koji te je samo uveo u Kolo nakon razgovora telefonom i član bez potvrde to ne mogu; ako takvog člana Kola nema, ispunjenost uvjeta utvrđuje Fondacija. Prijavu potom odobrava Fondacija. Uneseni podaci nisu javni: vidi ih samo onaj tko obrađuje prijavu. Riječ je o osjetljivim podacima, pa se obrađuju samo uz tvoj izričit pristanak, a pristanak možeš povući u svakom trenutku, tada prestaje i automatski upis POEN-a.
 
 Bliži uvjeti kojima se potvrđuje status za svaku skupinu uređeni su Pravilnikom o programima podrške, objavljenim na stranici.`,
       },

@@ -7,11 +7,12 @@ import { prisma } from "@/lib/prisma";
 import { posaljiAdminAlert } from "@/lib/adminAlert";
 import { imaFunkcionalniPristup } from "@/lib/protokol/pristup";
 import { sacuvajNaR2, r2Konfigurisan } from "@/lib/skladiste";
+import { proveriIzvrsenjeCelina } from "@/lib/operativni-celine-pravila";
 
 const DOKAZ_MAX_SIZE = 5 * 1024 * 1024; // 5MB, isto kao slike na Pijaci
 const DOKAZ_TIPOVI = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-// POST /api/doprinos-oglasi/[id]/evidencija — unos dnevnog izvršenja.
+// POST /api/doprinos-oglasi/[id]/evidencija — unos izvršenja (po celinama, čl. 18).
 // Prima multipart/form-data (dokaz = screenshot koji ide na R2) ili JSON
 // (legacy, dokaz kao tekstualni link).
 export async function POST(
@@ -25,19 +26,20 @@ export async function POST(
 
   const { id: oglasId } = await params;
 
-  let date: unknown, predlozeniPoen: unknown, description: unknown, dokaz: unknown;
+  let date: unknown, predlozeniPoen: unknown, celina: unknown, description: unknown, dokaz: unknown;
   let dokazSlika: File | null = null;
   if ((req.headers.get("content-type") ?? "").includes("multipart/form-data")) {
     const fd = await req.formData().catch(() => null);
     if (!fd) return await greska("Neispravan zahtev.", 400);
     date = fd.get("date");
     predlozeniPoen = fd.get("predlozeniPoen");
+    celina = fd.get("celina");
     description = fd.get("description");
     const f = fd.get("dokazSlika");
     if (f instanceof File && f.size > 0) dokazSlika = f;
   } else {
     const body = await req.json().catch(() => ({}));
-    ({ date, predlozeniPoen, description, dokaz } = body);
+    ({ date, predlozeniPoen, celina, description, dokaz } = body);
   }
 
   if (dokazSlika) {
@@ -50,9 +52,7 @@ export async function POST(
   }
 
   // Validacije
-  if (!date || !predlozeniPoen || !description) return await greska("Nedostaju podaci.", 400);
-  const predlozeni = Number(predlozeniPoen);
-  if (!Number.isInteger(predlozeni) || predlozeni < 1) return await greska("Predloženi POEN mora biti pozitivan ceo broj.", 400);
+  if (!date || !description) return await greska("Nedostaju podaci.", 400);
   if (typeof description !== "string" || description.trim().length < 10) return await greska("Opis mora imati najmanje 10 znakova.", 400);
 
   // Datum — max 3 dana unazad
@@ -67,18 +67,6 @@ export async function POST(
   const oglas = await prisma.doprinosOglas.findUnique({ where: { id: oglasId } });
   if (!oglas || oglas.status !== "ACTIVE") return await greska("Zadatak nije aktivan.", 400);
 
-  // Predloženi POEN pojedinačnog dnevnog izvršenja ne sme premašiti predloženi POEN
-  // celog zadatka. Osnov je čl. 11 (raspodela predloženog POEN-a po dnevnim
-  // izvršenjima), a NE raniji čl. 26 — gornja granica je brisana setom 4.4.4, jer
-  // se pozivala na odluku UO koja nikad nije doneta.
-  //
-  // Granica od 10.000.000 nije iz akta: to je brava na unos, protiv omaške u
-  // kucanju. Zadatak sa predlozeniPoen = 0 nema drugog ograničenja.
-  if (predlozeni > 10_000_000)
-    return await greska("Predloženi POEN dnevnog izvršenja ne može preći 10.000.000.", 400);
-  if (oglas.predlozeniPoen > 0 && predlozeni > oglas.predlozeniPoen)
-    return await greska(`Predloženi POEN dnevnog izvršenja ne može preći ${oglas.predlozeniPoen.toLocaleString("sr-RS")} (maksimalni POEN zadatka).`, 400);
-
   const prijava = await prisma.oglasPrijava.findUnique({
     where: { oglasId_userId: { oglasId, userId: session.user.id } },
   });
@@ -90,17 +78,42 @@ export async function POST(
   });
   if (postoji) return await greska("Evidencija za taj dan je već uneta.", 400);
 
-  // Kumulativni predloženi POEN svih dnevnih izvršenja (osim odbijenih) ne sme preći
-  // predloženi POEN zadatka (čl. 11 — raspodela predloženog POEN-a po dnevnim izvršenjima).
-  // Zadatak sa predlozeniPoen = 0 nema kumulativno ograničenje.
-  if (oglas.predlozeniPoen > 0) {
+  // Predloženi POEN zapisa (čl. 18; S1). Zadatak sa celinama: izvršilac navodi samo
+  // broj izvršenih celina, a iznos je broj celina × POEN po celini utvrđen uz
+  // zadatak — izvršilac ga ne određuje. Zatečen zadatak bez celina (brojCelina =
+  // NULL) radi po starom pravilu dok se ne zatvori: izvršilac predlaže iznos, uz
+  // granice zadatka.
+  let predlozeni: number;
+  let brojIzvrsenihCelina: number | null = null;
+  if (oglas.brojCelina != null) {
     const agg = await prisma.oglasEvidencija.aggregate({
       where: { userId: session.user.id, oglasId, status: { not: "REJECTED" } },
-      _sum: { predlozeniPoen: true },
+      _sum: { celina: true },
     });
-    const dosadasnji = agg._sum.predlozeniPoen ?? 0;
-    if (dosadasnji + predlozeni > oglas.predlozeniPoen)
-      return await greska(`Zbir predloženog POENA po dnevnim izvršenjima (${(dosadasnji + predlozeni).toLocaleString("sr-RS")}) prelazi maksimalni POEN zadatka (${oglas.predlozeniPoen.toLocaleString("sr-RS")}).`, 400);
+    const r = proveriIzvrsenjeCelina({
+      celina,
+      brojCelinaZadatka: oglas.brojCelina,
+      predlozeniPoenZadatka: oglas.predlozeniPoen,
+      dosadasnjeCeline: agg._sum.celina ?? 0,
+    });
+    if (!r.ok) return await greska(r.greska, 400);
+    predlozeni = r.predlozeniPoen;
+    brojIzvrsenihCelina = r.celina;
+  } else {
+    predlozeni = Number(predlozeniPoen);
+    if (!Number.isInteger(predlozeni) || predlozeni < 1) return await greska("Predloženi POEN mora biti pozitivan ceo broj.", 400);
+    // Granica od 10.000.000 nije iz akta: brava na unos, protiv omaške u kucanju.
+    if (predlozeni > 10_000_000)
+      return await greska("Predloženi POEN dnevnog izvršenja ne može preći 10.000.000.", 400);
+    if (oglas.predlozeniPoen > 0) {
+      const agg = await prisma.oglasEvidencija.aggregate({
+        where: { userId: session.user.id, oglasId, status: { not: "REJECTED" } },
+        _sum: { predlozeniPoen: true },
+      });
+      const dosadasnji = agg._sum.predlozeniPoen ?? 0;
+      if (dosadasnji + predlozeni > oglas.predlozeniPoen)
+        return await greska(`Zbir predloženog POENA po dnevnim izvršenjima (${(dosadasnji + predlozeni).toLocaleString("sr-RS")}) prelazi maksimalni POEN zadatka (${oglas.predlozeniPoen.toLocaleString("sr-RS")}).`, 400);
+    }
   }
 
   // Dokaz: screenshot → R2 (javni URL u bazu), ili legacy tekstualni link.
@@ -118,13 +131,14 @@ export async function POST(
       prijavaId: prijava.id,
       date: datumEv,
       predlozeniPoen: predlozeni,
+      celina: brojIzvrsenihCelina,
       dokaz: dokazUrl,
       description: description.trim(),
     },
   });
 
   void posaljiAdminAlert(
-    "Novo dnevno izvršenje (operativni doprinos)",
+    "Novo izvršenje (operativni doprinos)",
     `Zadatak: ${oglas.title}\nKorisnik: ${session.user.pseudonim}\nPredloženi POEN: ${predlozeni.toLocaleString("sr-RS")}`
   );
 

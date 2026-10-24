@@ -563,6 +563,26 @@
     "ru|faq|#71": "3b059a34020d",
     "ru|faq|#69": "eb2641f0e815",
     "hr|faq|#85": "4e39c4d78885",
-    "hu|faq|#85": "4e39c4d78885"
+    "hu|faq|#85": "4e39c4d78885",
+    "ru|zrno.upis_minimum": "3776b9d42225",
+    "ru|zrno.upis_max": "0e2ffe850f8e",
+    "ru|zrno.upis_na_cekanju": "2e94fd751fb5",
+    "ru|zrno.otpis_priblizno": "e9d5cc84fb0b",
+    "hr|zrno.upis_minimum": "3776b9d42225",
+    "hr|zrno.upis_max": "0e2ffe850f8e",
+    "hr|zrno.upis_na_cekanju": "2e94fd751fb5",
+    "hr|zrno.otpis_priblizno": "e9d5cc84fb0b",
+    "en|sistem.emisija_limit_danas": "035f95d67dd7",
+    "en|sistem.ukupno_poen": "a11a94d38f08",
+    "en|zrno.upis_minimum": "3776b9d42225",
+    "en|zrno.upis_max": "0e2ffe850f8e",
+    "en|zrno.upis_na_cekanju": "2e94fd751fb5",
+    "en|zrno.otpis_priblizno": "e9d5cc84fb0b",
+    "en|programi.isplaceno_ukupno": "0de160cbbae0",
+    "en|doprinosOglasi.ev_iznos_evidentirano": "d0c519a3c1a6",
+    "en|doprinosOglasi.ev_iznos_predlozeno": "5ae059d467ac",
+    "en|nabavke.kartica_deo": "780861599404",
+    "en|nabavke.rezervisano": "c11380c1df37",
+    "en|nabavke.preuzeto": "fe9183c1764b"
   }
 }

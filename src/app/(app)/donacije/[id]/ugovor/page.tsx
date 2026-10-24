@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -6,6 +7,12 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import UgovorAkcije from "./UgovorAkcije";
 import Kartica from "@/components/ui/Kartica";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("donacije");
+  return { title: t("naslov") };
+}
 
 /**
  * Ugovor o donaciji (Pravilnik o pokroviteljstvu i donacijama, čl. 5b).

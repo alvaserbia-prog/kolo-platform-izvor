@@ -6,7 +6,11 @@ import { prisma } from "@/lib/prisma";
 import { jeSuperadmin } from "@/lib/dozvole";
 import { ponistiZbogLazneIzjave, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
-/** POST — poništenje odobrenja zbog lažne izjave (čl. 12): otpis (i u minus) i isključenje svih članova. Samo superadmin — isključenje je njegova odluka. */
+/**
+ * POST { razlog, iskljuci: userId[] } — poništenje odobrenja zbog lažne izjave (čl. 12):
+ * otpis doprinosa gazdinstva svim članovima iz perioda izjave (i u minus), a
+ * isključenje samo označenima — ko je lagao ili znao (st. 3; U5). Samo superadmin.
+ */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
@@ -15,7 +19,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const { id } = await params;
   const body = await req.json().catch(() => ({}));
   try {
-    const rezultat = await ponistiZbogLazneIzjave(session.user.id, id, body?.razlog);
+    const rezultat = await ponistiZbogLazneIzjave(session.user.id, id, body?.razlog, body?.iskljuci);
     return NextResponse.json({ ok: true, rezultat: rezultat ?? null });
   } catch (e) {
     if (e instanceof GazdinstvoGreska) return await greska(e.message, e.status);

@@ -16,6 +16,7 @@ import { authOptions } from "@/lib/auth";
 import { greska } from "@/lib/greska-api";
 import { ucitajStatus, jePotvrdjen } from "@/lib/protokol/status";
 import {
+  dataPoverljivostPoziva,
   jeOsnovSpiska,
   mojZahtev,
   osnoviZaSpisak,
@@ -36,7 +37,11 @@ export async function GET() {
   if (!status) return await greska("Nije prijavljen.", 401);
   try {
     if (jePotvrdjen(status)) {
-      return NextResponse.json({ clanKola: true, zahtevi: await spisakZaPoziv(session.user.id) });
+      const [zahtevi, poverljivost] = await Promise.all([
+        spisakZaPoziv(session.user.id),
+        dataPoverljivostPoziva(session.user.id),
+      ]);
+      return NextResponse.json({ clanKola: true, zahtevi, poverljivostData: poverljivost });
     }
     if (smeNaSpisak(status)) {
       const [moj, osnovi] = await Promise.all([mojZahtev(session.user.id), osnoviZaSpisak(session.user.id)]);

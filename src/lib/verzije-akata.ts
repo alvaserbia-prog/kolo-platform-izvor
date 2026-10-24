@@ -63,8 +63,11 @@ export const AKT_USLOVI: Akt = {
   // poziv umesto zahteva za razgovor, uvođenje u Kolo; ceo set nosi istu šifru.
   // 4.8.4 — čl. 4 (elementi e-novca koji nedostaju), čl. 8, 16b, 28 i 37a: spisak za
   // poziv sa imenom, mestom i brojem, poređenje, utvrđenje višestrukog naloga.
-  verzija: "4.8.4",
-  fajl: "uslovi_koriscenja_4_8_4.md",
+  // 4.8.5 — registar 2026-10, oblasti U–S (objava posle seta 4.8.4): čl. 1 (ciljna
+  // teritorija), 16b (poziv obavlja član Kola), 20 (propisi), 28 (lažna izjava o
+  // gazdinstvu — samo ko je lagao ili znao).
+  verzija: "4.8.5",
+  fajl: "uslovi_koriscenja_4_8_5.md",
 };
 
 export const AKT_POLITIKA: Akt = {
@@ -94,8 +97,10 @@ export const AKT_POLITIKA: Akt = {
   // otvarao), izvod iz RPG do odluke o prijavi, potvrda uplatom ukinuta.
   // 4.8.4 — 4.5 (bez izjave o poreklu), 4.14 (peti slučaj, poređenje), 4.17 i čl. 10:
   // ime, mesto i broj ostaju uz nalog i porede se; utvrđenje višestrukog naloga.
-  verzija: "4.8.4",
-  fajl: "politika_4_8_4.md",
+  // 4.8.5 — registar 2026-10, oblasti U–B: čl. 2 (ciljna teritorija), čl. 8 (Google
+  // prijava, push, OpenStreetMap, rezervne kopije), zadružni admin, DPIA kod direktora.
+  verzija: "4.8.5",
+  fajl: "politika_4_8_5.md",
 };
 
 /**

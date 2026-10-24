@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
@@ -5,6 +7,12 @@ import { prisma } from "@/lib/prisma";
 import { labelPrograma } from "@/lib/protokol/programi";
 import PotvrdeKlijent from "./PotvrdeKlijent";
 import { ucitajStatus, sme } from "@/lib/protokol/status";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("programi");
+  return { title: t("potvrde_naslov") };
+}
 
 // Zahtevi za potvrdu socijalnih programa koje čeka prijavljeni verifikator.
 // Verifikator NE vidi osetljive prijavljene podatke (čl. 4) — potvrđuje na osnovu

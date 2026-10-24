@@ -62,7 +62,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
   const [poruka, setPoruka] = useState<{ tekst: string; ok: boolean } | null>(null);
   const [potpis, setPotpis] = useState<Record<string, Potpis>>({});
   const [potpisOtvoren, setPotpisOtvoren] = useState<string | null>(null);
-  const { dijalog, potvrdi } = useDijalog();
+  const { dijalog } = useDijalog();
 
   const ucitaj = useCallback(async () => {
     try {
@@ -85,21 +85,12 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
   const postaviPotpis = (id: string, izmena: Partial<Potpis>) =>
     setPotpis((s) => ({ ...s, [id]: { ...(s[id] ?? prazanPotpis), ...izmena } }));
 
-  async function potpisiNovcanu(id: string) {
-    if (!(await potvrdi({ poruka: tp("potpis_potvrda"), dugme: tp("potpisi") }))) return;
-    setRadi(id);
-    const res = await fetch(`/api/pokroviteljstvo/prijava/${id}/potpisi`, { method: "POST" });
-    const d = await res.json().catch(() => ({}));
-    setRadi(null);
-    setPoruka(res.ok ? null : { tekst: d.error ?? tp("greska"), ok: false });
-    await ucitaj();
-  }
-
-  // Čl. 13g st. 4 — jednokratni kod na adresu elektronske pošte podnosioca.
-  async function posaljiKod(id: string) {
+  // Čl. 13g st. 4 — jednokratni kod na adresu elektronske pošte podnosioca. Isti
+  // postupak važi i za novčano pokroviteljstvo (čl. 8 st. 1; F5-M1).
+  async function posaljiKod(id: string, vrsta: "dobra" | "prijava" = "dobra") {
     setPoruka(null);
     setRadi(`kod-${id}`);
-    const r = await fetch(`/api/pokroviteljstvo/dobra/${id}/kod`, { method: "POST" });
+    const r = await fetch(`/api/pokroviteljstvo/${vrsta}/${id}/kod`, { method: "POST" });
     const d = await r.json().catch(() => ({}));
     setRadi(null);
     if (r.ok) {
@@ -108,11 +99,11 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
     } else setPoruka({ tekst: d.error ?? t("greska"), ok: false });
   }
 
-  async function potpisiDobra(id: string) {
+  async function potpisiDobra(id: string, vrsta: "dobra" | "prijava" = "dobra") {
     const x = p(id);
     setPoruka(null);
     setRadi(id);
-    const r = await fetch(`/api/pokroviteljstvo/dobra/${id}/potpisi`, {
+    const r = await fetch(`/api/pokroviteljstvo/${vrsta}/${id}/potpisi`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ kod: x.kod, procitao: x.procitao, ovlascen: x.ovlascen, saglasan: x.saglasan }),
@@ -126,6 +117,41 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
     setPoruka(r.ok ? { tekst: t("potpisano"), ok: true } : { tekst: d.error ?? t("greska"), ok: false });
     await ucitaj();
   }
+
+  // Isti potpis za ugovor o dobrima i o novčanom pokroviteljstvu (čl. 13g st. 4; F5-M1).
+  const potpisBlok = (id: string, tekst: string, vrsta: "dobra" | "prijava") => (
+                <div className="space-y-3 border-t border-kolo-border pt-3">
+                  <pre className="text-xs text-kolo-text whitespace-pre-wrap font-sans bg-kolo-bg rounded-kontrola p-4 max-h-96 overflow-auto">{tekst}</pre>
+                  <label className="flex items-start gap-2 text-sm text-kolo-text">
+                    <input type="checkbox" className="mt-0.5" checked={p(id).procitao} onChange={(e) => postaviPotpis(id, { procitao: e.target.checked })} />
+                    {t("potpis_procitao")}
+                  </label>
+                  <label className="flex items-start gap-2 text-sm text-kolo-text">
+                    <input type="checkbox" className="mt-0.5" checked={p(id).ovlascen} onChange={(e) => postaviPotpis(id, { ovlascen: e.target.checked })} />
+                    {t("potpis_ovlascen")}
+                  </label>
+                  <label className="flex items-start gap-2 text-sm text-kolo-text">
+                    <input type="checkbox" className="mt-0.5" checked={p(id).saglasan} onChange={(e) => postaviPotpis(id, { saglasan: e.target.checked })} />
+                    {t("potpis_saglasan")}
+                  </label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Dugme varijanta="sekundarno" onClick={() => posaljiKod(id, vrsta)}
+                      disabled={radi === `kod-${id}` || !p(id).procitao || !p(id).ovlascen || !p(id).saglasan}>
+                      {p(id).kodPoslat ? t("posalji_kod_ponovo") : t("posalji_kod")}
+                    </Dugme>
+                    <input value={p(id).kod}
+                      onChange={(e) => postaviPotpis(id, { kod: e.target.value.replace(/\D/g, "").slice(0, 6) })}
+                      inputMode="numeric" autoComplete="one-time-code" placeholder={t("kod_potpisa_placeholder")}
+                      aria-label={t("kod_potpisa_placeholder")}
+                      className={`${KLASE_UNOSA.replace("w-full", "w-32")} font-mono`} />
+                    <Dugme onClick={() => potpisiDobra(id, vrsta)}
+                      disabled={radi === id || p(id).kod.length !== 6 || !p(id).procitao || !p(id).ovlascen || !p(id).saglasan}>
+                      {t("potpisi_kodom")}
+                    </Dugme>
+                  </div>
+                  <p className="text-xs text-kolo-muted">{t("potpis_napomena")}</p>
+                </div>
+  );
 
   const STATUS_NOVAC: Record<NovcanaPrijava["status"], string> = {
     CEKA_POTPIS: tp("status_ceka_potpis"),
@@ -173,15 +199,16 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
                     {otvoren === n.id ? tp("sakrij_ugovor") : tp("prikazi_ugovor")}
                   </Dugme>
                   {n.status === "CEKA_POTPIS" && (
-                    <Dugme velicina="sm" onClick={() => potpisiNovcanu(n.id)} disabled={radi === n.id}>
-                      {radi === n.id ? "…" : tp("potpisi")}
+                    <Dugme velicina="sm" onClick={() => setPotpisOtvoren(potpisOtvoren === n.id ? null : n.id)}>
+                      {tp("potpisi")}
                     </Dugme>
                   )}
                 </div>
               </div>
-              {otvoren === n.id && (
+              {otvoren === n.id && potpisOtvoren !== n.id && (
                 <pre className="text-xs text-kolo-text whitespace-pre-wrap font-sans bg-kolo-bg rounded-kontrola p-4">{n.ugovorTekst}</pre>
               )}
+              {n.status === "CEKA_POTPIS" && potpisOtvoren === n.id && potpisBlok(n.id, n.ugovorTekst, "prijava")}
             </Kartica>
           ))
         )}
@@ -231,39 +258,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
               {otvoren === u.id && u.ugovorTekst && potpisOtvoren !== u.id && (
                 <pre className="text-xs text-kolo-text whitespace-pre-wrap font-sans bg-kolo-bg rounded-kontrola p-4">{u.ugovorTekst}</pre>
               )}
-              {u.status === "CEKA_POTPIS" && potpisOtvoren === u.id && u.ugovorTekst && (
-                <div className="space-y-3 border-t border-kolo-border pt-3">
-                  <pre className="text-xs text-kolo-text whitespace-pre-wrap font-sans bg-kolo-bg rounded-kontrola p-4 max-h-96 overflow-auto">{u.ugovorTekst}</pre>
-                  <label className="flex items-start gap-2 text-sm text-kolo-text">
-                    <input type="checkbox" className="mt-0.5" checked={p(u.id).procitao} onChange={(e) => postaviPotpis(u.id, { procitao: e.target.checked })} />
-                    {t("potpis_procitao")}
-                  </label>
-                  <label className="flex items-start gap-2 text-sm text-kolo-text">
-                    <input type="checkbox" className="mt-0.5" checked={p(u.id).ovlascen} onChange={(e) => postaviPotpis(u.id, { ovlascen: e.target.checked })} />
-                    {t("potpis_ovlascen")}
-                  </label>
-                  <label className="flex items-start gap-2 text-sm text-kolo-text">
-                    <input type="checkbox" className="mt-0.5" checked={p(u.id).saglasan} onChange={(e) => postaviPotpis(u.id, { saglasan: e.target.checked })} />
-                    {t("potpis_saglasan")}
-                  </label>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Dugme varijanta="sekundarno" onClick={() => posaljiKod(u.id)}
-                      disabled={radi === `kod-${u.id}` || !p(u.id).procitao || !p(u.id).ovlascen || !p(u.id).saglasan}>
-                      {p(u.id).kodPoslat ? t("posalji_kod_ponovo") : t("posalji_kod")}
-                    </Dugme>
-                    <input value={p(u.id).kod}
-                      onChange={(e) => postaviPotpis(u.id, { kod: e.target.value.replace(/\D/g, "").slice(0, 6) })}
-                      inputMode="numeric" autoComplete="one-time-code" placeholder={t("kod_potpisa_placeholder")}
-                      aria-label={t("kod_potpisa_placeholder")}
-                      className={`${KLASE_UNOSA.replace("w-full", "w-32")} font-mono`} />
-                    <Dugme onClick={() => potpisiDobra(u.id)}
-                      disabled={radi === u.id || p(u.id).kod.length !== 6 || !p(u.id).procitao || !p(u.id).ovlascen || !p(u.id).saglasan}>
-                      {t("potpisi_kodom")}
-                    </Dugme>
-                  </div>
-                  <p className="text-xs text-kolo-muted">{t("potpis_napomena")}</p>
-                </div>
-              )}
+              {u.status === "CEKA_POTPIS" && potpisOtvoren === u.id && u.ugovorTekst && potpisBlok(u.id, u.ugovorTekst, "dobra")}
             </Kartica>
           ))
         )}

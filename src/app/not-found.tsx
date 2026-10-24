@@ -3,10 +3,14 @@ import { getLocale } from "next-intl/server";
 import { SistemskiEkran } from "@/components/SistemskiEkran";
 import { NEMA_STRANICE, normalizujJezik } from "@/lib/ekran-poruke";
 
-export const metadata: Metadata = {
-  title: "Stranica nije pronađena",
-  robots: { index: false, follow: false },
-};
+// Naslov kartice pregledača na jeziku čitaoca, iz istog skupa kao ekran.
+export async function generateMetadata(): Promise<Metadata> {
+  const jezik = normalizujJezik(await getLocale());
+  return {
+    title: NEMA_STRANICE[jezik].naslov,
+    robots: { index: false, follow: false },
+  };
+}
 
 /**
  * 404 — ranije je ovde bila Next-ova podrazumevana crno-bela stranica.

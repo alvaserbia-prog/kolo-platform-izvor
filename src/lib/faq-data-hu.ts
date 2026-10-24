@@ -153,6 +153,11 @@ A belépés megnyitja a hirdetések elérhetőségeit, a napi korlát nélküli 
         odgovor: `A szám nincs korlátozva, csak az ütem. Egy napon belül minden megerősítésed és bevezetésed számít, a kapcsolódók listájáról származók is. A harmadiknál és a negyediknél figyelmeztetést kapsz, az ötödik nem kerül bejegyzésre, és a megerősítés éjfélig leáll. Minden más a szokásos módon működik.`,
       },
       {
+        id: 122,
+        pitanje: `Hogyan vezessek be több embert?`,
+        odgovor: `Mindenki csak azokat erősíti meg, akiket személyesen ismer. Egy nap alatt a rendszer egy személytől korlátozott számú megerősítést fogad el, ezért osszátok el a megerősítéseket több napra. Minél többen vagytok a Kolóban, annál gyorsabban megy.`,
+      },
+      {
         id: 119,
         pitanje: `Mi történik, ha az, aki megerősített, távozik, vagy kiderül, hogy a megerősítés hamis?`,
         odgovor: `Ha az, aki megerősített vagy bevezetett, megszünteti a fiókját, a helyzeted és a POEN-ed megmarad. Csak a megállapított hamisság törli őket, ezt pedig személyenként ítélik meg, és nem terjed át azokra, akiket az a személy erősített meg.
@@ -510,7 +515,7 @@ A megjelenítés akkor ér véget, amikor a gazdaság megszűnik, például tör
         pitanje: `Mi a teendő, ha a gazdaságomat valaki más jelentette be?`,
         odgovor: `Jelentkezz az Alapítványnál. Más gazdaságának bejelentése a tagjai tudta nélkül hamis nyilatkozatnak minősül.
 
-Amikor az Alapítvány megállapítja, hogy a nyilatkozat hamis, a gazdaság jóváhagyását megsemmisíti, és a gazdaság megszűnik: a feljegyzett hozzájárulást megsemmisítik, a gazdaság nyilvántartásba vett hozzájárulását pedig leírják mindazoktól, akik abban az időszakban voltak tagok, amelyre a hamis nyilatkozat vonatkozik, azoktól is, akik közben kiléptek, mégpedig akkor is, ha a nyilvántartásuk ezzel negatívvá válik. Mindezekkel a személyekkel szemben kizárást mondanak ki a rendszerből. Mindenki, akit ez érint, értesítést kap, és kifogást nyújthat be.`,
+Amikor az Alapítvány megállapítja, hogy a nyilatkozat hamis, a gazdaság jóváhagyását megsemmisíti, és a gazdaság megszűnik: a feljegyzett hozzájárulást megsemmisítik, a gazdaság nyilvántartásba vett hozzájárulását pedig leírják mindazoktól, akik abban az időszakban voltak tagok, amelyre a hamis nyilatkozat vonatkozik, azoktól is, akik közben kiléptek, mégpedig akkor is, ha a nyilvántartásuk ezzel negatívvá válik. A rendszerből való kizárást csak azzal szemben mondják ki, aki a hamis nyilatkozatot tette vagy tudott róla; a többiektől csak a gazdaság hozzájárulását írják le. Mindenki, akit ez érint, értesítést kap, és kifogást nyújthat be.`,
       },
     ],
   },
@@ -630,7 +635,7 @@ Az első a csökkent képesség: van olyan határozatod az illetékes hatóságt
 
 A második az otthon elvesztése: elemi csapásban, tűzvészben, árvízben vagy kényszerű lakóhelyelhagyás során elvesztetted otthonodat vagy az élethez szükséges vagyonodat. Ez a jogalap az eseménytől számított tizenkét hónapig tart, és magától megszűnik.
 
-A jelentkezéskor csak azt kérdezzük, LÉTEZIK-e a határozat — nem a tartalmát, nem a fokot, nem a munkaképesség értékelését, nem a diagnózist, nem az orvosi dokumentációt. Betegség és otthonvesztés esetén az igazolás a teljes felelősség melletti nyilatkozatod, egyetlen okirat nélkül, egy téged személyesen ismerő Kolo-tag, illetve az Alapítvány megerősítésével.
+A jelentkezéskor csak azt kérdezzük, LÉTEZIK-e a határozat — nem a tartalmát, nem a fokot, nem a munkaképesség értékelését, nem a diagnózist, nem az orvosi dokumentációt. Betegség és otthonvesztés esetén az igazolás a nyilatkozatod, egyetlen okirat nélkül, egy téged személyesen ismerő Kolo-tag, illetve az Alapítvány megerősítésével.
 
 Az összeg fix, napi 2.000 POEN, minden jogalap esetén ugyanannyi. Ez a program nem zárja ki az Anyák Támogatását — mindkettőt megkapod, akkor is, ha mindkettő ugyanarra a gyerekre vonatkozik.
 
@@ -652,7 +657,7 @@ A jelentkezés ugyanazok szerint a szabályok szerint történik, mint a többi 
 
 Az adatokat a platformon egy űrlapba írod be: az Anyák Támogatásánál például a gyerek nevét és születési dátumát. A neked rögzülő összeg a gyerekek számától és életkorától függ.
 
-A feltételek teljesülését ezután, a beírt adatokba való betekintés nélkül és teljes felelősséggel egy Kolo-tag erősíti meg, aki személyesen ismer: aki megerősített, vagy egy másik Kolo-tag, aki ismer. Az a Kolo-tag, aki csak telefonos beszélgetés után vezetett be a Kolóba, valamint a megerősítés nélküli tag erre nem jogosult; ha ilyen Kolo-tag nincs, a feltételek teljesülését az Alapítvány állapítja meg. A kérelmet ezután az Alapítvány hagyja jóvá. A beírt adatok nem nyilvánosak: csak az látja őket, aki a kérelmet feldolgozza. Érzékeny adatokról van szó, ezért csak a kifejezett hozzájárulásoddal kezelik őket, a hozzájárulást pedig bármikor visszavonhatod — ekkor a POEN automatikus bejegyzése is megszűnik.
+A feltételek teljesülését ezután, a beírt adatokba való betekintés nélkül egy Kolo-tag erősíti meg, aki személyesen ismer: aki megerősített, vagy egy másik Kolo-tag, aki ismer. Az a Kolo-tag, aki csak telefonos beszélgetés után vezetett be a Kolóba, valamint a megerősítés nélküli tag erre nem jogosult; ha ilyen Kolo-tag nincs, a feltételek teljesülését az Alapítvány állapítja meg. A kérelmet ezután az Alapítvány hagyja jóvá. A beírt adatok nem nyilvánosak: csak az látja őket, aki a kérelmet feldolgozza. Érzékeny adatokról van szó, ezért csak a kifejezett hozzájárulásoddal kezelik őket, a hozzájárulást pedig bármikor visszavonhatod — ekkor a POEN automatikus bejegyzése is megszűnik.
 
 Az egyes csoportok jogállásának megerősítésére vonatkozó részletes feltételeket a honlapon közzétett, Támogatási programokról szóló szabályzat határozza meg.`,
       },

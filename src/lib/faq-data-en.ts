@@ -142,6 +142,11 @@ Joining opens listing contacts, conversation without a daily limit, programmes, 
         odgovor: `The number is not limited; the pace is. All your confirmations and introductions in one day are counted, including those from the list of connections. With the third and fourth you get a warning, and the fifth is not recorded and confirming stops for you until midnight. Everything else works as usual.`,
       },
       {
+        id: 122,
+        pitanje: `How do I bring in more people?`,
+        odgovor: `Each of you confirms only those you personally know. In one day the system accepts a limited number of confirmations from one person, so spread the confirmations over several days. The more of you are in Kolo, the faster it goes.`,
+      },
+      {
         id: 119,
         pitanje: `What if the person who confirmed me leaves, or the confirmation is found to be false?`,
         odgovor: `If the person who confirmed you or brought you in closes their account, your standing and your POEN remain. Only established falseness cancels them, and it is judged person by person and does not pass to those that person confirmed.
@@ -501,7 +506,7 @@ Being shown ends when the farm ends, for example by being deleted. It can be del
         pitanje: `What if someone else registered my farm?`,
         odgovor: `Contact the Foundation. Registering another person's farm without the knowledge of its members is considered a false declaration.
 
-When the Foundation establishes that a declaration is false, the farm's approval is annulled and the farm is terminated: the noted contribution is annulled, and the recorded farm contribution is written off for everyone who was a member during the period the false declaration concerns, including those who have withdrawn in the meantime, even when their record thereby becomes negative. All those persons are excluded from the system. Everyone affected receives a notification and can lodge a complaint.`,
+When the Foundation establishes that a declaration is false, the farm's approval is annulled and the farm is terminated: the noted contribution is annulled, and the recorded farm contribution is written off for everyone who was a member during the period the false declaration concerns, including those who have withdrawn in the meantime, even when their record thereby becomes negative. Exclusion from the system is imposed only on whoever gave the false declaration or knew of it; for the others, only the farm contribution is written off. Everyone affected receives a notification and can lodge a complaint.`,
       },
     ],
   },
@@ -621,7 +626,7 @@ The first is reduced capacity: you hold a decision of the competent authority es
 
 The second is loss of home: you lost your home, or the property you need to live, in a disaster, a fire, a flood, or forced displacement. That ground lasts twelve months from the event and expires by itself.
 
-The application asks only whether the decision EXISTS — not its content, not the degree, not the assessment of work capacity, not a diagnosis, not medical documentation. For illness and for loss of home the proof is your own declaration under full responsibility, without a single document, together with the confirmation of a Kolo member who knows you personally, or otherwise of the Foundation.
+The application asks only whether the decision EXISTS — not its content, not the degree, not the assessment of work capacity, not a diagnosis, not medical documentation. For illness and for loss of home the proof is your own declaration, without a single document, together with the confirmation of a Kolo member who knows you personally, or otherwise of the Foundation.
 
 The amount is fixed at 2,000 POEN per day, the same on every ground. This programme is not mutually exclusive with Support for Mothers — you receive both, including where both concern the same child.
 
@@ -643,7 +648,7 @@ The application follows the same rules as the other social programmes: through t
 
 You enter the data into a form on the platform: for Support for Mothers, for example, the child's name and date of birth. The amount recorded for you depends on the number and the age of the children.
 
-That the conditions are met is then confirmed, without sight of the data you entered and under full responsibility, by a Kolo member who knows you personally: the person who confirmed you or another Kolo member who knows you. A Kolo member who only introduced you into the Kolo after a phone conversation, and a member without confirmation, cannot do this; if there is no such Kolo member, the Foundation establishes whether the conditions are met. The application is then approved by the Foundation. The data you entered is not public: only the person processing the application sees it. This is sensitive data, so it is processed only with your explicit consent, and you can withdraw that consent at any moment — the automatic recording of POEN then stops as well.
+That the conditions are met is then confirmed, without sight of the data you entered, by a Kolo member who knows you personally: the person who confirmed you or another Kolo member who knows you. A Kolo member who only introduced you into the Kolo after a phone conversation, and a member without confirmation, cannot do this; if there is no such Kolo member, the Foundation establishes whether the conditions are met. The application is then approved by the Foundation. The data you entered is not public: only the person processing the application sees it. This is sensitive data, so it is processed only with your explicit consent, and you can withdraw that consent at any moment — the automatic recording of POEN then stops as well.
 
 The closer conditions by which the status is confirmed for each group are set by the Rules on support programmes, published on the site.`,
       },

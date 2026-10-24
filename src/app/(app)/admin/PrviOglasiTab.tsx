@@ -15,7 +15,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { intlTag } from "@/lib/format";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import Image from "next/image";
 import Pseudonim from "@/components/Pseudonim";
@@ -57,6 +57,7 @@ const PRIKAZI: [Prikaz, string][] = [
 
 export default function PrviOglasiTab({ onDone }: { onDone?: () => void }) {
   const locale = useLocale();
+  const ta = useTranslations("admin");
   // Pod-prikaz živi u adresi, da „nazad" sa oglasa ili profila
   // vrati na isti spisak.
   const [prikazIzAdrese, setPrikaz] = useStanjeUAdresi("prikaz", "cekanje");
@@ -139,6 +140,8 @@ export default function PrviOglasiTab({ onDone }: { onDone?: () => void }) {
   return (
     <div className="space-y-4">
       {dijalog}
+      {/* Registar 2026-10, P3-M1: odobrenje proverava i zabranjena dobra (Pravilnik čl. 40a). */}
+      <p className="text-xs text-kolo-muted">{ta("zabranjeno_dobro_podsetnik")}</p>
       <Obavestenje vrsta="info">
         Prvi oglas članova <strong>bez potvrde</strong>. Oglas je već na Pijaci — ovde se odlučuje
         samo o doprinosu od 1.000 POEN (Pravilnik čl. 40a). Odobrenjem POEN ulazi u opticaj, a

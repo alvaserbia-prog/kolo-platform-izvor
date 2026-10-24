@@ -3,7 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { jeAdmin } from "@/lib/dozvole";
+import { jeAdmin, jeZadruzniAdmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
 import { upisiZadrugu, ZadrugaGreska, PRAGOVI_RASTA, type PodaciZadruge } from "@/lib/protokol/zadruga";
 
@@ -11,18 +11,21 @@ import { upisiZadrugu, ZadrugaGreska, PRAGOVI_RASTA, type PodaciZadruge } from "
  * GET  /api/admin/zadruge — sve zadruge sa zadrugarima, zapisom i pragovima
  * POST /api/admin/zadruge — upis zadruge u sistem (Pravilnik o zadrugama čl. 5)
  *
- * 🔴 Ime i prezime zadrugara izlazi SAMO ovde, u administratorski tim (čl. 19,
- * Registar radnji obrade br. 19) — nijedna korisnička ruta ga ne vraća.
+ * 🔴 Ime i prezime i broj telefona zadrugara izlaze SAMO ovde: administratorskom
+ * timu i zadružnom adminu za njegovu zadrugu (čl. 16, 19, Registar radnji obrade
+ * br. 19) — nijedna korisnička ruta ih ne vraća.
  */
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  const me = await prisma.user.findUnique({ where: { id: session.user.id }, select: { admin: true } });
-  if (!jeAdmin(me)) return await greska("Nemate ovlašćenje.", 403);
+  const me = await prisma.user.findUnique({ where: { id: session.user.id }, select: { admin: true, adminZadrugaId: true } });
+  // Zadružni admin (U2) vidi samo svoju zadrugu; bez dodeljene zadruge ne vidi ništa.
+  const samoSvoja = jeZadruzniAdmin(me);
+  if (!jeAdmin(me) && !(samoSvoja && me?.adminZadrugaId)) return await greska("Nemate ovlašćenje.", 403);
 
   const [zadruge, krugovi] = await Promise.all([
     prisma.krug.findMany({
-      where: { zadruga: true },
+      where: samoSvoja ? { zadruga: true, id: me!.adminZadrugaId! } : { zadruga: true },
       orderBy: { createdAt: "asc" },
       include: {
         wallet: { select: { balance: true } },
@@ -34,16 +37,17 @@ export async function GET() {
             id: true,
             imePrezime: true,
             joinedAt: true,
-            user: { select: { id: true, pseudonim: true, identitet: { select: { imePrezime: true } } } },
+            user: { select: { id: true, pseudonim: true, telefon: true, identitet: { select: { imePrezime: true } } } },
           },
         },
       },
     }),
-    // Krug koji se može upisati kao zadruga (čl. 11 st. 3).
-    prisma.krug.findMany({ where: { zadruga: false }, select: { id: true, name: true, location: true } }),
+    // Krug koji se može upisati kao zadruga (čl. 11 st. 3) — upis vrši samo admin.
+    samoSvoja ? Promise.resolve([]) : prisma.krug.findMany({ where: { zadruga: false }, select: { id: true, name: true, location: true } }),
   ]);
 
   return NextResponse.json({
+    samoSvoja,
     pragovi: PRAGOVI_RASTA,
     krugovi,
     zadruge: zadruge.map((z) => ({
@@ -63,6 +67,8 @@ export async function GET() {
         pseudonim: m.user.pseudonim,
         // Evidencija identiteta (set 4.7.3); zatečeni zadrugari nose ime na članstvu.
         imePrezime: m.user.identitet?.imePrezime ?? m.imePrezime,
+        // Broj sa profila — zadruzi treba za rad sa zadrugarima (odluka vlasnika, U2).
+        telefon: m.user.telefon,
         od: m.joinedAt.toISOString(),
       })),
     })),

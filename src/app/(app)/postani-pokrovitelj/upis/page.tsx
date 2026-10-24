@@ -8,7 +8,10 @@ import { predlogIzGazdinstva } from "@/lib/protokol/upis-pokrovitelja";
 import UpisForma from "./UpisForma";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 
-export const metadata = { title: "Upis pokrovitelja — KOLO" };
+export async function generateMetadata() {
+  const t = await getTranslations("postaniPokrovitelj");
+  return { title: `${t("upis_naslov")} — KOLO` };
+}
 
 /**
  * Upis pokrovitelja u evidenciju (donacije čl. 6a): izbor — pravno lice odnosno

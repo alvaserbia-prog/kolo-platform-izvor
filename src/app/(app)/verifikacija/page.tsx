@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 /**
  * /verifikacija — stranica Potvrde (dokaz stvarnosti, set 4.8.2; spec §4.4).
  *
@@ -44,6 +45,12 @@ import MojeOznake, { type VerifikovanaOsoba } from "@/components/verifikacija/Mo
 import PrijaviVerifikaciju from "@/components/verifikacija/PrijaviVerifikaciju";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import { klaseDugmeta } from "@/components/ui/Dugme";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("verifikacija");
+  return { title: t("page_naslov") };
+}
 
 const POLJA_POTVRDJENOSTI = {
   maloletan: true,
@@ -134,6 +141,7 @@ export default async function VerifikacijaPage() {
       cekaDoprinos: v.poenStatus === PotvrdaPoenStatus.ZABELEZEN,
       vrsta: v.vrsta,
       potvrdjen: potvrdjenIzPolja(v.verifikovani),
+      statusNadzora: (!v.podlezeNadzoru ? "ne-podleze" : v.nadzornikId ? "nadzirano" : "ceka-nadzor") as VerifikovanaOsoba["statusNadzora"],
     }))
     .sort((a, b) => Number(b.cekaDoprinos) - Number(a.cekaDoprinos));
 
@@ -195,7 +203,13 @@ export default async function VerifikacijaPage() {
             <ZelimDaMeNekoNazove osnovi={[]} mojZahtev={moj} radiPotvrde uslov={uslovRazgovora} />
           )}
 
-          {/* Spisak povezanih (čl. 5d) — prvi posao novog člana Kola. */}
+          {/* „Čeka na tebe" ide pre obrasca (odluka vlasnika, 24.10.2026): tuđi zahtevi
+              koji čekaju — spisak za poziv (crveni krug kad rok prođe, dokaz čl. 4a;
+              Uslovi čl. 16b st. 3), zahtevi za potvrdu postojanja deteta (deca čl. 6)
+              i spisak povezanih (čl. 5d). Samo član Kola, čuvar Kola i osnivač. Sidra
+              `#zahtevi`, `#postojanje-deteta` i `#povezani` nose same komponente. */}
+          {potvrdjen && <SpisakZaPoziv />}
+          {potvrdjen && <ZahteviPostojanjaDeteta />}
           {potvrdjen && <SpisakPovezanih />}
 
           {mozeDaVerifikuje && (
@@ -206,17 +220,10 @@ export default async function VerifikacijaPage() {
             />
           )}
 
-          {/* Spisak „Žele da ih neko nazove" (dokaz čl. 4a, 5 st. 7; Uslovi čl. 16b
-              st. 3) i zahtevi za potvrdu postojanja deteta (deca čl. 6) — samo član
-              Kola, čuvar Kola i osnivač. Sidra `#zahtevi` i `#postojanje-deteta`
-              nose same komponente (stari linkovi iz obaveštenja). */}
-          {potvrdjen && <SpisakZaPoziv />}
-          {potvrdjen && <ZahteviPostojanjaDeteta />}
-
           {/* Zabeležene potvrde stoje LEVO, ispod koda i potvrđivanja, a pored lanca
               potvrda (odluka vlasnika, 20.10.2026). */}
           {(cekaMoje > 0 || cekaDate.length > 0) && (
-            <div className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
+            <div id="zabelezene" className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
               <h2 className="text-sm font-semibold text-kolo-text">{t("ceka_naslov")}</h2>
               {cekaMoje > 0 && (
                 <p className="mt-2 text-sm text-kolo-text">
@@ -236,6 +243,9 @@ export default async function VerifikacijaPage() {
               <p className="mt-2 text-sm text-kolo-muted">{t("ceka_opis")}</p>
               {/* 🔴 Klase `kolo-dugme-primarno`/`-sekundarno` NE POSTOJE — dugme ide
                   kroz `klaseDugmeta()` iz dizajn sistema. */}
+              {/* Samo „Objavi ponudu" (odluka vlasnika, 24.10.2026): dugme „Doniraj"
+                  pored „čeka te 1.000 POENA" čitalo se kao „uplati pa dobij POEN" —
+                  POEN se ne kupuje, a donacija nije njegova cena. */}
               {cekaMoje > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   <a
@@ -243,12 +253,6 @@ export default async function VerifikacijaPage() {
                     className={klaseDugmeta()}
                   >
                     {t("ceka_dugme_oglas")}
-                  </a>
-                  <a
-                    href="/donacije"
-                    className={klaseDugmeta({ varijanta: "sekundarno" })}
-                  >
-                    {t("ceka_dugme_donacija")}
                   </a>
                 </div>
               )}
@@ -262,6 +266,8 @@ export default async function VerifikacijaPage() {
             ja={{ pseudonim: user.pseudonim }}
             verifikatori={verifikatorCvorovi}
             verifikovani={verifikovaniCvorovi}
+            // Koga je potvrdio stoji jednom — u spisku sa oznakama ispod.
+            verifikovaniIspod={mozeDaVerifikuje}
             jeJaPocetni={user.jeOsnivac}
           />
         </div>

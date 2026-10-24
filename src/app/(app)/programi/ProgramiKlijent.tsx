@@ -9,6 +9,11 @@ import { useDijalog } from "@/components/ui/Dijalog";
 import { useState, useCallback, memo } from "react";
 import { intlTag } from "@/lib/format";
 import Link from "next/link";
+import {
+  MAJKE_OSNOVICA, MAJKE_UMANJENJE_PO_GODINI, MAJKE_TRAJANJE_GODINA,
+  STARIJI_OSNOVICA, STARIJI_PO_GODINI, STARIJI_OD_GODINA,
+  POSEBNA_PODRSKA_DNEVNO, SKOLOVANJE_DNEVNO,
+} from "@/lib/programi-iznosi-pravila";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import DatumRodjenja from "@/components/DatumRodjenja";
@@ -103,14 +108,13 @@ export default function ProgramiKlijent({ programi, pedAktivan, brojAktivnih, is
     if (res.ok) setTimeout(() => router.refresh(), 1200);
   }, [t, tc, router, potvrdi]);
 
-  const { opticaj, dnevniLimit, emitovanoAm, zahtevanoAm } = emisioniKontekst;
-  const emitovanoPct = dnevniLimit > 0 && emitovanoAm !== null ? Math.min(100, Math.round((emitovanoAm / dnevniLimit) * 100)) : 0;
 
   return (
     <div className="space-y-6">
       {dijalog}
       <NaslovStranice
         naslov={t("naslov")}
+        opis={t("uvod")}
         radnja={
           totalOcekivano > 0 ? (
             <div className="bg-kolo-green-100 rounded-kontrola px-4 py-2 text-center">
@@ -125,46 +129,7 @@ export default function ProgramiKlijent({ programi, pedAktivan, brojAktivnih, is
       {!isVerified && <Obavestenje vrsta="upozorenje">{t("nije_verifikovan")}</Obavestenje>}
       {isVerified && !imaPristupProgramima && <Obavestenje vrsta="upozorenje">{t("nepun_indeks")}</Obavestenje>}
 
-      {/* Emisioni kontekst */}
-      <Kartica className="space-y-3">
-        <div className="grid grid-cols-2 gap-3 text-center">
-          <div>
-            <p className="text-xs text-kolo-muted mb-0.5">{t("opticaj")}</p>
-            <p className="text-base font-bold text-kolo-text">{opticaj.toLocaleString(intlTag(locale))}</p>
-          </div>
-          <div>
-            <p className="text-xs text-kolo-muted mb-0.5">{t("dnevni_limit")}</p>
-            <p className="text-base font-bold text-kolo-text">{dnevniLimit.toLocaleString(intlTag(locale))}</p>
-          </div>
-          <div>
-            <p className="text-xs text-kolo-muted mb-0.5">{t("emitovano_danas")}</p>
-            <p className={`text-base font-bold ${emitovanoAm !== null && emitovanoAm > 0 ? "text-kolo-green-700" : "text-kolo-muted"}`}>
-              {emitovanoAm !== null ? emitovanoAm.toLocaleString(intlTag(locale)) : "—"}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-kolo-muted mb-0.5">{t("aktivni_programi")}</p>
-            <p className="text-base font-bold text-kolo-text">{brojAktivnih.toLocaleString(intlTag(locale))}</p>
-          </div>
-        </div>
-        {dnevniLimit > 0 && (
-          <div>
-            <div className="flex justify-between text-xs text-kolo-muted mb-1">
-              <span>{t("iskorišcenost")}</span>
-              <span>{emitovanoPct}%{zahtevanoAm !== null && zahtevanoAm > dnevniLimit ? t("limit_dostignut") : ""}</span>
-            </div>
-            <div className="h-2 bg-kolo-bg rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${emitovanoPct >= 100 ? "bg-kolo-danger" : emitovanoPct >= 75 ? "bg-kolo-gold-400" : "bg-kolo-green-500"}`}
-                style={{ width: `${emitovanoPct}%` }}
-              />
-            </div>
-          </div>
-        )}
-      </Kartica>
-
       <div className="space-y-3">
-        <OperativniKartica aktivan={pedAktivan} />
         {programi.map((p) => (
           <ProgramKartica
             key={p.type}
@@ -181,39 +146,13 @@ export default function ProgramiKlijent({ programi, pedAktivan, brojAktivnih, is
           />
         ))}
       </div>
+      {/* Brojke sistema (dnevni okvir) i kartica operativnog doprinosa su sklonjene
+          (C2, uloga 1, 24.10.2026): brojke služe obračunu, ne čoveku, a Zadaci imaju
+          svoju stranicu. Ostaje jedan red-veza. */}
+      <p className="text-sm text-kolo-muted">
+        <Link href="/doprinos-oglasi" className="font-semibold text-kolo-green-700 hover:underline">{t("zadaci_link")}</Link>
+      </p>
     </div>
-  );
-}
-
-// ── Kartica operativnog doprinosa (PED — ide kroz zadatke, ne kroz enrollment) ─
-
-function OperativniKartica({ aktivan }: { aktivan: boolean }) {
-  const t = useTranslations("programi");
-  const tc = useTranslations("common");
-
-  return (
-    <Kartica padding="nema" className="overflow-hidden">
-      <div className="px-5 py-4 flex justify-between items-start">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-semibold text-kolo-text">{t("operativni_naslov")}</p>
-            {aktivan ? (
-              <span className="text-xs px-2 py-0.5 rounded-lg border font-medium bg-kolo-green-100 text-kolo-green-700 border-kolo-green-100">
-                {t("status_aktivan")}
-              </span>
-            ) : (
-              <span className="text-xs bg-kolo-bg text-kolo-muted px-2 py-0.5 rounded-lg">{tc("neaktivan")}</span>
-            )}
-          </div>
-          <p className="text-xs text-kolo-muted mt-0.5">{t("opis_operativni")}</p>
-        </div>
-        <div className="ml-4 shrink-0">
-          <Link href="/doprinos-oglasi" className={klaseDugmeta({ velicina: "sm" })}>
-            {t("operativni_link")}
-          </Link>
-        </div>
-      </div>
-    </Kartica>
   );
 }
 
@@ -527,12 +466,14 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function opisPrograma(type: string, t: (key: string) => string): string {
+function opisPrograma(type: string, t: (key: string, v?: Record<string, string | number>) => string): string {
+  const fmt = (n: number) => n.toLocaleString("sr-RS");
   const mapa: Record<string, string> = {
-    PODRSKA_MAJKAMA:   t("opis_majkama"),
-    PODRSKA_STARIJIMA: t("opis_starijima"),
-    POSEBNA_BRIGA:     t("opis_posebna_briga"),
-    SKOLOVANJE:        t("opis_skolovanje"),
+    // Iznosi se čitaju iz pravila (pravilo 10), ne prepisuju u tekst.
+    PODRSKA_MAJKAMA:   t("opis_majkama_n", { osnovica: fmt(MAJKE_OSNOVICA), umanjenje: fmt(MAJKE_UMANJENJE_PO_GODINI), trajanje: MAJKE_TRAJANJE_GODINA }),
+    PODRSKA_STARIJIMA: t("opis_starijima_n", { osnovica: fmt(STARIJI_OSNOVICA), poGodini: fmt(STARIJI_PO_GODINI), od: STARIJI_OD_GODINA }),
+    POSEBNA_BRIGA:     t("opis_posebna_briga_n", { iznos: fmt(POSEBNA_PODRSKA_DNEVNO) }),
+    SKOLOVANJE:        t("opis_skolovanje_n", { iznos: fmt(SKOLOVANJE_DNEVNO) }),
   };
   return mapa[type] ?? "";
 }

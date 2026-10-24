@@ -2,7 +2,7 @@ import AppShell from "@/components/AppShell";
 import PublicHeader from "@/components/PublicHeader";
 import PublicFooter from "@/components/PublicFooter";
 import { sesija } from "@/lib/sesija";
-import { jeAdmin, mozeNadzor } from "@/lib/dozvole";
+import { jeAdmin, jeZadruzniAdmin, mozeNadzor } from "@/lib/dozvole";
 
 /**
  * Sistem ima sopstveni raspored, kao Zadruge i Škole (odluka vlasnika, 24.10.2026):
@@ -17,7 +17,7 @@ export default async function SistemLayout({ children }: { children: React.React
     return (
       <AppShell
         verified={session.user.verified}
-        isAdmin={jeAdmin(session.user)}
+        isAdmin={jeAdmin(session.user) || jeZadruzniAdmin(session.user)}
         jeNadzornik={mozeNadzor(session.user)}
       >
         {children}

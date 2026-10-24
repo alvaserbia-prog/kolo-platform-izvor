@@ -9,7 +9,7 @@ import { WalletType } from "@/generated/prisma/client";
 import { obavestiAdmineNoviKorisnik } from "@/lib/notifikacije";
 import { posaljiAdminAlert } from "@/lib/adminAlert";
 import { getLocale } from "next-intl/server";
-import { oba, PORUKA_PRISTANAK_OBAVEZAN, upisiPristankeRegistracije } from "@/lib/protokol/pristanak";
+import { oba, PORUKA_PRISTANAK_OBAVEZAN, PORUKA_PUNOLETSTVO_OBAVEZNO, punoletstvoIzjavljeno, upisiPristankeRegistracije } from "@/lib/protokol/pristanak";
 import { posaljiPotvrduAdrese } from "@/lib/protokol/potvrda-adrese";
 
 export async function POST(req: NextRequest) {
@@ -32,6 +32,10 @@ export async function POST(req: NextRequest) {
   if (!oba(body.prihvatamUslove, body.prihvatamPolitiku)) {
     return await greska(PORUKA_PRISTANAK_OBAVEZAN, 400);
   }
+  // D2-M1: izričita izjava o punoletstvu, kao i pri registraciji lozinkom.
+  if (!punoletstvoIzjavljeno(body.punoletan)) {
+    return await greska(PORUKA_PUNOLETSTVO_OBAVEZNO, 400);
+  }
   const trimmed = pseudonim.trim();
   const jezik = await getLocale();
 
@@ -50,7 +54,7 @@ export async function POST(req: NextRequest) {
         where: { id },
         data: { ...poljaPseudonima(trimmed), oauthPending: false, jezik },
       });
-      await upisiPristankeRegistracije(tx, id, jezik, "oauth");
+      await upisiPristankeRegistracije(tx, id, jezik, "oauth", { punoletstvo: true });
     });
     return NextResponse.json({ ok: true, userId: id });
   }
@@ -70,7 +74,7 @@ export async function POST(req: NextRequest) {
         where: { id: postojeci.id },
         data: { ...poljaPseudonima(trimmed), oauthPending: false, jezik },
       });
-      await upisiPristankeRegistracije(tx, postojeci.id, jezik, "oauth");
+      await upisiPristankeRegistracije(tx, postojeci.id, jezik, "oauth", { punoletstvo: true });
     });
     return NextResponse.json({ ok: true, userId: postojeci.id });
   }
@@ -96,7 +100,7 @@ export async function POST(req: NextRequest) {
         data: { userId: u.id, punoIme: session.user.pendingPunoIme },
       });
     }
-    await upisiPristankeRegistracije(tx, u.id, jezik, "oauth");
+    await upisiPristankeRegistracije(tx, u.id, jezik, "oauth", { punoletstvo: true });
     return u;
   });
 

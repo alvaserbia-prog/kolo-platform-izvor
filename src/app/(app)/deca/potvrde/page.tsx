@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("deca");
+  return { title: t("naslov") };
+}
 
 /**
  * Stara adresa ekrana izjašnjenja o postojanju deteta (postupak od 60 dana, ukinut

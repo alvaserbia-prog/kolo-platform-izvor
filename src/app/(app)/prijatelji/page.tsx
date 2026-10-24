@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { ucitajUcesnika } from "@/lib/protokol/deca";
 import PrijateljiKlijent from "./PrijateljiKlijent";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("prijatelji");
+  return { title: t("naslov") };
+}
 
 /**
  * Prijatelji — dečja zamena za stranicu Potvrde.

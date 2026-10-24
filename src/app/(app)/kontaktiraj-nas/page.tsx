@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { getTranslations } from "next-intl/server";
@@ -13,6 +14,12 @@ import {
 } from "@/lib/protokol/zahtev-razgovor";
 import KontaktObrazac from "./KontaktObrazac";
 import NaslovStranice from "@/components/ui/NaslovStranice";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("kontakt");
+  return { title: t("naslov") };
+}
 
 /**
  * „Želim da me neko nazove" — ulazak na spisak za poziv (dokaz stvarnosti čl. 4a;

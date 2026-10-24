@@ -30,8 +30,9 @@ export async function upisiPristankeRegistracije(
   userId: string,
   jezik: string,
   izvor: IzvorPristanka,
+  opcije: { punoletstvo?: boolean } = {},
 ): Promise<void> {
-  const stavke = pristanciPriRegistraciji(jezik);
+  const stavke = pristanciPriRegistraciji(jezik, opcije);
   // `skipDuplicates` nad `@@unique([userId, vrsta, verzija])` — dupli submit
   // obrasca i dovršavanje OAuth naloga koji je red već imao ne prave drugi zapis.
   await tx.zapisPristanka.createMany({

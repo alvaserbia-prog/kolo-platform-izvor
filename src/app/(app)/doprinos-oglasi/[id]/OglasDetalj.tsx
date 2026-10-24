@@ -24,6 +24,7 @@ interface EvidencijaItem {
   id: string;
   date: string;
   predlozeniPoen: number;
+  celina: number | null;
   amount: number;
   dokaz: string | null;
   description: string;
@@ -36,6 +37,9 @@ interface OglasData {
   description: string;
   source: string;
   predlozeniPoen: number;
+  brojCelina: number | null;
+  opisCeline: string | null;
+  procenaObima: string | null;
   obrazlozenje: string | null;
   saOdobravanjem: boolean;
   positions: number;
@@ -153,6 +157,13 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
           </div>
         </div>
 
+        {oglas.brojCelina != null && oglas.opisCeline && (
+          <div className="text-sm text-kolo-muted bg-kolo-bg rounded-kontrola p-3 space-y-1">
+            <p><span className="font-semibold text-kolo-text">{t("celina_opis_label")}: </span>{oglas.opisCeline}</p>
+            <p>{t("celine_info", { po: Math.floor(oglas.predlozeniPoen / oglas.brojCelina).toLocaleString(intlTag(locale)), broj: oglas.brojCelina })}</p>
+          </div>
+        )}
+
         {oglas.deadline && (
           <p className="text-xs text-kolo-muted">
             {t("rok_za_prijavu")}: <strong className="text-kolo-muted">{new Date(oglas.deadline).toLocaleDateString(intlTag(locale), { day: "2-digit", month: "long", year: "numeric" })}</strong>
@@ -230,6 +241,11 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
         <EvidencijaForma
           oglasId={oglas.id}
           maxPredlozeni={oglas.predlozeniPoen}
+          celine={oglas.brojCelina != null ? {
+            broj: oglas.brojCelina,
+            poPoCelini: Math.floor(oglas.predlozeniPoen / oglas.brojCelina),
+            preostalo: oglas.brojCelina - oglas.mojeEvidencije.filter((e) => e.status !== "REJECTED").reduce((z, e) => z + (e.celina ?? 0), 0),
+          } : null}
           onSuccess={() => router.refresh()}
         />
       )}
@@ -253,7 +269,7 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
                   )}
                   <div className="min-w-0">
                     <p className="text-sm text-kolo-text">{new Date(e.date).toLocaleDateString(intlTag(locale), { day: "2-digit", month: "short", year: "numeric" })}</p>
-                    <p className="text-xs text-kolo-muted mt-0.5 line-clamp-1">{e.description}</p>
+                    <p className="text-xs text-kolo-muted mt-0.5 line-clamp-1">{e.celina != null ? `${t("ev_celina", { broj: e.celina })} · ` : ""}{e.description}</p>
                   </div>
                 </div>
                 <div className="shrink-0 text-right">
@@ -275,22 +291,28 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
 
 // ── Forma za unos dnevnog izvršenja ─────────────────────────────────────────────
 
-function EvidencijaForma({ oglasId, maxPredlozeni, onSuccess }: {
+function EvidencijaForma({ oglasId, maxPredlozeni, celine, onSuccess }: {
   oglasId: string;
   maxPredlozeni: number;
+  /** Zadatak sa celinama (čl. 18; S1): izvršilac navodi broj celina, iznos ne bira. NULL = zatečen zadatak. */
+  celine: { broj: number; poPoCelini: number; preostalo: number } | null;
   onSuccess: () => void;
 }) {
   const locale = useLocale();
   const t = useTranslations("doprinosOglasi");
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
   const [predlozeniPoen, setPredlozeniPoen] = useState("");
+  const [brojCelina, setBrojCelina] = useState("1");
   const [description, setDescription] = useState("");
   const [dokazSlika, setDokazSlika] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const predlozeni = Number(predlozeniPoen);
+  const brojIzvrsenih = Number(brojCelina);
+  const predlozeni = celine
+    ? (Number.isInteger(brojIzvrsenih) && brojIzvrsenih > 0 ? brojIzvrsenih * celine.poPoCelini : 0)
+    : Number(predlozeniPoen);
 
   // Max datum = danas, min datum = 3 dana unazad
   const maxDate = new Date().toISOString().split("T")[0];
@@ -299,8 +321,13 @@ function EvidencijaForma({ oglasId, maxPredlozeni, onSuccess }: {
 
   async function handleSubmit() {
     setError("");
-    if (!predlozeniPoen || !Number.isInteger(predlozeni) || predlozeni < 1) { setError(t("ev_greska_poen_pozitivan")); return; }
-    if (maxPredlozeni > 0 && predlozeni > maxPredlozeni) { setError(t("ev_greska_poen_max", { max: maxPredlozeni.toLocaleString(intlTag(locale)) })); return; }
+    if (celine) {
+      if (!Number.isInteger(brojIzvrsenih) || brojIzvrsenih < 1) { setError(t("ev_greska_celina")); return; }
+      if (brojIzvrsenih > celine.preostalo) { setError(t("ev_greska_celina_max", { broj: celine.preostalo })); return; }
+    } else {
+      if (!predlozeniPoen || !Number.isInteger(predlozeni) || predlozeni < 1) { setError(t("ev_greska_poen_pozitivan")); return; }
+      if (maxPredlozeni > 0 && predlozeni > maxPredlozeni) { setError(t("ev_greska_poen_max", { max: maxPredlozeni.toLocaleString(intlTag(locale)) })); return; }
+    }
     if (!description.trim() || description.trim().length < 10) { setError(t("ev_greska_opis_min10")); return; }
     if (dokazSlika) {
       if (!["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(dokazSlika.type)) { setError(t("ev_greska_dokaz_format")); return; }
@@ -311,7 +338,8 @@ function EvidencijaForma({ oglasId, maxPredlozeni, onSuccess }: {
     try {
       const fd = new FormData();
       fd.append("date", date);
-      fd.append("predlozeniPoen", String(predlozeni));
+      if (celine) fd.append("celina", String(brojIzvrsenih));
+      else fd.append("predlozeniPoen", String(predlozeni));
       fd.append("description", description.trim());
       if (dokazSlika) fd.append("dokazSlika", dokazSlika);
       const res = await fetch(`/api/doprinos-oglasi/${oglasId}/evidencija`, {
@@ -321,7 +349,7 @@ function EvidencijaForma({ oglasId, maxPredlozeni, onSuccess }: {
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? t("greska")); return; }
       setSuccess(true);
-      setDescription(""); setPredlozeniPoen(""); setDokazSlika(null);
+      setDescription(""); setPredlozeniPoen(""); setBrojCelina("1"); setDokazSlika(null);
       setTimeout(onSuccess, 1200);
     } finally {
       setLoading(false);
@@ -339,7 +367,7 @@ function EvidencijaForma({ oglasId, maxPredlozeni, onSuccess }: {
   return (
     <Kartica className="space-y-4">
       <div className="flex flex-wrap gap-2 justify-between items-center">
-        <h3 className="text-sm font-semibold text-kolo-muted">{t("evidentiraj_dnevno")}</h3>
+        <h3 className="text-sm font-semibold text-kolo-muted">{celine ? t("evidentiraj_celine") : t("evidentiraj_dnevno")}</h3>
         {predlozeni > 0 && (
           <span className="text-sm font-bold text-kolo-green-700">{t("ev_iznos_predlozeno", { iznos: predlozeni.toLocaleString(intlTag(locale)) })}</span>
         )}
@@ -351,17 +379,29 @@ function EvidencijaForma({ oglasId, maxPredlozeni, onSuccess }: {
             onChange={(e) => setDate(e.target.value)}
             className={KLASE_UNOSA} />
         </Polje>
-        <div>
-          <label htmlFor="ev-predlozeni-poen" className="mb-1.5 block text-sm font-medium text-kolo-text">{maxPredlozeni > 0 ? t("predlozeni_poen_max", { max: maxPredlozeni.toLocaleString(intlTag(locale)) }) : t("predlozeni_poen_bez_max")}</label>
-          <input id="ev-predlozeni-poen" type="number" min={1} max={maxPredlozeni > 0 ? maxPredlozeni : undefined} step={1} value={predlozeniPoen}
-            onChange={(e) => setPredlozeniPoen(e.target.value)}
-            placeholder={t("predlozeni_poen_placeholder")}
-            className={KLASE_UNOSA} />
-          {/* Definiciona rečenica uz samo polje — isti posao koji
-              `novcanik.send_napomena` radi za prepis. Bez nje polje za unos
-              iznosa čita se kao fakturisanje rada. */}
-          <p className="mt-1.5 text-[11px] leading-snug text-kolo-muted">{t("predlozeni_napomena")}</p>
-        </div>
+        {celine ? (
+          <div>
+            <label htmlFor="ev-broj-celina" className="mb-1.5 block text-sm font-medium text-kolo-text">{t("broj_celina_label")}</label>
+            <input id="ev-broj-celina" type="number" min={1} max={celine.preostalo} step={1} value={brojCelina}
+              onChange={(e) => setBrojCelina(e.target.value)}
+              className={KLASE_UNOSA} />
+            <p className="mt-1 text-xs text-kolo-muted">{t("celine_preostalo", { broj: celine.preostalo })}</p>
+            {/* Definiciona rečenica uz polje: celina je deo posla, iznos nije izvršiočev. */}
+            <p className="mt-1.5 text-[11px] leading-snug text-kolo-muted">{t("celine_napomena")}</p>
+          </div>
+        ) : (
+          <div>
+            <label htmlFor="ev-predlozeni-poen" className="mb-1.5 block text-sm font-medium text-kolo-text">{maxPredlozeni > 0 ? t("predlozeni_poen_max", { max: maxPredlozeni.toLocaleString(intlTag(locale)) }) : t("predlozeni_poen_bez_max")}</label>
+            <input id="ev-predlozeni-poen" type="number" min={1} max={maxPredlozeni > 0 ? maxPredlozeni : undefined} step={1} value={predlozeniPoen}
+              onChange={(e) => setPredlozeniPoen(e.target.value)}
+              placeholder={t("predlozeni_poen_placeholder")}
+              className={KLASE_UNOSA} />
+            {/* Definiciona rečenica uz samo polje — isti posao koji
+                `novcanik.send_napomena` radi za prepis. Bez nje polje za unos
+                iznosa čita se kao fakturisanje rada. */}
+            <p className="mt-1.5 text-[11px] leading-snug text-kolo-muted">{t("predlozeni_napomena")}</p>
+          </div>
+        )}
       </div>
 
       <Polje oznaka={t("opis_izvrsenja_label")}>
@@ -379,7 +419,7 @@ function EvidencijaForma({ oglasId, maxPredlozeni, onSuccess }: {
       {error && <Obavestenje vrsta="greska">{error}</Obavestenje>}
 
       <Dugme velicina="lg" punaSirina onClick={handleSubmit} disabled={loading}>
-        {loading ? t("saljem") : t("posalji_dnevno")}
+        {loading ? t("saljem") : celine ? t("posalji_celine") : t("posalji_dnevno")}
       </Dugme>
     </Kartica>
   );

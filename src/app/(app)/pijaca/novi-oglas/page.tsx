@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import NoviOglasForma from "./NoviOglasForma";
 import { upravljackoClanstvo } from "@/lib/protokol/gazdinstvo";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("pijaca");
+  return { title: t("novi_oglas") };
+}
 
 export default async function NoviOglasPage({
   searchParams,

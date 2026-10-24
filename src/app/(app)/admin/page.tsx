@@ -7,7 +7,7 @@ import { ADMIN_TABOVI, type Tab } from "./tabovi";
 import { labelPrograma } from "@/lib/protokol/programi";
 import { ProgramType } from "@/generated/prisma/client";
 import { UKUPNO_ZRNA } from "@/lib/protokol/zrno";
-import { jeAdmin, jeSuperadmin } from "@/lib/dozvole";
+import { jeAdmin, jeSuperadmin, jeZadruzniAdmin } from "@/lib/dozvole";
 import { brojeviClanova, brojeviStatusa, USLOVI_STATUSA } from "@/lib/admin-clanovi";
 import { IZBOR_STATUSA, statusUcesnika, ucitajStatus, type StatusUcesnika } from "@/lib/protokol/status";
 
@@ -19,6 +19,8 @@ export default async function AdminPage({
   searchParams: Promise<{ tab?: string }>;
 }) {
   const session = await getServerSession(authOptions);
+  // Zadružni admin (U2) nema pristup panelu — samo ekranu svoje zadruge.
+  if (session && jeZadruzniAdmin(session.user)) redirect("/admin/zadruga");
   if (!session || !jeAdmin(session.user)) redirect("/dashboard");
   const viewerJeSuperadmin = jeSuperadmin(session.user);
 
@@ -257,7 +259,8 @@ export default async function AdminPage({
         oglasi: zaposljavanjeData[0].map((o) => ({
           id: o.id, title: o.title, description: o.description, obrazlozenje: o.obrazlozenje,
           source: o.source as string,
-          predlozeniPoen: o.predlozeniPoen, saOdobravanjem: o.saOdobravanjem, positions: o.positions,
+          predlozeniPoen: o.predlozeniPoen, brojCelina: o.brojCelina, opisCeline: o.opisCeline, procenaObima: o.procenaObima,
+          saOdobravanjem: o.saOdobravanjem, positions: o.positions,
           deadline: o.deadline?.toISOString() ?? null, status: o.status as string,
           createdByPseudonim: o.createdBy.pseudonim, krugName: o.krug?.name ?? null,
           ukupnoPrijava: o._count.prijave, pendingEvidencija: o._count.evidencije,
@@ -271,7 +274,7 @@ export default async function AdminPage({
         })),
         pendingEvidencije: zaposljavanjeData[2].map((e) => ({
           id: e.id, pseudonim: e.user.pseudonim, oglasTitle: e.oglas.title,
-          date: e.date.toISOString(), predlozeniPoen: e.predlozeniPoen,
+          date: e.date.toISOString(), predlozeniPoen: e.predlozeniPoen, celina: e.celina,
           description: e.description, dokaz: e.dokaz, createdAt: e.createdAt.toISOString(),
         })),
       }}

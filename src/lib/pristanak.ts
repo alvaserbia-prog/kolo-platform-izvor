@@ -84,12 +84,22 @@ export function tekstPristankaNaKolacice(jezik: string): StavkaPristanka {
  * kvačice na ekranu i odvojeno se dokazuju. Spojeni u jedan zapis, ne bi se moglo
  * pokazati da je razdvojenost postojala.
  */
-export function pristanciPriRegistraciji(jezik: string): StavkaPristanka[] {
-  return [
-    tekstPristankaNaAkt("USLOVI_KORISCENJA", jezik),
-    tekstPristankaNaAkt("POLITIKA_PRIVATNOSTI", jezik),
-  ];
+export function pristanciPriRegistraciji(jezik: string, opcije: { punoletstvo?: boolean } = {}): StavkaPristanka[] {
+  const uslovi = tekstPristankaNaAkt("USLOVI_KORISCENJA", jezik);
+  // Izjava o punoletstvu (registar 2026-10, D2-M1) ide u snimak pristanka na Uslove:
+  // bez novog podatka (datuma rođenja, isprave) i bez nove vrste zapisa. Samo pri
+  // otvaranju punoletnog naloga — ne pri ponovnom prihvatanju akata kroz gejt.
+  if (opcije.punoletstvo) uslovi.tekst = `${uslovi.tekst} ${prevedi(jezik, "pristanak.zapis_punoletstvo")}`;
+  return [uslovi, tekstPristankaNaAkt("POLITIKA_PRIVATNOSTI", jezik)];
 }
+
+/** Izjava o punoletstvu je data (D2-M1) — server proverava isto što i obrazac. */
+export function punoletstvoIzjavljeno(v: unknown): boolean {
+  return v === true;
+}
+
+export const PORUKA_PUNOLETSTVO_OBAVEZNO =
+  "Da otvoriš nalog odraslog korisnika, izjavi da imaš navršenih 18 godina. Mlađi otvaraju nalog deteta.";
 
 /**
  * Da li su prihvaćena OBA akta.

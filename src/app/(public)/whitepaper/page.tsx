@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function WhitepaperPage() {
   const locale = await getLocale();
   const t = await getTranslations("pravne");
-  const sadrzaj = await ucitajPravniDokument("whitepaper_4_8_4.md", locale);
+  const sadrzaj = await ucitajPravniDokument("whitepaper_4_8_5.md", locale);
 
   return (
     <div className="max-w-uska mx-auto pb-16">

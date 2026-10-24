@@ -10,7 +10,10 @@ import { kljucMeseca, procitajMesec, zbirPotvrde } from "@/lib/pokroviteljstvo-d
 import UgovorAkcije from "@/app/(app)/donacije/[id]/ugovor/UgovorAkcije";
 import Kartica from "@/components/ui/Kartica";
 
-export const metadata = { title: "Potvrda o predaji bez naknade — KOLO" };
+export async function generateMetadata() {
+  const t = await getTranslations("vauceri");
+  return { title: `${t("potvrda_naslov")} — KOLO` };
+}
 
 /**
  * Potvrda o predaji dobara odnosno pružanju usluga bez naknade (odluka vlasnika

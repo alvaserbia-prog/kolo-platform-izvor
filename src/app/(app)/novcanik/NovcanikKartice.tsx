@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { useTranslations, useLocale } from "next-intl";
 import Pseudonim from "@/components/Pseudonim";
 import UspehKartica from "@/components/UspehKartica";
-import SpisakCekanja from "@/components/SpisakCekanja";
+import Link from "next/link";
 import { jeNadoknada, iznosNadoknade, raspolozivo } from "@/lib/protokol/nadoknada";
 import { dogadjaj } from "@/lib/analitika";
 import { klaseDugmeta } from "@/components/ui/Dugme";
@@ -178,10 +178,11 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
           {/* Objašnjenje stoji UZ broj, u istoj kartici. Do ove izmene je stajalo ispod
               svih redova, pa se na dužem ekranu nije videlo u istom pogledu sa brojem
               koji objašnjava — a bez njega nula izgleda kao da je nešto nestalo. */}
-          {!smeDaSalje && (
-            <p className="mt-4 text-sm text-white/85">
-              {razlogZabrane === "ceka_roditelja" ? t("ceka_roditelja") : t("samo_primalac")}
-            </p>
+          {/* Punoletnom bez prepisa (nalog u nadoknadi) razlog kaže red „Nadoknada";
+              rečenica „prepis ti nije otvoren" bila je ostatak iz vremena kad
+              korisnik nije prepisivao (filter, 24.10.2026). */}
+          {!smeDaSalje && razlogZabrane === "ceka_roditelja" && (
+            <p className="mt-4 text-sm text-white/85">{t("ceka_roditelja")}</p>
           )}
         </div>
 
@@ -241,9 +242,9 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                 {raspolozivo(balance).toLocaleString(intlTag(locale))} {tc("poen")}
               </p>
             </div>
-            <p className="text-sm text-kolo-muted mt-1">
-              {t(razlogZabrane === "ceka_roditelja" ? "na_zapisu_opis_dete" : "na_zapisu_opis")}
-            </p>
+            {razlogZabrane === "ceka_roditelja" && (
+              <p className="text-sm text-kolo-muted mt-1">{t("na_zapisu_opis_dete")}</p>
+            )}
           </div>
         )}
 
@@ -329,6 +330,11 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                         })}
                       </p>
                     )}
+                    {/* Put do prvog doprinosa odmah uz broj (simulirani korisnici,
+                        24.10.2026) — ista radnja kao na Potvrdama. */}
+                    <Link href="/pijaca/novi-oglas" className="mt-1 inline-flex min-h-9 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
+                      {t("objavi_ponudu")}
+                    </Link>
                     {zabelezenGazdinstvo > 0 && (
                       <p className="text-sm text-kolo-muted mt-1">
                         {t("zabelezen_gazdinstvo", {
@@ -356,7 +362,11 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                             iznos: zabelezenePotvrdeTudje.toLocaleString(intlTag(locale)),
                           })}
                         </p>
-                        <SpisakCekanja ljudi={cekamPotvrdjene} />
+                        {/* Spisak ljudi stoji jednom — na Potvrdama (odluka vlasnika,
+                            24.10.2026); ovde zbir i veza. */}
+                        <Link href="/verifikacija#zabelezene" className="mt-1 inline-flex min-h-9 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
+                          {t("zabelezene_vidi")}
+                        </Link>
                       </div>
                     )}
                   </div>

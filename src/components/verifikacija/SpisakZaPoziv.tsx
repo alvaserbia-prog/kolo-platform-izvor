@@ -24,6 +24,8 @@ type Red = {
   prioritet?: boolean;
   /** Do kada Fondacija obezbeđuje poziv upisniku ZRNA. */
   rokPozivaDo?: string | null;
+  /** Rok je prošao, a ime i broj niko nije otvorio — crveno, kao krug u meniju. */
+  zakasnio?: boolean;
   /** Naziv gazdinstva koje čeka razgovor radi odobrenja (gazd. čl. 6a st. 2). */
   gazdinstvo?: string | null;
 };
@@ -58,6 +60,9 @@ export default function SpisakZaPoziv() {
   const [sada, setSada] = useState(() => Date.now());
   const [sumnja, setSumnja] = useState<Record<string, boolean>>({});
   const [zabelezeno, setZabelezeno] = useState<Record<string, boolean>>({});
+  // Izjava o poverljivosti pre prvog otvaranja (dokaz stvarnosti čl. 4a; S2-M1).
+  const [poverljivostData, setPoverljivostData] = useState(true);
+  const [izjava, setIzjava] = useState(false);
 
   const ucitaj = useCallback(async () => {
     const r = await fetch("/api/zahtev-razgovor", { cache: "no-store" });
@@ -72,6 +77,7 @@ export default function SpisakZaPoziv() {
     }
     const lista: Red[] = d.zahtevi ?? [];
     setRedovi(lista);
+    setPoverljivostData(d.poverljivostData !== false);
     // Ime i broj se čuvaju samo za pozive koji su posmatraču i dalje otvoreni.
     setOtvoreno((pre) => {
       const ostaje: Record<string, Otvoreno> = {};
@@ -108,7 +114,12 @@ export default function SpisakZaPoziv() {
   async function otvori(id: string) {
     setRadi(id);
     setGreska(null);
-    const r = await fetch(`/api/zahtev-razgovor/${id}/broj`, { method: "POST", cache: "no-store" });
+    const r = await fetch(`/api/zahtev-razgovor/${id}/broj`, {
+      method: "POST",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ poverljivost: izjava }),
+    });
     setRadi(null);
     if (!r.ok) {
       setGreska((await r.json().catch(() => ({}))).error ?? null);
@@ -116,6 +127,7 @@ export default function SpisakZaPoziv() {
       return;
     }
     const o: Otvoreno = await r.json();
+    setPoverljivostData(true);
     setOtvoreno((pre) => ({ ...pre, [id]: o }));
     setSada(Date.now());
     await ucitaj();
@@ -162,6 +174,12 @@ export default function SpisakZaPoziv() {
       <h2 className="text-sm font-semibold text-kolo-text">{t("naslov")}</h2>
       <p className="text-sm text-kolo-muted">{t("opis_clan_kola", { minuta: BROJ_OTVOREN_MINUTA })}</p>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
+      {!poverljivostData && redovi.length > 0 && (
+        <label className="flex items-start gap-2 rounded-kontrola bg-kolo-bg p-3 text-sm text-kolo-text cursor-pointer">
+          <input type="checkbox" checked={izjava} onChange={(e) => setIzjava(e.target.checked)} className="mt-0.5 h-4 w-4 accent-kolo-green-700" />
+          <span>{t("izjava_poverljivosti")}</span>
+        </label>
+      )}
       {redovi.length === 0 ? (
         <p className="text-sm text-kolo-muted">{t("prazan")}</p>
       ) : (
@@ -180,8 +198,8 @@ export default function SpisakZaPoziv() {
                   </span>
                 </div>
                 {z.rokPozivaDo && (
-                  <p className={z.prioritet ? "text-xs font-semibold text-kolo-gold-700" : "text-xs text-kolo-muted"}>
-                    {t(z.prioritet ? "prioritet_zrno" : "rok_poziva", { datum: new Date(z.rokPozivaDo).toLocaleDateString(intlTag(locale)) })}
+                  <p className={z.zakasnio ? "text-xs font-semibold text-kolo-danger" : z.prioritet ? "text-xs font-semibold text-kolo-gold-700" : "text-xs text-kolo-muted"}>
+                    {t(z.zakasnio ? "rok_prosao" : z.prioritet ? "prioritet_zrno" : "rok_poziva", { datum: new Date(z.rokPozivaDo).toLocaleDateString(intlTag(locale)) })}
                   </p>
                 )}
                 {z.opis && <p className="text-sm text-kolo-text whitespace-pre-line break-words">{z.opis}</p>}
@@ -255,7 +273,7 @@ export default function SpisakZaPoziv() {
                 ) : z.zakljucan ? (
                   <p className="text-xs text-kolo-muted">{t("zakljucan")}</p>
                 ) : (
-                  <Dugme velicina="sm" onClick={() => otvori(z.id)} disabled={radi === z.id}>
+                  <Dugme velicina="sm" onClick={() => otvori(z.id)} disabled={radi === z.id || (!poverljivostData && !izjava)}>
                     {z.otvorenMeni ? t("prikazi_ponovo") : t("otvori")}
                   </Dugme>
                 )}

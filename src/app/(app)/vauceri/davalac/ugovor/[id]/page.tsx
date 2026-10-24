@@ -9,7 +9,10 @@ import { zaglavljePrimerka } from "@/lib/protokol/pokroviteljstvo-dobrima";
 import UgovorAkcije from "@/app/(app)/donacije/[id]/ugovor/UgovorAkcije";
 import Kartica from "@/components/ui/Kartica";
 
-export const metadata = { title: "Ugovor o donaciji dobara odnosno usluga — KOLO" };
+export async function generateMetadata() {
+  const t = await getTranslations("vauceri");
+  return { title: `${t("ugovor_naslov")} — KOLO` };
+}
 
 /**
  * Primerak zaključenog ugovora o pokroviteljstvu dobrima i uslugama za štampu

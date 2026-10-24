@@ -57,6 +57,8 @@ import {
   redosledSpiska,
   rokPoziva,
   rokPozivaUpisnika,
+  jePozivZakasnio,
+  ROK_POZIVA_UPISNIKA_ZRNA_DANA,
   type ProveraRazgovora,
 } from "@/lib/potvrda-clana-pravila";
 import type { StatusUcesnika } from "@/lib/status-ucesnika-pravila";
@@ -531,6 +533,8 @@ export async function spisakZaPoziv(posmatracId: string) {
     vidljivi.map(async (z) => ({
       ...z,
       prioritet: z.osnov === "POTVRDA" && (await upisaoZrno(z.user.id)),
+      otvorenPosleUlaska:
+        (await prisma.zapisOtvaranjaPoziva.count({ where: { pozvaniId: z.user.id, otvorenoAt: { gte: z.createdAt } } })) > 0,
       // Jedan razgovor (gazd. čl. 6a st. 2): nosilac čije gazdinstvo čeka razgovor.
       gazdinstvo: z.osnov === "GAZDINSTVO_RPG" ? await gazdinstvoZaRazgovorSaSpiska(z.user.id) : null,
     })),
@@ -543,6 +547,8 @@ export async function spisakZaPoziv(posmatracId: string) {
       osnov: z.osnov,
       prioritet: z.prioritet,
       rokPozivaDo: rokPoziva(z.createdAt, z.prioritet).toISOString(),
+      // Isti uslov kao crveni krug u meniju (`jePozivZakasnio`).
+      zakasnio: jePozivZakasnio(z.createdAt, z.prioritet, z.otvorenPosleUlaska, sada),
       gazdinstvo: z.gazdinstvo?.naziv ?? null,
       mesto: z.mesto,
       opis: z.opis,
@@ -554,6 +560,65 @@ export async function spisakZaPoziv(posmatracId: string) {
       otvorenDo: moj ? z.otvorenDo?.toISOString() ?? null : null,
     };
   });
+}
+
+/**
+ * Zahtevi na spisku čiji je rok poziva prošao, a ime i broj niko nije otvorio
+ * (`jePozivZakasnio`). Samo živi punoletni nalozi, kao spisak. Ne vraća ni ime
+ * ni pseudonim — služi samo za broj (crveni krug) i podsetnik Fondaciji.
+ */
+async function zakasneliPozivi(sada: Date = new Date()) {
+  const redovi = await prisma.zahtevZaRazgovor.findMany({
+    where: {
+      createdAt: { lt: new Date(sada.getTime() - ROK_POZIVA_UPISNIKA_ZRNA_DANA * 24 * 3600 * 1000) },
+      user: { status: UserStatus.ACTIVE, deaktiviranAt: null, maloletan: false },
+    },
+    select: { userId: true, osnov: true, createdAt: true },
+  });
+  const izlaz: { userId: string; osnov: OsnovSpiska }[] = [];
+  for (const z of redovi) {
+    const upisnik = z.osnov === "POTVRDA" && (await upisaoZrno(z.userId));
+    const otvoren = await prisma.zapisOtvaranjaPoziva.count({
+      where: { pozvaniId: z.userId, otvorenoAt: { gte: z.createdAt } },
+    });
+    if (jePozivZakasnio(z.createdAt, upisnik, otvoren > 0, sada)) izlaz.push({ userId: z.userId, osnov: z.osnov });
+  }
+  return izlaz;
+}
+
+/**
+ * Broj zakasnelih poziva za crveni krug. Administrator vidi sve; član Kola samo
+ * redove koje sme da vidi na spisku (`smeVidetiRed` — zahtev radi potvrde samo
+ * čuvar), bez sopstvenog. Korisnik i član bez potvrde dobijaju nulu.
+ */
+export async function brojZakasnelihPoziva(posmatracId: string, admin: boolean): Promise<number> {
+  const zakasneli = await zakasneliPozivi();
+  if (zakasneli.length === 0) return 0;
+  if (admin) return zakasneli.length;
+  const status = await ucitajStatus(posmatracId);
+  if (!status) return 0;
+  return zakasneli.filter((z) => z.userId !== posmatracId && smeVidetiRed(z.osnov, status as StatusUcesnika)).length;
+}
+
+/**
+ * Dnevni podsetnik Fondaciji dok ima zakasnelih poziva (poziva ga jutarnji cron
+ * `potvrde-uslov`). Bez pseudonima — upozorenje ide i van EU, kao `obavestiClanoveKola`.
+ * Ne baca.
+ */
+export async function podsetiNaZakasnelePozive(): Promise<number> {
+  try {
+    const n = (await zakasneliPozivi()).length;
+    if (n > 0) {
+      await posaljiAdminAlert(
+        "Pozivi sa spiska kasne",
+        `Na spisku za poziv ${n === 1 ? "je jedan zahtev" : `je ${n} zahteva`} čiji je rok prošao, a ime i broj niko nije otvorio. Fondacija obezbeđuje poziv (Pravilnik o dokazu stvarnosti čl. 4a) — spisak je na stranici Potvrde.`,
+      );
+    }
+    return n;
+  } catch (e) {
+    console.error("[spisak-za-poziv] podsetnik nije poslat", e);
+    return 0;
+  }
 }
 
 /**
@@ -577,11 +642,31 @@ async function ocistiIstekla(sada: Date) {
  * Vraća ime i prezime iz evidencije identiteta SAMO kad je upisano (za korisnika
  * bez upisanog imena otvara se samo broj), broj telefona i rok.
  */
-export async function otvoriPoziv(posmatracId: string, zahtevId: string) {
+/** Da li je član Kola već dao izjavu o poverljivosti (dokaz stvarnosti čl. 4a; S2-M1). */
+export async function dataPoverljivostPoziva(userId: string): Promise<boolean> {
+  const u = await prisma.user.findUnique({ where: { id: userId }, select: { poverljivostPozivaAt: true } });
+  return u?.poverljivostPozivaAt != null;
+}
+
+/**
+ * Otvaranje poziva. 🔴 Pre PRVOG otvaranja član Kola jednom izjavljuje da ime i
+ * broj koristi samo za taj razgovor, da ih ne beleži i ne prosleđuje (dokaz
+ * stvarnosti čl. 4a; registar 2026-10, S2-M1) — bez izjave se ništa ne otvara.
+ * Beleži se samo trenutak izjave (`User.poverljivostPozivaAt`), u istoj
+ * transakciji sa otvaranjem.
+ */
+export async function otvoriPoziv(posmatracId: string, zahtevId: string, poverljivost = false) {
   const posmatrac = await proveriClanaKola(posmatracId);
   const sada = new Date();
   await ocistiIstekla(sada);
   return prisma.$transaction(async (tx) => {
+    const ja = await tx.user.findUniqueOrThrow({ where: { id: posmatracId }, select: { poverljivostPozivaAt: true } });
+    if (ja.poverljivostPozivaAt == null) {
+      if (poverljivost !== true)
+        throw new ZahtevGreska("Pre prvog otvaranja imena i broja potvrdi izjavu o poverljivosti.", 428);
+      await tx.user.update({ where: { id: posmatracId }, data: { poverljivostPozivaAt: sada } });
+    }
+
     const drugi = await tx.zahtevZaRazgovor.findFirst({
       where: { otvorioId: posmatracId, otvorenDo: { gt: sada }, id: { not: zahtevId } },
       select: { id: true },

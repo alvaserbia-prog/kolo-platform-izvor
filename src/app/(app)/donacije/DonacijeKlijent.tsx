@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
 import Dugme from "@/components/ui/Dugme";
 import NaslovStranice from "@/components/ui/NaslovStranice";
+import Segmenti from "@/components/ui/Segmenti";
+import { RACUN_FONDACIJE } from "@/lib/placanje/racun-fondacije";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
@@ -64,7 +67,6 @@ interface DonacijeData {
   rangTabela: RangRed[];
 }
 
-const FONDACIJA_RACUN_PLACEHOLDER = "840-123456789-00"; // dok račun nije otvoren (IPS_RACUN env)
 
 /** Prikaz računa 18 cifara u standardnom obliku 3-13-2. */
 function formatRacun(racun: string): string {
@@ -80,6 +82,8 @@ export default function DonacijeKlijent() {
   const [loading, setLoading] = useState(true);
   const [kopirano, setKopirano] = useState(false);
   const [iznosKartica, setIznosKartica] = useState("");
+  // Plaćanje karticom i IPS još nisu uključeni — podrazumevano je uplatnica.
+  const [nacin, setNacin] = useState<"ips" | "kartica" | "uplatnica">("uplatnica");
   const [javno, setJavno] = useState(true);
   const [karticaLoading, setKarticaLoading] = useState(false);
   const [karticaGreska, setKarticaGreska] = useState<string | null>(null);
@@ -173,10 +177,10 @@ export default function DonacijeKlijent() {
 
   const sledeci = data.rangTabela.find((r) => r.nivo === data.trenutniNivo + 1);
 
-  const prikazRacuna = data.racun ? formatRacun(data.racun) : FONDACIJA_RACUN_PLACEHOLDER;
+  const prikazRacuna = formatRacun(data.racun || RACUN_FONDACIJE);
 
   function kopirajPodatke() {
-    const tekst = `Primalac: KOLO Fondacija\nRačun: ${prikazRacuna}\nSvrha: Donacija\nModel: 97\nPoziv na broj: ${data!.pozivNaBroj}`;
+    const tekst = t("kopiraj_tekst", { racun: prikazRacuna, poziv: data!.pozivNaBroj });
     navigator.clipboard.writeText(tekst).then(() => {
       setKopirano(true);
       setTimeout(() => setKopirano(false), 2000);
@@ -209,6 +213,11 @@ export default function DonacijeKlijent() {
         <p className="text-sm text-kolo-muted">{t("objasnjenje")}</p>
       </Kartica>
 
+      {/* Udruženje ili firma doniraju kao pokrovitelji (C2, zajednica, 24.10.2026). */}
+      <p className="text-sm">
+        <Link href="/postani-pokrovitelj" className="font-semibold text-kolo-green-700 hover:underline">{t("pokrovitelj_link")}</Link>
+      </p>
+
       {/* Vrsta donacije — javna (POEN, ime javno) ili anonimna (bez POEN); važi za IPS i karticu */}
       <Kartica className="space-y-2">
         <p className="text-sm font-semibold text-kolo-text">{t("vidljivost_naslov")}</p>
@@ -231,10 +240,25 @@ export default function DonacijeKlijent() {
         )}
       </Kartica>
 
+      {/* Način plaćanja (C2, uloga 1, 24.10.2026): tri načina kao jezičci, vidi se
+          samo izabrani — ranije su sva tri stajala jedan ispod drugog. */}
+      <Segmenti
+        oznaka={t("nacin_oznaka")}
+        punaSirina
+        vrednost={nacin}
+        onPromena={setNacin}
+        opcije={[
+          { vrednost: "ips", oznaka: t("nacin_ips") },
+          { vrednost: "kartica", oznaka: t("nacin_kartica") },
+          { vrednost: "uplatnica", oznaka: t("nacin_uplatnica") },
+        ]}
+      />
+
       {/* IPS QR — instant dinarska uplata skeniranjem mobilnom bankom */}
-      <IpsQrPlacanje javno={javno} />
+      {nacin === "ips" && <IpsQrPlacanje javno={javno} />}
 
       {/* Kartično plaćanje (Banca Intesa / OTP — NestPay) */}
+      {nacin === "kartica" && (
       <Kartica className="space-y-4">
         <div>
           <p className="text-sm font-semibold text-kolo-text">{t("karticno_naslov")}</p>
@@ -281,14 +305,16 @@ export default function DonacijeKlijent() {
             uplatilac ne vidi iz izvoda, pa izjavu daje sam donator. */}
         <p className="text-xs text-kolo-muted">{t("karticno_sopstvena_kartica")}</p>
       </Kartica>
+      )}
 
       {/* Instrukcije za uplatu */}
+      {nacin === "uplatnica" && (
       <Kartica className="space-y-4">
         <p className="text-sm font-semibold text-kolo-text">{t("instrukcije")}</p>
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
             <span className="text-kolo-muted">{t("primalac")}</span>
-            <span className="font-medium text-kolo-text">KOLO Fondacija</span>
+            <span className="font-medium text-kolo-text">{t("primalac_vrednost")}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-kolo-muted">{t("racun")}</span>
@@ -308,6 +334,8 @@ export default function DonacijeKlijent() {
           </div>
         </div>
         <Obavestenje vrsta="info">{t("vas_broj_opis")}</Obavestenje>
+        {/* Kad se upisuje POEN — isto kao kod IPS-a i kartice (mera M-4a). */}
+        {javno && <p className="text-xs text-kolo-muted">{t("uplatnica_poen")}</p>}
         <div className="pt-2 border-t border-kolo-border">
           <p className="text-xs text-kolo-muted mb-3">{t("napomena_uplata")}</p>
           <Dugme punaSirina onClick={kopirajPodatke}>
@@ -315,6 +343,7 @@ export default function DonacijeKlijent() {
           </Dugme>
         </div>
       </Kartica>
+      )}
 
       {/* Rang */}
       <Kartica>
@@ -345,11 +374,12 @@ export default function DonacijeKlijent() {
         </div>
       </Kartica>
 
-      {/* Tabela rangova */}
+      {/* Tabela rangova — sklopljena, otvara se klikom (C2, uloga 1). */}
       <Kartica padding="nema" className="overflow-hidden">
-        <div className="px-4 py-3 border-b border-kolo-border">
-          <p className="text-sm font-semibold text-kolo-text">{t("tabela_naslov")}</p>
-        </div>
+        <details>
+        <summary className="px-4 py-3 border-b border-kolo-border cursor-pointer text-sm font-semibold text-kolo-text">
+          {t("tabela_naslov")}
+        </summary>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[280px] text-sm">
             <thead>
@@ -372,11 +402,7 @@ export default function DonacijeKlijent() {
                       {active && <span className="ml-2 text-xs text-kolo-green-700 font-semibold">{t("vas_nivo_oznaka")}</span>}
                     </td>
                     <td className={`px-4 py-2.5 text-right text-xs ${active ? "text-kolo-green-900" : "text-kolo-muted"}`}>
-                      {r.do >= 1_000_000_000
-                        ? "1 mlrd"
-                        : r.do >= 1_000_000
-                        ? `${(r.do / 1_000_000).toFixed(0)} mil`
-                        : r.do.toLocaleString(intlTag(locale))}
+                      {r.do.toLocaleString(intlTag(locale))}
                     </td>
                     <td className={`px-4 py-2.5 text-right ${active ? "text-kolo-green-700 font-semibold" : "text-kolo-muted"}`}>
                       {r.kurs.toFixed(2)}
@@ -387,6 +413,7 @@ export default function DonacijeKlijent() {
             </tbody>
           </table>
         </div>
+        </details>
       </Kartica>
 
       {/* Istorija donacija */}

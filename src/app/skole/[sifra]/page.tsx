@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { razresiSkolu } from "@/lib/skola";
 import SkolaKlijent from "./SkolaKlijent";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("skole");
+  return { title: t("naslov") };
+}
 
 export default async function SkolaPage({
   params,

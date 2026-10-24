@@ -10,7 +10,10 @@ import ProveraVaucera from "@/components/pokroviteljstvo/ProveraVaucera";
 import Kartica from "@/components/ui/Kartica";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 
-export const metadata = { title: "Provera vaučera — KOLO" };
+export async function generateMetadata() {
+  const t = await getTranslations("vauceri");
+  return { title: `${t("provera_naslov")} — KOLO` };
+}
 
 /**
  * Ulaz za proveru vaučera (nabavke čl. 30g). Ugovori, potpis, zaposleni i podaci

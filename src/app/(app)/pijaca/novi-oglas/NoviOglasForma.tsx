@@ -366,6 +366,11 @@ export default function NoviOglasForma({
               </option>
             ))}
           </select>
+          {/* Registar rizika 2026-10, P1-M3: odgovornost za propise o hrani i piću je na
+              onome ko nudi; Fondacija ih ne proverava (Uslovi čl. 16 st. 7, 16a). */}
+          {category === "hrana-i-pice" && !jePotraznja && (
+            <p className="mt-2 text-xs text-kolo-muted">{t("hrana_propisi_napomena")}</p>
+          )}
         </div>
 
         {/* Lokacija */}

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { jeAdmin } from "@/lib/dozvole";
+import { jeAdmin, jeZadruzniAdmin } from "@/lib/dozvole";
 
 /**
  * Stranice koje nose JEDNOKRATNI TOKEN u putanji i moraju da rade BEZ prijave.
@@ -204,7 +204,12 @@ export default async function proxy(req: NextRequest) {
   const adminPristup =
     jeAdmin({ admin: token.admin as string | undefined }) ||
     token.tipKorisnika === "POCETNI";
-  if (pathname.startsWith("/admin") && !adminPristup) {
+  // Zadružni admin (U2) prolazi samo na `/admin/zadruga`; stranica i rute same
+  // proveravaju da radi u svojoj zadruzi.
+  const zadruzniPristup =
+    jeZadruzniAdmin({ admin: token.admin as string | undefined }) &&
+    (pathname === "/admin/zadruga" || pathname.startsWith("/admin/zadruga/"));
+  if (pathname.startsWith("/admin") && !adminPristup && !zadruzniPristup) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 

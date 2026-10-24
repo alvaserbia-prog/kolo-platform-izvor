@@ -115,11 +115,12 @@ export default function MojQrKod({ zaClanaBezPotvrde = false }: { zaClanaBezPotv
           setStatusPriUspehu(sada.status ?? null);
           setObavestenje("uspeh");
           if (pollerRef.current) clearInterval(pollerRef.current);
-          // Odmah upiši nov verified status u sesiju (JWT cookie) i osveži
-          // serverske komponente (sidebar, gejtovi) — korisnik ne mora re-login.
-          osveziRef.current = osveziSesiju()
-            .then(() => router.refresh())
-            .catch(() => {});
+          // Nov status se odmah upisuje u sesiju (JWT cookie), ali se stranica NE
+          // osvežava sama: posle osvežavanja potvrđenom više ne treba „Pokaži kod",
+          // pa je kartica „Upisano je!" nestajala posle sekunde, pre nego što se
+          // pročita. Kartica stoji dok je čovek ne zatvori (odluka vlasnika,
+          // 24.10.2026) — članu bez potvrde nosi rečenice koje akt traži na ekranu.
+          osveziRef.current = osveziSesiju().catch(() => {});
         }
       } catch {
         // ignoriši mrežne greške u pollingu
@@ -152,6 +153,13 @@ export default function MojQrKod({ zaClanaBezPotvrde = false }: { zaClanaBezPotv
           // munjevit klik odveo na Pijacu sa još starim (neverifikovanim) JWT-om.
           if (osveziRef.current) await osveziRef.current;
           router.push("/pijaca");
+        }}
+        drugoDugme={{
+          tekst: t("qr_uspeh_zatvori"),
+          onKlik: async () => {
+            if (osveziRef.current) await osveziRef.current;
+            router.refresh();
+          },
         }}
       />
     );

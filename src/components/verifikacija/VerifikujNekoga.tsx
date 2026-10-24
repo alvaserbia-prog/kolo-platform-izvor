@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -76,7 +77,10 @@ export default function VerifikujNekoga({
           {naslov}
         </div>
         <Obavestenje vrsta="upozorenje">
-          {t("vn_zaustavljeno", { danas: potvrdaDanas })}
+          {t("vn_zaustavljeno_n", { danas: potvrdaDanas })}{" "}
+          <Link href="/cesto-postavljena-pitanja#ukljucivanje" className="font-semibold underline">
+            {t("vn_vise_ljudi")}
+          </Link>
         </Obavestenje>
       </div>
     );

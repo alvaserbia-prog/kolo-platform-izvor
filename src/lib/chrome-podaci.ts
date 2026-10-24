@@ -3,6 +3,7 @@ import { jeAdmin, mozeNadzor, type KorisnikDozvole } from "@/lib/dozvole";
 import { brojVerifikacijaZaNadzor } from "@/lib/protokol/nadzor-service";
 import { ChatSoba } from "@/generated/prisma/client";
 import { usloviSobe, usloviSobeOdraslih } from "@/lib/protokol/pricaonica";
+import { brojZakasnelihPoziva } from "@/lib/protokol/zahtev-razgovor";
 
 /**
  * Zajednička logika za podatke „chrome"-a (Header + Sidebar badge-evi).
@@ -16,6 +17,14 @@ export interface DnevniBrojevi {
   novcanik: number;
   pijaca: number;
   adminCekanje: number;
+  /**
+   * Crveni krug (odluka vlasnika, 24.10.2026): zahtevi sa spiska za poziv čiji je
+   * rok prošao bez otvaranja. `hitnoPozivi` uz „Potvrde" — redovi koje posmatrač
+   * sme da vidi (član Kola; radi potvrde samo čuvar); `hitnoAdmin` uz „Admin" — svi.
+   * Žuti krug ostaje za ono što je novo; crveno znači samo „rok je prošao".
+   */
+  hitnoPozivi: number;
+  hitnoAdmin: number;
 }
 
 /**
@@ -120,7 +129,15 @@ export async function izracunajDnevniBrojeve(
       gazdinstvaPrijave + gazdinstvaPristupanja;
   }
 
-  return { pocetna, novcanik, pijaca, adminCekanje };
+  // Dete nikoga ne poziva i ne vidi spisak — upit se za njega ni ne pravi.
+  const [hitnoPozivi, hitnoAdmin] = meUser?.maloletan
+    ? [0, 0]
+    : await Promise.all([
+        brojZakasnelihPoziva(userId, false),
+        jeAdmin(korisnik) ? brojZakasnelihPoziva(userId, true) : Promise.resolve(0),
+      ]);
+
+  return { pocetna, novcanik, pijaca, adminCekanje, hitnoPozivi, hitnoAdmin };
 }
 
 /**

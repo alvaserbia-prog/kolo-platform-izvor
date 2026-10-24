@@ -6,8 +6,8 @@ import Link from "next/link";
 import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
 import Dugme from "@/components/ui/Dugme";
-import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
+import { StatusBadge, type CvorVerifikovani } from "@/components/verifikacija/MiniStablo";
 
 /**
  * Lista osoba koje sam verifikovao, sa privatnom oznakom (nadimkom) koju mogu da
@@ -29,6 +29,8 @@ export type VerifikovanaOsoba = {
   vrsta?: "POTVRDA" | "UVODJENJE";
   /** Uvedeni je u međuvremenu potvrđen (član Kola). */
   potvrdjen?: boolean;
+  /** Stanje nadzora ove verifikacije — ista oznaka kao u lancu potvrda. */
+  statusNadzora?: CvorVerifikovani["statusNadzora"];
 };
 
 function Red({ osoba }: { osoba: VerifikovanaOsoba }) {
@@ -82,6 +84,7 @@ function Red({ osoba }: { osoba: VerifikovanaOsoba }) {
         >
           @<Pseudonim>{osoba.pseudonim}</Pseudonim>
         </Link>
+        {osoba.statusNadzora && <StatusBadge status={osoba.statusNadzora} />}
         {(osoba.vrsta === "UVODJENJE" || osoba.cekaDoprinos) && (
           <div className="flex flex-wrap gap-1.5">
             {osoba.vrsta === "UVODJENJE" && (
@@ -135,7 +138,7 @@ export default function MojeOznake({
   if (osobe.length === 0) return null;
   const uvodjenje = rezim === "UVODJENJE";
   return (
-    <Kartica as="section">
+    <Kartica as="section" id="moje-oznake">
       <h2 className="font-semibold text-kolo-text">
         {uvodjenje ? t("oznake_naslov_uvodjenje") : t("oznake_naslov")}
       </h2>
@@ -143,11 +146,6 @@ export default function MojeOznake({
         {t("oznake_opis")}
         {uvodjenje && <span className="block mt-1">{t("oznake_lanac_napomena")}</span>}
       </p>
-      {osobe.some((o) => o.cekaDoprinos) && (
-        <Obavestenje vrsta="upozorenje" className="mb-4">
-          {t("oznake_ceka_opis", { broj: osobe.filter((o) => o.cekaDoprinos).length })}
-        </Obavestenje>
-      )}
       <ul className="divide-y divide-kolo-border border border-kolo-border rounded-kontrola overflow-hidden">
         {osobe.map((o) => (
           <Red key={o.verifikacijaId} osoba={o} />

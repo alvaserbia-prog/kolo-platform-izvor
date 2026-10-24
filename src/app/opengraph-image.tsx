@@ -121,7 +121,9 @@ export default async function OpengraphImage() {
         >
           <span style={{ color: "#F5B842", fontWeight: 700 }}>ekolo.rs</span>
           <span style={{ color: "rgba(232, 245, 236, 0.5)" }}>·</span>
-          <span style={{ color: "#E8F5EC" }}>Članstvo je besplatno</span>
+          {/* „Učešće", ne „članstvo": Fondacija je bez članova, a pripadnost Kolu nije
+              članstvo u Fondaciji (pravna odbrana; brana `og-slika-izvor.test.ts`). */}
+          <span style={{ color: "#E8F5EC" }}>Učešće je besplatno</span>
         </div>
       </div>
     ),

@@ -554,7 +554,7 @@ export async function pozoviSledeceg(nabavkaId: string): Promise<number> {
         kljuc: "nabavka_poziv",
         parametri: { dobro: n.naziv.naziv, poen: n.poenPoDelu ?? 0, mesto: p.mesto ?? 0 },
         naslov: "Ušao si u nabavku",
-        tekst: `Nabavka „${n.naziv.naziv}" — tvoj deo košta ${n.poenPoDelu ?? 0} POEN. Potvrdi izborom dana preuzimanja u roku od ${ROK_POTVRDE_DANA} dana.`,
+        tekst: `Nabavka „${n.naziv.naziv}" — za tvoj deo se pri preuzimanju poništava ${n.poenPoDelu ?? 0} POENA. Potvrdi izborom dana preuzimanja u roku od ${ROK_POTVRDE_DANA} dana.`,
         link: `/nabavke/${nabavkaId}`,
       });
     } catch (e) {

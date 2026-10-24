@@ -132,9 +132,6 @@ export default function ZrnoKlijent(props: Props) {
       {/* Upis / otpis / aktiviranje */}
       <UpisOtpisSekcija {...props} onRefresh={onRefresh} />
 
-      {/* Razdvajač */}
-      <div className="border-t border-kolo-border pt-2" />
-
       {/* Glasanje sekcija */}
       <GlasanjeKlijent predlozi={props.predlozi} mojaGlasackaMoc={props.glasackaMoc} />
 
@@ -222,7 +219,9 @@ function UpisOtpisSekcija({
         <Obavestenje vrsta={poruka.ok ? "uspeh" : "greska"}>{poruka.text}</Obavestenje>
       )}
 
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* Dve grupe (C2, uloga 1, 24.10.2026): „Upis i otpis" za svakoga ko upisuje
+          ZRNO, a „Glas" (aktiviranje, pa glasanje i delegacija ispod) za čuvara Kola. */}
+      <div className="grid gap-4 md:grid-cols-2">
         {/* ── Upis ── */}
         <Kartica className="space-y-3">
           <p className="text-sm font-semibold text-kolo-muted">{t("upis_naslov")}</p>
@@ -307,6 +306,12 @@ function UpisOtpisSekcija({
           )}
         </Kartica>
 
+      </div>
+
+      <p className="pt-2 text-sm font-semibold text-kolo-muted">
+        <Pojam termin={t("glas_naslov")} objasnjenje={t("gornje_kolo_objasnjenje")} />
+      </p>
+      <div className="grid gap-4">
         {/* ── Aktiviranje / deaktiviranje ── */}
         <Kartica className="space-y-3">
           <p className="text-sm font-semibold text-kolo-muted">{t("status_naslov")}</p>

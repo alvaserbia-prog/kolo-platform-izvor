@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import AppShell from "@/components/AppShell";
 import { sesija } from "@/lib/sesija";
-import { jeAdmin, mozeNadzor } from "@/lib/dozvole";
+import { jeAdmin, jeZadruzniAdmin, mozeNadzor } from "@/lib/dozvole";
 
 // Autentifikovane stranice su iza prijave (bot ih ne može dohvatiti — proxy
 // preusmerava na /login). Zato su `noindex` i NEMAJU canonical: bez ovoga su
@@ -28,7 +28,7 @@ export default async function AppLayout({
   return (
     <AppShell
       verified={session.user.verified}
-      isAdmin={jeAdmin(session.user)}
+      isAdmin={jeAdmin(session.user) || jeZadruzniAdmin(session.user)}
       jeNadzornik={jeNadzornik}
     >
       {children}

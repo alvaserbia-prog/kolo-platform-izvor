@@ -90,7 +90,12 @@ export async function ugasiOznakeNaloga(tx: Tx, userId: string): Promise<IzlazNa
   // 2. Administratorski nivo i ukinut brojač.
   await tx.user.update({
     where: { id: userId },
-    data: { slotoviPotroseni: 0, ...(u.admin === "ADMIN" ? { admin: "NONE" } : {}) },
+    // Zadružni admin (U2) gubi nivo i vezu sa zadrugom kao i ADMIN.
+    data: {
+      slotoviPotroseni: 0,
+      ...(u.admin === "ADMIN" ? { admin: "NONE" } : {}),
+      ...(u.admin === "ZADRUGA" ? { admin: "NONE", adminZadrugaId: null } : {}),
+    },
   });
 
   // 3. Spisak za poziv.

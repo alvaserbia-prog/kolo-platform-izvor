@@ -13,6 +13,8 @@ interface DnevniBrojevi {
   novcanik: number;
   pijaca: number;
   adminCekanje: number;
+  hitnoPozivi?: number;
+  hitnoAdmin?: number;
 }
 
 interface SidebarProps {
@@ -35,9 +37,15 @@ function jeAktivan(pathname: string, href: string) {
   return pathname === href || (href !== "/sistem" && pathname.startsWith(href + "/"));
 }
 
-function BadgePill({ broj }: { broj: number }) {
+function BadgePill({ broj, hitno = false }: { broj: number; hitno?: boolean }) {
+  // Žuto = novo; crveno = rok je prošao (odluka vlasnika, 24.10.2026). Crveno se ne
+  // koristi ni za šta drugo, inače prestaje da se primećuje.
   return (
-    <span className="ml-2 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-kolo-gold-400 text-black text-xs font-semibold">
+    <span
+      className={`ml-2 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-semibold ${
+        hitno ? "bg-kolo-danger text-white" : "bg-kolo-gold-400 text-black"
+      }`}
+    >
       {broj}
     </span>
   );
@@ -113,8 +121,8 @@ function NavIkona({ href, mali }: { href: string; mali?: boolean }) {
   }
 }
 
-function NavLink({ href, label, broj, aktivan, zakljucano, opisZakljucano, uvuceno, onClick }: {
-  href: string; label: string; broj: number; aktivan: boolean; zakljucano?: boolean; opisZakljucano?: string; uvuceno?: boolean; onClick?: () => void;
+function NavLink({ href, label, broj, hitno = 0, aktivan, zakljucano, opisZakljucano, uvuceno, onClick }: {
+  href: string; label: string; broj: number; hitno?: number; aktivan: boolean; zakljucano?: boolean; opisZakljucano?: string; uvuceno?: boolean; onClick?: () => void;
 }) {
   const uvlaka = uvuceno ? "pl-6" : "px-3";
   // Zaključana stavka (korisniku, odluka vlasnika 22.10.2026): vidi se, zasivljena
@@ -153,6 +161,7 @@ function NavLink({ href, label, broj, aktivan, zakljucano, opisZakljucano, uvuce
         <NavIkona href={href} mali={uvuceno} />
       </span>
       <span className="flex-1 truncate">{label}</span>
+      {hitno > 0 && <BadgePill broj={hitno} hitno />}
       {broj > 0 && <BadgePill broj={broj} />}
     </Link>
   );
@@ -265,6 +274,11 @@ function SidebarContent({
   if (jeNadzornik && brojZaNadzor && brojZaNadzor > 0) {
     badge["/nadzor"] = brojZaNadzor;
   }
+  // Crveni krug — zakasneli pozivi sa spiska (Potvrde za člana Kola, Admin za admina).
+  const hitno: Record<string, number> = {
+    "/verifikacija": dnevniBrojevi?.hitnoPozivi ?? 0,
+    "/admin": dnevniBrojevi?.hitnoAdmin ?? 0,
+  };
 
   type Grupa = { label?: string; padajuca?: "zajednica" | "zajednicko_dobro"; links: Stavka[] };
 
@@ -273,6 +287,7 @@ function SidebarContent({
   // otvaraju se tek kad uđe u Kolo. Članu bez potvrde su sve otvorene (čl. 5a st. 8).
   const zakljucano = !verified;
 
+  // Zadružni admin (U2) dobija isti link; `/admin` ga vodi na ekran njegove zadruge.
   const adminGrupa: Grupa[] = isAdmin ? [{ links: [{ href: "/admin", label: t("admin") }] }] : [];
 
   // Isti kostur za korisnika i za člana (odluka vlasnika, 22.10.2026): kad
@@ -379,6 +394,7 @@ function SidebarContent({
                   href={href}
                   label={label}
                   broj={badge[href] ?? 0}
+                  hitno={hitno[href] ?? 0}
                   aktivan={jeAktivan(pathname, href)}
                   zakljucano={z}
                   opisZakljucano={t("zakljucano")}

@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import DonacijeKlijent from "./DonacijeKlijent";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("donacije");
+  return { title: t("naslov") };
+}
 
 /**
  * Listu donacija vidi i korisnik (donacije čl. 5a st. 1; Uslovi čl. 17 st. 3, 6):

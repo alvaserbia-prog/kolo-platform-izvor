@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
@@ -12,6 +13,12 @@ import { smePrepis as smePrepisDeteta } from "@/lib/deca-pravila";
 import { smeDaSalje as smePrepisPravilo } from "@/lib/doprinos-pravila";
 import { rezervisanoZaNabavku } from "@/lib/protokol/nabavka";
 import { dohvatiZabelezenGazdinstva } from "@/lib/protokol/gazdinstvo";
+
+// Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("nav");
+  return { title: t("novcanik") };
+}
 
 export default async function NovcanikPage({
   searchParams,

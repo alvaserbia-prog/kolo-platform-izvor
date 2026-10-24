@@ -18,6 +18,9 @@ export interface DnevniBrojevi {
   novcanik: number;
   pijaca: number;
   adminCekanje: number;
+  /** Crveni krug: zakasneli pozivi sa spiska (uz „Potvrde", odnosno uz „Admin"). */
+  hitnoPozivi: number;
+  hitnoAdmin: number;
 }
 
 export interface MeData {

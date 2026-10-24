@@ -1,7 +1,7 @@
 import AppShell from "@/components/AppShell";
 import PublicHeader from "@/components/PublicHeader";
 import { sesija } from "@/lib/sesija";
-import { jeAdmin, mozeNadzor } from "@/lib/dozvole";
+import { jeAdmin, jeZadruzniAdmin, mozeNadzor } from "@/lib/dozvole";
 
 /**
  * Stranice škola imaju sopstveni raspored, kao i Pijaca: nacionalne rang-liste
@@ -15,7 +15,7 @@ export default async function SkoleLayout({ children }: { children: React.ReactN
     return (
       <AppShell
         verified={session.user.verified}
-        isAdmin={jeAdmin(session.user)}
+        isAdmin={jeAdmin(session.user) || jeZadruzniAdmin(session.user)}
         jeNadzornik={mozeNadzor(session.user)}
       >
         {children}

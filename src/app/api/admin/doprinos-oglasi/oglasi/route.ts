@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { jeAdmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
+import { proveriCelineZadatka } from "@/lib/operativni-celine-pravila";
 
 // POST /api/admin/doprinos-oglasi/oglasi — kreiranje oglasa
 export async function POST(req: NextRequest) {
@@ -13,18 +14,15 @@ export async function POST(req: NextRequest) {
     return await greska("Pristup odbijen.", 403);
 
   const body = await req.json().catch(() => ({}));
-  const { title, description, predlozeniPoen, obrazlozenje, saOdobravanjem, positions, deadline, krugId } = body;
+  const { title, description, poenPoCelini, brojCelina, opisCeline, procenaObima, obrazlozenje, saOdobravanjem, positions, deadline, krugId } = body;
 
   if (!title?.trim() || !description?.trim()) return await greska("Naziv i opis su obavezni.", 400);
 
-  // Predloženi POEN — težinski koeficijent (čl. 5/6). Gornja granica po zadatku je
-  // operativni parametar (čl. 26) koji utvrđuje UO/Gornje Kolo; ovde se primenjuje
-  // samo zdravorazumski opseg kako bi se sprečili očigledno pogrešni unosi.
-  // Polje je opciono: prazno = 0 = bez ograničenja zbira dnevnih izvršenja po izvršiocu.
-  const predlozeni = predlozeniPoen === undefined || predlozeniPoen === null || predlozeniPoen === ""
-    ? 0 : Number(predlozeniPoen);
-  if (predlozeni !== 0 && (!Number.isInteger(predlozeni) || predlozeni < 100 || predlozeni > 10_000_000))
-    return await greska("Maksimalni POEN mora biti ceo broj između 100 i 10.000.000, ili prazno (neograničeno).", 400);
+  // Predloženi POEN se utvrđuje za jednu celinu, uz broj celina, opis celine i
+  // procenu obima rada (čl. 5, 6; S1). Zadatak „bez ograničenja" (0) više ne postoji.
+  const celine = proveriCelineZadatka({ poenPoCelini, brojCelina, opisCeline, procenaObima });
+  if (!celine.ok) return await greska(celine.greska, 400);
+  const predlozeni = celine.predlozeniPoen;
 
   const brMesta = Number(positions ?? 1);
   if (!Number.isInteger(brMesta) || brMesta < 1 || brMesta > 1000)
@@ -36,6 +34,9 @@ export async function POST(req: NextRequest) {
       description: description.trim(),
       source: "FONDACIJA", // izvor zadatka uvek Fondacija (admin = UO); selektor uklonjen iz forme
       predlozeniPoen: predlozeni,
+      brojCelina: celine.brojCelina,
+      opisCeline: celine.opisCeline,
+      procenaObima: celine.procenaObima,
       obrazlozenje: typeof obrazlozenje === "string" && obrazlozenje.trim() ? obrazlozenje.trim() : null,
       saOdobravanjem: Boolean(saOdobravanjem),
       positions: brMesta,
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
   });
 
   await logAdminAkcija(session.user.id, "DOPRINOS_OGLAS_KREIRAN", oglas.id,
-    `${oglas.title} (${predlozeni > 0 ? `maks ${predlozeni} POEN` : "bez maksimuma POENA"})`);
+    `${oglas.title} (${celine.brojCelina} × ${celine.poenPoCelini} POEN)`);
 
   return NextResponse.json({ ok: true, id: oglas.id });
 }
@@ -79,6 +80,9 @@ export async function GET(_req: NextRequest) {
       obrazlozenje: o.obrazlozenje,
       source: o.source,
       predlozeniPoen: o.predlozeniPoen,
+      brojCelina: o.brojCelina,
+      opisCeline: o.opisCeline,
+      procenaObima: o.procenaObima,
       saOdobravanjem: o.saOdobravanjem,
       positions: o.positions,
       deadline: o.deadline?.toISOString() ?? null,
