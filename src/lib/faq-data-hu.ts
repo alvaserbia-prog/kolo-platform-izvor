@@ -1193,7 +1193,7 @@ A korlátokról: ez a megváltoztathatatlanság tervezési szabály, amelyet a s
       {
         id: 80,
         pitanje: `Hol van a nyilvános kódtár? Letölthetem és futtathatom magam (self-host)?`,
-        odgovor: `A platform teljes forráskódja nyilvánosan elérhető a GitHubon: https://github.com/alvaserbia-prog/kolo-platform
+        odgovor: `A platform teljes forráskódja nyilvánosan elérhető a GitHubon: https://github.com/alvaserbia-prog/kolo-platform-izvor
 
 Szabadon átnézheted, letöltheted és futtathatod a saját másolatodat. A szoftver AGPL-3.0 licenc alatt áll, amely ezt kifejezetten megengedi — egyetlen feltétellel: ha a másolatodat nyilvános internetes szolgáltatásként üzemelteted, neked is elérhetővé kell tenned a saját forráskódodat, minden módosítással együtt, a felhasználóid számára, ugyanazon licenc alatt. Így marad a kód tartósan nyitott.
 

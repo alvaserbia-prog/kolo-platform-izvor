@@ -942,7 +942,8 @@
     "preporuka_povuci": "Povuci preporuku",
     "preporuka_greska": "Preporuka nije spremljena. Pokušaj ponovno.",
     "prigovor_tip_roditeljstvo": "Odluka po prijavi da netko nije roditelj djeteta",
-    "prigovor_tip_gazdinstvo": "Gospodarstvo: prijava, pristupanje, prestanak ili otpis"
+    "prigovor_tip_gazdinstvo": "Gospodarstvo: prijava, pristupanje, prestanak ili otpis",
+    "trx_otpis_visestrukog_naloga": "Otpis po utvrđenju višestrukog računa"
   },
   "zrno": {
     "naslov": "ZRNO",
@@ -2790,7 +2791,13 @@
     "spisak_povezanih_naslov": "Popis povezanih",
     "spisak_povezanih_tekst": "Sada si član Kola. Na stranici Potvrde imaš popis povezanih ({broj}): one koje si uveo u Kolo i onoga tko je tebe uveo, ako još nisu potvrđeni. Potvrdi samo one koje osobno poznaješ.",
     "potvrda_sa_spiska_povezanih_naslov": "Postao si član Kola",
-    "potvrda_sa_spiska_povezanih_tekst": "„{verifikator}“ te potvrdio s popisa povezanih, pa si od člana bez potvrde postao član Kola. Na stranici Potvrde i ti imaš popis povezanih: potvrdi s njega samo one koje osobno poznaješ. Pripadnost Kolu nije članstvo u Zakladi. Ako ne poznaješ ovu osobu, prijavi to na stranici Potvrde."
+    "potvrda_sa_spiska_povezanih_tekst": "„{verifikator}“ te potvrdio s popisa povezanih, pa si od člana bez potvrde postao član Kola. Na stranici Potvrde i ti imaš popis povezanih: potvrdi s njega samo one koje osobno poznaješ. Pripadnost Kolu nije članstvo u Zakladi. Ako ne poznaješ ovu osobu, prijavi to na stranici Potvrde.",
+    "visestruki_nalog_naslov": "Utvrđen je višestruki račun",
+    "visestruki_nalog_tekst": "Zaklada je utvrdila da je račun „{pseudonim}” tvoj drugi račun. Taj račun je prestao. Na odluku možeš podnijeti prigovor u roku od 15 dana. Obrazloženje: {obrazlozenje}",
+    "visestruki_nalog_otpis_naslov": "Utvrđen je višestruki račun",
+    "visestruki_nalog_otpis_tekst": "Zaklada je utvrdila da je račun „{pseudonim}” tvoj drugi račun. Taj račun je prestao, a POEN koji je s njega prepisan na ovaj račun ({poen}) je otpisan. Na odluku možeš podnijeti prigovor u roku od 15 dana. Obrazloženje: {obrazlozenje}",
+    "visestruki_nalog_otpis_minus_naslov": "Utvrđen je višestruki račun: zapis je u minusu",
+    "visestruki_nalog_otpis_minus_tekst": "Zaklada je utvrdila da je račun „{pseudonim}” tvoj drugi račun. Taj račun je prestao, a POEN koji je s njega prepisan na ovaj račun ({poen}) je otpisan. Tvoj zapis sada je {stanje} POEN; POEN koji pristigne prvo popunjava minus. Na odluku možeš podnijeti prigovor u roku od 15 dana. Obrazloženje: {obrazlozenje}"
   },
   "transakcije": {
     "verifikacija": "Potvrda člana {pseudonim}",
@@ -2830,7 +2837,9 @@
     "vaucer": "Vaučer, {opis}",
     "vaucer_ispravka": "Ispravak evidencije, vaučer {opis}",
     "pokroviteljstvo_dobra_otpis": "Otpis zbog neizvršenja pokroviteljstva dobrima i uslugama, {opis}",
-    "vaucer_uzet": "Vaučer: {opis} — {davalac}"
+    "vaucer_uzet": "Vaučer: {opis} — {davalac}",
+    "visestruki_nalog_otpis": "Otpis po utvrđenju višestrukog računa",
+    "visestruki_nalog_ponistenje": "Poništenje zapisa ugašenog računa"
   },
   "mejl": {
     "pozdrav": "Pozdrav",
@@ -3804,13 +3813,14 @@
     "filter_sve": "Prikaži sve"
   },
   "kontakt": {
+    "fali_pristanak": "Da bi bio na popisu, označi suglasnost iznad gumba.",
     "naslov": "Želim da me netko nazove",
-    "uvod": "Ako ne poznaješ nijednog člana Kola, ostavi par riječi o sebi i broj telefona. Nazvat će te član Kola najkasnije u roku od sedam dana, a nakon razgovora može te uvesti u Kolo.",
-    "uvod_osnov": "Za popis su ti dovoljni broj telefona i privola. Mjesto, opis i vrijeme kada si dostupan nisu obvezni, ali pomažu članu Kola koji te zove.",
+    "uvod": "Ako ne poznaješ nijednog člana Kola, upiši ime i prezime, mjesto i broj telefona i ostavi par riječi o sebi. Nazvat će te član Kola najkasnije u roku od sedam dana, a nakon razgovora može te uvesti u Kolo.",
+    "uvod_osnov": "Za popis su ti potrebni ime i prezime, mjesto, broj telefona i privola. Opis i vrijeme kada si dostupan nisu obvezni, ali pomažu članu Kola koji te zove.",
     "osnov_donacija": "Zaklada je utvrdila primitak tvoje donacije.",
     "osnov_pokroviteljstvo": "Zaklada je utvrdila primitak pokroviteljstva po tvojoj prijavi.",
     "osnov_gazdinstvo_rpg": "Podnio si prijavu gospodarstva kao nositelj.",
-    "obavestenje": "Nazvat će te član Kola. Vidjet će tvoje ime i prezime, ako je upisano, i broj telefona. Zaklada bilježi tko je otvorio tvoje podatke.",
+    "obavestenje": "Nazvat će te član Kola. Vidjet će tvoje ime i prezime i broj telefona te stoje li isti broj ili isto ime uz drugi račun. Zaklada bilježi tko je otvorio tvoje podatke.",
     "ne_potvrdjuje": "Dolazak na popis ne potvrđuje stvarnost i nije uvjet ni za što što si već učinio.",
     "mesto": "Mjesto",
     "mesto_placeholder": "npr. Sombor",
@@ -3820,23 +3830,26 @@
     "dostupnost_placeholder": "npr. radnim danima nakon 17 h",
     "neobavezno": "nije obvezno",
     "telefon": "Broj telefona",
-    "telefon_opis": "Ime i broj ne vidi nitko dok ih član Kola ne otvori, i tada ih vidi samo on, dok je poziv otvoren. Broj se briše kad te netko uvede u Kolo ili potvrdi i kad povučeš privolu.",
-    "pristanak": "Suglasan sam da budem na popisu za poziv. Nazvat će me član Kola koji će vidjeti moje ime i prezime, ako je upisano, i broj telefona, samo dok je poziv otvoren kod njega. Popis vide samo članovi Kola. Zaklada bilježi koji je član Kola otvorio moje podatke. Podaci s popisa i broj brišu se kad budem uveden u Kolo ili potvrđen, kad povučem privolu ili kad mi prestane status korisnika.",
+    "telefon_opis": "Ime i broj ne vidi nitko dok ih član Kola ne otvori, i tada ih vidi samo on, dok je poziv otvoren. Broj ostaje na tvom profilu i nakon poziva: možeš ga izmijeniti, ali ne i obrisati, dok postoji račun.",
+    "pristanak": "Suglasan sam da budem na popisu za poziv. Nazvat će me član Kola koji će vidjeti moje ime i prezime i broj telefona, samo dok je poziv otvoren kod njega, te stoje li isti broj ili isto ime uz drugi račun, uz mjesto tog računa. Popis vide samo članovi Kola. Zaklada bilježi koji je član Kola otvorio moje podatke. Ime i prezime, mjesto i broj ostaju uz moj račun dok on postoji i uspoređuju se s drugim računima. Podaci s popisa brišu se kad budem uveden u Kolo ili potvrđen, kad povučem privolu ili kad mi prestane status korisnika.",
     "dugme_posalji": "Želim da me netko nazove",
     "dugme_izmeni": "Spremi izmjene",
     "dugme_povuci": "Povuci privolu",
     "poslat": "Na popisu si. Članovi Kola su obaviješteni.",
     "izmenjen": "Izmjene su spremljene.",
-    "povucen": "Privola je povučena, a broj obrisan.",
-    "status_poslat": "Na popisu si za poziv. Član Kola nazvat će te najkasnije u roku od sedam dana. Kad te uvede u Kolo, podaci s popisa i broj brišu se.",
+    "povucen": "Privola je povučena, a podaci s popisa obrisani. Ime, mjesto i broj ostaju uz tvoj račun.",
+    "status_poslat": "Na popisu si za poziv. Član Kola nazvat će te najkasnije u roku od sedam dana. Kad te uvede u Kolo, podaci s popisa brišu se, a ime, mjesto i broj ostaju uz tvoj račun.",
     "greska": "Nije spremljeno. Pokušaj ponovno.",
-    "fali_pristanak": "Da bi bio na popisu, označi suglasnost iznad gumba.",
     "naslov_potvrda": "Želim da me netko nazove radi potvrde",
-    "uvod_potvrda": "Ostavi broj telefona i vrijeme kada si dostupan. Nazvat će te čuvar Kola najkasnije u roku od sedam dana i, ako nakon razgovora može odgovarati za tebe, potvrdit će te, pa postaješ član Kola. Mjesto i opis nisu obvezni.",
-    "obavestenje_potvrda": "Nazvat će te čuvar Kola. Vidjet će tvoje ime i prezime, ako je upisano, i broj telefona. Zaklada bilježi tko je otvorio tvoje podatke.",
-    "pristanak_potvrda": "Suglasan sam da budem na popisu za poziv radi potvrde. Nazvat će me čuvar Kola koji će vidjeti moje ime i prezime, ako je upisano, i broj telefona, samo dok je poziv otvoren kod njega. Moj zahtjev vide samo čuvari Kola. Zaklada bilježi koji je čuvar Kola otvorio moje podatke. Podaci i broj brišu se kad budem potvrđen ili kad povučem privolu.",
+    "uvod_potvrda": "Upiši ime i prezime, mjesto, broj telefona i vrijeme kada si dostupan. Nazvat će te čuvar Kola najkasnije u roku od sedam dana i, ako nakon razgovora može odgovarati za tebe, potvrdit će te, pa postaješ član Kola. Opis nije obvezan.",
+    "obavestenje_potvrda": "Nazvat će te čuvar Kola. Vidjet će tvoje ime i prezime i broj telefona te stoje li isti broj ili isto ime uz drugi račun. Zaklada bilježi tko je otvorio tvoje podatke.",
+    "pristanak_potvrda": "Suglasan sam da budem na popisu za poziv radi potvrde. Nazvat će me čuvar Kola koji će vidjeti moje ime i prezime i broj telefona, samo dok je poziv otvoren kod njega, te stoje li isti broj ili isto ime uz drugi račun, uz mjesto tog računa. Moj zahtjev vide samo čuvari Kola. Zaklada bilježi koji je čuvar Kola otvorio moje podatke. Ime i prezime, mjesto i broj ostaju uz moj račun dok on postoji i uspoređuju se s drugim računima. Podaci s popisa brišu se kad budem potvrđen ili kad povučem privolu.",
     "poslat_potvrda": "Na popisu si. Čuvari Kola su obaviješteni.",
-    "status_poslat_potvrda": "Na popisu si za poziv radi potvrde. Čuvar Kola nazvat će te najkasnije u roku od sedam dana. Kad te potvrdi, podaci s popisa i broj brišu se."
+    "status_poslat_potvrda": "Na popisu si za poziv radi potvrde. Čuvar Kola nazvat će te najkasnije u roku od sedam dana. Kad te potvrdi, podaci s popisa brišu se, a ime, mjesto i broj ostaju uz tvoj račun.",
+    "profil_napomena": "Ime i prezime, mjesto i broj telefona upisuju se na tvoj profil i ostaju uz račun dok on postoji. Na javnom profilu ne prikazuju se, osim ako to sam uključiš.",
+    "ime_prezime": "Ime i prezime",
+    "ime_prezime_opis": "Upisuje se jednom. Kasnije se ispravlja samo prigovorom „Ispravak podatka”.",
+    "ime_prezime_upisano": "Ime je već upisano uz tvoj račun. Ispravak ide prigovorom „Ispravak podatka”."
   },
   "spisak": {
     "naslov": "Žele da ih netko nazove",
@@ -3884,7 +3897,11 @@
     "plutajuca_opis": "Ako te nijedan član Kola ne poznaje osobno, može te nazvati čuvar Kola i nakon razgovora te potvrditi.",
     "plutajuca_opis_zrno": "Upisao si ZRNO, a glas dobivaš tek kad budeš potvrđen. Ostavi broj: čuvar Kola nazvat će te najkasnije u roku od tri dana.",
     "plutajuca_kasnije": "Kasnije",
-    "rok_poziva": "Poziv najkasnije do {datum}"
+    "rok_poziva": "Poziv najkasnije do {datum}",
+    "oznaka_isti_telefon": "Isti broj telefona već stoji uz drugi račun.",
+    "oznaka_isto_ime": "Isto ime i prezime već stoji uz drugi račun — mjesto: {mesta}.",
+    "oznaka_mesto_nepoznato": "nije upisano",
+    "oznaka_objasnjenje": "Ovo nije zabrana: broj dijele i ukućani, a ime i imenjaci. Pitaj u razgovoru. Ako posumnjaš da je riječ o drugom računu iste osobe, ne uvodi je u Kolo i javi Zakladi."
   },
   "pomoc": {
     "naslov": "Pomoć",

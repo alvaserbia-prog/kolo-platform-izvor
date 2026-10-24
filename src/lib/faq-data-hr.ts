@@ -1185,7 +1185,7 @@ O granicama: ova nepromjenjivost je dizajnersko pravilo osigurano softverskom ar
       {
         id: 80,
         pitanje: `Gdje je javni repozitorij koda? Mogu li ga preuzeti i sam pokrenuti (self-host)?`,
-        odgovor: `Cijeli izvorni kod platforme javno je dostupan na GitHubu: https://github.com/alvaserbia-prog/kolo-platform
+        odgovor: `Cijeli izvorni kod platforme javno je dostupan na GitHubu: https://github.com/alvaserbia-prog/kolo-platform-izvor
 
 Možeš ga slobodno pregledati, preuzeti i pokrenuti vlastitu kopiju. Softver je pod licencom AGPL-3.0, koja to izričito dopušta, uz jedan uvjet: ako svoju kopiju pokreneš kao javni internetski servis, moraš i sam učiniti svoj izvorni kod, sa svim izmjenama, dostupnim svojim korisnicima pod istom licencom. Tako kod ostaje trajno otvoren.
 

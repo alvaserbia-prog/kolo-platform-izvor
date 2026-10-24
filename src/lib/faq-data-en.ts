@@ -1185,7 +1185,7 @@ On the limits: this immutability is a design rule secured by the software archit
       {
         id: 80,
         pitanje: `Where is the public code repository? Can I download it and run it myself (self-host)?`,
-        odgovor: `The platform's entire source code is publicly available on GitHub: https://github.com/alvaserbia-prog/kolo-platform
+        odgovor: `The platform's entire source code is publicly available on GitHub: https://github.com/alvaserbia-prog/kolo-platform-izvor
 
 You are free to review it, download it and run your own copy. The software is under the AGPL-3.0 licence, which expressly permits this — on one condition: if you run your copy as a public internet service, you must also make your own source code, with all your changes, available to your users under the same licence. That is how the code stays permanently open.
 

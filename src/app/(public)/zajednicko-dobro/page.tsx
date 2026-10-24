@@ -52,7 +52,7 @@ export default async function ZajednickoDobroPage() {
           <p className="text-sm text-kolo-muted leading-relaxed">
             {t("doprinosi_tekst")}
           </p>
-          <a href="https://github.com/alvaserbia-prog/kolo-platform/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer"
+          <a href="https://github.com/alvaserbia-prog/kolo-platform-izvor/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer"
             className="text-sm font-medium text-kolo-green-700 hover:underline mt-2 inline-flex min-h-9 items-center">
             {t("doprinosi_cta")} →
           </a>

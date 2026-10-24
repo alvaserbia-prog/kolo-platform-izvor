@@ -942,7 +942,8 @@
     "preporuka_povuci": "Withdraw recommendation",
     "preporuka_greska": "The recommendation was not saved. Please try again.",
     "prigovor_tip_roditeljstvo": "Decision on a report that someone is not the child's parent",
-    "prigovor_tip_gazdinstvo": "Farm: registration, joining, termination or write-off"
+    "prigovor_tip_gazdinstvo": "Farm: registration, joining, termination or write-off",
+    "trx_otpis_visestrukog_naloga": "Write-off upon a finding of multiple accounts"
   },
   "zrno": {
     "naslov": "ZRNO",
@@ -2790,7 +2791,13 @@
     "spisak_povezanih_naslov": "List of connections",
     "spisak_povezanih_tekst": "You are now a Kolo member. On the Confirmations page you have a list of connections ({broj}): those you brought into the Kolo and the person who brought you in, if they are not yet confirmed. Confirm only those you know personally.",
     "potvrda_sa_spiska_povezanih_naslov": "You have become a Kolo member",
-    "potvrda_sa_spiska_povezanih_tekst": "“{verifikator}” has confirmed you from their list of connections, so you have gone from member without confirmation to Kolo member. You now have a list of connections on the Confirmations page too: confirm from it only those you know personally. Belonging to the Kolo is not membership in the Foundation. If you don't know this person, report it on the Confirmations page."
+    "potvrda_sa_spiska_povezanih_tekst": "“{verifikator}” has confirmed you from their list of connections, so you have gone from member without confirmation to Kolo member. You now have a list of connections on the Confirmations page too: confirm from it only those you know personally. Belonging to the Kolo is not membership in the Foundation. If you don't know this person, report it on the Confirmations page.",
+    "visestruki_nalog_naslov": "Multiple accounts established",
+    "visestruki_nalog_tekst": "The Foundation has established that the account “{pseudonim}” is your second account. That account has ceased. You can file a complaint against the decision within 15 days. Reasoning: {obrazlozenje}",
+    "visestruki_nalog_otpis_naslov": "Multiple accounts established",
+    "visestruki_nalog_otpis_tekst": "The Foundation has established that the account “{pseudonim}” is your second account. That account has ceased, and the POEN re-registered from it to this account ({poen}) has been written off. You can file a complaint against the decision within 15 days. Reasoning: {obrazlozenje}",
+    "visestruki_nalog_otpis_minus_naslov": "Multiple accounts established: your record is below zero",
+    "visestruki_nalog_otpis_minus_tekst": "The Foundation has established that the account “{pseudonim}” is your second account. That account has ceased, and the POEN re-registered from it to this account ({poen}) has been written off. Your record is now {stanje} POEN; POEN that arrives first fills the minus. You can file a complaint against the decision within 15 days. Reasoning: {obrazlozenje}"
   },
   "transakcije": {
     "verifikacija": "Confirmation of member {pseudonim}",
@@ -2830,7 +2837,9 @@
     "vaucer": "Voucher, {opis}",
     "vaucer_ispravka": "Ledger correction, voucher {opis}",
     "pokroviteljstvo_dobra_otpis": "Write-off for non-performance of sponsorship in goods and services, {opis}",
-    "vaucer_uzet": "Voucher: {opis} — {davalac}"
+    "vaucer_uzet": "Voucher: {opis} — {davalac}",
+    "visestruki_nalog_otpis": "Write-off upon a finding of multiple accounts",
+    "visestruki_nalog_ponistenje": "Cancellation of the record of a closed account"
   },
   "mejl": {
     "pozdrav": "Hello",
@@ -3804,13 +3813,14 @@
     "filter_sve": "Show all"
   },
   "kontakt": {
+    "fali_pristanak": "To be on the list, tick the consent above the button.",
     "naslov": "I'd like someone to call me",
-    "uvod": "If you don't know any Kolo member, leave a few words about yourself and a phone number. A Kolo member will call you within seven days at the latest and, after the conversation, can bring you into the Kolo.",
-    "uvod_osnov": "For the list, your phone number and consent are enough. Place, description and the time when you are available are optional, but they help the Kolo member who calls you.",
+    "uvod": "If you don't know any Kolo member, enter your first and last name, place and phone number and leave a few words about yourself. A Kolo member will call you within seven days at the latest and, after the conversation, can bring you into the Kolo.",
+    "uvod_osnov": "For the list you need your first and last name, place, phone number and consent. The description and the time when you are available are optional, but they help the Kolo member who calls you.",
     "osnov_donacija": "The Foundation has established receipt of your donation.",
     "osnov_pokroviteljstvo": "The Foundation has established receipt of the sponsorship under your application.",
     "osnov_gazdinstvo_rpg": "You have registered a farm as its holder.",
-    "obavestenje": "A Kolo member will call you. They will see your first and last name, if entered, and your phone number. The Foundation records who opened your data.",
+    "obavestenje": "A Kolo member will call you. They will see your first and last name and phone number, and whether the same number or the same name is listed with another account. The Foundation records who opened your data.",
     "ne_potvrdjuje": "Getting on the list does not confirm reality and is not a condition for anything you have already done.",
     "mesto": "Place",
     "mesto_placeholder": "e.g. Sombor",
@@ -3820,23 +3830,26 @@
     "dostupnost_placeholder": "e.g. weekdays after 5 pm",
     "neobavezno": "optional",
     "telefon": "Phone number",
-    "telefon_opis": "No one sees the name and number until a Kolo member opens them, and then only they see them, while the call is open. The number is deleted when someone introduces you into the Kolo or confirms you, and when you withdraw your consent.",
-    "pristanak": "I agree to be on the call list. A Kolo member will call me and will see my first and last name, if entered, and phone number, only while the call is open with them. Only Kolo members see the list. The Foundation records which Kolo member opened my details. The details on the list and the number are deleted when I am brought into the Kolo or confirmed, when I withdraw consent, or when my user status ends.",
+    "telefon_opis": "No one sees the name and number until a Kolo member opens them, and then only they see them, while the call is open. The number stays on your profile after the call as well: you can change it, but not delete it, for as long as the account exists.",
+    "pristanak": "I agree to be on the call list. A Kolo member will call me and will see my first and last name and phone number, only while the call is open with them, and whether the same number or the same name is listed with another account, together with that account's place. Only Kolo members see the list. The Foundation records which Kolo member opened my details. My first and last name, place and number stay with my account for as long as it exists and are compared with other accounts. The details on the list are deleted when I am brought into the Kolo or confirmed, when I withdraw consent, or when my user status ends.",
     "dugme_posalji": "I'd like someone to call me",
     "dugme_izmeni": "Save changes",
     "dugme_povuci": "Withdraw consent",
     "poslat": "You are on the list. Kolo members have been notified.",
     "izmenjen": "The changes have been saved.",
-    "povucen": "Consent has been withdrawn and the number deleted.",
-    "status_poslat": "You're on the call list. A Kolo member will call you within seven days at the latest. Once they bring you into the Kolo, the details on the list and the number are deleted.",
+    "povucen": "Consent has been withdrawn and the details on the list deleted. Your name, place and number stay with your account.",
+    "status_poslat": "You're on the call list. A Kolo member will call you within seven days at the latest. Once they bring you into the Kolo, the details on the list are deleted, while your name, place and number stay with your account.",
     "greska": "Not saved. Try again.",
-    "fali_pristanak": "To be on the list, tick the consent above the button.",
     "naslov_potvrda": "I'd like someone to call me for confirmation",
-    "uvod_potvrda": "Leave your phone number and the time you are available. A Kolo keeper will call you within seven days at the latest and, if after the conversation they can answer for you, will confirm you, and you become a Kolo member. Place and description are optional.",
-    "obavestenje_potvrda": "A Kolo keeper will call you. They will see your first and last name, if entered, and your phone number. The Foundation records who opened your details.",
-    "pristanak_potvrda": "I agree to be on the call list for confirmation. A Kolo keeper will call me and will see my first and last name, if entered, and phone number, only while the call is open with them. Only Kolo keepers see my request. The Foundation records which Kolo keeper opened my details. The details and the number are deleted when I am confirmed or when I withdraw consent.",
+    "uvod_potvrda": "Enter your first and last name, place, phone number and the time you are available. A Kolo keeper will call you within seven days at the latest and, if after the conversation they can answer for you, will confirm you, and you become a Kolo member. The description is optional.",
+    "obavestenje_potvrda": "A Kolo keeper will call you. They will see your first and last name and phone number, and whether the same number or the same name is listed with another account. The Foundation records who opened your details.",
+    "pristanak_potvrda": "I agree to be on the call list for confirmation. A Kolo keeper will call me and will see my first and last name and phone number, only while the call is open with them, and whether the same number or the same name is listed with another account, together with that account's place. Only Kolo keepers see my request. The Foundation records which Kolo keeper opened my details. My first and last name, place and number stay with my account for as long as it exists and are compared with other accounts. The details on the list are deleted when I am confirmed or when I withdraw consent.",
     "poslat_potvrda": "You're on the list. Kolo keepers have been notified.",
-    "status_poslat_potvrda": "You're on the call list for confirmation. A Kolo keeper will call you within seven days at the latest. Once they confirm you, the details on the list and the number are deleted."
+    "status_poslat_potvrda": "You're on the call list for confirmation. A Kolo keeper will call you within seven days at the latest. Once they confirm you, the details on the list are deleted, while your name, place and number stay with your account.",
+    "profil_napomena": "Your first and last name, place and phone number are entered on your profile and stay with the account for as long as it exists. They are not shown on your public profile unless you turn that on yourself.",
+    "ime_prezime": "First and last name",
+    "ime_prezime_opis": "Entered once. Later it can only be corrected through a “Data correction” complaint.",
+    "ime_prezime_upisano": "A name is already entered with your account. Corrections go through a “Data correction” complaint."
   },
   "spisak": {
     "naslov": "They'd like someone to call them",
@@ -3884,7 +3897,11 @@
     "plutajuca_opis": "If no Kolo member knows you personally, a Kolo keeper can call you and confirm you after the conversation.",
     "plutajuca_opis_zrno": "You have entered ZRNO, but you only get a vote once you are confirmed. Leave your number: a Kolo keeper will call you within three days at the latest.",
     "plutajuca_kasnije": "Later",
-    "rok_poziva": "Call by {datum} at the latest"
+    "rok_poziva": "Call by {datum} at the latest",
+    "oznaka_isti_telefon": "The same phone number is already listed with another account.",
+    "oznaka_isto_ime": "The same first and last name is already listed with another account — place: {mesta}.",
+    "oznaka_mesto_nepoznato": "not entered",
+    "oznaka_objasnjenje": "This is not a ban: household members share a number, and namesakes share a name. Ask during the conversation. If you suspect it is another account of the same person, do not bring them into the Kolo and let the Foundation know."
   },
   "pomoc": {
     "naslov": "Help",

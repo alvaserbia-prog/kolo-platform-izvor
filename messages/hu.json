@@ -942,7 +942,8 @@
     "preporuka_povuci": "Ajánlás visszavonása",
     "preporuka_greska": "Az ajánlás nem lett elmentve. Próbáld újra.",
     "prigovor_tip_roditeljstvo": "Döntés arról a bejelentésről, hogy valaki nem a gyermek szülője",
-    "prigovor_tip_gazdinstvo": "Gazdaság: bejelentés, csatlakozás, megszűnés vagy leírás"
+    "prigovor_tip_gazdinstvo": "Gazdaság: bejelentés, csatlakozás, megszűnés vagy leírás",
+    "trx_otpis_visestrukog_naloga": "Leírás többszörös fiók megállapítása alapján"
   },
   "zrno": {
     "naslov": "ZRNO",
@@ -2790,7 +2791,13 @@
     "spisak_povezanih_naslov": "Kapcsolódók listája",
     "spisak_povezanih_tekst": "Most már Kolo-tag vagy. A Megerősítések oldalon megtalálod a kapcsolódók listáját ({broj}): akiket bevezettél a Kolóba, és azt, aki téged bevezetett, ha még nincsenek megerősítve. Csak azokat erősítsd meg, akiket személyesen ismersz.",
     "potvrda_sa_spiska_povezanih_naslov": "Kolo-tag lettél",
-    "potvrda_sa_spiska_povezanih_tekst": "„{verifikator}” a kapcsolódók listájáról megerősített, így megerősítés nélküli tagból Kolo-tag lettél. A Megerősítések oldalon most neked is van kapcsolódói listád: csak azokat erősítsd meg róla, akiket személyesen ismersz. A Kolóhoz tartozás nem tagság az Alapítványban. Ha nem ismered ezt a személyt, jelentsd a Megerősítések oldalon."
+    "potvrda_sa_spiska_povezanih_tekst": "„{verifikator}” a kapcsolódók listájáról megerősített, így megerősítés nélküli tagból Kolo-tag lettél. A Megerősítések oldalon most neked is van kapcsolódói listád: csak azokat erősítsd meg róla, akiket személyesen ismersz. A Kolóhoz tartozás nem tagság az Alapítványban. Ha nem ismered ezt a személyt, jelentsd a Megerősítések oldalon.",
+    "visestruki_nalog_naslov": "Többszörös fiókot állapítottak meg",
+    "visestruki_nalog_tekst": "Az Alapítvány megállapította, hogy a(z) „{pseudonim}” fiók a második fiókod. Ez a fiók megszűnt. A döntés ellen 15 napon belül kifogást nyújthatsz be. Indoklás: {obrazlozenje}",
+    "visestruki_nalog_otpis_naslov": "Többszörös fiókot állapítottak meg",
+    "visestruki_nalog_otpis_tekst": "Az Alapítvány megállapította, hogy a(z) „{pseudonim}” fiók a második fiókod. Ez a fiók megszűnt, és a róla erre a fiókra átírt POEN ({poen}) leírásra került. A döntés ellen 15 napon belül kifogást nyújthatsz be. Indoklás: {obrazlozenje}",
+    "visestruki_nalog_otpis_minus_naslov": "Többszörös fiókot állapítottak meg: a bejegyzés mínuszban van",
+    "visestruki_nalog_otpis_minus_tekst": "Az Alapítvány megállapította, hogy a(z) „{pseudonim}” fiók a második fiókod. Ez a fiók megszűnt, és a róla erre a fiókra átírt POEN ({poen}) leírásra került. A bejegyzésed most {stanje} POEN; a beérkező POEN először a mínuszt tölti fel. A döntés ellen 15 napon belül kifogást nyújthatsz be. Indoklás: {obrazlozenje}"
   },
   "transakcije": {
     "verifikacija": "Tag megerősítése: {pseudonim}",
@@ -2830,7 +2837,9 @@
     "vaucer": "Utalvány, {opis}",
     "vaucer_ispravka": "Nyilvántartás helyesbítése, utalvány: {opis}",
     "pokroviteljstvo_dobra_otpis": "Leírás a javakkal és szolgáltatásokkal történő pártfogás nem teljesítése miatt, {opis}",
-    "vaucer_uzet": "Utalvány: {opis} — {davalac}"
+    "vaucer_uzet": "Utalvány: {opis} — {davalac}",
+    "visestruki_nalog_otpis": "Leírás többszörös fiók megállapítása alapján",
+    "visestruki_nalog_ponistenje": "Megszűnt fiók bejegyzésének érvénytelenítése"
   },
   "mejl": {
     "pozdrav": "Üdvözlünk",
@@ -3804,13 +3813,14 @@
     "filter_sve": "Összes megjelenítése"
   },
   "kontakt": {
+    "fali_pristanak": "Ahhoz, hogy felkerülj a listára, jelöld be a hozzájárulást a gomb felett.",
     "naslov": "Szeretném, ha felhívna valaki",
-    "uvod": "Ha nem ismersz egyetlen Kolo-tagot sem, írj pár szót magadról, és add meg a telefonszámodat. Egy Kolo-tag legkésőbb hét napon belül felhív, és a beszélgetés után bevezethet a Kolóba.",
-    "uvod_osnov": "A listához elég a telefonszámod és a hozzájárulásod. A település, a leírás és az, hogy mikor vagy elérhető, nem kötelező, de segít a téged hívó Kolo-tagnak.",
+    "uvod": "Ha nem ismersz egyetlen Kolo-tagot sem, add meg a vezeték- és utóneved, a településed és a telefonszámod, és írj pár szót magadról. Egy Kolo-tag legkésőbb hét napon belül felhív, és a beszélgetés után bevezethet a Kolóba.",
+    "uvod_osnov": "A listához szükséged van a vezeték- és utónevedre, a településre, a telefonszámra és a hozzájárulásodra. A leírás és az, hogy mikor vagy elérhető, nem kötelező, de segít a téged hívó Kolo-tagnak.",
     "osnov_donacija": "Az Alapítvány megállapította az adományod beérkezését.",
     "osnov_pokroviteljstvo": "Az Alapítvány megállapította a bejelentésed szerinti pártfogás beérkezését.",
     "osnov_gazdinstvo_rpg": "Gazdaságvezetőként bejelentettél egy gazdaságot.",
-    "obavestenje": "Egy Kolo-tag fog felhívni. Látni fogja a családi és utónevedet, ha be van jegyezve, és a telefonszámodat. Az Alapítvány rögzíti, ki nyitotta meg az adataidat.",
+    "obavestenje": "Egy Kolo-tag fog felhívni. Látni fogja a vezeték- és utónevedet és a telefonszámodat, valamint azt, hogy ugyanez a szám vagy ugyanez a név szerepel-e egy másik fióknál. Az Alapítvány rögzíti, ki nyitotta meg az adataidat.",
     "ne_potvrdjuje": "A listára kerülés nem igazolja a valóságot, és nem feltétele semminek, amit már megtettél.",
     "mesto": "Település",
     "mesto_placeholder": "pl. Zombor",
@@ -3820,23 +3830,26 @@
     "dostupnost_placeholder": "pl. hétköznap 17 óra után",
     "neobavezno": "nem kötelező",
     "telefon": "Telefonszám",
-    "telefon_opis": "A nevet és a számot senki sem látja, amíg egy Kolo-tag meg nem nyitja, és akkor is csak ő látja, amíg a hívás nyitva van. A szám törlődik, amikor valaki bevezet a Kolóba vagy megerősít, és amikor visszavonod a hozzájárulásodat.",
-    "pristanak": "Hozzájárulok, hogy felkerüljek a hívási listára. Felhív egy Kolo-tag, aki látni fogja a vezeték- és utónevemet, ha meg van adva, valamint a telefonszámomat, de csak addig, amíg a hívás nála nyitva van. A listát csak a Kolo-tagok látják. Az Alapítvány rögzíti, melyik Kolo-tag nyitotta meg az adataimat. A listán szereplő adatok és a szám törlődnek, amikor bevezetnek a Kolóba vagy megerősítenek, amikor visszavonom a hozzájárulásomat, vagy amikor megszűnik a felhasználói státuszom.",
+    "telefon_opis": "A nevet és a számot senki sem látja, amíg egy Kolo-tag meg nem nyitja, és akkor is csak ő látja, amíg a hívás nyitva van. A szám a hívás után is a profilodon marad: módosíthatod, de nem törölheted, amíg a fiók létezik.",
+    "pristanak": "Hozzájárulok, hogy felkerüljek a hívási listára. Felhív egy Kolo-tag, aki látni fogja a vezeték- és utónevemet és a telefonszámomat, de csak addig, amíg a hívás nála nyitva van, valamint azt, hogy ugyanez a szám vagy ugyanez a név szerepel-e egy másik fióknál, az adott fiók településével együtt. A listát csak a Kolo-tagok látják. Az Alapítvány rögzíti, melyik Kolo-tag nyitotta meg az adataimat. A vezeték- és utónevem, a településem és a számom a fiókomnál marad, amíg az létezik, és összevetik más fiókokkal. A listán szereplő adatok törlődnek, amikor bevezetnek a Kolóba vagy megerősítenek, amikor visszavonom a hozzájárulásomat, vagy amikor megszűnik a felhasználói státuszom.",
     "dugme_posalji": "Szeretném, ha felhívna valaki",
     "dugme_izmeni": "Módosítások mentése",
     "dugme_povuci": "Hozzájárulás visszavonása",
     "poslat": "Felkerültél a listára. A Kolo-tagok értesítést kaptak.",
     "izmenjen": "A módosítások mentve.",
-    "povucen": "A hozzájárulás visszavonva, a szám törölve.",
-    "status_poslat": "Felkerültél a hívási listára. Egy Kolo-tag legkésőbb hét napon belül felhív. Amikor bevezet a Kolóba, a listán szereplő adatok és a szám törlődnek.",
+    "povucen": "A hozzájárulás visszavonva, a listán szereplő adatok törölve. A név, a település és a szám a fiókodnál marad.",
+    "status_poslat": "Felkerültél a hívási listára. Egy Kolo-tag legkésőbb hét napon belül felhív. Amikor bevezet a Kolóba, a listán szereplő adatok törlődnek, a név, a település és a szám pedig a fiókodnál marad.",
     "greska": "Nem sikerült menteni. Próbáld újra.",
-    "fali_pristanak": "Ahhoz, hogy felkerülj a listára, jelöld be a hozzájárulást a gomb felett.",
     "naslov_potvrda": "Szeretném, ha felhívna valaki a megerősítés miatt",
-    "uvod_potvrda": "Add meg a telefonszámodat és azt, hogy mikor vagy elérhető. Egy Kolo-őrző legkésőbb hét napon belül felhív, és ha a beszélgetés után felelősséget tud vállalni érted, megerősít, és Kolo-taggá válsz. A település és a leírás nem kötelező.",
-    "obavestenje_potvrda": "Felhív egy Kolo-őrző. Látni fogja a vezeték- és utónevedet, ha meg van adva, valamint a telefonszámodat. Az Alapítvány rögzíti, ki nyitotta meg az adataidat.",
-    "pristanak_potvrda": "Hozzájárulok, hogy a megerősítés céljából felkerüljek a hívási listára. Felhív egy Kolo-őrző, aki látni fogja a vezeték- és utónevemet, ha meg van adva, valamint a telefonszámomat, de csak addig, amíg a hívás nála nyitva van. A kérésemet csak a Kolo-őrzők látják. Az Alapítvány rögzíti, melyik Kolo-őrző nyitotta meg az adataimat. Az adatok és a szám törlődnek, amikor megerősítenek, vagy amikor visszavonom a hozzájárulásomat.",
+    "uvod_potvrda": "Add meg a vezeték- és utóneved, a településed, a telefonszámod és azt, hogy mikor vagy elérhető. Egy Kolo-őrző legkésőbb hét napon belül felhív, és ha a beszélgetés után felelősséget tud vállalni érted, megerősít, és Kolo-taggá válsz. A leírás nem kötelező.",
+    "obavestenje_potvrda": "Felhív egy Kolo-őrző. Látni fogja a vezeték- és utónevedet és a telefonszámodat, valamint azt, hogy ugyanez a szám vagy ugyanez a név szerepel-e egy másik fióknál. Az Alapítvány rögzíti, ki nyitotta meg az adataidat.",
+    "pristanak_potvrda": "Hozzájárulok, hogy a megerősítés céljából felkerüljek a hívási listára. Felhív egy Kolo-őrző, aki látni fogja a vezeték- és utónevemet és a telefonszámomat, de csak addig, amíg a hívás nála nyitva van, valamint azt, hogy ugyanez a szám vagy ugyanez a név szerepel-e egy másik fióknál, az adott fiók településével együtt. A kérésemet csak a Kolo-őrzők látják. Az Alapítvány rögzíti, melyik Kolo-őrző nyitotta meg az adataimat. A vezeték- és utónevem, a településem és a számom a fiókomnál marad, amíg az létezik, és összevetik más fiókokkal. A listán szereplő adatok törlődnek, amikor megerősítenek, vagy amikor visszavonom a hozzájárulásomat.",
     "poslat_potvrda": "Felkerültél a listára. A Kolo-őrzőket értesítettük.",
-    "status_poslat_potvrda": "Felkerültél a hívási listára a megerősítés miatt. Egy Kolo-őrző legkésőbb hét napon belül felhív. Amikor megerősít, a listán szereplő adatok és a szám törlődnek."
+    "status_poslat_potvrda": "Felkerültél a hívási listára a megerősítés miatt. Egy Kolo-őrző legkésőbb hét napon belül felhív. Amikor megerősít, a listán szereplő adatok törlődnek, a név, a település és a szám pedig a fiókodnál marad.",
+    "profil_napomena": "A vezeték- és utóneved, a településed és a telefonszámod a profilodra kerül, és a fiókodnál marad, amíg az létezik. A nyilvános profilodon nem jelenik meg, hacsak magad be nem kapcsolod.",
+    "ime_prezime": "Vezeték- és utónév",
+    "ime_prezime_opis": "Egyszer kell megadni. Később csak „Adatjavítás” kifogással javítható.",
+    "ime_prezime_upisano": "A fiókodnál már szerepel név. A javítás „Adatjavítás” kifogással történik."
   },
   "spisak": {
     "naslov": "Szeretnék, ha valaki felhívná őket",
@@ -3884,7 +3897,11 @@
     "plutajuca_opis": "Ha egyetlen Kolo-tag sem ismer személyesen, felhívhat egy Kolo-őrző, és a beszélgetés után megerősíthet.",
     "plutajuca_opis_zrno": "ZRNO-t jegyeztél be, de szavazatot csak a megerősítésed után kapsz. Add meg a számodat: egy Kolo-őrző legkésőbb három napon belül felhív.",
     "plutajuca_kasnije": "Később",
-    "rok_poziva": "Hívás legkésőbb eddig: {datum}"
+    "rok_poziva": "Hívás legkésőbb eddig: {datum}",
+    "oznaka_isti_telefon": "Ugyanez a telefonszám már egy másik fióknál szerepel.",
+    "oznaka_isto_ime": "Ugyanez a vezeték- és utónév már egy másik fióknál szerepel — település: {mesta}.",
+    "oznaka_mesto_nepoznato": "nincs megadva",
+    "oznaka_objasnjenje": "Ez nem tiltás: a számon a háztartás tagjai is osztoznak, a néven pedig a névrokonok. Kérdezz rá a beszélgetésben. Ha azt gyanítod, hogy ugyanannak a személynek egy másik fiókjáról van szó, ne vezesd be a Kolóba, és jelezd az Alapítványnak."
   },
   "pomoc": {
     "naslov": "Súgó",
