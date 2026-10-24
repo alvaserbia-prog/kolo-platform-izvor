@@ -763,7 +763,7 @@ Kad je postojanje djeteta potvrđeno, račun postaje dijete Kola: oglasi, prepis
 
 Ako je dijete u svojem profilu unijelo vlastitu e-mail adresu i potvrdilo je klikom na poveznicu koja mu je stigla na tu adresu, samo zatraži novu lozinku kao i svaki drugi korisnik. Ta adresa služi isključivo za to, obavijesti na nju ne idu.
 
-Ako dijete nema svoju adresu, novu lozinku postavljaš ti, iz svojeg profila. Staru lozinku ne moraš znati, a dijete dobiva obavijest da si je promijenio.`,
+Ako dijete nema svoju adresu, novu lozinku postavljaš ti, iz svojeg profila. Staru lozinku ne moraš znati, a dijete dobiva obavijest o novoj lozinki.`,
       },
       {
         id: 87,
@@ -833,11 +833,11 @@ U svakom trenutku možeš ukloniti oglas, ugasiti razgovor s odraslima ili obris
         pitanje: `Kako dijete stječe POEN?`,
         odgovor: `Na tri načina, i za sva tri račun mora biti dijete Kola: barem jedan roditelj je član Kola i potvrđeno mu je da ima to dijete.
 
-Prijateljstvo. Za svako sklopljeno prijateljstvo upisuje se po 500 POEN svakom djetetu, kad su oba računa djeca Kola. Dok se čeka, objema stranama stoji natpis da 500 čeka: to je zabilježen doprinos, koji još nije upisan i ne ulazi u stanje. Prijateljstvo dvoje djece istog roditelja sklapa se normalno i vidi se u Pričaonici, ali ne nosi POEN.
+Prijateljstvo. To je jedini način na koji se djetetu POEN upisuje: za svako sklopljeno prijateljstvo upisuje se po 500 POENA svakom djetetu, kad su oba računa djeca Kola. Dok se čeka, objema stranama stoji natpis da 500 čeka: to je zabilježen doprinos, koji još nije upisan i ne ulazi u stanje. Prijateljstvo dvoje djece istog roditelja sklapa se normalno i vidi se u Pričaonici, ali ne nosi POEN.
 
-Pijaca. Dijete Kola objavljuje oglase pod istim uvjetima kao ostali korisnici i POEN iz razmjene upisuje mu se na isti način.
+Pijaca. Dijete Kola objavljuje oglase pod istim uvjetima kao ostali korisnici. Kad mu drugo dijete za ono što mu je dalo prepiše POEN, to je prepis: postojeći POEN prelazi s jednog zapisa na drugi.
 
-Prepis od roditelja. Ti i dijete Kola prepisujete POEN jedno drugome u oba smjera, bez ograničenja. Dok je račun dijete s roditeljem, prepisa nema ni u jednom smjeru. Prepisom se ne stvara nov POEN, nego se postojeći prenosi.
+Prepis od roditelja. Ti i dijete Kola prepisujete POEN jedno drugome u oba smjera; veći prepis s djetetova zapisa čeka tvoje odobrenje. Dok je račun dijete s roditeljem, prepisa nema ni u jednom smjeru. Prepisom se ne stvara nov POEN, nego se postojeći prenosi.
 
 POEN nije novac i nema vrijednost izvan sustava.`,
       },

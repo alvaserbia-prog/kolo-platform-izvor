@@ -763,7 +763,7 @@ Once the child's existence is confirmed, the account becomes a Kolo child: listi
 
 If the child has entered their own e-mail address in their profile and confirmed it by clicking the link sent to that address, they simply request a new password like any other user. That address serves only this purpose — no notifications are sent to it.
 
-If the child has no address of their own, you set the new password from your own profile. You do not need to know the old one, and the child is notified that you changed it.`,
+If the child has no address of their own, you set the new password from your own profile. You do not need to know the old one, and the child is notified about the new password.`,
       },
       {
         id: 87,
@@ -833,11 +833,11 @@ At any moment you can remove a listing, switch off conversations with adults, or
         pitanje: `How does a child obtain POEN?`,
         odgovor: `In three ways, and for all three the account must be a Kolo child: at least one parent is a Kolo member and has been confirmed to have that child.
 
-Friendship. For every friendship made, 500 POEN is recorded for each child, once both accounts are Kolo children. While it waits, both see a note that 500 is waiting: that is a noted contribution, which has not yet been recorded and does not enter the balance. A friendship between two children of the same parent is made normally and shows in the Chat Room, but carries no POEN.
+Friendship. This is the only way POEN is recorded for a child: for every friendship made, 500 POEN is recorded for each child, once both accounts are Kolo children. While it waits, both see a note that 500 is waiting: that is a noted contribution, which has not yet been recorded and does not enter the balance. A friendship between two children of the same parent is made normally and shows in the Chat Room, but carries no POEN.
 
-The Marketplace. A Kolo child posts listings under the same conditions as other users, and POEN from an exchange is recorded in the same way.
+The Marketplace. A Kolo child posts listings under the same conditions as other users. When another child re-registers POEN to them for what they gave, that is a re-registration: existing POEN moves from one record to another.
 
-A re-registration from a parent. You and a Kolo child re-register POEN to each other in both directions, without limits. While the account is a child with a parent, there are no re-registrations in either direction. A re-registration creates no new POEN — it moves existing POEN.
+A re-registration from a parent. You and a Kolo child re-register POEN to each other in both directions; a larger re-registration from the child's record waits for your approval. While the account is a child with a parent, there are no re-registrations in either direction. A re-registration creates no new POEN — it moves existing POEN.
 
 POEN is not money and has no value outside the system.`,
       },

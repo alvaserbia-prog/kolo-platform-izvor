@@ -234,9 +234,11 @@ function ProfilMeni({ userId, pseudonim }: { userId: string; pseudonim: string }
                 <path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>
               </svg>
             </button>}
-            {/* Moja deca — ulaz roditelja (paket F, F1-1): kartica na profilu, gde su
-                deca, poziv deteta i dugmad za otvaranje i preuzimanje naloga. */}
-            {me?.imaDecu && <button
+            {/* Moja deca — ulaz roditelja (paket F, F1-1, F10-1): kartica na profilu, gde
+                su deca, poziv deteta i dugmad za otvaranje i preuzimanje naloga. Stoji
+                svakom punoletnom, kao „Moje firme" — inače onaj ko tek hoće da doda
+                prvo dete nema kuda da uđe. */}
+            {me && !me.maloletan && <button
               onClick={() => { setOpen(false); router.push("/profil#moja-deca"); }}
               className="w-full text-right px-4 py-2.5 text-sm text-kolo-text hover:bg-kolo-bg transition-colors flex items-center justify-end gap-3"
             >

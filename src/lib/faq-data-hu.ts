@@ -772,7 +772,7 @@ Amikor a gyerek létezését megerősítették, a fiók Kolo-gyermekké válik: 
 
 Ha a gyerek megadta a profiljában a saját e-mail-címét, és megerősítette az arra a címre küldött hivatkozásra kattintva, egyszerűen új jelszót kér, mint bármely más felhasználó. Ez a cím kizárólag erre szolgál — értesítéseket nem küldünk rá.
 
-Ha a gyereknek nincs saját címe, az új jelszót te állítod be a saját profilodból. A régit nem kell tudnod, a gyerek pedig értesítést kap arról, hogy megváltoztattad.`,
+Ha a gyereknek nincs saját címe, az új jelszót te állítod be a saját profilodból. A régit nem kell tudnod, a gyerek pedig értesítést kap az új jelszóról.`,
       },
       {
         id: 87,
@@ -842,11 +842,11 @@ Bármikor eltávolíthatsz hirdetést, kikapcsolhatod a felnőttekkel folytatott
         pitanje: `Hogyan szerez a gyerek POEN-t?`,
         odgovor: `Háromféleképpen, és mindháromhoz a fióknak Kolo-gyermeknek kell lennie: legalább az egyik szülő Kolo-tag, és megerősítették neki, hogy van ilyen gyereke.
 
-Barátság. Minden megkötött barátságért 500-500 POEN rögzül mindkét gyereknek, amikor mindkét fiók Kolo-gyermek. Amíg várni kell, mindkettőjüknél felirat jelzi, hogy 500 várakozik: ez feljegyzett hozzájárulás, amely még nincs bejegyezve, és nem számít bele az egyenlegbe. Ugyanannak a szülőnek két gyereke között a barátság rendesen megköthető és látható a Beszélgetőben, de nem hoz POEN-t.
+Barátság. Ez az egyetlen mód, ahogyan a gyereknek POEN-t jegyeznek be: minden megkötött barátságért 500-500 POEN rögzül mindkét gyereknek, amikor mindkét fiók Kolo-gyermek. Amíg várni kell, mindkettőjüknél felirat jelzi, hogy 500 várakozik: ez feljegyzett hozzájárulás, amely még nincs bejegyezve, és nem számít bele az egyenlegbe. Ugyanannak a szülőnek két gyereke között a barátság rendesen megköthető és látható a Beszélgetőben, de nem hoz POEN-t.
 
-Piac. A Kolo-gyermek ugyanolyan feltételekkel ad fel hirdetést, mint a többi felhasználó, és a cseréből származó POEN ugyanúgy rögzül neki.
+Piac. A Kolo-gyermek ugyanolyan feltételekkel ad fel hirdetést, mint a többi felhasználó. Amikor egy másik gyerek azért, amit kapott tőle, POEN-t ír át neki, az átírás: a meglévő POEN egyik bejegyzésről a másikra kerül.
 
-Átírás a szülőtől. Te és a Kolo-gyermek mindkét irányban, korlátozás nélkül írhattok át egymásnak POEN-t. Amíg a fiók szülős gyermek, egyik irányban sincs átírás. Az átírás nem teremt új POEN-t, csak a meglévőt viszi át.
+Átírás a szülőtől. Te és a Kolo-gyermek mindkét irányban írhattok át egymásnak POEN-t; a gyermek bejegyzéséről induló nagyobb átírás a jóváhagyásodra vár. Amíg a fiók szülős gyermek, egyik irányban sincs átírás. Az átírás nem teremt új POEN-t, csak a meglévőt viszi át.
 
 A POEN nem pénz, és a rendszeren kívül nincs értéke.`,
       },

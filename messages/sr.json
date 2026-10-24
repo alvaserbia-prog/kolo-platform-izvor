@@ -361,7 +361,7 @@
     "prikazi_lozinku": "Prikaži lozinku",
     "sakrij_lozinku": "Sakrij lozinku",
     "email_ili_pseudonim": "Imejl ili pseudonim",
-    "deca_pseudonimom": "Možeš uneti imejl ili pseudonim. Deca se prijavljuju pseudonimom i lozinkom koju im je dao roditelj.",
+    "deca_pseudonimom": "Možeš uneti imejl ili pseudonim. Deca se prijavljuju nadimkom i lozinkom.",
     "podnaslov_odrediste": "Za ovo ti treba nalog. Prijavi se ili ga otvori za minut.",
     "otvori_nalog": "Otvori nalog"
   },
@@ -4271,7 +4271,8 @@
     "prijava_dete_uspeh": "Poslato. Fondacija će proveriti. Dok ne odluči, to lice nema uvid u tvoj nalog.",
     "prijava_trece_naslov": "Ovo nije roditelj?",
     "prijava_trece_opis": "Ako znaš da lice upisano kao roditelj ovog deteta nije njegov roditelj, prijavi to Fondaciji. Veza tog lica se odmah zaustavlja dok Fondacija ne odluči, osim ako je Fondacija već utvrdila da je to lice roditelj; tada se prijava samo razmatra. Ko je prijavio se ne otkriva.",
-    "dopisivanje_naslov": "S kim se dopisuje"
+    "dopisivanje_naslov": "S kim se dopisuje",
+    "postojanje_kako_u_kolo": "Kako da postanem član Kola →"
   },
   "decjaPocetna": {
     "pozdrav": "Zdravo, {pseudonim}!",
@@ -4324,7 +4325,7 @@
   },
   "registracijaDeteta": {
     "fali_pseudonim": "Upiši nadimak.",
-    "fali_lozinka": "Lozinka mora imati najmanje 8 znakova.",
+    "fali_lozinka": "Lozinka mora imati najmanje {broj} znakova.",
     "fali_email": "Upiši ispravnu imejl adresu roditelja.",
     "naslov": "Otvori svoj nalog",
     "podnaslov": "Izaberi nadimak i lozinku. Upiši imejl mame ili tate, poslaćemo im poruku da odobre tvoj nalog.",
@@ -4345,7 +4346,8 @@
     "kod_opis": "Ako poruka ne stigne, mama ili tata unose tvoj nadimak i ovaj broj.",
     "dalje": "Idemo dalje",
     "odrastao": "Nisi dete?",
-    "odrastao_link": "Otvori običan nalog"
+    "odrastao_link": "Otvori običan nalog",
+    "lozinka_opis": "Najmanje {broj} znakova."
   },
   "detePoziv": {
     "naslov": "Dete te je upisalo kao roditelja",
@@ -4359,7 +4361,7 @@
     "potvrda_brisanja": "Nalog i svi njegovi podaci biće obrisani. Nastaviti?",
     "istekao": "Link je istekao. Zamoli dete da ti pročita šestocifreni kod sa svog ekrana i unesi ga u odeljku „Moja deca“.",
     "ucitavanje": "Učitavanje…",
-    "nepostoji": "Poziv nije pronađen.",
+    "nepostoji": "Link je istekao ili je već iskorišćen. Zamoli dete da ti pročita šestocifreni kod sa svog profila i unesi ga u „Moja deca“ (gore desno, kad se prijaviš).",
     "greska": "Radnja nije izvršena. Pokušaj ponovo.",
     "vec_preuzet_naslov": "Nalog je već preuzet",
     "vec_preuzet_opis": "Nalog {pseudonim} već ima roditelja. Ako si drugi roditelj, unesi pseudonim i kod u odeljku „Moja deca“.",
@@ -4392,7 +4394,7 @@
     "kol_dece": "Dece",
     "kol_udeo": "Udeo",
     "bez_broja_ucenika": "Broj upisanih učenika nije poznat.",
-    "napomena": "Na listi su škole u kojima učestvuje bar jedno dete. Broje se deca Kola.",
+    "napomena": "Na listi su škole u kojima učestvuje bar jedno dete. Broje se deca Kola: deca čiji je roditelj u Kolu i potvrđeno mu je da ima to dete.",
     "spisak_prazan": "Spisak škola još nije unet.",
     "greska_ucitavanje": "Učitavanje nije uspelo.",
     "nema_skola": "Još nijedna škola nema uključeno dete.",
@@ -4416,7 +4418,8 @@
     "kartica_dugme": "Izaberi školu",
     "kartica_nije_na_listi": "Tvoja škola još nije na listi, uđe na nju sa prvim uključenim detetom.",
     "kartica_ti": "Ti si {mesto}. u svojoj školi",
-    "deca_samo_deca": "Spisak dece iz ove škole vide samo deca. Brojevi i mesto na listama vidljivi su svima."
+    "deca_samo_deca": "Spisak dece iz ove škole vide samo deca. Brojevi i mesto na listama vidljivi su svima.",
+    "od_ucenika": "{dece} od {ucenika} učenika"
   },
   "emailDeteta": {
     "naslov": "Moj imejl",

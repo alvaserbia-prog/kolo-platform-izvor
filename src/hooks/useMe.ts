@@ -40,8 +40,6 @@ export interface MeData {
    * i „povezano" nose različita ograničenja.
    */
   stanjeDeteta?: "NA_CEKANJU" | "POVEZANO" | "AKTIVNO" | null;
-  /** Punoletni sa detetom ili pozivom deteta — stavka „Moja deca" gore desno. */
-  imaDecu?: boolean;
 }
 
 export const ME_KEY = ["me"] as const;

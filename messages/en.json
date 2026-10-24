@@ -361,7 +361,7 @@
     "prikazi_lozinku": "Show password",
     "sakrij_lozinku": "Hide password",
     "email_ili_pseudonim": "Email or pseudonym",
-    "deca_pseudonimom": "You can enter your email or pseudonym. Children log in with a pseudonym and the password their parent gave them.",
+    "deca_pseudonimom": "You can enter your e-mail or pseudonym. Children sign in with their nickname and password.",
     "podnaslov_odrediste": "You need an account for this. Log in, or open one in a minute.",
     "otvori_nalog": "Open an account"
   },
@@ -3382,7 +3382,8 @@
     "prijava_trece_naslov": "Not the parent?",
     "prijava_trece_opis": "If you know that a person entered as this child's parent is not their parent, report it to the Foundation. That person's link is stopped immediately until the Foundation decides, unless the Foundation has already established that the person is a parent; in that case the report is only considered. Who reported is not disclosed.",
     "zahtevi_fali_izjava": "To confirm, tick the statement above the button.",
-    "dopisivanje_naslov": "Who they write with"
+    "dopisivanje_naslov": "Who they write with",
+    "postojanje_kako_u_kolo": "How do I become a Kolo member →"
   },
   "decjaPocetna": {
     "pozdrav": "Hello, {pseudonim}!",
@@ -3455,8 +3456,9 @@
     "odrastao": "Not a child?",
     "odrastao_link": "Open a regular account",
     "fali_pseudonim": "Enter a nickname.",
-    "fali_lozinka": "The password must have at least 8 characters.",
-    "fali_email": "Enter a valid parent's email address."
+    "fali_lozinka": "The password must have at least {broj} characters.",
+    "fali_email": "Enter a valid parent's email address.",
+    "lozinka_opis": "At least {broj} characters."
   },
   "detePoziv": {
     "naslov": "A child has entered you as their parent",
@@ -3470,7 +3472,7 @@
     "potvrda_brisanja": "The account and all its data will be deleted. Continue?",
     "istekao": "The link has expired. Ask the child to read you the six-digit code from their screen and enter it in the “My children” section.",
     "ucitavanje": "Loading…",
-    "nepostoji": "Invitation not found.",
+    "nepostoji": "The link has expired or has already been used. Ask the child to read you the six-digit code from their profile and enter it under “My children” (top right, once you sign in).",
     "greska": "The action was not carried out. Try again.",
     "vec_preuzet_naslov": "The account is already taken over",
     "vec_preuzet_opis": "The account {pseudonim} already has a parent. If you are the second parent, enter the pseudonym and the code in the “My children” section.",
@@ -3503,7 +3505,7 @@
     "kol_dece": "Children",
     "kol_udeo": "Share",
     "bez_broja_ucenika": "The number of enrolled pupils is not known.",
-    "napomena": "The list shows schools with at least one participating child. Kolo children are counted.",
+    "napomena": "The list shows schools with at least one child taking part. Kolo children are counted: children whose parent is in the Kolo and has been confirmed to have that child.",
     "spisak_prazan": "The list of schools has not been entered yet.",
     "greska_ucitavanje": "Loading failed.",
     "nema_skola": "No school has a participating child yet.",
@@ -3527,7 +3529,8 @@
     "kartica_dugme": "Choose school",
     "kartica_nije_na_listi": "Your school is not on the list yet — it joins with its first participating child.",
     "kartica_ti": "You are {mesto}. in your school",
-    "deca_samo_deca": "Only children see the list of children from this school. The numbers and the ranking are visible to everyone."
+    "deca_samo_deca": "Only children see the list of children from this school. The numbers and the ranking are visible to everyone.",
+    "od_ucenika": "{dece} of {ucenika} pupils"
   },
   "emailDeteta": {
     "naslov": "My e-mail",

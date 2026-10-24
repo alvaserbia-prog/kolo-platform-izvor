@@ -102,7 +102,7 @@ export default function SkoleKlijent() {
               napomena:
                 r.procenat === null
                   ? t("bez_broja_ucenika")
-                  : `${broj(r.dece)} / ${broj(r.ucenika as number)}`,
+                  : t("od_ucenika", { dece: broj(r.dece), ucenika: broj(r.ucenika as number) }),
             }))}
           />
         </div>

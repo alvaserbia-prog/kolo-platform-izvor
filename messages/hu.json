@@ -361,7 +361,7 @@
     "prikazi_lozinku": "Jelszó megjelenítése",
     "sakrij_lozinku": "Jelszó elrejtése",
     "email_ili_pseudonim": "E-mail vagy álnév",
-    "deca_pseudonimom": "Megadhatod az email-címedet vagy az álnevedet. A gyerekek álnévvel és a szülőjüktől kapott jelszóval jelentkeznek be.",
+    "deca_pseudonimom": "Megadhatod az e-mail-címedet vagy az álnevedet. A gyerekek a becenevükkel és a jelszavukkal lépnek be.",
     "podnaslov_odrediste": "Ehhez fiók kell. Jelentkezz be, vagy nyiss egyet egy perc alatt.",
     "otvori_nalog": "Fiók nyitása"
   },
@@ -3382,7 +3382,8 @@
     "prijava_trece_naslov": "Ő nem a szülő?",
     "prijava_trece_opis": "Ha tudod, hogy az e gyermek szülőjeként bejegyzett személy nem a szülője, jelentsd az Alapítványnak. Az illető kapcsolatát azonnal felfüggesztik, amíg az Alapítvány nem dönt, kivéve, ha az Alapítvány már megállapította, hogy ő a szülő; ekkor a bejelentést csak megvizsgálják. A bejelentő kilétét nem fedik fel.",
     "zahtevi_fali_izjava": "A megerősítéshez jelöld be a gomb feletti nyilatkozatot.",
-    "dopisivanje_naslov": "Kivel levelezik"
+    "dopisivanje_naslov": "Kivel levelezik",
+    "postojanje_kako_u_kolo": "Hogyan lehetek Kolo-tag →"
   },
   "decjaPocetna": {
     "pozdrav": "Szia, {pseudonim}!",
@@ -3455,8 +3456,9 @@
     "odrastao": "Nem vagy gyerek?",
     "odrastao_link": "Nyiss rendes fiókot",
     "fali_pseudonim": "Adj meg egy becenevet.",
-    "fali_lozinka": "A jelszónak legalább 8 karakterből kell állnia.",
-    "fali_email": "Adj meg egy érvényes szülői email-címet."
+    "fali_lozinka": "A jelszónak legalább {broj} karakterből kell állnia.",
+    "fali_email": "Adj meg egy érvényes szülői email-címet.",
+    "lozinka_opis": "Legalább {broj} karakter."
   },
   "detePoziv": {
     "naslov": "Egy gyerek téged adott meg szülőként",
@@ -3470,7 +3472,7 @@
     "potvrda_brisanja": "A fiók és minden adata törlődik. Folytatja?",
     "istekao": "A link lejárt. Kérd meg a gyermeket, hogy olvassa fel a hatjegyű kódot a képernyőjéről, és írd be a „Gyermekeim” részben.",
     "ucitavanje": "Betöltés…",
-    "nepostoji": "A meghívó nem található.",
+    "nepostoji": "A link lejárt, vagy már felhasználták. Kérd meg a gyereket, hogy olvassa fel a profiljában látható hatjegyű kódot, és írd be a „Gyermekeim” részben (jobbra fent, bejelentkezés után).",
     "greska": "A művelet nem hajtódott végre. Próbáld újra.",
     "vec_preuzet_naslov": "A fiókot már átvették",
     "vec_preuzet_opis": "A(z) {pseudonim} fióknak már van szülője. Ha te vagy a második szülő, add meg az álnevet és a kódot a „Gyermekeim” részben.",
@@ -3503,7 +3505,7 @@
     "kol_dece": "Gyerek",
     "kol_udeo": "Arány",
     "bez_broja_ucenika": "A beiratkozott tanulók száma nem ismert.",
-    "napomena": "A listán azok az iskolák szerepelnek, amelyekből legalább egy gyerek részt vesz. A Kolo-gyermekek számítanak.",
+    "napomena": "A listán azok az iskolák szerepelnek, ahol legalább egy gyermek részt vesz. A Kolo-gyermekeket számoljuk: azokat, akiknek a szülője a Kolóban van, és megerősítették neki, hogy van ilyen gyermeke.",
     "spisak_prazan": "Az iskolák listája még nincs feltöltve.",
     "greska_ucitavanje": "A betöltés nem sikerült.",
     "nema_skola": "Még egyetlen iskolából sincs részt vevő gyerek.",
@@ -3527,7 +3529,8 @@
     "kartica_dugme": "Iskola választása",
     "kartica_nije_na_listi": "Az iskolád még nincs a listán — az első részt vevő gyerekkel kerül fel rá.",
     "kartica_ti": "Te vagy a(z) {mesto}. az iskoládban",
-    "deca_samo_deca": "Az iskola gyerekeinek listáját csak gyerekek látják. A számok és a helyezés mindenki számára láthatók."
+    "deca_samo_deca": "Az iskola gyerekeinek listáját csak gyerekek látják. A számok és a helyezés mindenki számára láthatók.",
+    "od_ucenika": "{ucenika} tanulóból {dece}"
   },
   "emailDeteta": {
     "naslov": "Az e-mail-címem",

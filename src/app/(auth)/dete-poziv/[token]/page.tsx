@@ -151,6 +151,30 @@ export default function DetePozivPage({ params }: { params: Promise<{ token: str
         <Obavestenje vrsta="upozorenje">{t("istekao")}</Obavestenje>
       ) : (
         <>
+          {/* 🔴 Uputstvo za roditelja koji NIJE na platformi. Dugme ispod ga vodi
+              na prijavu, a on nalog nema — bez ovih koraka poruka traži radnju
+              koju čovek ne ume da izvrši. Stoji IZNAD dugmeta (paket F, F10-3): ko nema nalog
+              je inače prvo kliknuo „Preuzmi" i završio na prijavi. Ulazak u Kolo nije uslov. */}
+          <div className="rounded-kontrola bg-kolo-bg px-4 py-3 text-sm text-kolo-muted space-y-1">
+            <p className="font-semibold text-kolo-text">{t("nisam_clan_naslov")}</p>
+            {/* 🔴 Korak 1 mora da bude ŽIV link, i to sa `callbackUrl`. Dugme
+                „Preuzmi nalog" iznad vodi na prijavu, a čovek koji nema nalog
+                nema šta tamo da radi; obrazac za registraciju sam po sebi ne zna
+                da ga posle vrati na poziv. Bez ovoga se roditelj posle otvaranja
+                naloga gubi i mora ponovo da traži poruku u pošti. */}
+            <p>
+              <Link
+                href={`/registracija?callbackUrl=${encodeURIComponent(`/dete-poziv/${token}`)}`}
+                className="font-medium text-kolo-green-700 underline underline-offset-2"
+              >
+                {t("nisam_clan_korak1")}
+              </Link>
+            </p>
+            <p>{t("nisam_clan_korak2")}</p>
+            {/* Ulazak u Kolo nije uslov za preuzimanje — zato napomena, ne korak (F3-3). */}
+            <p className="pt-1">{t("nisam_clan_kasnije")}</p>
+          </div>
+
           <div>
             <label htmlFor="dete-poziv-datum" className="mb-1.5 block text-sm font-medium text-kolo-text">
               {t("datum_rodjenja")}
@@ -175,28 +199,6 @@ export default function DetePozivPage({ params }: { params: Promise<{ token: str
               Isti sadržaj stoji i u mejlu; ekran ne sme da bude škrtiji od njega. */}
           <p className="text-xs text-kolo-muted">{t("dobijate")}</p>
 
-          {/* 🔴 Uputstvo za roditelja koji NIJE na platformi. Dugme iznad ga vodi
-              na prijavu, a on nalog nema — bez ovih koraka poruka traži radnju
-              koju čovek ne ume da izvrši. Ulazak u Kolo dolazi kasnije i nije uslov. */}
-          <div className="rounded-kontrola bg-kolo-bg px-4 py-3 text-xs text-kolo-muted space-y-1">
-            <p className="font-semibold text-kolo-text">{t("nisam_clan_naslov")}</p>
-            {/* 🔴 Korak 1 mora da bude ŽIV link, i to sa `callbackUrl`. Dugme
-                „Preuzmi nalog" iznad vodi na prijavu, a čovek koji nema nalog
-                nema šta tamo da radi; obrazac za registraciju sam po sebi ne zna
-                da ga posle vrati na poziv. Bez ovoga se roditelj posle otvaranja
-                naloga gubi i mora ponovo da traži poruku u pošti. */}
-            <p>
-              <Link
-                href={`/registracija?callbackUrl=${encodeURIComponent(`/dete-poziv/${token}`)}`}
-                className="font-medium text-kolo-green-700 underline underline-offset-2"
-              >
-                {t("nisam_clan_korak1")}
-              </Link>
-            </p>
-            <p>{t("nisam_clan_korak2")}</p>
-            {/* Ulazak u Kolo nije uslov za preuzimanje — zato napomena, ne korak (F3-3). */}
-            <p className="pt-1">{t("nisam_clan_kasnije")}</p>
-          </div>
 
           <div className="space-y-2 border-t border-kolo-border pt-4">
             <p className="text-xs text-kolo-muted">{t("nije_moje_uvod")}</p>

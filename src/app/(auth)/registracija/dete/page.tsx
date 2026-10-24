@@ -10,6 +10,7 @@ import Kartica from "@/components/ui/Kartica";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
+import { MIN_LOZINKA } from "@/lib/deca-pravila";
 
 /**
  * Registracija deteta (Modul Deca, čl. 4a).
@@ -37,7 +38,7 @@ export default function RegistracijaDetetaPage() {
     setGreska("");
     // Dugme se ne gasi zbog nepotpunog obrasca — klik kaže šta fali.
     if (!pseudonim.trim()) { setGreska(t("fali_pseudonim")); return; }
-    if (lozinka.length < 8) { setGreska(t("fali_lozinka")); return; }
+    if (lozinka.length < MIN_LOZINKA) { setGreska(t("fali_lozinka", { broj: MIN_LOZINKA })); return; }
     if (!roditeljEmail.includes("@")) { setGreska(t("fali_email")); return; }
     setSalje(true);
     try {
@@ -113,6 +114,8 @@ export default function RegistracijaDetetaPage() {
                 sakrijLabel={t("sakrij_lozinku")}
               />
             </div>
+            {/* Pravilo pre unosa, ne tek u grešci (paket F, F10-5). */}
+            <p className="mt-1.5 text-sm text-kolo-muted">{t("lozinka_opis", { broj: MIN_LOZINKA })}</p>
           </div>
 
           <Polje oznaka={t("email_roditelja")} pomoc={t("email_roditelja_opis")}>

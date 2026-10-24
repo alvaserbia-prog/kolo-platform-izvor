@@ -637,7 +637,14 @@ function PotvrdaPostojanja({ dete }: { dete: Dete }) {
             </button>
           </>
         ) : (
-          <p className="mt-2 text-sm text-kolo-muted">{t("postojanje_samo_clan_kola")}</p>
+          <>
+            <p className="mt-2 text-sm text-kolo-muted">{t("postojanje_samo_clan_kola")}</p>
+            {/* Roditelj koji nije u Kolu ne zna kako da uđe (paket F, F10-2): put je na
+                Potvrdama — „Moj kod" i „Želim da me neko nazove". */}
+            <Link href="/verifikacija" className="mt-2 inline-block text-sm font-medium text-kolo-green-700 underline underline-offset-2">
+              {t("postojanje_kako_u_kolo")}
+            </Link>
+          </>
         ))}
       {greska && <Obavestenje vrsta="greska" className="mt-2">{greska}</Obavestenje>}
     </section>
