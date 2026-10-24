@@ -278,8 +278,8 @@ export async function probajEvidentirati(prijateljstvoId: string): Promise<boole
         tip: "prijateljstvo_poen",
         kljuc: "notifikacije.prijateljstvo_poen",
         parametri: { pseudonim: drugi.pseudonim, iznos: PRIJATELJSTVO_POEN },
-        naslov: `Upisano ti je ${PRIJATELJSTVO_POEN} POEN`,
-        tekst: `Prijateljstvo sa ${drugi.pseudonim} donelo ti je ${PRIJATELJSTVO_POEN} POEN.`,
+        naslov: `Upisano ti je ${PRIJATELJSTVO_POEN} POENA`,
+        tekst: `Prijateljstvo sa ${drugi.pseudonim} donelo ti je ${PRIJATELJSTVO_POEN} POENA.`,
         link: "/novcanik",
       }).catch(() => {});
     }
@@ -445,7 +445,7 @@ export async function raskiniPrijateljstvo(korisnikId: string, prijateljstvoId: 
     parametri: { pseudonim: jaPseudonim, iznos: PRIJATELJSTVO_POEN },
     naslov: "Prijateljstvo je raskinuto",
     tekst: p.poenEvidentiran
-      ? `Prijateljstvo sa ${jaPseudonim} je raskinuto. Otpisano ti je ${PRIJATELJSTVO_POEN} POEN.`
+      ? `Prijateljstvo sa ${jaPseudonim} je raskinuto. Otpisano ti je ${PRIJATELJSTVO_POEN} POENA.`
       : `Prijateljstvo sa ${jaPseudonim} je raskinuto.`,
     link: "/prijatelji",
   }).catch(() => {});

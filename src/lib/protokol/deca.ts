@@ -1636,3 +1636,50 @@ export async function javiRoditeljimaZaOglas(
     console.error("[deca] Obaveštenje roditelju o oglasu nije poslato", deteId, e);
   }
 }
+
+/**
+ * Šta čeka roditelja (paket F, 24.10.2026): prepisi dece iznad praga koji čekaju
+ * njegovo odobrenje (čl. 14) i pozivi u kojima je dete navelo njegovu adresu
+ * (čl. 4b). Čita ga „Čeka na tebe" na Početnoj; `imaDecu` pali stavku „Moja deca"
+ * u meniju gore desno.
+ *
+ * Zaustavljena veza (čl. 4e st. 2) ne daje ovlašćenja roditelja, pa se prepisi
+ * takvog deteta ne broje — dete na spisku ostaje, zato `imaDecu` ne gleda zastoj.
+ * Uslov poziva je isti kao u `poziviZaEmail` (`deca-poziv.ts`).
+ */
+export async function cekaRoditelja(roditeljId: string, email: string | null) {
+  const sada = new Date();
+  const [prepisi, roditeljstva, pozivi] = await Promise.all([
+    prisma.prepisOdobrenje.findMany({
+      where: {
+        status: "CEKA",
+        rokDo: { gt: sada },
+        dete: {
+          deaktiviranAt: null,
+          roditeljstvaKaoDete: { some: { roditeljId, zaustavljenaAt: null } },
+        },
+      },
+      select: { deteId: true },
+    }),
+    prisma.roditeljstvo.count({ where: { roditeljId, dete: { deaktiviranAt: null, maloletan: true } } }),
+    email
+      ? prisma.roditeljPoziv.count({
+          where: {
+            email: email.trim().toLowerCase(),
+            iskoriscenAt: null,
+            odbijenAt: null,
+            brisanjeDo: { gt: sada },
+            dete: { deaktiviranAt: null, maloletan: true },
+          },
+        })
+      : Promise.resolve(0),
+  ]);
+  const deca = [...new Set(prepisi.map((p) => p.deteId))];
+  return {
+    prepisi: prepisi.length,
+    // Jedno dete → pravo na njegova podešavanja, gde je odobrenje; više → „Moja deca".
+    prepisiHref: deca.length === 1 ? `/deca/${deca[0]}` : "/profil#moja-deca",
+    pozivi,
+    imaDecu: roditeljstva > 0 || pozivi > 0,
+  };
+}

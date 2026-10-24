@@ -136,6 +136,15 @@ export default function DetePozivPage({ params }: { params: Promise<{ token: str
         <p className="mt-1 text-sm text-kolo-muted">
           {t("opis", { pseudonim: poziv.pseudonim })}
         </p>
+        {/* Za mnoge roditelje ovo je prvi susret sa KOLO sistemom (paket F, F6-1):
+            pre datuma i dugmeta „Obriši" mora da stoji šta je KOLO i šta dete ovde radi. */}
+        <p className="mt-3 text-sm text-kolo-text">{t("uvod")}</p>
+        <Link
+          href="/cesto-postavljena-pitanja#deca"
+          className="mt-1 inline-block text-sm font-medium text-kolo-green-700 underline underline-offset-2"
+        >
+          {t("uvod_link")}
+        </Link>
       </div>
 
       {poziv.istekao ? (
@@ -167,9 +176,8 @@ export default function DetePozivPage({ params }: { params: Promise<{ token: str
           <p className="text-xs text-kolo-muted">{t("dobijate")}</p>
 
           {/* 🔴 Uputstvo za roditelja koji NIJE na platformi. Dugme iznad ga vodi
-              na prijavu, a on nalog nema — bez ova tri koraka poruka traži radnju
-              koju čovek ne ume da izvrši. Drugi i treći korak se ne dešavaju istog
-              dana, ali dete zbog toga nije zaustavljeno. */}
+              na prijavu, a on nalog nema — bez ovih koraka poruka traži radnju
+              koju čovek ne ume da izvrši. Ulazak u Kolo dolazi kasnije i nije uslov. */}
           <div className="rounded-kontrola bg-kolo-bg px-4 py-3 text-xs text-kolo-muted space-y-1">
             <p className="font-semibold text-kolo-text">{t("nisam_clan_naslov")}</p>
             {/* 🔴 Korak 1 mora da bude ŽIV link, i to sa `callbackUrl`. Dugme
@@ -186,8 +194,8 @@ export default function DetePozivPage({ params }: { params: Promise<{ token: str
               </Link>
             </p>
             <p>{t("nisam_clan_korak2")}</p>
-            <p>{t("nisam_clan_korak3")}</p>
-            <p className="pt-1">{t("nisam_clan_poen")}</p>
+            {/* Ulazak u Kolo nije uslov za preuzimanje — zato napomena, ne korak (F3-3). */}
+            <p className="pt-1">{t("nisam_clan_kasnije")}</p>
           </div>
 
           <div className="space-y-2 border-t border-kolo-border pt-4">

@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { mozeNadzor } from "@/lib/dozvole";
 import { izracunajDnevniBrojeve, izracunajNadzorBroj } from "@/lib/chrome-podaci";
 import { pristanakStatus } from "@/lib/politika";
-import { stanjeNaloga } from "@/lib/protokol/deca";
+import { cekaRoditelja, stanjeNaloga } from "@/lib/protokol/deca";
 import { prevedi, type Parametri } from "@/lib/prevod-servera";
 import { getLocale } from "next-intl/server";
 
@@ -38,7 +38,7 @@ export async function GET() {
     prisma.wallet.findUnique({ where: { userId: meId }, select: { balance: true } }),
     prisma.user.findUnique({
       where: { id: meId },
-      select: { avatar: true, vodicVidjenAt: true, maloletan: true },
+      select: { avatar: true, vodicVidjenAt: true, maloletan: true, email: true },
     }),
     prisma.poruka.count({
       where: {
@@ -99,5 +99,8 @@ export async function GET() {
     // roditelja (stanje `NA_CEKANJU`, čl. 4c) nema Pričaonicu, oglase ni poruke.
     maloletan: user?.maloletan ?? false,
     stanjeDeteta: user?.maloletan ? await stanjeNaloga(meId) : null,
+    // „Moja deca" u meniju gore desno (paket F, F1-1): samo roditelju sa detetom
+    // ili sa pozivom u kome je dete navelo njegovu adresu.
+    imaDecu: user && !user.maloletan ? (await cekaRoditelja(meId, user.email)).imaDecu : false,
   });
 }

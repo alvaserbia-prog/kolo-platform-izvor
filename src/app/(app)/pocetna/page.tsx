@@ -13,7 +13,7 @@ import { prisma } from "@/lib/prisma";
 import PocetnaKlijent from "./PocetnaKlijent";
 import { jeAdmin } from "@/lib/dozvole";
 import { ChatSoba } from "@/generated/prisma/client";
-import { usloviVidljivostiOglasa, ucitajUcesnika, zahteviPostojanjaZaPotvrdu } from "@/lib/protokol/deca";
+import { cekaRoditelja, usloviVidljivostiOglasa, ucitajUcesnika, zahteviPostojanjaZaPotvrdu } from "@/lib/protokol/deca";
 import { dohvatiPrijatelje } from "@/lib/protokol/prijateljstva";
 import { usloviSobe, usloviSobeOdraslih } from "@/lib/protokol/pricaonica";
 import { smeUPricaonicu } from "@/lib/deca-pravila";
@@ -152,6 +152,10 @@ export default async function PocetnaPage() {
         zahteviPostojanjaZaPotvrdu(session.user.id).then((r) => r.length).catch(() => 0),
       ])
     : [0, 0];
+  // Roditelju, bilo kog statusa, Početna kaže i šta čeka njega kao roditelja
+  // (paket F, F1-2). Dete ovde ne stiže — ono ima svoju početnu iznad.
+  const mojaAdresa = await prisma.user.findUnique({ where: { id: session.user.id }, select: { email: true } });
+  const roditelj = await cekaRoditelja(session.user.id, mojaAdresa?.email ?? null);
   const tPocetna = await getTranslations("pocetna");
 
   // Brojač na vrhu početne: članovi, oglasi, razmene, opticaj. Isti izvor kao
@@ -227,9 +231,10 @@ export default async function PocetnaPage() {
               </Link>
             </OznakaStatusa>
             {jeKorisnik && <ZelimDaMeNekoNazove osnovi={osnoviSpiska} mojZahtev={zahtevNaSpisku} />}
+            <CekaNaTebe roditelj={roditelj} />
           </div>
         ) : jePotvrdjen ? (
-          <CekaNaTebe spisak={naSpisku} postojanjeDeteta={postojanjeDeteta} />
+          <CekaNaTebe spisak={naSpisku} postojanjeDeteta={postojanjeDeteta} roditelj={roditelj} />
         ) : null
       }
       brojac={{

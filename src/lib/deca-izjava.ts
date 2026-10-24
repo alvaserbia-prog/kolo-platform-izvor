@@ -28,8 +28,8 @@
  * Do seta 4.6.3 je ova izjava nosila i rečenicu „pristajem na obradu njegovih
  * podataka". Time su dve izjave različitog dejstva stajale u jednom tekstu:
  *
- *  - izjava o postojanju deteta je tvrdnja o ČINJENICI, daje se pod punom
- *    odgovornošću i njen izostanak obara potvrde TREĆIH lica (čl. 6 st. 3);
+ *  - izjava o postojanju deteta je tvrdnja o ČINJENICI i daje se pod punom
+ *    odgovornošću (čl. 6 st. 1);
  *  - saglasnost na obradu podataka deteta (ZZPL čl. 16) povlači se u svakom
  *    trenutku, bez razloga i bez posledica po bilo koga drugog (čl. 15 st. 3).
  *
@@ -59,9 +59,11 @@ export function generisiIzjavuRoditelja(p: UlazIzjaveRoditelja): string {
       "postaje dete Kola tek kada sam član Kola i kada član Kola koji me lično zna " +
       "potvrdi da imam to dete.",
     "",
+    // Posledica je samo isključenje (čl. 4e, Uslovi čl. 28); rečenica o poništenju
+    // zapisa nije imala osnov u aktu i skinuta je 24.10.2026 (paket F, F7-3).
+    // Snimljene izjave ostaju kakve su (pravilo 11).
     "Znam da je lažna izjava o roditeljstvu teža povreda pravila sistema, za " +
-      "koju se obavezno izriče isključenje, i da povlači poništenje zapisa " +
-      "evidentiranih na osnovu naloga tog deteta.",
+      "koju se obavezno izriče isključenje.",
     "",
     "Izjavu dajem u skladu sa članom 6 Pravilnika o učešću dece.",
   ].join("\n");

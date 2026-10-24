@@ -70,7 +70,7 @@ export default function MojaDeca() {
   if (deca === null && !greska) return null;
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
+    <section id="moja-deca" className="scroll-mt-20 rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
       <h2 className="text-lg font-semibold text-kolo-text">{t("naslov")}</h2>
       <p className="mt-1 text-sm text-kolo-muted">{t("podnaslov")}</p>
 

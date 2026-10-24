@@ -159,7 +159,6 @@ export default function PrijateljiKlijent() {
         >
           {broj ?? "–"}
         </p>
-        <p className="text-base text-kolo-muted">{t("brojac_opis")}</p>
         {/* „500 na čekanju" uz pseudonim je i namera, ne samo obaveštenje: dete koje
             je aktivno ne dobija ništa dok drugom roditelj ne preuzme nalog. */}
         {naCekanju > 0 && (

@@ -63,7 +63,7 @@ const BOJE_DECE = [
 /** Naslov u kome svako slovo ima svoju boju — kao na crtežu. */
 function SareniNaslov({ tekst }: { tekst: string }) {
   return (
-    <h1 className="text-center text-4xl font-extrabold tracking-tight sm:text-5xl">
+    <h1 className="text-center text-4xl font-extrabold tracking-tight break-words sm:text-5xl">
       {[...tekst].map((slovo, i) => (
         <span key={i} className={BOJE_DECE[i % BOJE_DECE.length].tekst}>
           {slovo}
@@ -145,9 +145,8 @@ export default function DecjaPocetna({
   if (cekaRoditelja) {
     return (
       <div className="mx-auto max-w-2xl space-y-5">
-        <SareniNaslov tekst={t("naslov")} />
+        <SareniNaslov tekst={t("pozdrav", { pseudonim })} />
         <section className="rounded-3xl border-4 border-deca-narandza-400 bg-white p-6 text-center shadow-sm">
-          <p className="text-sm text-kolo-muted">{t("pozdrav", { pseudonim })}</p>
           <h2 className="mt-2 text-xl font-extrabold text-deca-korala-600">{t("ceka_naslov")}</h2>
           <p className="mt-2 text-base text-kolo-text">{t("ceka_opis", { broj: brojPrijatelja })}</p>
           <p className="mt-3 text-sm text-kolo-muted">{t("ceka_uputstvo")}</p>
@@ -171,7 +170,7 @@ export default function DecjaPocetna({
 
   return (
     <div className="mx-auto max-w-4xl space-y-5">
-      <SareniNaslov tekst={t("naslov")} />
+      <SareniNaslov tekst={t("pozdrav", { pseudonim })} />
 
       {/* Dete sa roditeljem: status i na šta se čeka (deca čl. 4c poslednji stav). */}
       {!deteKola && status && (
@@ -186,7 +185,6 @@ export default function DecjaPocetna({
           strana ne skroluje vodoravno, pa dete vidi „1.000.0". Roditelj po pravilu
           prepisuje okrugle iznose, dakle to nije rubni slučaj. */}
       <section className="broj-kartica rounded-3xl border-4 border-deca-sunce-400 bg-white p-6 text-center shadow-sm">
-        <p className="text-sm text-kolo-muted">{t("pozdrav", { pseudonim })}</p>
         <p
           className="broj-kartica-vrednost mt-1 font-extrabold text-deca-nebo-600"
           style={{ ["--znakova" as string]: String(poen.toLocaleString("sr-RS").length) }}

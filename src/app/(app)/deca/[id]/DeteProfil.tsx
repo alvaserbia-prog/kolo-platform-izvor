@@ -22,6 +22,11 @@ import Prekidac from "@/components/ui/Prekidac";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
+/** Stanje naloga (čl. 4c) kao status za `OznakaStatusa`. */
+function statusIzStanja(stanje: StanjeDeteta): StatusUcesnika {
+  return stanje === "AKTIVNO" ? "DETE_KOLA" : stanje === "POVEZANO" ? "DETE_SA_RODITELJEM" : "DETE_NA_CEKANJU";
+}
+
 type Dete = {
   id: string;
   pseudonim: string;
@@ -130,9 +135,9 @@ export default function DeteProfil({
           <div className="min-w-0">
             <h1 className="kolo-naslov truncate">{dete.pseudonim}</h1>
             <p className="text-sm text-kolo-muted">
-              <span className="mr-2 inline-flex items-center rounded-full bg-kolo-bg px-2 py-0.5 text-xs font-medium text-kolo-muted">
-                {t("status_dete")}
-              </span>
+              {/* Stanje deteta, ne opšte „dete" (paket F, F2-8): roditelj na vrhu vidi
+                  na šta se čeka. Imenuje ga samo `OznakaStatusa`. */}
+              <OznakaStatusa status={statusIzStanja(dete.stanje)} className="mr-2" />
               {dete.godine !== null && t("godina", { broj: dete.godine })}
             </p>
           </div>
@@ -151,11 +156,21 @@ export default function DeteProfil({
 
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
 
+      {/* Redosled (paket F, F1-3): prvo ono što čeka roditelja (izjava, prepisi),
+          pa dete Kola, pa s kim se dete dopisuje (pregled, prekidač i razgovori
+          sa odraslima zajedno), pa oglasi i nalog. */}
+      <IzjavaRoditelja dete={dete} />
+
       <PrepisiNaCekanju deteId={dete.id} prepisi={prepisi} />
 
+      <PotvrdaPostojanja dete={dete} />
+
+      <p className="pt-2 text-sm font-medium text-kolo-muted">{t("dopisivanje_naslov")}</p>
+
+      <Pregled deteId={dete.id} />
+
       {/* Prekidač iz čl. 10 st. 2 — jedina saglasnost koju roditelj daje posle
-          otvaranja naloga. Stoji na vrhu, jer menja krug ljudi sa kojima dete
-          sme da razgovara. */}
+          otvaranja naloga. Stoji iznad razgovora sa odraslima, koje otvara. */}
       <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
@@ -175,9 +190,7 @@ export default function DeteProfil({
         </div>
       </section>
 
-      <PotvrdaPostojanja dete={dete} />
-
-      <IzjavaRoditelja dete={dete} />
+      <Razgovori deteId={dete.id} />
 
       {/* Oglasi — jedino što roditelj može da ukloni (čl. 10 st. 1). */}
       <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
@@ -213,10 +226,6 @@ export default function DeteProfil({
         )}
         <p className="mt-3 text-xs text-kolo-muted">{t("oglasi_napomena")}</p>
       </section>
-
-      <Pregled deteId={dete.id} />
-
-      <Razgovori deteId={dete.id} />
 
       <NovaLozinka deteId={dete.id} imaSvojuAdresu={dete.imaSvojuAdresu} />
 
@@ -596,8 +605,7 @@ function PotvrdaPostojanja({ dete }: { dete: Dete }) {
 
   // Status deteta i na šta se čeka imenuje SAMO `OznakaStatusa` (namespace
   // `status`; brana `oznaka-statusa-izvor.test.ts`).
-  const statusDeteta: StatusUcesnika =
-    dete.stanje === "AKTIVNO" ? "DETE_KOLA" : dete.stanje === "POVEZANO" ? "DETE_SA_RODITELJEM" : "DETE_NA_CEKANJU";
+  const statusDeteta = statusIzStanja(dete.stanje);
 
   return (
     <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">

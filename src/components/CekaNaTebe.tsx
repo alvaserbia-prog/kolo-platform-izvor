@@ -12,15 +12,31 @@ import { useMe } from "@/hooks/useMe";
  * Brojeve spiska za poziv i potvrda postojanja deteta daje server; nadzor
  * stiže iz `useMe` (isti broj kao uz stavku u meniju). Bez ičega na čekanju
  * kartica se ne crta.
+ *
+ * Roditelju (bilo kog statusa) kartica nosi i ono što čeka njega kao roditelja
+ * (paket F, F1-2): prepis deteta iznad praga, koji posle sedam dana propada
+ * (deca čl. 14), i poziv u kome je dete navelo njegovu adresu (čl. 4b).
  */
-export default function CekaNaTebe({ spisak, postojanjeDeteta }: { spisak: number; postojanjeDeteta: number }) {
+export default function CekaNaTebe({
+  spisak = 0,
+  postojanjeDeteta = 0,
+  roditelj,
+}: {
+  spisak?: number;
+  postojanjeDeteta?: number;
+  roditelj?: { prepisi: number; prepisiHref: string; pozivi: number };
+}) {
   const t = useTranslations("pocetna");
   const { data: me } = useMe();
   const nadzor = me?.nadzorBroj ?? 0;
-  const ukupno = spisak + postojanjeDeteta + nadzor;
+  const prepisi = roditelj?.prepisi ?? 0;
+  const pozivi = roditelj?.pozivi ?? 0;
+  const ukupno = spisak + postojanjeDeteta + nadzor + prepisi + pozivi;
   if (ukupno === 0) return null;
 
   const redovi = [
+    { broj: prepisi, href: roditelj?.prepisiHref ?? "/profil#moja-deca", kljuc: "ceka_prepis_deteta" },
+    { broj: pozivi, href: "/profil#moja-deca", kljuc: "ceka_poziv_deteta" },
     { broj: spisak, href: "/verifikacija#zahtevi", kljuc: "ceka_spisak" },
     { broj: postojanjeDeteta, href: "/verifikacija#postojanje-deteta", kljuc: "ceka_postojanje" },
     { broj: nadzor, href: "/nadzor", kljuc: "ceka_nadzor" },
@@ -31,7 +47,7 @@ export default function CekaNaTebe({ spisak, postojanjeDeteta }: { spisak: numbe
       <h2 className="text-base font-semibold text-kolo-text">{t("ceka_naslov", { broj: ukupno })}</h2>
       <ul className="mt-2 divide-y divide-kolo-border">
         {redovi.map((r) => (
-          <li key={r.href}>
+          <li key={r.kljuc}>
             <Link href={r.href} className="flex min-h-11 items-center justify-between gap-3 text-sm text-kolo-text hover:text-kolo-green-700">
               <span>{t(r.kljuc)}</span>
               <span className="flex items-center gap-2">

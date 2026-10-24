@@ -136,8 +136,10 @@ async function najaviPunoletstvo(
     parametri: { dana, iznos, broj: prijateljstva.length },
     naslov: `Za ${dana} dana puniš ${UZRAST_PUNOLETSTVO}`,
     tekst:
-      `Tog dana biće ti otpisano ${iznos.toLocaleString("sr-RS")} POEN iz ${prijateljstva.length} prijateljstava, ` +
-      `a prijateljstva će biti zatvorena. Zauzvrat te potvrđuje roditelj i sam počinješ da potvrđuješ druge.`,
+      // Šta posle punoletstva zavisi od roditelja (deca čl. 19 st. 3), pa najava to
+      // ne obećava — tačnu varijantu nosi obaveštenje na sam dan (paket F, F7-10).
+      `Tog dana biće ti otpisano ${iznos.toLocaleString("sr-RS")} POENA iz ${prijateljstva.length} prijateljstava, ` +
+      `a prijateljstva se zatvaraju.`,
     link: "/prijatelji",
   }).catch(() => {});
 
@@ -148,7 +150,7 @@ async function najaviPunoletstvo(
       kljuc: "notifikacije.punoletstvo_najava_prijatelj",
       parametri: { pseudonim, dana, iznos: PRIJATELJSTVO_POEN },
       naslov: "Prijatelj uskoro puni 18",
-      tekst: `${pseudonim} za ${dana} dana puni ${UZRAST_PUNOLETSTVO}. Tada se vaše prijateljstvo zatvara i biće ti otpisano ${PRIJATELJSTVO_POEN} POEN.`,
+      tekst: `${pseudonim} za ${dana} dana puni ${UZRAST_PUNOLETSTVO}. Tada se vaše prijateljstvo zatvara i biće ti otpisano ${PRIJATELJSTVO_POEN} POENA.`,
       link: "/prijatelji",
     }).catch(() => {});
   }
@@ -226,7 +228,7 @@ async function prevediUPunoletni(deteId: string) {
           kljuc: "notifikacije.punoletstvo_otpis_prijatelj",
           parametri: { pseudonim: dete.pseudonim, iznos: PRIJATELJSTVO_POEN },
           naslov: "Prijatelj je postao punoletan",
-          tekst: `${dete.pseudonim} ima ${UZRAST_PUNOLETSTVO} godina. Vaše prijateljstvo je zatvoreno i otpisano ti je ${PRIJATELJSTVO_POEN} POEN.`,
+          tekst: `${dete.pseudonim} ima ${UZRAST_PUNOLETSTVO} godina. Vaše prijateljstvo je zatvoreno i otpisano ti je ${PRIJATELJSTVO_POEN} POENA.`,
           link: "/prijatelji",
         }).catch(() => {});
       } catch (e) {
@@ -307,7 +309,7 @@ async function prevediUPunoletni(deteId: string) {
     parametri: { iznos, broj: isplacena.length, potvrda },
     naslov: "Nalog je prešao u punoletni",
     tekst:
-      `Otpisano ti je ${iznos.toLocaleString("sr-RS")} POEN iz ${isplacena.length} prijateljstava. ` +
+      `Otpisano ti je ${iznos.toLocaleString("sr-RS")} POENA iz ${isplacena.length} prijateljstava. ` +
       (ishod === "POTVRDA"
         ? `Roditelj te je potvrdio, pa si sada član Kola.`
         : ishod === "UVODJENJE"

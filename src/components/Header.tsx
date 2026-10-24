@@ -234,6 +234,17 @@ function ProfilMeni({ userId, pseudonim }: { userId: string; pseudonim: string }
                 <path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>
               </svg>
             </button>}
+            {/* Moja deca — ulaz roditelja (paket F, F1-1): kartica na profilu, gde su
+                deca, poziv deteta i dugmad za otvaranje i preuzimanje naloga. */}
+            {me?.imaDecu && <button
+              onClick={() => { setOpen(false); router.push("/profil#moja-deca"); }}
+              className="w-full text-right px-4 py-2.5 text-sm text-kolo-text hover:bg-kolo-bg transition-colors flex items-center justify-end gap-3"
+            >
+              {t("moja_deca")}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2"/><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><path d="M15 20v-1a3.5 3.5 0 0 1 6 0v1"/>
+              </svg>
+            </button>}
           </div>
           <div className="border-t border-kolo-border" />
           <div className="py-1">

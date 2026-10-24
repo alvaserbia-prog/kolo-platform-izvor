@@ -546,7 +546,7 @@ export async function prevediUMaloletni(
     naslov: "Nalog je preveden u dečji",
     tekst:
       `Tvoj nalog sada radi po pravilima za maloletne korisnike, a kao roditelj je upisan ${roditelj.pseudonim}. ` +
-      `Poništeno ti je ${netoEmisija > 0 ? netoEmisija : 0} POEN upisanih kroz kanale; POEN koji su ti drugi prepisali ostaje.`,
+      `Poništeno ti je ${netoEmisija > 0 ? netoEmisija : 0} POENA upisanih kroz kanale; POEN koji su ti drugi prepisali ostaje.`,
     link: "/novcanik",
   }).catch(() => {});
 
@@ -574,9 +574,9 @@ export async function prevediUMaloletni(
     tip: "roditeljstvo_upisano",
     kljuc: "notifikacije.roditeljstvo_upisano_izjava",
     parametri: { pseudonim: nalog.pseudonim },
-    naslov: "Upisan si kao roditelj",
+    naslov: "Roditelj si na prevedenom nalogu",
     tekst:
-      `Nalog ${nalog.pseudonim} je preveden u dečji i ti si upisan kao njegov roditelj. ` +
+      `Nalog ${nalog.pseudonim} je preveden u dečji. Roditelj si na tom nalogu. ` +
       `Daj izjavu o postojanju deteta na profilu deteta.`,
     link: `/deca/${userId}`,
   }).catch(() => {});
