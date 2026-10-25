@@ -64,7 +64,8 @@ export const JAVNE_RUTE = [
  */
 // `/sistem` (odluka vlasnika, 24.10.2026): kartice i zbirovi su javni, a spiskove
 // gostu stranica ni ne čita (Politika privatnosti čl. 6).
-export const JAVNE_TACNE_RUTE = ["/skole", "/zadruge", "/sistem"];
+// `/sistem/zdravlje` (odluka vlasnika 25.10.2026): pokazatelji su zbir, javni kao `/sistem`.
+export const JAVNE_TACNE_RUTE = ["/skole", "/zadruge", "/sistem", "/sistem/zdravlje"];
 
 /**
  * Prvi segment svake stranice koja postoji u `src/app` (uključujući one u
@@ -78,7 +79,7 @@ export const JAVNE_TACNE_RUTE = ["/skole", "/zadruge", "/sistem"];
 export const POZNATI_SEGMENTI = [
   "admin", "bagovi", "cesto-postavljena-pitanja", "dashboard", "deca", "dete-poziv",
   "dobrodosli", "donacije", "doniraj", "doprinos-oglasi", "dpia", "firme", "gazdinstva",
-  "glasanje", "kako-funkcionise", "kako-sistem-radi", "kontaktiraj-nas", "login", "m",
+  "glasanje", "kako-funkcionise", "kako-sistem-radi", "kontaktiraj-nas", "kutija-zelja", "login", "m",
   "mapa", "nabavke", "nadzor", "novcanik", "o-nama", "o-sistemu", "oauth",
   "odjava-obavestenja", "odrzavanje", "osnivacki-doprinos", "pijaca", "pocetna",
   "podrzi-kolo", "pokrovitelji", "politika-prihvati", "pomoc", "poruke", "postani-pokrovitelj", "potvrdi-email",

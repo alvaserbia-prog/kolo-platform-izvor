@@ -99,6 +99,9 @@ export async function dohvatiRegistarOdluka() {
     include: {
       author: { select: { pseudonim: true } },
       _count: { select: { glasovi: true } },
+      // Samo težine datih glasova, bez glasača i bez smera glasa — za broj čuvara
+      // čija moć čini većinu (Pravilnik o Gornjem Kolu nacrt čl. 20 st. 1).
+      glasovi: { select: { glasackaGlasova: true } },
     },
   });
   return odluke.map((o) => ({
@@ -119,6 +122,7 @@ export async function dohvatiRegistarOdluka() {
     uoOdgovor: o.uoOdgovor,
     uoObrazlozenje: o.uoObrazlozenje,
     brGlasova: o._count.glasovi,
+    tezineGlasova: o.glasovi.map((g) => g.glasackaGlasova),
   }));
 }
 

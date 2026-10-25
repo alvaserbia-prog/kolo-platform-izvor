@@ -35,6 +35,7 @@ import {
   otpisiPunoletnom,
 } from "./prijateljstva";
 import { izvrsiVerifikacijuBezTokena } from "./verifikacija-service";
+import { obrisiKutijuZelja } from "./kutija-zelja";
 import { jePotvrdjen, statusUcesnika } from "@/lib/status-ucesnika-pravila";
 import {
   NAJAVA_PUNOLETSTVA_DANA,
@@ -250,6 +251,9 @@ async function prevediUPunoletni(deteId: string) {
     // Potvrde postojanja deteta (čl. 6) gube predmet punoletstvom; padaju i
     // kaskadno sa vezom iznad, ali se brišu izričito da redosled ne zavisi od šeme.
     await tx.potvrdaPostojanjaDeteta.deleteMany({ where: { deteId } });
+    // Kutija želja je samo dečji prostor: predlozi i podrške punoletnog se brišu,
+    // isto kao pri brisanju naloga deteta (odluka vlasnika 25.10.2026).
+    await obrisiKutijuZelja(tx, deteId);
     await tx.user.update({
       where: { id: deteId },
       data: {

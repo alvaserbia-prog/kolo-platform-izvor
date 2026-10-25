@@ -98,10 +98,12 @@ export default function LokacijeSekcija({
       }
       return { kljuc, naziv, ukupno: e.ukupno, verifikovanih: e.verifikovanih, clanovi: e.clanovi };
     });
+    // Redosled po broju registrovanih naloga iz mesta (odluka vlasnika 25.10.2026),
+    // pa po broju verifikovanih. Prikazuju se SVA mesta, i ona sa jednim nalogom.
     rezultat.sort(
       (a, b) =>
-        b.verifikovanih - a.verifikovanih ||
         b.ukupno - a.ukupno ||
+        b.verifikovanih - a.verifikovanih ||
         a.naziv.localeCompare(b.naziv, intlTag(locale))
     );
     return { lokacije: rezultat, bezLokacije: bez };

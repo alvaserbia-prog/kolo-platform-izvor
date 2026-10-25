@@ -42,9 +42,8 @@ interface JavnaDonacija {
    *  (donacije čl. 5a, set 4.8.2); ruta šalje oba polja kao `null`. */
   pseudonim: null;
   userId: null;
+  /** 🔴 Bez broja POEN-a i nivoa — RSD i POEN u istom redu daju odnos (R-01). */
   amountRSD: number;
-  level: number;
-  poenEmitted: number;
   createdAt: string;
 }
 
@@ -515,11 +514,6 @@ export default function DonacijeKlijent() {
                     {new Date(d.createdAt).toLocaleDateString(intlTag(locale))} · {d.amountRSD.toLocaleString(intlTag(locale))} RSD
                   </p>
                 </div>
-                {!d.anonimno && d.poenEmitted > 0 && (
-                  <p className="text-xs text-kolo-green-700 font-semibold">
-                    +{d.poenEmitted.toLocaleString(intlTag(locale))} {tc("poen")}
-                  </p>
-                )}
               </div>
             ))}
           </Kartica>

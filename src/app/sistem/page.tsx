@@ -238,7 +238,9 @@ export default async function SistemPage({
           orderBy: [{ confirmedAt: "desc" }, { createdAt: "desc" }],
           take: 50,
           select: {
-            id: true, amountRSD: true, level: true, poenEmitted: true, donatorIme: true,
+            // 🔴 Bez `poenEmitted` i `level`: RSD i POEN u istom redu daju odnos
+            // deljenjem (R-01; odluka vlasnika 25.10.2026).
+            id: true, amountRSD: true, donatorIme: true,
             javno: true, confirmedAt: true, createdAt: true,
           },
         }),
@@ -344,8 +346,6 @@ export default async function SistemPage({
     ime: d.javno ? d.donatorIme : null,
     anonimno: !d.javno,
     amountRSD: Number(d.amountRSD),
-    poenEmitted: d.poenEmitted,
-    level: d.level,
     confirmedAt: (d.confirmedAt ?? d.createdAt).toISOString(),
   }));
 
@@ -394,7 +394,7 @@ export default async function SistemPage({
   // identifikator je redni broj, ne id naloga — kao gost na `/zadruge`.
   const anonimni = mesta.map((u, i) => ({
     id: String(i), pseudonim: "", verified: u.verified, maloletan: u.maloletan,
-    avatar: null, balance: 0, krug: null, donacijeRSD: 0, rangDonacije: 0,
+    avatar: null, balance: 0, krug: null, rangDonacije: 0,
     location: u.location ?? null, createdAt: "",
   }));
   const clanovi = verified ? korisnici.map((u) => {
@@ -407,7 +407,8 @@ export default async function SistemPage({
       avatar: u.avatar,
       balance: u.wallet?.balance ?? 0,
       krug: u.krugClanstva[0]?.krug?.name ?? null,
-      donacijeRSD,
+      // 🔴 Samo nivo, bez dinarskog zbira: pseudonim + RSD uz stanje POEN-a
+      // (odluka vlasnika 25.10.2026). Zbir ne napušta server.
       rangDonacije: donacijeRSD > 0 ? nivoZaKumulativ(donacijeRSD).nivo : 0,
       location: u.location ?? null,
       createdAt: u.createdAt.toISOString(),

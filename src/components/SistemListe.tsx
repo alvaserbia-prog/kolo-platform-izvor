@@ -48,7 +48,6 @@ export interface Clan {
   avatar: string | null;
   balance: number;
   krug: string | null;
-  donacijeRSD: number;
   rangDonacije: number;
   location: string | null;
   createdAt: string;
@@ -244,7 +243,7 @@ const ClanRed = memo(function ClanRed({
         <div className="flex items-center justify-end gap-1 text-sm text-kolo-muted">
           <RangTooltip
             rang={c.rangDonacije}
-            label={`${t("rang_tooltip", { rang: c.rangDonacije, rsd: c.donacijeRSD.toLocaleString(intlTag(locale)) })}`}
+            label={t("rang_tooltip", { rang: c.rangDonacije })}
           />
         </div>
         <span className="text-right text-sm text-kolo-muted">

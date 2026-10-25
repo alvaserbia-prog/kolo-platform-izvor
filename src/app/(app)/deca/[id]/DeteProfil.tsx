@@ -413,6 +413,8 @@ function BrisanjeNaloga({
 type Pregledi = {
   prijatelji: { pseudonim: string; od: string; poenEvidentiran: boolean }[];
   razgovori: { id: string; drugi: string; poruka: number; poslednja: string }[];
+  /** Kutija želja: samo tekst predloga deteta (odluka vlasnika 25.10.2026). */
+  zelje: string[];
 };
 
 /**
@@ -479,6 +481,20 @@ function Pregled({ deteId }: { deteId: string }) {
                       {t("pregled_poruka", { broj: r.poruka })}
                     </span>
                   </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {/* Kutija želja: SAMO tekst predloga deteta — bez stanja, odgovora i
+              podrški koje je dete dalo drugoj deci. */}
+          <div className="sm:col-span-2">
+            <h3 className="text-sm font-medium text-kolo-text">{t("pregled_zelje")}</h3>
+            {podaci.zelje.length === 0 ? (
+              <p className="mt-1 text-sm text-kolo-muted">{t("pregled_zelje_prazno")}</p>
+            ) : (
+              <ul className="mt-2 space-y-1 text-sm">
+                {podaci.zelje.map((z, i) => (
+                  <li key={i} className="whitespace-pre-wrap text-kolo-text">{z}</li>
                 ))}
               </ul>
             )}

@@ -19,5 +19,7 @@
 // po njenom nalogu (Pravilnik o zadrugama čl. 16).
 // „gazdinstva" = pregled prijava gazdinstava i kasnijih pristupanja, poništenje
 // odobrenja zbog lažne izjave (Pravilnik o gazdinstvima čl. 6, 8, 12).
-export const ADMIN_TABOVI = ["dashboard", "programi", "ped", "pokrovitelji", "donacije", "prigovori", "korisnici", "pijaca", "prvi-oglasi", "potvrde", "razmene", "nabavke", "zadruge", "gazdinstva", "emisija", "osnivaci", "vesti", "obavestenja", "politika", "audit", "aktivnost", "levak", "nadzor", "odluke"] as const;
+// „kutija-zelja" = pregled predloga dece pre prikaza i odgovor Fondacije
+// (whitepaper 5.0, pogl. 7). Pregled sadržaja, kao „pijaca"; autor se ne vidi.
+export const ADMIN_TABOVI = ["dashboard", "programi", "ped", "pokrovitelji", "donacije", "prigovori", "korisnici", "pijaca", "prvi-oglasi", "potvrde", "razmene", "nabavke", "zadruge", "gazdinstva", "emisija", "osnivaci", "vesti", "obavestenja", "politika", "audit", "aktivnost", "levak", "nadzor", "odluke", "kutija-zelja"] as const;
 export type Tab = (typeof ADMIN_TABOVI)[number];

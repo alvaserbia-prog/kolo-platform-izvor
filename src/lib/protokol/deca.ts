@@ -555,8 +555,9 @@ export async function dohvatiRazgovoreDeteta(roditeljId: string, deteId: string)
  */
 export async function dohvatiPregledDeteta(roditeljId: string, deteId: string) {
   const dete = await mojeDeteIliBaci(roditeljId, deteId);
+  const { tekstoviZeljaDeteta } = await import("./kutija-zelja");
 
-  const [prijateljstva, konverzacije] = await Promise.all([
+  const [prijateljstva, konverzacije, zelje] = await Promise.all([
     prisma.prijateljstvo.findMany({
       where: { OR: [{ aId: dete.id }, { bId: dete.id }], raskinutAt: null },
       orderBy: { createdAt: "desc" },
@@ -584,6 +585,7 @@ export async function dohvatiPregledDeteta(roditeljId: string, deteId: string) {
         _count: { select: { poruke: true } },
       },
     }),
+    tekstoviZeljaDeteta(dete.id),
   ]);
 
   return {
@@ -607,6 +609,9 @@ export async function dohvatiPregledDeteta(roditeljId: string, deteId: string) {
       poruka: k._count.poruke,
       poslednja: k.lastMessageAt.toISOString(),
     })),
+    // Kutija želja: roditelj vidi SAMO tekst predloga svog deteta — bez stanja,
+    // odgovora i podrški koje je dete dalo drugima (odluka vlasnika 25.10.2026).
+    zelje,
   };
 }
 
@@ -636,6 +641,7 @@ export async function obrisiDecjiNalog(
   uklonioId: string | null,
   osnov: string
 ) {
+  const { obrisiKutijuZelja } = await import("./kutija-zelja");
   await prisma.$transaction(async (tx) => {
     const w = await tx.wallet.findUnique({ where: { userId: deteId } });
     const balans = w?.balance ?? 0;
@@ -679,6 +685,9 @@ export async function obrisiDecjiNalog(
     // 500 — nije ona ta koja odlazi.
     await tx.prijateljstvo.deleteMany({ where: { OR: [{ aId: deteId }, { bId: deteId }] } });
     await tx.prijateljToken.deleteMany({ where: { korisnikId: deteId } });
+    // Kutija želja: predlozi deteta (sa podrškama i odgovorima) i podrške koje je
+    // dalo brišu se svi (odluka vlasnika 25.10.2026).
+    await obrisiKutijuZelja(tx, deteId);
     await tx.roditeljstvo.deleteMany({ where: { deteId } });
     await tx.roditeljPoziv.deleteMany({ where: { deteId } });
 

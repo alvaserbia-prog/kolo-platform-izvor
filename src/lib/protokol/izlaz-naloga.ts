@@ -29,6 +29,7 @@ import { preracunajStatusNaloga, posledicePromeneStatusa, prestaoStatus, type Pr
 import { obrisiIdentitet } from "./identitet";
 import { obrisiPreporuke } from "./preporuka";
 import { KLJUC_ZAHTEV_POTVRDA } from "./program-potvrda";
+import { obrisiKutijuZelja } from "./kutija-zelja";
 
 type Tx = Prisma.TransactionClient;
 
@@ -71,7 +72,9 @@ export type IzlazNaloga = {
  *     roditelj ili dete — date potvrde ostaju;
  * 12. prepisi deteta koji čekaju roditelja (deca čl. 14), u kojima je nalog dete ili
  *     primalac — zatvaraju se (`ISTEKAO`); ništa nije skinuto, pa se ništa ne vraća;
- * 13. push pretplate — nalog bez statusa ne prima obaveštenja na uređaj.
+ * 13. push pretplate — nalog bez statusa ne prima obaveštenja na uređaj;
+ * 14. Kutija želja — predlozi naloga (sa podrškama i odgovorima) i podrške koje je
+ *     dao se brišu (odluka vlasnika 25.10.2026).
  */
 export async function ugasiOznakeNaloga(tx: Tx, userId: string): Promise<IzlazNaloga> {
   const u = await tx.user.findUnique({
@@ -194,6 +197,9 @@ export async function ugasiOznakeNaloga(tx: Tx, userId: string): Promise<IzlazNa
 
   // 13. Push pretplate.
   await tx.pushPretplata.deleteMany({ where: { userId } });
+
+  // 14. Kutija želja.
+  await obrisiKutijuZelja(tx, userId);
 
   return { promena, delegatori, prepisiDece };
 }

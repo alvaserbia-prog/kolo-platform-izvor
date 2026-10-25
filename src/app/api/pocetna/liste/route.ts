@@ -73,7 +73,7 @@ export async function GET(req: Request) {
           avatar: u.avatar,
           balance: u.wallet?.balance ?? 0,
           krug: u.krugClanstva[0]?.krug?.name ?? null,
-          donacijeRSD,
+          // 🔴 Samo nivo, bez dinarskog zbira (odluka vlasnika 25.10.2026).
           rangDonacije: donacijeRSD > 0 ? nivoZaKumulativ(donacijeRSD).nivo : 0,
           location: u.location ?? null,
           createdAt: u.createdAt.toISOString(),

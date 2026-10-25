@@ -143,15 +143,24 @@ export async function dohvatiTrosakPrethodnogMeseca(): Promise<number> {
  * - aktivan = (Protokol < -1M) I (!trajnoUgasen)
  * - trajnoUgasen postaje true ako saldoFondacije >= 3 × trosak prethodnog meseca (jednosmerni flag)
  */
+/**
+ * Singleton reda veta. Na produkciji ga nije bilo (25.10.2026, pokazatelji
+ * zdravlja), pa je `/api/javno/veto` padao na „nije inicijalizovan“ — kao kod
+ * osnivačkog kanala, red se kreira po potrebi sa podrazumevanim vrednostima
+ * (veto neaktivan, nije ugašen), umesto da se baca izuzetak.
+ */
+function dohvatiIliKreirajVeto() {
+  return prisma.sistemskiVeto.upsert({ where: { id: "singleton" }, update: {}, create: { id: "singleton" } });
+}
+
 export async function azurirajVetoStatus(): Promise<VetoStatus> {
   const [veto, protokol, saldo, trosakPrethodnog] = await Promise.all([
-    prisma.sistemskiVeto.findUnique({ where: { id: "singleton" } }),
+    dohvatiIliKreirajVeto(),
     prisma.wallet.findUnique({ where: { id: PROTOKOL_WALLET_ID }, select: { balance: true } }),
     dohvatiSaldoFondacije(),
     dohvatiTrosakPrethodnogMeseca(),
   ]);
 
-  if (!veto) throw new Error("SistemskiVeto singleton nije inicijalizovan.");
 
   const protokolBalans = protokol?.balance ?? 0;
   const pragZaGasenje = trosakPrethodnog * 3;
@@ -192,15 +201,14 @@ export async function azurirajVetoStatus(): Promise<VetoStatus> {
 }
 
 export async function dohvatiVetoStatus(): Promise<VetoStatus> {
-  // Ne update-uje, samo izvestava trenutno stanje + izracunate kontekstne vrednosti
+  // Ne menja stanje veta, samo izveštava (red se kreira samo ako ne postoji)
   const [veto, protokol, saldo, trosakPrethodnog] = await Promise.all([
-    prisma.sistemskiVeto.findUnique({ where: { id: "singleton" } }),
+    dohvatiIliKreirajVeto(),
     prisma.wallet.findUnique({ where: { id: PROTOKOL_WALLET_ID }, select: { balance: true } }),
     dohvatiSaldoFondacije(),
     dohvatiTrosakPrethodnogMeseca(),
   ]);
 
-  if (!veto) throw new Error("SistemskiVeto singleton nije inicijalizovan.");
 
   return {
     aktivan: veto.aktivan,

@@ -3,6 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { izvrsiNocnuEmisiju } from "@/lib/protokol/programi";
 import { izvrsiZrnoOperacije } from "@/lib/protokol/zrno";
 import { proveriIAktivirajFazu2 } from "@/lib/protokol/faza-sistema";
+import { azurirajStalnuPonudu, zapisiDnevniSnimak } from "@/lib/protokol/pokazatelji";
 import { proveriIEvidentirajKorak } from "@/lib/protokol/osnivacki";
 import { jePonocUSrbiji } from "@/lib/protokol/obracunski-dan";
 
@@ -59,7 +60,20 @@ async function nocniObracun(datum: Date) {
     // jer obračun zavisi od konačnog stanja Protokola za obračunski period.
     const faza = await proveriIAktivirajFazu2();
 
-    return NextResponse.json({ ok: true, programi, zrno, osnivacki, faza });
+    // 4. Pokazatelji zdravlja i koncentracije (`/sistem/zdravlje`): stanje stalne
+    // ponude gazdinstava i dnevni snimak. Posle svega, jer mere konačno stanje
+    // perioda; izolovano — pokazatelj nema dejstvo i ne sme da obori obračun.
+    let pokazatelji: unknown = null;
+    try {
+      const ponuda = await azurirajStalnuPonudu();
+      const snimljeno = await zapisiDnevniSnimak(datum);
+      pokazatelji = { ponuda, snimljeno };
+    } catch (e) {
+      console.error("[CRON] Greška pri pokazateljima:", e);
+      pokazatelji = { error: String(e) };
+    }
+
+    return NextResponse.json({ ok: true, programi, zrno, osnivacki, faza, pokazatelji });
   } catch (err) {
     console.error("[CRON] Greška pri nocnoj emisiji:", err);
     return await greska("Greška pri izvršavanju emisije.", 500);

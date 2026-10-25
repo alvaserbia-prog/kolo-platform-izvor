@@ -9,6 +9,7 @@ import { ProgramType } from "@/generated/prisma/client";
 import { UKUPNO_ZRNA } from "@/lib/protokol/zrno";
 import { jeAdmin, jeSuperadmin, jeZadruzniAdmin } from "@/lib/dozvole";
 import { brojeviClanova, brojeviStatusa, USLOVI_STATUSA } from "@/lib/admin-clanovi";
+import { brojNaPregledu } from "@/lib/protokol/kutija-zelja";
 import { IZBOR_STATUSA, statusUcesnika, ucitajStatus, type StatusUcesnika } from "@/lib/protokol/status";
 
 const SVI_PROGRAMI: ProgramType[] = ["PED", "PODRSKA_MAJKAMA", "PODRSKA_STARIJIMA", "POSEBNA_BRIGA", "SKOLOVANJE"];
@@ -169,6 +170,7 @@ export default async function AdminPage({
 
   // Učesnici po statusu za Pregled (deca u zasebnoj koloni).
   const statusiBrojevi = await brojeviStatusa();
+  const zeljaNaPregledu = await brojNaPregledu();
 
   return (
     <AdminKlijent
@@ -192,6 +194,7 @@ export default async function AdminPage({
       otvorenihPrijavaOglasa={otvorenihPrijavaOglasa}
       prvihOglasaNaCekanju={prvihOglasaNaCekanju}
       otvorenihPrijavaRazmene={otvorenihPrijavaRazmene}
+      zeljaNaPregledu={zeljaNaPregledu}
       users={allUsers.map((u) => ({
         id: u.id, pseudonim: u.pseudonim, email: u.email, telefon: u.telefon, location: u.location, tipKorisnika: u.tipKorisnika, admin: u.admin, verified: u.verified,
         statusUcesnika: statusiKorisnika.get(u.id) ?? statusUcesnika(u),

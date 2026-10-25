@@ -30,6 +30,7 @@ export const RUTE_BEZ_MERENJA = [
   "/dete-poziv",
   "/registracija/dete",
   "/prijatelji",
+  "/kutija-zelja",
   // Potvrda tuđe prijave na program podrške — sam ulazak otkriva da neko iz
   // lanca traži podršku (posebna kategorija, Politika čl. 6).
   "/programi/potvrde",

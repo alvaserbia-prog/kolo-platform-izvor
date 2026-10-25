@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+import { MIN_LICA_U_ZBIRU, najmanjiBrojZaVecinu } from "@/lib/pokazatelji-pravila";
 import { intlTag } from "@/lib/format";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -69,6 +70,12 @@ export default async function RegistarOdlukaPage() {
                   <span>{t("registar_za_zbir", { zbir: o.zaZbir })}</span>
                   <span>{t("registar_protiv_zbir", { zbir: o.protivZbir })}</span>
                   <span>· {t("registar_br_glasaca", { count: o.brGlasova })}</span>
+                  {/* Koliko čuvara čini većinu datih glasova (GK nacrt čl. 20 st. 1;
+                      pokazatelj K10). Iskazuje se od pet glasača — manji zbir bi
+                      otkrivao pojedinca; pojedinačan glas se ne objavljuje. */}
+                  {o.brGlasova >= MIN_LICA_U_ZBIRU && najmanjiBrojZaVecinu(o.tezineGlasova) !== null && (
+                    <span>· {t("registar_vecina", { count: najmanjiBrojZaVecinu(o.tezineGlasova)! })}</span>
+                  )}
                 </div>
 
                 {/* Izvršenje usvojene odluke (čl. 17, 18) */}

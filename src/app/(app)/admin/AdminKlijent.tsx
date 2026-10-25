@@ -44,6 +44,7 @@ const NabavkeTab = dynamic(() => import("./NabavkeTab"), { ssr: false });
 const ZadrugeTab = dynamic(() => import("./ZadrugeTab"), { ssr: false });
 const GazdinstvaTab = dynamic(() => import("./GazdinstvaTab"), { ssr: false });
 const OdlukeTab = dynamic(() => import("./OdlukeTab"), { ssr: false });
+const KutijaZeljaTab = dynamic(() => import("./KutijaZeljaTab"), { ssr: false });
 
 interface KorisnikInfo {
   id: string;
@@ -257,6 +258,8 @@ interface AdminKlijentProps {
   /** Prvi oglasi koji čekaju odobrenje doprinosa — badge na tabu Prvi oglasi (čl. 40a). */
   prvihOglasaNaCekanju: number;
   otvorenihPrijavaRazmene: number;
+  /** Predlozi dece koji čekaju pregled — badge na tabu Kutija želja. */
+  zeljaNaPregledu?: number;
 }
 
 const adminNivoLabel = (t: ReturnType<typeof useTranslations<"admin">>): Record<string, string> => ({
@@ -280,7 +283,7 @@ const statusLabel = (t: (k: string) => string): Record<string, string> => ({
 });
 
 
-export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, adminPokrovitelji, dashboard, auditLogs, verifikovaniKorisnici, krugoviLista2, blogObjave, nadzorNalazi, otvorenihPredmeta, pendingDonacije, otvoreniPrigovori, viewerJeSuperadmin, viewerId, pocetniTab, otvorenihPrijavaOglasa, prvihOglasaNaCekanju, otvorenihPrijavaRazmene }: AdminKlijentProps) {
+export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, adminPokrovitelji, dashboard, auditLogs, verifikovaniKorisnici, krugoviLista2, blogObjave, nadzorNalazi, otvorenihPredmeta, pendingDonacije, otvoreniPrigovori, viewerJeSuperadmin, viewerId, pocetniTab, otvorenihPrijavaOglasa, prvihOglasaNaCekanju, otvorenihPrijavaRazmene, zeljaNaPregledu = 0 }: AdminKlijentProps) {
   const router = useRouter();
   const t = useTranslations("admin");
   // Pri povratku (back) sa oglasa ili profila `pocetniTab` stiže iz stabla koje je
@@ -324,6 +327,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
     razmene: otvorenihPrijavaRazmene,
     nadzor: nadzorNalazi.length,
     odluke: otvorenihPredmeta,
+    "kutija-zelja": zeljaNaPregledu,
   };
   const naziv: Record<Tab, string> = {
     dashboard: t("tab_dashboard"),
@@ -350,6 +354,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
     levak: t("tab_levak"),
     nadzor: t("tab_nadzor"),
     odluke: t("tab_odluke"),
+    "kutija-zelja": t("tab_kutija_zelja"),
   };
   // Tabovi samo za superadmina: cirkularna pošta (obaveštenja), pristanak na
   // nove akte (politika — odluka vlasnika, Uslovi čl. 40), audit, aktivnost,
@@ -366,7 +371,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
     { kljuc: "clanovi", oznaka: t("grupa_clanovi"), tabovi: ["korisnici", "potvrde", "osnivaci"] },
     { kljuc: "pijaca", oznaka: t("grupa_pijaca"), tabovi: ["pijaca", "prvi-oglasi", "razmene", "gazdinstva"] },
     { kljuc: "novac", oznaka: t("grupa_novac"), tabovi: ["donacije", "pokrovitelji", "programi", "ped", "nabavke", "zadruge"] },
-    { kljuc: "provere", oznaka: t("grupa_provere"), tabovi: ["prigovori", "nadzor", "odluke"] },
+    { kljuc: "provere", oznaka: t("grupa_provere"), tabovi: ["prigovori", "nadzor", "odluke", "kutija-zelja"] },
     { kljuc: "sistem", oznaka: t("grupa_sistem"), tabovi: ["vesti", "obavestenja", "politika", "audit", "aktivnost", "levak"] },
   ] as Grupa[])
     .map((g) => ({ ...g, tabovi: g.tabovi.filter(vidljiv) }))
@@ -529,6 +534,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
 
       {/* Odluke — nadzorni predmeti koje su otvorili nadzornici (samo superadmin) */}
       {tab === "odluke" && viewerJeSuperadmin && <OdlukeTab />}
+      {tab === "kutija-zelja" && <KutijaZeljaTab onDone={() => router.refresh()} />}
 
       {/* Osnivači */}
       {tab === "osnivaci" && <OsnivaciTab verifikovaniKorisnici={verifikovaniKorisnici} onDone={() => router.refresh()} />}

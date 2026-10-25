@@ -84,11 +84,13 @@ export async function GET() {
         },
         orderBy: [{ confirmedAt: "desc" }, { createdAt: "desc" }],
         take: 50,
+        // 🔴 Bez broja POEN-a i bez nivoa (odluka vlasnika 25.10.2026): iznos u
+        // dinarima i broj POEN-a u istom redu daju odnos deljenjem (R-01) — isto
+        // zbog čega ugovor o donaciji ne nosi broj POEN-a. Donator svoj broj vidi
+        // u sopstvenoj evidenciji. Brana: `koncentracija-izvor.test.ts`.
         select: {
           id: true,
           amountRSD: true,
-          level: true,
-          poenEmitted: true,
           donatorIme: true,
           imePovucenoAt: true,
           javno: true,
@@ -136,8 +138,6 @@ export async function GET() {
       pseudonim: null,
       userId: null,
       amountRSD: Number(d.amountRSD),
-      level: d.level,
-      poenEmitted: d.poenEmitted,
       createdAt: (d.confirmedAt ?? d.createdAt).toISOString(),
     })),
     // Tabela nema kraj (čl. 4) — šalje se nekoliko redova iznad zaključanih

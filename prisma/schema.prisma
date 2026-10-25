@@ -543,6 +543,11 @@ model User {
   prijateljstvaB                   Prijateljstvo[]                @relation("PrijateljB")
   prijateljstvaRaskinuta           Prijateljstvo[]                @relation("PrijateljstvoRaskinuo")
   prijateljTokeni                  PrijateljToken[]
+  // Kutija želja (dečji prostor, 25.10.2026)
+  zeljeDeteta                      ZeljaDeteta[]                  @relation("ZeljaAutor")
+  zeljePregledane                  ZeljaDeteta[]                  @relation("ZeljaPregledao")
+  podrskeZelja                     PodrskaZelje[]                 @relation("ZeljaPodrska")
+  odgovoriNaZelje                  OdgovorNaZelju[]               @relation("ZeljaOdgovorio")
   memberHash                       String                         @unique
   location                         String?
   telefon                          String?
@@ -1604,6 +1609,16 @@ model Preporuka {
 
   @@unique([odId, zaId])
   @@index([zaId])
+}
+
+/// Dnevni snimak pokazatelja zdravlja i koncentracije (`/sistem/zdravlje`; odluke
+/// vlasnika 25.10.2026). 🔴 Bez ijednog identifikatora lica: samo šifra pokazatelja,
+/// vrednost i lampica (`{ "K1": { "v": 63.4, "l": "CRVENO" }, … }`). Upisuje ga noćni
+/// obračun; ne proizvodi nikakvo dejstvo.
+model PokazateljDan {
+  date      DateTime @id @db.Date
+  vrednosti Json
+  createdAt DateTime @default(now())
 }
 
 model DailyEmissionSummary {
@@ -3625,6 +3640,10 @@ model Gazdinstvo {
   /// Od kada gazdinstvo sme imati članove (gazd. čl. 4a, 9a; set 4.8.2). Postavlja se
   /// kad je podnosilac član Kola ili osnivač; monotono — pad potvrđenosti ga ne briše.
   smeClanoveOd       DateTime?
+  /// Od kada bar jedan član neprekidno ima aktivan oglas kojim nudi (pokazatelj Z5,
+  /// „stalna ponuda“; `protokol/pokazatelji.ts`). Upisuje ga noćni obračun: dan bez
+  /// ponude vraća `null`. Stanje gazdinstva, ne istorija lica.
+  ponudaNeprekidnoOd DateTime?
   /// Telefon za razgovor Fondacije sa nosiocem (gazd. čl. 4 t. 9, 6a) — nosioca,
   /// odnosno podnosioca kad nosilac nema nalog. Vidi ga samo admin; briše se odlukom.
   telefonZaRazgovor  String?
@@ -3818,4 +3837,62 @@ model UtvrdjenjeVisestrukogNaloga {
 
   @@index([zadrzaniId])
   @@index([predmetOtvoren])
+}
+
+// ─── Kutija želja u dečjem prostoru (whitepaper 5.0, pogl. 7; 25.10.2026) ────
+/// Stanje predloga deteta. `NA_PREGLEDU → PRIKAZAN | ODBIJEN`, `PRIKAZAN → ODGOVOREN`.
+enum StanjeZelje {
+  NA_PREGLEDU
+  PRIKAZAN
+  ODBIJEN
+  ODGOVOREN
+}
+
+/// Predlog deteta za dečji prostor (nova funkcija, igra ili pravilo).
+/// 🔴 Autor se nikad ne vraća klijentu — ni kao id (`kutija-zelja-pravila.ts`).
+/// Predlog ne donosi POEN i ne obavezuje Fondaciju. Briše se sa svim podrškama i
+/// odgovorom pri brisanju naloga deteta, svakom izlasku naloga i punoletstvu
+/// (odluka vlasnika 25.10.2026).
+model ZeljaDeteta {
+  id               String          @id @default(uuid())
+  autorId          String
+  autor            User            @relation("ZeljaAutor", fields: [autorId], references: [id], onDelete: Cascade)
+  tekst            String
+  stanje           StanjeZelje     @default(NA_PREGLEDU)
+  /// Ko je iz Fondacije pregledao predlog pre prikaza, i kada.
+  pregledaoId      String?
+  pregledao        User?           @relation("ZeljaPregledao", fields: [pregledaoId], references: [id], onDelete: SetNull)
+  pregledanoAt     DateTime?
+  /// Razlog odbijanja — prikazuje se autoru, jednostavnim jezikom.
+  razlogOdbijanja  String?
+  createdAt        DateTime        @default(now())
+  podrske          PodrskaZelje[]
+  odgovor          OdgovorNaZelju?
+
+  @@index([autorId])
+  @@index([stanje])
+}
+
+/// Podrška predlogu — jedan glas po detetu po predlogu; povlači se brisanjem reda.
+model PodrskaZelje {
+  id        String      @id @default(uuid())
+  zeljaId   String
+  zelja     ZeljaDeteta @relation(fields: [zeljaId], references: [id], onDelete: Cascade)
+  deteId    String
+  dete      User        @relation("ZeljaPodrska", fields: [deteId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+
+  @@unique([zeljaId, deteId])
+  @@index([deteId])
+}
+
+/// Obrazložen odgovor Fondacije na prikazan predlog (šta će uraditi, šta neće i zašto).
+model OdgovorNaZelju {
+  id          String      @id @default(uuid())
+  zeljaId     String      @unique
+  zelja       ZeljaDeteta @relation(fields: [zeljaId], references: [id], onDelete: Cascade)
+  tekst       String
+  odgovorioId String?
+  odgovorio   User?       @relation("ZeljaOdgovorio", fields: [odgovorioId], references: [id], onDelete: SetNull)
+  createdAt   DateTime    @default(now())
 }

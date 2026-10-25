@@ -59,9 +59,9 @@ interface DonacijaItem {
    */
   ime: string | null;
   anonimno: boolean;
+  /** 🔴 Bez broja POEN-a i nivoa — RSD i POEN u istom redu daju odnos (R-01;
+   *  odluka vlasnika 25.10.2026). POEN se vidi u zapisima Protokola, uz pseudonim. */
   amountRSD: number;
-  poenEmitted: number;
-  level: number;
   confirmedAt: string;
 }
 
@@ -233,6 +233,14 @@ export default function SistemKlijent({
         // ponavljanje koje gura brojke ispod prvog ekrana.
         <OznakaStatusa varijanta="kratko" status={status} />
       )}
+
+      {/* Zdravlje sistema (odluka vlasnika 25.10.2026): svi pokazatelji zdravlja i
+          koncentracije sa lampicama žive na zasebnoj stranici, ne u ovoj mreži. */}
+      <div className="flex justify-end">
+        <Link href="/sistem/zdravlje" className="inline-flex min-h-10 items-center text-sm font-medium text-kolo-green-700 hover:underline">
+          {t("zdravlje_link")} →
+        </Link>
+      </div>
 
       {/* Kartice pokazatelja (odluka vlasnika, 24.10.2026): četiri reda po četiri,
           naslovi redova idu redom bočnog menija. Kartica sa nulom zadržava mesto i
@@ -898,7 +906,6 @@ function DonacijeSekcija({
 }) {
   const locale = useLocale();
   const t = useTranslations("sistem");
-  const tc = useTranslations("common");
 
   // Lista donacija je ista korisniku i verifikovanom (set 4.8.2; donacije čl. 5a
   // st. 1); zaključana je samo detetu (`verified` ovde znači „nije dete").
@@ -921,17 +928,15 @@ function DonacijeSekcija({
       ) : (<>
       <p className="text-xs text-kolo-muted">{t("prikazanih_donacija", { count: donacije.length })}</p>
       <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
-        <div className="hidden sm:grid grid-cols-[1fr_100px_110px_72px_110px] gap-4 px-5 py-2.5 bg-kolo-bg border-b border-kolo-border text-xs font-semibold text-kolo-muted">
+        <div className="hidden sm:grid grid-cols-[1fr_120px_110px] gap-4 px-5 py-2.5 bg-kolo-bg border-b border-kolo-border text-xs font-semibold text-kolo-muted">
           <span>{t("col_donator")}</span>
           <span className="text-right">RSD</span>
-          <span className="text-right">{tc("poen")}</span>
-          <span className="text-right">{t("col_nivo")}</span>
           <span className="text-right">{t("col_datum")}</span>
         </div>
         {donacije.map((d, i) => (
           <div key={d.id} className={i < donacije.length - 1 ? "border-b border-kolo-border/30" : ""}>
             {/* Desktop */}
-            <div className="hidden sm:grid grid-cols-[1fr_100px_110px_72px_110px] gap-4 px-5 py-3 items-center text-sm">
+            <div className="hidden sm:grid grid-cols-[1fr_120px_110px] gap-4 px-5 py-3 items-center text-sm">
               {d.anonimno ? (
                 <span className="font-medium text-kolo-muted truncate">{t("donacija_anonimna")}</span>
               ) : (
@@ -940,10 +945,6 @@ function DonacijeSekcija({
               <span className="text-right">
                 {d.amountRSD.toLocaleString(intlTag(locale))}
               </span>
-              <span className="text-right font-semibold text-kolo-text">
-                {d.poenEmitted.toLocaleString(intlTag(locale))}
-              </span>
-              <span className="text-right text-kolo-muted">{t("nivo_label")} {d.level}</span>
               <span className="text-right text-kolo-muted">
                 {new Date(d.confirmedAt).toLocaleDateString(intlTag(locale), {
                   day: "2-digit",
@@ -961,12 +962,10 @@ function DonacijeSekcija({
                   <span className="font-semibold text-kolo-text">{d.ime ?? "—"}</span>
                 )}
                 <span className="text-sm font-bold text-kolo-text">
-                  {d.poenEmitted.toLocaleString(intlTag(locale))} {tc("poen")}
+                  {d.amountRSD.toLocaleString(intlTag(locale))} RSD
                 </span>
               </div>
               <div className="flex items-center gap-3 text-xs text-kolo-muted">
-                <span>{d.amountRSD.toLocaleString(intlTag(locale))} RSD</span>
-                <span>{t("nivo_label")} {d.level}</span>
                 <span className="ml-auto">
                   {new Date(d.confirmedAt).toLocaleDateString(intlTag(locale), {
                     day: "2-digit",

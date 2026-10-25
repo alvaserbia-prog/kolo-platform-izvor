@@ -3,6 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { izvozKutijeZelja } from "@/lib/protokol/kutija-zelja";
 
 /**
  * GET /api/profil/eksport
@@ -47,6 +48,7 @@ export async function GET() {
     preporukeDate,
     preporukaPrimljeno,
     zahtevZaRazgovor,
+    kutijaZelja,
   ] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
@@ -323,6 +325,9 @@ export async function GET() {
         createdAt: true,
       },
     }),
+    // Kutija želja (dečji prostor): sopstveni predlozi sa stanjem i odgovorom i
+    // podrške koje je dete dalo — bez autora tuđih predloga.
+    izvozKutijeZelja(userId),
   ]);
 
   const eksport = {
@@ -381,6 +386,7 @@ export async function GET() {
       brojPrimljenih: preporukaPrimljeno,
     },
     zahtevZaRazgovor,
+    kutijaZelja,
   };
 
   return new NextResponse(JSON.stringify(eksport, null, 2), {

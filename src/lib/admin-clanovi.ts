@@ -14,7 +14,7 @@ import { PRAG_VERIFIKACIJE } from "@/lib/status-ucesnika-pravila";
  * Prvi red: ukupno = registrovani + brisani (NALOZI, ne učesnici — tu je i dete);
  * suspendovani su podskup registrovanih (nalog postoji, privremeno je zaključan).
  * Drugi red razlaže registrovane: redovni (verifikovani) + novi (korisnici) + deca =
- * registrovani. 🔴 Dete nikad nije korisnik ni član (set 4.8.2, dogovor t. 5): svaki
+ * registrovani. 🔴 Dete je korisnik, ali se nikad ne broji uz punoletne (set 4.8.2): svaki
  * brojač punoletnih nosi `maloletan: false`, a deca idu u svoju kolonu.
  *
  * „Aktivni" su podskup redovnih (početni članovi uključeni): verifikovan učesnik koji
@@ -62,7 +62,7 @@ export type BrojeviClanova = Awaited<ReturnType<typeof brojeviClanova>>;
 // ─── Status učesnika kao Prisma uslov (set 4.8.2) ────────────────────────────
 //
 // 🔴 Prisma prevod `statusUcesnika()` iz `status-ucesnika-pravila.ts` — isti redosled
-// provera: dete PRVO (dete nikad nije korisnik ni osnivač), pa osnivač, pa
+// provera: dete PRVO (dete nema status iz podele i nije osnivač), pa osnivač, pa
 // verifikovanost (`verified && indeks ≥ PRAG_VERIFIKACIJE`), pa potvrđenost
 // (`potvrdjenAt`), pa čuvar (`NOSILAC_ZRNA`). Ako se pravilo promeni, ovaj prevod
 // mora s njim. Brana: `__tests__/deca-u-brojacima-izvor.test.ts`.

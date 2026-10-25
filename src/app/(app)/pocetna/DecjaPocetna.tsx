@@ -226,6 +226,8 @@ export default function DecjaPocetna({
         <Dugme href="/profil/oglasi" naslov={t("dugme_moji_oglasi")} broj={mojihOglasa} boja="bg-deca-trava-600" />
         <Dugme href="/prijatelji" naslov={t("dugme_prijatelji")} broj={brojPrijatelja} boja="bg-deca-slezova-600" />
         <Dugme href="/poruke" naslov={t("dugme_poruke")} boja="bg-deca-more-600" />
+        {/* Kutija želja: predlozi za dečji prostor (whitepaper 5.0, pogl. 7). */}
+        <Dugme href="/kutija-zelja" naslov={t("dugme_kutija_zelja")} boja="bg-deca-nebo-600" />
       </div>
 
       {/* Kartica škole — ovo je mesto na kome ceo mehanizam uspeva ili pada.

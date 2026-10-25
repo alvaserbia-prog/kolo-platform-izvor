@@ -587,6 +587,21 @@ async function zakasneliPozivi(sada: Date = new Date()) {
 }
 
 /**
+ * Zbirno stanje spiska za poziv za pokazatelj Z4 (`protokol/pokazatelji.ts`):
+ * koliko je živih punoletnih na spisku i kolikima je rok poziva prošao. Samo
+ * brojevi — bez lica.
+ */
+export async function stanjeSpiskaZaPoziv(sada: Date = new Date()): Promise<{ naSpisku: number; zakasnelih: number }> {
+  const [naSpisku, zakasneli] = await Promise.all([
+    prisma.zahtevZaRazgovor.count({
+      where: { user: { status: UserStatus.ACTIVE, deaktiviranAt: null, maloletan: false } },
+    }),
+    zakasneliPozivi(sada),
+  ]);
+  return { naSpisku, zakasnelih: zakasneli.length };
+}
+
+/**
  * Broj zakasnelih poziva za crveni krug. Administrator vidi sve; član Kola samo
  * redove koje sme da vidi na spisku (`smeVidetiRed` — zahtev radi potvrde samo
  * čuvar), bez sopstvenog. Korisnik i član bez potvrde dobijaju nulu.

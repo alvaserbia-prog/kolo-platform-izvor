@@ -12,3 +12,4 @@ export function normalizujLokaciju(sirovo: string | null): string {
   // se različito grupisali Srbinu i Rusu.
   return ociscen ? ociscen.toLocaleLowerCase("sr-Latn-RS") : "";
 }
+
