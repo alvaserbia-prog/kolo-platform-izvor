@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";
+import { jeCronPoziv } from "@/lib/cron-auth";
 import { obradiPunoletstva } from "@/lib/protokol/punoletstvo";
 import { obrisiNepreuzeteNaloge } from "@/lib/protokol/deca-poziv";
 
@@ -22,8 +23,7 @@ import { obrisiNepreuzeteNaloge } from "@/lib/protokol/deca-poziv";
  * istog dana oduzelo POEN dvaput.
  */
 export async function POST(req: NextRequest) {
-  const secret = req.headers.get("x-cron-secret");
-  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+  if (!jeCronPoziv(req)) {
     return await greska("Neautorizovano.", 401);
   }
   // Ugašen modul nema šta da obrađuje, ali ruta ostaje živa da raspored ne puca.

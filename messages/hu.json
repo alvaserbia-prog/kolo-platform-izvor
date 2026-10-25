@@ -2105,7 +2105,7 @@
     "verifikacija_potrebna": "A javakkal és szolgáltatásokkal nyújtott pártfogáshoz a Kolóban kell lenned",
     "verifikacija_opis": "A pártfogó bejegyzését és a pénzbeli pártfogást bármely nagykorú felhasználó elvégezheti. Amikor az Alapítvány megerősíti a pénzbeli pártfogás beérkezését, választhatod a „Szeretném, ha felhívna valaki” lehetőséget, és felhív egy Kolo-tag. A javakkal és szolgáltatásokkal nyújtott pártfogáshoz szükséges, hogy valaki megerősítsen vagy bevezessen a Kolóba.",
     "verifikacija_link": "Hogyan lépek be a Kolóba →",
-    "nivoi_napomena": "A pártfogás ugyanazon táblázat szerint történik, mint a természetes személy adománya. A szint a cég adományainak összegéből számítódik, a személyes adományaidtól elkülönítve, az újonnan elért szint együtthatója pedig a teljes új adományra vonatkozik. A táblázat korlátozás nélkül folytatódik. A legkisebb kérelem 10.000 RSD.",
+    "nivoi_napomena": "A pártfogás ugyanazon táblázat szerint történik, mint a természetes személy adománya. A szint a cég adományainak összegéből számítódik, a személyes adományaidtól elkülönítve, az újonnan elért szint együtthatója pedig a teljes új adományra vonatkozik. A legmagasabb a 11. szint, 2,00-es együtthatóval. A legkisebb kérelem 10.000 RSD.",
     "forma_naslov": "Patronálás indítása",
     "forma_opis": "A platform a bejegyzés adataiból adományozási szerződést hoz létre; a szerződést a Szerződések fülön írod alá. Amint az Alapítvány megerősíti a befizetés beérkezését, a hozzájárulás a bejegyzésedben nyilvántartásba kerül.",
     "forma_naziv_label": "A jogi személy vagy vállalkozó neve",

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { probajEvidentiratiGazdinstvo } from "@/lib/protokol/gazdinstvo";
 import { greska } from "@/lib/greska-api";
+import { jeCronPoziv } from "@/lib/cron-auth";
 import { prisma } from "@/lib/prisma";
 import { probajEvidentiratiPotvrde } from "@/lib/protokol/potvrda-poen";
 import { PotvrdaPoenStatus } from "@/generated/prisma/client";
@@ -33,8 +34,7 @@ const MAX_KORISNIKA = 500;
 const BUDZET_MS = 40_000;
 
 export async function POST(req: NextRequest) {
-  const secret = req.headers.get("x-cron-secret");
-  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+  if (!jeCronPoziv(req)) {
     return await greska("Neautorizovano.", 401);
   }
 

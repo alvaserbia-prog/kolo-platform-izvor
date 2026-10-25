@@ -395,7 +395,7 @@ Veći saldo ne daje razmjerno veću moć. Glasanje u Gornjem Kolu je kvadratno: 
         pitanje: `Kako funkcionira donacija Fondaciji i koliko POENA dobivam?`,
         odgovor: `Donirati može svatko tko ima korisnički račun, i prije ulaska u Kolo: uplatom u dinarima na račun Fondacije, karticom ili IPS QR kodom.
 
-Kad Fondacija utvrdi primitak uplate, Protokol ti automatski upisuje POEN: iznos donacije pomnožen koeficijentom evidencije donacija. Koeficijent je 1,00 i raste za 0,10 na svakom pragu ukupnog iznosa tvojih donacija (5.000, 10.000, 20.000, 50.000 dinara i dalje, bez gornje granice). Kad donacijom prijeđeš prag, novi koeficijent vrijedi za cijelu tu donaciju, a dosegnuta razina ostaje trajno. To nije obračunski koeficijent ZRNA.
+Kad Fondacija utvrdi primitak uplate, Protokol ti automatski upisuje POEN: iznos donacije pomnožen koeficijentom evidencije donacija. Koeficijent je 1,00 i raste za 0,10 na svakom pragu ukupnog iznosa tvojih donacija (5.000, 10.000, 20.000, 50.000 dinara i dalje, do 5.000.000 dinara). Najviša je razina 11, s koeficijentom 2,00. Kad donacijom prijeđeš prag, novi koeficijent vrijedi za cijelu tu donaciju, a dosegnuta razina ostaje trajno. To nije obračunski koeficijent ZRNA.
 
 Koeficijent raste jer veći pojedinačan doprinos ima veće značenje za zajednicu: njime se potreba podmiri odjednom. To nije popust, jer se donacijom ništa ne kupuje i ne stječe se nikakvo pravo prema Fondaciji.
 
@@ -408,7 +408,7 @@ Donacija je nepovratna. Pokriva troškove rada Fondacije, a višak ide u kolekti
         pitanje: `U kojoj valuti doniram, mogu li poslati eure iz inozemstva?`,
         odgovor: `Možeš, donacija se daje uplatom na račun Fondacije, u dinarima ili u drugoj valuti, dakle i eurima iz inozemstva. Plaćanje karticom i IPS QR kodom kroz platformu radi samo u dinarima.
 
-POEN se upisuje po istim pravilima kao za svaku donaciju: iznos × koeficijent evidencije donacija, koji raste s kumulativnim iznosom kroz 11 razina (podrobno u pitanju o donacijama). Iznos u stranoj valuti računa se u dinarskoj protuvrijednosti.
+POEN se upisuje po istim pravilima kao za svaku donaciju: iznos × koeficijent evidencije donacija, koji raste s kumulativnim iznosom do najviše 2,00 (podrobno u pitanju o donacijama). Iznos u stranoj valuti računa se u dinarskoj protuvrijednosti.
 
 Fondacija na zahtjev izdaje potvrdu o donaciji u skladu sa zakonom.`,
       },

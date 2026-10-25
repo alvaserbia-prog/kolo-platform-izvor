@@ -2105,7 +2105,7 @@
     "verifikacija_potrebna": "Sponsorship with goods and services requires you to be in the Kolo",
     "verifikacija_opis": "Any adult user can enter a sponsor and give a monetary sponsorship. Once the Foundation confirms receipt of the monetary sponsorship, you can choose “I'd like someone to call me”, and a Kolo member will call you. For sponsorship with goods and services, someone needs to confirm you or introduce you into the Kolo.",
     "verifikacija_link": "How do I enter the Kolo →",
-    "nivoi_napomena": "Sponsorship follows the same table as a donation by a natural person. The tier is calculated from the total of the company's donations, separately from your personal donations, and the coefficient of the newly reached tier applies to the entire new donation. The table continues without limit. The minimum application is RSD 10,000.",
+    "nivoi_napomena": "Sponsorship follows the same table as a donation by a natural person. The tier is calculated from the total of the company's donations, separately from your personal donations, and the coefficient of the newly reached tier applies to the entire new donation. The highest is tier 11, with a coefficient of 2.00. The minimum application is RSD 10,000.",
     "forma_naslov": "Start sponsorship",
     "forma_opis": "The platform generates a donation agreement from the entry data; you sign the agreement in the Agreements tab. Once the Foundation confirms receipt of the payment, the contribution is recorded in your record.",
     "forma_naziv_label": "Name of legal entity or entrepreneur",

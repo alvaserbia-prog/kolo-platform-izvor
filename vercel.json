@@ -26,6 +26,10 @@
       "schedule": "0 22 * * *"
     },
     {
+      "path": "/api/cron/nocna-emisija/zima",
+      "schedule": "0 23 * * *"
+    },
+    {
       "path": "/api/cron/gdpr-cistenje",
       "schedule": "0 2 1 * *"
     },

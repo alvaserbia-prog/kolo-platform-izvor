@@ -96,14 +96,16 @@ export const RANG_TABELA: { nivo: number; do: number; kurs: number }[] = [
   { nivo: 11, do:       5_000_000, kurs: 2.00 },
 ];
 /**
- * 🔴 Tabela se NASTAVLJA BEZ KRAJA (odluka vlasnika, 2026-09-08). `RANG_TABELA`
- * gore je samo ZAKLJUČAN deo — jedanaest nivoa koji su objavljeni u aktu i koje
- * čuva test. Iznad njih pragovi idu istim nizom 1–2–5 (10.000.000, 20.000.000,
- * 50.000.000 …), a koeficijent raste za 0,10 po nivou. Bez plafona: sistem treba
- * da izdrži skok u opticaju pri velikoj donaciji.
+ * 🔴 Tabela ima JEDANAEST nivoa i staje na koeficijentu 2,00 (odluka vlasnika
+ * 25.10.2026, za donaciju i pokroviteljstvo podjednako). Svaki kumulativ od
+ * 5.000.000 RSD naviše ostaje na nivou 11. Do tada se tabela nastavljala bez
+ * kraja (odluka 2026-09-08); zatečeni zapisi sa višim nivoom ostaju kakvi jesu.
  *
- * Prag se zato NE traži u nizu nego se računa, a niz služi kao provera.
+ * Prag se računa (`pragZaNivo`), a `RANG_TABELA` služi kao provera.
  */
+
+/** Najviši nivo tabele (čl. 4); njegov koeficijent je 2,00. */
+export const NAJVISI_NIVO = 11;
 
 /** Korak koeficijenta po nivou (čl. 4). */
 export const KORAK_KOEFICIJENTA = 0.1;
@@ -168,11 +170,11 @@ export function pragZaNivo(nivo: number): number {
 }
 
 /**
- * Koeficijent za dati nivo. Računa se u celim brojevima (stotinkama) — sa
- * `1 + (n-1) * 0.1` jedanaesti nivo daje 2.0000000000000004.
+ * Koeficijent za dati nivo, najviše 2,00 (nivo 11). Računa se u celim brojevima
+ * (stotinkama) — sa `1 + (n-1) * 0.1` jedanaesti nivo daje 2.0000000000000004.
  */
 export function koeficijentZaNivo(nivo: number): number {
-  return (100 + (Math.max(1, nivo) - 1) * 10) / 100;
+  return (100 + (Math.min(NAJVISI_NIVO, Math.max(1, nivo)) - 1) * 10) / 100;
 }
 
 
@@ -182,12 +184,11 @@ export function koeficijentZaNivo(nivo: number): number {
  * Svaki iznos (uključujući 0) je bar Nivo 1 (koeficijent 1,00).
  */
 export function nivoZaKumulativ(kumulativRSD: number): { nivo: number; kurs: number } {
-  // Nije pretraga po nizu nego penjanje po pragovima — tabela nema kraj.
-  // `Number.isFinite` čuva petlju: Infinity bi je vrtelo beskonačno, NaN pada na
-  // nivo 1 sam od sebe (poređenje sa NaN je uvek netačno).
+  // Penjanje po pragovima do najvišeg nivoa. Besmislen unos (Infinity, NaN,
+  // negativan) pada na nivo 1.
   if (!Number.isFinite(kumulativRSD) || kumulativRSD < 0) return { nivo: 1, kurs: 1.0 };
   let nivo = 1;
-  while (kumulativRSD >= pragZaNivo(nivo + 1)) nivo++;
+  while (nivo < NAJVISI_NIVO && kumulativRSD >= pragZaNivo(nivo + 1)) nivo++;
   return { nivo, kurs: koeficijentZaNivo(nivo) };
 }
 
@@ -221,17 +222,16 @@ export function nivoPokroviteljstvaZaKumulativ(kumulativRSD: number): {
  * lestvica. Najmanja prijava (10.000 RSD) stoji u napomeni ispod tabele.
  */
 export function tabelaPokroviteljstvaZaPrikaz(
-  doNivoa = 14
+  doNivoa = NAJVISI_NIVO
 ): { nivo: number; do: number; kurs: number }[] {
   return tabelaZaPrikaz(doNivoa);
 }
 
 /**
- * Redovi za prikaz — zaključanih jedanaest plus nekoliko iz nastavka, da se na
- * ekranu vidi da tabela ne staje. Prikaz, ne pravilo: obračun ide kroz
- * `nivoZaKumulativ`, koji nema gornju granicu.
+ * Redovi za prikaz — svih jedanaest nivoa. Prikaz, ne pravilo: obračun ide kroz
+ * `nivoZaKumulativ`.
  */
-export function tabelaZaPrikaz(doNivoa = 14): { nivo: number; do: number; kurs: number }[] {
+export function tabelaZaPrikaz(doNivoa = NAJVISI_NIVO): { nivo: number; do: number; kurs: number }[] {
   return Array.from({ length: doNivoa }, (_, i) => ({
     nivo: i + 1,
     do: pragZaNivo(i + 1),

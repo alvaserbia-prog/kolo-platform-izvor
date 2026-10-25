@@ -2105,7 +2105,7 @@
     "verifikacija_potrebna": "Pokroviteljstvo dobrima i uslugama traži da budeš u Kolu",
     "verifikacija_opis": "Upis pokrovitelja i novčano pokroviteljstvo može da izvrši svaki punoletni korisnik. Kad Fondacija potvrdi prijem novčanog pokroviteljstva, možeš da izabereš „Želim da me neko nazove“, pa će te pozvati član Kola. Za pokroviteljstvo dobrima i uslugama potrebno je da te neko potvrdi ili uvede u Kolo.",
     "verifikacija_link": "Kako da uđem u Kolo →",
-    "nivoi_napomena": "Pokroviteljstvo ide po istoj tabeli kao donacija fizičkog lica. Nivo se računa iz zbira donacija firme, odvojeno od tvojih ličnih donacija, a koeficijent novodostignutog nivoa primenjuje se na celu novu donaciju. Tabela se nastavlja bez ograničenja. Najmanja prijava je 10.000 RSD.",
+    "nivoi_napomena": "Pokroviteljstvo ide po istoj tabeli kao donacija fizičkog lica. Nivo se računa iz zbira donacija firme, odvojeno od tvojih ličnih donacija, a koeficijent novodostignutog nivoa primenjuje se na celu novu donaciju. Najviši je nivo 11, sa koeficijentom 2,00. Najmanja prijava je 10.000 RSD.",
     "forma_naslov": "Pokreni pokroviteljstvo",
     "forma_opis": "Platforma generiše ugovor o donaciji iz podataka upisa; ugovor potpisuješ u tabu Ugovori. Kad Fondacija potvrdi prijem uplate, doprinos se evidentira u tvom zapisu.",
     "forma_naziv_label": "Naziv pravnog lica ili preduzetnika",

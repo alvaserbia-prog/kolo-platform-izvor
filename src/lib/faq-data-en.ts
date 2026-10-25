@@ -395,7 +395,7 @@ What you can check. The total amount recorded, the number of steps carried out a
         pitanje: `How does a donation to the Foundation work and how much POEN do I get?`,
         odgovor: `Anyone with an account can donate, even before joining the Kolo: by payment in dinars to the Foundation's account, by card or by IPS QR code.
 
-When the Foundation establishes receipt of the payment, the Protocol automatically enters POEN for you: the donation amount multiplied by the donation recording coefficient. The coefficient is 1.00 and rises by 0.10 at each threshold of the total amount of your donations (5,000, 10,000, 20,000, 50,000 dinars and so on, with no upper limit). When a donation takes you past a threshold, the new coefficient applies to that whole donation, and the level reached is kept permanently. This is not the ZRNO accounting coefficient.
+When the Foundation establishes receipt of the payment, the Protocol automatically enters POEN for you: the donation amount multiplied by the donation recording coefficient. The coefficient is 1.00 and rises by 0.10 at each threshold of the total amount of your donations (5,000, 10,000, 20,000, 50,000 dinars and so on, up to 5,000,000 dinars). The highest is level 11, with a coefficient of 2.00. When a donation takes you past a threshold, the new coefficient applies to that whole donation, and the level reached is kept permanently. This is not the ZRNO accounting coefficient.
 
 The coefficient rises because a larger individual contribution matters more to the community: it meets a need all at once. It is not a discount, because a donation buys nothing and gives no right against the Foundation.
 
@@ -408,7 +408,7 @@ A donation is non-refundable. It covers the Foundation's running costs, and any 
         pitanje: `In what currency do I donate — can I send euros from abroad?`,
         odgovor: `You can — a donation is made by payment into the Foundation's account, in dinars or in another currency, so euros from abroad as well. Card payment and the IPS QR code through the platform work in dinars only.
 
-POEN is recorded under the same rules as for any donation: the amount × the donation recording coefficient, which rises with the cumulative amount across 11 levels (in detail in the question about donations). An amount in a foreign currency is counted at its dinar equivalent.
+POEN is recorded under the same rules as for any donation: the amount × the donation recording coefficient, which rises with the cumulative amount up to at most 2.00 (in detail in the question about donations). An amount in a foreign currency is counted at its dinar equivalent.
 
 On request, the Foundation issues a confirmation of the donation in accordance with the law.`,
       },

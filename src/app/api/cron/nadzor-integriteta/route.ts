@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";
+import { jeCronPoziv } from "@/lib/cron-auth";
 import { pokreniNadzorIntegriteta } from "@/lib/protokol/nadzor-integriteta";
 
 /**
@@ -10,8 +11,7 @@ import { pokreniNadzorIntegriteta } from "@/lib/protokol/nadzor-integriteta";
  * nikakvu radnju nad nalozima — samo posmatra i obaveštava. Preporučeno: dnevno.
  */
 export async function POST(req: NextRequest) {
-  const secret = req.headers.get("x-cron-secret");
-  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+  if (!jeCronPoziv(req)) {
     return await greska("Neautorizovano.", 401);
   }
 
@@ -20,4 +20,9 @@ export async function POST(req: NextRequest) {
     `[Nadzor integriteta] otvoreno=${rez.ukupno} hitno=${rez.hitno} upozorenje=${rez.upozorenje} noviHitni=${rez.noviHitni}`
   );
   return NextResponse.json({ ok: true, ...rez });
+}
+
+// GET — Vercel Cron (Authorization: Bearer).
+export async function GET(req: NextRequest) {
+  return POST(req);
 }

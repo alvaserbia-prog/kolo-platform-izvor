@@ -405,7 +405,7 @@ Mit ellenőrizhetsz. A bejegyzett teljes összeg, a megtett lépések száma és
         pitanje: `Hogyan működik az adomány az Alapítványnak, és mennyi POEN-t kapok?`,
         odgovor: `Bárki adományozhat, akinek fiókja van, akár a Kolóba lépés előtt is: dinárbefizetéssel az Alapítvány számlájára, kártyával vagy IPS QR-kóddal.
 
-Amikor az Alapítvány megállapítja a befizetés beérkezését, a Protokoll automatikusan POEN-t jegyez be neked: az adomány összegét megszorozva az adományok nyilvántartási együtthatójával. Az együttható 1,00, és adományaid teljes összegének minden küszöbénél (5000, 10 000, 20 000, 50 000 dinár és tovább, felső határ nélkül) 0,10-dal nő. Ha egy adománnyal átlépsz egy küszöböt, az új együttható az egész adományra érvényes, az elért szint pedig véglegesen megmarad. Ez nem a ZRNO elszámolási együtthatója.
+Amikor az Alapítvány megállapítja a befizetés beérkezését, a Protokoll automatikusan POEN-t jegyez be neked: az adomány összegét megszorozva az adományok nyilvántartási együtthatójával. Az együttható 1,00, és adományaid teljes összegének minden küszöbénél (5000, 10 000, 20 000, 50 000 dinár és tovább, 5 000 000 dinárig) 0,10-dal nő. A legmagasabb a 11. szint, 2,00-es együtthatóval. Ha egy adománnyal átlépsz egy küszöböt, az új együttható az egész adományra érvényes, az elért szint pedig véglegesen megmarad. Ez nem a ZRNO elszámolási együtthatója.
 
 Az együttható azért nő, mert a nagyobb egyedi hozzájárulás nagyobb jelentőségű a közösség számára: egyszerre fedez egy szükségletet. Ez nem kedvezmény, mert adománnyal semmit sem vásárolsz, és semmilyen jogot nem szerzel az Alapítvánnyal szemben.
 
@@ -418,7 +418,7 @@ Az adomány visszafordíthatatlan. Az Alapítvány működési költségeit fede
         pitanje: `Milyen pénznemben adományozok — küldhetek eurót külföldről?`,
         odgovor: `Küldhetsz — az adomány az Alapítvány számlájára történő befizetéssel adható, dinárban vagy más pénznemben, tehát euróban is külföldről. A platformon keresztüli bankkártyás fizetés és az IPS QR-kód csak dinárban működik.
 
-A POEN ugyanazok szerint a szabályok szerint rögzül, mint bármely adománynál: összeg × az adományok nyilvántartási koefficiense, amely a halmozott összeggel nő 11 szinten át (részletesen az adományokról szóló kérdésben). A külföldi pénznemben lévő összeg a dináregyenértéken számít.
+A POEN ugyanazok szerint a szabályok szerint rögzül, mint bármely adománynál: összeg × az adományok nyilvántartási koefficiense, amely a halmozott összeggel legfeljebb 2,00-ig nő (részletesen az adományokról szóló kérdésben). A külföldi pénznemben lévő összeg a dináregyenértéken számít.
 
 Kérésre az Alapítvány a törvénnyel összhangban igazolást állít ki az adományról.`,
       },
