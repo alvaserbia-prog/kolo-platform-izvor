@@ -20,6 +20,7 @@ import { smeUPricaonicu } from "@/lib/deca-pravila";
 import DecjaPocetna from "./DecjaPocetna";
 import { karticaSkoleZaDete } from "@/lib/protokol/skole";
 import { USLOV_RAZMENE } from "@/lib/razmena-brojac-pravila";
+import { USLOV_CLANA_U_SPISKU } from "@/lib/clanovi-spisak";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
@@ -158,7 +159,7 @@ export default async function PocetnaPage() {
   const roditelj = await cekaRoditelja(session.user.id, mojaAdresa?.email ?? null);
   const tPocetna = await getTranslations("pocetna");
 
-  // Brojač na vrhu početne: članovi, oglasi, razmene, opticaj. Isti izvor kao
+  // Brojač na vrhu početne: korisnici, oglasi, razmene, opticaj. Isti izvor kao
   // kartice na /sistem — „razmene" su prenosi između korisnika (TRANSFER) od
   // najmanje `MIN_POEN_RAZMENE` (uslov stoji na jednom mestu, u
   // `razmena-brojac-pravila.ts`), a „opticaj" apsolutna vrednost protivzapisa
@@ -178,7 +179,8 @@ export default async function PocetnaPage() {
       take: 100,
       include: { user: { select: { id: true, pseudonim: true, verified: true, avatar: true } } },
     }),
-    prisma.user.count({ where: { deaktiviranAt: null } }),
+    // Korisnici: živi punoletni nalozi (pravilo 19), bez dece (deca čl. 4c).
+    prisma.user.count({ where: { ...USLOV_CLANA_U_SPISKU, maloletan: false } }),
     // Isti uslov kao spisak koji ovaj član vidi na Pijaci — broj ne sme da bude
     // veći od onoga što se tamo nađe.
     prisma.marketplaceListing.count({ where: { status: "ACTIVE", seller: usloviVidljivostiOglasa(ja) } }),
