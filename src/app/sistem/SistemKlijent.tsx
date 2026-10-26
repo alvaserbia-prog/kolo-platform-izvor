@@ -234,14 +234,6 @@ export default function SistemKlijent({
         <OznakaStatusa varijanta="kratko" status={status} />
       )}
 
-      {/* Zdravlje sistema (odluka vlasnika 25.10.2026): svi pokazatelji zdravlja i
-          koncentracije sa lampicama žive na zasebnoj stranici, ne u ovoj mreži. */}
-      <div className="flex justify-end">
-        <Link href="/sistem/zdravlje" className="inline-flex min-h-10 items-center text-sm font-medium text-kolo-green-700 hover:underline">
-          {t("zdravlje_link")} →
-        </Link>
-      </div>
-
       {/* Kartice pokazatelja (odluka vlasnika, 24.10.2026): četiri reda po četiri,
           naslovi redova idu redom bočnog menija. Kartica sa nulom zadržava mesto i
           naslov, a umesto nule nosi rečenicu i vezu — kad stigne prvi zapis, sama
@@ -403,6 +395,15 @@ export default function SistemKlijent({
       )}
       {sekcija === "faza" && <FazaSekcija opticaj={opticaj} />}
       {sekcija === "fondacija" && <FondacijaSekcija />}
+
+      {/* Zdravlje sistema (odluka vlasnika 25.10.2026): svi pokazatelji zdravlja i
+          koncentracije sa lampicama žive na zasebnoj stranici; veza stoji na dnu
+          stranice, iznad podnožja (odluka vlasnika, isti dan). */}
+      <div className="flex justify-center border-t border-kolo-border pt-6">
+        <Link href="/sistem/zdravlje" className="inline-flex min-h-10 items-center text-sm font-medium text-kolo-green-700 hover:underline">
+          {t("zdravlje_link")} →
+        </Link>
+      </div>
     </div>
   );
 }
