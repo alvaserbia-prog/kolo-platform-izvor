@@ -11,12 +11,12 @@ import { KLASE_UNOSA } from "@/components/ui/Polje";
  * Kontrole Upravnog odbora nad usvojenom odlukom koja čeka sprovođenje (čl. 51
  * Pravilnika, čl. 17 Gornjeg Kola).
  *
- * 🔴 Tri različite radnje, namerno razdvojene:
+ * 🔴 Dve različite radnje, namerno razdvojene:
  *  - „sproveo" traži OZNAKU AKTA UO — Gornje Kolo nije organ Fondacije, pa se
  *    odluka sprovodi aktom UO i taj akt mora ostati u registru;
  *  - „ne sprovodi" traži razlog sa ZATVORENE liste iz čl. 51 (zakon, Statut,
- *    van nadležnosti) uz obrazloženje;
- *  - „zaštitni veto" je zaseban institut (čl. 48) — privremen, gasi se po čl. 49.
+ *    van nadležnosti) uz obrazloženje.
+ * Zaštitni veto je uklonjen (odluka vlasnika 25.10.2026) i ne vraća se.
  */
 type Razlog = "ZAKON" | "STATUT" | "VAN_NADLEZNOSTI";
 const RAZLOZI: Razlog[] = ["ZAKON", "STATUT", "VAN_NADLEZNOSTI"];
@@ -24,8 +24,8 @@ const RAZLOZI: Razlog[] = ["ZAKON", "STATUT", "VAN_NADLEZNOSTI"];
 export default function IzvrsenjeKontrole({ id }: { id: string }) {
   const t = useTranslations("glasanje");
   const router = useRouter();
-  const [radnja, setRadnja] = useState<"izvrsi" | "veto" | "odbij" | null>(null);
-  const [forma, setForma] = useState<"akt" | "veto" | "odbij" | null>(null);
+  const [radnja, setRadnja] = useState<"izvrsi" | "odbij" | null>(null);
+  const [forma, setForma] = useState<"akt" | "odbij" | null>(null);
   const [akt, setAkt] = useState("");
   const [obrazlozenje, setObrazlozenje] = useState("");
   const [razlog, setRazlog] = useState<Razlog>("ZAKON");
@@ -35,7 +35,7 @@ export default function IzvrsenjeKontrole({ id }: { id: string }) {
     setForma(null); setAkt(""); setObrazlozenje(""); setRazlog("ZAKON");
   }
 
-  async function posalji(put: string, telo: unknown, koja: "izvrsi" | "veto" | "odbij") {
+  async function posalji(put: string, telo: unknown, koja: "izvrsi" | "odbij") {
     setRadnja(koja); setGreska(null);
     const res = await fetch(`/api/admin/glasanje/${id}/${put}`, {
       method: "POST",
@@ -57,9 +57,6 @@ export default function IzvrsenjeKontrole({ id }: { id: string }) {
           <Dugme varijanta="sekundarno" velicina="sm" onClick={() => setForma("odbij")} disabled={radnja !== null}>
             {t("ne_sprovodi")}
           </Dugme>
-          <Dugme varijanta="opasno" velicina="sm" onClick={() => setForma("veto")} disabled={radnja !== null}>
-            {t("zastitni_veto")}
-          </Dugme>
         </div>
       )}
 
@@ -76,7 +73,7 @@ export default function IzvrsenjeKontrole({ id }: { id: string }) {
               {radnja === "izvrsi" ? "..." : t("potvrdi_izvrseno")}
             </Dugme>
             <Dugme varijanta="tiho" velicina="sm" onClick={zatvori}>
-              {t("otkazi_veto")}
+              {t("otkazi")}
             </Dugme>
           </div>
         </div>
@@ -101,25 +98,7 @@ export default function IzvrsenjeKontrole({ id }: { id: string }) {
               {radnja === "odbij" ? "..." : t("potvrdi_ne_sprovodi")}
             </Dugme>
             <Dugme varijanta="tiho" velicina="sm" onClick={zatvori}>
-              {t("otkazi_veto")}
-            </Dugme>
-          </div>
-        </div>
-      )}
-
-      {forma === "veto" && (
-        <div className="space-y-2">
-          <textarea rows={2} value={obrazlozenje} onChange={(e) => setObrazlozenje(e.target.value)}
-            placeholder={t("veto_obrazlozenje_placeholder")}
-            aria-label={t("veto_obrazlozenje_placeholder")}
-            className={`${KLASE_UNOSA} resize-none`} />
-          <div className="flex gap-2">
-            <Dugme varijanta="opasno" velicina="sm" onClick={() => posalji("veto", { obrazlozenje: obrazlozenje.trim() }, "veto")}
-              disabled={radnja !== null || obrazlozenje.trim().length < 10}>
-              {radnja === "veto" ? "..." : t("potvrdi_veto")}
-            </Dugme>
-            <Dugme varijanta="tiho" velicina="sm" onClick={zatvori}>
-              {t("otkazi_veto")}
+              {t("otkazi")}
             </Dugme>
           </div>
         </div>

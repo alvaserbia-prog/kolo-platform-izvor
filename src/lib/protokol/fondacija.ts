@@ -1,19 +1,18 @@
 /**
- * Fondacija — transparentnost sredstava i Zastitni veto (Pravilnik o KOLO sistemu cl. 48–50, v3.7.5)
+ * Fondacija — transparentnost sredstava.
  *
  * Sredstva Fondacije = priliv (donacije + pokroviteljstvo, oba u RSD) - odliv
  * (operativni troskovi + projektni odliv)
- * Veto aktivan ako Protokol balansa < -1.000.000 POEN I trajnoUgasen = false
- * Veto se trajno gasi kad sredstva Fondacije >= 3 × operativni trosak prethodnog meseca
- *   (reper po Pravilniku o Gornjem Kolu 3.7.6, cl. 19).
+ *
+ * 🔴 Zastitni veto je uklonjen (odluka vlasnika 25.10.2026): bio je dupla brana uz
+ * operativnu rezervu nabavke, a gasio se jednom zauvek. Tabela `SistemskiVeto` i
+ * vrednost `VETO_OBUSTAVLJENO` ostaju kao istorija; radnja veta se ne vraca.
  *
  * Inicijalne vrednosti = 0 (po dogovoru sa vlasnikom 2026-05-24).
  */
 
 import { prisma } from "@/lib/prisma";
 
-const PROTOKOL_WALLET_ID = "banka-singleton";
-const VETO_PRAG_POEN = -1_000_000;
 
 export interface FondacijaSaldo {
   ukupanPriliv: number;        // RSD
@@ -23,18 +22,6 @@ export interface FondacijaSaldo {
   operativniOdliv: number;     // RSD (samo FondacijaTrosak)
   projektniOdliv: number;      // RSD (samo ProjekatTrosak — kolektivne nabavke)
   saldo: number;               // RSD (priliv - odliv)
-}
-
-export interface VetoStatus {
-  aktivan: boolean;
-  trajnoUgasen: boolean;
-  datumAktivacije: Date | null;
-  datumGasenja: Date | null;
-  protokolBalans: number;
-  prag: number;
-  saldoFondacije: number;
-  trosakPrethodnogMeseca: number;
-  pragZaGasenje: number;       // 3 × trosak prethodnog meseca
 }
 
 export async function dohvatiSaldoFondacije(): Promise<FondacijaSaldo> {
@@ -115,14 +102,14 @@ export async function dohvatiGodisnjiProjektniPregled(
 }
 
 /**
- * Operativni trosak Fondacije za prethodni KALENDARSKI mesec — reper za prag
- * gasenja zastitnog veta (Pravilnik o Gornjem Kolu 3.7.6, cl. 19).
+ * Operativni trosak Fondacije za prethodni KALENDARSKI mesec — reper za
+ * operativnu rezervu kolektivne nabavke (nabavke cl. 5).
  * Vraca 0 dok ne postoji nijedan zapis za prethodni mesec.
  *
- * 🔴 Broji SAMO `FondacijaTrosak` — nikad `ProjekatTrosak`. Prag za gasenje veta je
- * `trosak × 3`, pa bi nabavka od 200.000 RSD upisana kao operativa podigla prag za
- * 600.000 RSD; veto bi se najteze gasio bas u mesecima kada Fondacija najvise radi,
- * a mesec bez nabavke bi ga naglo olaksao. Prag mora da meri operativu, ne aktivnost.
+ * 🔴 Broji SAMO `FondacijaTrosak` — nikad `ProjekatTrosak`. Rezerva je
+ * `trosak × 3`, pa bi nabavka od 200.000 RSD upisana kao operativa podigla rezervu za
+ * 600.000 RSD; sledeca nabavka bi bila najteza bas u mesecima kada Fondacija najvise
+ * radi. Rezerva mora da meri operativu, ne aktivnost.
  * Zato kolektivne nabavke imaju sopstveni model (vidi `ProjekatTrosak` u semi).
  */
 export async function dohvatiTrosakPrethodnogMeseca(): Promise<number> {
@@ -136,89 +123,4 @@ export async function dohvatiTrosakPrethodnogMeseca(): Promise<number> {
   });
 
   return Number(troskovi._sum.iznosRSD ?? 0);
-}
-
-/**
- * Azurira singleton SistemskiVeto na osnovu trenutnog stanja:
- * - aktivan = (Protokol < -1M) I (!trajnoUgasen)
- * - trajnoUgasen postaje true ako saldoFondacije >= 3 × trosak prethodnog meseca (jednosmerni flag)
- */
-/**
- * Singleton reda veta. Na produkciji ga nije bilo (25.10.2026, pokazatelji
- * zdravlja), pa je `/api/javno/veto` padao na „nije inicijalizovan“ — kao kod
- * osnivačkog kanala, red se kreira po potrebi sa podrazumevanim vrednostima
- * (veto neaktivan, nije ugašen), umesto da se baca izuzetak.
- */
-function dohvatiIliKreirajVeto() {
-  return prisma.sistemskiVeto.upsert({ where: { id: "singleton" }, update: {}, create: { id: "singleton" } });
-}
-
-export async function azurirajVetoStatus(): Promise<VetoStatus> {
-  const [veto, protokol, saldo, trosakPrethodnog] = await Promise.all([
-    dohvatiIliKreirajVeto(),
-    prisma.wallet.findUnique({ where: { id: PROTOKOL_WALLET_ID }, select: { balance: true } }),
-    dohvatiSaldoFondacije(),
-    dohvatiTrosakPrethodnogMeseca(),
-  ]);
-
-
-  const protokolBalans = protokol?.balance ?? 0;
-  const pragZaGasenje = trosakPrethodnog * 3;
-
-  let trajnoUgasen = veto.trajnoUgasen;
-  let datumGasenja = veto.datumGasenja;
-
-  // Provera trajnog gasenja (jednosmerni flag)
-  if (!trajnoUgasen && trosakPrethodnog > 0 && saldo.saldo >= pragZaGasenje) {
-    trajnoUgasen = true;
-    datumGasenja = new Date();
-  }
-
-  // Veto je aktivan samo ako jos nije trajno ugasen I Protokol je ispod praga
-  const aktivan = !trajnoUgasen && protokolBalans < VETO_PRAG_POEN;
-
-  let datumAktivacije = veto.datumAktivacije;
-  if (aktivan && !veto.aktivan) {
-    datumAktivacije = new Date();
-  }
-
-  await prisma.sistemskiVeto.update({
-    where: { id: "singleton" },
-    data: { aktivan, trajnoUgasen, datumAktivacije, datumGasenja },
-  });
-
-  return {
-    aktivan,
-    trajnoUgasen,
-    datumAktivacije,
-    datumGasenja,
-    protokolBalans,
-    prag: VETO_PRAG_POEN,
-    saldoFondacije: saldo.saldo,
-    trosakPrethodnogMeseca: trosakPrethodnog,
-    pragZaGasenje,
-  };
-}
-
-export async function dohvatiVetoStatus(): Promise<VetoStatus> {
-  // Ne menja stanje veta, samo izveštava (red se kreira samo ako ne postoji)
-  const [veto, protokol, saldo, trosakPrethodnog] = await Promise.all([
-    dohvatiIliKreirajVeto(),
-    prisma.wallet.findUnique({ where: { id: PROTOKOL_WALLET_ID }, select: { balance: true } }),
-    dohvatiSaldoFondacije(),
-    dohvatiTrosakPrethodnogMeseca(),
-  ]);
-
-
-  return {
-    aktivan: veto.aktivan,
-    trajnoUgasen: veto.trajnoUgasen,
-    datumAktivacije: veto.datumAktivacije,
-    datumGasenja: veto.datumGasenja,
-    protokolBalans: protokol?.balance ?? 0,
-    prag: VETO_PRAG_POEN,
-    saldoFondacije: saldo.saldo,
-    trosakPrethodnogMeseca: trosakPrethodnog,
-    pragZaGasenje: trosakPrethodnog * 3,
-  };
 }

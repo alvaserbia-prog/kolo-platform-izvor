@@ -203,8 +203,8 @@ export async function izvrsiOdluku(id: string, akt: string): Promise<void> {
  * UO odbija da sprovede odluku Gornjeg Kola (čl. 51 Pravilnika).
  *
  * 🔴 Razlozi su ZATVORENA LISTA i tip ih sprovodi — celishodnost odluke UO ne ceni.
- * Zaštitni veto NIJE ovde: on ima sopstvenu radnju (`vetoNaIzvrsenje`), jer je
- * privremen i gasi se trajno po čl. 49, dok su ova tri razloga trajna.
+ * 🔴 Zaštitni veto je uklonjen (odluka vlasnika 25.10.2026): razloga ima tri i
+ * četvrti se ne dodaje. Stari zapisi `VETO_OBUSTAVLJENO` ostaju kao istorija.
  */
 export async function neSprovediOdluku(
   id: string,
@@ -256,23 +256,5 @@ export async function odgovoriNaPreporuku(
   await prisma.glasanjePredlog.update({
     where: { id },
     data: { uoOdgovor: odgovor, uoObrazlozenje: o, uoOdgovorAt: new Date() },
-  });
-}
-
-/**
- * Fondacija (UO) obustavlja izvršenje odluke zaštitnim vetom (čl. 18).
- * Veto mora biti obrazložen — bez obrazloženja predstavlja zloupotrebu.
- */
-export async function vetoNaIzvrsenje(id: string, obrazlozenje: string): Promise<void> {
-  const o = (obrazlozenje ?? "").trim();
-  if (o.length < 10)
-    throw new GlasanjeGreska("Zaštitni veto mora imati obrazloženje koje upućuje na konkretnu pretnju održivosti (čl. 18).");
-  const p = await prisma.glasanjePredlog.findUnique({ where: { id }, select: { izvrsenjeStatus: true } });
-  if (!p) throw new GlasanjeGreska("Predlog nije pronađen.", 404);
-  if (p.izvrsenjeStatus !== "ZA_IZVRSENJE")
-    throw new GlasanjeGreska("Veto je moguć samo na odluku koja čeka izvršenje.");
-  await prisma.glasanjePredlog.update({
-    where: { id },
-    data: { izvrsenjeStatus: "VETO_OBUSTAVLJENO", vetoObrazlozenje: o, vetoAt: new Date() },
   });
 }

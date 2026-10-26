@@ -31,7 +31,6 @@ type Sredstva = {
   trosakPrethodnogMesecaRSD: number;
   rezervaRSD: number;
   raspolozivoRSD: number;
-  vetoAktivan: boolean;
 };
 type Registar = { nazivId: string; naziv: string; brojKorisnika: number };
 
@@ -134,11 +133,6 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
               </div>
             ))}
         </dl>
-        {sredstva?.vetoAktivan && (
-          <Obavestenje vrsta="greska" className="mt-2">
-            {t("nab_veto")}
-          </Obavestenje>
-        )}
         <p className="mt-2 text-xs text-kolo-muted">
           {t("nab_odliv_napomena")}
         </p>

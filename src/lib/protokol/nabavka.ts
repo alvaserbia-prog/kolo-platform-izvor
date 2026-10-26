@@ -13,7 +13,6 @@ import { ROK_NABAVKA_DANA } from "@/lib/prigovor-pravila";
 import {
   dohvatiSaldoFondacije,
   dohvatiTrosakPrethodnogMeseca,
-  azurirajVetoStatus,
 } from "@/lib/protokol/fondacija";
 import {
   MESECI_REZERVE,
@@ -200,27 +199,25 @@ export interface SredstvaZaProjekte {
   trosakPrethodnogMesecaRSD: number;
   rezervaRSD: number;
   raspolozivoRSD: number;
-  vetoAktivan: boolean;
 }
 
 /**
- * Sredstva raspoloživa za projekte, sa stanjem zaštitnog veta (čl. 5 i 7).
+ * Sredstva raspoloživa za projekte (čl. 5). Zaštitni veto je uklonjen (odluka
+ * vlasnika 25.10.2026): kočnica je samo operativna rezerva, koja se meri svakog meseca.
  *
  * Saldo dolazi iz `fondacija.ts` i već je umanjen za projektni odliv; rezerva se
  * računa isključivo iz OPERATIVNIH troškova — vidi komentar uz `ProjekatTrosak`.
  */
 export async function sredstvaZaProjekte(): Promise<SredstvaZaProjekte> {
-  const [saldo, trosak, veto] = await Promise.all([
+  const [saldo, trosak] = await Promise.all([
     dohvatiSaldoFondacije(),
     dohvatiTrosakPrethodnogMeseca(),
-    azurirajVetoStatus(),
   ]);
   return {
     saldoRSD: saldo.saldo,
     trosakPrethodnogMesecaRSD: trosak,
     rezervaRSD: trosak * MESECI_REZERVE,
     raspolozivoRSD: raspolozivoZaProjekte(saldo.saldo, trosak),
-    vetoAktivan: veto.aktivan,
   };
 }
 
@@ -350,10 +347,6 @@ export async function objaviNabavku(nabavkaId: string, ulaz: ObjavaUlaz) {
   }
 
   const sredstva = await sredstvaZaProjekte();
-  if (sredstva.vetoAktivan) {
-    throw new NabavkaGreska("Zaštitni veto Fondacije je na snazi — nabavka se ne sprovodi (čl. 7).", 409);
-  }
-
   if (n.brojJedinica === null || n.velicinaDela === null || n.poenPoDelu === null) {
     throw new NabavkaGreska("Parametri nabavke nisu utvrđeni (čl. 17).", 409);
   }
@@ -732,9 +725,9 @@ export async function prijavaPoKodu(nabavkaId: string, kod: string) {
  * manje od broja delova iz kalkulacije, kupuje se manje jedinica i plaća srazmerno
  * manje — veličina dela se ne menja (st. 2).
  *
- * Odliv ide u `ProjekatTrosak`, ne u `FondacijaTrosak`: prag za gašenje zaštitnog
- * veta je tri OPERATIVNA troška prethodnog meseca, pa bi nabavka upisana kao
- * operativa podigla taj prag i veto bi se najteže gasio baš kad Fondacija radi.
+ * Odliv ide u `ProjekatTrosak`, ne u `FondacijaTrosak`: operativna rezerva je tri
+ * OPERATIVNA troška prethodnog meseca, pa bi nabavka upisana kao operativa podigla
+ * rezervu i sledeća nabavka bi bila najteža baš kad Fondacija radi.
  */
 export async function zabeleziPlacanje(nabavkaId: string, iznosRSD: number, kreiraoId: string) {
   const n = await prisma.nabavka.findUnique({

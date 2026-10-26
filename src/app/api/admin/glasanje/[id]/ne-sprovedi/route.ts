@@ -7,8 +7,8 @@ import { jeSuperadmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
 
 // POST /api/admin/glasanje/[id]/ne-sprovedi — UO odbija sprovođenje odluke Gornjeg
-// Kola iz razloga sa zatvorene liste (čl. 51 Pravilnika). Zaštitni veto ide zasebnom
-// rutom `/veto` — on je privremen i gasi se po čl. 49, ovi razlozi nisu.
+// Kola iz razloga sa zatvorene liste (čl. 51 Pravilnika). Zaštitni veto je uklonjen
+// (odluka vlasnika 25.10.2026), pa su ovo jedini razlozi.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeSuperadmin(session.user))

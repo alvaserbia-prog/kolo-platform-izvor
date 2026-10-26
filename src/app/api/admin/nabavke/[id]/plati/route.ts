@@ -16,9 +16,9 @@ import { zabeleziPlacanje, NabavkaGreska } from "@/lib/protokol/nabavka";
  * potvrđeno manje od broja delova iz kalkulacije, kupuje se manje jedinica i plaća
  * srazmerno manje; veličina dela se ne menja.
  *
- * 🔴 Odliv ide u `ProjekatTrosak`, ne u `FondacijaTrosak`: prag za gašenje
- * zaštitnog veta je tri OPERATIVNA troška prethodnog meseca, pa bi nabavka upisana
- * kao operativa podigla prag i veto bi se najteže gasio baš kad Fondacija radi.
+ * 🔴 Odliv ide u `ProjekatTrosak`, ne u `FondacijaTrosak`: operativna rezerva je
+ * tri OPERATIVNA troška prethodnog meseca, pa bi nabavka upisana kao operativa
+ * podigla rezervu i sledeća nabavka bi bila najteža baš kad Fondacija radi.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

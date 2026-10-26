@@ -84,8 +84,8 @@ export function validanNaziv(naziv: string): boolean {
 /**
  * Čl. 5 — sredstva raspoloživa za projekte.
  *
- * Rezerva je isti reper po kome se trajno gasi zaštitni veto (Gornje Kolo čl. 19),
- * pa nije proizvoljna cifra nego mera održivosti koju akti već priznaju.
+ * Rezerva je jedina kočnica trošenja na projekte i meri se svakog meseca iznova
+ * (zaštitni veto, koji se jednom gasio, uklonjen je odlukom vlasnika 25.10.2026).
  * Negativna razlika se svodi na nulu — nabavka se tada ne sprovodi.
  */
 export function raspolozivoZaProjekte(saldoRSD: number, trosakPrethodnogMesecaRSD: number): number {
