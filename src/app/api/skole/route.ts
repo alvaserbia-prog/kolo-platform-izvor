@@ -6,7 +6,7 @@ import { ranglisteSkola, skolePostoje, type TipSkole } from "@/lib/protokol/skol
  *
  * 🔴 Ruta je OTVORENA i neprijavljenom posetiocu: ovo je čist zbir, bez ijednog
  * imena. Spisak dece jedne škole je druga ruta (`/api/skole/[sifra]`) i on traži
- * prijavu — po čl. 13 gostu nije dostupan ni oglas maloletnog korisnika, pa mu
+ * prijavu — po čl. 24 st. 2 Pravilnika o učešću dece gostu nije dostupan ni oglas maloletnog korisnika, pa mu
  * spisak dece ne sme biti dostupniji od toga.
  *
  * Osnovne i srednje škole se traže odvojeno: u jednoj listi bi gimnazija sa

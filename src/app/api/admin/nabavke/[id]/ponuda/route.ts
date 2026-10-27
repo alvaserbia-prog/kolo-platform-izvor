@@ -11,7 +11,7 @@ import { dodajPonudu, obrisiPonudu, NabavkaGreska } from "@/lib/protokol/nabavka
  * POST   /api/admin/nabavke/[id]/ponuda {ponudjac, cena, napomena}
  * DELETE /api/admin/nabavke/[id]/ponuda {ponudaId}
  *
- * Prikupljanje ponuda (čl. 15). Objavljuju se SVE, i one koje nisu izabrane —
+ * Prikupljanje ponuda (čl. 14). Objavljuju se SVE, i one koje nisu izabrane —
  * bez toga „najpovoljnija" nije provera nego tvrdnja.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {

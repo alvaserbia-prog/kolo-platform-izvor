@@ -12,6 +12,7 @@ import {
 import {
   MAX_KARTICNA_UPLATA_RSD,
   MAX_KARTICNIH_UPLATA_DNEVNO,
+  PORUKA_DETE_NE_DONIRA,
 } from "@/lib/donacija-pravila";
 
 const MIN_RSD = 100;
@@ -86,6 +87,7 @@ export async function POST(req: NextRequest) {
     select: {
       id: true,
       email: true,
+      maloletan: true,
       wallet: { select: { id: true } },
       podaci: { select: { punoIme: true } },
     },
@@ -93,8 +95,9 @@ export async function POST(req: NextRequest) {
   if (!user?.wallet) {
     return await greska("Član nema zapis u Protokolu.", 400);
   }
+  if (user.maloletan) return await greska(PORUKA_DETE_NE_DONIRA, 403);
 
-  // Javna donacija zahteva uneto ime i prezime (čl. 5a) — provera PRE naplate.
+  // Javna donacija zahteva uneto ime i prezime (čl. 7 st. 1) — provera PRE naplate.
   if (javno && !user.podaci?.punoIme?.trim()) {
     return NextResponse.json(
       {

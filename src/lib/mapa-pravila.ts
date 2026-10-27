@@ -1,8 +1,8 @@
 /**
  * Jedna mapa za gazdinstva i pokrovitelje — ČISTA pravila (bez Prisme, bez Leaflet-a).
  *
- * Osnov: Pravilnik o gazdinstvima čl. 11 („Na istoj mapi prikazuju se i
- * pokrovitelji"), Pravilnik o pokroviteljstvu i donacijama čl. 13 st. 4 (pokrovitelj
+ * Osnov: Pravilnik o gazdinstvima čl. 19 st. 2 („Na istoj mapi prikazuju se i
+ * pokrovitelji"), Pravilnik o pokroviteljstvu i donacijama čl. 26 st. 2 (pokrovitelj
  * na mapi: naziv, logotip, mesto i adresa, uz ponudu vaučera — ništa drugo).
  *
  * 🔴 Tačka nosi samo ono što akti dozvoljavaju: naziv, mesto, adresu (gazdinstvo —
@@ -27,9 +27,9 @@ export type TackaMape = {
   adresa: string | null;
   lat: number;
   lng: number;
-  /** Logotip — samo pokrovitelj (čl. 13 st. 4). */
+  /** Logotip — samo pokrovitelj (čl. 26 st. 2). */
   logoUrl: string | null;
-  /** Oznaka DOMAĆE — oglasi odobrenog gazdinstva (Pravilnik čl. 40c, `jeDomace`). */
+  /** Oznaka DOMAĆE — oglasi odobrenog gazdinstva (Pravilnik o gazdinstvima čl. 18 st. 2, `jeDomace`). */
   domace: boolean;
   /** Upis pokrovitelja čiji su vaučeri ponuđeni (za vezu „Vaučeri"); `null` bez upisa. */
   upisId: string | null;

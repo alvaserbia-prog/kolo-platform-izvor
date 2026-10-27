@@ -8,7 +8,7 @@ import { rateLimit, klijentIP } from "@/lib/rate-limit";
  * POST /api/pijaca/[id]/pregled — uveća brojač pregleda oglasa.
  *
  * Zove ga `OglasDetalj` pri otvaranju stranice oglasa. Otvoreno i za goste
- * (pregled oglasa je javan, Pravilnik čl. 16).
+ * (pregled oglasa je javan, Uslovi čl. 17 st. 2).
  *
  * Šta se NE broji:
  *  - pregled samog oglašivača (inače bi sebi napunio brojač),

@@ -10,7 +10,7 @@ import { zabeleziPlacanje, NabavkaGreska } from "@/lib/protokol/nabavka";
 /**
  * POST /api/admin/nabavke/[id]/plati { iznosRSD }
  *
- * Beleži plaćanje dobavljaču i otvara period preuzimanja (čl. 25).
+ * Beleži plaćanje dobavljaču i otvara period preuzimanja (čl. 23).
  *
  * 🔴 Plaća se TEK sada, kad je poznato koliko je delova potvrđeno — ako je
  * potvrđeno manje od broja delova iz kalkulacije, kupuje se manje jedinica i plaća

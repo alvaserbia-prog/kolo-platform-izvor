@@ -6,7 +6,8 @@ import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { MIN_ZADRUGARA, sledeciPrag } from "@/lib/zadruga-pravila";
+import { MIN_ZADRUGARA, sledeciPrag, zapisZamrznut } from "@/lib/zadruga-pravila";
+import { brojZadrugaraUcesnika } from "@/lib/protokol/zadruga";
 import { opisTransakcije } from "@/lib/prevod-servera";
 import { intlTag } from "@/lib/format";
 import { profilHref } from "@/lib/profil-link";
@@ -26,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /**
  * Stranica zadruge — Pravilnik o zadrugama (set 4.7.0).
  *
- * 🔴 Zapisi zadruge i spisak zadrugara vidljivi su redovnim članovima (čl. 19),
+ * 🔴 Zapisi zadruge i spisak zadrugara vidljivi su učesnicima (zadruge čl. 21),
  * zadrugari pod pseudonimom. Ime i prezime zadrugara se ovde NE čita — upit ga
  * ni ne traži, pa ne može da procuri ni greškom u prikazu.
  */
@@ -45,6 +46,7 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
       zadruga: true,
       maticniBroj: true,
       prestanakAt: true,
+      zamrznutoAt: true,
       wallet: { select: { id: true, balance: true } },
       bonusLogs: { select: { threshold: true } },
     },
@@ -56,13 +58,15 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
   const verified = session.user.verified;
   const broj = (n: number) => n.toLocaleString(intlTag(locale));
 
-  const [zadrugari, mojeClanstvo, zapisi] = await Promise.all([
+  const [zadrugari, mojeClanstvo, ucesnika, zapisi] = await Promise.all([
     prisma.krugClanstvo.findMany({
       where: { krugId: id, leftAt: null },
       orderBy: { joinedAt: "asc" },
       select: { user: { select: { id: true, pseudonim: true } } },
     }),
     prisma.krugClanstvo.findFirst({ where: { krugId: id, userId: session.user.id, leftAt: null }, select: { id: true } }),
+    // Za pragove se broje samo zadrugari koji su učesnici (čl. 6 st. 1).
+    brojZadrugaraUcesnika(id),
     verified && z.wallet
       ? prisma.transaction.findMany({
           where: { OR: [{ fromWalletId: z.wallet.id }, { toWalletId: z.wallet.id }] },
@@ -84,8 +88,9 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
   ]);
 
   const otvoren = z.bonusLogs.some((b) => b.threshold === MIN_ZADRUGARA);
-  const sledeci = sledeciPrag(zadrugari.length);
+  const sledeci = sledeciPrag(ucesnika);
   const aktivna = !z.prestanakAt;
+  const zamrznut = zapisZamrznut(z);
 
   return (
     <div className="space-y-6">
@@ -96,6 +101,7 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
           opis={t("detalj_opis", { lokalitet: z.location ?? "—" })}
         />
         {!aktivna && <Obavestenje vrsta="upozorenje" className="mt-3">{t("prestala")}</Obavestenje>}
+        {aktivna && zamrznut && <Obavestenje vrsta="upozorenje" className="mt-3">{t("zamrznut")}</Obavestenje>}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -107,10 +113,13 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
             {sledeci ? t("sledeci_prag_tekst", { clanovi: sledeci.clanovi, poen: broj(sledeci.poen) }) : t("svi_pragovi")}
           </p>
           {!otvoren && <p className="text-xs text-kolo-muted mt-1">{t("zapis_se_otvara", { n: MIN_ZADRUGARA })}</p>}
+          {zadrugari.length > ucesnika && <p className="text-xs text-kolo-muted mt-1">{t("miruju", { n: zadrugari.length - ucesnika })}</p>}
         </Kartica>
       </div>
 
-      {mojeClanstvo && aktivna && otvoren && <ZadrugaPrepis zadrugaId={z.id} />}
+      {/* Zadrugar koji nije učesnik miruje i ne prepisuje u zapis zadruge (čl. 6 st. 1);
+          zamrznut zapis ne prima prepis (čl. 22 st. 2). */}
+      {mojeClanstvo && aktivna && otvoren && !zamrznut && verified && <ZadrugaPrepis zadrugaId={z.id} />}
 
       {verified ? (
         <>

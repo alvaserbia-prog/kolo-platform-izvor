@@ -6,11 +6,12 @@
  * i `analitika-putanja.ts`). Pozivno mesto zato ne proverava ništa samo.
  *
  * ─── 🔴 Šta NIKAD ne ide u GA ──────────────────────────────────────────────
- *  - pseudonim, id naloga, email, `user_id` — Fondacija ne drži vezu pseudonima
- *    i identiteta (Pravilnik čl. 31), pa je ne sme dati ni Google-u;
+ *  - pseudonim, id naloga, email, `user_id` — veza pseudonima i imena postoji
+ *    samo u evidenciji identiteta, koja se vodi zasebno i čita uzak krug
+ *    (Pravilnik čl. 31); Google-u se ne daje ni pseudonim ni ikakav ključ ka njoj;
  *  - iznos POEN-a ili dinara, `value`/`currency` — broj uz POEN u alatu za
- *    merenje prodaje čita se kao novčana vrednost (Pravilnik čl. 13);
- *  - naziv socijalnog programa ili njegov osnov (posebna kategorija, Politika čl. 6).
+ *    merenje prodaje čita se kao novčana vrednost (Pravilnik čl. 16);
+ *  - naziv socijalnog programa ili njegov osnov (posebna kategorija, Politika čl. 27).
  *
  * Zato parametri prolaze kroz DOZVOLJENU listu imena, a vrednost mora biti kratka
  * oznaka iz koda (mala slova, cifre, `_`, `-`). Brana: `analitika-izvor.test.ts`.

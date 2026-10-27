@@ -7,8 +7,8 @@ import { odgovoriNaPrijavuRazmene } from "@/lib/protokol/prijava-razmene";
 /**
  * POST /api/prigovor/razmena/[id]  { odgovor }
  *
- * Izjašnjenje druge strane pre odluke o prigovoru na prepis (Pravilnik čl. 16
- * st. 10, set 4.5.4). Rok je sedam dana od otvaranja slučaja; dok traje, odluka
+ * Izjašnjenje druge strane pre odluke o prigovoru na prepis (Uslovi čl. 40
+ * st. 5, set 4.5.4). Rok je sedam dana od otvaranja slučaja; dok traje, odluka
  * se ne donosi — to sprovodi `ponistiPrepis`, ne ovaj ekran.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {

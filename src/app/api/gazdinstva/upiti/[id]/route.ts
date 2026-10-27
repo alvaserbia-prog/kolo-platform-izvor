@@ -6,9 +6,9 @@ import { odgovoriNaUpit, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
  * POST — odgovor člana gazdinstva na upit da preuzme izjavu o tačnosti podataka
- * (Pravilnik o gazdinstvima čl. 9 st. 3, 11 st. 6): `{ preuzima: boolean }`.
+ * (Pravilnik o gazdinstvima čl. 13 st. 2–3, 21 st. 3): `{ preuzima: boolean }`.
  * Odbijanje šalje upit sledećem članu po redu; kad ga niko ne preuzme, gazdinstvo
- * prestaje (čl. 12a st. 1 t. 1).
+ * prestaje (čl. 22 st. 1 t. 1).
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

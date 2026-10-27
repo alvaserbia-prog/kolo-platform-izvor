@@ -9,10 +9,10 @@ import { obrisiNepreuzeteNaloge } from "@/lib/protokol/deca-poziv";
  *
  * Dva posla u istom terminu, oba dnevna i oba nadoknađuju propušteno:
  *
- *  1. **Punoletstvo** (čl. 19) — najava mesec dana ranije, pa na sam dan otpis
+ *  1. **Punoletstvo** (čl. 35) — najava mesec dana ranije, pa na sam dan otpis
  *     POEN-a iz prijateljstava, brisanje prijateljstava, prelazak naloga u
  *     punoletni i potvrde stvarnosti od roditelja.
- *  2. **Nepreuzeti nalozi** (čl. 4b st. 5) — brisanje naloga dece koje niko nije
+ *  2. **Nepreuzeti nalozi** (čl. 10 st. 5) — brisanje naloga dece koje niko nije
  *     preuzeo u roku od četrnaest dana od registracije.
  *
  * Termin: dnevno u 20:00 UTC — pre noćne emisije (22:00) i pre isteka roka za

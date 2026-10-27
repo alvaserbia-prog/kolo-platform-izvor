@@ -15,11 +15,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Ugovor o donaciji (Pravilnik o pokroviteljstvu i donacijama, čl. 5b).
+ * Ugovor o donaciji (Pravilnik o pokroviteljstvu i donacijama, čl. 14).
  *
  * Prikazuje se SNIMLJEN tekst sa zapisa donacije — nikad se ne generiše ponovo
- * pri čitanju. Vidi ga isključivo sam donator (čl. 67 Pravilnika o KOLO
- * sistemu): dokument nosi ime, iznos i broj POEN-a.
+ * pri čitanju. Vidi ga isključivo sam donator (čl. 56 Pravilnika o KOLO
+ * sistemu): dokument nosi ime i iznos. Ugovori sačinjeni od 26.10.2026. ne nose
+ * broj POEN-a; zatečeni ga nose i prikazuju se kakvi su snimljeni.
  */
 export default async function UgovorODonacijiPage({
   params,

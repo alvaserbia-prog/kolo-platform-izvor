@@ -15,8 +15,8 @@ import { jeSuperadmin } from "@/lib/dozvole";
 //
 // 🔴 Do 4.2.0 je ova ruta obarala CELO podstablo verifikatora — stvarni ljudi su
 // gubili status zbog tuđe radnje. Sada padaju samo verifikacije koje ovaj nalog
-// dodiruju (primljene i obavljene, čl. 20), a kaskada staje na prvom stvarnom
-// čoveku: on gubi tu jednu vezu i može ponovo biti verifikovan (čl. 20c).
+// dodiruju (primljene i obavljene, čl. 34), a kaskada staje na prvom stvarnom
+// čoveku: on gubi tu jednu vezu i može ponovo biti verifikovan (čl. 37).
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeSuperadmin(session.user))
@@ -46,7 +46,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     }
 
     // Nadoknada je poseban događaj i tiče se drugog čoveka od onog iznad —
-    // verifikatora kome je nepokriveni deo prešao na zapis (čl. 20b).
+    // verifikatora kome je nepokriveni deo prešao na zapis (čl. 36).
     for (const n of rez.nadoknade) {
       await obavesti(n.userId, {
         tip: "NADOKNADA",

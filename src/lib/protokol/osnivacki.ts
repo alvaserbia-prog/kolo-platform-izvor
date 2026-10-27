@@ -1,49 +1,32 @@
 /**
- * Osnivacki doprinos (Pravilnik o osnivackom doprinosu v3.9.1)
+ * Osnivački doprinos — servisni sloj (Pravilnik o osnivačkom doprinosu; Pravilnik
+ * o KOLO sistemu čl. 35). Čista pravila (granica, korak, raspodela, javnost udela)
+ * žive u `osnivacki-pravila.ts` i ovde se re-eksportuju (pravilo 9).
  *
- * Pravila:
- * - Gornja granica: 2.400.000 POEN (100 koraka x 24.000)
- * - Korak se aktivira svaki put kad ukupan POEN u sistemu predje prag od 100k
- * - Pragovi: 100.000, 200.000, 300.000, ..., 10.000.000 (poslednji)
- * - Kanal se trajno zatvara na 100. koraku
- *
- * NAPOMENA: Lista osnivaca i udeli se popunjavaju kroz admin interfejs
- * (interni akt Fondacije, cl. 12). Koraci se evidentiraju tek kad je
- * lista osnivaca zakljucana (zbir udela = 1).
+ * - Korak se evidentira samo iz noćnog obračuna, na kraju obračunskog perioda
+ *   (čl. 6 st. 2–3); ručnog okidača nema.
+ * - Osnivači i udeli su iz odluke o raspodeli (čl. 8); u platformu ih upisuje
+ *   administrator, a zaključavanjem liste odluka se objavljuje (čl. 8 st. 4) i
+ *   krug se više ne menja (čl. 2 st. 3). Koraci se evidentiraju tek nad
+ *   zaključanom listom (zbir udela = 1).
  */
 
 import { prisma } from "@/lib/prisma";
 import { emitujPoen } from "./emisija";
 import { TransactionType } from "@/generated/prisma/client";
+import { prestaoStatus } from "@/lib/status-ucesnika-pravila";
+import {
+  ITERATION_LIMIT,
+  GORNJA_GRANICA,
+  PRAG_SKOK,
+  iznosiKoraka,
+  osnivacuJePrestaoStatus,
+  preostaloDoGranice,
+} from "@/lib/osnivacki-pravila";
+
+export * from "@/lib/osnivacki-pravila";
 
 const PROTOKOL_WALLET_ID = "banka-singleton";
-
-export const ITERATION_LIMIT = 100;
-export const KORAK_IZNOS = 24_000;
-export const GORNJA_GRANICA = ITERATION_LIMIT * KORAK_IZNOS; // 2.400.000
-export const PRAG_SKOK = 100_000;
-
-/**
- * Raspodela jednog koraka (KORAK_IZNOS) među osnivačima srazmerno udelima (čl. 12).
- * Largest-remainder metoda — zbir vraćenih iznosa je tačno KORAK_IZNOS (bez gubitka
- * na zaokruživanju), pa evidentirani iznos po koraku ostaje konzistentan sa 20.000.
- * Pretpostavka (validirano u pozivaocu): svi udeli imaju isti imenilac, zbir
- * brojilaca = imenilac.
- */
-export function raspodeliKorak(udeli: { udeoBrojilac: number; udeoImenilac: number }[]): number[] {
-  if (udeli.length === 0) return [];
-  const imenilac = udeli[0].udeoImenilac;
-  const baze = udeli.map((u) => Math.floor((KORAK_IZNOS * u.udeoBrojilac) / imenilac));
-  let ostatak = KORAK_IZNOS - baze.reduce((s, x) => s + x, 0);
-  const ostaci = udeli
-    .map((u, i) => ({ i, frac: (KORAK_IZNOS * u.udeoBrojilac) % imenilac }))
-    .sort((a, b) => b.frac - a.frac);
-  for (let k = 0; k < ostaci.length && ostatak > 0; k++) {
-    baze[ostaci[k].i] += 1;
-    ostatak--;
-  }
-  return baze;
-}
 
 /**
  * Ukupan POEN u sistemu = apsolutna vrednost Protokol balansa (jer je zero-sum).
@@ -100,7 +83,7 @@ export async function dohvatiStatusKanala(): Promise<KanalStatus> {
     zatvorenAt: kanal.zatvorenAt,
     poslednjiPrag: kanal.poslednjiPrag,
     gornjaGranica: GORNJA_GRANICA,
-    preostalo: GORNJA_GRANICA - kanal.ukupnoEvidentirano,
+    preostalo: preostaloDoGranice(kanal.ukupnoEvidentirano, kanal.zatvoren),
     procenatIskoriscenja: Math.round((kanal.ukupnoEvidentirano / GORNJA_GRANICA) * 10000) / 100,
     ukupanPoenUSistemu: ukupanPoen,
     sledeciPrag: kanal.poslednjiPrag + PRAG_SKOK,
@@ -109,9 +92,12 @@ export async function dohvatiStatusKanala(): Promise<KanalStatus> {
 }
 
 /**
- * Provera i evidentiranje koraka.
- * Poziva se rucno (admin) ili iz noćnog cron-a.
- * Vraca koliko koraka je evidentirano u ovom pozivu (moze biti vise od 1 ako je opticaj naglo skocio).
+ * Provera i evidentiranje koraka (čl. 6). Poziva je SAMO noćni obračun, na kraju
+ * obračunskog perioda (`/api/cron/nocna-emisija`); 🔴 ručnog okidača nema, jer bi
+ * provera usred perioda merila stanje koje nije stanje perioda (čl. 6 st. 2) i bila
+ * bi diskreciona (st. 3).
+ * Vraća koliko koraka je evidentirano u ovom pozivu (može biti više od 1 ako je
+ * ukupan broj POEN-a u periodu dostigao više pragova).
  */
 export async function proveriIEvidentirajKorak(): Promise<{
   evidentiranoKoraka: number;
@@ -128,16 +114,23 @@ export async function proveriIEvidentirajKorak(): Promise<{
     return {
       evidentiranoKoraka: 0,
       zatvoren: false,
-      poruka: "Lista osnivača nije zaključana — koraci se ne evidentiraju dok admin ne zaključa osnivače.",
+      poruka: "Odluka o raspodeli nije objavljena (lista osnivača nije zaključana) — koraci se ne evidentiraju.",
     };
   }
 
-  const osnivaci = await prisma.osnivac.findMany({ orderBy: { redniBroj: "asc" } });
+  const osnivaci = await prisma.osnivac.findMany({
+    orderBy: { redniBroj: "asc" },
+    include: {
+      user: { select: { status: true, deaktiviranAt: true } },
+      _count: { select: { emisije: true } },
+    },
+  });
   if (osnivaci.length === 0) {
-    return { evidentiranoKoraka: 0, zatvoren: false, poruka: "Nema definisanih osnivaca." };
+    return { evidentiranoKoraka: 0, zatvoren: false, poruka: "Nema definisanih osnivača." };
   }
 
-  // Provera da zbir udela = 1
+  // Provera da zbir udela = 1 (čl. 8 st. 1) — nad CELOM odlukom, i sa osnivačima
+  // kojima je prestao status: njihov udeo ostaje u imeniocu (čl. 8 st. 3).
   const zbirBrojilaca = osnivaci.reduce((s, o) => s + o.udeoBrojilac, 0);
   const imenilac = osnivaci[0].udeoImenilac;
   const sviIstiImenilac = osnivaci.every((o) => o.udeoImenilac === imenilac);
@@ -145,48 +138,75 @@ export async function proveriIEvidentirajKorak(): Promise<{
     return {
       evidentiranoKoraka: 0,
       zatvoren: false,
-      poruka: `Udeli osnivaca nisu validni: zbir = ${zbirBrojilaca}/${imenilac}, mora biti ${imenilac}/${imenilac}.`,
+      poruka: `Udeli osnivača nisu validni: zbir = ${zbirBrojilaca}/${imenilac}, mora biti ${imenilac}/${imenilac}.`,
     };
   }
 
+  // Čl. 8 st. 3: udeo osnivača kome je prestao status korisnika (isključen ili
+  // ugašen nalog, `prestaoStatus`) se od tada ne evidentira i ne raspoređuje na druge.
+  // 🔴 Takav nalog ne sme da zaustavi kanal — on se samo preskače.
+  const saStatusom = osnivaci.map((o) => ({
+    ...o,
+    prestao: osnivacuJePrestaoStatus({
+      prestaoSada: o.user ? prestaoStatus(o.user) : true,
+      brojEmisija: o._count?.emisije,
+      brojKorakaKanala: kanal.brojKoraka,
+    }),
+  }));
+  const iznosi = iznosiKoraka(saStatusom);
+
+  // Novčanici onih kojima se korak upisuje traže se PRE prvog koraka: ako nekome
+  // ko ima status novčanik nedostaje (kvar podataka, ne prestanak statusa), provera
+  // se prekida pre ijednog upisa, pa se pragovi nadoknađuju sledećom proverom —
+  // umesto da njegov udeo nestane ili da korak ostane upisan napola.
+  const novcanici = new Map<string, string>();
+  for (let oi = 0; oi < saStatusom.length; oi++) {
+    if (iznosi[oi] <= 0) continue;
+    const wallet = await prisma.wallet.findUnique({ where: { userId: saStatusom[oi].userId } });
+    if (!wallet) {
+      return {
+        evidentiranoKoraka: 0,
+        zatvoren: false,
+        poruka: `Novčanik ne postoji za osnivača br. ${saStatusom[oi].redniBroj}; korak nije evidentiran.`,
+      };
+    }
+    novcanici.set(saStatusom[oi].id, wallet.id);
+  }
+  const iznosJednogKoraka = iznosi.reduce((s, x) => s + x, 0);
+
   let trenutniKoraci = kanal.brojKoraka;
   let trenutniPrag = kanal.poslednjiPrag;
+  let ukupnoEvidentirano = kanal.ukupnoEvidentirano;
   let evidentirano = 0;
 
-  // Snapshot ukupnog POEN-a PRE petlje. Svaki korak emituje KORAK_IZNOS POEN-a i time
-  // povećava opticaj; da to NE bi samo guralo prag za sledeći korak (samopojačavajuća
-  // kaskada), prag se poredi prema stanju sistema na ulasku, a ne posle svake emisije.
+  // Snimak ukupnog POEN-a PRE petlje (čl. 6 st. 4): koraci evidentirani pri jednoj
+  // proveri ne računaju se u ukupan broj prema kome se pri toj istoj proveri
+  // utvrđuje dostizanje praga — inače bi se kanal sam pojačavao.
   const ukupanPoen = await izracunajUkupanPoen();
 
   while (trenutniKoraci < ITERATION_LIMIT) {
     const sledeciPrag = trenutniPrag + PRAG_SKOK;
 
-    if (ukupanPoen < sledeciPrag) break; // jos nije dostignut sledeci prag
+    if (ukupanPoen < sledeciPrag) break; // još nije dostignut sledeći prag
 
-    // Evidentiraj korak: kreira KorakLog i emituje POEN svakom osnivacu
+    // Korak se beleži i kad je umanjen (čl. 8 st. 3) — i kad su svim osnivačima
+    // prestali statusi, jer se kanal ne zaustavlja i pragovi se ne pomeraju.
     const korakLog = await prisma.osnivackiKorakLog.create({
       data: {
         brojKoraka: trenutniKoraci + 1,
         prag: sledeciPrag,
         ukupanPoenUSistemu: ukupanPoen,
-        iznosKoraka: KORAK_IZNOS,
+        iznosKoraka: iznosJednogKoraka,
       },
     });
 
-    // Emituj POEN svakom osnivacu prema udelu (zbir = tačno KORAK_IZNOS)
-    const iznosi = raspodeliKorak(osnivaci);
-    for (let oi = 0; oi < osnivaci.length; oi++) {
-      const osnivac = osnivaci[oi];
+    for (let oi = 0; oi < saStatusom.length; oi++) {
+      const osnivac = saStatusom[oi];
       const iznos = iznosi[oi];
       if (iznos <= 0) continue;
 
-      const wallet = await prisma.wallet.findUnique({ where: { userId: osnivac.userId } });
-      if (!wallet) {
-        throw new Error(`Wallet ne postoji za osnivaca ${osnivac.userId}.`);
-      }
-
       const rezultat = await emitujPoen(
-        wallet.id,
+        novcanici.get(osnivac.id)!,
         iznos,
         TransactionType.EMISIJA_OSNIVACKI,
         `Osnivacki doprinos — korak ${trenutniKoraci + 1}/${ITERATION_LIMIT}`, { kljuc: "transakcije.osnivacki", parametri: { korak: trenutniKoraci + 1, ukupno: ITERATION_LIMIT } },
@@ -204,17 +224,18 @@ export async function proveriIEvidentirajKorak(): Promise<{
 
     trenutniKoraci += 1;
     trenutniPrag = sledeciPrag;
+    ukupnoEvidentirano += iznosJednogKoraka;
     evidentirano += 1;
   }
 
-  // Update singleton kanala
+  // Čl. 10 st. 1: kanal se zatvara 100. korakom, i kad su koraci bili umanjeni.
   const zatvoren = trenutniKoraci >= ITERATION_LIMIT;
   await prisma.osnivackiKanal.update({
     where: { id: "singleton" },
     data: {
       brojKoraka: trenutniKoraci,
       poslednjiPrag: trenutniPrag,
-      ukupnoEvidentirano: trenutniKoraci * KORAK_IZNOS,
+      ukupnoEvidentirano,
       zatvoren,
       zatvorenAt: zatvoren ? new Date() : undefined,
     },

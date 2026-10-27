@@ -3,8 +3,8 @@
 /**
  * Cirkularna SISTEMSKA obaveštenja — sastavljanje i slanje svim korisnicima.
  *
- * Namena je uska: izmene Uslova/Politike (Uslovi čl. 40, Politika čl. 16),
- * planirani zastoj duži od 24h (Uslovi čl. 33). NIJE kanal za vesti ni bilten —
+ * Namena je uska: izmene Uslova/Politike (Uslovi čl. 43, Politika čl. 47),
+ * planirani zastoj duži od 24h (Uslovi čl. 36). NIJE kanal za vesti ni bilten —
  * za to je potrebna dopuna Politike i zaseban pristanak korisnika.
  *
  * Slanje ide u porcijama: svaki poziv obradi koliko stigne, pa se ponavlja dok

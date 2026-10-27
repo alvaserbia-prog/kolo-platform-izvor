@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
       pseudonim: { contains: q, mode: "insensitive" },
       status: { not: "EXCLUDED" },
       id: { not: session.user.id },
-      // Maloletni korisnici se ne pojavljuju u pretrazi članova (Modul Deca, čl. 13).
+      // Maloletni korisnici se ne pojavljuju u pretrazi članova (Pravilnik o učešću dece, čl. 24, 25).
       // Do njih se dolazi kroz njihov oglas, ne pretraživanjem po imenu.
       maloletan: false,
     },

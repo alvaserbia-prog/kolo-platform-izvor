@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { DecaGreska, dohvatiPregledDeteta } from "@/lib/protokol/deca";
 
 /**
- * GET /api/deca/[id]/pregled — „ko i koliko" (Modul Deca, čl. 9 st. 2).
+ * GET /api/deca/[id]/pregled — „ko i koliko" (Pravilnik o učešću dece, čl. 19 st. 2).
  *
  * 🔴 Ovo je ono što roditelj dobija UMESTO sadržaja razgovora među decom: spisak
  * prijatelja sa datumima i spisak razgovora bez ijedne poruke. Sadržaj se ne vraća

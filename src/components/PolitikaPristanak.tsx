@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { intlTag } from "@/lib/format";
 import { useMePatch, ME_KEY } from "@/hooks/useMe";
-import { AKT_POLITIKA, AKT_USLOVI } from "@/lib/verzije-akata";
+import { AKT_POLITIKA, AKT_RIZICI, AKT_USLOVI } from "@/lib/verzije-akata";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 
@@ -18,7 +18,7 @@ interface Verzija {
 }
 
 /**
- * Ekran za pristanak na nove akte (Uslovi čl. 40, Politika čl. 16).
+ * Ekran za pristanak na nove akte (Uslovi čl. 43, Politika čl. 47).
  *
  * Koristi se na DVA mesta i namerno je jedna komponenta:
  *   1. kao prekrivač preko app-a (`AppShell`) — redovan put,
@@ -202,7 +202,10 @@ export default function PolitikaPristanak({
             <span className="text-sm text-kolo-text">
               {t("kvacica_uslovi")}{" "}
               <Link href="/uslovi" target="_blank" className="text-kolo-green-700 underline">{t("uslovi_link")}</Link>{" "}
-              <span className="text-kolo-muted">(v{AKT_USLOVI.verzija})</span>
+              <span className="text-kolo-muted">(v{AKT_USLOVI.verzija})</span>{" "}
+              {/* Izjava o rizicima: ista kvačica kao Uslovi (rizici čl. 2 st. 1; odluka vlasnika 12). */}
+              {t("i_veznik")} <Link href="/rizici" target="_blank" className="text-kolo-green-700 underline">{t("rizici_link")}</Link>{" "}
+              <span className="text-kolo-muted">(v{AKT_RIZICI.verzija})</span>
             </span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer py-2 min-h-11">

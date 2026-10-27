@@ -35,7 +35,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     zastupnikImePrezime: p.zastupnikImePrezime,
     zastupnikFunkcija: p.zastupnikFunkcija,
     aprUporedjenAt: p.aprUporedjenAt?.toISOString() ?? null,
-    // Upis (donacije čl. 6a): poređenje sa registrom izvršeno je pri odobrenju upisa.
+    // Upis (donacije čl. 16, 18): poređenje sa registrom izvršeno je pri odobrenju upisa.
     upisId: p.upisId,
     upisOdobren: !!p.upis && upisOdobrenZaPotvrdu(p.upis),
     vrstaDonacije: p.vrstaDonacije,

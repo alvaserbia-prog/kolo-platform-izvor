@@ -63,7 +63,7 @@ function PorukeContent() {
   /**
    * Maloletni nalog. Njemu se NE prikazuje rečenica o „redovnim članovima":
    * ona je za dete neistinita na svakoj reči — ono nije „nov član" koji čeka
-   * potvrdu (u lanac potvrda ne ulazi, čl. 15), sme da piše svakom svom
+   * potvrdu (u lanac potvrda ne ulazi, deca čl. 29 st. 2), sme da piše svakom svom
    * prijatelju, a punoletni članovi mu se po pravilu i ne javljaju jer je
    * roditeljski prekidač podrazumevano isključen. Umesto toga dobija spisak
    * svojih prijatelja kao dugmad — što je i najbolji mogući sadržaj tog mesta.
@@ -76,11 +76,11 @@ function PorukeContent() {
   const [drugiAvatar, setDrugiAvatar] = useState<string | null>(null);
   // Oglas povodom kog je razgovor otvoren, a poruka još nije napisana.
   const [povod, setPovod] = useState<{ id: string; naslov: string; imaSliku: boolean } | null>(null);
-  // Modul Deca, čl. 9 st. 3: sa druge strane je dete, a razgovor čita njegov
+  // Pravilnik o učešću dece čl. 19 st. 3: sa druge strane je dete, a razgovor čita njegov
   // roditelj. Natpis je i odvraćanje i poštenje — ko piše detetu, treba da zna
   // pred kim piše. Server ga postavlja samo punoletnom sagovorniku.
   const [roditeljCita, setRoditeljCita] = useState(false);
-  /** Razgovor ugašen raskidom prijateljstva (čl. 14c) — polje za pisanje otpada. */
+  /** Razgovor ugašen raskidom prijateljstva (deca čl. 34) — polje za pisanje otpada. */
   const [razgovorZatvoren, setRazgovorZatvoren] = useState(false);
   const [mojAvatar, setMojAvatar] = useState<string | null>(null);
   const [mojPseudonim, setMojPseudonim] = useState("");

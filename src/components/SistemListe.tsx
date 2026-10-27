@@ -7,7 +7,7 @@
  * ispod svojih kartica; prepisan spisak bi se razišao sa ovim pri prvoj sledećoj
  * izmeni (isto pravilo po kome se tabele nivoa ne prepisuju u ekrane), a razišao
  * bi se baš na pravilu vidljivosti: pseudonim u evidenciji doprinosa vidi samo
- * potvrđen član (Pravilnik čl. 67, Politika čl. 6), i to pravilo nosi `Ucesnik`.
+ * potvrđen član (Pravilnik čl. 56, Politika čl. 11 st. 4), i to pravilo nosi `Ucesnik`.
  */
 
 import { memo, useMemo, useState } from "react";
@@ -58,8 +58,8 @@ export interface Clan {
 /**
  * Strana u zapisu — pseudonim, „—" ili naziv Protokola.
  *
- * Pseudonim u evidenciji doprinosa vidi SAMO potvrđen član (Pravilnik čl. 67,
- * Politika čl. 6). Nov član vidi vreme, iznos i opis zapisa, a strane ne — i to
+ * Pseudonim u evidenciji doprinosa vidi SAMO potvrđen član (Pravilnik čl. 56,
+ * Politika čl. 11 st. 4). Nov član vidi vreme, iznos i opis zapisa, a strane ne — i to
  * u sva tri spiska na Sistemu. Do 2026-09-02 su spisak razmena i spisak prepisa
  * to poštovali, a spisak zapisa Protokola nije: linka nije bilo, ali je pseudonim
  * stajao kao običan tekst, pa je pravilo važilo na dva mesta od tri. Otud jedna
@@ -226,7 +226,7 @@ const ClanRed = memo(function ClanRed({
           </Link>
           {/* 🔴 Dete dobija SVOJ pečat, ne „?". Maloletni nalog jeste neverifikovan
               i uvek će biti — u lanac potvrda ne sme da uđe (Pravilnik o učešću
-              dece čl. 15) — pa bi mu oznaka za novog člana saopštavala nešto što
+              dece čl. 29 st. 2) — pa bi mu oznaka za novog člana saopštavala nešto što
               se nikad neće promeniti. Isti razlog kao pečat na Pijaci. */}
           {c.maloletan ? (
             <span className="shrink-0 text-[11px] bg-kolo-green-100 text-kolo-green-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">{t("clan_dete")}</span>

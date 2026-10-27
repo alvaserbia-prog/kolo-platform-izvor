@@ -11,7 +11,7 @@ import { obustaviNabavku, NabavkaGreska } from "@/lib/protokol/nabavka";
  * POST /api/admin/nabavke/[id]/obustavi { razlog }
  *
  * Obustava nabavke. Sve rezervacije se oslobađaju, a POEN se NE gasi — poništenje
- * po čl. 27 nastupa tek u trenutku preuzimanja.
+ * po čl. 25 nastupa tek u trenutku preuzimanja.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

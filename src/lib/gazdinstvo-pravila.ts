@@ -1,14 +1,14 @@
 /**
- * Čista pravila gazdinstava — Pravilnik o KOLO sistemu čl. 40c i Pravilnik o
+ * Čista pravila gazdinstava — Pravilnik o KOLO sistemu čl. 39 i Pravilnik o
  * gazdinstvima (set 4.8.2). Bez Prisme: uvozi ih i pretraživač.
  *
  * 🔴 Gazdinstvo NIJE korisnik ni kolektivni oblik i nema zapis u Protokolu.
  * Doprinos se beleži u lični zapis člana pri odobrenju gazdinstva (odnosno
  * pristupanja), a evidentira se tek kad član ima objavljen oglas kojim nešto nudi
- * i kad je VERIFIKOVAN u lancu potvrda (čl. 40c st. 4; gazd. čl. 8 st. 2). Iznosi
+ * i kad je VERIFIKOVAN u lancu potvrda (gazd. čl. 16 st. 1). Iznosi
  * se čitaju odavde — ne prepisivati ih u ekrane.
  *
- * 🔴 Prava po statusu (gazd. čl. 4a, 7, 7a, 9, 9a): ko sme da prijavi, kada
+ * 🔴 Prava po statusu (gazd. čl. 4, 9, 10, 11, 14): ko sme da prijavi, kada
  * gazdinstvo sme imati članove, ko upravlja i ko poziva — sve se IZVODI iz
  * statusa učesnika (`status-ucesnika-pravila.ts`) i `smeClanoveOd`, ne čuva se.
  */
@@ -20,13 +20,13 @@ import {
 
 export type Provera = { ok: true } | { ok: false; razlog: string; status: 400 | 403 };
 
-/** Čl. 40c st. 3 — prvi član po redu. */
+/** Gazd. čl. 15 st. 1 — prvi član po redu. */
 export const IZNOS_PRVOG_CLANA = 5000;
-/** Čl. 40c st. 3 — drugi do šestog člana. */
+/** Gazd. čl. 15 st. 1 — drugi do šestog člana. */
 export const IZNOS_OSTALIH_CLANOVA = 2000;
 /** Doprinos se beleži najviše šestorici članova jednog gazdinstva. */
 export const MAX_CLANOVA_SA_DOPRINOSOM = 6;
-/** Pravilnik o gazdinstvima čl. 4 t. 7 — uslov za gazdinstvo kao celinu. */
+/** Pravilnik o gazdinstvima čl. 5 st. 1 t. 7 i čl. 6 st. 4 — uslov za gazdinstvo kao celinu. */
 export const MIN_OGLASA_UZ_PRIJAVU = 3;
 
 export const MAX_NAZIV = 80;
@@ -56,9 +56,9 @@ export type KandidatClan = {
 };
 
 /**
- * Pravilnik o gazdinstvima čl. 7 st. 1 i Pravilnik o učešću dece čl. 15 — član
+ * Pravilnik o gazdinstvima čl. 9 st. 1 i Pravilnik o učešću dece čl. 29 st. 3 — član
  * gazdinstva može biti isključivo punoletan nalog. Potvrđenost NIJE uslov za
- * pristupanje; ona je uslov za evidentiranje doprinosa (čl. 40c st. 4).
+ * pristupanje; ona je uslov za evidentiranje doprinosa (gazd. čl. 16 st. 1 t. 2).
  */
 export function smeBitiClan(k: KandidatClan): Provera {
   if (k.maloletan) {
@@ -73,7 +73,7 @@ export function smeBitiClan(k: KandidatClan): Provera {
 export type UslovEvidentiranja = {
   /**
    * Verifikovan u lancu potvrda (član bez potvrde, član Kola, čuvar, osnivač) —
-   * Pravilnik čl. 40c st. 4; gazd. čl. 8 st. 2 t. 2. Potvrđenost NIJE uslov.
+   * gazd. čl. 16 st. 1 t. 2. Potvrđenost NIJE uslov.
    */
   verifikovan: boolean;
   /** Ima objavljen oglas kojim nudi dobro ili uslugu, uz sadržinski minimum. */
@@ -82,13 +82,13 @@ export type UslovEvidentiranja = {
   aktivan: boolean;
 };
 
-/** Čl. 40c st. 4 — oba uslova, za sve članove podjednako. */
+/** Gazd. čl. 16 st. 1 — oba uslova, za sve članove podjednako. */
 export function smeSeEvidentirati(u: UslovEvidentiranja): boolean {
   return u.verifikovan && u.imaOglas && !u.maloletan && u.aktivan;
 }
 
 /**
- * Oznaka DOMAĆE (čl. 10) se ne čuva — izvodi se: gazdinstvo je odobreno i
+ * Oznaka DOMAĆE (čl. 18 st. 2) se ne čuva — izvodi se: gazdinstvo je odobreno i
  * oglašivač je i dalje njegov odobren član. Zato ne preživljava ni poništenje
  * odobrenja ni istupanje.
  */
@@ -122,14 +122,14 @@ export type UnosPrijave = {
   opis: string;
   bpg: string | null;
   neregistrovano: boolean;
-  /** Adresa gazdinstva (čl. 4 t. 3) — obavezna, ne prikazuje se drugim korisnicima. */
+  /** Adresa gazdinstva (čl. 5 st. 1 t. 3) — obavezna, ne prikazuje se drugim korisnicima. */
   adresa: string;
   lat: number;
   lng: number;
   uloga: "NOSILAC" | "CLAN";
 };
 
-/** Čl. 4 — provera polja prijave (naselje proverava `razresiNaselje`, van ovog fajla). */
+/** Čl. 5 — provera polja prijave (naselje proverava `razresiNaselje`, van ovog fajla). */
 export function proveriPrijavu(u: UnosPrijave): Provera {
   const naziv = u.naziv.trim();
   if (naziv.length < 2) return { ok: false, razlog: "Naziv gazdinstva je obavezan.", status: 400 };
@@ -155,7 +155,7 @@ export function proveriPrijavu(u: UnosPrijave): Provera {
 }
 
 /**
- * Tekst izjave o tačnosti (čl. 4 t. 6 i čl. 7 st. 2). Snima se uz članstvo u
+ * Tekst izjave o tačnosti (čl. 5 st. 1 t. 6 i čl. 9 st. 3). Snima se uz članstvo u
  * trenutku davanja i posle se ne generiše ponovo (CLAUDE.md pravilo 11).
  */
 export function tekstIzjave(naziv: string): string {
@@ -165,7 +165,7 @@ export function tekstIzjave(naziv: string): string {
     `sam, po propisima koji se na to primenjuju. Znam da se, ako izjava nije ` +
     `tačna, odobrenje gazdinstva poništava, doprinos gazdinstva otpisuje, a iz ` +
     `sistema se isključuje onaj ko je lažnu izjavu dao ili za nju znao (Pravilnik o ` +
-    `gazdinstvima čl. 12).`
+    `gazdinstvima čl. 20).`
   );
 }
 
@@ -173,7 +173,7 @@ export function tekstIzjave(naziv: string): string {
 
 const AKTIVNO_CLANSTVO_STATUSI = ["PRISTUPIO", "ODOBREN"];
 
-/** Korisnik ili član bez potvrde — prijavljuje samo kao nosilac, bez članova (čl. 4a t. 2–3). */
+/** Korisnik ili član bez potvrde — prijavljuje samo kao nosilac, bez članova (čl. 4 st. 1 t. 2–3). */
 const jeNepotvrdjenOdrasli = (s: StatusUcesnika) => s === "KORISNIK" || s === "CLAN_BEZ_POTVRDE";
 
 export const PORUKA_PRIJAVA_DETE = "Maloletni učesnik ne može prijaviti gazdinstvo.";
@@ -181,7 +181,7 @@ export const PORUKA_PRIJAVA_SAMO_NOSILAC =
   "Dok te ne potvrdi član Kola, gazdinstvo možeš da prijaviš samo kao nosilac. Kao član gazdinstva prijavu podnosi član Kola.";
 
 /**
- * Ko može prijaviti gazdinstvo (gazd. čl. 4a; set 4.8.3) — upisano ili neupisano u
+ * Ko može prijaviti gazdinstvo (gazd. čl. 4; set 4.8.3) — upisano ili neupisano u
  * Registar, svejedno:
  *  1) član Kola, čuvar i osnivač — kao nosilac ili kao član;
  *  2) član bez potvrde i korisnik — samo kao NOSILAC (članove gazdinstvo dobija kad
@@ -200,7 +200,7 @@ export function smePrijaviti(u: {
 }
 
 /**
- * 🔴 Izvod iz Registra se od seta 4.8.3 ne prilaže (gazd. čl. 4b st. 1). Funkcija
+ * 🔴 Izvod iz Registra se od seta 4.8.3 ne prilaže (gazd. čl. 3 st. 3). Funkcija
  * ostaje da bi svaki prikaz i ruta pitali isto mesto; zatečeni izvodi se i dalje
  * brišu odlukom o prijavi.
  */
@@ -225,7 +225,7 @@ export function tipIzvoda(bajtovi: Uint8Array): (typeof TIPOVI_IZVODA)[number] |
   return null;
 }
 
-/** Provera otpremljenog izvoda (gazd. čl. 4b). */
+/** Provera otpremljenog izvoda (gazd. čl. 3 st. 3: izvod se više ne prilaže). */
 export function proveriIzvod(bajtovi: Uint8Array): Provera {
   if (bajtovi.length === 0) return { ok: false, razlog: "Fajl je prazan.", status: 400 };
   if (bajtovi.length > MAX_IZVOD_BAJTOVA)
@@ -236,8 +236,8 @@ export function proveriIzvod(bajtovi: Uint8Array): Provera {
 
 /**
  * Gazdinstvo sme imati članove od trenutka kada je podnosilac bio član Kola,
- * odnosno osnivač (gazd. čl. 4a). 🔴 Monotono: pad potvrđenosti podnosioca ga ne
- * vraća (čl. 9a — gazdinstvo nastavlja da radi).
+ * odnosno osnivač (gazd. čl. 4 st. 1 t. 2). 🔴 Monotono: pad potvrđenosti podnosioca ga ne
+ * vraća (čl. 4 st. 2 i čl. 14 st. 2 — gazdinstvo nastavlja da radi).
  */
 export function smeImatiClanove(g: { smeClanoveOd: Date | string | null }): boolean {
   return g.smeClanoveOd !== null;
@@ -245,11 +245,11 @@ export function smeImatiClanove(g: { smeClanoveOd: Date | string | null }): bool
 
 /**
  * Upravljanje gazdinstvom na platformi (oglasi u ime gazdinstva, profil) — gazd.
- * čl. 9 st. 1 i 9a:
+ * čl. 11 i 14:
  *  - svaki član gazdinstva koji je član Kola, čuvar ili osnivač;
  *  - podnosilac koji je korisnik ili član bez potvrde, dok gazdinstvo radi po
- *    čl. 4a t. 2–3 (bez članova). 🔴 Kad je gazdinstvo jednom smelo da ima
- *    članove, podnosilac kome je prestala potvrđenost gubi pravo (čl. 9a), isto
+ *    čl. 4 st. 1 t. 2–3 (bez članova). 🔴 Kad je gazdinstvo jednom smelo da ima
+ *    članove, podnosilac kome je prestala potvrđenost gubi pravo (čl. 14 st. 1), isto
  *    kao svaki drugi član.
  */
 export function smeUpravljati(u: {
@@ -264,7 +264,7 @@ export function smeUpravljati(u: {
 }
 
 /**
- * Poziv u gazdinstvo (gazd. čl. 7 st. 2, 9 st. 1, 9a): poziva član gazdinstva
+ * Poziv u gazdinstvo (gazd. čl. 9 st. 2, 11, 14): poziva član gazdinstva
  * koji je član Kola, čuvar ili osnivač, i to samo kad gazdinstvo sme imati članove.
  */
 export function smePozvati(u: { clanStatus: string; statusUcesnika: StatusUcesnika; smeClanove: boolean }): boolean {
@@ -272,7 +272,7 @@ export function smePozvati(u: { clanStatus: string; statusUcesnika: StatusUcesni
 }
 
 /**
- * Uslov pristupanja (gazd. čl. 7a): pozvani je u trenutku odobrenja član Kola,
+ * Uslov pristupanja (gazd. čl. 10): pozvani je u trenutku odobrenja član Kola,
  * čuvar ili osnivač. Korisnika, odnosno člana bez potvrde, pre toga potvrdi član
  * koji ga lično zna — potvrda ide kroz lanac potvrda, ne kroz gazdinstvo.
  */
@@ -283,12 +283,12 @@ export function pristupanjeSmeOdobriti(pozvaniStatus: StatusUcesnika): boolean {
 export type OsnovPrestanka = "BEZ_CLANOVA" | "BRISANJE" | "LAZNA_IZJAVA";
 
 /**
- * Ko trpi poništenje i otpis pri prestanku gazdinstva (gazd. čl. 12, 12a st. 3;
- * Pravilnik čl. 40c st. 6):
- *  - BEZ_CLANOVA i BRISANJE (čl. 12a st. 1 t. 1–2): lica koja su članovi u
- *    trenutku prestanka; doprinos ranije istupelih se ne dira (čl. 9 st. 3);
+ * Ko trpi poništenje i otpis pri prestanku gazdinstva (gazd. čl. 20, 23;
+ * Pravilnik čl. 39 st. 3):
+ *  - BEZ_CLANOVA i BRISANJE (čl. 22 st. 1 t. 1–2): lica koja su članovi u
+ *    trenutku prestanka; doprinos ranije istupelih se ne dira (čl. 13 st. 1);
  *  - LAZNA_IZJAVA (t. 3): i svako ko je ikad pristupio, i kada je u međuvremenu
- *    istupio (čl. 12 st. 2).
+ *    istupio (čl. 20 st. 2).
  * Pozvani koji nije pristupio i odbijeno pristupanje nisu bili članovi.
  */
 export function clanoviZaOtpis(
@@ -299,5 +299,5 @@ export function clanoviZaOtpis(
   return [...new Set(clanstva.filter((c) => statusi.includes(c.status)).map((c) => c.userId))];
 }
 
-/** Rok za odgovor na upit o preuzimanju izjave (gazd. čl. 9 st. 3). */
+/** Rok za odgovor na upit o preuzimanju izjave (gazd. čl. 13 st. 3). */
 export const ROK_UPITA_DANA = 30;

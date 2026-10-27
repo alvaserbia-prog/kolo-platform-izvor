@@ -1,11 +1,11 @@
 /**
- * Faza sistema — automatski prelaz iz Faze 1 u Fazu 2 (Pravilnik v3.7.5; gornje_kolo_3_7_6, čl. 3).
+ * Faza sistema — automatski prelaz iz Faze 1 u Fazu 2 (Pravilnik čl. 41; Pravilnik o Gornjem Kolu čl. 3).
  *
  * Faza 1: pravila Protokola postavlja osnivač u saradnji sa Fondacijom.
- * Faza 2: pravila Protokola utvrđuju se na predlog Gornjeg Kola, koji UO usvaja svojim aktom (čl. 42, 51).
+ * Faza 2: pravila Protokola utvrđuju se na predlog Gornjeg Kola, koji UO usvaja svojim aktom (Pravilnik čl. 41, 46).
  *
  * Prelaz iz Faze 1 u Fazu 2 nastupa AUTOMATSKI po dostizanju praga od 1.000.000
- * evidentiranih POEN-a u sistemu (čl. 44 — obračunski ekvivalent: stanje Protokola
+ * evidentiranih POEN-a u sistemu (Pravilnik čl. 41 st. 1 — obračunski ekvivalent: stanje Protokola
  * od −1.000.000). Dostizanje praga istovremeno aktivira mogućnost upisa ZRNA
  * i uspostavlja Gornje Kolo.
  *
@@ -17,7 +17,7 @@ import { prisma } from "@/lib/prisma";
 
 const PROTOKOL_WALLET_ID = "banka-singleton";
 
-/** Prag prelaza Faze 1 → Faze 2 (čl. 44). */
+/** Prag prelaza Faze 1 → Faze 2 (Pravilnik čl. 41 st. 1). */
 export const PRAG_FAZE_2_POEN = 1_000_000;
 
 export type FazaSistema = "FAZA_1" | "FAZA_2";
@@ -33,7 +33,7 @@ export interface FazaStatus {
 
 /**
  * Vraća ukupan broj evidentiranih POEN-a u sistemu (= |balance| Protokola,
- * po zero-sum invarijanti, čl. 14).
+ * po zero-sum invarijanti, Pravilnik čl. 17).
  */
 export async function ukupnoEvidentiranoPoen(): Promise<number> {
   const protokol = await prisma.wallet.findUnique({

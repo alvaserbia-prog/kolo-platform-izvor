@@ -15,7 +15,7 @@ import { zatvoriPostupakPotvrda } from "./program-potvrda";
  * postupak potvrda.
  *
  * 🔴 `metadata` se briše, ne zadržava. Registar radnji obrade rok čuvanja ovih
- * podataka vezuje za trajanje osnova (izričit pristanak, čl. 4); kad prijava
+ * podataka vezuje za trajanje osnova (izričit pristanak, programi čl. 6); kad prijava
  * prestane da važi, osnova nema, a u `metadata` stoje posebne kategorije —
  * datumi rođenja dece, datum rešenja o invaliditetu, naziv ustanove. Bez ovoga
  * ih zauvek zadržava svako ko je odbijen, kome je istekla reverifikacija ili je

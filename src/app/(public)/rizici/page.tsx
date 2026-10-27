@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { pageMetadata } from "@/lib/seo";
 import { ucitajPravniDokument } from "@/lib/pravni-dokument";
+import { AKT_RIZICI } from "@/lib/verzije-akata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pravne");
@@ -18,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RiziciPage() {
   const locale = await getLocale();
   const t = await getTranslations("pravne");
-  const sadrzaj = await ucitajPravniDokument("rizici_4_8_3.md", locale);
+  const sadrzaj = await ucitajPravniDokument(AKT_RIZICI.fajl, locale);
 
   return (
     <div className="max-w-uska mx-auto pb-16">

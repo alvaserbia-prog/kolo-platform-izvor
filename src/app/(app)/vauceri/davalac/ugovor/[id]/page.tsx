@@ -16,12 +16,12 @@ export async function generateMetadata() {
 
 /**
  * Primerak zaključenog ugovora o pokroviteljstvu dobrima i uslugama za štampu
- * (donacije čl. 13g st. 4): zaglavlje „Zaključeno elektronski na Platformi KOLO,
+ * (donacije čl. 32 st. 1): zaglavlje „Zaključeno elektronski na Platformi KOLO,
  * dana …, u … časova, kontrolni broj …" i SNIMLJEN tekst — nikad se ne generiše
  * ponovo pri čitanju.
  *
  * Vidi ga podnosilac prijave i administratorski tim. Zaposleni davaoca ga ne vidi
- * (donacije čl. 13g st. 6). Tuđ ili nepotpisan ugovor izgleda isto — 404.
+ * (donacije čl. 32 st. 3). Tuđ ili nepotpisan ugovor izgleda isto — 404.
  */
 export default async function PrimerakUgovoraDobraPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
   const soba = await sobaKorisnika(session.user.id);
   // `null` znači da korisnik sobu ne vidi uopšte — nalog deteta koje još čeka
-  // roditelja (čl. 4c). Vraća se prazna soba, a ekran deteta objašnjava zašto i
+  // roditelja (deca čl. 5 st. 1 t. 1, 27 st. 2). Vraća se prazna soba, a ekran deteta objašnjava zašto i
   // šta mu to otvara.
   const uslovi = await usloviSobe(session.user.id, soba);
   if (!uslovi) {
@@ -59,13 +59,13 @@ export async function POST(req: NextRequest) {
   }
   // 🔴 Dete piše u svojoj sobi BEZ ikakve potvrde. Uslov „samo potvrđeni" je pisan
   // za sobu odraslih; preneseno na decu, dečja soba bi zauvek bila samo za čitanje,
-  // jer maloletni korisnik potvrdu nikad ne stiče (Modul Deca, čl. 15).
+  // jer maloletni korisnik potvrdu nikad ne stiče (Pravilnik o učešću dece, čl. 29 st. 2).
   const soba = await sobaKorisnika(session.user.id);
   // Od seta 4.8.1 (odluka vlasnika 20.10.2026) u sobi odraslih piše i nov član, bez
   // ograničenja: Pričaonica je mesto upoznavanja, a upoznavanje je put do potvrde
-  // (Uslovi čl. 16 st. 5). Moderacija ostaje ista.
+  // (Uslovi čl. 14 st. 2). Moderacija ostaje ista.
   // Zato što potvrde nema, uslov za dečju sobu je STANJE NALOGA: iza deteta mora da
-  // stoji roditelj koji je sam prošao registraciju (čl. 18 st. 2). Bez toga bi se
+  // stoji roditelj koji je sam prošao registraciju (deca čl. 27 st. 2). Bez toga bi se
   // odrastao čovek predstavio kao dvanaestogodišnjak bez ijedne prepreke — ranije je
   // taj rizik hvatalo roditeljsko čitanje razgovora, koje je ukinuto.
   if (soba === ChatSoba.DECA && !(await smeUSobu(session.user.id))) {

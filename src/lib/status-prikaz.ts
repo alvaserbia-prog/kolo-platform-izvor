@@ -5,11 +5,11 @@
  * koje za dete čita stanje iz `deca.ts`). Ovde se dodaje samo ono što kartica
  * pored statusa kaže:
  *
- *  - za dete — na šta se čeka (deca čl. 4c poslednji stav), kroz servisnu
+ *  - za dete — na šta se čeka (deca čl. 5 st. 4), kroz servisnu
  *    funkciju `naStaCekaNalog` iz `protokol/deca.ts` (isti sastojci kao stanje deteta);
- *  - za korisnika sa ZRNOM — da mu je ZRNO zamrznuto (Pravilnik čl. 30 st. 3;
- *    dokaz stvarnosti čl. 4 st. 4);
- *  - za člana bez potvrde sa ZRNOM — da ga ne aktivira (Pravilnik čl. 28a).
+ *  - za korisnika sa ZRNOM — da mu je ZRNO zamrznuto (Pravilnik čl. 29 st. 1;
+ *    dokaz stvarnosti čl. 31 st. 2);
+ *  - za člana bez potvrde sa ZRNOM — da ga ne aktivira (Pravilnik čl. 22 st. 3, 23 st. 2).
  */
 import { prisma } from "@/lib/prisma";
 import { ucitajStatus, type StatusUcesnika } from "@/lib/protokol/status";

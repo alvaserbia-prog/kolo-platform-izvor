@@ -11,7 +11,7 @@ import { smeDelegirati } from "@/lib/gornje-kolo-pravila";
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  // Delegira samo čuvar Kola (Pravilnik čl. 47; Gornje Kolo čl. 14).
+  // Delegira samo čuvar Kola (Pravilnik čl. 44 st. 2; Gornje Kolo čl. 14).
   const mojStatus = await ucitajStatus(session.user.id);
   if (!mojStatus || !smeDelegirati(mojStatus, mojStatus))
     return await greska("Glas delegira samo čuvar Kola.", 403);

@@ -6,8 +6,8 @@ import { jeAdmin } from "@/lib/dozvole";
 import { raskiniUgovorDobra, odgovorNaGresku } from "@/lib/protokol/pokroviteljstvo-dobrima";
 
 // POST /api/admin/pokroviteljstvo/dobra/[id]/raskid — raskid ugovora po neizvršenju,
-// posle prigovora imaoca vaučera tog ugovora (donacije čl. 13j; osmi osnov negativnog
-// zapisa, Pravilnik čl. 14 st. 3 t. 8). Telo: { vaucerId, obrazlozenje }.
+// posle prigovora imaoca vaučera tog ugovora (donacije čl. 35; sedmi osnov negativnog
+// zapisa, Pravilnik čl. 17 st. 2 t. 7). Telo: { vaucerId, obrazlozenje }.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeAdmin(session.user)) return await greska("Pristup odbijen.", 403);

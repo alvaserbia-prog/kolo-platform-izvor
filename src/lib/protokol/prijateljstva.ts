@@ -1,5 +1,5 @@
 /**
- * Prijateljstva maloletnih korisnika (Modul Deca, čl. 14a–14c).
+ * Prijateljstva maloletnih korisnika (Pravilnik o učešću dece, čl. 32–34).
  *
  * Deca se povezuju skeniranjem QR koda, uživo. Kod NEMA izgovorivi broj kao onaj
  * za potvrdu stvarnosti — broj se može izdiktirati telefonom, a QR se mora POKAZATI.
@@ -14,11 +14,11 @@
  *
  * Obostrano čekanje je i CELA odbrana od farmovanja. Broj dece po roditelju nije
  * ograničen, pa bi jedan čovek inače otvorio deset naloga, upario ih međusobno
- * (45 parova = 45.000 POEN) i prekidačem iz čl. 10 prepisao sve sebi. Lažni nalozi
+ * (45 parova = 45.000 POEN) i prekidačem iz čl. 20 st. 2 prepisao sve sebi. Lažni nalozi
  * nikad ne postaju deca Kola — a nalog je dete Kola tek kad je roditelj ČLAN KOLA,
  * dakle čovek koga je neko treći potvrdio u stvarnom svetu, i kad je član Kola koji
- * ga lično zna potvrdio da ima to dete (čl. 4c t. 3, set 4.8.2). Nema šta da se izvuče. Uz to, prijateljstvo dece istog roditelja se sklapa normalno ali
- * NE nosi POEN (čl. 14b st. 4) — inače bi šestoro dece jednog čoveka dalo petnaest
+ * ga lično zna potvrdio da ima to dete (čl. 5 st. 1 t. 3, set 4.8.2). Nema šta da se izvuče. Uz to, prijateljstvo dece istog roditelja se sklapa normalno ali
+ * NE nosi POEN (čl. 33 st. 3) — inače bi šestoro dece jednog čoveka dalo petnaest
  * parova bez ijednog stranca.
  *
  * Dok jedna strana čeka, obe vide „500 na čekanju" sa pseudonimom prijatelja. To je
@@ -87,9 +87,9 @@ export async function generisiToken(korisnikId: string) {
  * Povezuje dvoje dece na osnovu skeniranog koda.
  *
  * Obe strane moraju biti maloletne: prijateljstvo je odnos unutar dečjeg prostora,
- * a odnos deteta i punoletnog korisnika uređuje prekidač iz čl. 10, ne ovo.
+ * a odnos deteta i punoletnog korisnika uređuje prekidač iz čl. 20 st. 2, ne ovo.
  *
- * 🔴 Radi i za dete na čekanju — to je jedino što ono i sme (čl. 4c). Prijateljstva
+ * 🔴 Radi i za dete na čekanju — to je jedino što ono i sme (čl. 5 st. 1 t. 1). Prijateljstva
  * su razlog zbog kog ono uopšte ostaje na platformi dok mu roditelj ne preuzme nalog.
  */
 export async function poveziPoTokenu(skenerId: string, token: string) {
@@ -135,7 +135,7 @@ export async function poveziPoTokenu(skenerId: string, token: string) {
   }
 
   if (postojece) {
-    // Obnova raskinutog para (čl. 14c st. 5) — POEN se upisuje ponovo. Zajedno sa
+    // Obnova raskinutog para (čl. 34 st. 4) — POEN se upisuje ponovo. Zajedno sa
     // otpisom pri raskidu, ciklus raskini–obnovi daje TAČNO NULU; bez toga bi bio
     // beskonačna kasa iz jednog jedinog prijateljstva.
     await prisma.$transaction([
@@ -155,7 +155,7 @@ export async function poveziPoTokenu(skenerId: string, token: string) {
     prijateljstvoId = kreirano.id;
   }
 
-  // Čl. 14a st. 4: kad dete Kola sklopi prijateljstvo sa detetom koje nije dete
+  // Čl. 32 st. 4: kad dete Kola sklopi prijateljstvo sa detetom koje nije dete
   // Kola, roditelj deteta Kola se o tome obaveštava — bez uvida u razgovore.
   await javiRoditeljimaDetetaKola(ucesnikIzReda(a), a.pseudonim, ucesnikIzReda(b), b.pseudonim);
 
@@ -169,7 +169,7 @@ export async function poveziPoTokenu(skenerId: string, token: string) {
 
 /**
  * Obaveštenje roditeljima deteta Kola o prijateljstvu sa detetom koje nije dete Kola
- * (čl. 14a st. 4). 🔴 Bez uvida u razgovore (čl. 9 st. 2) — samo pseudonim
+ * (čl. 32 st. 4). 🔴 Bez uvida u razgovore (čl. 19 st. 2) — samo pseudonim
  * prijatelja. Ne baca.
  */
 async function javiRoditeljimaDetetaKola(
@@ -196,7 +196,7 @@ async function javiRoditeljimaDetetaKola(
   }
 }
 
-// ── Isplata (čl. 14b) ─────────────────────────────────────────────────────────
+// ── Isplata (čl. 33) ─────────────────────────────────────────────────────────
 
 /** Učitava oba učesnika prijateljstva u obliku koji čista pravila razumeju. */
 async function ucesniciPrijateljstva(prijateljstvoId: string) {
@@ -339,13 +339,13 @@ export async function osveziPrijateljstvaDece(roditeljId: string): Promise<numbe
   }
 }
 
-// ── Raskid (čl. 14c) ─────────────────────────────────────────────────────────
+// ── Raskid (čl. 34) ─────────────────────────────────────────────────────────
 
 /**
  * Otpis 500 POEN sa jednog zapisa, uz protivzapis Protokola.
  *
  * 🔴 ZAPIS SME U MINUS. Ovo je TREĆI izuzetak od zabrane negativnog zapisa POEN-a
- * (Pravilnik čl. 14 st. 3), uz nadoknadu po čl. 20b Pravilnika o dokazu stvarnosti i
+ * (Pravilnik čl. 17 st. 2 t. 3), uz nadoknadu po čl. 36 Pravilnika o dokazu stvarnosti i
  * poništen prepis po prijavi razmene. Minus se ponaša isto kao nadoknada: nije dug,
  * ne naplaćuje se, POEN-i koji pristignu prvo ga popunjavaju, prepis drugome je
  * moguć tek preko nule, a razmena dobara i usluga nije ograničena.
@@ -380,7 +380,7 @@ async function otpisiPoen(korisnikId: string, iznos: number, opis: string, kljuc
 }
 
 /**
- * Raskid prijateljstva (čl. 14c).
+ * Raskid prijateljstva (čl. 34).
  *
  * 🔴 Raskinuti može SAMO DETE — bilo koje od dvoje. Roditelj nema raskid; njemu
  * ostaju brisanje naloga, uklanjanje oglasa i prekidač za odrasle. Raskid je odnos
@@ -450,11 +450,25 @@ export async function raskiniPrijateljstvo(korisnikId: string, prijateljstvoId: 
     link: "/prijatelji",
   }).catch(() => {});
 
+  // 🔴 I dete koje je raskinulo dobija poruku o otpisu (deca: dete se obaveštava o
+  // svakom otpisu; minus se nikad ne pojavljuje bez reči). Bez nje vidi samo manji
+  // broj POEN-a, bez objašnjenja. Bez otpisa poruke nema — raskid je njegov klik.
+  if (p.poenEvidentiran) {
+    await obavesti(korisnikId, {
+      tip: "prijateljstvo_raskinuto",
+      kljuc: "notifikacije.prijateljstvo_raskinuo_poen",
+      parametri: { pseudonim: drugiPseudonim, iznos: PRIJATELJSTVO_POEN },
+      naslov: "Prijateljstvo je raskinuto",
+      tekst: `Raskinuto je prijateljstvo sa ${drugiPseudonim}, zato ti je otpisano ${PRIJATELJSTVO_POEN} POENA.`,
+      link: "/prijatelji",
+    }).catch(() => {});
+  }
+
   return { ok: true, otpisano: p.poenEvidentiran ? PRIJATELJSTVO_POEN : 0 };
 }
 
 /**
- * Otpis pri prelasku u punoletstvo (čl. 19 st. 2). Otpisuje SAMO drugoj strani —
+ * Otpis pri prelasku u punoletstvo (čl. 35 st. 2). Otpisuje SAMO drugoj strani —
  * detetu koje postaje punoletno se otpisuje zbirno, u jednom zapisu, pa se ne
  * meša sa ovim.
  */
@@ -471,7 +485,7 @@ export async function otpisiPrijateljuPriPunoletstvu(
   );
 }
 
-/** Zbirni otpis onome ko postaje punoletan (čl. 19 st. 2). */
+/** Zbirni otpis onome ko postaje punoletan (čl. 35 st. 2). */
 export async function otpisiPunoletnom(korisnikId: string, iznos: number, broj: number) {
   await otpisiPoen(
     korisnikId,
@@ -525,7 +539,7 @@ export async function dohvatiPrijatelje(korisnikId: string) {
         od: x.red.createdAt.toISOString(),
         evidentirano: x.red.poenEvidentiran,
         bezPoena: braca,
-        // Zašto čeka: jedna strana još nije dete Kola (čl. 14b st. 2).
+        // Zašto čeka: jedna strana još nije dete Kola (čl. 33 st. 2).
         naCekanju: !x.red.poenEvidentiran && !braca,
         drugiStanje: drugiUcesnik.stanje,
       };
@@ -557,7 +571,7 @@ export async function suPrijatelji(x: string, y: string): Promise<boolean> {
  * koštao 500 POENA i nije prekidao ono zbog čega se povlači.
  *
  * Provera se veže za RASKINUT red, ne za odsustvo prijateljstva: dvoje dece koja
- * nikad nisu bila prijatelji smeju da se dopisuju povodom oglasa (čl. 12). Kad se
+ * nikad nisu bila prijatelji smeju da se dopisuju povodom oglasa (čl. 22). Kad se
  * par obnovi, aktivan red postoji i razgovor ponovo radi — kao i POEN.
  */
 export const PORUKA_RASKINUTO =
@@ -573,7 +587,7 @@ export async function raskinutoIzmedju(x: string, y: string): Promise<boolean> {
 }
 
 /**
- * Id-evi svih prijatelja — Pričaonica po njima filtrira poruke (čl. 18 st. 3).
+ * Id-evi svih prijatelja — Pričaonica po njima filtrira poruke (čl. 27 st. 3).
  * Uvek uključuje i samog korisnika: svoje poruke čovek vidi i pre nego što ima ijednog
  * prijatelja, inače mu se posle slanja ne desi ništa na ekranu.
  */
@@ -598,7 +612,7 @@ async function dohvatiWallet(korisnikId: string): Promise<string> {
   return nov.id;
 }
 
-/** Da li nalog uopšte sme da bude u Pričaonici (čl. 18 st. 2). */
+/** Da li nalog uopšte sme da bude u Pričaonici (čl. 27 st. 2). */
 export async function smeUSobu(korisnikId: string): Promise<boolean> {
   const u = await prisma.user.findUnique({ where: { id: korisnikId }, select: IZBOR_UCESNIKA });
   return u ? smeUPricaonicu(ucesnikIzReda(u).stanje) : false;

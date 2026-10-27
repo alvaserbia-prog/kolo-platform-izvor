@@ -7,7 +7,7 @@ import { jeAdmin, jeZadruzniAdmin } from "@/lib/dozvole";
 import ZadrugeTab from "../ZadrugeTab";
 
 /**
- * `/admin/zadruga` — ekran zadružnog admina (Pravilnik o zadrugama čl. 16; registar
+ * `/admin/zadruga` — ekran zadružnog admina (Pravilnik o zadrugama čl. 15; registar
  * 2026-10, U2). Lice koje predloži zadruga vidi samo ovo: zapis, zadrugare i radnje
  * svoje zadruge. Ostatak admin panela (`/admin`) mu je zatvoren jer `jeAdmin` za
  * nivo ZADRUGA vraća `false`. Admin koji ovde dođe ide na pun tab „Zadruge".

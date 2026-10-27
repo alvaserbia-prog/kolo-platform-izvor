@@ -32,7 +32,7 @@ type Nabavka = {
  *
  * Predlog je JEDNA REČ iz rečnika, jedan po članu (Pravilnik o projektima i
  * kolektivnim nabavkama čl. 9). Registar se prikazuje ZBIRNO, bez pseudonima
- * (čl. 10 st. 2) — služi odlučivanju o tome šta se nabavlja, a ne uvidu u to ko
+ * (čl. 10 st. 1) — služi odlučivanju o tome šta se nabavlja, a ne uvidu u to ko
  * šta traži.
  */
 export default function NabavkeKlijent() {
@@ -135,7 +135,7 @@ export default function NabavkeKlijent() {
     <Stranica sirina="uska">
       <div>
         <NaslovStranice naslov={t("naslov")} opis={t("uvod")} />
-        {/* Zbirni godišnji pregled projekata (čl. 31 st. 4). Evidencija obima, ne
+        {/* Zbirni godišnji pregled projekata (čl. 37 st. 5). Evidencija obima, ne
             granica — učestalost nabavki pravilnikom nije ograničena. */}
         {projekti && (
           <p className="mt-2 text-xs text-kolo-muted">

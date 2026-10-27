@@ -12,7 +12,7 @@ import { useDijalog } from "@/components/ui/Dijalog";
 const QrSkener = dynamic(() => import("@/components/verifikacija/QrSkener"), { ssr: false });
 
 /**
- * Provera i realizacija vaučera (nabavke čl. 30g st. 1, Politika 4.15): unos ili
+ * Provera i realizacija vaučera (nabavke čl. 34 st. 1, Politika čl. 29): unos ili
  * skeniranje koda, stanje, opis, rok i PSEUDONIM imaoca; potvrda predaje.
  *
  * Koriste je korisnik koji vodi upis pokrovitelja (stranica pokrovitelja, tab

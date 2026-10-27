@@ -1,30 +1,30 @@
 /**
  * Potvrda člana bez potvrde posle razgovora telefonom i spisak povezanih
- * (Pravilnik o dokazu stvarnosti čl. 4a, 5c, 5d; set 4.8.3) — ČISTA pravila, bez Prisme.
+ * (Pravilnik o dokazu stvarnosti čl. 8, 11, 16, 17; set 4.8.3) — ČISTA pravila, bez Prisme.
  *
  *  - Čuvar Kola sme da potvrdi člana bez potvrde posle razgovora telefonom samo kad
  *    je ovaj u Kolu najmanje `DANA_U_KOLU_ZA_RAZGOVOR` dana, protiv njega nije
  *    usvojena prijava razmene ni prijava oglasa, i nije završen nadzorni predmet
- *    utvrđenjem lažne verifikacije (čl. 5c st. 2). Iste uslove ispunjava i ko traži
- *    razgovor radi potvrde (čl. 5c st. 3).
+ *    utvrđenjem lažne verifikacije (čl. 16 st. 1). Iste uslove ispunjava i ko traži
+ *    razgovor radi potvrde (čl. 16 st. 2).
  *  - Svakome na spisku Fondacija obezbeđuje poziv u roku od `ROK_POZIVA_DANA` dana;
- *    upisnik ZRNA je prvi, a njemu u roku od `ROK_POZIVA_UPISNIKA_ZRNA_DANA` dana (čl. 4a).
+ *    upisnik ZRNA je prvi, a njemu u roku od `ROK_POZIVA_UPISNIKA_ZRNA_DANA` dana (čl. 11).
  *  - Spisak povezanih: jedan nivo naniže (koje je uveo dok je bio bez potvrde) i
- *    jedan naviše (ko je njega uveo), samo dok su još članovi bez potvrde (čl. 5d).
- *    Potvrda uvodioca je izuzetak od čl. 12 i uvek je u nadzoru (čl. 5d st. 3).
+ *    jedan naviše (ko je njega uveo), samo dok su još članovi bez potvrde (čl. 17).
+ *    Potvrda uvodioca je izuzetak od čl. 28 i uvek je u nadzoru (čl. 17 st. 3).
  *
  * 🔴 Potvrda nikad ne nastupa automatski — svaka je lična odluka onoga ko potvrđuje.
  *
  * Bez Prisme: uvozi ga i pretraživač.
  */
 
-/** Najmanje dana u Kolu pre potvrde posle razgovora telefonom (čl. 5c st. 2 t. 1). */
+/** Najmanje dana u Kolu pre potvrde posle razgovora telefonom (čl. 16 st. 1 t. 1). */
 export const DANA_U_KOLU_ZA_RAZGOVOR = 30;
 
-/** Rok u kome Fondacija obezbeđuje poziv svakome na spisku za poziv (čl. 4a). */
+/** Rok u kome Fondacija obezbeđuje poziv svakome na spisku za poziv (čl. 11 st. 1). */
 export const ROK_POZIVA_DANA = 7;
 
-/** Rok u kome Fondacija obezbeđuje poziv upisniku ZRNA (čl. 4a). */
+/** Rok u kome Fondacija obezbeđuje poziv upisniku ZRNA (čl. 11 st. 2). */
 export const ROK_POZIVA_UPISNIKA_ZRNA_DANA = 3;
 
 const DAN_MS = 24 * 60 * 60 * 1000;
@@ -36,7 +36,7 @@ export type ProveraRazgovora =
   | { ok: false; uslov: UslovRazgovora; /** Samo kod TRIDESET_DANA: od kada je uslov ispunjen. */ odDana: Date | null };
 
 /**
- * Uslovi iz čl. 5c st. 2. `uvedenAt` je trenutak uvođenja u Kolo (verifikaciona
+ * Uslovi iz čl. 16 st. 1. `uvedenAt` je trenutak uvođenja u Kolo (verifikaciona
  * veza); `null` znači da učesnik nije uveden.
  */
 export function proveriUsloveRazgovora(u: {
@@ -53,18 +53,18 @@ export function proveriUsloveRazgovora(u: {
   return { ok: true };
 }
 
-/** Do kada Fondacija obezbeđuje poziv upisniku ZRNA (čl. 4a). */
+/** Do kada Fondacija obezbeđuje poziv upisniku ZRNA (čl. 11 st. 2). */
 export function rokPozivaUpisnika(naSpiskuOd: Date): Date {
   return new Date(naSpiskuOd.getTime() + ROK_POZIVA_UPISNIKA_ZRNA_DANA * DAN_MS);
 }
 
-/** Do kada Fondacija obezbeđuje poziv onome ko je na spisku (čl. 4a); upisniku ZRNA kraći rok. */
+/** Do kada Fondacija obezbeđuje poziv onome ko je na spisku (čl. 11); upisniku ZRNA kraći rok. */
 export function rokPoziva(naSpiskuOd: Date, upisnikZrna: boolean): Date {
   return upisnikZrna ? rokPozivaUpisnika(naSpiskuOd) : new Date(naSpiskuOd.getTime() + ROK_POZIVA_DANA * DAN_MS);
 }
 
 /**
- * Poziv kasni (crveni krug, odluka vlasnika 24.10.2026): rok iz čl. 4a je prošao, a
+ * Poziv kasni (crveni krug, odluka vlasnika 24.10.2026): rok iz čl. 11 je prošao, a
  * niko od članova Kola nije otvorio ime i broj otkako je čovek na spisku. Otvaranje
  * je jedini trag poziva koji sistem ima — šta je bilo u razgovoru ne beleži.
  */
@@ -78,7 +78,7 @@ export function jePozivZakasnio(
 }
 
 /**
- * Redosled spiska za poziv: upisnici ZRNA koji traže potvrdu prvi (čl. 4a), pa svi
+ * Redosled spiska za poziv: upisnici ZRNA koji traže potvrdu prvi (čl. 8 st. 4), pa svi
  * ostali po vremenu dospeća.
  */
 export function redosledSpiska<T extends { prioritet: boolean; createdAt: Date | string }>(redovi: T[]): T[] {
@@ -89,7 +89,7 @@ export function redosledSpiska<T extends { prioritet: boolean; createdAt: Date |
 export type Povezan = { userId: string; smer: "NANIZE" | "NAVISE" };
 
 /**
- * Spisak povezanih (čl. 5d st. 1) iz grafa: `uveo` su uvođenja koja je učesnik obavio
+ * Spisak povezanih (čl. 17 st. 1) iz grafa: `uveo` su uvođenja koja je učesnik obavio
  * dok je bio član bez potvrde, `uvodilac` je onaj ko je njega uveo. Ostaju samo oni
  * koji su još članovi bez potvrde (`bezPotvrde`).
  */

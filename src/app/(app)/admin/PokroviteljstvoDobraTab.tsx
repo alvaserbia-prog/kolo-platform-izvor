@@ -12,16 +12,16 @@ import { useDijalog } from "@/components/ui/Dijalog";
 
 /**
  * Admin → Pokrovitelji → Dobra i usluge (Pravilnik o pokroviteljstvu i donacijama
- * Glava IVa; nabavke Glava VIIIa).
+ * Glava IV; nabavke Glava VII).
  *
  * Pregled: Fondacija proverava SAMO da je fotografija cenovnika priložena —
- * podatke o davaocu je uporedila sa registrom pri odobrenju upisa (čl. 6a st. 4;
+ * podatke o davaocu je uporedila sa registrom pri odobrenju upisa (čl. 18 st. 1;
  * Admin → Pokrovitelji → Upisi), pa se prijava prihvata samo iz odobrenog upisa.
- * 🔴 Cenu ne procenjuje, ne upoređuje i ne određuje (čl. 13f st. 2) — samo se
+ * 🔴 Cenu ne procenjuje, ne upoređuje i ne određuje (čl. 29 st. 2) — samo se
  * prikazuju fotografija cenovnika i cena. Fotografiju otvara samo administratorska ruta.
  *
- * Posle potpisa vaučeri su odmah dostupni članovima (nabavke čl. 30e) — raspodele
- * i dodele nema. Raskid po neizvršenju posle prigovora imaoca (čl. 13j) upisuje
+ * Posle potpisa vaučeri su odmah dostupni članovima (nabavke čl. 32) — raspodele
+ * i dodele nema. Raskid po neizvršenju posle prigovora imaoca (čl. 35) upisuje
  * davaoca na listu zabrane; „Skini zabranu" je odluka Fondacije uz obrazloženje.
  */
 type Vaucer = {
@@ -50,7 +50,7 @@ type Ugovor = {
   kontaktTelefon: string | null;
   izjavaOvlascenjeAt: string | null;
   potvrdaEvidentiranjaAt: string | null;
-  /** Upis pokrovitelja odobren uz poređenje sa registrom (donacije čl. 6a st. 4). */
+  /** Upis pokrovitelja odobren uz poređenje sa registrom (donacije čl. 18 st. 1). */
   upisOdobren: boolean;
   vrsta: "DOBRO" | "USLUGA";
   opis: string;
@@ -127,14 +127,14 @@ export default function PokroviteljstvoDobraTab() {
     return r.ok ? d : null;
   }
 
-  // Lista zabrane (čl. 13j st. 2) — Fondacija skida davaoca uz obrazloženje.
+  // Lista zabrane (čl. 35 st. 5) — Fondacija skida davaoca uz obrazloženje.
   async function skiniZabranu(z: Zabrana) {
     const razlog = await unesi({ poruka: t("dobra_zabrana_skini_prompt", { naziv: z.naziv }), dugme: t("dobra_zabrana_skini") });
     if (!razlog?.trim()) return;
     await radnja(z.id, `/api/admin/pokroviteljstvo/zabrane/${z.id}/skini`, { razlog: razlog.trim() });
   }
 
-  // Naredni ugovor bez polovine iskorišćenih vaučera (čl. 13f st. 4, set 4.8.4) —
+  // Naredni ugovor bez polovine iskorišćenih vaučera (čl. 29 st. 4, set 4.8.4) —
   // samo odlukom Fondacije, uz obrazloženje; ruta propušta samo superadmina.
   async function dozvoliNaredni(u: Ugovor) {
     const razlog = await unesi({ poruka: t("dobra_naredni_prompt", { naziv: u.naziv }), dugme: t("dobra_naredni_dozvoli") });
@@ -148,7 +148,7 @@ export default function PokroviteljstvoDobraTab() {
     await radnja(id, `/api/admin/pokroviteljstvo/dobra/${id}/odbij`, { razlog: razlog.trim() });
   }
 
-  // Raskid ugovora po neizvršenju (čl. 13j) — pokreće se sa vaučera o kome je prigovor.
+  // Raskid ugovora po neizvršenju (čl. 35) — pokreće se sa vaučera o kome je prigovor.
   async function raskid(ugovorId: string, v: Vaucer) {
     const obrazlozenje = await unesi({ poruka: t("dobra_raskid_prompt"), opasno: true, dugme: t("dobra_raskid_btn") });
     if (!obrazlozenje?.trim()) return;
@@ -284,10 +284,10 @@ export default function PokroviteljstvoDobraTab() {
 
             {u.status === "NA_PREGLEDU" && (
               <div className="space-y-2 border-t border-kolo-border pt-2">
-                {/* Fondacija cenu ne upoređuje (čl. 13f st. 2) — prikazuju se samo cena i fotografija cenovnika. */}
+                {/* Fondacija cenu ne upoređuje (čl. 29 st. 2) — prikazuju se samo cena i fotografija cenovnika. */}
                 <p className="text-xs text-kolo-muted">{t("dobra_cena_napomena", { cena: broj(u.cenaPoJedinici) })}</p>
                 {/* Podatke o davaocu Fondacija je uporedila sa registrom pri odobrenju
-                    upisa (čl. 6a st. 4) — ovde se proverava samo cenovnik. */}
+                    upisa (čl. 18 st. 1) — ovde se proverava samo cenovnik. */}
                 <p className="text-xs text-kolo-muted">{u.upisOdobren ? t("dobra_upis_odobren") : t("dobra_upis_nije_odobren")}</p>
                 <div className="flex gap-2">
                   <button
@@ -376,7 +376,7 @@ export default function PokroviteljstvoDobraTab() {
         );
       })}
 
-      {/* ── Lista zabrane (čl. 13j st. 2) ──────────────────────────────────── */}
+      {/* ── Lista zabrane (čl. 35 st. 5) ──────────────────────────────────── */}
       <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-4 space-y-2 shadow-kartica">
         <p className="font-semibold text-kolo-text">{t("dobra_zabrane_naslov")}</p>
         <p className="text-xs text-kolo-muted">{t("dobra_zabrane_opis")}</p>

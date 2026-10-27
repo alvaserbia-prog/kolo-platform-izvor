@@ -48,12 +48,12 @@ type Tab = "ugovori" | "vauceri" | "zaposleni" | "podaci";
 const TABOVI: Tab[] = ["ugovori", "vauceri", "zaposleni", "podaci"];
 
 /**
- * Stranica pokrovitelja — upis (donacije čl. 6a) koji korisnik vodi.
+ * Stranica pokrovitelja — upis (donacije čl. 16) koji korisnik vodi.
  *
  * 🔴 „Doniraj novac" i „Doniraj robu ili usluge" su dostupni samo iz odobrenog
  * upisa (server ponovo proverava u obe rute). Novčano pokroviteljstvo daje pravno
- * lice, preduzetnik ili nosilac registrovanog gazdinstva (čl. 6, set 4.7.9); lista
- * zabrane zatvara samo nov ugovor o pokroviteljstvu dobrima i uslugama (čl. 13j st. 2).
+ * lice, preduzetnik ili nosilac registrovanog gazdinstva (čl. 15, set 4.7.9); lista
+ * zabrane zatvara samo nov ugovor o pokroviteljstvu dobrima i uslugama (čl. 35 st. 5).
  */
 export default function UpisProfil({
   upis,

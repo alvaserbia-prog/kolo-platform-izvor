@@ -43,6 +43,9 @@ export default function PolitikaTab() {
   const [verzija, setVerzija] = useState(predlog);
   const [naslov, setNaslov] = useState(`Akti KOLO sistema ${predlog}`);
   const [obavesti, setObavesti] = useState(true);
+  // Dan stupanja na snagu (GGGG-MM-DD); prazno = od trenutka upisa. Sme u budućnost
+  // (Uslovi čl. 43 st. 3, Pravilnik čl. 57 st. 2) — proveru radi server.
+  const [efektivnaOd, setEfektivnaOd] = useState("");
   const { dijalog, potvrdi } = useDijalog();
 
   const ucitaj = useCallback(async () => {
@@ -56,7 +59,10 @@ export default function PolitikaTab() {
   }, [ucitaj]);
 
   async function zatrazi() {
-    if (!(await potvrdi({ poruka: t("pol_potvrda", { verzija }), dugme: t("pol_dugme") }))) return;
+    const poruka = efektivnaOd
+      ? t("pol_potvrda_od", { verzija, datum: new Date(efektivnaOd + "T12:00:00").toLocaleDateString("sr-RS") })
+      : t("pol_potvrda", { verzija });
+    if (!(await potvrdi({ poruka, dugme: t("pol_dugme") }))) return;
     setRadi(true);
     setGreska(null);
     setPoruka(null);
@@ -64,7 +70,7 @@ export default function PolitikaTab() {
       const res = await fetch("/api/admin/politika", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ verzija, naslov, obavesti }),
+        body: JSON.stringify({ verzija, naslov, obavesti, ...(efektivnaOd ? { efektivnaOd } : {}) }),
       });
       const d = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -80,7 +86,10 @@ export default function PolitikaTab() {
 
   if (ucitava) return <p className="text-sm text-kolo-muted">{t("pol_ucitavanje")}</p>;
 
-  const poslednja = verzije[0];
+  // Na snazi je poslednja verzija čiji je dan stupanja prošao; one upisane unapred
+  // stoje u istoriji sa oznakom „stupa na snagu".
+  const sada = Date.now();
+  const poslednja = verzije.find((v) => new Date(v.efektivnaOd).getTime() <= sada);
   const polje = KLASE_UNOSA + " mt-1";
 
   return (
@@ -121,6 +130,10 @@ export default function PolitikaTab() {
             {t("pol_naslov_polje")}
             <input className={polje} value={naslov} onChange={(e) => setNaslov(e.target.value)} />
           </label>
+          <label className="block text-sm font-medium text-kolo-text">
+            {t("pol_efektivna_od")}
+            <input type="date" className={polje} value={efektivnaOd} onChange={(e) => setEfektivnaOd(e.target.value)} />
+          </label>
         </div>
         <label className="mt-3 flex items-start gap-2 text-sm">
           <input type="checkbox" checked={obavesti} onChange={(e) => setObavesti(e.target.checked)} />
@@ -145,6 +158,11 @@ export default function PolitikaTab() {
               <li key={v.id} className="flex flex-wrap justify-between gap-2 py-2">
                 <span>
                   <span className="font-medium">{v.verzija}</span> — {v.naslov}
+                  {new Date(v.efektivnaOd).getTime() > sada && (
+                    <span className="ml-2 text-xs text-kolo-muted">
+                      ({t("pol_buduca", { datum: new Date(v.efektivnaOd).toLocaleDateString("sr-RS") })})
+                    </span>
+                  )}
                 </span>
                 <span className="text-kolo-muted">
                   {new Date(v.efektivnaOd).toLocaleDateString("sr-RS")} · {t("pol_pristalo", { n: v._count.pristanci })}

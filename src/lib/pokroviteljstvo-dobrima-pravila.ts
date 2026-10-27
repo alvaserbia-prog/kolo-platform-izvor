@@ -1,9 +1,9 @@
 /**
  * Pokroviteljstvo dobrima i uslugama — ČISTA pravila (bez Prisme).
  *
- * Osnov: Pravilnik o pokroviteljstvu i donacijama, Glava IVa (čl. 13d–13l);
- * Pravilnik o projektima i kolektivnim nabavkama, Glava VIIIa (čl. 30b–30g);
- * Pravilnik o KOLO sistemu čl. 14 st. 3 t. 8 i čl. 14a. Odluke vlasnika O-1…O-15
+ * Osnov: Pravilnik o pokroviteljstvu i donacijama, Glava IV (čl. 27–36);
+ * Pravilnik o projektima i kolektivnim nabavkama, Glava VII (čl. 29–34);
+ * Pravilnik o KOLO sistemu čl. 17 st. 2 t. 7 i čl. 18. Odluke vlasnika O-1…O-15
  * (19.10.2026) i dopuna od 20.10.2026: odnos podnosioca prema davaocu, kontakt
  * davaoca, cena samo iz fotografije cenovnika (Fondacija cenu ne upoređuje), rok
  * važenja fiksno godinu dana, potpis jednokratnim kodom na mejl, vaučeri se
@@ -28,7 +28,7 @@
  * 🔴 O-14: podnosilac prijave (i povezana lica, po izjavi) ne uzima vaučere
  * svog davaoca.
  *
- * 🔴 Fondacija cenu ne procenjuje, ne upoređuje i ne određuje (čl. 13f st. 2) —
+ * 🔴 Fondacija cenu ne procenjuje, ne upoređuje i ne određuje (čl. 29 st. 2) —
  * pravila o „najnižoj ceni iz javnih izvora" više nema.
  */
 
@@ -37,29 +37,29 @@ import { smeUcestvovati, type UcesnikProvera } from "@/lib/nabavka-pravila";
 
 // ─── Konstante iz akta ────────────────────────────────────────────────────────
 
-/** Čl. 13f st. 3 — najmanja vrednost ugovora (RSD). Važi za svaki ugovor. */
+/** Čl. 29 st. 3 — najmanja vrednost ugovora (RSD). Važi za svaki ugovor. */
 export const MIN_VREDNOST_UGOVORA_RSD = 10_000;
 
-/** Čl. 13f st. 3 — najveća vrednost ugovora (RSD). Važi za svaki ugovor (odluka vlasnika). */
+/** Čl. 29 st. 3 — najveća vrednost ugovora (RSD). Važi za svaki ugovor (odluka vlasnika). */
 export const MAX_VREDNOST_UGOVORA_RSD = 50_000;
 
-/** Čl. 13f st. 4 — naredni ugovor tek kad je iskorišćeno bar toliko vaučera prethodnog. */
+/** Čl. 29 st. 4 — naredni ugovor tek kad je iskorišćeno bar toliko vaučera prethodnog. */
 export const UDEO_ISKORISCENIH_ZA_NAREDNI = 0.5;
 
 /**
- * Čl. 13f st. 5 — vaučer važi jednu godinu od izdavanja. Rok se ne bira u
+ * Čl. 29 st. 5 — vaučer važi jednu godinu od izdavanja. Rok se ne bira u
  * prijavi (odluka vlasnika 20.10.2026).
  */
 export const ROK_VAZENJA_MESECI = 12;
 
-/** Nabavke čl. 30c st. 2 — najviše dva uzeta, a neiskorišćena vaučera po korisniku. */
+/** Nabavke čl. 30 st. 2 — najviše dva uzeta, a neiskorišćena vaučera po korisniku. */
 export const MAX_AKTIVNIH_VAUCERA_PO_CLANU = 2;
 
 /** Brava na unos: najviše vaučera po ugovoru (protiv omaške u kucanju). */
 export const MAX_VAUCERA_PO_UGOVORU = 500;
 
 /**
- * Dokaz cene je SAMO fotografija cenovnika (čl. 13e st. 2) — jedna ili više.
+ * Dokaz cene je SAMO fotografija cenovnika (čl. 28 st. 2 t. 4, čl. 29 st. 2) — jedna ili više.
  * Računi i javni izvori cene se više ne traže.
  */
 export const DOKAZ_TIPOVI: readonly string[] = ["image/jpeg", "image/png", "image/webp"];
@@ -67,10 +67,10 @@ export const DOKAZ_MAX_BAJTOVA = 2 * 1024 * 1024;
 /** Najviše fotografija cenovnika po prijavi. */
 export const DOKAZ_MAX_FAJLOVA = 5;
 
-/** Uslovi čl. 37a st. 4 — prigovor na vaučer najkasnije toliko dana od isteka roka važenja. */
+/** Uslovi čl. 40 st. 4 t. 4 — prigovor na vaučer najkasnije toliko dana od isteka roka važenja. */
 export const ROK_PRIGOVORA_POSLE_ISTEKA_DANA = 15;
 
-/** Čl. 13g st. 4 — jednokratni kod za potpis: šest cifara, važi 15 minuta, najviše 5 pokušaja. */
+/** Čl. 32 st. 1 — jednokratni kod za potpis: šest cifara, važi 15 minuta, najviše 5 pokušaja. */
 export const POTPIS_KOD_CIFARA = 6;
 export const POTPIS_KOD_TRAJANJE_MIN = 15;
 export const POTPIS_KOD_MAX_POKUSAJA = 5;
@@ -80,11 +80,11 @@ export const POTPIS_KOD_RAZMAK_SEKUNDI = 60;
 /**
  * APR — javna objedinjena pretraga registra privrednih subjekata. Pretraga ne
  * prima matični broj kroz adresu, pa admin ekran prikazuje MB za kopiranje
- * (čl. 13f st. 2: Fondacija proverava da podaci odgovaraju registru).
+ * (čl. 18 st. 1: Fondacija proverava da podaci odgovaraju registru).
  */
 export const APR_PRETRAGA_URL = "https://pretraga.apr.gov.rs/unifiedentitysearch";
 
-// ─── Odnos podnosioca prema davaocu (čl. 13e st. 1 i 4) ───────────────────────
+// ─── Odnos podnosioca prema davaocu (čl. 16 st. 2 t. 4, čl. 17) ───────────────────────
 
 export const ODNOSI_FIRME = ["ZASTUPNIK", "PREDUZETNIK", "VLASNIK", "JEDAN_OD_VLASNIKA", "STVARNI_VLASNIK", "OVLASCENO_LICE"] as const;
 export const ODNOSI_GAZDINSTVA = ["NOSILAC_GAZDINSTVA"] as const;
@@ -111,7 +111,7 @@ export const ODNOS_U_UGOVORU: Record<OdnosPremaDavaocu, string> = {
 export const FUNKCIJA_NOSIOCA_GAZDINSTVA = ODNOS_U_UGOVORU.NOSILAC_GAZDINSTVA;
 
 /**
- * Pravni oblik pokrovitelja (donacije čl. 6a st. 2) — određuje samo koji odnos
+ * Pravni oblik pokrovitelja (donacije čl. 16 st. 2 t. 1) — određuje samo koji odnos
  * podnosilac bira i koje izjave daje. 🔴 Ne utiče na obračun doprinosa: uvećan
  * koeficijent po pravnom obliku je ukinut (17.10.2026) i ne vraća se.
  */
@@ -133,7 +133,7 @@ export const ODNOSI_PO_OBLIKU: Record<PravniOblik, readonly OdnosPremaDavaocu[]>
 };
 
 /**
- * Članski oblici (čl. 6a st. 3): kod udruženja i zadruge podnosioca, i kad je
+ * Članski oblici (čl. 17 st. 1): kod udruženja i zadruge podnosioca, i kad je
  * zakonski zastupnik, ovlašćuje nadležni organ — time pokrovitelj sam bira u čiji
  * zapis ide doprinos, a Fondacija ništa ne raspoređuje.
  */
@@ -157,24 +157,24 @@ export function odnosDozvoljen(vrstaDavaoca: VrstaDavaoca, odnos: unknown, oblik
 }
 
 /**
- * Čl. 13e st. 4 — podnosilac koji nije zakonski zastupnik ni preduzetnik izjavljuje
+ * Čl. 17 st. 1 — podnosilac koji nije zakonski zastupnik ni preduzetnik izjavljuje
  * da je ovlašćen da u ime davaoca zaključi ugovor. Nosilac gazdinstva potpisuje u
  * svoje ime, pa izjavu ne daje. Kod udruženja i zadruge izjavu o ovlašćenju organa
- * daje i zakonski zastupnik (donacije čl. 6a st. 3).
+ * daje i zakonski zastupnik (donacije čl. 17 st. 1).
  */
 export function trebaIzjavaOvlascenja(odnos: OdnosPremaDavaocu, oblik?: PravniOblik | null): boolean {
   if (jeClanskiOblik(oblik)) return true;
   return odnos !== "ZASTUPNIK" && odnos !== "PREDUZETNIK" && odnos !== "NOSILAC_GAZDINSTVA";
 }
 
-// ─── Vrednost i kvote (čl. 13f) ───────────────────────────────────────────────
+// ─── Vrednost i kvote (čl. 29) ───────────────────────────────────────────────
 
-/** Čl. 13f st. 1 — vrednost = broj vaučera × cena po jedinici, na dve decimale. */
+/** Čl. 29 st. 1 — vrednost = broj vaučera × cena po jedinici, na dve decimale. */
 export function vrednostUgovora(brojVaucera: number, cenaPoJedinici: number): number {
   return Math.round(brojVaucera * cenaPoJedinici * 100) / 100;
 }
 
-/** Čl. 13f st. 3 — vrednost ugovora mora biti između 10.000 i 50.000 RSD. */
+/** Čl. 29 st. 3 — vrednost ugovora mora biti između 10.000 i 50.000 RSD. */
 export function uGranicamaVrednosti(vrednostRsd: number): boolean {
   return (
     Number.isFinite(vrednostRsd) &&
@@ -192,11 +192,11 @@ export type PrethodniUgovor = {
 export type IshodProvere = { ok: true } | { ok: false; razlog: string };
 
 /**
- * Čl. 13f st. 4 i čl. 13j st. 2 — sme li davalac (po matičnom broju, odnosno broju
+ * Čl. 29 st. 4 i čl. 35 st. 5 — sme li davalac (po matičnom broju, odnosno broju
  * gazdinstva) da podnese novu prijavu.
  *
  * Davalac na listi zabrane ne podnosi prijavu dok ga Fondacija sa liste ne skine
- * (čl. 13j st. 2). Prijava u toku (na pregledu ili čeka potpis) zatvara novu.
+ * (čl. 35 st. 5). Prijava u toku (na pregledu ili čeka potpis) zatvara novu.
  * Prethodni potpisani ugovor dozvoljava novu prijavu kada je iskorišćeno najmanje
  * polovina njegovih vaučera, ili kada je Fondacija odlukom dozvolila naredni ugovor.
  *
@@ -230,9 +230,9 @@ export function smeNoviUgovor(u: {
 }
 
 /**
- * Čl. 13j st. 1 — koji vaučeri raskinutog ugovora ulaze u raskid: svaki koji do
+ * Čl. 35 st. 2 — koji vaučeri raskinutog ugovora ulaze u raskid: svaki koji do
  * raskida nije iskorišćen, bez obzira na to da li je uzet. Vaučer o kome je
- * prigovor (označen kao iskorišćen iako dobro nije predato, nabavke čl. 30g st. 3)
+ * prigovor (označen kao iskorišćen iako dobro nije predato, nabavke čl. 34 st. 5)
  * ulazi i kada je označen kao iskorišćen. Već ranije otpisan (NEIZVRSEN) ne ulazi.
  */
 export function ulaziURaskid(v: { id: string; status: string }, vaucerPrigovoraId: string): boolean {
@@ -241,32 +241,32 @@ export function ulaziURaskid(v: { id: string; status: string }, vaucerPrigovoraI
   return true;
 }
 
-/** Čl. 13j st. 1 — ukupan otpis pri raskidu: otpis po vaučeru × broj vaučera koji ulaze u raskid. */
+/** Čl. 35 st. 2 — ukupan otpis pri raskidu: otpis po vaučeru × broj vaučera koji ulaze u raskid. */
 export function otpisPriRaskidu(poenEvidentirano: number, brojVaucera: number, uRaskidu: number): number {
   return otpisPoVauceru(poenEvidentirano, brojVaucera) * Math.max(0, uRaskidu);
 }
 
-// ─── Koeficijent i broj POEN-a (čl. 13h, nabavke čl. 30d) ─────────────────────
+// ─── Koeficijent i broj POEN-a (čl. 33, nabavke čl. 31) ─────────────────────
 
 /**
- * Čl. 13h st. 2 — koeficijent evidencije iz nivoa koji je pokrovitelj dostigao
+ * Čl. 33 st. 2 — koeficijent evidencije iz nivoa koji je pokrovitelj dostigao
  * KUMULATIVNIM NOVČANIM DOPRINOSOM. Bez novčanog doprinosa: 1,00.
  *
  * 🔴 Ulaz je isključivo novčani kumulativ (`Pokrovitelj.rsdKumulativ`). Vrednost
- * ugovora o dobrima se ovde ne dodaje — ni tekućeg ni ranijih (čl. 13h st. 3).
+ * ugovora o dobrima se ovde ne dodaje — ni tekućeg ni ranijih (čl. 33 st. 3).
  */
 export function koeficijentIzNovca(novcaniKumulativRsd: number | null): number {
   if (novcaniKumulativRsd == null || !Number.isFinite(novcaniKumulativRsd) || novcaniKumulativRsd <= 0) return 1.0;
   return nivoZaKumulativ(novcaniKumulativRsd).kurs;
 }
 
-/** Čl. 13h st. 2 — broj evidentiranih POEN-a = vrednost × koeficijent (ceo broj). */
+/** Čl. 33 st. 2 — broj evidentiranih POEN-a = vrednost × koeficijent (ceo broj). */
 export function poenZaUgovor(vrednostRsd: number, koeficijent: number): number {
   return Math.round(vrednostRsd * koeficijent);
 }
 
 /**
- * Nabavke čl. 30d st. 1 (O-8) — broj POEN-a po vaučeru: upis BEZ uvećanja po
+ * Nabavke čl. 31 st. 1 (O-8) — broj POEN-a po vaučeru: upis BEZ uvećanja po
  * koeficijentu (koeficijent 1,00), podeljen brojem vaučera.
  */
 export const KOEFICIJENT_RASPODELE = 1.0;
@@ -276,7 +276,7 @@ export function poenaPoVauceru(vrednostRsd: number, brojVaucera: number): number
 }
 
 /**
- * Donacije čl. 13j st. 1 — otpis po vaučeru: broj POEN-a evidentiran po ugovoru
+ * Donacije čl. 35 st. 2 — otpis po vaučeru: broj POEN-a evidentiran po ugovoru
  * (snimak), podeljen brojem vaučera.
  */
 export function otpisPoVauceru(poenEvidentirano: number, brojVaucera: number): number {
@@ -293,17 +293,17 @@ export function vaziDoOd(izdato: Date, meseci: number = ROK_VAZENJA_MESECI): Dat
   return d;
 }
 
-// ─── Uzimanje vaučera (nabavke čl. 30c, 30e, 30f) ────────────────────────────
+// ─── Uzimanje vaučera (nabavke čl. 30, 32, 33) ────────────────────────────
 
 /**
- * Nabavke čl. 30c i 30f — sme li korisnik da uzme vaučer:
+ * Nabavke čl. 30 i 33 — sme li korisnik da uzme vaučer:
  *  - korisnik iz čl. 4 nabavki (punoletan, aktivan, indeks ≥ 10%);
- *  - nije podnosilac prijave tog davaoca (čl. 13k; povezanost se ne može
+ *  - nije podnosilac prijave tog davaoca (donacije čl. 36; povezanost se ne može
  *    proveriti iz evidencije, pa se uz to traži izričita izjava);
  *  - dao je izjavu o nepovezanosti I pristanak na prikaz zapisa o poništenju uz
- *    pseudonim (čl. 30f st. 1) — bez njih se vaučer ne može uzeti;
- *  - nema već dva uzeta, a neiskorišćena vaučera (čl. 30c st. 2);
- *  - ima dovoljno raspoloživih POEN-a (čl. 30f st. 3) — zapis ne ide u minus.
+ *    pseudonim (čl. 33 st. 1) — bez njih se vaučer ne može uzeti;
+ *  - nema već dva uzeta, a neiskorišćena vaučera (čl. 30 st. 2);
+ *  - ima dovoljno raspoloživih POEN-a (čl. 33 st. 4) — zapis ne ide u minus.
  *
  * Servis istu proveru ponavlja UNUTAR transakcije, nad zaključanim zapisom.
  */
@@ -338,10 +338,10 @@ export function smeUzetiVaucer(u: UcesnikProvera & {
 
 /**
  * Stanje vaučera koje davalac vidi kad unese ili skenira kod. Uz stanje davalac
- * vidi opis, rok važenja i PSEUDONIM imaoca (nabavke čl. 30g st. 1) — i ništa
+ * vidi opis, rok važenja i PSEUDONIM imaoca (nabavke čl. 34 st. 1) — i ništa
  * drugo o imaocu.
  *
- * POEN je poništen već pri uzimanju (nabavke čl. 30f), pa stanja „ne može se
+ * POEN je poništen već pri uzimanju (nabavke čl. 33 st. 4), pa stanja „ne može se
  * realizovati" nema: uzet vaučer u roku važi. `NE_VAZI` = vaučer niko nije uzeo
  * ili je prestao zbog raskida ugovora.
  */
@@ -365,7 +365,7 @@ export function normalizujKod(kod: unknown): string {
   return typeof kod === "string" ? kod.toUpperCase().replace(/[^A-Z0-9]/g, "") : "";
 }
 
-// ─── Zaposleni davaoca (donacije čl. 13g st. 6, nabavke čl. 30g st. 1) ───────
+// ─── Zaposleni davaoca (donacije čl. 32 st. 3, nabavke čl. 34 st. 1) ───────
 
 /**
  * Ko sme da potvrdi vaučer: podnosilac prijave ugovora ILI njegov aktivan
@@ -395,13 +395,13 @@ export interface NalogZaposlenog {
   maloletan: boolean;
   status: string;
   deaktiviranAt: Date | null;
-  /** Verifikovan korisnik (donacije čl. 13g st. 6). */
+  /** Verifikovan korisnik (donacije čl. 32 st. 3). */
   verified: boolean;
 }
 
 /**
  * Zaposleni može biti samo VERIFIKOVAN, PUNOLETAN korisnik sa AKTIVNIM nalogom,
- * različit od podnosioca (donacije čl. 13g st. 6). Isti uslov važi i pri
+ * različit od podnosioca (donacije čl. 32 st. 3). Isti uslov važi i pri
  * određivanju i pri svakoj proveri i potvrdi — nalog koji je u međuvremenu
  * suspendovan, ugašen ili izgubio potvrdu ne potvrđuje.
  */
@@ -415,7 +415,7 @@ export function smeBitiZaposleni(n: NalogZaposlenog, davalacUserId: string): Ish
   return { ok: true };
 }
 
-// ─── Jednokratni kod za potpis (čl. 13g st. 4) ───────────────────────────────
+// ─── Jednokratni kod za potpis (čl. 32 st. 1) ───────────────────────────────
 
 export type StanjeKoda = { hash: string | null; istice: Date | null; pokusaja: number };
 
@@ -438,21 +438,21 @@ export function ocistiKodPotpisa(unos: unknown): string | null {
 }
 
 /**
- * Tri potvrde pre potpisa (čl. 13g st. 4): ugovor je pročitan, podnosilac je
+ * Tri potvrde pre potpisa (čl. 32 st. 1): ugovor je pročitan, podnosilac je
  * ovlašćen da ga zaključi i saglasan je da se ugovor zaključuje potvrdom na platformi.
  */
 export function potvrdePotpisaOk(p: { procitao: unknown; ovlascen: unknown; saglasan: unknown }): boolean {
   return p.procitao === true && p.ovlascen === true && p.saglasan === true;
 }
 
-// ─── Prijava (čl. 13e) ────────────────────────────────────────────────────────
+// ─── Prijava (čl. 28) ────────────────────────────────────────────────────────
 
 export type VrstaDavaoca = "FIRMA" | "GAZDINSTVO";
 
 /**
- * Prijava iz odobrenog upisa (čl. 13e st. 2 i 3): samo dobro, odnosno usluga — opis,
+ * Prijava iz odobrenog upisa (čl. 28 st. 2 i 3): samo dobro, odnosno usluga — opis,
  * broj vaučera, cena, mesto i adresa predaje i izjava o propisima. Podaci o davaocu,
- * odnos, kontakt, izjava o ovlašćenju i potvrda o evidentiranju su u UPISU (čl. 6a)
+ * odnos, kontakt, izjava o ovlašćenju i potvrda o evidentiranju su u UPISU (čl. 16)
  * i u ugovor ulaze kao njegov snimak.
  */
 export type PredmetPrijaveDobra = {
@@ -495,9 +495,9 @@ export function ocistiKontaktTelefon(unos: unknown): string | null {
 const daJe = (v: unknown) => v === true || v === "true";
 
 /**
- * Provera prijave (čl. 13e st. 2 i 3, čl. 13f). Mesto (naselje) i fotografije
+ * Provera prijave (čl. 28 st. 2 i 3, čl. 29). Mesto (naselje) i fotografije
  * cenovnika proverava ruta — prvo kroz `razresiNaselje`, drugo kroz `proveriDokaze`.
- * Upis (čl. 6a) i njegovu spremnost proverava servis (`upisSpremanZaPrijavu`).
+ * Upis (čl. 16) i njegovu spremnost proverava servis (`upisSpremanZaPrijavu`).
  */
 export function procitajPredmetDobra(
   b: Record<string, unknown>,
@@ -522,12 +522,12 @@ export function procitajPredmetDobra(
   if (!uGranicamaVrednosti(vrednostRsd))
     return { ok: false, razlog: "Vrednost ugovora (broj vaučera × cena) mora biti između 10.000 i 50.000 dinara." };
 
-  // Čl. 13e st. 2 — mesto i adresa predaje, odnosno pružanja (mesto proverava ruta).
+  // Čl. 28 st. 2 t. 5 — mesto i adresa predaje, odnosno pružanja (mesto proverava ruta).
   const adresa = tekst(b.adresaPredaje);
   if (adresa.length < MIN_ADRESA || adresa.length > MAX_ADRESA)
     return { ok: false, razlog: "Upiši adresu predaje, odnosno pružanja." };
 
-  // Čl. 13e st. 3 — izjava o propisima.
+  // Čl. 28 st. 3 — izjava o propisima.
   if (!daJe(b.izjavaPropisi))
     return { ok: false, razlog: "Potrebna je izjava da davalac ispunjava propise za promet tog dobra, odnosno pružanje te usluge." };
 
@@ -540,7 +540,7 @@ export function procitajPredmetDobra(
 export type VrstaDokaza = "CENOVNIK";
 
 /**
- * Provera priloženog dokaza (čl. 13e st. 2): SAMO fotografija cenovnika iz koje se
+ * Provera priloženog dokaza (čl. 28 st. 2 t. 4): SAMO fotografija cenovnika iz koje se
  * vidi cena — najmanje jedna, za firmu i za gazdinstvo isto. Računi, javni izvori
  * cene i potvrda o upisu gazdinstva se ne traže.
  */
@@ -556,20 +556,20 @@ export function proveriDokaze(fajlovi: { vrsta: VrstaDokaza; tip: string; velici
 }
 
 /**
- * Po čemu se davalac prepoznaje za kvotu (čl. 13f st. 4) i listu zabrane (čl. 13j
- * st. 2): pravno lice i preduzetnik po matičnom broju, gazdinstvo po BPG.
+ * Po čemu se davalac prepoznaje za kvotu (čl. 29 st. 4) i listu zabrane (čl. 35
+ * st. 5): pravno lice i preduzetnik po matičnom broju, gazdinstvo po BPG.
  */
 export function kljucDavaoca(p: { vrstaDavaoca: VrstaDavaoca; maticniBroj: string | null; bpg: string | null }):
   { maticniBroj: string } | { bpg: string } {
   return p.vrstaDavaoca === "GAZDINSTVO" ? { bpg: p.bpg ?? "" } : { maticniBroj: p.maticniBroj ?? "" };
 }
 
-// ─── Ugovor (čl. 13g) ─────────────────────────────────────────────────────────
+// ─── Ugovor (čl. 31) ─────────────────────────────────────────────────────────
 
 /**
- * Tekst ugovora o donaciji dobara odnosno usluga (čl. 13g st. 2 i 4).
+ * Tekst ugovora o donaciji dobara odnosno usluga (čl. 31 st. 2, čl. 32 st. 1).
  *
- * 🔴 Ugovor NE sadrži odredbe o POEN-u niti o evidentiranju POEN-a (čl. 13g st. 3,
+ * 🔴 Ugovor NE sadrži odredbe o POEN-u niti o evidentiranju POEN-a (čl. 31 st. 3,
  * O-3). Generiše se jednom, pri prihvatanju prijave, i SNIMA — ne generiše se
  * ponovo pri čitanju.
  */
@@ -637,22 +637,22 @@ export function generisiUgovorDobraTekst(p: {
   ].join("\n");
 }
 
-// ─── Rang-lista pokrovitelja, deo „Dobra i usluge" (čl. 13 st. 1) ────────────
+// ─── Rang-lista pokrovitelja, deo „Dobra i usluge" (čl. 25 st. 1) ────────────
 
 export type StavkaRangListeDobara = { naziv: string; logoUrl: string | null; vrednostRsd: number };
 
 /**
- * Drugi deo rang-liste pokrovitelja (čl. 13 st. 1): zbir vrednosti potpisanih
+ * Drugi deo rang-liste pokrovitelja (čl. 25 st. 1): zbir vrednosti potpisanih
  * ugovora o pokroviteljstvu dobrima i uslugama po davaocu (pravno lice i
  * preduzetnik po matičnom broju, gazdinstvo po broju gazdinstva), od većeg ka
  * manjem. Naziv je onaj iz najnovijeg ugovora; gazdinstvo se prikazuje nazivom
  * gazdinstva.
  *
- * Uz naziv ide logotip iz najnovijeg potpisanog ugovora koji ga ima (čl. 13 st. 4).
+ * Uz naziv ide logotip iz najnovijeg potpisanog ugovora koji ga ima (čl. 26 st. 2).
  *
  * 🔴 Izlaz nosi SAMO naziv, logotip i iznos u dinarima — nikad broj POEN-a, matični
- * broj, PIB, BPG, adresu ni podnosioca (čl. 13 st. 1 i 2), ni vezu ka internet
- * stranici (čl. 13 st. 5).
+ * broj, PIB, BPG, adresu ni podnosioca (čl. 25 st. 2), ni vezu ka internet
+ * stranici (čl. 26 st. 3).
  */
 export function rangListaDobara(
   ugovori: { vrstaDavaoca: VrstaDavaoca; maticniBroj: string | null; bpg: string | null; naziv: string; logoUrl?: string | null; vrednostRsd: number; potpisanoAt: Date | null }[],
@@ -678,7 +678,7 @@ export function rangListaDobara(
 
 // ─── Potvrda o predaji bez naknade (odluka vlasnika 20.10.2026) ──────────────
 //
-// Davalac realizaciju ne kuca na kasi: vaučer iz Glave IVa nije vaučer u smislu
+// Davalac realizaciju ne kuca na kasi: vaučer iz Glave IV nije vaučer u smislu
 // Zakona o PDV (imalac ništa ne plaća), predaja je promet bez naknade, pa se ne
 // izdaje ni fiskalni račun ni e-faktura. Realizaciju u svojim knjigama zatvara
 // potvrdom o predaji sa platforme. 🔴 Potvrda ne pominje POEN ni „fiskalni",

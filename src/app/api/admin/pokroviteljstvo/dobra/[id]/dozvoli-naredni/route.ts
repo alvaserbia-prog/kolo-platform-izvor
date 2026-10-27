@@ -8,7 +8,7 @@ import { dozvoliNaredniUgovor, odgovorNaGresku } from "@/lib/protokol/pokrovitel
 /**
  * POST /api/admin/pokroviteljstvo/dobra/[id]/dozvoli-naredni — odluka Fondacije da
  * davalac sme da zaključi naredni ugovor iako nije iskorišćena polovina vaučera ovog
- * ugovora (donacije čl. 13f st. 4, set 4.8.4; N2-M6). Samo superadmin. Telo: { razlog }.
+ * ugovora (donacije čl. 29 st. 4, set 4.8.4; N2-M6). Samo superadmin. Telo: { razlog }.
  */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

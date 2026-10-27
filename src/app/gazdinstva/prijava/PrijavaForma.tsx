@@ -27,26 +27,26 @@ type Pocetno = {
   lat: number | null;
   lng: number | null;
   uloga: "NOSILAC" | "CLAN";
-  /** Izjava o prikazu adrese uz tačku na mapi već data (čl. 4 t. 3). */
+  /** Izjava o prikazu adrese uz tačku na mapi već data (čl. 5 st. 1 t. 3). */
   imaIzjavuAdrese: boolean;
 };
 
 /**
- * Forma prijave gazdinstva (Pravilnik o gazdinstvima čl. 4). Tačna lokacija se
- * pronalazi po adresi ili bira klikom na mapu. Adresa je obavezna (čl. 4 t. 3) i
+ * Forma prijave gazdinstva (Pravilnik o gazdinstvima čl. 5). Tačna lokacija se
+ * pronalazi po adresi ili bira klikom na mapu. Adresa je obavezna (čl. 5 st. 1 t. 3) i
  * ispisuje se uz tačku na mapi — uz OBAVEZNU izjavu podnosioca da je saglasan da se
  * adresa prikazuje (dopuna 20.10.2026). 🔴 Izjava se ne povlači; prikaz prestaje
- * samo brisanjem gazdinstva (čl. 11, Politika 4.13).
+ * samo prestankom gazdinstva (čl. 19 st. 4, Politika čl. 25).
  *
- * Ime i prezime podnosioca (čl. 4 t. 8) traži se samo dok nalog nema upisano ime;
+ * Ime i prezime podnosioca (čl. 5 st. 1 t. 8) traži se samo dok nalog nema upisano ime;
  * ide u evidenciju identiteta, ne na gazdinstvo, i ne prikazuje se drugima.
  *
- * Broj telefona (čl. 4 t. 9) je broj NOSIOCA, odnosno podnosioca kad nosilac nema
- * nalog — samo za razgovor iz čl. 6a; vidi ga samo Fondacija i briše se odlukom.
+ * Broj telefona (čl. 5 st. 1 t. 9) je broj NOSIOCA, odnosno podnosioca kad nosilac nema
+ * nalog — samo za razgovor iz čl. 8; vidi ga samo Fondacija i briše se odlukom.
  *
- * `samoNosilac` (čl. 4a t. 2–3; set 4.8.3): korisnik i član bez potvrde prijavljuju
+ * `samoNosilac` (čl. 4 st. 1 t. 2–3; set 4.8.3): korisnik i član bez potvrde prijavljuju
  * gazdinstvo, upisano ili neupisano u Registar, samo kao nosilac; izvod se ne
- * prilaže (čl. 4b).
+ * prilaže (čl. 3 st. 3).
  */
 export default function PrijavaForma({
   izmenaId,
@@ -65,7 +65,7 @@ export default function PrijavaForma({
   const t = useTranslations("gazdinstva");
   const router = useRouter();
   const [imePrezime, setImePrezime] = useState("");
-  // Broj nosioca za razgovor sa Fondacijom pre odobrenja (čl. 4 t. 9, 6a).
+  // Broj nosioca za razgovor sa Fondacijom pre odobrenja (čl. 5 st. 1 t. 9, 8).
   const [telefon, setTelefon] = useState("");
   const [naziv, setNaziv] = useState(pocetno?.naziv ?? "");
   const [opis, setOpis] = useState(pocetno?.opis ?? "");

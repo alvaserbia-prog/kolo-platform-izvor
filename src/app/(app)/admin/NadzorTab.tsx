@@ -3,10 +3,10 @@
 /**
  * Tab „Provere" (ključ taba ostaje `nadzor`, pravilo 12) — tri odeljka:
  *  1. Nalazi — noćni nadzor integriteta (`RizikNalaz`);
- *  2. Zatvorene grupe — provera iz dokaza stvarnosti čl. 11 poslednji stav (set
+ *  2. Zatvorene grupe — provera iz dokaza stvarnosti čl. 26 (set
  *     4.8.2): računa se pri prikazu, nema dejstvo; Fondacija članove može pozvati na
  *     razgovor;
- *  3. Ko je otvorio ime i broj — zapis otvaranja poziva (dokaz čl. 4a st. 5;
+ *  3. Ko je otvorio ime i broj — zapis otvaranja poziva (dokaz čl. 10 st. 4;
  *     komponenta `ZapisiOtvaranja`, paket P2).
  */
 
@@ -52,7 +52,7 @@ type ZatvorenaGrupa = {
   razmenaSaOstalima: number;
 };
 
-/** Provera zatvorene grupe — samo prikaz (čl. 11 poslednji stav). */
+/** Provera zatvorene grupe — samo prikaz (dokaz stvarnosti čl. 26). */
 function ZatvoreneGrupe() {
   const t = useTranslations("admin");
   const [grupe, setGrupe] = useState<ZatvorenaGrupa[] | null>(null);
@@ -233,7 +233,7 @@ export default function NadzorTab({ nalazi }: { nalazi: NadzorNalaz[] }) {
 
       <ZatvoreneGrupe />
 
-      {/* Ko je otvorio ime i broj korisnika sa spiska za poziv (dokaz čl. 4a st. 5). */}
+      {/* Ko je otvorio ime i broj korisnika sa spiska za poziv (dokaz čl. 10 st. 4). */}
       <ZapisiOtvaranja />
     </div>
   );

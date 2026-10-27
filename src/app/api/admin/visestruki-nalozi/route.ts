@@ -11,7 +11,7 @@ import {
 } from "@/lib/protokol/visestruki-nalog";
 
 /**
- * Višestruki nalog istog lica (dokaz stvarnosti čl. 4a i 4b; set 4.8.4; N4-M2/M3).
+ * Višestruki nalog istog lica (dokaz stvarnosti čl. 13 i 14; set 4.8.4; N4-M2/M3).
  * Samo superadmin.
  *
  * GET  — mogući višestruki nalozi (grupe po istom broju, odnosno istom imenu, samo

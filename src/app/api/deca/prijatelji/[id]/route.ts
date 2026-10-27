@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { PrijateljGreska, raskiniPrijateljstvo } from "@/lib/protokol/prijateljstva";
 
 /**
- * DELETE /api/deca/prijatelji/[id] — raskid prijateljstva (Modul Deca, čl. 14c).
+ * DELETE /api/deca/prijatelji/[id] — raskid prijateljstva (Pravilnik o učešću dece, čl. 34).
  *
  * 🔴 Raskinuti može SAMO DETE, bilo koje od dvoje. Rute kojom bi roditelj raskinuo
  * prijateljstvo svog deteta NEMA, i to je namerno: raskid je odnos među decom.

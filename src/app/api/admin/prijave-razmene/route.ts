@@ -9,8 +9,8 @@ import { prisma } from "@/lib/prisma";
  * GET /api/admin/prijave-razmene?prikaz=otvorene|resene
  *
  * Spisak prijava neispunjene razmene. Uz svaku ide i TRENUTNO stanje primaoca —
- * po njemu se vidi koliko se uopšte može vratiti pre nego što se pritisne dugme
- * (zapis primaoca ne sme u minus, Pravilnik čl. 14).
+ * po njemu se vidi da li će ispravka odvesti zapis primaoca u minus, pre nego što
+ * se pritisne dugme (Pravilnik čl. 17 st. 2 t. 2).
  */
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
         id: p.protiv.id,
         pseudonim: p.protiv.pseudonim,
         tipKorisnika: p.protiv.tipKorisnika,
-        // Negativno stanje (nadoknada, čl. 20b) prikazuje se kakvo jeste —
+        // Negativno stanje (nadoknada, dokaz stvarnosti čl. 36) prikazuje se kakvo jeste —
         // adminu je to podatak, ne greška.
         stanje: p.protiv.wallet?.balance ?? 0,
       },

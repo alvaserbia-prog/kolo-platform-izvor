@@ -12,7 +12,7 @@ import { ispraviEvidencijuNabavke } from "@/lib/protokol/nabavka-ispravka";
  * PATCH /api/admin/prigovori/[id] — odgovori na prigovor
  * Body: { status: "RESENO" | "ODBIJENO" | "U_OBRADI", odgovor: string, ispravi?: boolean }
  *
- * `ispravi` važi samo za vrstu **NABAVKA** (nabavke čl. 30a st. 5): uz usvojen
+ * `ispravi` važi samo za vrstu **NABAVKA** (nabavke čl. 35 st. 1 t. 1): uz usvojen
  * prigovor otklanja se poništenje zapisa POEN-a izvršeno pri preuzimanju. Radnja
  * stoji ovde, a ne u zasebnom tabu, da se o jednom slučaju ne bi odlučivalo na
  * dva mesta — isti razlog iz kog odluka o prepisu zatvara i prigovor uz sebe.

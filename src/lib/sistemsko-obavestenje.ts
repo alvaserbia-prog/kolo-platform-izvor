@@ -2,13 +2,13 @@
  * Cirkularna SISTEMSKA obaveštenja — jedna poruka svim korisnicima.
  *
  * Namena je uska i propisana aktima: izmene Uslova i Politike privatnosti
- * (Uslovi čl. 40, Politika čl. 16 — izmene stupaju na snagu danom donošenja, a
+ * (Uslovi čl. 43, Politika čl. 47 — izmene stupaju na snagu danom donošenja, a
  * obaveštenje se šalje bez odlaganja; rok od 15 dana je ukinut setom 4.3.0),
  * planirani zastoj
- * duži od 24 sata (Uslovi čl. 33) i slična obaveštenja koja Fondacija DUGUJE
+ * duži od 24 sata (Uslovi čl. 36) i slična obaveštenja koja Fondacija DUGUJE
  * korisnicima. Zato ova pošta NE poštuje `User.emailObavestenja` opt-out.
  *
- * ⚠️ Ovo NIJE kanal za vesti ni bilten. Politika privatnosti čl. 8 deklariše
+ * ⚠️ Ovo NIJE kanal za vesti ni bilten. Politika privatnosti čl. 39 deklariše
  * Resend „isključivo za dostavljanje sistemskih obaveštenja"; slanje biltena je
  * druga svrha obrade i traži dopunu Politike/DPIA/Radnji obrade, novu verziju
  * Politike sa ponovnom saglasnošću i zaseban pristanak korisnika.
@@ -47,7 +47,7 @@ const POKUSAJA = 2;
  * Ko prima sistemska obaveštenja: svi nalozi sa email adresom koji nisu ugašeni.
  *
  * Suspendovani su namerno UNUTRA — obaveštenje o suspenziji i o izmeni Uslova
- * duguje im se isto kao i ostalima (Uslovi čl. 27, 40).
+ * duguje im se isto kao i ostalima (Uslovi čl. 31, 43).
  */
 export function primaociUslov() {
   return { deaktiviranAt: null, email: { not: null } } as const;

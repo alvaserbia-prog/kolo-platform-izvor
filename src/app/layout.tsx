@@ -209,7 +209,7 @@ export default async function RootLayout({
         </NextIntlClientProvider>
         {/* Vercel Analytics — bez kolačića (cookieless, agregatno), ne zahteva pristanak. */}
         <VercelAnalitika />
-        {/* Google Analytics — učitava se SAMO uz pristanak (čl. 7 Politike). */}
+        {/* Google Analytics — učitava se SAMO uz pristanak (čl. 10 Politike). */}
         <Analitika gaId={gaId} />
       </body>
     </html>

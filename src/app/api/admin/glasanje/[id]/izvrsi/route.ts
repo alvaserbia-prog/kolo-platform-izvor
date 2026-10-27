@@ -6,7 +6,7 @@ import { izvrsiOdluku, GlasanjeGreska } from "@/lib/protokol/glasanje";
 import { jeSuperadmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
 
-// POST /api/admin/glasanje/[id]/izvrsi — UO beleži akt kojim je odluka sprovedena (čl. 51)
+// POST /api/admin/glasanje/[id]/izvrsi — UO beleži akt kojim je odluka sprovedena (Pravilnik čl. 46; Gornje Kolo čl. 17)
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeSuperadmin(session.user))

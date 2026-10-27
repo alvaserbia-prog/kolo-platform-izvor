@@ -11,7 +11,7 @@ import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
 /**
- * Zaposleni pokrovitelja (donacije čl. 6a i 13g st. 6, nabavke čl. 30g st. 1).
+ * Zaposleni pokrovitelja (donacije čl. 16 i 32 st. 3, nabavke čl. 34 st. 1).
  *
  * Korisnik koji vodi upis ovde određuje verifikovane korisnike koji u ime
  * pokrovitelja potvrđuju vaučere i opoziva ih. Ovlašćenje se vezuje za UPIS.

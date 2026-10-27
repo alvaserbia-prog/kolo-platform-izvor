@@ -4,7 +4,7 @@
  * Vraća status (set 4.8.2), tip i interni indeks logovanog korisnika. Ekran „Moj
  * kod" po promeni statusa prepoznaje da je verifikacija ili potvrda upisana — i kad
  * se tip i indeks ne menjaju (član bez potvrde → član Kola). Indeks se ne prikazuje.
- * Kapacitet i slotovi su ukinuti setom 4.7.5 (dokaz stvarnosti čl. 8).
+ * Kapacitet i slotovi su ukinuti setom 4.7.5 (dokaz stvarnosti čl. 21).
  */
 import { NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";

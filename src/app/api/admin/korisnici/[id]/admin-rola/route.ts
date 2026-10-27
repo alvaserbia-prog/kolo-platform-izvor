@@ -8,7 +8,7 @@ import { jeSuperadmin } from "@/lib/dozvole";
 import { AdminNivo } from "@/generated/prisma/client";
 
 // POST — superadmin dodeljuje/oduzima admin rolu (NONE/ADMIN/SUPERADMIN/ZADRUGA).
-// ZADRUGA (zadružni admin, zadruge čl. 16; U2) traži `zadrugaId` upisane zadruge;
+// ZADRUGA (zadružni admin, zadruge čl. 15; U2) traži `zadrugaId` upisane zadruge;
 // svaki drugi nivo briše vezu sa zadrugom.
 const DOZVOLJENI: AdminNivo[] = ["NONE", "ADMIN", "SUPERADMIN", "ZADRUGA"];
 

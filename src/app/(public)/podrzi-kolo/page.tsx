@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * 🔴 Dvoja vrata ostaju DVA ODVOJENA PUTA: donacija i pokroviteljstvo su dva
  * ugovora po dva dela akta (Pravilnik o pokroviteljstvu i donacijama). Uz
  * pokroviteljstvo ne stoji ništa što liči na reklamu ili prednost: naziv i
- * logotip na rang-listi su evidencija, ne pravo pokrovitelja (donacije čl. 13).
+ * logotip na rang-listi su evidencija, ne pravo pokrovitelja (donacije čl. 26).
  * U vratima piše i „udruženje" — udruženje je pokrovitelj kao i firma.
  *
  * Stranica ništa ne obrađuje: radni ekrani (`/donacije`,

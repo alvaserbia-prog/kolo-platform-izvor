@@ -43,7 +43,6 @@ const fmt = (n: number, locale: string) => n.toLocaleString(intlTag(locale));
 
 export default function OsnivaciTab({
   verifikovaniKorisnici,
-  onDone,
 }: {
   verifikovaniKorisnici: { id: string; pseudonim: string }[];
   onDone: () => void;
@@ -77,7 +76,7 @@ export default function OsnivaciTab({
   const status = statusData ?? null;
   const [radnja, setRadnja] = useState<string | null>(null);
 
-  // Revizija kanala doprinosa za prvi oglas (čl. 40a) — učitava se NA ZAHTEV:
+  // Revizija kanala doprinosa za prvi oglas (Pravilnik čl. 38) — učitava se NA ZAHTEV:
   // prolazi kroz sve oglase i sve zapise, pa nema razloga da se vrti svaki put
   // kad neko otvori Osnivače.
   type RevizijaStavka = { userId: string; pseudonim: string; oglasId?: string };
@@ -205,47 +204,6 @@ export default function OsnivaciTab({
     else await obavesti(d.error ?? t("greska_generalna"));
   }
 
-  async function otkljucaj() {
-    if (!(await potvrdi({ poruka: t("osnivaci_otkljucaj_confirm") }))) return;
-    setRadnja("otkljucaj");
-    const res = await fetch("/api/admin/osnivaci/zakljucaj", { method: "DELETE" });
-    const d = await res.json().catch(() => ({}));
-    setRadnja(null);
-    if (res.ok) await refetch();
-    else await obavesti(d.error ?? t("greska_generalna"));
-  }
-
-  async function evidentiraj() {
-    if (!(await potvrdi({ poruka: t("osnivaci_evidentiraj_confirm") }))) return;
-    setRadnja("triger");
-    const res = await fetch("/api/admin/osnivacki/triger", { method: "POST" });
-    const d = await res.json().catch(() => ({}));
-    setRadnja(null);
-    await obavesti(res.ok ? (d.poruka ?? "Gotovo.") : (d.error ?? t("greska_generalna")));
-    if (res.ok) { await refetch(); onDone(); }
-  }
-
-  // Jednokratna prelazna radnja (čl. 40a, prelazni stav) — razrešava doprinose koji
-  // stoje ZABELEZEN kod potvrđenih članova. Idempotentno; drugi klik ne radi ništa.
-  async function razresiZatecene() {
-    if (!(await potvrdi({ poruka: t("doprinos_zatecene_confirm") }))) return;
-    setRadnja("zatecene");
-    const res = await fetch("/api/admin/doprinos-sadrzaju/zatecene", { method: "POST" });
-    const d = await res.json().catch(() => ({}));
-    setRadnja(null);
-    await obavesti(
-      res.ok
-        ? t("doprinos_zatecene_gotovo", {
-            evidentirano: d.evidentirano ?? 0,
-            poen: fmt(d.poenUOpticaj ?? 0, locale),
-            preskoceno: d.preskocenoNeverifikovanih ?? 0,
-            obavesteno: d.naknadnoObavesteno ?? 0,
-          })
-        : (d.error ?? t("greska_generalna")),
-    );
-    if (res.ok) { await refetch(); onDone(); }
-  }
-
   if (ucitavanje) return <p className="text-sm text-kolo-muted">{t("osnivaci_ucitavanje")}</p>;
 
   const inputCls = "w-full min-h-9 px-2 py-1 rounded-kontrola border border-kolo-border bg-kolo-surface text-sm outline-none focus:border-kolo-green-700";
@@ -280,23 +238,20 @@ export default function OsnivaciTab({
           <div className="mt-4 h-2 rounded-full bg-kolo-bg overflow-hidden">
             <div className="h-full bg-kolo-green-700" style={{ width: `${Math.min(100, status.procenatIskoriscenja)}%` }} />
           </div>
-          <button
-            onClick={evidentiraj}
-            disabled={radnja === "triger" || status.zatvoren || !zakljucano}
-            className={klaseDugmeta() + " mt-4"}
-          >
-            {radnja === "triger" ? t("osnivaci_evidentiraj_loading") : t("osnivaci_evidentiraj_btn")}
-          </button>
-          <p className="mt-2 text-xs text-kolo-muted">
-            {zakljucano ? t("osnivaci_evidentiraj_napomena") : t("osnivaci_evidentiraj_treba_zakljucati")}
+          {/* Pravilnik o osnivačkom doprinosu čl. 6 st. 2–3: korak se proverava samo na kraju
+              obračunskog perioda (noćni obračun), bez ičije odluke — ručnog okidača nema. */}
+          <p className="mt-4 text-xs text-kolo-muted">
+            {zakljucano ? t("osnivaci_koraci_automatski") : t("osnivaci_evidentiraj_treba_zakljucati")}
           </p>
         </div>
       )}
 
-      {/* Prelazna radnja: doprinosi verifikovanih koji su ostali zabeleženi (čl. 40a). */}
+      {/* Provera kanala doprinosa za prvi oglas (Pravilnik čl. 38) — samo čita. Prelazna
+          radnja „Evidentiraj zatečene" (prelazni stav Pravilnika 4.8.5) uklonjena je setom 5.0:
+          u važećem aktu za nju nema osnova. */}
       <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-        <h2 className="text-base font-semibold text-kolo-text mb-2">{t("doprinos_zatecene_naslov")}</h2>
-        <p className="text-sm text-kolo-muted mb-4">{t("doprinos_zatecene_opis")}</p>
+        <h2 className="text-base font-semibold text-kolo-text mb-2">{t("doprinos_revizija_naslov")}</h2>
+        <p className="text-sm text-kolo-muted mb-4">{t("doprinos_revizija_opis")}</p>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={ucitajReviziju}
@@ -304,13 +259,6 @@ export default function OsnivaciTab({
             className={klaseDugmeta({ varijanta: "sekundarno", velicina: "md" })}
           >
             {radnja === "revizija" ? t("doprinos_revizija_loading") : t("doprinos_revizija_btn")}
-          </button>
-          <button
-            onClick={razresiZatecene}
-            disabled={radnja === "zatecene"}
-            className={klaseDugmeta()}
-          >
-            {radnja === "zatecene" ? t("doprinos_zatecene_loading") : t("doprinos_zatecene_btn")}
           </button>
         </div>
 
@@ -351,7 +299,6 @@ export default function OsnivaciTab({
             </p>
           </div>
         )}
-        <p className="mt-2 text-xs text-kolo-muted">{t("doprinos_zatecene_napomena")}</p>
       </div>
 
       {/* Lista osnivaca */}
@@ -448,10 +395,6 @@ export default function OsnivaciTab({
         ) : zakljucano ? (
           <div className="mt-4 flex items-center justify-between gap-3 bg-kolo-bg rounded-kontrola px-4 py-3">
             <p className="text-sm text-kolo-text font-medium">🔒 {t("osnivaci_zakljucano_info")}</p>
-            <button onClick={otkljucaj} disabled={radnja === "otkljucaj"}
-              className={klaseDugmeta({ varijanta: "sekundarno", velicina: "sm" })}>
-              {t("osnivaci_otkljucaj_btn")}
-            </button>
           </div>
         ) : (
           <div className="mt-4">

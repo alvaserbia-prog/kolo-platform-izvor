@@ -1,6 +1,6 @@
 /**
- * Višestruki nalog istog lica — čista pravila (Pravilnik o dokazu stvarnosti čl. 4a
- * i 4b, Pravilnik o KOLO sistemu čl. 14 st. 3 t. 8; set 4.8.4; registar 2026-10,
+ * Višestruki nalog istog lica — čista pravila (Pravilnik o dokazu stvarnosti čl. 13
+ * i 14, Pravilnik o KOLO sistemu čl. 17 st. 2 t. 8; set 4.8.4; registar 2026-10,
  * N4-M2 i N4-M3). Bez Prisme: uvozi ih i pretraživač.
  *
  * Jedinstvenost se ne dokazuje (nema isprave ni JMBG-a, Pravilnik čl. 31), pa se
@@ -61,7 +61,7 @@ export function imaOznaku(o: OznakeDuplikata): boolean {
 }
 
 /**
- * Neto prepis sa ugašenog naloga na nalog koji ostaje (Pravilnik čl. 14 st. 3 t. 8):
+ * Neto prepis sa ugašenog naloga na nalog koji ostaje (Pravilnik čl. 17 st. 2 t. 8):
  * zbir prepisa sa ugašenog na zadržani, umanjen za prepise u suprotnom smeru. Otpisuje
  * se samo pozitivan ostatak — ono što je lice samo vratilo ne kažnjava se.
  */

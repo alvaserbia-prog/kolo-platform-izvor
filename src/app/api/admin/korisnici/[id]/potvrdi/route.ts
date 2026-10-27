@@ -1,13 +1,13 @@
 /**
  * POST /api/admin/korisnici/[id]/potvrdi — potvrda člana bez potvrde ODLUKOM
- * FONDACIJE (Pravilnik o dokazu stvarnosti čl. 5a st. 3; Pravilnik čl. 28a st. 4).
+ * FONDACIJE (Pravilnik o dokazu stvarnosti čl. 5 st. 1 t. 4; Pravilnik čl. 28 st. 3).
  *
- * Telo: { obrazlozenje: string } — obavezno, sa pozivom na odluku o merilima.
+ * Telo: { obrazlozenje: string } — obavezno (dokaz stvarnosti čl. 5 st. 1 t. 4: po sopstvenoj odluci, uz obrazloženje).
  * `[id]` je id naloga ili njegov pseudonim (ekran upisuje pseudonim).
  *
- * Samo superadmin (otvoreno pitanje 2: merila još nisu doneta). Nije nova
+ * Samo superadmin (merila posebnom odlukom ne postoje od seta 4.9.0). Nije nova
  * verifikacija, ne nosi POEN, ne ulazi u dnevni tempo i ne podleže nadzoru; trag
- * ide u audit. Pokreće automatsku potvrdu lanca (čl. 5a st. 5).
+ * ide u audit. Potvrđeni dobija spisak povezanih (čl. 17); automatske potvrde lanca nema.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";

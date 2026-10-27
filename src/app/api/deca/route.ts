@@ -25,18 +25,18 @@ export async function GET() {
 }
 
 /**
- * POST /api/deca — roditelj otvara nalog svom detetu (Pravilnik o učešću dece, čl. 4).
+ * POST /api/deca — roditelj otvara nalog svom detetu (Pravilnik o učešću dece, čl. 7).
  *
  * 🔴 Otvara ga svaki punoletni učesnik koji izjavi da je roditelj; potvrđenost nije
- * uslov (čl. 5 st. 1). Nalog je „dete sa roditeljem"; „dete Kola" postaje kad je
- * roditelj član Kola i kad mu član Kola potvrdi postojanje deteta (čl. 4c t. 3, 6).
+ * uslov (čl. 7 st. 1). Nalog je „dete sa roditeljem"; „dete Kola" postaje kad je
+ * roditelj član Kola i kad mu član Kola potvrdi postojanje deteta (čl. 5 st. 1 t. 3, 13).
  * Dete nema imejl — lozinku postavlja roditelj i predaje je detetu.
  */
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
 
-  // Otvaranje je dostupno i nepotvrđenom nalogu (čl. 5 st. 1), pa ograničenje drži
+  // Otvaranje je dostupno i nepotvrđenom nalogu (čl. 7 st. 1), pa ograničenje drži
   // da se dečji nalozi ne otvaraju na veliko.
   const rl = rateLimit(`deca:${session.user.id}:${klijentIP(req)}`, 5, 24 * 60 * 60 * 1000);
   if (!rl.ok) {

@@ -1,9 +1,9 @@
 /**
  * Signali uz verifikaciju i potvrdu koja čeka nadzor (Pravilnik o dokazu stvarnosti
- * čl. 11 st. 8, set 4.8.2).
+ * čl. 25 st. 2, set 4.8.2).
  *
  * 🔴 Signal NIJE ishod nadzora i ne menja tok: svaka verifikacija koja podleže
- * nadzoru (čl. 9, 10) ide u nadzor i bez signala. Signal samo kaže nadzorniku gde da
+ * nadzoru (čl. 22) ide u nadzor i bez signala. Signal samo kaže nadzorniku gde da
  * pogleda prvo i zašto. Ne čuva se — računa se pri svakom prikazu iz podataka koje
  * sistem već ima (vreme verifikacije, vrsta verifikacije, razmene, mesto). Nikad iz
  * IP adrese ni otiska uređaja.
@@ -34,9 +34,9 @@ export type SignalNadzora =
 export type UlazSignala = {
   /** Koja je ovo po redu verifikacija (ili potvrda) verifikatora tog dana (1 = prva). */
   redniUDanu: number;
-  /** Verifikator je u trenutku verifikacije bio član bez potvrde (čl. 5a). */
+  /** Verifikator je u trenutku verifikacije bio član bez potvrde (čl. 4 st. 2). */
   verifikatorBezPotvrde: boolean;
-  /** Ovo je uvođenje u Kolo sa spiska za poziv (čl. 4a, čl. 5 st. 7). */
+  /** Ovo je uvođenje u Kolo sa spiska za poziv (čl. 8, čl. 12 st. 2). */
   uvodjenjeSaSpiska: boolean;
   /** Pun broj dana od verifikacije do sada. */
   danaOdPotvrde: number;
@@ -71,10 +71,10 @@ export function signaliPotvrde(u: UlazSignala): SignalNadzora[] {
 }
 
 /**
- * Signali uz potvrdu člana bez potvrde i uz potvrdu postojanja deteta (čl. 10 st. 5,
- * čl. 11; otvoreno pitanje 20): koja je po redu u danu (za potvrdu koju je dao
- * čovek), potvrda posle razgovora telefonom (čl. 5c), potvrda uvodioca sa spiska
- * povezanih (čl. 5d st. 3) i korak automatske potvrde lanca (stari zapisi).
+ * Signali uz potvrdu člana bez potvrde i uz potvrdu postojanja deteta (čl. 23 st. 4,
+ * čl. 25; otvoreno pitanje 20): koja je po redu u danu (za potvrdu koju je dao
+ * čovek), potvrda posle razgovora telefonom (čl. 16), potvrda uvodioca sa spiska
+ * povezanih (čl. 17 st. 3) i korak automatske potvrde lanca (stari zapisi).
  */
 export function signaliPotvrdeClana(u: {
   redniUDanu: number | null;
@@ -90,4 +90,24 @@ export function signaliPotvrdeClana(u: {
   if (u.premaUvodiocu) s.push({ kod: "UVODILAC" });
   if (u.korakLanca !== null && u.korakLanca > 0) s.push({ kod: "LANAC", korak: u.korakLanca });
   return s;
+}
+
+/**
+ * Redosled u redu nadzora (čl. 25). Signali SAMO određuju redosled — nijedna
+ * stavka zbog njih ne izlazi iz nadzora niti u njega ulazi (st. 3):
+ *   1. verifikacije koje je obavio član bez potvrde, prve (st. 1);
+ *   2. zatim stavke sa više signala;
+ *   3. među jednakima najstarija.
+ * Jedan izvor za stranicu `/nadzor` i rutu `/api/nadzor` (brana
+ * `nadzor-redosled-izvor.test.ts`).
+ */
+export function sortirajPoSignalima<T extends { id: string; verifikatorBezPotvrde: boolean; datum: Date }>(
+  stavke: T[],
+  signali: ReadonlyMap<string, readonly SignalNadzora[]>,
+): T[] {
+  return [...stavke].sort((a, b) => {
+    if (a.verifikatorBezPotvrde !== b.verifikatorBezPotvrde) return a.verifikatorBezPotvrde ? -1 : 1;
+    const razlika = (signali.get(b.id)?.length ?? 0) - (signali.get(a.id)?.length ?? 0);
+    return razlika !== 0 ? razlika : a.datum.getTime() - b.datum.getTime();
+  });
 }

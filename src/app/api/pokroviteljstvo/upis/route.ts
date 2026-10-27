@@ -14,9 +14,9 @@ import { mojiUpisi, upisiPokrovitelja, odgovorNaGreskuUpisa } from "@/lib/protok
 /**
  * GET  /api/pokroviteljstvo/upis — upisi koje prijavljeni korisnik vodi i pokrovitelji
  *      za koje potvrđuje vaučere.
- * POST /api/pokroviteljstvo/upis — upis pokrovitelja u evidenciju (donacije čl. 6a).
+ * POST /api/pokroviteljstvo/upis — upis pokrovitelja u evidenciju (donacije čl. 16–18).
  *
- * 🔴 Izjava o prikazu adrese na mapi je obavezna i ne povlači se (čl. 6a st. 2);
+ * 🔴 Izjava o prikazu adrese na mapi je obavezna i ne povlači se (čl. 16 st. 2 t. 3);
  * izlaz je brisanje upisa (`DELETE /api/pokroviteljstvo/upis/[id]`).
  */
 export async function GET() {
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
   const logo = procitajLogoUrl(body.logoUrl);
   if (!logo.ok) return await greska(logo.razlog, 400);
-  // Tekst potvrde o evidentiranju (čl. 6a st. 3) — SKLOPLJEN NA SERVERU iz istog
+  // Tekst potvrde o evidentiranju (čl. 17 st. 2–3) — SKLOPLJEN NA SERVERU iz istog
   // ključa iz kog ga ekran prikazuje, na jeziku na kom je prikazan, i snima se.
   const jezik = await getLocale();
   const oblik = body.vrsta !== "GAZDINSTVO" && jePravniOblik(body.pravniOblik) ? body.pravniOblik : null;

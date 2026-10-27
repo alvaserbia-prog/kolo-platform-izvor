@@ -10,6 +10,7 @@ import {
   pozivNaBrojZaClana,
   sklopiIpsString,
 } from "@/lib/placanje/ips-qr";
+import { PORUKA_DETE_NE_DONIRA } from "@/lib/donacija-pravila";
 
 /**
  * GET — informacije za prikaz IPS sekcije (da li je konfigurisano + javni
@@ -80,6 +81,7 @@ export async function POST(req: NextRequest) {
     select: {
       id: true,
       donatorskiBroj: true,
+      maloletan: true,
       wallet: { select: { id: true } },
       podaci: { select: { punoIme: true } },
     },
@@ -87,8 +89,9 @@ export async function POST(req: NextRequest) {
   if (!user?.wallet) {
     return await greska("Član nema zapis u Protokolu.", 400);
   }
+  if (user.maloletan) return await greska(PORUKA_DETE_NE_DONIRA, 403);
 
-  // Javna donacija zahteva uneto ime i prezime (čl. 5a) — provera PRE generisanja.
+  // Javna donacija zahteva uneto ime i prezime (čl. 7 st. 1) — provera PRE generisanja.
   if (javno && !user.podaci?.punoIme?.trim()) {
     return NextResponse.json(
       {

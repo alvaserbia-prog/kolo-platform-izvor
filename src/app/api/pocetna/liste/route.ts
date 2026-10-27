@@ -21,7 +21,7 @@ import { uslovZapisaProtokola, opisZapisaProtokola, VEZA_PROGRAMA } from "@/lib/
  * istim imenom ne smeju da mere dva različita skupa.
  *
  * 🔴 Vidljivost se sprovodi OVDE, ne samo u prikazu. Pseudonim u evidenciji
- * doprinosa vidi samo potvrđen član (Pravilnik čl. 67, Politika čl. 6), pa se
+ * doprinosa vidi samo potvrđen član (Pravilnik čl. 56, Politika čl. 11), pa se
  * novom članu strane maskiraju na serveru (`null`), a spisak članova mu se ne
  * šalje uopšte. Na `/sistem` tu razliku pravi tek prikaz — ovde pseudonim ne
  * stigne ni u mrežni odgovor.
@@ -86,7 +86,7 @@ export async function GET(req: Request) {
     return await greska("Nepoznata sekcija.", 400);
   }
 
-  // Dečji prostor izlazi iz oba spiska (Pravilnik o učešću dece čl. 13) — uslov
+  // Dečji prostor izlazi iz oba spiska (Politika privatnosti čl. 11 st. 5 t. 1) — uslov
   // je onaj isti iz `protokol/deca.ts`, ne njegova kopija.
   const bezDece = [
     { OR: [{ fromWalletId: null }, { fromWallet: { is: BEZ_DECE } }] },
@@ -100,10 +100,10 @@ export async function GET(req: Request) {
         : {
             // Zapisi Protokola = sve što nije prepis između korisnika.
             // 🔴 Zapis socijalnog programa ulazi samo verifikovanom posmatraču
-            // (Pravilnik o programima podrške čl. 4 st. 4, set 4.6.7). Uslov je
+            // (Pravilnik o programima podrške čl. 20 st. 1–2, set 4.6.7). Uslov je
             // ISTI onaj koji koriste `/sistem` i `/api/javno/feed`, ne njegova
             // kopija — razlaz dva takva upita je već jednom proizveo kvar.
-            // Osnov po kome je pravo ostvareno se ne prikazuje nikome (st. 5).
+            // Osnov po kome je pravo ostvareno se ne prikazuje nikome (čl. 20 st. 3).
             ...uslovZapisaProtokola(verified),
             AND: bezDece,
           },

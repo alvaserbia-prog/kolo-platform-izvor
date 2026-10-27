@@ -10,10 +10,10 @@ import { proveriRazlog, tekstObavestenjaPoruka } from "@/lib/moderacija";
 
 // DELETE /api/admin/chat/[id] — Fondacija uklanja poruku iz Pričaonice.
 //
-// Uslovi čl. 25 st. 1 obuhvataju „svu drugu komunikaciju putem Platforme", a
+// Uslovi čl. 29 st. 1 obuhvataju „svu drugu komunikaciju putem Platforme", a
 // st. 2 daje pravo uklanjanja uz obaveštenje sa razlogom. Pričaonica je jedina
 // globalna soba — bez ovoga jedini način da se sporna poruka skloni bio bi
-// isključenje korisnika, što je nesrazmerno (čl. 28).
+// isključenje korisnika, što je nesrazmerno (čl. 32).
 //
 // Brisanje je MEKO: poruka nestaje iz sobe, a trag ko je i zašto uklonio ostaje
 // dok je noćni cron ne pobriše sa ostalima starijim od 30 dana. Sadržaj poruke

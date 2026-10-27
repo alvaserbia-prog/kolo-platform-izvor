@@ -43,7 +43,7 @@ export default async function PocetnaPage() {
   // Status učesnika (set 4.8.2): jezgro ga izvodi, ekran ga samo crta.
   const prikaz = await prikazStatusa(session.user.id);
   if (ja?.maloletan) {
-    // Nalog koji još čeka roditelja (čl. 4c) nema Pričaonicu. Ne prazna soba nego
+    // Nalog koji još čeka roditelja (deca čl. 27 st. 2) nema Pričaonicu. Ne prazna soba nego
     // NIJEDNA poruka ne stiže do klijenta — filter je i na serveru, ne samo u
     // prikazu, jer je to bezbednosno pravilo a ne ukras.
     const soba = smeUPricaonicu(ja.stanje);
@@ -71,7 +71,7 @@ export default async function PocetnaPage() {
         },
       }),
       prisma.marketplaceListing.count({ where: { sellerId: ja.id, status: "ACTIVE" } }),
-      // Svako vidi SAMO poruke svojih prijatelja (čl. 18 st. 3) — jedna soba,
+      // Svako vidi SAMO poruke svojih prijatelja (deca čl. 27 st. 3) — jedna soba,
       // filtrirana grafom prijateljstava.
       usloviDecje
         ? prisma.chatMessage.findMany({
@@ -81,10 +81,10 @@ export default async function PocetnaPage() {
             include: { user: { select: { id: true, pseudonim: true, avatar: true } } },
           })
         : Promise.resolve([]),
-      // Kartica škole (čl. 7). `null` dok dete nije izabralo školu ili dok
+      // Kartica škole (deca čl. 26). `null` dok dete nije izabralo školu ili dok
       // zvaničan spisak škola nije uvezen.
       karticaSkoleZaDete(ja.id),
-      // Lica upisana kao roditelji — za prijavu lažnog roditeljstva (deca čl. 4e
+      // Lica upisana kao roditelji — za prijavu lažnog roditeljstva (deca čl. 17
       // st. 1). Zaustavljena veza je već kod Fondacije, pa se ne nudi ponovo.
       prisma.roditeljstvo.findMany({
         where: { deteId: ja.id, zaustavljenaAt: null },
@@ -130,7 +130,7 @@ export default async function PocetnaPage() {
     );
   }
 
-  // Korisniku početna nudi spisak za poziv (dokaz stvarnosti čl. 4a; Uslovi čl. 16b).
+  // Korisniku početna nudi spisak za poziv (dokaz stvarnosti čl. 8).
   const jeKorisnik = prikaz?.status === "KORISNIK";
   const [osnoviSpiska, zahtevNaSpisku] = jeKorisnik
     ? await Promise.all([osnoviZaSpisak(session.user.id), mojZahtev(session.user.id)])
@@ -179,7 +179,7 @@ export default async function PocetnaPage() {
       take: 100,
       include: { user: { select: { id: true, pseudonim: true, verified: true, avatar: true } } },
     }),
-    // Korisnici: živi punoletni nalozi (pravilo 19), bez dece (deca čl. 4c).
+    // Korisnici: živi punoletni nalozi (pravilo 19), bez dece (deca čl. 2 st. 2).
     prisma.user.count({ where: { ...USLOV_CLANA_U_SPISKU, maloletan: false } }),
     // Isti uslov kao spisak koji ovaj član vidi na Pijaci — broj ne sme da bude
     // veći od onoga što se tamo nađe.
@@ -218,7 +218,7 @@ export default async function PocetnaPage() {
       jeAdminViewer={jeAdmin(session.user)}
       // Kartica po statusu (set 4.8.2) — korisniku status i „Želim da me neko
       // nazove" (komponenta spiska za poziv), članu bez potvrde obavezne rečenice
-      // (Pravilnik čl. 2, 28a; Uslovi čl. 2). Član Kola, čuvar i osnivač ovde ne
+      // (Pravilnik čl. 2, 28; dokaz stvarnosti čl. 6; Uslovi čl. 2). Član Kola, čuvar i osnivač ovde ne
       // dobijaju karticu.
       karticaStatusa={
         prikaz && (prikaz.status === "KORISNIK" || prikaz.status === "CLAN_BEZ_POTVRDE") ? (

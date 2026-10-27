@@ -7,7 +7,7 @@ import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
-// Admin (UO) obrazložen odgovor na usvojenu dinarsku preporuku (čl. 20).
+// Admin (UO) obrazložen odgovor na usvojenu dinarsku preporuku (Pravilnik o Gornjem Kolu čl. 18).
 export default function PreporukaOdgovor({ id }: { id: string }) {
   const t = useTranslations("glasanje");
   const router = useRouter();

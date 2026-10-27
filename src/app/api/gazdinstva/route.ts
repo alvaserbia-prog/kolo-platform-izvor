@@ -5,9 +5,9 @@ import { authOptions } from "@/lib/auth";
 import { gazdinstvaZaMapu, prijaviGazdinstvo, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
- * GET  /api/gazdinstva — tačke javne mape (Pravilnik o gazdinstvima čl. 11).
+ * GET  /api/gazdinstva — tačke javne mape (Pravilnik o gazdinstvima čl. 19).
  *      Javno: bez adrese i bez BPG-a.
- * POST /api/gazdinstva — prijava gazdinstva (čl. 4); otvara se kao nacrt.
+ * POST /api/gazdinstva — prijava gazdinstva (čl. 4, 5); otvara se kao nacrt.
  */
 export async function GET() {
   return NextResponse.json({ gazdinstva: await gazdinstvaZaMapu() });

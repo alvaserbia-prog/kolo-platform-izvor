@@ -9,7 +9,7 @@ import { ponistiPrepis } from "@/lib/protokol/prijava-razmene";
  * POST /api/admin/prijave-razmene/[id]/ponisti  { odluka }
  *
  * Poništava prepis protivzapisom, u punom iznosu — zapis primaoca sme da ode u
- * minus (isti režim kao nadoknada iz čl. 20b). Obrazloženje je obavezno: ide
+ * minus (Pravilnik čl. 17 st. 2 t. 2; isti režim kao nadoknada, st. 3). Obrazloženje je obavezno: ide
  * obema stranama i u revizijski dnevnik.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {

@@ -230,7 +230,7 @@ export default async function OpengraphImage({
     },
   });
 
-  // 🔴 Oglas maloletnog korisnika (Modul Deca, čl. 13) NE sme ni naslovom ni
+  // 🔴 Oglas maloletnog korisnika (Pravilnik o učešću dece čl. 24) NE sme ni naslovom ni
   // fotografijom u OG karticu. Ova ruta je javna i nema sesiju — ko zna `id`,
   // dobija sliku, a Gugl i svaki program za poruke je pokupe sami. Zato ovde
   // ide ista brendirana kartica kao za nepostojeći oglas: potvrđuje samo da

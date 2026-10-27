@@ -25,7 +25,7 @@ interface Donacija {
   poenEmitted: number;
   status: "PENDING" | "CONFIRMED";
   javno: boolean;
-  /** Ime još stoji u listi — tada se nudi povlačenje (čl. 5a st. 4). */
+  /** Ime još stoji u listi — tada se nudi povlačenje (donacije čl. 12). */
   imeObjavljeno: boolean;
   imePovuceno: boolean;
   imaUgovor: boolean;
@@ -39,7 +39,7 @@ interface JavnaDonacija {
   /** Javna donacija kojoj je donator povukao ime, ili je nalog ugašen. */
   imePovuceno: boolean;
   /** 🔴 Lista nosi ime, iznos i datum — nikad pseudonim ni vezu ka profilu
-   *  (donacije čl. 5a, set 4.8.2); ruta šalje oba polja kao `null`. */
+   *  (donacije čl. 11, set 4.8.2); ruta šalje oba polja kao `null`. */
   pseudonim: null;
   userId: null;
   /** 🔴 Bez broja POEN-a i nivoa — RSD i POEN u istom redu daju odnos (R-01). */
@@ -150,7 +150,7 @@ export default function DonacijeKlijent() {
     }
   }
 
-  // Povlačenje imena iz liste (čl. 5a st. 4). Jednosmerno — ime se briše iz
+  // Povlačenje imena iz liste (donacije čl. 12). Jednosmerno — ime se briše iz
   // zapisa, pa se pre slanja traži potvrda.
   async function povuciIme(id: string) {
     if (!(await potvrdi({ poruka: t("povuci_ime_potvrda"), opasno: true }))) return;
@@ -452,7 +452,7 @@ export default function DonacijeKlijent() {
                       +{d.poenEmitted.toLocaleString(intlTag(locale))} {tc("poen")}
                     </p>
                   )}
-                  {/* Ugovor o donaciji (čl. 5b) — samo za zapise koji ga imaju;
+                  {/* Ugovor o donaciji (donacije čl. 14) — samo za zapise koji ga imaju;
                       zatečene donacije su nastale pre uvođenja ugovora. */}
                   {d.imaUgovor && (
                     <a

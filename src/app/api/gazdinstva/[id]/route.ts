@@ -5,9 +5,9 @@ import { authOptions } from "@/lib/auth";
 import { izmeniGazdinstvo, izmeniOpis, obrisiGazdinstvo, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
- * PATCH — izmena prijave dok nije odobrena (Pravilnik o gazdinstvima čl. 4, 6; podatke
- * iz čl. 4 t. 1–3 menja samo lice koje odgovara za izjavu, čl. 9 st. 2), odnosno
- * `{ samoOpis: true, opis }` — opis gazdinstva menja svaki član koji upravlja (čl. 9 st. 1).
+ * PATCH — izmena prijave dok nije odobrena (Pravilnik o gazdinstvima čl. 5, 7; podatke
+ * iz čl. 5 st. 1 t. 1–3 menja samo lice koje odgovara za izjavu, čl. 12 st. 3), odnosno
+ * `{ samoOpis: true, opis }` — opis gazdinstva menja svaki član koji upravlja (čl. 11).
  */
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
@@ -29,11 +29,11 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 }
 
 /**
- * DELETE — brisanje gazdinstva sa platforme (Pravilnik o gazdinstvima čl. 11 st. 5–6):
+ * DELETE — brisanje gazdinstva sa platforme (Pravilnik o gazdinstvima čl. 21):
  * samo lice koje odgovara za izjavu, i samo kad gazdinstvo nema ugovor o
  * pokroviteljstvu dobrima i uslugama sa neiskorišćenim vaučerima. Gazdinstvo sa
  * drugim članovima se ne briše — zahtev ima dejstvo istupanja (`ishod: "ISTUPIO"`).
- * Brisanjem gazdinstvo prestaje: zabeležen doprinos se poništava, evidentiran otpisuje (čl. 12a).
+ * Brisanjem gazdinstvo prestaje: zabeležen doprinos se poništava, evidentiran otpisuje (čl. 22, 23).
  */
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

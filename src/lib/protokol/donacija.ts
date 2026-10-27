@@ -8,6 +8,7 @@ import {
   izracunajPoenZaDonaciju,
   nivoZaKumulativ,
   normalizujUplatioca,
+  PORUKA_DETE_NE_DONIRA,
 } from "@/lib/donacija-pravila";
 import { generisiUgovorODonaciji } from "@/lib/donacija-ugovor";
 
@@ -31,11 +32,11 @@ export {
  * Admin evidentira donaciju i emituje POEN iz Protokola (koeficijentni model).
  * Jedna transakcija sa iznosom = nova donacija × koeficijent nivoa.
  *
- * Javna vs anonimna donacija (Pravilnik o pokroviteljstvu i donacijama čl. 3, 5):
+ * Javna vs anonimna donacija (Pravilnik o pokroviteljstvu i donacijama čl. 7):
  * - `javno = true` (podrazumevano): evidentira se POEN; ime i prezime donatora
  *   SNIMA se na zapis (`donatorIme`) i prikazuje u listi donacija. Kasnija
  *   izmena profila ga ne menja, ali NIJE trajan: donator ga povlači, a gašenje
- *   naloga ga briše (čl. 5a st. 4, set 4.6.8). Ulazi u kumulativni nivo.
+ *   naloga ga briše (čl. 12, set 4.6.8). Ulazi u kumulativni nivo.
  * - `javno = false` (anonimna): POEN se NE evidentira (0), zapis NE ulazi u
  *   kumulativni nivo, ime se ne beleži.
  *
@@ -52,17 +53,17 @@ export async function evidentirajDonaciju(
     adminId?: string;
     javno?: boolean;
     /**
-     * Ime uplatioca iz bankovnog izvoda (čl. 3 Pravilnika o pokroviteljstvu i
+     * Ime uplatioca iz bankovnog izvoda (čl. 6 Pravilnika o pokroviteljstvu i
      * donacijama). Doprinos se evidentira ISKLJUČIVO korisniku čijim je
      * sredstvima uplata izvršena — ovo polje je trag da je to provereno.
      */
     uplatilac?: string | null;
-    /** Uplata sa računa otvorenog u inostranstvu (čl. 13b t. 4). */
+    /** Uplata sa računa otvorenog u inostranstvu (čl. 38 t. 4). */
     straniPriliv?: boolean;
     /**
      * Uplatilac ne stoji uz drugi nalog (mera C-1). Uplata evidentirana „uprkos
      * poklapanju" (zajednički račun) ne potvrđuje stvarnost (dokaz stvarnosti
-     * čl. 4a): dokazuje uplatu, ne jedinstvenost. Izostavljeno znači „nije provereno".
+     * čl. 8 st. 2): dokazuje uplatu, ne jedinstvenost. Izostavljeno znači „nije provereno".
      */
     uplatilacJedinstven?: boolean;
   }
@@ -71,7 +72,7 @@ export async function evidentirajDonaciju(
   noviNivo: number;
   noviKumulativ: number;
   kurs: number;
-  /** Zapis donacije — pozivna mesta ga koriste za link na ugovor (čl. 5b). */
+  /** Zapis donacije — pozivna mesta ga koriste za link na ugovor (čl. 14). */
   zapisId: string;
 }> {
   const javno = options?.javno ?? true;
@@ -99,9 +100,10 @@ export async function evidentirajDonaciju(
 
   if (!user) throw new Error("Korisnik nije pronađen.");
   if (!user.wallet) throw new Error("Član nema zapis u Protokolu.");
+  if (user.maloletan) throw new Error(PORUKA_DETE_NE_DONIRA);
   // Donirati sme i korisnik koga niko nije uveo u Kolo, i POEN mu se evidentira
   // (R-01, mera M-9). Javna uplata od najmanje `PRAG_POTVRDE_UPLATOM_RSD` mu samo
-  // nudi spisak za poziv (dokaz stvarnosti čl. 4a, set 4.8.2) — vidi kraj funkcije.
+  // nudi spisak za poziv (dokaz stvarnosti čl. 8, set 4.8.2) — vidi kraj funkcije.
 
   const dosadaRSD = user.donations.reduce((sum, d) => sum + Number(d.amountRSD), 0);
 
@@ -113,16 +115,16 @@ export async function evidentirajDonaciju(
   const noviNivo = javno ? izracun.noviNivo : nivoZaKumulativ(dosadaRSD).nivo;
   const kurs = javno ? izracun.kurs : nivoZaKumulativ(dosadaRSD).kurs;
 
-  // Trajan snapshot imena za javnu donaciju (čl. 5a) — ne menja se kasnije.
+  // Trajan snapshot imena za javnu donaciju (čl. 7 i 11) — ne menja se kasnije.
   const donatorIme = javno ? user.podaci?.punoIme?.trim() || null : null;
 
-  // Uplatilac iz izvoda (čl. 3). Kad ga pozivno mesto ne prosledi (kartično
+  // Uplatilac iz izvoda (čl. 6). Kad ga pozivno mesto ne prosledi (kartično
   // plaćanje), upisuje se ime samog korisnika — akt traži da platni instrument
   // glasi na donatora, pa je to ono što zapis tvrdi.
   const uplatilac = options?.uplatilac?.trim() || user.podaci?.punoIme?.trim() || null;
   const uplatilacKljuc = normalizujUplatioca(uplatilac);
 
-  // Ugovor o donaciji (čl. 5b) — sačinjava se pri potvrdi i SNIMA se na zapis.
+  // Ugovor o donaciji (čl. 14) — sačinjava se pri potvrdi i SNIMA se na zapis.
   // Jedno mesto za sva tri puta (ručna evidencija, potvrda PENDING zapisa,
   // kartični callback), jer svi prolaze kroz ovu funkciju.
   const zapisId = options?.existingRecordId ?? crypto.randomUUID();
@@ -130,9 +132,6 @@ export async function evidentirajDonaciju(
     ime: donatorIme,
     pseudonim: user.pseudonim,
     iznosRSD: novaRSD,
-    poen,
-    nivo: noviNivo,
-    koeficijent: kurs,
     javno,
     zapisId,
     datum: new Date(),
@@ -189,10 +188,10 @@ export async function evidentirajDonaciju(
     // SVAKOM prijavljenom nalogu, uključujući nepotvrđene, kojima je pseudonim
     // strane maskiran (`/api/javno/feed`). Ime i prezime u opisu identifikuje
     // jače nego pseudonim koji je sakriven — opis je time postao širi kanal od
-    // onoga na koji je pristanak dat (Uslovi čl. 17).
+    // onoga na koji je pristanak dat (Uslovi čl. 16).
     //
-    // Uplatilac ostaje na `DonationRecord.uplatilac` — tamo mu je mesto po čl. 3
-    // st. 5 (AML trag iz R-19), i vidi ga samo Fondacija.
+    // Uplatilac ostaje na `DonationRecord.uplatilac` — tamo mu je mesto po čl. 6 i 38 t. 2
+    // (AML trag iz R-19), i vidi ga samo Fondacija.
     await emitujPoen(
       user.wallet.id,
       poen,
@@ -202,21 +201,21 @@ export async function evidentirajDonaciju(
     );
 
     // Javna donacija je jedan od četiri traga učešća koji otključavaju POEN po potvrdi
-    // (dokaz stvarnosti čl. 7). 🔴 Stoji UNUTAR `if (poen > 0)`, pa anonimna donacija
+    // (dokaz stvarnosti čl. 19). 🔴 Stoji UNUTAR `if (poen > 0)`, pa anonimna donacija
     // ne otključava ništa — i to je namerno: POEN za potvrdu je javan zapis u knjizi,
     // pa bi se pojavio a na Pijaci ne bi osvanuo nijedan nov oglas, i posmatrač bi
     // zaključio da je čovek donirao. To je tačno ono što anonimna donacija krije
-    // (čl. 5a). Anoniman donator otključava nekim od druga tri puta.
+    // (čl. 7). Anoniman donator otključava nekim od druga tri puta.
     //
     // Ne baca: donacija je već evidentirana i ne sme da padne zbog ovog kanala.
     await probajEvidentiratiPotvrde(userId);
   }
 
-  // Evidencija identiteta (Pravilnik čl. 31a, set 4.7.3): javna donacija upisuje ime
+  // Evidencija identiteta (Pravilnik čl. 31, set 4.7.3): javna donacija upisuje ime
   // donatora uz nalog, ako ga nalog još nema. Upisano ime se ne prepisuje — drugo ime
   // uplatioca (npr. zajednički račun) ostaje samo na zapisu donacije. Isti uslov
   // `javno` kao gore: anonimna donacija ne upisuje ništa. Za maloletni nalog se
-  // evidencija identiteta ne vodi (čl. 31a st. 6). Ne baca — donacija je već
+  // evidencija identiteta ne vodi (čl. 31 st. 7). Ne baca — donacija je već
   // evidentirana.
   //
   // 🔴 Upisuje se samo PROVERENO ime (set 4.7.7): ime sa profila (`donatorIme`) korisnik
@@ -233,12 +232,12 @@ export async function evidentirajDonaciju(
     }
   }
 
-  // Spisak za poziv (dokaz stvarnosti čl. 4a st. 2 t. 2, st. 3; set 4.8.2): javna
+  // Spisak za poziv (dokaz stvarnosti čl. 8 st. 1 t. 2, st. 3; set 4.8.2): javna
   // donacija od praga, jednom uplatom, uz poklapanje uplatioca sa imenom i bez
   // uplatioca uz drugi nalog, korisniku NUDI spisak — obaveštenje sa linkom na
   // „Želim da me neko nazove". Potvrda uplatom je ukinuta: uplata ne verifikuje.
   // 🔴 ANONIMNA DONACIJA NE VODI NA SPISAK: po njoj se ništa ne pripisuje licu.
-  // 🔴 Donacija i POEN po njoj ne zavise od ovoga (čl. 4a st. 6). Ne baca.
+  // 🔴 Donacija i POEN po njoj ne zavise od ovoga (čl. 12 st. 1). Ne baca.
   if (
     donacijaVodiNaSpisak({
       javno,

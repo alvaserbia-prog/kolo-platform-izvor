@@ -4,9 +4,10 @@ import {
   MAJKE_OSNOVICA, MAJKE_UMANJENJE_PO_GODINI, MAJKE_TRAJANJE_GODINA,
   STARIJI_OSNOVICA, STARIJI_PO_GODINI, STARIJI_OD_GODINA,
   POSEBNA_PODRSKA_DNEVNO, SKOLOVANJE_DNEVNO,
+  dnevniLimit, opticajNaPocetkuPerioda,
 } from "@/lib/programi-iznosi-pravila";
 import { probajEvidentiratiPotvrde } from "./potvrda-poen";
-import { danObracuna } from "./obracunski-dan";
+import { beogradskiDan, danObracuna, prethodniDan } from "./obracunski-dan";
 import { FUNKCIONALNI_PRAG_INDEKSA } from "./dokaz-stvarnosti";
 import { OsnovPodrske, ProgramType, TipKorisnika, TransactionType } from "@/generated/prisma/client";
 
@@ -20,33 +21,36 @@ const PROTOKOL_WALLET_ID = "banka-singleton";
  *
  * 🔴 Nije konačan rok i rute je ne zovu — zovu `rokReverifikacije`, koja kod
  * Posebne podrške uzima u obzir i osnov (gubitak doma teče od događaja, akutna
- * bolest traje šest meseci) i gornja ograničenja iz čl. 12. Ovde stoji podrazumevana
+ * bolest traje šest meseci) i gornja ograničenja iz čl. 18. Ovde stoji podrazumevana
  * vrednost i jedno mesto sa koga je `rokReverifikacije` čita, da ne nastanu dve
  * istine o istom roku.
  */
 export function danaDoReverifikacije(type: ProgramType): number | null {
-  if (type === "POSEBNA_BRIGA") return 365; // godišnja revizija (čl. 12)
-  if (type === "SKOLOVANJE") return 183; // po studijskoj godini (čl. 13)
+  if (type === "POSEBNA_BRIGA") return 365; // godišnja revizija (čl. 18)
+  if (type === "SKOLOVANJE") return 183; // po studijskoj godini (čl. 19)
   return null; // MAJKAMA/STARIJIMA — stabilne činjenice, bez periodične revizije
 }
 
 /**
  * Konkretan rok reverifikacije jedne prijave (Pravilnik o programima podrške
- * čl. 12, 13). Čista funkcija — vraća datum ili `null` kad roka nema.
+ * čl. 18, 19). Čista funkcija — vraća datum ili `null` kad roka nema.
  *
  * 🔴 Ovo, a ne `danaDoReverifikacije`, zovu rute: kod Posebne podrške rok zavisi
- * od OSNOVA, a osnov se ne vidi iz tipa programa. Čl. 12 razlikuje tri roka:
+ * od OSNOVA, a osnov se ne vidi iz tipa programa. Čl. 18 razlikuje tri roka:
  *  - smanjena sposobnost po rešenju → godišnja revizija;
  *  - smanjena sposobnost zbog akutne bolesti → šest meseci, pa ponovna prijava;
  *  - gubitak doma → dvanaest meseci **od događaja**, bez revizije.
  *
- * 🔴 Dva gornja ograničenja, oba iz čl. 12: pravo za maloletno lice prestaje
+ * 🔴 Dva gornja ograničenja, oba iz čl. 18: pravo za maloletno lice prestaje
  * punoletstvom tog lica, a pravo po rešenju ne može nadživeti sam akt, pa datum
  * isteka rešenja — koji se po istom članu i beleži — obara rok kad je bliži.
  * Beleži se samo datum, nikad sadržaj rešenja.
  *
- * Zatečena prijava bez osnova drži stari rok od 365 dana: promena pravila ne sme
- * da skrati pravo koje je odobreno pre nje.
+ * 🔴 Posebna podrška bez osnova nema pravo (čl. 14 st. 1: pravo se ostvaruje po
+ * jednom od dva osnova), pa joj je rok trenutak odobrenja i revizija je obustavlja
+ * prvim prolazom. Akt nema prelaznu odredbu za zatečene prijave bez osnova, pa
+ * ranija grana sa rokom od 365 dana ne postoji (stanje koda 5.0, #43); ruta
+ * prijave osnov ionako traži.
  */
 export function rokReverifikacije(
   prijava: { type: ProgramType; osnov: OsnovPodrske | null; metadata: unknown },
@@ -68,6 +72,8 @@ export function rokReverifikacije(
     return Number.isNaN(d.getTime()) ? null : d;
   };
 
+  if (prijava.osnov == null) return odKada;
+
   if (prijava.osnov === "GUBITAK_DOMA") {
     // „Traje dvanaest meseci **od događaja**" — ne od odobravanja. Bez datuma
     // događaja rok teče od odobravanja, da pravo ne ostane bez roka.
@@ -86,14 +92,14 @@ export type RevizijaRazlog = "revizija" | "indeks";
 
 /**
  * Da li ACTIVE socijalni program treba obustaviti (čista, testabilna odluka):
- *  - "revizija": prošao rok `nextReverifikacija`, status nije ponovo potvrđen (čl. 12);
+ *  - "revizija": prošao rok `nextReverifikacija`, status nije ponovo potvrđen (čl. 18);
  *  - "indeks": učesnik više nije VERIFIKOVAN (pala mu je verifikacija) — osnov na
  *    kojem je program odobren više ne važi. Ime razloga je interno i ostaje.
  *
  * Uslov je verifikovanost (programi čl. 4 st. 1; set 4.8.2 — i član bez potvrde).
  * 🔴 Imunitet `NOSILAC_ZRNA` je ukinut setom 4.8.2: čuvar Kola kome padne
- * verifikacija postaje korisnik (Pravilnik čl. 30 st. 3), pa i njemu program
- * staje. Jedini izuzetak je osnivač, koji je uvek potvrđen (dokaz čl. 14, 15).
+ * verifikacija postaje korisnik (dokaz stvarnosti čl. 31 st. 2), pa i njemu program
+ * staje. Jedini izuzetak je osnivač, koji je uvek potvrđen (dokaz čl. 29).
  * Vraća null ako program ostaje aktivan.
  */
 export function razlogObustaveProgram(
@@ -141,13 +147,27 @@ function godinaRazlike(rodjendan: Date, danas: Date): number {
 type MajkeMetadata = { deca: { datumRodjenja: string }[] };
 type StarijiMetadata = { datumRodjenja: string };
 
+/**
+ * Podrška majkama (programi čl. 12): iznos po detetu × koeficijent po REDNOM
+ * BROJU DETETA PO ROĐENJU.
+ *
+ * 🔴 Redni broj se izvodi iz datuma rođenja, ne iz redosleda unosa: deca se pre
+ * obračuna ređaju od najstarijeg. Inače bi zbir zavisio od toga kojim je redom
+ * podnosilac uneo datume. Dete koje je navršilo 20 godina se ne uračunava u
+ * iznos (čl. 11 st. 2), ali zadržava svoje mesto u redu rođenja, pa mlađa deca
+ * ne dobijaju niži redni broj.
+ */
 export function izracunajMajke(metadata: unknown, danas: Date): number {
   const m = metadata as MajkeMetadata;
   if (!m?.deca?.length) return 0;
   const BAZA = MAJKE_OSNOVICA;
+  const poRodjenju = m.deca
+    .map((d) => new Date(d.datumRodjenja))
+    .filter((d) => !Number.isNaN(d.getTime()))
+    .sort((a, b) => a.getTime() - b.getTime());
   let total = 0;
-  for (let i = 0; i < m.deca.length; i++) {
-    const god = godinaRazlike(new Date(m.deca[i].datumRodjenja), danas);
+  for (let i = 0; i < poRodjenju.length; i++) {
+    const god = godinaRazlike(poRodjenju[i], danas);
     if (god >= MAJKE_TRAJANJE_GODINA || god < 0) continue; // van trajanja
     const bazaSmanjenje = Math.max(0, BAZA - god * MAJKE_UMANJENJE_PO_GODINI);
     total += Math.floor(bazaSmanjenje * koeficijentDeteta(i));
@@ -174,24 +194,32 @@ export function izracunajDnevniIznos(
     case "PODRSKA_STARIJIMA": return izracunajStariji(metadata, danas);
     case "POSEBNA_BRIGA":     return POSEBNA_PODRSKA_DNEVNO;
     case "SKOLOVANJE":        return SKOLOVANJE_DNEVNO;
-    case "PED":               return 0; // operativni doprinos ne ide kroz enrollment — raspodela iz OglasEvidencija (čl. 24)
+    case "PED":               return 0; // operativni doprinos ne ide kroz enrollment — raspodela iz OglasEvidencija (operativni čl. 21)
   }
 }
 
-// ── Raspodela operativnog doprinosa (Pravilnik o operativnom doprinosu čl. 24) ──
+// ── Raspodela operativnog doprinosa (Pravilnik o operativnom doprinosu čl. 21) ──
 //
 // evidentirani POEN = predloženi POEN × min(1, L/P)
 //   P = zbir predloženih POEN-a svih potvrđenih verifikacija u periodu
-//   L = dnevni limit (10% opticaja, deljen sa socijalnim programima — Pravilnik čl. 15)
+//   L = dnevni limit (`DNEVNI_LIMIT_UDEO` opticaja na početku perioda, deljen sa
+//       programima podrške — operativni čl. 20, programi čl. 10)
 //
-// Napomena o zajedničkom poolu: master Pravilnik (čl. 15) stavlja operativni doprinos
+// Napomena o zajedničkom poolu: master Pravilnik (čl. 19 st. 2) stavlja operativni doprinos
 // i socijalne programe u JEDAN dnevni limit od 10%. Zato se predloženi POEN potvrđenih
 // verifikacija ubacuje u isti pool kao socijalni programi, a `raspodelaKoeficijent`
-// nad ukupnom potražnjom prirodno daje min(1, L/P) iz čl. 24.
+// nad ukupnom potražnjom prirodno daje min(1, L/P) iz čl. 21.
 
-/** Koeficijent srazmerne raspodele: min(1, limit/totalRequested). */
+/**
+ * Koeficijent srazmerne raspodele: min(1, limit/totalRequested).
+ *
+ * 🔴 Limit 0 daje koeficijent 0, ne 1: min(1, 0/P) = 0. Ranije je limit 0 bio
+ * „guard" koji je vraćao 1, pa je dan bez limita evidentirao PUN predloženi
+ * iznos — upravo obrnuto od pravila da se van limita ništa ne evidentira.
+ */
 export function raspodelaKoeficijent(totalRequested: number, limit: number): number {
-  return totalRequested > limit && limit > 0 ? limit / totalRequested : 1.0;
+  if (totalRequested <= limit) return 1.0;
+  return limit > 0 ? limit / totalRequested : 0;
 }
 
 /** Evidentirani (stvarni) POEN za jednu potvrđenu verifikaciju. Math.floor — u korist Protokola. */
@@ -203,7 +231,7 @@ export function evidentiraniPoen(predlozeniPoen: number, koeficijent: number): n
 
 type EmisijaItem = {
   walletId: string;
-  /** Vlasnik zapisa — treba za otključavanje POEN-a po potvrdi kod operativnog (čl. 7). */
+  /** Vlasnik zapisa — treba za otključavanje POEN-a po potvrdi kod operativnog (dokaz stvarnosti čl. 19). */
   userId: string;
   amount: number;
   type: ProgramType;
@@ -212,14 +240,68 @@ type EmisijaItem = {
   enrollmentId?: string;
 };
 
+/**
+ * Trenutak u kome počinje obračunski period koji noćni prolaz za `danas` zatvara
+ * — ponoć po srpskom vremenu na početku dana `prethodniDan(danas)`. Leti je to
+ * 22:00 UTC prethodnog dana, zimi 23:00 UTC; bira se ona od dve koja je zaista
+ * prva sekunda tog beogradskog dana.
+ */
+export function pocetakObracunskogPerioda(danas: Date): Date {
+  const dan = prethodniDan(danas);
+  const sat = 60 * 60 * 1000;
+  for (const pomak of [2, 1, 0]) {
+    const t = new Date(dan.getTime() - pomak * sat);
+    if (
+      beogradskiDan(t).getTime() === dan.getTime() &&
+      beogradskiDan(new Date(t.getTime() - 1)).getTime() !== dan.getTime()
+    ) {
+      return t;
+    }
+  }
+  return new Date(dan.getTime() - sat);
+}
+
+/**
+ * Opticaj na početku obračunskog perioda (operativni čl. 20 st. 1; programi čl. 10).
+ *
+ * 🔴 Ne čita se stanje Protokola u trenutku obračuna: tokom dana opticaj raste
+ * (donacije, potvrde, prvi oglasi), pa bi limit zavisio od toga koliko je kasno
+ * obračun pokrenut. Od današnjeg stanja se oduzima svako kretanje Protokola od
+ * početka perioda.
+ *
+ * Izuzete su emisije programa i operativnog doprinosa (`EMISIJA_PROGRAM`,
+ * `EMISIJA_OPERATIVNI`): nastaju samo u noćnom prolazu, a prolaz koji se izvršio
+ * posle ponoći zatvarao je PRETHODNI period — njegov iznos je deo stanja na
+ * početku ovog. Tekući prolaz u ovom trenutku još ništa nije upisao.
+ */
+async function opticajZaLimit(danas: Date): Promise<number> {
+  const od = pocetakObracunskogPerioda(danas);
+  const izuzeti = [TransactionType.EMISIJA_PROGRAM, TransactionType.EMISIJA_OPERATIVNI];
+  const [protokol, ulaz, izlaz] = await Promise.all([
+    prisma.wallet.findUnique({ where: { id: PROTOKOL_WALLET_ID }, select: { balance: true } }),
+    prisma.transaction.aggregate({
+      _sum: { amount: true },
+      where: { toWalletId: PROTOKOL_WALLET_ID, createdAt: { gte: od }, type: { notIn: izuzeti } },
+    }),
+    prisma.transaction.aggregate({
+      _sum: { amount: true },
+      where: { fromWalletId: PROTOKOL_WALLET_ID, createdAt: { gte: od }, type: { notIn: izuzeti } },
+    }),
+  ]);
+  return opticajNaPocetkuPerioda({
+    stanjeProtokolaSada: protokol?.balance ?? 0,
+    ulazUProtokolOdPocetka: ulaz._sum.amount ?? 0,
+    izlazIzProtokolaOdPocetka: izlaz._sum.amount ?? 0,
+  });
+}
+
 export async function izvrsiNocnuEmisiju(datum: Date) {
   // Obračunski dan po srpskom vremenu (cron 22:00 UTC = ponoć po lokalnom leti)
   const danas = danObracuna(datum);
 
-  // 1. Opticaj i limit
-  const protokol = await prisma.wallet.findUnique({ where: { id: PROTOKOL_WALLET_ID } });
-  const opticaj = Math.abs(protokol?.balance ?? 0);
-  const limit = Math.floor(opticaj * 0.1);
+  // 1. Opticaj na početku perioda i limit (operativni čl. 20)
+  const opticaj = await opticajZaLimit(danas);
+  const limit = dnevniLimit(opticaj);
 
   // K4: BRAVA DANA — `create` summary-ja za `danas` služi kao zaključavanje. Ako je
   // noćna emisija već pokrenuta (cron retry ili cron + ručni admin okidač), drugi poziv
@@ -258,8 +340,8 @@ export async function izvrsiNocnuEmisiju(datum: Date) {
   }
 
   // 4. Operativni doprinos — sve potvrđene verifikacije (status APPROVED) ulaze u
-  //    raspodelu ovog perioda (čl. 22, 24). Težina je `predlozeniPoen`; stvarni
-  //    evidentirani iznos računa se srazmerno dnevnom limitu (čl. 24).
+  //    raspodelu ovog perioda (operativni čl. 19, 21). Težina je `predlozeniPoen`; stvarni
+  //    evidentirani iznos računa se srazmerno dnevnom limitu (čl. 21).
   if (aktivniTipovi.has("PED")) {
     const evidencije = await prisma.oglasEvidencija.findMany({
       where: { status: "APPROVED" },
@@ -282,7 +364,7 @@ export async function izvrsiNocnuEmisiju(datum: Date) {
     return { opticaj, limit, totalRequested: 0, totalEmitted: 0, koeficijent: 1, breakdown: {} };
   }
 
-  // 5. Proporcionalno smanjenje (Pravilnik čl. 50; operativni čl. 24: min(1, L/P))
+  // 5. Proporcionalno smanjenje (Pravilnik čl. 19 st. 2; operativni čl. 21: min(1, L/P))
   const totalRequested = items.reduce((s, i) => s + i.amount, 0);
   const koeficijent = raspodelaKoeficijent(totalRequested, limit);
 
@@ -320,14 +402,14 @@ export async function izvrsiNocnuEmisiju(datum: Date) {
           ? { kljuc: "transakcije.program", parametri: { program: labelPrograma(item.type) } }
           : { kljuc: "transakcije.socijalni_program" },
         // 🔴 Veza do prijave, ne naziv programa u opisu. Iz nje se naziv izvodi pri
-        // čitanju, za verifikovanog posmatrača (čl. 4 st. 4) — a prestankom prijave
+        // čitanju, za verifikovanog posmatrača (programi čl. 20 st. 1) — a prestankom prijave
         // prikaz nestaje s njom. Operativni doprinos nema prijavu na program:
         // prijavljuje se na konkretan zadatak, pa mu je veza `undefined`.
         jeOperativni ? undefined : { enrollmentId: item.enrollmentId }
       );
 
       // 🔴 SAMO operativni doprinos otključava POEN po potvrdi (dokaz stvarnosti
-      // čl. 7). Socijalni program se namerno NE računa: to nije doprinos nego
+      // čl. 19). Socijalni program se namerno NE računa: to nije doprinos nego
       // podrška — korisnik prima, ne daje. Ne dodavati ga ovde.
       //
       // Ne baca: emisija je već upisana i ne sme da padne zbog ovog kanala.
@@ -351,7 +433,7 @@ export async function izvrsiNocnuEmisiju(datum: Date) {
     }
 
     // Operativni doprinos: potvrđena verifikacija se uvek označava obrađenom (EMITTED),
-    // i kada je emitovani iznos 0 — neevidentirani višak se NE prenosi u naredni period (čl. 24).
+    // i kada je emitovani iznos 0 — neevidentirani višak se NE prenosi u naredni period (operativni čl. 21).
     if (item.evidencijaId) {
       await prisma.oglasEvidencija.update({
         where: { id: item.evidencijaId },
@@ -386,7 +468,7 @@ export type DnevniProgram = {
   poen: number;
 };
 
-/** Socijalni programi — operativni doprinos NIJE među njima (čl. 36, svoj kanal). */
+/** Socijalni programi — operativni doprinos NIJE među njima (Pravilnik čl. 34, svoj kanal). */
 export const SOCIJALNI_PROGRAMI: ProgramType[] = [
   "PODRSKA_MAJKAMA",
   "PODRSKA_STARIJIMA",
@@ -454,7 +536,8 @@ export function labelPrograma(type: ProgramType): string {
     PODRSKA_MAJKAMA:    "Podrška majkama",
     PODRSKA_STARIJIMA:  "Podrška starijima",
     POSEBNA_BRIGA:      "Posebna podrška",
-    SKOLOVANJE:         "Školovanje",
+    // Interni tip ostaje `SKOLOVANJE` (pravilo 12); naziv iz akta (programi čl. 2 t. 4).
+    SKOLOVANJE:         "Podrška studentima",
   };
   return mapa[type];
 }

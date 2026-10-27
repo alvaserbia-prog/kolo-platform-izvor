@@ -14,18 +14,18 @@ import {
 } from "@/lib/protokol/zadruga";
 
 /**
- * POST — zapis iz zapisa zadruge, u ime zadruge (Pravilnik o zadrugama čl. 16):
+ * POST — zapis iz zapisa zadruge, u ime zadruge (Pravilnik o zadrugama čl. 15):
  *  - `{ osnov: PRIJEM | DOPRINOS | USLUGA_PRIMLJENA, pseudonim, iznos, opis }` — korisniku;
  *  - `{ osnov: "IZDAVANJE", primalacZadrugaId, iznos, opis }` — dobro izdato drugoj
- *    zadruzi, POEN ide iz njenog zapisa u zapis ove zadruge (čl. 14 st. 2).
- * Iznos određuje zadruga (čl. 15); ovde se samo upisuje.
+ *    zadruzi, POEN ide iz njenog zapisa u zapis ove zadruge (čl. 12 st. 2).
+ * Iznos određuje zadruga (čl. 14); ovde se samo upisuje.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
   const me = await prisma.user.findUnique({ where: { id: session.user.id }, select: { admin: true, adminZadrugaId: true } });
   const { id } = await params;
-  // Admin u svakoj zadruzi, zadružni admin samo u svojoj (zadruge čl. 16; U2).
+  // Admin u svakoj zadruzi, zadružni admin samo u svojoj (zadruge čl. 15; U2).
   if (!smeRaditiZaZadrugu(me, id)) return await greska("Nemate ovlašćenje.", 403);
   let body: { osnov?: unknown; pseudonim?: unknown; primalacZadrugaId?: unknown; iznos?: unknown; opis?: unknown };
   try {

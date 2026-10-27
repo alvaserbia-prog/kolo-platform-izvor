@@ -20,8 +20,8 @@ export async function generateMetadata(): Promise<Metadata> {
  * nude vaučere (meni „Podrži", odluka vlasnika 20.10.2026). Vaučeri prikazuju
  * ponudu po dobru, ovde je ista ponuda po firmi.
  *
- * 🔴 Uz firmu samo naziv, logotip, mesto, adresa i ponuda vaučera (donacije čl. 13
- * st. 4) — bez opisa, reklamnog teksta i veze ka internet stranici, jer
+ * 🔴 Uz firmu samo naziv, logotip, mesto, adresa i ponuda vaučera (donacije čl. 26
+ * st. 2) — bez opisa, reklamnog teksta i veze ka internet stranici, jer
  * pokrovitelj ne stiče promociju. Na spisku je samo firma koja trenutno ima
  * slobodne vaučere: upis bez doprinosa bi bio reklama. Novčani pokrovitelji su
  * na rang-listi (`/pokrovitelji`).

@@ -17,7 +17,7 @@ type Prijatelj = {
   pseudonim: string;
   avatar: string | null;
   evidentirano: boolean;
-  /** Braća i sestre: prijateljstvo radi, samo ne nosi POEN (čl. 14b st. 4). */
+  /** Braća i sestre: prijateljstvo radi, samo ne nosi POEN (deca čl. 33 st. 3). */
   bezPoena: boolean;
   /** Čeka drugu stranu da postane aktivna — „500 na čekanju". */
   naCekanju: boolean;
@@ -104,7 +104,7 @@ export default function PrijateljiKlijent() {
   }
 
   /**
-   * Raskid (čl. 14c). 🔴 Potvrda pre raskida NIJE ukras: otpisuje se 500 POEN i
+   * Raskid (deca čl. 34). 🔴 Potvrda pre raskida NIJE ukras: otpisuje se 500 POEN i
    * onome ko raskida i onome ko je raskinut, a od 31.08.2026. raskid gasi i
    * zatečene razgovore sa tom osobom — dakle to je i jedini način da dete prekine
    * kontakt. Tekst mora da kaže oboje.

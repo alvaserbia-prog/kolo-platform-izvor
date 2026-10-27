@@ -3,8 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { jeSuperadmin } from "@/lib/dozvole";
-import { logAdminAkcija } from "@/lib/audit";
-import { evidentirajZateceneVerifikovane, revidirajDoprinose } from "@/lib/protokol/doprinos-sadrzaju";
+import { revidirajDoprinose } from "@/lib/protokol/doprinos-sadrzaju";
 
 /**
  * GET /api/admin/doprinos-sadrzaju/zatecene
@@ -24,31 +23,19 @@ export async function GET() {
 }
 
 /**
- * POST /api/admin/doprinos-sadrzaju/zatecene
+ * POST /api/admin/doprinos-sadrzaju/zatecene — UKINUTO (410).
  *
- * Jednokratno razrešava doprinose koji stoje ZABELEZEN kod verifikovanih korisnika
- * (čl. 40a, prelazni stav). Neverifikovane NE dira — njih Fondacija odobrava jedan
- * po jedan u tabu „Prvi oglasi". Idempotentno — ponovno pokretanje ne evidentira dvaput.
- *
- * Namerno je na dugmetu, a ne u migraciji: emisija ide kroz `emitujPoen` (zero-sum,
- * audit), i opticaj skače za 1.000 × broj razrešenih, što može da upali osnivački
- * korak. Trenutak tog skoka treba da bira čovek.
+ * Jednokratno razrešavanje doprinosa koji stoje ZABELEZEN kod verifikovanih
+ * korisnika imalo je osnov u prelaznom stavu Pravilnika 4.8.5 čl. 40a. Set 5.0 tu
+ * prelaznu odredbu nema, pa ova radnja više nema osnov: emisija bez osnova iz
+ * Pravilnika čl. 19 nije dozvoljena. Revizija (GET) ostaje — ona samo čita.
  */
 export async function POST() {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
   if (!jeSuperadmin(session.user)) return await greska("Samo superadmin.", 403);
-
-  try {
-    const rezultat = await evidentirajZateceneVerifikovane();
-    await logAdminAkcija(
-      session.user.id,
-      "DOPRINOS_SADRZAJU_ZATECENI_EVIDENTIRANI",
-      undefined,
-      `${rezultat.naknadnoZabelezeno} naknadno zabeleženo, ${rezultat.evidentirano} razrešeno, ${rezultat.poenUOpticaj} POEN u opticaj`,
-    );
-    return NextResponse.json(rezultat);
-  } catch (e) {
-    return await greska(String(e), 500);
-  }
+  return await greska(
+    "Radnja je ukinuta: prelazna odredba o zatečenim doprinosima za prvi oglas ne postoji u setu akata 5.0.",
+    410,
+  );
 }

@@ -8,7 +8,7 @@ import { odobriDoprinos } from "@/lib/protokol/doprinos-sadrzaju";
 /**
  * POST /api/admin/prvi-oglasi/[id]/odobri
  *
- * Fondacija odobrava doprinos za prvi oglas naloga bez potvrde (čl. 40a st. 4):
+ * Fondacija odobrava doprinos za prvi oglas naloga bez potvrde (Pravilnik čl. 38 st. 2; Uslovi čl. 19):
  * emituje se 1.000 POEN i korisniku ide obaveštenje. Idempotentno — drugi klik
  * ne emituje po drugi put (prelaz se rezerviše uslovnim update-om).
  */

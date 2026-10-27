@@ -7,7 +7,7 @@ import { odustani, NabavkaGreska } from "@/lib/protokol/nabavka";
 /**
  * POST /api/nabavke/[id]/odustani
  *
- * Odustanak (čl. 24 st. 1). Rezervisan POEN se oslobađa, a poziv odmah ide
+ * Odustanak (čl. 22 st. 1). Rezervisan POEN se oslobađa, a poziv odmah ide
  * sledećem u redu — isto pravilo koje pokriva i istek roka i nepreuzimanje.
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {

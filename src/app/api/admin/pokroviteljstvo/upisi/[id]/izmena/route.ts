@@ -6,7 +6,7 @@ import { jeAdmin } from "@/lib/dozvole";
 import { odobriIzmenuUpisa, odbijIzmenuUpisa, odgovorNaGreskuUpisa } from "@/lib/protokol/upis-pokrovitelja";
 
 // POST /api/admin/pokroviteljstvo/upisi/[id]/izmena — odluka o izmeni naziva, MB
-// odnosno logotipa (donacije čl. 6a st. 5): `{ odobri: true, aprUporedjeno }` ili
+// odnosno logotipa (donacije čl. 18 st. 2): `{ odobri: true, aprUporedjeno }` ili
 // `{ odobri: false, razlog }`. Za izmenu naziva ili MB firme poređenje sa registrom
 // je obavezno.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

@@ -20,8 +20,8 @@ export type TekstoviMape = {
 };
 
 /**
- * Jedna mapa za gazdinstva i pokrovitelje (Pravilnik o gazdinstvima čl. 11,
- * Pravilnik o pokroviteljstvu i donacijama čl. 13 st. 4).
+ * Jedna mapa za gazdinstva i pokrovitelje (Pravilnik o gazdinstvima čl. 19,
+ * Pravilnik o pokroviteljstvu i donacijama čl. 26 st. 2).
  *
  * Dve vrste oznaka (gazdinstvo, pokrovitelj), grupisanje bliskih tačaka, naziv iznad
  * tačke tek od zuma `LABELA_OD_ZUMA`. Klik/dodir (i prelaz mišem na računaru)

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";
 import { prisma } from "@/lib/prisma";
+import { posaljiAdminAlert } from "@/lib/adminAlert";
 
 // GET /api/cron/zero-sum — dnevna provera zero-sum invarijante (zbir svih balansa
 // = 0). Do seta 4.8.0 je ovde išla i resinhronizacija keša zabranjene zone;
@@ -19,6 +20,12 @@ export async function GET(req: NextRequest) {
 
   if (zbir !== 0) {
     console.error(`[ZERO-SUM ALARM] Zbir svih balansa nije 0! Zbir: ${zbir} | ${new Date().toISOString()}`);
+    // Alarm ide i van logova (Telegram i mejl) — dnevna provera koja samo loguje
+    // ostaje nevidljiva dok neko sam ne pogleda.
+    await posaljiAdminAlert(
+      "Zero-sum narušen (dnevna provera)",
+      `Zbir svih stanja nije nula: ${zbir}.\nProveriti poslednje radnje koje pišu stanje mimo emitujPoen().`,
+    );
     return NextResponse.json({ ok: false, zbir }, { status: 500 });
   }
 

@@ -1,6 +1,6 @@
 /**
  * Uslov za upis POEN-a po potvrdi u lancu potvrda — ČISTE funkcije, bez baze.
- * Osnov: Pravilnik o dokazu stvarnosti čl. 7, Pravilnik o KOLO sistemu čl. 15 t. 2.
+ * Osnov: Pravilnik o dokazu stvarnosti čl. 19, Pravilnik o KOLO sistemu čl. 19 st. 1 t. 2.
  *
  * Do ove izmene je Protokol upisivao 1.000 + 1.000 **odmah po potvrdi**, automatski,
  * bez ijedne ljudske odluke i bez ijednog traga da je potvrđeni išta uradio. To je bio
@@ -9,7 +9,7 @@
  * član, osnivački je vezan za opticaj. Potvrda — ništa.
  *
  * Sada POEN čeka **trag stvarnog učešća** potvrđenog korisnika. Pravilo je isto ono
- * koje čl. 40a već nosi za nalog bez potvrde („da nalozi čija stvarnost nije potvrđena
+ * koje Pravilnik čl. 38 već nosi za nalog bez potvrde („da nalozi čija stvarnost nije potvrđena
  * ne uvećavaju ukupan broj evidentiranih POEN-a pre nego što se u sistemu pojavi trag
  * stvarnog učešća") — ovde se samo dovršava i na kanalu potvrde.
  *
@@ -38,7 +38,7 @@
  *    član sa nalogom — `DonationRecord.userId` je obavezan), nego zbog privatnosti: POEN
  *    za potvrdu je javan zapis u knjizi, pa bi se pojavio a na Pijaci ne bi osvanuo
  *    nijedan nov oglas — posmatrač zaključuje da je donirao. To je tačno ono što
- *    anonimna donacija krije (čl. 5a). Anoniman donator otključava nekim od druga tri
+ *    anonimna donacija krije (donacije čl. 7 i 11). Anoniman donator otključava nekim od druga tri
  *    puta i ništa ne gubi.
  *
  * Izdvojeno iz servisnog modula (`src/lib/protokol/potvrda-poen.ts`) zato što ista
@@ -56,7 +56,7 @@ export type UslovPotvrde = "OGLAS" | "DONACIJA" | "POKROVITELJSTVO" | "OPERATIVN
  */
 export type TragUcesca = {
   /**
-   * Doprinos po čl. 40a je EVIDENTIRAN — dakle Fondacija je odobrila prvi oglas.
+   * Doprinos po Pravilniku čl. 38 je EVIDENTIRAN — dakle Fondacija je odobrila prvi oglas.
    * 🔴 Meri se STATUS doprinosa, ne postojanje oglasa: oglas koji formalno ispunjava
    * sadržinski minimum a nije stvarna ponuda ne sme da otključa 3.000 POEN-a.
    */

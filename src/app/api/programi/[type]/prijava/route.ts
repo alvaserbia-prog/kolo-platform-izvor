@@ -24,7 +24,7 @@ const DOZVOLJENI_TIPOVI: ProgramType[] = [
 ];
 
 /**
- * Vrste dokaza u okviru osnova smanjene sposobnosti (čl. 12).
+ * Vrste dokaza u okviru osnova smanjene sposobnosti (čl. 15).
  *
  * 🔴 Nisu osnovi i ne smeju postati kolona ni oznaka na ekranu: razdvojeni od
  * osnova, odali bi da je reč o zdravlju. Žive u `metadata`, koju vidi samo lice
@@ -35,20 +35,21 @@ const DOKAZI_SPOSOBNOSTI = ["RESENJE", "BOLEST_AKUTNA", "BOLEST_HRONICNA"];
 
 // POST /api/programi/[type]/prijava — prijava na socijalni program.
 // Pravo ostvaruje VERIFIKOVAN učesnik — i član bez potvrde (Pravilnik o programima
-// podrške čl. 4 st. 1; Pravilnik čl. 28a st. 3; set 4.8.2). Anti-malverzaciju nosi
-// ostatak čl. 4: izričit pristanak i potvrda ispunjenosti uslova od člana Kola koji
+// podrške čl. 4 st. 1; dokaz stvarnosti čl. 6 st. 1; set 4.8.2). Anti-malverzaciju nose
+// čl. 5 i 6: izričit pristanak i potvrda ispunjenosti uslova od člana Kola koji
 // podnosioca lično zna (`dohvatiPotvrdioceUslova`), odnosno od Fondacije, pre nego
-// što Fondacija odobri. Za maloletnog prijavu podnosi roditelj (čl. 13 st. 4).
+// što Fondacija odobri. Maloletni korisnik nema pravo na programe (čl. 2 st. 3).
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ type: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  // Status iz baze, ne iz sesije. Dete samo ne podnosi prijavu (programi čl. 13
-  // st. 4: za maloletnog prijavu podnosi roditelj).
+  // Status iz baze, ne iz sesije. Dete ne podnosi prijavu (programi čl. 2
+  // st. 3: maloletni korisnik nema pravo na programe podrške) — matrica dozvola
+  // `PRIJAVA_NA_PROGRAM` ne pušta nijedno stanje deteta.
   const status = await ucitajStatus(session.user.id);
-  if (!status || !sme("PRIJAVA_NA_PROGRAM", status) || status === "DETE_KOLA")
+  if (!status || !sme("PRIJAVA_NA_PROGRAM", status))
     return await greska("Na program se prijavljuje verifikovan učesnik.", 403);
 
   const { type } = await params;
@@ -83,13 +84,24 @@ export async function POST(
   if (vec && !mozeReapply)
     return await greska("Već ste prijavljeni na ovaj program.", 400);
 
+  // Podrška studentima (čl. 19): dokaz statusa je izjava pod punom odgovornošću,
+  // u kojoj se navode ustanova i godina studija — bez nje nema prijave.
+  if (programType === "SKOLOVANJE") {
+    const ustanova = typeof body.ustanova === "string" ? body.ustanova.trim() : "";
+    const godina = typeof body.godinaStudija === "string" ? body.godinaStudija.trim() : "";
+    if (!ustanova || !godina)
+      return await greska("Unesi visokoškolsku ustanovu i godinu studija.", 400);
+    if (body.izjavaStudent !== true)
+      return await greska("Potrebna je izjava da si redovno upisan u visokoškolsku ustanovu.", 400);
+  }
+
   const metadata = buildMetadata(programType, body);
 
   // Osnov je obavezan samo za Posebnu podršku — jedini program sa više osnova
-  // (čl. 12). Za ostale ostaje `null`.
+  // (čl. 14). Za ostale ostaje `null`.
   //
   // 🔴 Osnov se upisuje u sopstvenu kolonu, a NE PRIKAZUJE se nijednom korisniku
-  // (čl. 4 st. 5). Postoji zato što od njega zavisi trajanje prava: gubitak doma
+  // (čl. 20 st. 3). Postoji zato što od njega zavisi trajanje prava: gubitak doma
   // traje dvanaest meseci od događaja bez revizije, smanjena sposobnost podleže
   // godišnjoj reviziji.
   let osnov: OsnovPodrske | null = null;
@@ -99,7 +111,7 @@ export async function POST(
     osnov = body.osnov as OsnovPodrske;
 
     // 🔴 Datum događaja je uslov, ne podatak uz prijavu: pravo po osnovu gubitka
-    // doma „traje dvanaest meseci OD DOGAĐAJA" (čl. 12), pa se rok bez njega ne
+    // doma „traje dvanaest meseci OD DOGAĐAJA" (čl. 18 st. 3), pa se rok bez njega ne
     // može izračunati, a prijava posle isteka tog roka ne bi mogla ništa da
     // donese — bila bi odobrena i istog dana obustavljena revizijom, što na
     // ekranu izgleda kao kvar. Odbija se odmah, sa razlogom.
@@ -118,7 +130,7 @@ export async function POST(
   }
 
   // Ko potvrđuje ispunjenost uslova: članovi Kola koji podnosioca lično znaju
-  // (čl. 4 st. 2). Uvoditelj telefonom i član bez potvrde ne ulaze. Prazan skup
+  // (čl. 5 st. 1–2). Uvoditelj telefonom i član bez potvrde ne ulaze. Prazan skup
   // nije prepreka — tada odlučuje Fondacija, uz obrazloženje.
   const verifikatori = await dohvatiPotvrdioceUslova(prisma, session.user.id);
 
@@ -192,7 +204,7 @@ export async function POST(
   // push dobijaju neutralan tekst kroz `spoljni` — bez pseudonima i bez programa.
   // Do 4.4.9 su akti tvrdili da se obaveštavanje verifikatora vrši „isključivo
   // unutar platforme (in-app notifikacija)", a `obavesti` je isti tekst slao i
-  // mejlom i push-om; tvrdnja je od ovog seta istinita. Verifikator po čl. 4
+  // mejlom i push-om; tvrdnja je od ovog seta istinita. Verifikator po čl. 5
   // Pravilnika o programima podrške potvrđuje baš taj program, pa naziv mora da
   // vidi — ali u aplikaciji, ne u tuđem sandučetu i ne na zaključanom ekranu.
   //
@@ -221,7 +233,7 @@ export async function POST(
   // 🔴 Naziv programa NE ide u kanal upozorenja (Telegram + mejl na ADMIN_EMAIL).
   // Iz para „pseudonim + POSEBNA_BRIGA" čita se pripadnost posebnoj kategoriji
   // podataka, a taj kanal ide preko obrađivača u SAD koje Politika navodi samo za
-  // uzak obim (čl. 8, 9). Ko odlučuje o prijavi vidi je u admin panelu, gde su
+  // uzak obim (čl. 39, 40). Ko odlučuje o prijavi vidi je u admin panelu, gde su
   // uneti podaci ionako otvoreni samo superadminu.
   void posaljiAdminAlert(
     "Nova prijava na program",
@@ -237,7 +249,7 @@ export async function POST(
 function buildMetadata(type: ProgramType, body: Record<string, unknown>): any {
   switch (type) {
     case "PODRSKA_MAJKAMA": {
-      // Minimizacija (čl. 14): čuva se SAMO datum rođenja deteta (za uzrast i redni
+      // Minimizacija (čl. 11 st. 1, 21 st. 2): čuva se SAMO datum rođenja deteta (za uzrast i redni
       // broj u obračunu). Ime deteta se ne prikuplja — nije potrebno ni za šta.
       const deca = (body.deca as { datumRodjenja: string }[]) ?? [];
       return { deca: deca.map((d) => ({ datumRodjenja: d.datumRodjenja })) };
@@ -245,20 +257,20 @@ function buildMetadata(type: ProgramType, body: Record<string, unknown>): any {
     case "PODRSKA_STARIJIMA":
       return { datumRodjenja: body.datumRodjenja as string };
     case "POSEBNA_BRIGA": {
-      // Dva osnova (čl. 12, set 4.6.7): smanjena sposobnost i gubitak doma.
+      // Dva osnova (čl. 14, set 4.6.7): smanjena sposobnost i gubitak doma.
       //
-      // Minimizacija (čl. 14) je ista kao pre: kad se pravo ostvaruje po rešenju,
+      // Minimizacija (čl. 15 st. 2, 21 st. 2) je ista kao pre: kad se pravo ostvaruje po rešenju,
       // beleži se SAMO datum rešenja i opcioni datum isteka — ne broj, ne organ,
       // ne stepen invaliditeta, ne ocena radne sposobnosti, ne dijagnoza i nikakva
       // medicinska dokumentacija. Uzima se POSTOJANJE rešenja, ne njegov sadržaj.
       //
       // 🔴 `dokaz` stoji u `metadata`, a ne u koloni `osnov`: razlika rešenje /
       // akutna bolest / hronična bolest je bliža podatku o zdravlju od samog
-      // osnova, a `metadata` vidi isključivo lice koje obrađuje prijavu (čl. 4).
+      // osnova, a `metadata` vidi isključivo lice koje obrađuje prijavu (čl. 21 st. 3).
       // Potrebna je jer od nje zavisi rok — akutna bolest traje šest meseci.
       //
       // 🔴 Od lica o kome se korisnik stara beleži se SAMO datum punoletstva, i
-      // samo kad je maloletno: čl. 12 traži da pravo tada prestane punoletstvom
+      // samo kad je maloletno: čl. 15 st. 4 i 18 st. 2 traže da pravo tada prestane punoletstvom
       // tog lica, a ništa više o njemu se „ne unosi u prijavu preko onoga što je
       // neophodno za utvrđivanje osnova". Identitet i stanje tog lica se ne traže.
       if (body.osnov === "GUBITAK_DOMA") {
@@ -275,7 +287,13 @@ function buildMetadata(type: ProgramType, body: Record<string, unknown>): any {
       };
     }
     case "SKOLOVANJE":
-      return { ustanova: (body.ustanova as string)?.trim() ?? "", program: (body.program as string)?.trim() ?? "" };
+      // Podrška studentima (čl. 19 st. 2; čl. 4 st. 2): samo ustanova i godina
+      // studija — smer i drugi podaci se ne unose. Interni tip ostaje `SKOLOVANJE`
+      // (pravilo 12).
+      return {
+        ustanova: String(body.ustanova ?? "").trim(),
+        godinaStudija: String(body.godinaStudija ?? "").trim(),
+      };
     default:
       return null;
   }

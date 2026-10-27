@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { PRISTANAK_NA_AKTE_TRAZI_SE } from "@/lib/moduli";
 
 /**
- * Da li korisniku treba pristanak na akte (Uslovi čl. 40, Politika čl. 16).
+ * Da li korisniku treba pristanak na akte (Uslovi čl. 43, Politika čl. 47).
  *
  * 🔴 JEDAN izvor istine za DVA mesta: `/api/me` (odatle `AppShell` zna da li da
  * prikaže ekran) i `GET /api/politika/prihvati` (odatle sam ekran zna šta da

@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Zadruge — po lokalitetima (Pravilnik čl. 56: teritorijalni princip).
+ * Zadruge — po lokalitetima (Pravilnik čl. 50: teritorijalni princip).
  *
  * Stranica nosi spisak lokacija na kojima žive članovi, isti kao kartica
  * „Lokacije" na `/sistem`, i zadruge upisane na svakoj od njih (Pravilnik o
@@ -41,7 +41,7 @@ export default async function ZadrugePage() {
   const zadruge = await zadrugeZaPrikaz();
 
   // 🔴 Korisnik van Kola i gost dobijaju isti zbir po mestu: rang-lista lokacije
-  // (pseudonim, avatar, stanje) ide samo verifikovanom (Pravilnik čl. 67).
+  // (pseudonim, avatar, stanje) ide samo verifikovanom (Pravilnik čl. 56).
   if (!session || !session.user.verified) {
     const mesta = await prisma.user.findMany({
       where: USLOV_CLANA_U_SPISKU,

@@ -1,5 +1,5 @@
 /**
- * Provera zatvorene grupe (Pravilnik o dokazu stvarnosti čl. 11 poslednji stav, set
+ * Provera zatvorene grupe (Pravilnik o dokazu stvarnosti čl. 26, set
  * 4.8.2) — ČISTA funkcija, bez Prisme (CLAUDE.md pravilo 9).
  *
  * Prepoznaje grupe članova bez potvrde koji su međusobno uveli jedni druge u Kolo i
@@ -7,7 +7,7 @@
  *
  * 🔴 Provera NE PROIZVODI NIKAKVO DEJSTVO: ne menja status, verifikaciju ni zapise,
  * nije ishod nadzora ni tvrdnja da je verifikacija lažna i ne pokreće postupak iz
- * Glave VIII. Ne čuva se — računa se pri prikazu i samo se pokazuje Fondaciji, koja
+ * Glave IX. Ne čuva se — računa se pri prikazu i samo se pokazuje Fondaciji, koja
  * članove grupe može pozvati na razgovor.
  */
 import { jePotvrdjen, type StatusUcesnika } from "@/lib/status-ucesnika-pravila";

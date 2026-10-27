@@ -4,11 +4,11 @@ import type { Metadata } from "next";
  *
  * Tri pogleda, po statusu iz jezgra (`prikazStatusa` → `ucitajStatus`):
  *  - KORISNIK — kartica statusa, „Moj kod" (pokaži ga nekome ko te lično zna) i
- *    „Želim da me neko nazove" sa osnovima (dokaz čl. 4a; Uslovi čl. 16b);
+ *    „Želim da me neko nazove" sa osnovima (dokaz čl. 8);
  *  - ČLAN BEZ POTVRDE — kartica sa obaveznim rečenicama (crta ih `OznakaStatusa`),
  *    „Moj kod" (da ga potvrdi član Kola), „Želim da me neko nazove radi potvrde"
- *    (čl. 5c; set 4.8.3), „Uvedi u Kolo" (čl. 5a st. 2), „Koga si uveo" i lanac;
- *  - ČLAN KOLA, ČUVAR KOLA, OSNIVAČ — spisak povezanih (`#povezani`, čl. 5d),
+ *    (čl. 16; set 4.8.3), „Uvedi u Kolo" (čl. 4 st. 2), „Koga si uveo" i lanac;
+ *  - ČLAN KOLA, ČUVAR KOLA, OSNIVAČ — spisak povezanih (`#povezani`, čl. 17),
  *    „Potvrdi", spisak „Žele da ih neko nazove" (`#zahtevi`; zahteve radi potvrde
  *    vide samo čuvari), zahtevi za potvrdu postojanja deteta (`#postojanje-deteta`),
  *    lanac sa oznakom vrste po čvoru, oznake i prijava pogrešne verifikacije.
@@ -24,6 +24,7 @@ import { prisma } from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 import { jePotvrdjen, jeVerifikovan, potvrdjenIzPolja } from "@/lib/status-ucesnika-pravila";
 import { prikazStatusa } from "@/lib/status-prikaz";
+import { jeAdmin } from "@/lib/dozvole";
 import { brojVerifikacijaDanas } from "@/lib/protokol/verifikacija-service";
 import { mojZahtev, osnoviZaSpisak, uslovRazgovoraRadiPotvrde } from "@/lib/protokol/zahtev-razgovor";
 import IndeksPrikaz from "@/components/verifikacija/IndeksPrikaz";
@@ -69,8 +70,11 @@ export default async function VerifikacijaPage() {
   const prikaz = await prikazStatusa(userId);
   if (!prikaz) redirect("/login");
   const { status } = prikaz;
+  // 🔴 Podaci o nadzoru ne prikazuju se ni verifikatoru ni verifikovanom (Politika
+  // čl. 15 st. 7) — samo administratorskom timu, isto kao u ruti lanca potvrda.
+  const admin = jeAdmin(session.user);
 
-  // 🔴 Dete ne ulazi u lanac potvrda ni kao meta (Pravilnik o učešću dece čl. 15):
+  // 🔴 Dete ne ulazi u lanac potvrda ni kao meta (Pravilnik o učešću dece čl. 29 st. 2):
   // nikoga ne potvrđuje i njega niko ne potvrđuje. Njegovo mesto u mreži su
   // prijatelji, pa se sa ove stranice šalje tamo.
   if (status.startsWith("DETE_")) redirect("/prijatelji");
@@ -95,7 +99,7 @@ export default async function VerifikacijaPage() {
           oznakaVerifikatora: true,
           podlezeNadzoru: true,
           nadzornikId: true,
-          // Da li je POEN po toj verifikaciji upisan (dokaz stvarnosti čl. 7).
+          // Da li je POEN po toj verifikaciji upisan (dokaz stvarnosti čl. 19).
           poenStatus: true,
           verifikovani: { select: { id: true, pseudonim: true, ...POLJA_POTVRDJENOSTI } },
         },
@@ -107,8 +111,8 @@ export default async function VerifikacijaPage() {
   const korisnik = status === "KORISNIK";
   const bezPotvrde = status === "CLAN_BEZ_POTVRDE";
   const potvrdjen = jePotvrdjen(status);
-  // Verifikuje svaki verifikovan učesnik: član bez potvrde UVODI (čl. 5a st. 2),
-  // član Kola, čuvar i osnivač POTVRĐUJU. Kočnica je dnevni tempo (čl. 8), a broj
+  // Verifikuje svaki verifikovan učesnik: član bez potvrde UVODI (čl. 4 st. 2),
+  // član Kola, čuvar i osnivač POTVRĐUJU. Kočnica je dnevni tempo (čl. 21), a broj
   // današnjih verifikacija ide formi, koja sama pokazuje upozorenje.
   const mozeDaVerifikuje = jeVerifikovan(status);
   const potvrdaDanas = mozeDaVerifikuje ? await brojVerifikacijaDanas(userId) : 0;
@@ -126,7 +130,7 @@ export default async function VerifikacijaPage() {
   const verifikovaniCvorovi: CvorVerifikovani[] = user.verifikacijeKojeSamObavio.map((v) => ({
     id: v.verifikovani.id,
     pseudonim: v.verifikovani.pseudonim,
-    statusNadzora: !v.podlezeNadzoru ? "ne-podleze" : v.nadzornikId ? "nadzirano" : "ceka-nadzor",
+    statusNadzora: !admin || !v.podlezeNadzoru ? "ne-podleze" : v.nadzornikId ? "nadzirano" : "ceka-nadzor",
     vrsta: v.vrsta,
     potvrdjen: potvrdjenIzPolja(v.verifikovani),
   }));
@@ -141,7 +145,7 @@ export default async function VerifikacijaPage() {
       cekaDoprinos: v.poenStatus === PotvrdaPoenStatus.ZABELEZEN,
       vrsta: v.vrsta,
       potvrdjen: potvrdjenIzPolja(v.verifikovani),
-      statusNadzora: (!v.podlezeNadzoru ? "ne-podleze" : v.nadzornikId ? "nadzirano" : "ceka-nadzor") as VerifikovanaOsoba["statusNadzora"],
+      statusNadzora: (!admin || !v.podlezeNadzoru ? "ne-podleze" : v.nadzornikId ? "nadzirano" : "ceka-nadzor") as VerifikovanaOsoba["statusNadzora"],
     }))
     .sort((a, b) => Number(b.cekaDoprinos) - Number(a.cekaDoprinos));
 
@@ -151,7 +155,7 @@ export default async function VerifikacijaPage() {
       ? t("podnaslov_bez_potvrde")
       : t("potvrde_danas", { broj: potvrdaDanas });
 
-  // POEN po potvrdi čeka trag stvarnog učešća (dokaz stvarnosti čl. 7). Red stoji i
+  // POEN po potvrdi čeka trag stvarnog učešća (dokaz stvarnosti čl. 19). Red stoji i
   // onome ko je potvrdu dobio i onome ko ju je dao — on čeka TUĐI potez.
   const zabelezenePotvrde = await dohvatiZabelezenePotvrde(userId);
   const cekaMoje = zabelezenePotvrde.kaoPotvrdjeni;
@@ -165,8 +169,8 @@ export default async function VerifikacijaPage() {
     pseudonim: v.verifikovani.pseudonim,
   }));
 
-  // „Želim da me neko nazove" — korisnik (dokaz čl. 4a; tabela dozvola br. 12) i,
-  // radi potvrde, član bez potvrde (čl. 5c; br. 12a).
+  // „Želim da me neko nazove" — korisnik (dokaz čl. 8; tabela dozvola br. 12) i,
+  // radi potvrde, član bez potvrde (čl. 16; br. 12a).
   const [osnovi, moj] = korisnik
     ? await Promise.all([osnoviZaSpisak(userId), mojZahtev(userId)])
     : bezPotvrde
@@ -204,9 +208,9 @@ export default async function VerifikacijaPage() {
           )}
 
           {/* „Čeka na tebe" ide pre obrasca (odluka vlasnika, 24.10.2026): tuđi zahtevi
-              koji čekaju — spisak za poziv (crveni krug kad rok prođe, dokaz čl. 4a;
-              Uslovi čl. 16b st. 3), zahtevi za potvrdu postojanja deteta (deca čl. 6)
-              i spisak povezanih (čl. 5d). Samo član Kola, čuvar Kola i osnivač. Sidra
+              koji čekaju — spisak za poziv (crveni krug kad rok prođe, dokaz čl. 8
+              i 11), zahtevi za potvrdu postojanja deteta (deca čl. 13)
+              i spisak povezanih (dokaz čl. 17). Samo član Kola, čuvar Kola i osnivač. Sidra
               `#zahtevi`, `#postojanje-deteta` i `#povezani` nose same komponente. */}
           {potvrdjen && <SpisakZaPoziv />}
           {potvrdjen && <ZahteviPostojanjaDeteta />}
@@ -269,12 +273,13 @@ export default async function VerifikacijaPage() {
             // Koga je potvrdio stoji jednom — u spisku sa oznakama ispod.
             verifikovaniIspod={mozeDaVerifikuje}
             jeJaPocetni={user.jeOsnivac}
+            prikaziNadzor={admin}
           />
         </div>
       </div>
 
       {/* Član bez potvrde: „Koga si uveo" (kad njega neko potvrdi, oni mu dolaze na
-          spisak povezanih — čl. 5d). Član Kola, čuvar, osnivač: oznake. */}
+          spisak povezanih — čl. 17). Član Kola, čuvar, osnivač: oznake. */}
       {mozeDaVerifikuje && <MojeOznake osobe={mojeOznake} rezim={bezPotvrde ? "UVODJENJE" : "POTVRDA"} />}
 
       {/* Diskretna prijava pogrešne/neželjene verifikacije (hrani nadzor integriteta). */}

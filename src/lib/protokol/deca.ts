@@ -1,19 +1,19 @@
 /**
- * Modul Deca — servisne funkcije (Pravilnik o učešću dece, v4.8.2).
+ * Modul Deca — servisne funkcije (Pravilnik o učešću dece).
  *
  * Re-eksportuje čista pravila iz `src/lib/deca-pravila.ts`, pa server ima jedan
  * ulaz. Pretraživač uvozi pravila neposredno — ovaj modul povlači Prisma klijent.
  *
  * ─── Dva ulaza u modul ──────────────────────────────────────────────────────
  *
- *  1. **Roditelj otvara nalog iz svog profila** (čl. 4). Otvara ga SVAKI punoletni
- *     učesnik koji izjavi da je roditelj; potvrđenost nije uslov (čl. 5 st. 1).
+ *  1. **Roditelj otvara nalog iz svog profila** (čl. 7). Otvara ga SVAKI punoletni
+ *     učesnik koji izjavi da je roditelj; potvrđenost nije uslov (čl. 7 st. 1).
  *     Nalog je odmah „dete sa roditeljem" (`POVEZANO`). Ovde.
- *  2. **Dete se registruje samo** (čl. 4a–4c), pre nego što je iko od njegovih
+ *  2. **Dete se registruje samo** (čl. 8–11), pre nego što je iko od njegovih
  *     roditelja na platformi. Nalog počinje na `NA_CEKANJU`. Vidi
  *     `src/lib/protokol/deca-poziv.ts`.
  *
- * ─── Dete Kola (čl. 4c t. 3, 5, 6) ─────────────────────────────────────────
+ * ─── Dete Kola (čl. 5, 13) ─────────────────────────────────────────
  *
  * U „dete Kola" (`AKTIVNO`) nalog prelazi sam, kad je bar jedan roditelj član Kola
  * ili osnivač i NJEMU je postojanje deteta potvrđeno. Potvrdu roditelj traži sam
@@ -75,7 +75,7 @@ export class DecaGreska extends Error {
  * Polja koja opisuju maloletni nalog. 🔴 Jedino mesto koje ih upisuje.
  *
  * `datumRodjenja` sme da bude `null` — dete koje se registrovalo samo ga ne unosi,
- * upisuje ga roditelj pri preuzimanju (čl. 7). Veza sa roditeljem NIJE ovde: ona
+ * upisuje ga roditelj pri preuzimanju (čl. 12 st. 1). Veza sa roditeljem NIJE ovde: ona
  * živi u tabeli `Roditeljstvo`, jer roditelja može biti dvoje.
  */
 export function poljaDeteta(datumRodjenja: Date | null) {
@@ -105,7 +105,7 @@ export const IZBOR_UCESNIKA = {
           deaktiviranAt: true,
         },
       },
-      // Živa potvrda postojanja deteta ZA OVU vezu (čl. 6). Potvrda data drugom
+      // Živa potvrda postojanja deteta ZA OVU vezu (čl. 13). Potvrda data drugom
       // roditelju ne prelazi na ovog.
       potvrdePostojanja: {
         where: { potvrdjenoAt: { not: null }, ponistenaAt: null },
@@ -141,7 +141,7 @@ type RedUcesnika = {
   roditeljstvaKaoDete: RedRoditeljstva[];
 };
 
-/** Položaj svakog roditelja iz reda baze (čl. 4c, 5, 6, 4e). */
+/** Položaj svakog roditelja iz reda baze (čl. 5, 13, 17). */
 export function roditeljiIzReda(red: Pick<RedUcesnika, "roditeljstvaKaoDete">): RoditeljStanje[] {
   return red.roditeljstvaKaoDete.map((r) =>
     roditeljStanjeIzPolja({
@@ -158,14 +158,14 @@ export function ucesnikIzReda(red: RedUcesnika): Ucesnik {
   return {
     id: red.id,
     maloletan: red.maloletan,
-    // Uzrast nosi razvrstavanje iz čl. 12. Kod deteta koje čeka preuzimanje datum
-    // još ne postoji (upisuje ga roditelj, čl. 7), pa ostaje `null` — a `null` po
+    // Uzrast nosi razvrstavanje iz čl. 22. Kod deteta koje čeka preuzimanje datum
+    // još ne postoji (upisuje ga roditelj, čl. 12), pa ostaje `null` — a `null` po
     // `smeSaOdraslima` pada na stroži režim, što je ovde ispravno.
     godine: red.maloletan && red.datumRodjenja ? uzrast(red.datumRodjenja, beogradskiDan()) : null,
     dozvolaOdrasli: red.dozvolaOdrasli,
     skolaSifra: red.skolaSifra,
     // 🔴 Lice čija je veza zaustavljena po prijavi nema ovlašćenja roditelja ni uvid
-    // (čl. 4e st. 2), pa ga pravila ovlašćenja ne vide kao roditelja.
+    // (čl. 17 st. 2), pa ga pravila ovlašćenja ne vide kao roditelja.
     roditeljIds: red.roditeljstvaKaoDete.filter((r) => !r.zaustavljenaAt).map((r) => r.roditeljId),
     // Punoletan korisnik nema stanje — `AKTIVNO` je jedina vrednost koja ništa ne
     // ograničava, pa se ostatak koda ne mora granati na „je li ovo dete".
@@ -179,13 +179,13 @@ export async function ucitajUcesnika(userId: string): Promise<Ucesnik | null> {
   return red ? ucesnikIzReda(red) : null;
 }
 
-/** Stanje naloga (čl. 4c). Za punoletni nalog uvek `AKTIVNO`. */
+/** Stanje naloga (čl. 5). Za punoletni nalog uvek `AKTIVNO`. */
 export async function stanjeNaloga(userId: string): Promise<StanjeDeteta> {
   return (await ucitajUcesnika(userId))?.stanje ?? "NA_CEKANJU";
 }
 
 /**
- * Baca ako nalog još čeka roditelja (čl. 4c t. 1). Za radnje koje traže dete Kola
+ * Baca ako nalog još čeka roditelja (čl. 5 st. 1 t. 1). Za radnje koje traže dete Kola
  * (objava, prepis) proverava se `smeObjavitiOglas`/`smePrepis`.
  *
  * 🟡 Stanje nije `UserStatus`, pa ga osvežavanje JWT tokena ne hvata samo od sebe
@@ -198,10 +198,10 @@ export async function zaustaviAkoCekaRoditelja(userId: string) {
 }
 
 /**
- * Prodavac čiji se oglas prikazuje (čl. 13 st. 4).
+ * Prodavac čiji se oglas prikazuje (čl. 24 st. 1).
  *
  * Punoletan nalog ovaj uslov ne dodiruje. Maloletni mora biti dete Kola: oglas
- * objavljuje samo dete Kola, a kad nalog pređe u „dete sa roditeljem" (čl. 20),
+ * objavljuje samo dete Kola, a kad nalog pređe u „dete sa roditeljem" (čl. 6 st. 2),
  * njegovi oglasi se ne prikazuju dok ponovo ne postane dete Kola — ništa se ne briše.
  *
  * 🔴 Uslov za dete je `USLOV_AKTIVNO_DETE` iz `skole.ts`, Prisma prevod
@@ -212,14 +212,14 @@ export const USLOV_PRODAVAC_RADI = {
 } satisfies Prisma.UserWhereInput;
 
 /**
- * Uslov nad prodavcem koji sprovodi vidljivost oglasa iz čl. 13.
+ * Uslov nad prodavcem koji sprovodi vidljivost oglasa iz čl. 24.
  *
  * 🔴 Gost NIKADA ne vidi oglas maloletnog korisnika, i to je jedini deo koji važi
  * uvek — cena mu je nula, a cena propuštanja je izlaganje
  * deteta.
  */
 export function usloviVidljivostiOglasa(posmatracUlaz: Ucesnik | null) {
-  // Dete na čekanju vidi Pijacu kao neprijavljen posetilac (čl. 4c t. 1, 13 st. 4).
+  // Dete na čekanju vidi Pijacu kao neprijavljen posetilac (čl. 5 st. 1 t. 1).
   const posmatrac = posmatracKaoGost(posmatracUlaz);
   if (!posmatrac) return { AND: [USLOV_PRODAVAC_RADI, { maloletan: false }] };
 
@@ -257,7 +257,7 @@ export function usloviVidljivostiOglasa(posmatracUlaz: Ucesnik | null) {
             datumRodjenja: { lte: granicaDatumaZaUzrast(UZRAST_SA_ODRASLIMA, beogradskiDan()) },
           },
           // Sopstveno dete roditelj vidi i kad je prekidač isključen.
-          // Zaustavljena veza ne daje uvid (čl. 4e st. 2).
+          // Zaustavljena veza ne daje uvid (čl. 17 st. 2).
           {
             maloletan: true,
             roditeljstvaKaoDete: { some: { roditeljId: posmatrac.id, zaustavljenaAt: null } },
@@ -268,7 +268,7 @@ export function usloviVidljivostiOglasa(posmatracUlaz: Ucesnik | null) {
   };
 }
 
-// ── Otvaranje naloga iz roditeljskog profila (čl. 4–6) ───────────────────────
+// ── Otvaranje naloga iz roditeljskog profila (čl. 7 i 12) ───────────────────────
 
 export type OtvaranjeUlaz = {
   roditeljId: string;
@@ -279,10 +279,10 @@ export type OtvaranjeUlaz = {
 };
 
 /**
- * Otvara nalog maloletnog učesnika (čl. 4, 5, 6 st. 1).
+ * Otvara nalog maloletnog učesnika (čl. 7 i 12).
  *
  * 🔴 Otvara ga SVAKI punoletni učesnik koji izjavi da je roditelj — i korisnik i
- * član bez potvrde; potvrđenost roditelja nije uslov (čl. 4 st. 1, 5 st. 1). Nalog
+ * član bez potvrde; potvrđenost roditelja nije uslov (čl. 7 st. 1). Nalog
  * je odmah „dete sa roditeljem". Roditelju koji je član Kola ili osnivač ekran nudi
  * „Zatraži potvrdu da imaš dete" (`zatraziPotvrduPostojanja`).
  *
@@ -312,7 +312,7 @@ export async function otvoriNalogDeteta(ulaz: OtvaranjeUlaz) {
   if (!dozvoljen.ok) throw new DecaGreska(dozvoljen.razlog, dozvoljen.status);
 
   const sada = new Date();
-  // Kod kojim ulazi DRUGI roditelj (čl. 4b st. 6). Nastaje i ovde, iako poziva
+  // Kod kojim ulazi DRUGI roditelj (čl. 11 st. 1). Nastaje i ovde, iako poziva
   // nema — inače bi drugi roditelj mogao da uđe samo kod dece koja su se
   // registrovala sama, što je razlika bez razloga.
   const { poljaPozivaZaRoditeljskiUlaz } = await import("./deca-poziv");
@@ -325,7 +325,7 @@ export async function otvoriNalogDeteta(ulaz: OtvaranjeUlaz) {
         passwordHash: ulaz.passwordHash,
         memberHash: ulaz.memberHash,
         // Maloletni korisnik ostaje NEVERIFIKOVAN: nema indeks stvarnosti i nikoga
-        // ne potvrđuje (čl. 15). Time sve zatečene brane sistema — ZRNO, glasanje,
+        // ne potvrđuje (čl. 29 st. 2). Time sve zatečene brane sistema — ZRNO, glasanje,
         // nadzor, programi — važe za njega bez ijedne nove provere.
         tipKorisnika: TipKorisnika.NEVERIFIKOVAN,
         ...poljaDeteta(ulaz.datumRodjenja),
@@ -338,7 +338,7 @@ export async function otvoriNalogDeteta(ulaz: OtvaranjeUlaz) {
       select: { id: true, pseudonim: true },
     });
 
-    // Izjava roditelja (čl. 6 st. 1) nastaje ODMAH: otvaranje naloga je upravo
+    // Izjava roditelja (čl. 12) nastaje ODMAH: otvaranje naloga je upravo
     // radnja kojom roditelj preuzima odgovornost, pa nema šta da čeka rok. Tekst
     // se snima i posle toga se ne menja.
     await tx.roditeljstvo.update({
@@ -360,21 +360,21 @@ export async function otvoriNalogDeteta(ulaz: OtvaranjeUlaz) {
   });
 
   // Roditelju koji je član Kola ili osnivač nalog ne postaje dete Kola sam od sebe:
-  // potvrdu postojanja traži roditelj (čl. 6 st. 2). Obaveštenje ga na to upućuje.
+  // potvrdu postojanja traži roditelj (čl. 13 st. 1). Obaveštenje ga na to upućuje.
   await javiDaZatraziPotvrdu(roditelj.id).catch(() => {});
 
   return { id: dete.id, pseudonim: dete.pseudonim, stanje: "POVEZANO" as StanjeDeteta };
 }
 
-// ── Prekidač i uklanjanje (čl. 10) ────────────────────────────────────────────
+// ── Prekidač i uklanjanje (čl. 20) ────────────────────────────────────────────
 
 /**
  * Provera da je nalog upravo dete tog roditelja; baca ako nije.
  *
  * 🔴 Oba roditelja prolaze isti test — nema „prvog" i „drugog". Ovlašćenja iz
- * čl. 10 (prekidač, uklanjanje oglasa, uvid, brisanje) su im jednaka.
+ * čl. 19–21 i 36 (prekidač, uklanjanje oglasa, uvid, brisanje) su im jednaka.
  *
- * 🔴 Zaustavljena veza (čl. 4e st. 2) ne daje ni uvid ni ovlašćenja.
+ * 🔴 Zaustavljena veza (čl. 17 st. 2) ne daje ni uvid ni ovlašćenja.
  */
 export async function mojeDeteIliBaci(roditeljId: string, deteId: string) {
   const dete = await prisma.user.findUnique({
@@ -396,7 +396,7 @@ export async function mojeDeteIliBaci(roditeljId: string, deteId: string) {
   return dete;
 }
 
-/** Prekidač iz čl. 10 st. 2 — komunikacija i razmena sa punoletnim korisnicima. */
+/** Prekidač iz čl. 20 st. 2 — komunikacija i razmena sa punoletnim korisnicima. */
 export async function postaviDozvolu(roditeljId: string, deteId: string, dozvola: boolean) {
   await mojeDeteIliBaci(roditeljId, deteId);
   await prisma.user.update({ where: { id: deteId }, data: { dozvolaOdrasli: dozvola } });
@@ -404,11 +404,11 @@ export async function postaviDozvolu(roditeljId: string, deteId: string, dozvola
 }
 
 /**
- * Nova lozinka detetu, na zahtev roditelja (čl. 10 st. 1).
+ * Nova lozinka detetu, na zahtev roditelja (čl. 21 st. 1).
  *
  * ─── Zašto ovo mora da postoji ──────────────────────────────────────────────
  *
- * Nalog maloletnog korisnika po pravilu nema imejl (čl. 4a — dete unosi adresu
+ * Nalog maloletnog korisnika po pravilu nema imejl (čl. 8 — dete unosi adresu
  * SVOG RODITELJA, koja se ne upisuje u `User.email`). Tok „zaboravljena lozinka"
  * traži imejl, pa detetu bez adrese ne stoji na raspolaganju: zaboravljena lozinka
  * je do ove izmene značila trajno zaključan nalog, sa svim prijateljstvima i
@@ -433,11 +433,11 @@ export async function postaviLozinkuDeteta(
     throw new DecaGreska(`Lozinka mora imati najmanje ${MIN_LOZINKA} znakova.`, 400);
   }
 
-  // 🔴 Ovlašćenje prestaje čim dete upiše i potvrdi SOPSTVENU adresu (čl. 7a):
+  // 🔴 Ovlašćenje prestaje čim dete upiše i potvrdi SOPSTVENU adresu (čl. 21 st. 2):
   // tada mu je put oporavka sopstveni i roditelju ovo dugme više ne treba, a
   // ostavljeno bi značilo da roditelj u svakom trenutku preuzima nalog deteta —
   // uključujući sedamnaestogodišnjaka sa sopstvenom lozinkom. Kad je pristup
-  // zaista izgubljen, put je prigovor o kome odlučuje Fondacija (čl. 10 st. 3).
+  // zaista izgubljen, put je prigovor o kome odlučuje Fondacija (čl. 21 st. 2).
   const sopstvenaAdresa = await prisma.user.findUnique({
     where: { id: dete.id },
     select: { email: true },
@@ -462,7 +462,7 @@ export async function postaviLozinkuDeteta(
 }
 
 /**
- * Uklanjanje oglasa deteta (čl. 10 st. 1) — jedno od ovlašćenja uklanjanja koje
+ * Uklanjanje oglasa deteta (čl. 20 st. 1) — jedno od ovlašćenja uklanjanja koje
  * roditelj ima. Meko, kao i moderacija Fondacije: oglas nestaje iz svih prikaza,
  * a trag ko ga je i kada uklonio ostaje.
  */
@@ -473,7 +473,7 @@ export async function ukloniOglasDeteta(roditeljId: string, deteId: string, ogla
     data: {
       uklonjenAt: new Date(),
       uklonioId: roditeljId,
-      uklonjenRazlog: "Uklonio roditelj (Pravilnik o Modulu Deca, čl. 10 st. 1)",
+      uklonjenRazlog: "Uklonio roditelj (Pravilnik o učešću dece, čl. 20 st. 1)",
       status: "UKLONJEN",
     },
   });
@@ -492,7 +492,7 @@ export async function ukloniOglasDeteta(roditeljId: string, deteId: string, ogla
 }
 
 /**
- * Razgovori deteta SA PUNOLETNIM LICIMA — roditelj ih čita (čl. 9).
+ * Razgovori deteta SA PUNOLETNIM LICIMA — roditelj ih čita (čl. 19).
  *
  * 🔴 IZMENA U ODNOSU NA PRVU VERZIJU: razgovore između dece roditelj VIŠE NE ČITA.
  * Nadzor nad dečjim razgovorom dodiruje i tuđe dete — poruke drugog deteta čitao bi
@@ -502,7 +502,7 @@ export async function ukloniOglasDeteta(roditeljId: string, deteId: string, ogla
  * `dohvatiPregledDeteta`).
  *
  * 🔴 Roditelj SAMO ČITA. Ne piše u razgovor: sa druge strane je odrastao čovek, a
- * taj odnos otvara isključivo prekidač iz čl. 10. Punoletnom sagovorniku u razgovoru
+ * taj odnos otvara isključivo prekidač iz čl. 20. Punoletnom sagovorniku u razgovoru
  * stoji vidljiv natpis da razgovor čita roditelj — to je i odvraćanje i poštenje.
  */
 export async function dohvatiRazgovoreDeteta(roditeljId: string, deteId: string) {
@@ -548,7 +548,7 @@ export async function dohvatiRazgovoreDeteta(roditeljId: string, deteId: string)
 }
 
 /**
- * Šta roditelj vidi umesto sadržaja razgovora među decom (čl. 9 st. 2): KO i KOLIKO.
+ * Šta roditelj vidi umesto sadržaja razgovora među decom (čl. 19 st. 2): KO i KOLIKO.
  *
  * Spisak prijatelja sa datumima i spisak razgovora bez ijedne poruke. Uz to
  * istorija prepisa i oglasi stoje na svojim mestima, kao i do sada.
@@ -615,25 +615,25 @@ export async function dohvatiPregledDeteta(roditeljId: string, deteId: string) {
   };
 }
 
-// ── Brisanje naloga (čl. 17) ─────────────────────────────────────────────────
+// ── Brisanje naloga (čl. 36) ─────────────────────────────────────────────────
 
 /**
  * Roditelj briše nalog svog deteta. Poništavaju se svi zapisi POEN-a uz protivzapis
  * Protokola i uklanjaju se svi oglasi.
  *
  * Nalog se anonimizuje i deaktivira, a ne briše iz baze — isti postupak kao pri
- * prestanku statusa punoletnog korisnika (čl. 34 Pravilnika o KOLO sistemu).
+ * prestanku statusa punoletnog korisnika (čl. 33 Pravilnika o KOLO sistemu).
  * Numerička istorija transakcija ostaje, jer bez nje zero-sum ne bi mogao da se
  * proveri; napušteni pseudonim se briše, pa ime postaje ponovo slobodno.
  */
 export async function obrisiNalogDeteta(roditeljId: string, deteId: string) {
   const dete = await mojeDeteIliBaci(roditeljId, deteId);
-  return obrisiDecjiNalog(dete.id, dete.pseudonim, roditeljId, "Modul Deca, čl. 17");
+  return obrisiDecjiNalog(dete.id, dete.pseudonim, roditeljId, "Pravilnik o učešću dece, čl. 36");
 }
 
 /**
- * Jezgro brisanja dečjeg naloga. Zove ga i roditelj (čl. 17) i noćni posao koji
- * uklanja naloge koje niko nije preuzeo u roku od četrnaest dana (čl. 4b st. 5).
+ * Jezgro brisanja dečjeg naloga. Zove ga i roditelj (čl. 36) i noćni posao koji
+ * uklanja naloge koje niko nije preuzeo u roku od četrnaest dana (čl. 10 st. 5).
  */
 export async function obrisiDecjiNalog(
   deteId: string,
@@ -646,7 +646,7 @@ export async function obrisiDecjiNalog(
     const w = await tx.wallet.findUnique({ where: { userId: deteId } });
     const balans = w?.balance ?? 0;
     // 🔴 `increment: balans` pokriva i NEGATIVNO stanje. Dečji zapis sme u minus
-    // (raskid prijateljstva, čl. 14c st. 3), pa nulovanje takvog zapisa dodaje POEN
+    // (raskid prijateljstva, čl. 34 st. 2), pa nulovanje takvog zapisa dodaje POEN
     // u sistem i Protokol mora da ide dublje u minus, ne plići. Uslov `> 0` bi tada
     // tiho oborio zero-sum.
     if (w && balans !== 0) {
@@ -677,7 +677,7 @@ export async function obrisiDecjiNalog(
     });
 
     // Stari postupak potvrde (do seta 4.8.2) gubi predmet — zapisi koji još čekaju
-    // se brišu. Potvrde postojanja (čl. 6) padaju kaskadno sa vezom roditelja ispod.
+    // se brišu. Potvrde postojanja (čl. 13) padaju kaskadno sa vezom roditelja ispod.
     await tx.roditeljstvoPotvrda.deleteMany({ where: { deteId, status: "CEKA" } });
 
     // Prijateljstva se brišu bez otpisa: POEN je upravo poništen u celini, pa bi
@@ -717,29 +717,29 @@ export async function obrisiDecjiNalog(
   return { ok: true, pseudonim };
 }
 
-// ── Izjava roditelja i potvrda postojanja deteta (čl. 6, set 4.8.2) ──────────
+// ── Izjava roditelja i potvrda postojanja deteta (čl. 12–13, set 4.8.2) ──────────
 
 /**
- * Zašto roditelj ne postavlja lozinku detetu koje ima svoju adresu (čl. 10 st. 3).
+ * Zašto roditelj ne postavlja lozinku detetu koje ima svoju adresu (čl. 21 st. 2).
  * Poruka imenuje i izlaz — inače saopštava samo zabranu.
  */
 export const PORUKA_LOZINKA_IMA_ADRESU =
   "Dete je upisalo svoju elektronsku adresu, pa lozinku postavlja samo ono — kroz postupak za zaboravljenu lozinku. Ako je pristup stvarno izgubljen, podnesi prigovor sa svog profila; odlučuje Fondacija.";
 
-/** Poruka roditelju koji nije član Kola, a traži potvrdu postojanja (čl. 6 st. 2). */
+/** Poruka roditelju koji nije član Kola, a traži potvrdu postojanja (čl. 13 st. 1). */
 export const PORUKA_POTVRDU_TRAZI_CLAN_KOLA =
   "Potvrdu da imaš dete traži roditelj koji je član Kola.";
 
-/** Poruka onome ko nije član Kola, a pokušava da potvrdi postojanje deteta (čl. 6 st. 4). */
+/** Poruka onome ko nije član Kola, a pokušava da potvrdi postojanje deteta (čl. 13 st. 3). */
 export const PORUKA_POSTOJANJE_POTVRDJUJE_CLAN_KOLA =
   "Postojanje deteta potvrđuje član Kola koji roditelja lično zna.";
 
 /**
- * Izjava roditelja o postojanju deteta (čl. 6 st. 1), kad je nije dao pri
+ * Izjava roditelja o postojanju deteta (čl. 12 st. 1), kad je nije dao pri
  * otvaranju odnosno preuzimanju naloga.
  *
  * Jedini takav slučaj je administrativno prevođenje punoletnog naloga u maloletni
- * (čl. 4d): roditelj izjavu daje po prijemu odluke o prevođenju. 🔴 Od seta 4.8.2
+ * (čl. 15): roditelj izjavu daje po prijemu odluke o prevođenju. 🔴 Od seta 4.8.2
  * izjava NEMA rok i izostanak nema posledicu po treća lica — potvrde stvarnosti
  * roditelja se zbog nje ne diraju.
  */
@@ -797,7 +797,7 @@ const IZBOR_POLOZAJA = {
 
 /**
  * Obaveštenje roditelju koji je član Kola ili osnivač da zatraži potvrdu
- * postojanja za decu kojoj je još nije tražio (čl. 6 st. 2 i 8). Ne baca.
+ * postojanja za decu kojoj je još nije tražio (čl. 13 st. 1). Ne baca.
  *
  * Zove se pri otvaranju i preuzimanju naloga i kad roditelj postane član Kola
  * (`posleStatusaRoditelja`). Ne šalje ništa roditelju koji nije član Kola, ni kad
@@ -839,14 +839,14 @@ export async function javiDaZatraziPotvrdu(roditeljId: string): Promise<number> 
 }
 
 /**
- * Roditelj koji je član Kola ili osnivač traži potvrdu postojanja deteta (čl. 6
- * st. 2). Za svako dete posebno, bez roka. Najviše jedan živ zahtev po vezi
+ * Roditelj koji je član Kola ili osnivač traži potvrdu postojanja deteta (čl. 13
+ * st. 1). Za svako dete posebno, bez roka. Najviše jedan živ zahtev po vezi
  * (`aktivnaKljuc = roditeljstvoId`).
  *
  * Obaveštenje (otvoreno pitanje 10 specifikacije prelaza): verifikatorima koji su
  * roditelja POTVRDILI (veza vrste POTVRDA) i članovima Kola koji su ga potvrdili kao
  * člana bez potvrde — ako su danas član Kola ili osnivač i nisu drugi roditelj istog
- * deteta. 🔴 Obaveštenje nosi ISKLJUČIVO pseudonim roditelja (čl. 6 st. 3) — bez
+ * deteta. 🔴 Obaveštenje nosi ISKLJUČIVO pseudonim roditelja (čl. 13 st. 2) — bez
  * pseudonima, uzrasta, pola i škole deteta. Svi članovi Kola zahtev vide na
  * stranici Potvrde; masovno obaveštavanje se ne radi.
  */
@@ -905,7 +905,7 @@ export async function zatraziPotvrduPostojanja(roditeljId: string, deteId: strin
   return { id: zahtevId, vecPostoji: false, potvrdjeno: false };
 }
 
-/** Obaveštenje o zahtevu — samo pseudonim roditelja (čl. 6 st. 3). Ne baca. */
+/** Obaveštenje o zahtevu — samo pseudonim roditelja (čl. 13 st. 2). Ne baca. */
 async function javiMogucimPotvrdiocima(roditeljId: string, deteId: string, roditeljPseudonim: string) {
   try {
     const [veze, potvrdeClana, roditeljiDeteta] = await Promise.all([
@@ -948,11 +948,11 @@ async function javiMogucimPotvrdiocima(roditeljId: string, deteId: string, rodit
 
 /**
  * Zahtevi za potvrdu postojanja deteta koje posmatrač vidi na stranici Potvrde
- * (čl. 6 st. 3). Vidi ih SAMO član Kola ili osnivač (član bez potvrde, korisnik i
+ * (čl. 13 st. 2). Vidi ih SAMO član Kola ili osnivač (član bez potvrde, korisnik i
  * dete dobijaju prazan spisak — ruta vraća 403).
  *
  * 🔴 Ne prikazuju se sopstveni zahtevi ni zahtevi za decu kojoj je posmatrač
- * roditelj (drugi roditelj potvrdu ne daje, čl. 6 st. 4). Odgovor nosi ISKLJUČIVO
+ * roditelj (drugi roditelj potvrdu ne daje, čl. 13 st. 3). Odgovor nosi ISKLJUČIVO
  * pseudonim roditelja — ni pseudonim, ni uzrast, ni pol, ni školu deteta.
  */
 export async function zahteviPostojanjaZaPotvrdu(posmatracId: string) {
@@ -990,13 +990,13 @@ export async function zahteviPostojanjaZaPotvrdu(posmatracId: string) {
 
 /**
  * Član Kola ili osnivač potvrđuje postojanje deteta roditelja koga lično zna
- * (čl. 6 st. 4). 🔴 Bez POEN-a ikome (st. 5). Drugi roditelj istog deteta potvrdu
- * ne daje; maloletni učesnik ne potvrđuje (čl. 15).
+ * (čl. 13 st. 3). 🔴 Bez POEN-a ikome (st. 4). Drugi roditelj istog deteta potvrdu
+ * ne daje; maloletni učesnik ne potvrđuje (čl. 29 st. 2).
  *
  * Nadzoru podleže kad potvrdu daje član Kola koji nije osnivač ni čuvar Kola
- * (dokaz stvarnosti čl. 10 st. 1) — isto pravilo kao `podlezeNadzoruPotvrda` za
+ * (dokaz stvarnosti čl. 22) — isto pravilo kao `podlezeNadzoruPotvrda` za
  * izvor CLAN_KOLA. Posle upisa se osvežavaju prijateljstva deteta, jer nalog može
- * upravo postati dete Kola (čl. 14b st. 2).
+ * upravo postati dete Kola (čl. 33 st. 2).
  */
 export async function potvrdiPostojanje(potvrdilacId: string, zahtevId: string, izjava: boolean) {
   if (izjava !== true) {
@@ -1068,12 +1068,12 @@ export async function potvrdiPostojanje(potvrdilacId: string, zahtevId: string, 
 }
 
 /**
- * Poništenje potvrde postojanja deteta (čl. 6 st. 6, čl. 20; Glava VIII Pravilnika
+ * Poništenje potvrde postojanja deteta (čl. 13 st. 5, čl. 6 st. 2; Glava IX Pravilnika
  * o dokazu stvarnosti). Zove je odluka u nadzornom predmetu
- * (`api/admin/nadzor/predmeti/[id]/utvrdi`) i ukidanje veze po čl. 4e.
+ * (`api/admin/nadzor/predmeti/[id]/utvrdi`) i ukidanje veze po čl. 17–18.
  *
- * Nalog deteta time prelazi u „dete sa roditeljem" ako uslov iz čl. 4c t. 3 ne
- * ispunjava po drugom roditelju — to se izvodi samo, ništa se ne briše (čl. 20).
+ * Nalog deteta time prelazi u „dete sa roditeljem" ako uslov iz čl. 5 st. 1 t. 3 ne
+ * ispunjava po drugom roditelju — to se izvodi samo, ništa se ne briše (čl. 6 st. 2).
  * Bez POEN-a: potvrda ga nije ni nosila.
  */
 export async function ponistiPotvrduPostojanja(id: string, adminId: string) {
@@ -1102,13 +1102,13 @@ export async function ponistiPotvrduPostojanja(id: string, adminId: string) {
   return { ok: true, vecPonistena: false };
 }
 
-// ── Prijava lažnog roditeljstva (čl. 4e) ─────────────────────────────────────
+// ── Prijava lažnog roditeljstva (čl. 17–18) ─────────────────────────────────────
 
 /** Najviše otvorenih prijava po podnosiocu — brana od zatrpavanja. */
 export const MAX_OTVORENIH_PRIJAVA = 5;
 
 /**
- * Prijava da lice koje je nalog deteta otvorilo ili preuzelo nije roditelj (čl. 4e
+ * Prijava da lice koje je nalog deteta otvorilo ili preuzelo nije roditelj (čl. 17
  * st. 1). Podnosi je maloletni učesnik, drugi roditelj ili bilo koji drugi učesnik.
  *
  * Po prijemu se veza ODMAH zaustavlja (st. 2): lice nema uvid ni ovlašćenja, a
@@ -1121,7 +1121,7 @@ export const MAX_OTVORENIH_PRIJAVA = 5;
  * 🔴 Ponovljena prijava (set 4.8.4, registar 2026-10 D4): kada je Fondacija za ovu
  * vezu već odlučila da je lice roditelj (prijava `NEMA_OSNOVA`), nova prijava se
  * prima i razmatra, ali veza se njome NE zaustavlja automatski — inače bi se
- * zaustavljanje u roditeljskom sporu moglo ponavljati bez kraja (čl. 4e poslednji stav).
+ * zaustavljanje u roditeljskom sporu moglo ponavljati bez kraja (čl. 17 st. 4).
  */
 export async function prijaviRoditeljstvo(podnosilacId: string, roditeljstvoId: string, opis: string) {
   const tekst = typeof opis === "string" ? opis.trim() : "";
@@ -1178,12 +1178,12 @@ export async function prijaviRoditeljstvo(podnosilacId: string, roditeljstvoId: 
     const { posaljiAdminAlert } = await import("@/lib/adminAlert");
     void posaljiAdminAlert(
       "Ponovljena prijava lažnog roditeljstva",
-      `Prijava ${prijava.id}: za ovu vezu je već odlučeno da je lice roditelj, pa veza NIJE zaustavljena (čl. 4e poslednji stav). Odluka u Admin → Odluke.`,
+      `Prijava ${prijava.id}: za ovu vezu je već odlučeno da je lice roditelj, pa veza NIJE zaustavljena (čl. 17 st. 4). Odluka u Admin → Odluke.`,
     );
     return { id: prijava.id };
   }
 
-  // 🔴 Bez podnosioca — ni id ni pseudonim (čl. 4e st. 3).
+  // 🔴 Bez podnosioca — ni id ni pseudonim (čl. 17 st. 3).
   await obavesti(veza.roditeljId, {
     tip: "roditeljstvo_prijava_zaustavljena",
     kljuc: "notifikacije.roditeljstvo_prijava_zaustavljena",
@@ -1198,7 +1198,7 @@ export async function prijaviRoditeljstvo(podnosilacId: string, roditeljstvoId: 
   const { posaljiAdminAlert } = await import("@/lib/adminAlert");
   void posaljiAdminAlert(
     "Prijava lažnog roditeljstva",
-    `Prijava ${prijava.id}: veza je zaustavljena (čl. 4e st. 2). Odluka u Admin → Odluke.`,
+    `Prijava ${prijava.id}: veza je zaustavljena (čl. 17 st. 2). Odluka u Admin → Odluke.`,
   );
 
   return { id: prijava.id };
@@ -1245,18 +1245,18 @@ export async function prijaveRoditeljstva(status: "OTVORENA" | "SVE" = "OTVORENA
 export type IshodPrijaveRoditeljstva = "NEMA_OSNOVA" | "UKINUTA";
 
 /**
- * Odluka ovlašćenog lica Fondacije o prijavi (čl. 4e st. 3–6).
+ * Odluka ovlašćenog lica Fondacije o prijavi (čl. 17 st. 3 i 5, čl. 18).
  *
  *  - `NEMA_OSNOVA` — zaustavljanje prestaje (ako za istu vezu nema druge otvorene
  *    prijave) i veza ponovo proizvodi dejstvo.
  *  - `UKINUTA` — veza se briše; potvrda postojanja deteta data tom licu prestaje da
- *    proizvodi dejstvo (poništava se; da li je bila lažna ceni se po čl. 6 st. 6);
+ *    proizvodi dejstvo (poništava se; da li je bila lažna ceni se po čl. 13 st. 5);
  *    mesto roditelja se oslobađa. Ako dete ostane bez roditelja, nalog se ne briše
  *    nego prelazi u „dete na čekanju", a rok od četrnaest dana za preuzimanje teče
- *    iznova, uz nov kod (st. 4). Licu se obavezno izriče isključenje (st. 5).
+ *    iznova, uz nov kod (čl. 18 st. 3). Licu se obavezno izriče isključenje (čl. 18 st. 4).
  *
  * Obrazloženje je obavezno. Odluka se javlja podnosiocu i licu — licu bez
- * podnosioca. Na odluku obe strane imaju prigovor (st. 6; Uslovi čl. 37a, vrsta
+ * podnosioca. Na odluku obe strane imaju prigovor (čl. 17 st. 5; Uslovi čl. 40, vrsta
  * `RODITELJSTVO`).
  */
 export async function odluciOPrijaviRoditeljstva(
@@ -1323,7 +1323,7 @@ export async function odluciOPrijaviRoditeljstva(
         data: { status: "UKINUTA", odlucioId: adminId, odlucenoAt: sada, obrazlozenje: razlog },
       });
 
-      // Potvrda postojanja data tom licu prestaje da proizvodi dejstvo (st. 4).
+      // Potvrda postojanja data tom licu prestaje da proizvodi dejstvo (čl. 18 st. 1).
       const potvrda = await tx.potvrdaPostojanjaDeteta.findUnique({
         where: { aktivnaKljuc: prijava.roditeljstvoId },
         select: { id: true, potvrdjenoAt: true },
@@ -1357,18 +1357,18 @@ export async function odluciOPrijaviRoditeljstva(
     await iskljuciKorisnika(
       adminId,
       prijava.roditeljId,
-      "Lažna izjava o roditeljstvu (Pravilnik o učešću dece čl. 4e st. 5)",
-    ).catch((e) => console.error("[deca] Isključenje po čl. 4e nije izvršeno", prijava.roditeljId, e));
+      "Lažna izjava o roditeljstvu (Pravilnik o učešću dece čl. 18 st. 4)",
+    ).catch((e) => console.error("[deca] Isključenje po čl. 18 nije izvršeno", prijava.roditeljId, e));
     if (ponistenaPotvrda) {
       const { posaljiAdminAlert } = await import("@/lib/adminAlert");
       void posaljiAdminAlert(
         "Ukinuta veza je imala potvrdu postojanja deteta",
-        `Potvrda ${ponistenaPotvrda} je prestala da proizvodi dejstvo. Da li je bila lažna ceni se po čl. 6 st. 6 Pravilnika o učešću dece.`,
+        `Potvrda ${ponistenaPotvrda} je prestala da proizvodi dejstvo. Da li je bila lažna ceni se po čl. 13 st. 5 Pravilnika o učešću dece.`,
       );
     }
   }
 
-  // Licu na koje se prijava odnosi — bez podnosioca (st. 3).
+  // Licu na koje se prijava odnosi — bez podnosioca (čl. 17 st. 3).
   await obavesti(prijava.roditeljId, {
     tip: "roditeljstvo_prijava_odluka",
     kljuc: ishod === "UKINUTA" ? "notifikacije.roditeljstvo_prijava_ukinuta" : "notifikacije.roditeljstvo_prijava_nema_osnova",
@@ -1416,7 +1416,7 @@ export async function dohvatiDecu(roditeljId: string) {
     where: {
       maloletan: true,
       deaktiviranAt: null,
-      // Zaustavljena veza ne daje uvid (čl. 4e st. 2), ali dete ostaje na spisku
+      // Zaustavljena veza ne daje uvid (čl. 17 st. 2), ali dete ostaje na spisku
       // sa oznakom, da roditelj zna šta se desilo.
       roditeljstvaKaoDete: { some: { roditeljId } },
     },
@@ -1467,17 +1467,17 @@ export async function dohvatiDecu(roditeljId: string) {
       stanje: ucesnikIzReda(red).stanje,
       naStaSeCeka: naStaSeCeka(roditeljiIzReda(red)),
       zaustavljeno,
-      // Potvrda postojanja ZA OVOG roditelja (čl. 6): nema / tražena / potvrđena.
+      // Potvrda postojanja ZA OVOG roditelja (čl. 13): nema / tražena / potvrđena.
       postojanje: mojZahtev ? (mojZahtev.potvrdjenoAt ? "POTVRDJENO" : "TRAZENO") : "NIJE_TRAZENO",
       // Šestocifreni kod stoji uz dete i posle preuzimanja — njime DRUGI roditelj
-      // ulazi u nalog (čl. 4b st. 6).
+      // ulazi u nalog (čl. 11 st. 1).
       kod: zaustavljeno ? null : (d.roditeljPoziv?.kod ?? null),
       roditelji: d.roditeljstvaKaoDete.map((r) => r.roditelj.pseudonim),
     };
   });
 }
 
-/** Na šta čeka nalog deteta (čl. 4c poslednji stav) — za profil deteta. */
+/** Na šta čeka nalog deteta (čl. 5 st. 4) — za profil deteta. */
 export async function naStaCekaNalog(deteId: string): Promise<NaStaSeCeka | null> {
   const red = await prisma.user.findUnique({ where: { id: deteId }, select: IZBOR_UCESNIKA });
   if (!red?.maloletan) return null;
@@ -1490,7 +1490,7 @@ export async function naStaCekaNalog(deteId: string): Promise<NaStaSeCeka | null
  * Kad pristup nije dopušten, vraća se sadržaj ZATVORENOG PRIKAZA — a ne gola
  * zabrana. Ekran mora da uradi tri stvari, inače izgleda kao kvar:
  *   1. kaže ZAŠTO profil nije otvoren,
- *   2. imenuje ODRASLU OSOBU kojoj se čovek obraća (čl. 10 — roditelj odgovara za
+ *   2. imenuje ODRASLU OSOBU kojoj se čovek obraća (čl. 20 st. 4 — roditelj odgovara za
  *      radnje deteta; bez imena roditelja je to slepa ulica, a i zapis u knjizi
  *      ostaje neobjašnjen: „ko je sad pa Mihajlo"),
  *   3. pokazuje JEDINI dozvoljeni put dalje — oglas na Pijaci.
@@ -1508,7 +1508,7 @@ export async function pristupProfiluDeteta(
 ): Promise<
   | {
       sme: true;
-      /** Na šta nalog deteta čeka (čl. 4c poslednji stav); `null` za dete Kola i odrasle. */
+      /** Na šta nalog deteta čeka (čl. 5 st. 4); `null` za dete Kola i odrasle. */
       naStaSeCeka?: NaStaSeCeka | null;
     }
   | {
@@ -1574,7 +1574,7 @@ export async function pristupProfiluDeteta(
 /**
  * Prisma uslov nad `Wallet`-om: zapis koji NE pripada maloletnom korisniku.
  *
- * Dečji prostor nije javan (Pravilnik o učešću dece čl. 13), pa se transakcija u
+ * Dečji prostor nije javan (Pravilnik o učešću dece čl. 24 st. 2), pa se transakcija u
  * kojoj je bilo koja strana maloletna ne prikazuje ni verifikovanom posmatraču —
  * feed bi mu inače otkrio pseudonim deteta.
  *
@@ -1591,7 +1591,7 @@ export const BEZ_DECE: Prisma.WalletWhereInput = {
   OR: [{ user: { is: null } }, { user: { is: { maloletan: false } } }],
 };
 
-// ── Obaveštenje roditelju o oglasu deteta (čl. 10 st. 6) ─────────────────────
+// ── Obaveštenje roditelju o oglasu deteta (čl. 20 st. 4) ─────────────────────
 
 /**
  * Javlja svakom roditelju da je dete objavilo oglas.
@@ -1602,16 +1602,16 @@ export const BEZ_DECE: Prisma.WalletWhereInput = {
  * `usloviVidljivostiOglasa`). Dakle publika je pretežno ili isključivo maloletna,
  * a jedini odrastao koji taj oglas uopšte vidi jeste roditelj.
  *
- * 🔴 Čl. 10 st. 6 Pravilnika o učešću dece čini roditelja odgovornim za sadržaj
+ * 🔴 Čl. 20 st. 4 Pravilnika o učešću dece čini roditelja odgovornim za sadržaj
  * koji je dete objavilo **do trenutka uklanjanja** i za radnje deteta na Platformi.
  * Ta odredba je neizvodljiva dok roditelj ne zna da je oglas objavljen — do ovog
  * seta ga je video samo ako bi sam otvorio profil deteta. Obaveštenje pretvara
- * pasivan uvid u aktivan; dugme „Ukloni" stoji tamo gde link vodi (čl. 10 st. 1).
+ * pasivan uvid u aktivan; dugme „Ukloni" stoji tamo gde link vodi (čl. 20 st. 1).
  *
  * 🟡 Pokriva ono što je OBJAVLJENO. Razmena dogovorena mimo oglasa Platformi nije
  * vidljiva i ne pokušava da bude — praćenje obrazaca prepisa je odbijeno uz stari
  * R-19 („nemoguće je sprovesti kontrolu kada je transfer poena slobodan"). Zabranu
- * iz čl. 21 Uslova zato nosi RADNJA, ne oglas, pa osnov za meru postoji i kada
+ * iz čl. 23 Uslova zato nosi RADNJA, ne oglas, pa osnov za meru postoji i kada
  * oglasa nema.
  *
  * Ne baca: objava oglasa ne sme da padne zato što obaveštenje nije otišlo.
@@ -1648,10 +1648,10 @@ export async function javiRoditeljimaZaOglas(
 
 /**
  * Šta čeka roditelja (paket F, 24.10.2026): prepisi dece iznad praga koji čekaju
- * njegovo odobrenje (čl. 14) i pozivi u kojima je dete navelo njegovu adresu
- * (čl. 4b). Čita ga „Čeka na tebe" na Početnoj.
+ * njegovo odobrenje (čl. 30) i pozivi u kojima je dete navelo njegovu adresu
+ * (čl. 10). Čita ga „Čeka na tebe" na Početnoj.
  *
- * Zaustavljena veza (čl. 4e st. 2) ne daje ovlašćenja roditelja, pa se prepisi
+ * Zaustavljena veza (čl. 17 st. 2) ne daje ovlašćenja roditelja, pa se prepisi
  * takvog deteta ne broje.
  * Uslov poziva je isti kao u `poziviZaEmail` (`deca-poziv.ts`).
  */

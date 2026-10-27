@@ -59,12 +59,21 @@ export default async function ZajednickoDobroPage() {
         </Kartica>
 
         <Kartica as="section" padding="lg">
+          {/* Pravilnik 5.0 čl. 10: četiri principa pravne prirode i dve granice zajedničkog dobra. */}
           <h2 className="font-semibold text-kolo-text mb-2">{t("principi_naslov")}</h2>
+          <p className="text-sm text-kolo-muted leading-relaxed mb-2">{t("principi_uvod")}</p>
           <ul className="text-sm text-kolo-muted leading-relaxed space-y-2 list-disc pl-5">
             <li><strong>{t("principi_1_naslov")}</strong> — {t("principi_1_opis")}</li>
             <li><strong>{t("principi_2_naslov")}</strong> — {t("principi_2_opis")}</li>
             <li><strong>{t("principi_3_naslov")}</strong> — {t("principi_3_opis")}</li>
+            <li><strong>{t("principi_4_naslov")}</strong> — {t("principi_4_opis")}</li>
           </ul>
+          <h3 className="font-semibold text-kolo-text mt-4 mb-2">{t("granice_naslov")}</h3>
+          <ul className="text-sm text-kolo-muted leading-relaxed space-y-2 list-disc pl-5">
+            <li><strong>{t("granice_1_naslov")}</strong> — {t("granice_1_opis")}</li>
+            <li><strong>{t("granice_2_naslov")}</strong> — {t("granice_2_opis")}</li>
+          </ul>
+          <p className="text-sm text-kolo-muted leading-relaxed mt-3">{t("principi_napomena")}</p>
         </Kartica>
       </div>
     </div>

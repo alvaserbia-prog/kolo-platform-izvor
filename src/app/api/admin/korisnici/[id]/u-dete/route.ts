@@ -89,7 +89,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         `${rez.poenVracenOdDrugih} POEN skinuto drugima (${rez.brojUMinusu} u minusu), ` +
         `${rez.zrnaOtpisana} ZRNA otpisano, ${rez.obrisanoZabelezenih} zabeleženih doprinosa obrisano, ` +
         `${rez.ugasenoProgramaPrijava} prijava na programe ugašeno, ` +
-        `${rez.brojPotvrdjivaca} izjašnjenja po čl. 6`,
+        `${rez.brojPotvrdjivaca} izjašnjenja po čl. 13`,
     );
     return NextResponse.json({ ok: true, ...rez });
   } catch (e) {

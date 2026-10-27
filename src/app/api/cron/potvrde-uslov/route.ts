@@ -11,7 +11,7 @@ import { podsetiNaZakasnelePozive } from "@/lib/protokol/zahtev-razgovor";
  * POST /api/cron/potvrde-uslov
  *
  * Kupi zabeležene potvrde čiji je uslov u međuvremenu ispunjen i upisuje POEN
- * (Pravilnik o dokazu stvarnosti čl. 7).
+ * (Pravilnik o dokazu stvarnosti čl. 19).
  *
  * 🔴 ZAŠTO POSTOJI, kad okidači već zovu `probajEvidentiratiPotvrde` na sva četiri
  * mesta (odobren oglas, potvrđena javna donacija, potvrđeno pokroviteljstvo,
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     obradjenoKorisnika += 1;
   }
 
-  // Doprinos gazdinstva (čl. 40c st. 4) — mreža za slučaj da je neki okidač
+  // Doprinos gazdinstva (Pravilnik o gazdinstvima čl. 16) — mreža za slučaj da je neki okidač
   // (oglas, potvrda, odobrenje) promašio. `probajEvidentiratiGazdinstvo` ne baca.
   const gazdinstvaZabelezena = await prisma.doprinosGazdinstva.findMany({
     where: { status: "ZABELEZEN", gazdinstvo: { status: "ODOBRENO" } },
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
       `upisanih potvrda: ${upisanoPotvrda}${prekinuto ? " (prekinuto zbog budžeta)" : ""}`,
   );
 
-  // Podsetnik Fondaciji dok ima zakasnelih poziva sa spiska (čl. 4a; odluka vlasnika
+  // Podsetnik Fondaciji dok ima zakasnelih poziva sa spiska (dokaz stvarnosti čl. 11; odluka vlasnika
   // 24.10.2026). Ide uz ovaj jutarnji prolaz da ne bi trebao nov cron; ne baca.
   const zakasnelihPoziva = await podsetiNaZakasnelePozive();
 

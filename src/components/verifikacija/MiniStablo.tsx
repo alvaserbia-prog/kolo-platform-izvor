@@ -17,7 +17,7 @@ import { profilHref } from "@/lib/profil-link";
 export type CvorVerifikator = {
   id: string;
   pseudonim: string;
-  /** Vrsta verifikacije kojom je ovaj čvor verifikovao nosioca kartice (čl. 5a). */
+  /** Vrsta verifikacije kojom je ovaj čvor verifikovao nosioca kartice (dokaz stvarnosti čl. 4). */
   vrsta?: "POTVRDA" | "UVODJENJE";
   /** Kod uvođenja: da li je nosilac kartice u međuvremenu potvrđen. */
   potvrdjen?: boolean;
@@ -27,7 +27,7 @@ export type CvorVerifikovani = {
   id: string;
   pseudonim: string;
   statusNadzora: "ne-podleze" | "ceka-nadzor" | "nadzirano";
-  /** Vrsta verifikacije (dokaz stvarnosti čl. 5a, 6): potvrda ili uvođenje u Kolo. */
+  /** Vrsta verifikacije (dokaz stvarnosti čl. 4, 18): potvrda ili uvođenje u Kolo. */
   vrsta?: "POTVRDA" | "UVODJENJE";
   /** Kod uvođenja: da li je uvedeni u međuvremenu potvrđen (član Kola). */
   potvrdjen?: boolean;

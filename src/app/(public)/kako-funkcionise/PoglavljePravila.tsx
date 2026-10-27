@@ -16,12 +16,12 @@ import ZaglavljePoglavlja from "./ZaglavljePoglavlja";
  * koji je došao da vidi pijacu lista „POEN nije…" proizvodi sumnju koje nije
  * bilo. Do nje vode sidro `#pravila`, futer i stara adresa.
  *
- * 🔴 Odredbe se navode PO BROJU ČLANA i proverene su u Pravilniku 4.8.3
- * (23.10.2026): čl. 12–13 (POEN), 18 (kvalifikacija ZRNA), 22 (neprenosivost),
- * 23 (obračunski koeficijent), 25 (promena pozicije čuvara nije prinos), 34 i 72
- * (ne nasleđuje se), 38 (dinar ulazi u Fondaciju), 46 (kvadratno glasanje), 69
- * (sistem nije platna institucija), 70 i 78 (nekonvertibilnost), 73 (donacija
- * nije protivusluga). Do tada su brojevi u `zasto3` i `zasto6` bili zamenjeni. Pri svakom bumpu seta akata proveriti da numeracija nije
+ * 🔴 Odredbe se navode PO BROJU ČLANA i usklađene su sa Pravilnikom 5.0.0
+ * (26.10.2026): čl. 12 i 16 (POEN), 21 (kvalifikacija ZRNA), 24 (neprenosivost),
+ * 25 (obračunski koeficijent), 27 (položaj čuvara Kola nije ulaganje), 12 i 33
+ * (ne nasleđuje se), 36 (dinar ulazi u Fondaciju), 44 (glasanje po kvadratnom korenu), 9
+ * (sistem nije platna institucija), 11 (nekonvertibilnost), 14 (donacija nije
+ * protivusluga). Do 23.10.2026 su brojevi u `zasto3` i `zasto6` bili zamenjeni. Pri svakom bumpu seta akata proveriti da numeracija nije
  * pomerena — pogrešan broj člana na javnoj pravnoj strani gori je od nenavedenog.
  *
  * 🟡 Lista `poen_nije1..6` namerno se čita iz namespace-a `kakoFunkcionisePage`,
@@ -45,8 +45,8 @@ export default async function PoglavljePravila() {
   // Šest odredaba koje obaraju čitanje ZRNA kao investicionog instrumenta.
   // 🔴 `zasto2` NE tvrdi da dinarskog ulaza nema — donacija u dinarima postoji i
   // nosi evidentiran POEN. Tvrdi ono što akti stvarno kažu: da su to dva pravno
-  // nezavisna akta, da dinar ulazi u Fondaciju a ne u obračunski okvir (čl. 38)
-  // i da evidentiranje nije protivusluga (čl. 73).
+  // nezavisna akta, da dinar ulazi u Fondaciju a ne u obračunski okvir (čl. 36)
+  // i da evidentiranje nije protivusluga (čl. 14).
   const razlozi = [1, 2, 3, 4, 5, 6].map((n) => ({
     naslov: t(`zasto${n}_naslov`),
     tekst: t(`zasto${n}_tekst`),

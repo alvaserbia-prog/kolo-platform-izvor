@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Preporuka člana na profilu (Uslovi čl. 17a, set 4.8.0).
+ * Preporuka člana na profilu (dokaz stvarnosti čl. 20, set 4.8.0).
  *
  * Prikazuje samo BROJ preporuka i, kad posmatrač sme, dugme „Preporučujem ga" /
  * „Povuci preporuku". 🔴 Ko je preporučio se ne prikazuje (Politika 4.16), a dugme

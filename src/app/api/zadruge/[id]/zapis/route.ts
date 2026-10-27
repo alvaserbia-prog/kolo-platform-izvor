@@ -6,7 +6,7 @@ import { zapisUZadrugu, jeOsnovUZapis, procitajIznos, ZadrugaGreska } from "@/li
 
 /**
  * POST — zadrugar prepisuje POEN u zapis svoje zadruge, uz osnov (Pravilnik o
- * zadrugama čl. 13): izdato dobro iz raspodele, korišćenje opreme, usluga zadruge.
+ * zadrugama čl. 11 st. 1, 3): izdato dobro iz raspodele, korišćenje opreme, usluga zadruge.
  * Pokreće ga sam zadrugar — POEN se iz tuđeg zapisa ne skida bez njegove radnje.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {

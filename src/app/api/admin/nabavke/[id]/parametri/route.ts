@@ -14,7 +14,7 @@ import { utvrdiParametre, NabavkaGreska } from "@/lib/protokol/nabavka";
  * Čl. 17 — parametre nabavke utvrđuje odluka kojom se nabavka pokreće: ukupna
  * količina, veličina jednog dela i broj POEN-a koji se poništava po delu.
  *
- * 🔴 Radnja se izvršava PRE prikupljanja ponuda. Time se tvrdnja iz čl. 19 („broj
+ * 🔴 Radnja se izvršava PRE prikupljanja ponuda. Time se tvrdnja iz čl. 17 („broj
  * POEN-a po delu nije cena dobra i ne izvodi se iz nje") ne brani rečima nego
  * redosledom: u trenutku odlučivanja dinarska cena još ne postoji.
  */

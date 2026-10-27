@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { posaljiAdminAlert } from "@/lib/adminAlert";
-import { jeVrstaPrigovora, smePodneti, UKINUTE_VRSTE } from "@/lib/prigovor-pravila";
+import { jeVrstaPrigovora, krajRokaVaucera, smePodneti, UKINUTE_VRSTE } from "@/lib/prigovor-pravila";
 import { smePrijaviti } from "@/lib/razmena-prijava";
 import { otvoriPrijavuRazmene } from "@/lib/protokol/prijava-razmene";
 
@@ -47,8 +47,10 @@ export async function POST(req: NextRequest) {
   // Predmet i rok se razrešavaju PRE opšte provere: „pocetakRoka" zavisi od toga
   // šta je predmet, a za dve vrste zavisi i to sme li se prigovor uopšte podneti.
   let pocetakRoka: Date | null = null;
+  /** Gotov kraj roka, kad se rok ne svodi na „početak + dani" (vaučer). */
+  let krajRoka: Date | null = null;
   /** Popunjava se samo za RAZMENA kad prigovor podnosi pošiljalac — tada se uz
-   *  prigovor otvara i slučaj o kome Fondacija odlučuje (Pravilnik čl. 16 st. 10). */
+   *  prigovor otvara i slučaj o kome Fondacija odlučuje (Pravilnik čl. 20 st. 5; Uslovi čl. 40 st. 5). */
   let razmena: { transakcijaId: string; protivId: string } | null = null;
 
   if (tipOdluke === "RAZMENA") {
@@ -60,7 +62,7 @@ export async function POST(req: NextRequest) {
         type: true,
         createdAt: true,
         fromWallet: { select: { userId: true } },
-        toWallet: { select: { userId: true } },
+        toWallet: { select: { userId: true, user: { select: { maloletan: true } } } },
         prijavaRazmene: { select: { id: true, status: true, resenAt: true } },
       },
     });
@@ -86,6 +88,8 @@ export async function POST(req: NextRequest) {
         vecPrijavljena: tx.prijavaRazmene !== null,
         otvorenihPrijava,
         prijaviocMaloletan: ja?.maloletan ?? false,
+        // Ni prepis MALOLETNOM primaocu se ne obara kroz Platformu (deca čl. 23 st. 3).
+        primalacMaloletan: tx.toWallet?.user?.maloletan ?? false,
         opis,
       });
       if (!provera.ok) return await greska(provera.razlog, 400);
@@ -96,7 +100,7 @@ export async function POST(req: NextRequest) {
       // Prigovor na sopstvenu odluku Fondacije — zapis primaoca je poništenjem
       // umanjen, moguće i u minus. Ovde se ne otvara nov slučaj: odlučuje se o
       // odluci koja već postoji. Rok teče od PONIŠTENJA, ne od prepisa (Uslovi
-      // čl. 37a st. 4) — prepis je mogao biti mesecima ranije.
+      // čl. 40 st. 4) — prepis je mogao biti mesecima ranije.
       pocetakRoka = tx.prijavaRazmene.resenAt ?? tx.createdAt;
     } else {
       return await greska(
@@ -120,18 +124,37 @@ export async function POST(req: NextRequest) {
   }
 
   if (tipOdluke === "VAUCER") {
-    // Neizvršenje obaveze davaoca iz vaučera (Uslovi čl. 37a; donacije čl. 13j).
-    // Prigovor označava tačno jedan vaučer, i podnosi ga samo njegov imalac. Rok
-    // teče od isteka roka važenja vaučera (najkasnije petnaest dana posle njega).
+    // Neizvršenje obaveze davaoca iz vaučera (Uslovi čl. 40; donacije čl. 35).
+    // Prigovor označava tačno jedan vaučer, i podnosi ga samo njegov imalac. Rok je
+    // 30 dana od označavanja kao iskorišćen, odnosno od odbijanja predaje, a
+    // najkasnije 15 dana od isteka roka važenja (Uslovi čl. 40 st. 4 t. 4).
+    // Odbijanje predaje se dešava kod davaoca i Platforma ga ne beleži, pa se za
+    // neiskorišćen vaučer ovde proverava samo krajnja granica.
     if (!predmetId) return await greska("Izaberi vaučer na koji se prigovor odnosi.", 400);
     const v = await prisma.vaucer.findUnique({
       where: { id: predmetId },
-      select: { imalacId: true, status: true, ugovor: { select: { vaziDo: true } } },
+      select: { imalacId: true, status: true, iskoriscenAt: true, ugovor: { select: { vaziDo: true } } },
     });
     if (!v || v.imalacId !== session.user.id) return await greska("Vaučer ne postoji.", 404);
     if (!["DODELJEN", "ISKORISCEN", "ISTEKAO"].includes(v.status))
       return await greska("Za ovaj vaučer se prigovor ne može podneti.", 400);
-    pocetakRoka = v.ugovor.vaziDo;
+    if (v.ugovor.vaziDo)
+      krajRoka = krajRokaVaucera({
+        vaziDo: v.ugovor.vaziDo,
+        iskoriscenAt: v.status === "ISKORISCEN" ? v.iskoriscenAt : null,
+      });
+  }
+
+  if (tipOdluke === "VISESTRUKI_NALOG") {
+    // Odluka o utvrđenju višestrukog naloga (Uslovi čl. 40 st. 2 t. 9): podnosi je
+    // lice sa naloga koji je zadržalo, u roku od 15 dana od obaveštenja (st. 4 t. 3).
+    const u = await prisma.utvrdjenjeVisestrukogNaloga.findFirst({
+      where: { zadrzaniId: session.user.id },
+      orderBy: { utvrdjenoAt: "desc" },
+      select: { utvrdjenoAt: true },
+    });
+    if (!u) return await greska("Za tvoj nalog nije utvrđen višestruki nalog.", 400);
+    pocetakRoka = u.utvrdjenoAt;
   }
 
   const otvorenihIsteVrste = await prisma.prigovorNaOdluku.count({
@@ -148,6 +171,7 @@ export async function POST(req: NextRequest) {
     predmetId,
     otvorenihIsteVrste,
     pocetakRoka,
+    krajRoka,
     sada: new Date(),
   });
   if (!provera.ok) return await greska(provera.razlog, 400);

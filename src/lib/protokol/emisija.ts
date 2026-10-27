@@ -22,9 +22,9 @@ export type OpisTransakcije = {
 /**
  * Veze zapisa do onoga iz čega je nastao.
  *
- * 🔴 `enrollmentId` je veza, ne naziv programa (set 4.6.7, R-03). Čl. 4 st. 4
+ * 🔴 `enrollmentId` je veza, ne naziv programa (set 4.6.7, R-03). Čl. 20 st. 1
  * Pravilnika o programima podrške traži da se evidentiranje po programu prikaže
- * verifikovanim korisnicima uz naziv programa, a čl. 4 st. 5 da se osnov ne
+ * verifikovanim korisnicima uz naziv programa, a čl. 20 st. 3 da se osnov ne
  * prikaže nikome. Naziv se zato izvodi iz prijave pri čitanju, dok opis zapisa
  * i dalje glasi samo „Socijalni program": zapis je trajan i ide u GDPR izvoz.
  */

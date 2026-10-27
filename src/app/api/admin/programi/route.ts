@@ -53,8 +53,8 @@ export async function GET() {
       label: labelPrograma(e.type),
       metadata: smeVidetiPodatke ? e.metadata : null,
       // 🔴 Osnov se ne prikazuje nijednom korisniku (Pravilnik o programima
-      // podrške čl. 4 st. 5), ali lice koje obrađuje prijavu mora da ga vidi —
-      // od njega zavisi rok iz čl. 12 (gubitak doma teče od događaja i ne
+      // podrške čl. 20 st. 3), ali lice koje obrađuje prijavu mora da ga vidi —
+      // od njega zavisi rok iz čl. 18 (gubitak doma teče od događaja i ne
       // podleže reviziji). Isti gejt kao za unete podatke.
       osnov: smeVidetiPodatke ? e.osnov : null,
       // Set 4.8.2: nijedan zahtev članu Kola nije upućen (nema ko podnosioca lično

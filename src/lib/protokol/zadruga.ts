@@ -9,6 +9,8 @@ import { obavesti } from "@/lib/notifikacije";
 import { upisiIdentitet, procitajImePrezime } from "./identitet";
 import { gdePseudonim } from "@/lib/pseudonim";
 import { USLOV_CLANA_U_SPISKU } from "@/lib/clanovi-spisak";
+import { USLOVI_STATUSA } from "@/lib/admin-clanovi";
+import { statusUcesnika, jeVerifikovan } from "@/lib/status-ucesnika-pravila";
 import {
   dospeliPragovi,
   pragLokalitetaZaNovuZadrugu,
@@ -19,6 +21,8 @@ import {
   TIP_PO_OSNOVU,
   smeBitiZadrugar,
   smePrimitiIzZapisa,
+  zapisZamrznut,
+  jeOsnovZamrzavanja,
   type OsnovIzZapisa,
   type OsnovUZapis,
   type OsnovZapisa,
@@ -27,18 +31,24 @@ import {
 export * from "@/lib/zadruga-pravila";
 
 /**
- * Servis Modula Zadruga — Pravilnik o zadrugama (set 4.7.0).
+ * Servis Modula Zadruga — Pravilnik o zadrugama (set 5.0).
  *
- * 🔴 Krug i zadruga su ISTI kolektivni oblik (čl. 11): zadruga je red u tabeli
- * `Krug` sa `zadruga = true`, sa istim zapisom (`Wallet` tipa `KRUG`) i istim
- * dnevnikom pragova (`KrugBonusLog`). Krug koji se upiše kao zadruga zato nastavlja
- * sa svim što je imao, a prag koji je dostigao kao krug se ne ponavlja.
+ * Zadruga je red u tabeli `Krug` sa `zadruga = true`, sa zapisom (`Wallet` tipa
+ * `KRUG`) i dnevnikom pragova (`KrugBonusLog`). Upis postojećeg kruga kao zadruge
+ * (raniji čl. 11 st. 3) brisan je u setu 5.0; zatečeni pragovi ostaju u dnevniku.
  *
- * 🔴 Zapis zadruge nikad ne ide u minus (Pravilnik o KOLO sistemu čl. 14 st. 3 —
+ * 🔴 Zadrugar koji nije učesnik MIRUJE (čl. 6 st. 1): ne broji se za pragove i ne
+ * prepisuje u zapis zadruge — brojač je `brojZadrugaraUcesnika`, jedan za pragove,
+ * prikaz i jedinice zadružnog doprinosa.
+ *
+ * 🔴 Od otkaza ugovora, odnosno pokretanja brisanja (čl. 22 st. 2), zapis je
+ * zamrznut: `ucitajZadrugu(id, { zaPrepis: true })` odbija svaki prepis.
+ *
+ * 🔴 Zapis zadruge nikad ne ide u minus (Pravilnik o KOLO sistemu čl. 17 st. 2 —
  * kolektivni oblik nije među šest izuzetaka): skidanje ide `updateMany` sa uslovom
  * `balance >= iznos`, isto kao u `prepis.ts`.
  *
- * 🔴 Svaki zapis nosi osnov (čl. 13) i svoj tip transakcije — nikad `TRANSFER`.
+ * 🔴 Svaki zapis nosi osnov (čl. 11) i svoj tip transakcije — nikad `TRANSFER`.
  */
 
 export class ZadrugaGreska extends Error {
@@ -61,16 +71,39 @@ function ocistiOpis(opis: unknown): string | null {
   return s;
 }
 
-/** Aktivna zadruga sa zapisom — ili greška. */
-async function ucitajZadrugu(krugId: string) {
+/**
+ * Aktivna zadruga sa zapisom — ili greška. `zaPrepis`: radnja prepisuje iz zapisa ili
+ * u njega, pa je zamrznut zapis odbija (čl. 22 st. 2).
+ */
+export async function ucitajZadrugu(krugId: string, opcije: { zaPrepis?: boolean } = {}) {
   const z = await prisma.krug.findUnique({ where: { id: krugId }, include: { wallet: true } });
   if (!z || !z.zadruga) throw new ZadrugaGreska("Zadruga ne postoji.", 404);
   if (z.prestanakAt || z.status !== "ACTIVE") throw new ZadrugaGreska("Učešće zadruge je prestalo.", 409);
   if (!z.wallet) throw new ZadrugaGreska("Zadruga nema zapis u Protokolu.", 500);
+  if (opcije.zaPrepis && zapisZamrznut(z)) {
+    throw new ZadrugaGreska(
+      "Od otkaza ugovora o saradnji, odnosno pokretanja brisanja zadruge, iz zapisa zadruge i u njega se ne prepisuje (čl. 22 st. 2).",
+      409,
+    );
+  }
   return { ...z, wallet: z.wallet };
 }
 
-/** Čl. 5 — zapis je otvoren kad je evidentiran prvi prag (pet zadrugara). */
+/**
+ * Prisma uslov za zadrugara koji NE miruje (čl. 6 st. 1): živo članstvo i nalog
+ * učesnika. Isti uslov za pragove, prikaz broja i jedinice zadružnog doprinosa.
+ */
+export const USLOV_ZADRUGARA_UCESNIKA = {
+  leftAt: null,
+  user: { ...USLOVI_STATUSA.verifikovan, deaktiviranAt: null, status: { not: "EXCLUDED" as const } },
+} satisfies Prisma.KrugClanstvoWhereInput;
+
+/** Broj zadrugara koji su učesnici — za pragove (čl. 9) i jedinice (čl. 17 st. 3). */
+export async function brojZadrugaraUcesnika(krugId: string): Promise<number> {
+  return prisma.krugClanstvo.count({ where: { krugId, ...USLOV_ZADRUGARA_UCESNIKA } });
+}
+
+/** Čl. 4 st. 3 — zapis je otvoren kad je evidentiran prvi prag (pet zadrugara). */
 async function zapisOtvoren(krugId: string): Promise<boolean> {
   const n = await prisma.krugBonusLog.count({ where: { krugId, threshold: MIN_ZADRUGARA } });
   return n > 0;
@@ -86,14 +119,12 @@ export type PodaciZadruge = {
   adresa?: unknown;
   ugovorAt: unknown;
   opis?: unknown;
-  /** Postojeći krug koji se upisuje kao zadruga (čl. 11 st. 3). */
-  krugId?: unknown;
 };
 
 /**
- * Upis zadruge u sistem (čl. 5): podaci iz registra i dan ugovora o saradnji.
+ * Upis zadruge u sistem (čl. 4): podaci iz registra i dan ugovora o saradnji.
  * Zapis (`Wallet`) nastaje odmah, ali se POEN u njega evidentira tek kad se
- * povežu prvi zadrugari i dostigne prag iz čl. 10.
+ * povežu prvi zadrugari i dostigne prag iz čl. 9.
  */
 export async function upisiZadrugu(adminId: string, p: PodaciZadruge) {
   const naziv = typeof p.naziv === "string" ? p.naziv.trim().replace(/\s+/g, " ") : "";
@@ -112,18 +143,16 @@ export async function upisiZadrugu(adminId: string, p: PodaciZadruge) {
   const opis = typeof p.opis === "string" && p.opis.trim() ? p.opis.trim() : null;
   const podaci = { zadruga: true, maticniBroj, pib, adresa, ugovorAt, location: lokalitet };
 
-  const krugId = typeof p.krugId === "string" && p.krugId ? p.krugId : null;
-
-  // Čl. 6 st. 2–3 — prva zadruga na lokalitetu traži 50 redovnih članova tog
-  // lokaliteta; sledeća ne. Lokalitet člana je mesto iz njegovog naloga (st. 4).
+  // Čl. 5 st. 2–3 — prva zadruga u mestu traži 50 učesnika tog mesta; sledeća ne.
+  // Mesto učesnika je mesto iz njegovog naloga (st. 1).
   const naLokalitetu = { equals: lokalitet, mode: "insensitive" as const };
   const postojiZadruga =
     (await prisma.krug.count({
-      where: { zadruga: true, prestanakAt: null, status: "ACTIVE", location: naLokalitetu, ...(krugId ? { NOT: { id: krugId } } : {}) },
+      where: { zadruga: true, prestanakAt: null, status: "ACTIVE", location: naLokalitetu },
     })) > 0;
   const potrebno = pragLokalitetaZaNovuZadrugu(postojiZadruga);
   if (potrebno > 0) {
-    const redovnih = await prisma.user.count({
+    const ucesnika = await prisma.user.count({
       where: {
         ...USLOV_CLANA_U_SPISKU,
         // Isti brojač kao kartica lokacije (`verified`), da ekran i server ne bi
@@ -133,41 +162,29 @@ export async function upisiZadrugu(adminId: string, p: PodaciZadruge) {
         location: naLokalitetu,
       },
     });
-    if (redovnih < potrebno) {
+    if (ucesnika < potrebno) {
       throw new ZadrugaGreska(
-        `Prva zadruga u mestu ${lokalitet} otvara se sa najmanje ${potrebno} redovnih članova iz tog mesta; sada ih ima ${redovnih}.`,
+        `Prva zadruga u mestu ${lokalitet} upisuje se kad mesto ima najmanje ${potrebno} učesnika; sada ih ima ${ucesnika}.`,
         409,
       );
     }
   }
-  let id: string;
-  if (krugId) {
-    // Krug nastavlja kao zadruga sa istim zapisom i istim dnevnikom pragova.
-    const krug = await prisma.krug.findUnique({ where: { id: krugId }, include: { wallet: true } });
-    if (!krug) throw new ZadrugaGreska("Krug ne postoji.", 404);
-    if (krug.zadruga) throw new ZadrugaGreska("Krug je već upisan kao zadruga.", 409);
-    await prisma.krug.update({ where: { id: krugId }, data: { ...podaci, name: naziv } });
-    if (!krug.wallet) await prisma.wallet.create({ data: { krugId, type: "KRUG", balance: 0 } });
-    id = krugId;
-  } else {
-    const postoji = await prisma.krug.findUnique({ where: { name: naziv } });
-    if (postoji) throw new ZadrugaGreska("Zadruga ili krug sa tim nazivom već postoji.", 409);
-    const z = await prisma.$transaction(async (tx) => {
-      const nova = await tx.krug.create({ data: { ...podaci, name: naziv, description: opis } });
-      await tx.wallet.create({ data: { krugId: nova.id, type: "KRUG", balance: 0 } });
-      return nova;
-    });
-    id = z.id;
-  }
-  // Zatečeni članovi kruga su zadrugari od trenutka upisa (čl. 11 st. 3).
-  await proveriIEvidentirajPragove(id);
-  return { id };
+  // Upis postojećeg kruga kao zadruge (raniji čl. 11 st. 3) brisan je u setu 5.0:
+  // zadruga se upisuje samo kao nova, sa praznim zapisom.
+  const postoji = await prisma.krug.findUnique({ where: { name: naziv } });
+  if (postoji) throw new ZadrugaGreska("Zadruga ili krug sa tim nazivom već postoji.", 409);
+  const z = await prisma.$transaction(async (tx) => {
+    const nova = await tx.krug.create({ data: { ...podaci, name: naziv, description: opis } });
+    await tx.wallet.create({ data: { krugId: nova.id, type: "KRUG", balance: 0 } });
+    return nova;
+  });
+  return { id: z.id };
 }
 
 // ── Zadrugari ───────────────────────────────────────────────────────────────
 
 /**
- * Čl. 7 — povezivanje naloga sa zadrugom. Zadruga dostavlja ime i prezime i
+ * Čl. 6 — povezivanje naloga sa zadrugom. Zadruga dostavlja ime i prezime i
  * pseudonim, za lica koja su na to pristala; dokaz pristanka čuva zadruga, a
  * sprovodilac ga potvrđuje kvačicom (`pristanak`).
  */
@@ -205,7 +222,7 @@ export async function dodajZadrugara(
   // povezivanja istog naloga u dve zadruge oba prolaze. Sada drugo pada (P2034).
   try {
   await prisma.$transaction(async (tx) => {
-    // Čl. 7 st. 3 — samo u jednoj zadruzi (i krug je isti oblik).
+    // Čl. 6 st. 3 — samo u jednoj zadruzi (i krug je isti oblik).
     const aktivno = await tx.krugClanstvo.findFirst({ where: { userId: korisnik.id, leftAt: null } });
     if (aktivno) {
       throw new ZadrugaGreska(
@@ -213,7 +230,7 @@ export async function dodajZadrugara(
         409,
       );
     }
-    // Ime ide u evidenciju identiteta (čl. 31a, set 4.7.3), ne više na članstvo:
+    // Ime ide u evidenciju identiteta (Pravilnik čl. 31, set 4.7.3), ne više na članstvo:
     // jedan nalog, jedno ime. `KrugClanstvo.imePrezime` nose samo zatečeni redovi.
     if ((await upisiIdentitet(korisnik.id, imePrezime, "ZADRUGA", tx)) === "RAZLIKUJE_SE") {
       throw new ZadrugaGreska(
@@ -245,9 +262,9 @@ export async function dodajZadrugara(
 }
 
 /**
- * Čl. 9 — prestanak svojstva zadrugara. Ime na članstvu (zatečeni redovi) se briše
- * odmah; veza ostaje pseudonimna, jer je deo istorije pragova (čl. 11: pad broja
- * ništa ne otpisuje). Zapis u evidenciji identiteta ostaje uz nalog (čl. 31a
+ * Čl. 8 — prestanak svojstva zadrugara. Ime na članstvu (zatečeni redovi) se briše
+ * odmah; veza ostaje pseudonimna, jer je deo istorije pragova (čl. 10: pad broja
+ * ništa ne otpisuje). Zapis u evidenciji identiteta ostaje uz nalog (čl. 31 st. 7
  * Pravilnika) i briše se tek gašenjem naloga.
  */
 export async function ukloniZadrugara(krugId: string, clanstvoId: string) {
@@ -259,11 +276,13 @@ export async function ukloniZadrugara(krugId: string, clanstvoId: string) {
   });
 }
 
-// ── Rast (čl. 10–11) ────────────────────────────────────────────────────────
+// ── Rast (čl. 9–10) ────────────────────────────────────────────────────────
 
 /**
  * Evidentira sve dostignute a neevidentirane pragove. Poziva se posle svakog
- * povezivanja zadrugara i pri upisu kruga kao zadruge.
+ * povezivanja zadrugara i pri svakom prepisu sa zapisom zadruge (zadrugar koji je
+ * mirovao broji se čim ponovo postane učesnik). Broje se samo zadrugari koji su
+ * učesnici (čl. 6 st. 1).
  *
  * Prag se prvo rezerviše jedinstvenim redom (`@@unique([krugId, threshold])`) —
  * paralelni poziv dobija P2002 i preskače, pa se svaki prag evidentira tačno jednom.
@@ -271,9 +290,10 @@ export async function ukloniZadrugara(krugId: string, clanstvoId: string) {
  */
 export async function proveriIEvidentirajPragove(krugId: string) {
   const z = await prisma.krug.findUnique({ where: { id: krugId }, include: { wallet: true } });
-  if (!z?.wallet || !z.zadruga || z.prestanakAt) return;
+  // Zamrznut zapis (čl. 22 st. 2) više ne raste: u njega se ništa ne upisuje.
+  if (!z?.wallet || !z.zadruga || z.prestanakAt || zapisZamrznut(z)) return;
   const [broj, logovi] = await Promise.all([
-    prisma.krugClanstvo.count({ where: { krugId, leftAt: null } }),
+    brojZadrugaraUcesnika(krugId),
     prisma.krugBonusLog.findMany({ where: { krugId }, select: { threshold: true } }),
   ]);
   for (const prag of dospeliPragovi(broj, logovi.map((l) => l.threshold))) {
@@ -284,7 +304,7 @@ export async function proveriIEvidentirajPragove(krugId: string) {
       throw e;
     }
     // 🔴 Ako emisija padne, rezervacija praga se vraća — inače bi prag ostao
-    // „evidentiran" bez ijednog POEN-a i nikad se ne bi ponovio (čl. 11).
+    // „evidentiran" bez ijednog POEN-a i nikad se ne bi ponovio (čl. 10).
     try {
       await emitujPoen(
         z.wallet.id,
@@ -300,7 +320,7 @@ export async function proveriIEvidentirajPragove(krugId: string) {
   }
 }
 
-// ── Zapisi sa osnovom (čl. 13–17) ───────────────────────────────────────────
+// ── Zapisi sa osnovom (čl. 11–16) ───────────────────────────────────────────
 
 /**
  * Prepis između dva zapisa, atomski i bez minusa na strani koja daje.
@@ -338,16 +358,16 @@ async function prepisiSaOsnovom(
 }
 
 /**
- * Zapis IZ zapisa zadruge korisniku (prijem dobra, zadružni doprinos, primljena
- * usluga). Sprovodi lice iz administratorskog tima u ime zadruge (čl. 16).
- * Iznos određuje zadruga (čl. 15) — ovde se samo upisuje.
+ * Zapis IZ zapisa zadruge korisniku (prijem dobra, zadatak zadruge, primljena
+ * usluga). Sprovodi lice koje radi u ime zadruge (čl. 15).
+ * Iznos određuje zadruga (čl. 14) — ovde se samo upisuje.
  */
 export async function zapisIzZadruge(
   sprovodilacId: string,
   krugId: string,
   p: { osnov: OsnovIzZapisa; pseudonim: unknown; iznos: number; opis: unknown },
 ) {
-  const zadruga = await ucitajZadrugu(krugId);
+  const zadruga = await ucitajZadrugu(krugId, { zaPrepis: true });
   if (!(await zapisOtvoren(krugId))) {
     throw new ZadrugaGreska(`Zapis zadruge se otvara sa ${MIN_ZADRUGARA} zadrugara.`, 409);
   }
@@ -373,10 +393,11 @@ export async function zapisIzZadruge(
     tekst: `Zadruga ${zadruga.name} ti je prepisala ${p.iznos.toLocaleString("sr-RS")} POEN${opis ? ` — ${opis}` : ""}.`,
     link: "/novcanik",
   });
+  await proveriIEvidentirajPragove(krugId);
 }
 
 /**
- * Izdavanje dobra DRUGOJ zadruzi (čl. 14 st. 2): POEN ide iz zapisa zadruge koja
+ * Izdavanje dobra DRUGOJ zadruzi (čl. 12 st. 2): POEN ide iz zapisa zadruge koja
  * prima dobro u zapis zadruge koja ga izdaje. Sprovodi administratorski tim, po
  * nalogu obe zadruge.
  */
@@ -384,11 +405,11 @@ export async function izdavanjeDrugojZadruzi(
   krugId: string,
   p: { primalacZadrugaId: unknown; iznos: number; opis: unknown },
 ) {
-  const izdaje = await ucitajZadrugu(krugId);
+  const izdaje = await ucitajZadrugu(krugId, { zaPrepis: true });
   if (typeof p.primalacZadrugaId !== "string" || p.primalacZadrugaId === krugId) {
     throw new ZadrugaGreska("Izaberite drugu zadrugu.");
   }
-  const prima = await ucitajZadrugu(p.primalacZadrugaId);
+  const prima = await ucitajZadrugu(p.primalacZadrugaId, { zaPrepis: true });
   if (!(await zapisOtvoren(krugId)) || !(await zapisOtvoren(prima.id))) {
     throw new ZadrugaGreska(`Zapis zadruge se otvara sa ${MIN_ZADRUGARA} zadrugara.`, 409);
   }
@@ -399,14 +420,14 @@ export async function izdavanjeDrugojZadruzi(
 /**
  * Zapis U zapis zadruge od zadrugara (izdato dobro, korišćenje opreme, usluga
  * zadruge). Pokreće ga sam zadrugar — POEN se iz tuđeg zapisa ne skida bez
- * njegove radnje.
+ * njegove radnje. Zadrugar koji nije učesnik miruje i ne prepisuje (čl. 6 st. 1).
  */
 export async function zapisUZadrugu(
   userId: string,
   krugId: string,
   p: { osnov: OsnovUZapis; iznos: number; opis: unknown },
 ) {
-  const zadruga = await ucitajZadrugu(krugId);
+  const zadruga = await ucitajZadrugu(krugId, { zaPrepis: true });
   if (!(await zapisOtvoren(krugId))) {
     throw new ZadrugaGreska(`Zapis zadruge se otvara sa ${MIN_ZADRUGARA} zadrugara.`, 409);
   }
@@ -414,15 +435,29 @@ export async function zapisUZadrugu(
   const [korisnik, clanstvo] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
-      select: { tipKorisnika: true, maloletan: true, wallet: { select: { id: true, balance: true } } },
+      select: {
+        tipKorisnika: true,
+        maloletan: true,
+        jeOsnivac: true,
+        verified: true,
+        indeksStvarnosti: true,
+        potvrdjenAt: true,
+        status: true,
+        deaktiviranAt: true,
+        wallet: { select: { id: true, balance: true } },
+      },
     }),
     prisma.krugClanstvo.findFirst({ where: { userId, krugId, leftAt: null } }),
   ]);
   if (!korisnik?.wallet) throw new ZadrugaGreska("Nemate zapis u Protokolu.", 500);
-  // Čl. 8 — prava u okviru zadruge ima zadrugar te zadruge.
+  // Čl. 7 — prava u okviru zadruge ima zadrugar te zadruge.
   if (!clanstvo) throw new ZadrugaGreska("Ovo mogu samo zadrugari ove zadruge.", 403);
   if (korisnik.maloletan) {
     throw new ZadrugaGreska("Radnje zadruge ne sprovode se sa nalogom deteta.", 403);
+  }
+  // Čl. 6 st. 1 — zadrugar koji nije učesnik miruje: ne prepisuje u zapis zadruge.
+  if (!jeVerifikovan(statusUcesnika(korisnik))) {
+    throw new ZadrugaGreska("Dok nisi u Kolu, svojstvo zadrugara miruje i ne prepisuješ u zapis zadruge (čl. 6 st. 1).", 403);
   }
   if (!smeDaSalje(korisnik.tipKorisnika)) {
     throw new ZadrugaGreska("Prepis u tuđi zapis otvara se po potvrdi.", 403);
@@ -431,9 +466,32 @@ export async function zapisUZadrugu(
     throw new ZadrugaGreska("Na tvom zapisu stoji nadoknada; prepis je moguć tek kad zapis pređe nulu.");
   }
   await prepisiSaOsnovom(korisnik.wallet.id, zadruga.wallet.id, p.iznos, p.osnov, { zadruga: zadruga.name }, opis);
+  await proveriIEvidentirajPragove(krugId);
 }
 
-// ── Prestanak učešća (čl. 20; Pravilnik o KOLO sistemu čl. 56) ──────────────
+// ── Zamrzavanje zapisa (čl. 22 st. 2; Pravilnik o KOLO sistemu čl. 50 st. 4) ──
+
+/**
+ * Upis otkaza ugovora o saradnji, odnosno pokretanja brisanja zadruge iz registra.
+ * Od tog trenutka iz zapisa zadruge i u njega se ne prepisuje i zadružni doprinos
+ * se ne evidentira; zapis se zatvara tek prestankom učešća (čl. 22 st. 1, 3).
+ * Sprovodi samo administratorski tim (čl. 15 st. 3). Upis je jednom.
+ */
+export async function zamrzniZapisZadruge(krugId: string, osnov: unknown) {
+  if (!jeOsnovZamrzavanja(osnov)) throw new ZadrugaGreska("Izaberite osnov: otkaz ugovora ili pokretanje brisanja.");
+  const zadruga = await ucitajZadrugu(krugId);
+  if (zapisZamrznut(zadruga)) throw new ZadrugaGreska("Zapis zadruge je već zamrznut.", 409);
+  const sada = new Date();
+  // 🔴 Zaključava zapis: prepis koji je već počeo završava se pre zamrzavanja, a
+  // svaki kasniji vidi `zamrznutoAt`.
+  await prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT id FROM "Wallet" WHERE id = ${zadruga.wallet.id} FOR UPDATE`;
+    await tx.krug.update({ where: { id: krugId }, data: { zamrznutoAt: sada, zamrznutoOsnov: osnov } });
+  });
+  return { zamrznutoAt: sada };
+}
+
+// ── Prestanak učešća (čl. 22; Pravilnik o KOLO sistemu čl. 50) ──────────────
 
 /**
  * Zatvara zapis zadruge: POEN se poništava protivzapisom u korist Protokola
@@ -468,7 +526,7 @@ export async function prestanakZadruge(krugId: string) {
       data: { leftAt: sada, imePrezime: null, pristanakAt: null },
     });
     await tx.krug.update({ where: { id: krugId }, data: { prestanakAt: sada, status: "SUSPENDED" } });
-    // Prestankom zadruge prestaje i uloga lica koje je ona predložila (čl. 16; U2).
+    // Prestankom zadruge prestaje i uloga lica koje je ona predložila (čl. 15 st. 4; U2).
     await tx.user.updateMany({ where: { adminZadrugaId: krugId }, data: { admin: "NONE", adminZadrugaId: null } });
     return w.balance;
   });
@@ -490,7 +548,8 @@ export async function zadrugeZaPrikaz() {
       id: true,
       name: true,
       location: true,
-      _count: { select: { memberships: { where: { leftAt: null } } } },
+      // Zadrugar koji miruje (nije učesnik) ne broji se (čl. 6 st. 1).
+      _count: { select: { memberships: { where: USLOV_ZADRUGARA_UCESNIKA } } },
     },
   });
   return z.map((r) => ({ id: r.id, naziv: r.name, lokalitet: r.location, zadrugara: r._count.memberships }));

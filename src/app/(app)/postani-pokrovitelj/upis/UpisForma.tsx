@@ -39,13 +39,13 @@ type Predlog = {
 
 /**
  * Obrazac upisa pokrovitelja u evidenciju (Pravilnik o pokroviteljstvu i donacijama
- * čl. 6a st. 2 i 3) — na jednoj strani.
+ * čl. 16 i 17) — na jednoj strani.
  *
  * Pravno lice i preduzetnik: naziv, sedište, MB, PIB, odnos prema pokrovitelju, ime
  * i prezime; gazdinstvo: ime i prezime nosioca, naziv i BPG. Za oba: kontakt,
  * logotip, mesto i adresa za mapu (tačka se pronalazi po adresi i može se pomeriti),
  * uz OBAVEZNU izjavu da je pokrovitelj saglasan da se adresa prikazuje — izjava se
- * ne povlači; prikaz prestaje samo brisanjem upisa (čl. 6a st. 6).
+ * ne povlači; prikaz prestaje samo brisanjem upisa (čl. 18 st. 4).
  *
  * 🔴 Na obrascu se ne pominje POEN kao vrednost. Ime i prezime ne ide na mapu ni na
  * rang-listu.
@@ -240,7 +240,7 @@ export default function UpisForma({
         <Polje oznaka={t("upis_kontakt_telefon_label")}><input type="tel" value={f.kontaktTelefon} onChange={postavi("kontaktTelefon")} autoComplete="tel" className={polje} /></Polje>
       </div>
 
-      {/* ── Prikaz na mapi (čl. 6a st. 2, čl. 13 st. 4) ─────────────────────── */}
+      {/* ── Prikaz na mapi (čl. 16, čl. 26 st. 2) ─────────────────────── */}
       <h3 className="text-sm font-semibold text-kolo-text pt-2">{t("upis_mapa_naslov")}</h3>
       <p className="text-xs text-kolo-muted">{t("upis_mapa_opis")}</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -267,7 +267,7 @@ export default function UpisForma({
       <p className="text-xs text-kolo-muted">{porukaAdrese ?? t("upis_tacka_napomena")}</p>
       <MapaGazdinstava izbor={tacka} onIzbor={setTacka} centar={pronadjeno ?? centarNaselja} zumCentra={pronadjeno ? 17 : 14} visina={300} />
 
-      {/* ── Izjave (čl. 6a st. 2 i 3) ─────────────────────────────────────── */}
+      {/* ── Izjave (čl. 16 i 17) ─────────────────────────────────────── */}
       <label className="flex items-start gap-2 text-sm text-kolo-text">
         <input type="checkbox" className="mt-0.5" checked={izjavaAdresa} onChange={(e) => setIzjavaAdresa(e.target.checked)} />
         {t("upis_izjava_adresa")}

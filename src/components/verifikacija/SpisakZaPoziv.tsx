@@ -20,13 +20,13 @@ type Red = {
   zakljucan: boolean;
   otvorenMeni: boolean;
   otvorenDo: string | null;
-  /** Upisnik ZRNA koji traži potvrdu — prvi na spisku (čl. 4a; set 4.8.3). */
+  /** Upisnik ZRNA koji traži potvrdu — prvi na spisku (čl. 8 st. 4; set 4.8.3). */
   prioritet?: boolean;
   /** Do kada Fondacija obezbeđuje poziv upisniku ZRNA. */
   rokPozivaDo?: string | null;
   /** Rok je prošao, a ime i broj niko nije otvorio — crveno, kao krug u meniju. */
   zakasnio?: boolean;
-  /** Naziv gazdinstva koje čeka razgovor radi odobrenja (gazd. čl. 6a st. 2). */
+  /** Naziv gazdinstva koje čeka razgovor radi odobrenja (gazd. čl. 8 st. 2). */
   gazdinstvo?: string | null;
 };
 
@@ -40,11 +40,11 @@ type Otvoreno = {
 
 /**
  * „Žele da ih neko nazove" — spisak za poziv za člana Kola (dokaz stvarnosti čl.
- * 4a; Uslovi čl. 16b; set 4.8.3). Bez propova; server odbija svakog ko nije član
+ * 8–12; set 4.8.3). Bez propova; server odbija svakog ko nije član
  * Kola, pa se tada ne prikazuje ništa (član bez potvrde spisak ne vidi). Zahteve
- * radi potvrde (čl. 5c) server šalje samo čuvarima Kola; upisnik ZRNA je prvi.
+ * radi potvrde (čl. 10 st. 1, 16) server šalje samo čuvarima Kola; upisnik ZRNA je prvi.
  * Kod nosioca gazdinstva član Kola posle razgovora beleži i razgovor radi odobrenja
- * gazdinstva (gazd. čl. 6a st. 2) — jedan razgovor.
+ * gazdinstva (gazd. čl. 8 st. 2) — jedan razgovor.
  *
  * 🔴 Ime i broj dolaze sa servera SAMO u odgovoru na „Otvori ime i broj" i drže se
  * samo u stanju ove komponente dok je poziv otvoren. Sidro `#zahtevi` ostaje zbog
@@ -60,7 +60,7 @@ export default function SpisakZaPoziv() {
   const [sada, setSada] = useState(() => Date.now());
   const [sumnja, setSumnja] = useState<Record<string, boolean>>({});
   const [zabelezeno, setZabelezeno] = useState<Record<string, boolean>>({});
-  // Izjava o poverljivosti pre prvog otvaranja (dokaz stvarnosti čl. 4a; S2-M1).
+  // Izjava o poverljivosti pre prvog otvaranja (dokaz stvarnosti čl. 10 st. 3; S2-M1).
   const [poverljivostData, setPoverljivostData] = useState(true);
   const [izjava, setIzjava] = useState(false);
 

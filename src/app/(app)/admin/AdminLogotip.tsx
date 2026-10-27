@@ -7,7 +7,7 @@ import { klaseDugmeta } from "@/components/ui/Dugme";
 import { useDijalog } from "@/components/ui/Dijalog";
 
 /**
- * Logotip pokrovitelja u pregledu administratorskog tima (donacije čl. 13 st. 4).
+ * Logotip pokrovitelja u pregledu administratorskog tima (donacije čl. 26 st. 2).
  *
  * 🔴 Moderacija je samo UKLANJANJE, uz obavezan razlog — nikad prepravka ni
  * postavljanje logotipa umesto pokrovitelja (isto pravilo kao za oglase).

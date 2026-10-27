@@ -51,7 +51,7 @@ interface Props {
   currentUserId: string;
   blog: BlogObjava[];
   chatInicijalno: ChatPoruka[];
-  /** UO Fondacije — može ukloniti spornu poruku iz sobe (Uslovi čl. 25 st. 2). */
+  /** UO Fondacije — može ukloniti spornu poruku iz sobe (Uslovi čl. 29 st. 2). */
   jeAdminViewer: boolean;
   /** Brojač stanja sistema na vrhu strane. */
   brojac: { clanovi: number; oglasi: number; razmene: number; opticaj: number };
@@ -129,7 +129,7 @@ export default function PocetnaKlijent({
   const prebaci = (s: Sekcija) => postaviSekciju(sekcija === s ? null : s);
 
   /**
-   * Uklanjanje sporne poruke iz Pričaonice (Uslovi čl. 25 st. 2 — obuhvata „svu
+   * Uklanjanje sporne poruke iz Pričaonice (Uslovi čl. 29 — obuhvata „svu
    * drugu komunikaciju putem Platforme"). Razlog je obavezan jer se šalje autoru.
    * Bez ovoga bi jedina poluga nad spornom porukom bila isključenje korisnika.
    */
@@ -299,7 +299,7 @@ export default function PocetnaKlijent({
               <UcitavanjeListe poruka={tc("ucitavanje")} />
             ) : (
               /* Nov član spisak članova ne dobija ni od servera (Pravilnik
-                 čl. 67) — komponenta mu na isto mesto stavlja objašnjenje. */
+                 čl. 56) — komponenta mu na isto mesto stavlja objašnjenje. */
               <ClanoviSekcija clanovi={clanovi ?? []} verified={verified} />
             )
           ) : sekcija === "razmene" ? (
@@ -454,7 +454,7 @@ export default function PocetnaKlijent({
             )}
           </div>
 
-          {/* Unos — od seta 4.8.1 piše i nov član (Uslovi čl. 16 st. 5) */}
+          {/* Unos — od seta 4.8.1 piše i nov član (Uslovi čl. 14 st. 2) */}
           <div className="border-t border-kolo-border p-3">
             <form onSubmit={posaljiPoruku} className="flex gap-2">
                 <input

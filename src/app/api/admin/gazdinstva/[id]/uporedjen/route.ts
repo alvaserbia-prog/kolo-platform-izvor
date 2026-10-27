@@ -8,8 +8,8 @@ import { oznaciPoredjenje, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
  * POST — Fondacija je ime i prezime nosioca, adresu i BPG iz prijave uporedila sa
- * izvodom iz Registra (Pravilnik o gazdinstvima čl. 4b st. 3). Kad se ne slažu,
- * prijava se vraća na dopunu (`/vrati`). 🔴 Poređenje ne potvrđuje stvarnost (čl. 4b st. 5).
+ * izvodom iz Registra (Pravilnik o gazdinstvima čl. 3 st. 3). Kad se ne slažu,
+ * prijava se vraća na dopunu (`/vrati`). 🔴 Poređenje ne potvrđuje stvarnost (čl. 4 st. 3).
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

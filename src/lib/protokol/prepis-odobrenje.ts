@@ -7,11 +7,11 @@ import { ROK_ODOBRENJA_PREPISA_DANA, pragOdobrenja } from "@/lib/deca-pravila";
 
 /**
  * Prepis iz zapisa maloletnog korisnika koji čeka odobrenje roditelja
- * (Pravilnik o učešću dece, čl. 14).
+ * (Pravilnik o učešću dece, čl. 30).
  *
  * ─── Zašto postoji ──────────────────────────────────────────────────────────
  *
- * Prekidač iz čl. 10 st. 2 je saglasnost data UNAPRED, za sve i zauvek. Porodični
+ * Prekidač iz čl. 20 st. 2 je saglasnost data UNAPRED, za sve i zauvek. Porodični
  * zakon (čl. 64) traži saglasnost roditelja za KONKRETAN pravni posao, a poslove
  * male vrednosti maloletnik preduzima sam. Prag razdvaja to dvoje: sitna razmena
  * ide bez ikoga, veća čeka roditelja.
@@ -151,7 +151,7 @@ export async function odluciOPrepisu(
   }
   // Uslov prepisa se proverava PONOVO (set 4.8.2): ako je nalog deteta u međuvremenu
   // prešao u „dete sa roditeljem", ne učestvuje u ažuriranju evidencije POEN-a
-  // (Pravilnik o učešću dece čl. 4c t. 2, 14 poslednji stav).
+  // (Pravilnik o učešću dece čl. 5 st. 1 t. 2, čl. 30 st. 6).
   const [odU, kaU] = await Promise.all([ucitajUcesnika(dete.id), ucitajUcesnika(primalac.id)]);
   const uslov = odU && kaU ? smeDaPrepise(odU, kaU) : { ok: false as const, razlog: "Nalog više ne postoji.", status: 403 as const };
   if (!uslov.ok) {
@@ -212,7 +212,7 @@ async function javiDetetu(
 }
 
 /**
- * Istek roka — noćni posao, uz postupak potvrde iz čl. 6.
+ * Istek roka — noćni posao, rok iz čl. 30 st. 4 (7 dana).
  *
  * Ništa se ne vraća jer ništa nije ni skinuto; zahtev samo prestaje da važi.
  */

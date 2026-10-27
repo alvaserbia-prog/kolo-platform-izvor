@@ -92,7 +92,7 @@ export default function CenaUnos({
       )}
 
       {/* Orijentir za iznos — bez broja: odnos izvodi učesnik, Fondacija ga ne
-          objavljuje (Uslovi čl. 19). Isti tekst stoji u FAQ-u „Kako da odredim
+          objavljuje (Uslovi čl. 21). Isti tekst stoji u FAQ-u „Kako da odredim
           cenu u POENIMA?". */}
       {cenaTip !== "DOGOVOR" && (
         <p className="mt-2 text-xs text-kolo-muted leading-relaxed">{t("cena_iznos_hint")}</p>

@@ -6,6 +6,7 @@ import { izvrsiZrnoOperacije } from "@/lib/protokol/zrno";
 import { prisma } from "@/lib/prisma";
 import { jeSuperadmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
+import { dohvatiFazuStatus } from "@/lib/protokol/faza-sistema";
 
 // POST /api/admin/zrno/nocna — manualni okidač ZRNO operacija
 export async function POST() {
@@ -24,6 +25,9 @@ export async function POST() {
 }
 
 // PATCH /api/admin/zrno/nocna — toggle ZRNO tržište
+//
+// 🔴 Upis ZRNA ne otvara se ručno u Fazi 1: ZRNO se upisuje od Faze 2 (Pravilnik
+// čl. 22 st. 1, čl. 41), a kanal otvara samo dostizanje praga (`proveriIAktivirajFazu2`).
 export async function PATCH() {
   const session = await getServerSession(authOptions);
   if (!session || !jeSuperadmin(session.user))
@@ -31,6 +35,15 @@ export async function PATCH() {
 
   const current = await prisma.zrnoKanal.findUnique({ where: { id: "singleton" } });
   const novoStanje = !(current?.isActive ?? false);
+
+  if (novoStanje) {
+    const faza = await dohvatiFazuStatus();
+    if (faza.faza === "FAZA_1")
+      return await greska(
+        "Upis ZRNA se ne otvara u Fazi 1 — otvara se sam, dostizanjem praga za Fazu 2 (Pravilnik čl. 22 st. 1, čl. 41).",
+        409,
+      );
+  }
 
   await prisma.zrnoKanal.upsert({
     where: { id: "singleton" },

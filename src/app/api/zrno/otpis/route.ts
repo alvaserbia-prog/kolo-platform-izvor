@@ -12,9 +12,9 @@ import { smeOtpisatiZrno } from "@/lib/gornje-kolo-pravila";
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  // Slobodno ZRNO otpisuje čuvar Kola i član bez potvrde (Pravilnik čl. 20, 21).
+  // Slobodno ZRNO otpisuje čuvar Kola i član bez potvrde (Pravilnik čl. 23 st. 2).
   // Korisniku je ZRNO zamrznuto — ne otpisuje ga dok ponovo ne bude verifikovan
-  // (čl. 30 st. 3). Provera se ponavlja i pri izvršenju u ponoć.
+  // (čl. 29 st. 1). Provera se ponavlja i pri izvršenju u ponoć.
   const status = await ucitajStatus(session.user.id);
   if (!status || !smeOtpisatiZrno(status))
     return await greska("Upisano ZRNO ti je zamrznuto dok ponovo ne budeš verifikovan.", 403);

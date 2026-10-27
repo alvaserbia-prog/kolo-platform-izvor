@@ -29,7 +29,7 @@ export default async function PoglavljeKakoRadi() {
   const locale = await getLocale();
   const broj = (n: number) => n.toLocaleString(intlTag(locale));
 
-  // Kanali iz Pravilnika čl. 15, bez rasta kolektivnih oblika: taj kanal upisuje
+  // Kanali iz Pravilnika čl. 19, bez rasta kolektivnih oblika: taj kanal upisuje
   // u zapis zadruge, ne čoveku, pa stoji kao napomena ispod kartica. Kartice nemaju
   // redne brojeve i ne prate redosled iz akta (odluka vlasnika, 23.10.2026): idu
   // redom kojim čovek na njih nailazi — prvo ono što radi sam, pa novac, pa
@@ -48,7 +48,7 @@ export default async function PoglavljeKakoRadi() {
     { naslov: t("n5_naslov"), opis: t("n5_opis"), iznos: t("n5_iznos_prag", { prag: broj(MINIMUM_PRIJAVE_POKROVITELJSTVA) }), zlatna: false },
     // Socijalni programi stoje iznad dečjeg prostora (odluka vlasnika, 23.10.2026).
     { naslov: t("n4_naslov"), opis: t("n4_opis"), iznos: t("n4_iznos"), zlatna: false },
-    // Doprinos dece u dečjem prostoru (čl. 15 t. 9).
+    // Doprinos dece u dečjem prostoru (čl. 19 st. 1 t. 9).
     {
       naslov: t("n8_naslov"),
       opis: t("n8_opis_poen", { iznos: broj(PRIJATELJSTVO_POEN) }),
@@ -127,7 +127,7 @@ export default async function PoglavljeKakoRadi() {
         </div>
 
         {/* Zapis zadruge nije lični kanal — POEN u njemu ne pripada nikome lično
-            (Pravilnik o zadrugama čl. 10–11), pa stoji ispod kartica, ne u brojaču. */}
+            (Pravilnik o zadrugama čl. 9–10), pa stoji ispod kartica, ne u brojaču. */}
         <p className="text-sm text-kolo-muted leading-relaxed max-w-2xl mx-auto text-center">
           {t("kanali_zadruga_napomena")}{" "}
           <Link href="/zadruge" className="text-kolo-green-700 hover:underline">

@@ -6,7 +6,7 @@ import { otpremiIzvod, GazdinstvoGreska, MAX_IZVOD_BAJTOVA } from "@/lib/protoko
 
 /**
  * POST — otpremanje izvoda iz Registra poljoprivrednih gazdinstava (Pravilnik o
- * gazdinstvima čl. 4b st. 1–2), `multipart/form-data` sa poljem `fajl` (PDF, JPG
+ * gazdinstvima čl. 3 st. 3: izvod se više ne prilaže), `multipart/form-data` sa poljem `fajl` (PDF, JPG
  * ili PNG, najviše 5 MB). Prilaže ga podnosilac koji je korisnik ili član bez
  * potvrde, za gazdinstvo upisano u Registar.
  *

@@ -19,7 +19,7 @@ import { PRAG_VERIFIKACIJE } from "@/lib/status-ucesnika-pravila";
  *
  * „Aktivni" su podskup redovnih (početni članovi uključeni): verifikovan učesnik koji
  * ima i PRVI POTVRĐEN DOPRINOS — isti trag učešća koji otključava POEN po potvrdi
- * (dokaz stvarnosti čl. 7), pa se tipovi emisija čitaju iz `TIP_PO_USLOVU`, ne
+ * (dokaz stvarnosti čl. 19), pa se tipovi emisija čitaju iz `TIP_PO_USLOVU`, ne
  * prepisuju. Naziv je samo naziv kartice u panelu, ne status člana.
  *
  * `punoletni` je prvi red bez dece (admin Pregled): deca se tamo prikazuju u
@@ -88,7 +88,7 @@ const OSNIVAC_PRESTAO: Prisma.UserWhereInput = {
 };
 
 export const USLOVI_STATUSA = {
-  /** Korisnik: punoletan, nije verifikovan (Pravilnik čl. 28); i osnivač kome je status prestao. */
+  /** Korisnik: punoletan, nije verifikovan (Pravilnik čl. 28 st. 1); i osnivač kome je status prestao. */
   korisnik: {
     ...PUNOLETAN,
     OR: [
@@ -101,21 +101,21 @@ export const USLOVI_STATUSA = {
     ...PUNOLETAN,
     OR: [OSNIVAC_ZIV, { verified: true, indeksStvarnosti: { gte: PRAG_VERIFIKACIJE } }],
   },
-  /** Član bez potvrde (Pravilnik čl. 28a). */
+  /** Član bez potvrde (Pravilnik čl. 28 st. 3; dokaz stvarnosti čl. 6). */
   bezPotvrde: { ...VERIFIKOVAN_NE_OSNIVAC, potvrdjenAt: null },
-  /** Član Kola (Pravilnik čl. 29) — potvrđen, bez ZRNA. */
+  /** Član Kola (Pravilnik čl. 28) — potvrđen, bez ZRNA. */
   clanKola: {
     ...VERIFIKOVAN_NE_OSNIVAC,
     potvrdjenAt: { not: null },
     tipKorisnika: { not: TipKorisnika.NOSILAC_ZRNA },
   },
-  /** Čuvar Kola (Pravilnik čl. 30) — potvrđen i drži ZRNO; osnivač se broji zasebno. */
+  /** Čuvar Kola (Pravilnik čl. 22 st. 2) — potvrđen i drži ZRNO; osnivač se broji zasebno. */
   cuvar: {
     ...VERIFIKOVAN_NE_OSNIVAC,
     potvrdjenAt: { not: null },
     tipKorisnika: TipKorisnika.NOSILAC_ZRNA,
   },
-  /** Osnivač (dokaz stvarnosti čl. 14, 15; Pravilnik čl. 82). */
+  /** Osnivač (dokaz stvarnosti čl. 29; Pravilnik čl. 58). */
   osnivac: { ...PUNOLETAN, ...OSNIVAC_ZIV },
 } satisfies Record<string, Prisma.UserWhereInput>;
 
@@ -125,7 +125,7 @@ const ZIV_RODITELJ = {
 } satisfies Prisma.UserWhereInput;
 
 /**
- * Deca po stanju (Pravilnik o učešću dece čl. 4c). Dete Kola je `USLOV_AKTIVNO_DETE`
+ * Deca po stanju (Pravilnik o učešću dece čl. 5). Dete Kola je `USLOV_AKTIVNO_DETE`
  * (`protokol/skole.ts`) — isti uslov kojim se dete broji svuda, ne kopija.
  */
 export const USLOVI_DECE = {

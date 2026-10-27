@@ -9,11 +9,11 @@ type Zahtev = { id: string; roditelj: string; trazeno: string | null };
 
 /**
  * Zahtevi za potvrdu postojanja deteta — na stranici Potvrde, sidro
- * `#postojanje-deteta` (Pravilnik o učešću dece čl. 6 st. 3–6; set 4.8.2).
+ * `#postojanje-deteta` (Pravilnik o učešću dece čl. 13 st. 2–6; set 4.8.2).
  *
  * Bez propova. Vidi ga SAMO član Kola ili osnivač: ruta drugima vraća 403, pa se
  * komponenta tada ne crta. 🔴 Svaki zahtev nosi ISKLJUČIVO pseudonim roditelja —
- * ni pseudonim, ni uzrast, ni pol, ni školu deteta (čl. 6 st. 3). Sopstveni zahtevi
+ * ni pseudonim, ni uzrast, ni pol, ni školu deteta (čl. 13 st. 2). Sopstveni zahtevi
  * i zahtevi za decu kojoj je posmatrač roditelj se ne prikazuju (drugi roditelj
  * potvrdu ne daje, st. 4).
  *

@@ -4,9 +4,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { izracunajGlasove } from "@/lib/protokol/zrno";
-import { fazaPredloga, zatvoriIstekleIObjaviIshod } from "@/lib/protokol/glasanje";
+import { UKLJUCI_ZA_PRIKAZ, prikazPredloga, zatvoriIstekleIObjaviIshod } from "@/lib/protokol/glasanje";
+import { ucitajStatus } from "@/lib/protokol/status";
+import { vidiPseudonimeGornjegKola } from "@/lib/gornje-kolo-pravila";
 
-// GET /api/glasanje/[id] — detalji predloga + rezultati
+// GET /api/glasanje/[id] — detalji predloga + zbirovi. Pseudonime vide samo učesnici
+// (Pravilnik o Gornjem Kolu čl. 9 st. 3, 19 st. 2); izborni glas se ne broji kao
+// „protiv" (`zbiroviGlasova`).
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -16,40 +20,17 @@ export async function GET(
 
   const { id } = await params;
 
-  // Zatvori istekle i utvrdi ishod (čl. 13)
+  // Zatvori istekle i utvrdi ishod (Gornje Kolo čl. 7, 10 st. 4, 19)
   await zatvoriIstekleIObjaviIshod();
 
-  const predlog = await prisma.glasanjePredlog.findUnique({
-    where: { id },
-    include: {
-      author: { select: { pseudonim: true } },
-      glasovi: true,
-    },
-  });
-
+  const predlog = await prisma.glasanjePredlog.findUnique({ where: { id }, include: UKLJUCI_ZA_PRIKAZ });
   if (!predlog) return await greska("Predlog nije pronađen.", 404);
 
-  const mojGlas = predlog.glasovi.find((g) => g.userId === session.user.id);
-  const zaGlasova = predlog.glasovi.filter((g) => g.za).reduce((s, g) => s + g.glasackaGlasova, 0);
-  const protiGlasova = predlog.glasovi.filter((g) => !g.za).reduce((s, g) => s + g.glasackaGlasova, 0);
+  const status = await ucitajStatus(session.user.id);
+  const prikaz = prikazPredloga(predlog, session.user.id, vidiPseudonimeGornjegKola(status));
 
   // Moja glasačka moć (za prikaz)
   const mojGlasoviBroj = await izracunajGlasove(session.user.id);
 
-  return NextResponse.json({
-    id: predlog.id,
-    title: predlog.title,
-    description: predlog.description,
-    authorPseudonim: predlog.author.pseudonim,
-    glasanjePocetak: predlog.glasanjePocetak.toISOString(),
-    deadline: predlog.deadline.toISOString(),
-    status: predlog.status,
-    faza: fazaPredloga(predlog),
-    ishodUsvojen: predlog.ishodUsvojen,
-    zaGlasova,
-    protiGlasova,
-    mojGlas: mojGlas ? { za: mojGlas.za, glasackaGlasova: mojGlas.glasackaGlasova } : null,
-    mojGlasoviBroj,
-    createdAt: predlog.createdAt.toISOString(),
-  });
+  return NextResponse.json({ ...prikaz, mojGlasoviBroj });
 }

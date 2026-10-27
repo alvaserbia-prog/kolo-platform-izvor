@@ -6,7 +6,7 @@ import { posaljiKodZaPotpis, odgovorNaGresku } from "@/lib/protokol/pokroviteljs
 
 /**
  * POST /api/pokroviteljstvo/dobra/[id]/kod — šalje jednokratni šestocifreni kod za
- * potpis ugovora na adresu elektronske pošte podnosioca (donacije čl. 13g st. 4).
+ * potpis ugovora na adresu elektronske pošte podnosioca (donacije čl. 32 st. 1).
  * U bazi ostaje samo heš koda, sa rokom od 15 minuta i najviše 5 pokušaja.
  */
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

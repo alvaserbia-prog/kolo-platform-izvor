@@ -27,12 +27,19 @@ export async function POST(
   if (enrollment.status !== "PENDING")
     return await greska("Prijava nije na čekanju.", 400);
 
+  // 🔴 Posebna podrška bez osnova nema pravo (Pravilnik o programima podrške čl. 14
+  // st. 1: pravo se ostvaruje po jednom od dva osnova). Odobrena bez osnova, revizija
+  // bi je obustavila prvim prolazom (`rokReverifikacije` joj daje rok = trenutak
+  // odobrenja), pa se odobrenje odbija pre bilo kakvog upisa.
+  if (enrollment.type === "POSEBNA_BRIGA" && enrollment.osnov == null)
+    return await greska("Posebna podrška se ne odobrava bez osnova (gubitak doma ili bolest).", 409);
+
   const body = await req.json().catch(() => ({}));
 
-  // Tvrda blokada (anti-malverzacija, Pravilnik o programima podrške čl. 4 st. 2,
+  // Tvrda blokada (anti-malverzacija, Pravilnik o programima podrške čl. 4 st. 3 i 5,
   // set 4.8.2): odobrava se tek kad je ispunjenost uslova potvrđena — od člana Kola
   // koji podnosioca lično zna, odnosno od Fondacije. Ko ima više potvrđivača po
-  // zatečenim verifikacijama (dokaz stvarnosti čl. 22), dovoljna je potvrda jednog.
+  // zatečenim verifikacijama (programi čl. 5 st. 3), dovoljna je potvrda jednog.
   //
   // Kad podnosilac nema nijednog podobnog potvrđivača (nijedan zahtev nije upućen),
   // ispunjenost uslova potvrđuje Fondacija: `obrazlozenjeFondacije` je obavezno i
@@ -56,7 +63,7 @@ export async function POST(
   }
   const dailyAmount = body.dailyAmount ? Number(body.dailyAmount) : undefined;
 
-  // Reverifikacija statusa (Pravilnik o programima podrške čl. 12/13).
+  // Reverifikacija statusa (Pravilnik o programima podrške čl. 18, 19).
   //
   // 🔴 Rok se traži od `rokReverifikacije`, ne od broja dana po tipu programa:
   // kod Posebne podrške zavisi od OSNOVA i od podataka u prijavi — gubitak doma

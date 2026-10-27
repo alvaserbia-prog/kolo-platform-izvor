@@ -35,7 +35,7 @@ export async function GET() {
     slobodno,
     aktivno,
     ukupno: slobodno + aktivno,
-    // Set 4.8.2: glasačku moć ima samo čuvar Kola (Pravilnik čl. 30 st. 3, 45).
+    // Set 4.8.2: glasačku moć ima samo čuvar Kola (Pravilnik čl. 29, 43).
     glasackaMoc: status && smeAktiviratiZrno(status) ? glasackaMoc(aktivno) : 0,
     polozaj: polozajZrna(status ?? "KORISNIK", slobodno + aktivno),
     koeficijent,

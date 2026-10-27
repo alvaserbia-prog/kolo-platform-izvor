@@ -1,6 +1,6 @@
 /**
  * Modul Deca — samostalna registracija deteta i preuzimanje naloga
- * (Pravilnik o Modulu Deca, čl. 4a–4c).
+ * (Pravilnik o učešću dece, čl. 5, 8–11).
  *
  * ─── Zašto drugi ulaz uopšte postoji ────────────────────────────────────────
  *
@@ -11,7 +11,7 @@
  * ─── Šta dete unosi, a šta ne ───────────────────────────────────────────────
  *
  * Unosi pseudonim, lozinku i **imejl roditelja**. NE unosi datum rođenja — njega
- * upisuje roditelj pri preuzimanju (čl. 7), jer je roditeljska izjava jedina
+ * upisuje roditelj pri preuzimanju (čl. 12 st. 1), jer je roditeljska izjava jedina
  * provera godina kojom sistem raspolaže. Do preuzimanja o detetu se ne zna ništa
  * osim pseudonima; u poruci roditelju stoji **samo pseudonim**, nikad pravo ime —
  * ne zna se da li je adresa tačna.
@@ -48,11 +48,11 @@ import {
   uzrastZaModul,
 } from "@/lib/deca-pravila";
 
-/** Najviše dva roditelja po detetu (čl. 4b st. 6) — otac i majka, ista ovlašćenja. */
+/** Najviše dva roditelja po detetu (čl. 2 st. 4) — otac i majka, ista ovlašćenja. */
 export const MAX_RODITELJA = 2;
 
 /**
- * Najviše poziva koji istovremeno čekaju na jednoj adresi (čl. 4a).
+ * Najviše poziva koji istovremeno čekaju na jednoj adresi (čl. 8).
  *
  * Troje dece iz iste porodice na istu adresu je uobičajeno; više od toga na
  * adresu koju niko nije potvrdio je slanje pošte tuđem čoveku.
@@ -66,10 +66,10 @@ function generisiKod(): string {
 
 /**
  * Podaci za red `RoditeljPoziv` koji nastaje uz nalog otvoren IZ RODITELJSKOG
- * PROFILA (čl. 4).
+ * PROFILA (čl. 7).
  *
  * 🔴 Tu nema poziva — roditelj je već tu. Red ipak nastaje, jer u njemu živi
- * **šestocifreni kod kojim ulazi DRUGI roditelj** (čl. 4b st. 6). Bez njega bi
+ * **šestocifreni kod kojim ulazi DRUGI roditelj** (čl. 11 st. 1). Bez njega bi
  * drugi roditelj mogao da uđe samo kod dece koja su se registrovala sama, što je
  * razlika bez razloga.
  *
@@ -92,7 +92,7 @@ export function poljaPozivaZaRoditeljskiUlaz(email: string | null, sada: Date) {
  * Datum rođenja iz tela zahteva.
  *
  * Tri ishoda, i sva tri su potrebna: `null` = nije poslat (drugi roditelj ga i ne
- * šalje, jer se datum posle upisa ne menja — čl. 7), `undefined` = poslat je
+ * šalje, jer se datum posle upisa ne menja — čl. 12), `undefined` = poslat je
  * neispravan podatak, `Date` = ispravan.
  */
 export function parsirajDatumRodjenja(vrednost: unknown): Date | null | undefined {
@@ -105,7 +105,7 @@ export function parsirajDatumRodjenja(vrednost: unknown): Date | null | undefine
 
 /**
  * Novi podaci poziva kad dete posle ukidanja veze po prijavi lažnog roditeljstva
- * ostane bez roditelja (čl. 4e st. 4): nalog prelazi u „dete na čekanju", rok od
+ * ostane bez roditelja (čl. 18 st. 3): nalog prelazi u „dete na čekanju", rok od
  * četrnaest dana za preuzimanje teče iznova od dana ukidanja, a kod i token se
  * menjaju — lice čija je veza ukinuta stari kod zna.
  *
@@ -139,7 +139,7 @@ export type RegistracijaDetetaUlaz = {
 };
 
 /**
- * Dete otvara nalog samo. Nalog počinje u stanju `NA_CEKANJU` (čl. 4c):
+ * Dete otvara nalog samo. Nalog počinje u stanju `NA_CEKANJU` (čl. 5 st. 1 t. 1):
  * ima profil, skenira QR kodove i sklapa prijateljstva, ali nema Pričaonicu i
  * POEN mu se ne upisuje.
  *
@@ -176,10 +176,10 @@ export async function registrujDete(ulaz: RegistracijaDetetaUlaz) {
         ...poljaPseudonima(ulaz.pseudonim),
         passwordHash: ulaz.passwordHash,
         memberHash: ulaz.memberHash,
-        // Maloletni korisnik ostaje NEVERIFIKOVAN (čl. 15): nema indeks stvarnosti i
+        // Maloletni korisnik ostaje NEVERIFIKOVAN (čl. 29 st. 2): nema indeks stvarnosti i
         // nikoga ne potvrđuje. Time sve zatečene brane sistema važe bez nove provere.
         tipKorisnika: TipKorisnika.NEVERIFIKOVAN,
-        // 🔴 Bez datuma rođenja — upisuje ga roditelj pri preuzimanju (čl. 7).
+        // 🔴 Bez datuma rođenja — upisuje ga roditelj pri preuzimanju (čl. 12 st. 1).
         ...poljaDeteta(null),
         vodicVidjenAt: null,
         wallet: { create: { type: WalletType.USER, balance: 0 } },
@@ -222,19 +222,19 @@ export async function registrujDete(ulaz: RegistracijaDetetaUlaz) {
  * ─── Zašto poruka opisuje DVA koraka, a ne jedan ────────────────────────────
  *
  * Preuzimanje naloga i prelazak u „dete Kola" (roditelj član Kola + potvrda
- * postojanja deteta, čl. 4c t. 3) su dve različite stvari i ne dešavaju se istog dana. Ranija poruka je to pominjala u jednoj rečenici pri
+ * postojanja deteta, čl. 5 st. 1 t. 3) su dve različite stvari i ne dešavaju se istog dana. Ranija poruka je to pominjala u jednoj rečenici pri
  * dnu, pa je roditelj koji preuzme nalog očekivao da detetu odmah krene POEN — a
  * POEN čeka drugi korak. Sada svaki korak ima svoj naslov i svoju posledicu, pa
  * čovek vidi šta dobija odmah, a šta tek kad ga neko potvrdi.
  *
  * Uz to su izričito nabrojana ovlašćenja koja roditelj dobija preuzimanjem
- * (čl. 9 i 10). Bez toga poruka traži saglasnost, a ne kaže šta se za nju dobija.
+ * (čl. 19 i 20). Bez toga poruka traži saglasnost, a ne kaže šta se za nju dobija.
  *
  * ─── Zašto su odbijanje i brisanje ravnopravno navedeni ─────────────────────
  *
  * Adresa nije proverena, pa je čovek na drugoj strani možda nema veze sa detetom.
  * Njemu poruka mora da ponudi izlaz jednako vidljivo kao i pristanak, inače je to
- * pritisak, a ne izbor. Obe radnje rade BEZ prijave (čl. 4b st. 4).
+ * pritisak, a ne izbor. Obe radnje rade BEZ prijave (čl. 10 st. 4).
  */
 async function posaljiPozivRoditelju(
   email: string,
@@ -347,7 +347,7 @@ async function poveziRoditelja(
   }
 
   // Datum rođenja se traži samo pri PRVOM preuzimanju: posle upisa se ne menja
-  // (čl. 7), pa drugi roditelj nema šta da unese ni da ispravi.
+  // (čl. 12), pa drugi roditelj nema šta da unese ni da ispravi.
   if (!dete.datumRodjenja) {
     if (!datumRodjenja) throw new DecaGreska("Datum rođenja deteta je obavezan.", 400);
     const godine = uzrast(datumRodjenja, beogradskiDan());
@@ -361,7 +361,7 @@ async function poveziRoditelja(
 
   await prisma.$transaction(async (tx) => {
     // Preuzimanje je radnja kojom roditelj preuzima odgovornost za nalog, pa
-    // izjava iz čl. 6 st. 1 nastaje ODMAH i rok mu ne teče. Tekst se snima i
+    // izjava iz čl. 12 nastaje ODMAH i rok mu ne teče. Tekst se snima i
     // posle toga se ne menja.
     await tx.roditeljstvo.create({
       data: {
@@ -382,7 +382,7 @@ async function poveziRoditelja(
       await tx.user.update({ where: { id: dete.id }, data: { datumRodjenja } });
     }
     // Poziv je odradio posao. Red OSTAJE — u njemu živi šestocifreni kod kojim
-    // ulazi drugi roditelj (čl. 4b st. 6) — ali se obeleži kao iskorišćen, pa
+    // ulazi drugi roditelj (čl. 11 st. 1) — ali se obeleži kao iskorišćen, pa
     // noćni posao više ne broji ovaj nalog kao nepreuzet.
     await tx.roditeljPoziv.updateMany({
       where: { deteId: dete.id, iskoriscenAt: null },
@@ -390,9 +390,9 @@ async function poveziRoditelja(
     });
   });
 
-  // 🔴 Preuzimanje ne traži potvrđenost roditelja (čl. 4b st. 6, 5 st. 1) i nalog
+  // 🔴 Preuzimanje ne traži potvrđenost roditelja (čl. 11 st. 1) i nalog
   // vodi u „dete sa roditeljem". Roditelju koji je član Kola ili osnivač ide poziv
-  // da zatraži potvrdu postojanja deteta (čl. 6 st. 2).
+  // da zatraži potvrdu postojanja deteta (čl. 13 st. 1).
   await javiDaZatraziPotvrdu(roditeljId).catch(() => {});
 
   await obavesti(dete.id, {
@@ -405,7 +405,7 @@ async function poveziRoditelja(
   }).catch(() => {});
 
   // Preuzimanjem nalog postaje „dete sa roditeljem", ne dete Kola: nova veza još
-  // nema potvrdu postojanja (čl. 6), pa se prijateljstva ovde ne osvežavaju.
+  // nema potvrdu postojanja (čl. 13), pa se prijateljstva ovde ne osvežavaju.
 
   return { deteId: dete.id, pseudonim: dete.pseudonim };
 }
@@ -456,7 +456,7 @@ export async function preuzmiKodom(
 }
 
 /**
- * „Ovo nije moje dete" (čl. 4b st. 4).
+ * „Ovo nije moje dete" (čl. 10 st. 4).
  *
  * Nalog se NE briše — dete je možda pogrešno otkucalo adresu i ima još vremena da
  * je ispravi. Poziv umire, pa ista adresa više ne dobija poruku, a nalog i dalje
@@ -472,7 +472,7 @@ export async function odbijPoziv(token: string) {
 }
 
 /**
- * „Obriši nalog" iz poruke (čl. 4b st. 4).
+ * „Obriši nalog" iz poruke (čl. 10 st. 4).
  *
  * 🔴 Radi BEZ prijave: onaj ko drži link je jedina osoba koju sistem u tom
  * trenutku može da pita, a odbijanje bez mogućnosti brisanja ostavlja tuđe dete da
@@ -492,11 +492,11 @@ export async function obrisiPoTokenu(token: string) {
     throw new DecaGreska("Nalog je već preuzet — briše se sa profila deteta.", 409);
   }
   if (poziv.tokenDo < new Date()) throw new DecaGreska("Link je istekao.", 410);
-  return obrisiDecjiNalog(poziv.dete.id, poziv.dete.pseudonim, null, "Modul Deca, čl. 4b st. 4");
+  return obrisiDecjiNalog(poziv.dete.id, poziv.dete.pseudonim, null, "Pravilnik o učešću dece, čl. 10 st. 4");
 }
 
 /**
- * Maloletni korisnik sam briše nalog koji čeka preuzimanje (čl. 4a st. 6).
+ * Maloletni korisnik sam briše nalog koji čeka preuzimanje (čl. 8 st. 3).
  *
  * 🔴 Do 4.4.8 je jedini izlaz iz naloga na čekanju držao RODITELJ — dugmetom iz
  * poruke ili istekom roka od četrnaest dana. Dete koje se predomisli nije imalo
@@ -508,7 +508,7 @@ export async function obrisiPoTokenu(token: string) {
  * zajedno sa zapisima o prijateljstvima, ne anonimizuje se kao punoletni nalog.
  *
  * 🔴 Radnja je dostupna ISKLJUČIVO u stanju „na čekanju". Po preuzimanju naloga
- * odgovornost je na roditelju (čl. 10) i brisanje ide preko njegovog profila —
+ * odgovornost je na roditelju (čl. 20 st. 4) i brisanje ide preko njegovog profila —
  * inače bi dete jednim potezom obrisalo nalog koji roditelj nadzire.
  */
 export async function obrisiSopstveniNalogNaCekanju(userId: string) {
@@ -526,13 +526,13 @@ export async function obrisiSopstveniNalogNaCekanju(userId: string) {
   if (dete.roditeljstvaKaoDete.length > 0) {
     throw new DecaGreska("Nalog je preuzet — briše ga roditelj sa profila deteta.", 409);
   }
-  return obrisiDecjiNalog(userId, dete.pseudonim, null, "Modul Deca, čl. 4a st. 6");
+  return obrisiDecjiNalog(userId, dete.pseudonim, null, "Pravilnik o učešću dece, čl. 8 st. 3");
 }
 
 // ── Primarni put: predlog veze pri registraciji roditelja ────────────────────
 
 /**
- * Pozivi upućeni na imejl ovog korisnika (čl. 4b st. 6, primarni put).
+ * Pozivi upućeni na imejl ovog korisnika (čl. 11 st. 1, primarni put).
  *
  * Roditelj koji se registruje istim imejlom koji je dete unelo ne mora ništa da
  * traži — veza mu se sama predloži u odeljku „Moja deca".
@@ -561,7 +561,7 @@ export async function poziviZaEmail(email: string | null) {
   }));
 }
 
-// ── Noćni posao: nalozi koje niko nije preuzeo (čl. 4b st. 5) ────────────────
+// ── Noćni posao: nalozi koje niko nije preuzeo (čl. 10 st. 5) ────────────────
 
 /**
  * Briše naloge dece koje niko nije preuzeo u roku od četrnaest dana.
@@ -586,7 +586,7 @@ export async function obrisiNepreuzeteNaloge(sada: Date = new Date()) {
   let obrisano = 0;
   for (const p of istekli) {
     try {
-      await obrisiDecjiNalog(p.dete.id, p.dete.pseudonim, null, "Modul Deca, čl. 4b st. 5");
+      await obrisiDecjiNalog(p.dete.id, p.dete.pseudonim, null, "Pravilnik o učešću dece, čl. 10 st. 5");
       obrisano += 1;
     } catch (e) {
       console.error("[deca-poziv] Brisanje nepreuzetog naloga nije uspelo", p.dete.id, e);

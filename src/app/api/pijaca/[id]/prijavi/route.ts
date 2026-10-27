@@ -8,13 +8,13 @@ import { jeRazlogPrijave, RAZLOG_OPIS, MAX_RAZLOG } from "@/lib/moderacija";
 
 // POST /api/pijaca/[id]/prijavi — korisnik prijavljuje sporan oglas.
 //
-// Uslovi čl. 25 st. 2 izričito pominju sadržaj „koji je prijavljen od strane
+// Uslovi čl. 29 st. 2 izričito pominju sadržaj „koji je prijavljen od strane
 // drugih korisnika kao problematičan" kao osnov za uklanjanje — ovo je taj kanal.
 //
 // Otvoreno je svim PRIJAVLJENIM korisnicima, ne samo verifikovanima: pregled
-// oglasa je javan (Pravilnik čl. 16), pa i neverifikovani vidi sporan sadržaj i
+// oglasa je javan (Uslovi čl. 17 st. 2), pa i neverifikovani vidi sporan sadržaj i
 // treba da može da ga prijavi. Prijava nije komunikacija sa oglašivačem, pa ne
-// zadire u ograničenje iz Uslova čl. 12.
+// zadire u ograničenje iz Uslova čl. 14 st. 2.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);

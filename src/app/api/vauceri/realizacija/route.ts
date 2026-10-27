@@ -6,7 +6,7 @@ import { potvrdiRealizaciju, odgovorNaGresku } from "@/lib/protokol/pokroviteljs
 
 /**
  * POST /api/vauceri/realizacija — davalac potvrđuje da je dobro predato, odnosno
- * usluga pružena (nabavke čl. 30g st. 1). Potvrđuje podnosilac prijave ILI njegov
+ * usluga pružena (nabavke čl. 34 st. 1). Potvrđuje podnosilac prijave ILI njegov
  * aktivan zaposleni — niko drugi (`potvrdiRealizaciju` → `ovlascenjeKorisnika`);
  * ko je potvrdio, beleži se u `Vaucer.potvrdioId`. Odgovor ne nosi podatke o imaocu.
  */

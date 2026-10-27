@@ -15,7 +15,7 @@ import { useMe } from "@/hooks/useMe";
  *
  * Roditelju (bilo kog statusa) kartica nosi i ono što čeka njega kao roditelja
  * (paket F, F1-2): prepis deteta iznad praga, koji posle sedam dana propada
- * (deca čl. 14), i poziv u kome je dete navelo njegovu adresu (čl. 4b).
+ * (deca čl. 30), i poziv u kome je dete navelo njegovu adresu (čl. 10).
  */
 export default function CekaNaTebe({
   spisak = 0,

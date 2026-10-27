@@ -7,12 +7,12 @@ import { DecaGreska, dajIzjavuRoditelja, mojeDeteIliBaci } from "@/lib/protokol/
 /**
  * POST /api/deca/[id]/izjava
  *
- * Izjava roditelja o postojanju deteta (Pravilnik o učešću dece, čl. 6 st. 1).
+ * Izjava roditelja o postojanju deteta (Pravilnik o učešću dece, čl. 12 st. 1).
  *
  * Roditelj je po pravilu daje u trenutku u kome preuzima odgovornost za nalog —
- * pri otvaranju naloga (čl. 4) ili pri preuzimanju (čl. 4b) — pa mu ova ruta ne
+ * pri otvaranju naloga (čl. 7) ili pri preuzimanju (čl. 11) — pa mu ova ruta ne
  * treba. Postoji zbog jedinog slučaja u kome tog trenutka nema: administrativno
- * prevođenje punoletnog naloga u maloletni (čl. 4d), gde roditelj izjavu daje po
+ * prevođenje punoletnog naloga u maloletni (čl. 15), gde roditelj izjavu daje po
  * prijemu odluke. Od seta 4.8.2 izjava nema rok ni posledicu po treća lica.
  *
  * 🔴 Potvrda mora da stigne izričito (`potvrda: true`). Izjava se daje pod punom

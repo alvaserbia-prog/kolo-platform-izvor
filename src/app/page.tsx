@@ -39,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
 async function getPijacaPreview() {
   try {
     const listings = await prisma.marketplaceListing.findMany({
-      // Oglas maloletnog korisnika se ovde ne prikazuje nikada (Modul Deca, čl. 13):
+      // Oglas maloletnog korisnika se ovde ne prikazuje nikada (Pravilnik o učešću dece čl. 24):
       // stranica je javna i keširana, pa se služi neprijavljenom posmatraču — a njemu
       // dečji oglas ne pripada ni uz roditeljsku saglasnost.
       where: { status: "ACTIVE", seller: usloviVidljivostiOglasa(null) },
@@ -91,15 +91,15 @@ async function getPijacaPreview() {
 }
 
 // Naslovnu vidi samo gost (prijavljeni se preusmeravaju na /dashboard). Po
-// gradiranoj vidljivosti (Politika čl. 6), gost vidi SAMO agregate — ne
+// gradiranoj vidljivosti (Politika čl. 11 st. 4), gost vidi SAMO agregate — ne
 // pojedinačne transakcije ni pseudonime. Četiri pokazatelja: verifikovani
 // članovi (poverenje), transakcije među članovima (samo tip TRANSFER — bez
 // emisija Protokola, i bez prepisa ispod praga iz `USLOV_RAZMENE`), aktivni
-// oglasi (pregled oglasa je ionako javan, čl. 16)
+// oglasi (pregled oglasa je ionako javan, Uslovi čl. 17 st. 2)
 // i ukupno evidentiranih POEN-a. Opticaj se računa kao zbir pozitivnih
 // stanja (pod zero-sum jednako apsolutnoj vrednosti minusa Protokola) — bez
 // zavisnosti od ID-ja Protokol novčanika. Zbir ide preko SVIH ne-Protokol
-// novčanika, uključujući negativne (nadoknada čl. 20b, poništen prepis, otpis
+// novčanika, uključujući negativne (nadoknada po čl. 36 dokaza stvarnosti, poništen prepis, otpis
 // prijateljstva); filtriranje na `balance > 0` bi prikazalo veći opticaj nego
 // što ga ima.
 async function getAgregati() {
@@ -136,7 +136,7 @@ async function getAgregati() {
 
 // Sekcija o domaćim proizvođačima se prikazuje tek kad na mapi ima šta da se vidi
 // — isti prag kao pregled Pijace (tri). Broje se samo odobrena gazdinstva, jedina
-// koja mapa prikazuje (Pravilnik o gazdinstvima čl. 11).
+// koja mapa prikazuje (Pravilnik o gazdinstvima čl. 19).
 const MIN_GAZDINSTAVA_ZA_SEKCIJU = 3;
 
 async function getBrojGazdinstava() {
@@ -168,7 +168,7 @@ export default async function Home() {
   const komeKartice = [
     { ikona: "mreza", naslov: t("kome_udruzenja_naslov"), opis: t("kome_udruzenja_opis", { prag: PRAG_PRVE_ZADRUGE }), link: { href: "/zadruge", label: t("kome_udruzenja_link") } },
     // Veze ka prijavi (odluka vlasnika, 24.10.2026): proizvođaču i domaćici gazdinstvo;
-    // firmi upis sa stranice Firme (jedini ulaz za firmu, donacije čl. 6a).
+    // firmi upis sa stranice Firme (jedini ulaz za firmu, donacije čl. 16).
     { ikona: "klica", naslov: t("kome_1_naslov"), opis: t("kome_1_opis"), link: { href: "/gazdinstva", label: t("kome_gazdinstvo_link") } },
     { ikona: "alat", naslov: t("kome_2_naslov"), opis: t("kome_2_opis") },
     { ikona: "vreme", naslov: t("kome_3_naslov"), opis: t("kome_3_opis") },
@@ -177,7 +177,7 @@ export default async function Home() {
     { ikona: "pocetak", naslov: t("kome_6_naslov"), opis: t("kome_6_opis") },
     // Preduzetnici i lokalne firme (vlasnik, 24.10.2026) umesto „Ljudi koji drže do
     // svog kraja": firma ulazi kao pokrovitelj, upisom sa stranice Firme. Tekst ne
-    // obećava promociju ni korist (donacije čl. 13, R-17).
+    // obećava promociju ni korist (donacije čl. 26 st. 3, R-17).
     { ikona: "firma", naslov: t("kome_firme_naslov"), opis: t("kome_firme_opis"), link: { href: "/firme", label: t("kome_firma_link") } },
   ];
 
@@ -394,8 +394,8 @@ export default async function Home() {
 
         {/* ── SEKCIJA 5a — DOMAĆI PROIZVOĐAČI NA MAPI ───────────────
             🔴 Uz oznaku DOMAĆE uvek stoji da je Fondacija ne jemči (Pravilnik o
-            gazdinstvima čl. 10, Uslovi čl. 16b). Bez reči „organski", „eko",
-            „zdravo" — Fondacija sama ne hvali robu (Uslovi čl. 22b). */}
+            gazdinstvima čl. 18, Uslovi čl. 20 st. 2). Bez reči „organski", „eko",
+            „zdravo" — Fondacija sama ne hvali robu (Uslovi čl. 26). */}
         {brojGazdinstava >= MIN_GAZDINSTAVA_ZA_SEKCIJU && (
           <section className="border border-kolo-border bg-kolo-surface rounded-kartica shadow-kartica p-6 md:p-8">
             <h2 className="text-xl font-bold text-kolo-green-900 tracking-tight">

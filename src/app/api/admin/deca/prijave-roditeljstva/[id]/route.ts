@@ -11,9 +11,9 @@ import { DecaGreska, odluciOPrijaviRoditeljstva } from "@/lib/protokol/deca";
  * Body: `{ ishod: "NEMA_OSNOVA" | "UKINUTA", obrazlozenje: string }`
  *
  * Odluka ovlašćenog lica Fondacije o prijavi lažnog roditeljstva (Pravilnik o
- * učešću dece čl. 4e st. 3–6). Obrazloženje je obavezno.
+ * učešću dece čl. 17 st. 3–5, 18). Obrazloženje je obavezno.
  *
- * 🔴 `UKINUTA` povlači obavezno isključenje lica (st. 5, `iskljuciKorisnika`), pa
+ * 🔴 `UKINUTA` povlači obavezno isključenje lica (čl. 18 st. 4, `iskljuciKorisnika`), pa
  * je traži SUPERADMIN — isto kao svako drugo isključenje. `NEMA_OSNOVA` donosi
  * administrator.
  */

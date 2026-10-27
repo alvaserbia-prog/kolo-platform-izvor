@@ -1,9 +1,9 @@
 /**
  * Poništenje POEN-a za nadzor — prelazna radnja uz set 4.7.5, ispravljena setom 4.7.7.
  *
- * Odluka vlasnika 18.10.2026: nadzor se više ne plaća (dokaz stvarnosti čl. 7 i 10),
- * a zatečeni upisi se poništavaju. Osnov: dokaz stvarnosti čl. 22b i Pravilnik o KOLO
- * sistemu čl. 14 (poslednji stav).
+ * Odluka vlasnika 18.10.2026: nadzor se više ne plaća (dokaz stvarnosti čl. 19 st. 8 i 23 st. 2),
+ * a zatečeni upisi se poništavaju. Osnov: raniji čl. 22b dokaza stvarnosti (brisan u setu 5.0) i Pravilnik o KOLO
+ * sistemu čl. 17 st. 5.
  *
  * 🔴 ŠTA SE PONIŠTAVA — samo ŽIVIH 500, a ne svaki red `EMISIJA_NADZOR` u istoriji.
  * Živ je onaj upis čija veza još postoji i nosi `nadzorPoenStatus = EVIDENTIRAN`. Upis
@@ -20,12 +20,12 @@
  *
  * 🔴 Sve u JEDNOJ transakciji, uz proveru da se svako pogođeno stanje slaže sa zbirom
  * svojih zapisa i pre i posle (obrazac `potvrde-parovi.ts`). Niko ne ide u minus: to bi
- * bio osnov negativnog zapisa koji Pravilnik čl. 14 st. 3 ne poznaje, a kapiranje na
+ * bio osnov negativnog zapisa koji Pravilnik čl. 17 st. 2 ne poznaje, a kapiranje na
  * nulu nije izlaz (pravilo 4). Radnja je ponovljiva: posle nje nema živih veza, pa drugi
  * put nema šta da se poništi.
  *
  * Ugašen nalog se preskače u knjiženju: njegov zapis je pri gašenju već poništen u
- * celini (Pravilnik čl. 34), pa mu se veze samo gase.
+ * celini (Pravilnik čl. 33), pa mu se veze samo gase.
  *
  * Pregled i sprovođenje idu kroz ISTU funkciju (`suviHod`), da se brojevi ne raziđu.
  */
@@ -37,7 +37,7 @@ import { POEN_NADZORNIK } from "@/lib/protokol/dokaz-stvarnosti";
 
 const PROTOKOL_WALLET_ID = "banka-singleton";
 const OPIS_PROTIVZAPISA =
-  "Poništenje POEN-a za nadzor — nadzor se više ne plaća (dokaz stvarnosti čl. 22b)";
+  "Poništenje POEN-a za nadzor — nadzor se više ne plaća (raniji čl. 22b dokaza stvarnosti)";
 
 export type NadzorUcesnik = {
   pseudonim: string;
@@ -115,7 +115,7 @@ export async function ukloniPoenNadzora(opcije: {
     where: { id: { in: [...zivihPoKorisniku.keys()] } },
     select: { id: true, pseudonim: true, deaktiviranAt: true, wallet: { select: { id: true, balance: true } } },
   });
-  // Ugašen nalog: zapis je već poništen u celini (čl. 34) — samo se gase veze.
+  // Ugašen nalog: zapis je već poništen u celini (Pravilnik čl. 33) — samo se gase veze.
   const aktivni = korisnici.filter((k) => !k.deaktiviranAt && k.wallet);
 
   const walletIds = aktivni.map((k) => k.wallet!.id);
@@ -157,7 +157,7 @@ export async function ukloniPoenNadzora(opcije: {
   if (uMinus.length > 0) {
     prepreke.push(
       `${uMinus.length} nalog(a) bi otišlo u minus (${uMinus.map((u) => u.pseudonim).join(", ")}) — ` +
-        `to je osnov negativnog zapisa koji Pravilnik čl. 14 st. 3 ne poznaje. Radnja se ne sprovodi.`,
+        `to je osnov negativnog zapisa koji Pravilnik čl. 17 st. 2 ne poznaje. Radnja se ne sprovodi.`,
     );
   }
 
@@ -248,7 +248,7 @@ export async function ukloniPoenNadzora(opcije: {
       "NADZOR_POEN_UKLONJEN",
       undefined,
       `Poništeno ${upisa} živih upisa za nadzor (${poen} POEN) nad ${ishod.obavestenja} naloga, ` +
-        `ugašeno ${zabelezenih} zabeleženih. Istorija zadržana. Dokaz stvarnosti čl. 22b.`,
+        `ugašeno ${zabelezenih} zabeleženih. Istorija zadržana. Raniji čl. 22b dokaza stvarnosti.`,
     );
   }
 

@@ -23,12 +23,12 @@ export default async function PokroviteljiPage() {
   const locale = await getLocale();
   const t = await getTranslations("pokroviteljPage");
 
-  // Rang-lista u dva odvojena dela (Pravilnik o pokroviteljstvu i donacijama čl. 13
+  // Rang-lista u dva odvojena dela (Pravilnik o pokroviteljstvu i donacijama čl. 25
   // st. 1): novčani doprinos i vrednost pokroviteljstva dobrima i uslugama. U oba
-  // dela samo naziv (uz logotip, ako ga je pokrovitelj priložio — čl. 13 st. 4) i
+  // dela samo naziv (uz logotip, ako ga je pokrovitelj priložio — čl. 26 st. 2) i
   // iznos u dinarima — 🔴 broj POEN-a, adresa, MB, PIB i BPG se ne objavljuju
-  // (čl. 13 st. 1 i 2), a logotip nije link (čl. 13 st. 5).
-  // Obrisan upis ostaje na rang-listi; uklanja se samo na zahtev (čl. 6a st. 6).
+  // (čl. 25), a logotip nije link (čl. 26 st. 3).
+  // Obrisan upis ostaje na rang-listi; uklanja se samo na zahtev (čl. 18 st. 4).
   const [pokrovitelji, dobra] = await Promise.all([javnaRangListaNovca(), javnaRangListaDobara()]);
   const rsd = (n: number) => `${n.toLocaleString(intlTag(locale))} RSD`;
 

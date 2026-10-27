@@ -64,7 +64,8 @@ export function kljucPseudonima(p: string): string {
  * Pravilo važi za nove naloge i za svaku izmenu; nalozi koji su ranije uzeli
  * pseudonim sa starim znakovima nastavljaju da rade neizmenjeni.
  *
- * Rezervisan prefiks `obrisani-korisnik` je zabranjen (imitacija ugašenih naloga).
+ * Rezervisani prefiksi `obrisani-korisnik` i `anonimno-` su zabranjeni (imitacija
+ * ugašenih, odnosno anonimizovanih naloga).
  */
 export function validanPseudonim(p: unknown): p is string {
   if (typeof p !== "string") return false;
@@ -72,6 +73,8 @@ export function validanPseudonim(p: unknown): p is string {
   if (t.length < 3 || t.length > 30) return false;
   if (/[_.-]{2}/.test(t)) return false;
   if (/^obrisani-korisnik/i.test(t)) return false;
+  // Oznaka anonimizovanog zapisa (Pravilnik čl. 55 st. 3, `anonimizacija-pravila.ts`).
+  if (/^anonimno-/i.test(t)) return false;
   if (REZERVISANI_PSEUDONIMI.has(kljucPseudonima(t))) return false;
   return PSEUDONIM_REGEX.test(t);
 }

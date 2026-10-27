@@ -11,7 +11,7 @@ import { zatvoriPrijaveIUtvrdiRed, NabavkaGreska } from "@/lib/protokol/nabavka"
  * POST /api/admin/nabavke/[id]/zatvori-prijave
  *
  * Ručno zatvaranje prijava pre isteka roka; isto radi i noćni posao po isteku
- * (čl. 22). Snima se broj POEN-a i mesto u redu, pa se šalju prvi pozivi.
+ * (čl. 20). Snima se broj POEN-a i mesto u redu, pa se šalju prvi pozivi.
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

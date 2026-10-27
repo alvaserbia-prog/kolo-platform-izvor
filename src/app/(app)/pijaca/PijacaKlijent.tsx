@@ -33,15 +33,15 @@ interface Listing {
   /**
    * `null` kad posmatrač pseudonim ne sme da vidi: dete sa roditeljem oglase vidi
    * bez pseudonima oglašivača, osim oglasa svojih prijatelja (Pravilnik o učešću
-   * dece čl. 4c t. 2, 13 st. 4). Odluku donosi server.
+   * dece čl. 5 st. 1 t. 2). Odluku donosi server.
    */
   sellerPseudonim: string | null;
-  /** Oglašivač je prijatelj posmatrača-deteta (čl. 14a) — dete sa roditeljem mu piše. */
+  /** Oglašivač je prijatelj posmatrača-deteta (deca čl. 32) — dete sa roditeljem mu piše. */
   sellerPrijatelj?: boolean;
   sellerVerified: boolean;
-  /** Oglašivač je maloletan korisnik — pečat i objašnjenje su drugi (čl. 9, 13). */
+  /** Oglašivač je maloletan korisnik — pečat i objašnjenje su drugi (deca čl. 19, 24). */
   sellerMaloletan: boolean;
-  /** Oglas u ime odobrenog gazdinstva (Pravilnik o gazdinstvima čl. 10). */
+  /** Oglas u ime odobrenog gazdinstva (Pravilnik o gazdinstvima čl. 18 st. 2). */
   domace?: boolean;
 }
 
@@ -53,18 +53,18 @@ interface Props {
   prijavljen?: boolean;
   /** Posmatrač je maloletan — dugme na kartici bira se po dečjim pravilima. */
   posmatracMaloletan?: boolean;
-  /** Posmatrač je dete sa roditeljem — piše samo prijateljima (čl. 4c t. 2). */
+  /** Posmatrač je dete sa roditeljem — piše samo prijateljima (deca čl. 5 st. 1 t. 2). */
   deteSaRoditeljem?: boolean;
   /**
-   * Dete Kola sme da piše drugoj deci (čl. 12). Dete sa roditeljem piše samo
+   * Dete Kola sme da piše drugoj deci (deca čl. 22). Dete sa roditeljem piše samo
    * prijateljima (`sellerPrijatelj`), dete na čekanju nikome.
    *
    * 🔴 Dugme se NE bira po `isVerified`: maloletni nalog je trajno neverifikovan
-   * (čl. 15), pa je detetu na svakoj kartici stajao poziv da postavi svoj oglas
+   * (deca čl. 29 st. 2), pa je detetu na svakoj kartici stajao poziv da postavi svoj oglas
    * umesto dugmeta „Kontaktiraj" — iako mu ruta razgovor dozvoljava.
    */
   detePise?: boolean;
-  /** Prekidač iz čl. 10 st. 2 — bez njega dete ne piše punoletnim članovima. */
+  /** Prekidač iz deca čl. 20 st. 2 — bez njega dete ne piše punoletnim članovima. */
   deteSmeSaOdraslima?: boolean;
   // Predizabrane kategorije iz URL-a (?kat=slug1,slug2) — validirane na serveru.
   initialKat?: string[];
@@ -219,8 +219,8 @@ export default function PijacaKlijent({
     const res = await fetch("/api/poruke", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // `oglasId` beleži upit povodom oglasa — uslov koraka 3 na putanji
-      // doprinosa razmeni (Pravilnik čl. 40a).
+      // `oglasId` služi samo prikazu povoda u razgovoru (putanja doprinosa
+      // razmeni, koja je beležila upit, ukinuta je setom 4.8.0).
       body: JSON.stringify({ userId: sellerId, oglasId }),
     });
     // Odbijen razgovor (npr. korisnik je danas već pokrenuo dozvoljen broj novih
@@ -545,7 +545,7 @@ export default function PijacaKlijent({
           Na mobilnom samo krug sa plusom, na širim ekranima plus + tekst.
 
           Uslov je PRIJAVLJEN, ne potvrđen: objava je otvorena i novom članu
-          (Pravilnik čl. 16 st. 5), a dok je stajalo `isVerified`, onaj kome je
+          (Uslovi čl. 14 st. 2), a dok je stajalo `isVerified`, onaj kome je
           objava prvi potez sistema nije imao dugme — do forme je stizao samo
           preko zaglavlja ili zelene trake. Potražnju i dalje sme samo potvrđen
           član, pa se za ostale putanja i natpis vraćaju na običan oglas. */}
@@ -635,19 +635,19 @@ const OglasKartica = memo(function OglasKartica({
         <span className="absolute top-2 left-2 bg-white/90 text-kolo-muted text-xs font-medium px-2 py-0.5 rounded-lg">
           {t(`kategorija_${kategorijaKljuc(oglas.category)}`)}
         </span>
-        {/* Pečat da oglašivač nije verifikovan (Uslovi čl. 16, Pravilnik čl. 16).
+        {/* Pečat da oglašivač nije verifikovan (Uslovi čl. 18 st. 2).
             Vide ga svi kojima je vidljiv i oglas, uključujući neprijavljene.
             Ranije je stajao kao sitan tekst uz pseudonim i lako se previđao.
 
             🔴 Dete dobija SVOJ pečat, ne „bez potvrde". Maloletni nalog jeste
-            neverifikovan i uvek će biti — u lanac potvrda ne sme da uđe (čl. 15) —
+            neverifikovan i uvek će biti — u lanac potvrda ne sme da uđe (deca čl. 29 st. 2) —
             pa bi mu „bez potvrde" saopštavalo nešto što se nikad neće promeniti,
             i to rečju koja opisuje novog odraslog člana. Ono što sagovorniku
             zaista treba je da je sa druge strane dete. */}
         {/* Pečati se slažu jedan ispod drugog u gornjem desnom uglu. Oznaka
             DOMAĆE je pečat iste vrste kao „bez potvrde", samo zelen (odluka
             vlasnika 20.10.2026) — oglas u ime gazdinstva koje je pristupilo
-            sistemu. Fondacija je ne jemči (Uslovi čl. 16b): ne kaže ništa o
+            sistemu. Fondacija je ne jemči (Uslovi čl. 20 st. 2): ne kaže ništa o
             kvalitetu ni poreklu robe, samo da oglas stoji u ime gazdinstva. */}
         <div className="absolute top-2 right-2 flex flex-col items-end gap-1.5">
           {oglas.sellerMaloletan ? (
@@ -712,7 +712,7 @@ const OglasKartica = memo(function OglasKartica({
               <span className="ml-1 text-kolo-green-700 font-medium">· ~{udaljenost} km</span>
             )}
           </span>
-          {/* Dete piše drugom detetu bezuslovno (čl. 12), a punoletnom članu samo
+          {/* Dete piše drugom detetu bezuslovno (deca čl. 22), a punoletnom članu samo
               uz roditeljski prekidač. Oglas punoletnog mu se ionako ne prikazuje
               dok prekidač stoji isključen, pa je uslov ovde druga brana, ne prva. */}
           {(posmatracMaloletan
@@ -736,7 +736,7 @@ const OglasKartica = memo(function OglasKartica({
             </button>
           ) : posmatracMaloletan ? (
             /* Detetu se NIKAD ne nudi potvrda kao izlaz — u lanac potvrda ne ulazi
-               (čl. 15). Ostaje istinit razlog, bez dugmeta koje ne vodi nikuda. */
+               (deca čl. 29 st. 2). Ostaje istinit razlog, bez dugmeta koje ne vodi nikuda. */
             <span className="shrink-0 text-sm text-kolo-muted">
               {detePise
                 ? t("dete_odrasli_kratko")
@@ -747,7 +747,7 @@ const OglasKartica = memo(function OglasKartica({
           ) : (
             /* Neverifikovanom se više ne nudi verifikacija kao prvi korak: gost
                nema ni nalog, a prijavljenom je najbliži potez sopstveni oglas —
-               kroz njega ga mreža i nađe (Pravilnik čl. 32 st. 4). */
+               kroz njega ga mreža i nađe (dokaz stvarnosti čl. 15 st. 7). */
             <Link
               href={prijavljen ? "/pijaca/novi-oglas" : "/registracija"}
               className="shrink-0 text-xs text-kolo-green-700 font-semibold hover:underline"

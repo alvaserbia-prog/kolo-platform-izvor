@@ -10,7 +10,7 @@ import { prisma } from "@/lib/prisma";
 /**
  * GET /api/deca/preuzmi — pozivi upućeni na imejl prijavljenog korisnika.
  *
- * Primarni put iz čl. 4b st. 6: roditelj koji se registruje istim imejlom koji je
+ * Primarni put iz čl. 11 st. 1: roditelj koji se registruje istim imejlom koji je
  * dete unelo ne mora ništa da traži — veza mu se sama predloži u „Moja deca".
  */
 export async function GET() {

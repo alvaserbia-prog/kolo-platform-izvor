@@ -8,7 +8,7 @@ import { logAdminAkcija } from "@/lib/audit";
 import { prestanakZadruge, ZadrugaGreska } from "@/lib/protokol/zadruga";
 
 /**
- * POST — prestanak učešća zadruge (Pravilnik o zadrugama čl. 20). POEN zapisa
+ * POST — prestanak učešća zadruge (Pravilnik o zadrugama čl. 22). POEN zapisa
  * zadruge poništava se protivzapisom u korist Protokola; potez je nepovratan.
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {

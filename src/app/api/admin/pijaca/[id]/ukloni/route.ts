@@ -11,7 +11,7 @@ import { proveriRazlog, tekstObavestenjaOglas, PRAG_ZA_UPOZORENJE } from "@/lib/
 import { ponistiZabelezen } from "@/lib/protokol/doprinos-sadrzaju";
 
 // POST /api/admin/pijaca/[id]/ukloni — Fondacija uklanja oglas koji krši Uslove,
-// Pravilnik ili zakon (Uslovi čl. 21 st. 2, čl. 25 st. 2).
+// Pravilnik ili zakon (Uslovi čl. 18 st. 4, čl. 29 st. 2).
 //
 // Uklanjanje je MEKO: oglas dobija status UKLONJEN i nestaje iz svih javnih
 // prikaza (svi upiti već filtriraju `status: "ACTIVE"`), ali ostaje vlasniku
@@ -60,11 +60,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   await logAdminAkcija(session.user.id, "OGLAS_UKLONJEN", id, `${oglas.seller.pseudonim} — ${oglas.title}: ${razlog}`);
 
   // Oglas uklonjen zbog povrede Uslova pre nego što je doprinos evidentiran →
-  // zabeleženi doprinos propada (Pravilnik čl. 40a st. 4). Već evidentiran se NE
+  // zabeleženi doprinos propada (Pravilnik čl. 38 st. 4). Već evidentiran se NE
   // dira: zapis POEN-a je nastao i ne poništava se unazad.
   await ponistiZabelezen(id, session.user.id);
 
-  // Obaveštenje vlasniku sa razlogom NIJE opcija nego obaveza (čl. 25 st. 2).
+  // Obaveštenje vlasniku sa razlogom NIJE opcija nego obaveza (čl. 29 st. 2).
   // Jedan poziv pokriva zvonce, push i email.
   await obavesti(oglas.sellerId, {
     tip: "OGLAS_UKLONJEN",
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     link: "/profil/oglasi",
   });
 
-  // Ponovljeno kršenje je osnov za suspenziju/isključenje (Uslovi čl. 27, 28) —
+  // Ponovljeno kršenje je osnov za suspenziju/isključenje (Uslovi čl. 31, 32) —
   // javi kad se nakupi, ali ne sankcioniši automatski.
   const uklonjenihUkupno = await prisma.marketplaceListing.count({
     where: { sellerId: oglas.sellerId, status: "UKLONJEN" },
@@ -83,7 +83,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (uklonjenihUkupno >= PRAG_ZA_UPOZORENJE) {
     void posaljiAdminAlert(
       "Više uklonjenih oglasa istog korisnika",
-      `Korisnik: ${oglas.seller.pseudonim}\nUkupno uklonjenih oglasa: ${uklonjenihUkupno}\nPoslednji razlog: ${razlog}\n\nRazmotriti suspenziju (Uslovi čl. 27) ili isključenje (čl. 28).`,
+      `Korisnik: ${oglas.seller.pseudonim}\nUkupno uklonjenih oglasa: ${uklonjenihUkupno}\nPoslednji razlog: ${razlog}\n\nRazmotriti suspenziju (Uslovi čl. 31) ili isključenje (čl. 32).`,
     );
   }
 

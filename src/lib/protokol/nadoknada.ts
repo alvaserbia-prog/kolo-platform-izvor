@@ -1,8 +1,8 @@
 /**
  * Nadoknada po poništenju lažne verifikacije.
  *
- * Osnov: Pravilnik o dokazu stvarnosti 4.2.0, čl. 20a, 20b i 20c; izuzetak od
- * zabrane negativnog zapisa POEN-a je u čl. 14 stav 3 Pravilnika o KOLO sistemu.
+ * Osnov: Pravilnik o dokazu stvarnosti, čl. 35, 36 i 37; izuzetak od
+ * zabrane negativnog zapisa POEN-a je u čl. 17 stav 2 Pravilnika o KOLO sistemu.
  *
  * Zašto uopšte postoji: kad se lažnom nalogu poništi 1.000 POEN-a, a on je deo
  * toga već potrošio na tuđu robu, taj deo se nema odakle vratiti. Zbir svih takvih
@@ -11,26 +11,26 @@
  *
  * 🔴 KO SME U MINUS: isključivo verifikator poništene verifikacije. Verifikovani
  * korisnik i nadzornik idu NAJVIŠE do nule, a nepokriveni deo prelazi na verifikatora
- * (čl. 20b st. 2, čl. 20c st. 2). Ko ništa nije skrivio ne ostaje u minusu — bez toga
+ * (čl. 36 st. 2, čl. 37 st. 1). Ko ništa nije skrivio ne ostaje u minusu — bez toga
  * bi pošten čovek kome verifikator bude naknadno oboren ispao dužan.
  *
  * Zero-sum ostaje očuvan: svaki poništeni POEN ima tačan protivzapis Protokola, a
  * prenos nepokrivenog dela na verifikatora je običan prenos između dva zapisa.
  *
- * ─── Svi osnovi negativnog zapisa (Pravilnik čl. 14 st. 3, set 4.8.4) ────────
+ * ─── Svi osnovi negativnog zapisa (Pravilnik čl. 17 st. 2, set 4.8.4) ────────
  * Funkcije `jeNadoknada` / `iznosNadoknade` / `raspolozivo` ispod NE razlikuju
  * osnov: minus JESTE nadoknada, bez obzira odakle je došao. Osnovi su (lista je
  * iscrpna i zatvorena; deveti se ne uvodi bez izmene tog člana):
- *   1. nadoknada po čl. 20b (poništena lažna verifikacija) — ovaj fajl;
+ *   1. nadoknada po čl. 36 dokaza stvarnosti (poništena lažna verifikacija) — ovaj fajl;
  *   2. poništen prepis po prijavi razmene (`PONISTENJE_PREPISA`);
  *   3. otpis doprinosa iz dečjeg prostora (`OTPIS_PRIJATELJSTVO`, punoletstvo);
  *   4. prevođenje punoletnog naloga u maloletni (`OTPIS_PREVOD_U_MALOLETNI`);
- *   5. otpis po usklađivanju zatečenih potvrda (čl. 22a dokaza stvarnosti);
- *   6. otpis po prestanku gazdinstva (`OTPIS_GAZDINSTVO`, čl. 40c);
+ *   5. otpis po usklađivanju zatečenih potvrda (čl. 39 dokaza stvarnosti);
+ *   6. otpis po prestanku gazdinstva (`OTPIS_GAZDINSTVO`, Pravilnik čl. 39, gazdinstva čl. 23);
  *   7. otpis po neizvršenju pokroviteljstva dobrima i uslugama
- *      (`OTPIS_POKROVITELJ_DOBRA`, donacije čl. 13j) — `protokol/pokroviteljstvo-dobrima.ts`;
+ *      (`OTPIS_POKROVITELJ_DOBRA`, donacije čl. 35) — `protokol/pokroviteljstvo-dobrima.ts`;
  *   8. otpis neto prepisa sa ugašenog naloga po utvrđenju višestrukog naloga
- *      (`OTPIS_VISESTRUKI_NALOG`, dokaz stvarnosti čl. 4b) — `protokol/visestruki-nalog.ts`.
+ *      (`OTPIS_VISESTRUKI_NALOG`, dokaz stvarnosti čl. 14) — `protokol/visestruki-nalog.ts`.
  */
 
 export type PodelaTereta = {
@@ -68,7 +68,7 @@ export function iznosNadoknade(stanje: number): number {
  *
  * Nadoknada ne sprečava razmenu dobara i usluga, ali POEN-i koji pristignu prvo
  * popunjavaju nadoknadu — korisnik raspolaže zapisom tek pošto pređe nulu
- * (čl. 20b st. 5). Za negativno stanje raspoloživo je nula, ne negativan broj.
+ * (čl. 36 st. 5). Za negativno stanje raspoloživo je nula, ne negativan broj.
  */
 export function raspolozivo(stanje: number): number {
   return Math.max(0, stanje);

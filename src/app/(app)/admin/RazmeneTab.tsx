@@ -7,7 +7,7 @@
  * traže obrazloženje, jer obe idu čoveku.
  *
  * 🔴 Poništenje vraća CEO prepisani iznos i zapis primaoca sme u minus (odluka
- * vlasnika 2026-08-15) — minus radi isto što i nadoknada iz čl. 20b. Zato uz
+ * vlasnika 2026-08-15) — minus radi isto što i nadoknada iz čl. 36 dokaza stvarnosti. Zato uz
  * svaku stavku stoji stanje primaoca i stanje POSLE poništenja: odluka se
  * donosi znajući da li čoveka ostavlja u nadoknadi.
  *

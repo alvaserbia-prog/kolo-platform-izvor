@@ -28,7 +28,7 @@ export interface NoviOglasDogadjaj {
 }
 
 export async function emitujNoviOglas(dogadjaj: NoviOglasDogadjaj): Promise<void> {
-  // Obaveštenje ne sme da probije vidljivost iz Modula Deca (čl. 13): dečji oglas
+  // Obaveštenje ne sme da probije vidljivost iz Modula Deca (čl. 24): dečji oglas
   // se ne javlja punoletnima dok roditelj ne otvori prekidač, a oglas punoletnog
   // ne javlja se detetu pod istim uslovom. Bez ovoga bi zvonce vodilo na stranicu
   // koja tom čoveku vraća 404 — i usput odalo da oglas postoji.

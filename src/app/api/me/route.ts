@@ -96,7 +96,7 @@ export async function GET() {
     // (obrazac prijave to čita; vidi `LoginForm`).
     vodicPotreban: user?.vodicVidjenAt == null,
     // Modul Deca — navigacija maloletnog korisnika je uža, a nalog koji još čeka
-    // roditelja (stanje `NA_CEKANJU`, čl. 4c) nema Pričaonicu, oglase ni poruke.
+    // roditelja (stanje `NA_CEKANJU`, deca čl. 5 st. 1 t. 1) nema Pričaonicu, oglase ni poruke.
     maloletan: user?.maloletan ?? false,
     stanjeDeteta: user?.maloletan ? await stanjeNaloga(meId) : null,
   });

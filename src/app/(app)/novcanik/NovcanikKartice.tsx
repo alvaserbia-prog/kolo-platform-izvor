@@ -33,7 +33,7 @@ interface Props {
    *
    * 🔴 Zatečeni tekst govori o poništenoj potvrdi i o prijavi razmene — dva
    * instituta koja dete nikad nije dodirnulo. Kod deteta minus nastaje iz
-   * raskinutog prijateljstva (čl. 14c) ili sa osamnaestim rođendanom (čl. 19),
+   * raskinutog prijateljstva (deca čl. 34) ili sa osamnaestim rođendanom (deca čl. 35),
    * pa dete koje se posvađalo sa drugaricom čita pasus o postupku Fondacije.
    * Iznos, računica i pravni režim minusa ostaju isti — menja se rečenica.
    */
@@ -46,9 +46,9 @@ interface Props {
   prefillOpis?: string;
   /** Doprinos sadržaju koji čeka okidač (0 = nema). Nikad se ne sabira sa stanjem. */
   zabelezenDoprinos?: number;
-  /** Doprinos gazdinstva (čl. 40c st. 4) — čeka sopstveni potez: oglas i potvrdu. */
+  /** Doprinos gazdinstva (gazdinstva čl. 16) — čeka sopstveni potez: oglas i potvrdu. */
   zabelezenGazdinstvo?: number;
-  /** POEN po potvrdama koji čeka prvi doprinos — tvoj (dokaz stvarnosti čl. 7). */
+  /** POEN po potvrdama koji čeka prvi doprinos — tvoj (dokaz stvarnosti čl. 19). */
   zabelezenePotvrdeMoje?: number;
   /** POEN po potvrdama koje si dao — čeka TUĐI prvi doprinos. */
   zabelezenePotvrdeTudje?: number;
@@ -58,7 +58,7 @@ interface Props {
    * na raspolaganju da podseti baš tog čoveka.
    *
    * 🔴 Ne otvara nijedan nov podatak — ista imena već stoje na stranici Potvrde;
-   * vidi ih isključivo vlasnik naloga (čl. 67). Red za nadzor je uklonjen setom 4.7.5:
+   * vidi ih isključivo vlasnik naloga (Pravilnik čl. 56). Red za nadzor je uklonjen setom 4.7.5:
    * nadzor se više ne plaća.
    */
   cekamPotvrdjene?: { id: string; pseudonim: string }[];
@@ -68,7 +68,7 @@ interface Props {
   smeDaSalje?: boolean;
   /**
    * Zašto dugmeta nema. Detetu se NE sme reći „otvara se po potvrdi": ono potvrdu
-   * ne dobija do punoletstva (čl. 15), pa bi ga uputstvo slalo u prazno. Njegov
+   * ne dobija do punoletstva (deca čl. 29 st. 2), pa bi ga uputstvo slalo u prazno. Njegov
    * uslov je da roditelj preuzme nalog.
    */
   razlogZabrane?: "neverifikovan" | "ceka_roditelja";
@@ -79,14 +79,14 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
   const router = useRouter();
   const t = useTranslations("novcanik");
   const tc = useTranslations("common");
-  // Nadoknada po poništenju lažne verifikacije (dokaz stvarnosti čl. 20b). Negativan
+  // Nadoknada po poništenju lažne verifikacije (dokaz stvarnosti čl. 36). Negativan
   // zapis JESTE nadoknada — nema zasebne kolone. Prikazuje se kao zaseban red, a ne
   // kao „minus stanje", jer nije dug i ne može se naplatiti.
   const uNadoknadi = jeNadoknada(balance);
 
   // Sme li nalog da prepiše POEN drugome. Spaja dva razloga zabrane koja su se do
-  // sada proveravala odvojeno: tip naloga (čl. 28 st. 2, odn. čl. 14 Pravilnika o
-  // učešću dece) i nepokriven zapis (nadoknada po čl. 20b).
+  // sada proveravala odvojeno: tip naloga (čl. 30 Pravilnika o učešću
+  // dece) i nepokriven zapis (nadoknada po čl. 36 dokaza stvarnosti).
   //
   // 🔴 Obrazac za prepis se NE otvara nalogu koji ne sme da prepisuje. Do ove izmene
   // ga je `?plati=` (skeniran QR ili link iz oglasa) otvarao bez obzira na dozvolu,
@@ -126,9 +126,9 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             pregledač koji to ne zna odbaci celog — kartica je ostajala bela, sa belim
             slovima, i kod onoga ko sme da prepisuje. Brana: `novcanik-kartica-izvor.test.ts`.
 
-            🟢 „Moj QR" OSTAJE i takvom nalogu, i to namerno: nov član sme da PRIMA
-            (čl. 28 st. 2), a QR je način da mu se prepiše POEN za prodato dobro. To mu
-            je ujedno i put do potvrde (čl. 40a), pa bi sklanjanje tog dugmeta zatvorilo
+            🟢 „Moj QR" OSTAJE i takvom nalogu, i to namerno: takav nalog sme da PRIMA,
+            a QR je način da mu se prepiše POEN za prodato dobro. To mu
+            je ujedno i put do potvrde (Pravilnik čl. 38), pa bi sklanjanje tog dugmeta zatvorilo
             ulaz kroz Pijacu. Skener se sklanja jer vodi u suprotnom smeru — u obrazac
             za prepis DRUGOME. */}
         <div className="bg-kolo-green-700 bg-linear-to-br from-kolo-green-700 to-kolo-green-500 rounded-2xl p-6 text-white shadow-lg">
@@ -204,7 +204,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
           </div>
         )}
 
-        {/* Nadoknada (čl. 20b) stoji ISPOD kartice, kao zaseban red. Nije prikazana
+        {/* Nadoknada (dokaz stvarnosti čl. 36) stoji ISPOD kartice, kao zaseban red. Nije prikazana
             kao negativno stanje jer nije dug: Fondacija po njoj nema potraživanje i
             ne može je naplatiti. Razmena dobara i usluga se njome ne ograničava —
             ograničen je samo upis POENA drugome, dok zapis ne pređe nulu. */}
@@ -226,14 +226,14 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
         )}
 
         {/* Na tvom zapisu — POEN koji nalog STVARNO ima, ali njime još ne sme da
-            raspolaže (čl. 28 st. 2 za nov član, čl. 14 Pravilnika o učešću dece za
-            dete koje čeka roditelja). Veliki broj iznad pokazuje raspoloživo za
+            raspolaže (čl. 30 Pravilnika o učešću dece za dete koje čeka
+            roditelja). Veliki broj iznad pokazuje raspoloživo za
             prepis, dakle nulu; bez ovog reda bi čovek koji je nešto prodao na Pijaci
             pomislio da mu je prodaja nestala. Zapis JESTE njegov i zbir u sistemu ga
             broji — čeka se samo pravo raspolaganja, koje dolazi sa potvrdom.
 
             🔴 Ovo NIJE isto što i zabeleženo ispod: ovde je POEN upisan u Protokol,
-            tamo zapis još ne postoji (čl. 40a st. 3). Dva reda se ne spajaju. */}
+            tamo zapis još ne postoji (Pravilnik čl. 38 st. 2). Dva reda se ne spajaju. */}
         {!smeDaSalje && raspolozivo(balance) > 0 && (
           <div className="mt-3 rounded-kartica border border-kolo-border bg-kolo-surface px-5 py-4 shadow-kartica">
             <div className="flex items-baseline justify-between gap-3">
@@ -250,7 +250,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
 
         {/* Zabeležen doprinos — JEDAN broj za sve što čeka uslov, sa razlaganjem na
             klik. Do ove izmene je to bilo pet redova sa skoro istim naslovima
-            (doprinos po čl. 40a, koraci putanje razmene — ukinuti setom 4.8.0 — potvrde primljene, potvrde
+            (doprinos po čl. 38, koraci putanje razmene — ukinuti setom 4.8.0 — potvrde primljene, potvrde
             date, nadzor), pa se iz ekrana nije video odgovor na jedino pitanje koje
             vlasnika naloga zanima: šta treba da se desi da se ovo upiše.
 
@@ -260,13 +260,13 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             „potvrde koje si dao" i „nadzor" čekaju treća lica i on tu ne može ništa
             osim da ih podseti, a „prvi oglas" čeka UO.
 
-            🔴 Nikad se ne sabira sa stanjem: do okidača to nije zapis POEN-a (čl. 40a
-            st. 3). Naziv je „Zabeležen doprinos", nikad „POEN na čekanju" — POEN
-            postoji isključivo kao zapis u Protokolu (čl. 12), a to pravilo čuva
+            🔴 Nikad se ne sabira sa stanjem: do okidača to nije zapis POEN-a (čl. 38
+            st. 2). Naziv je „Zabeležen doprinos", nikad „POEN na čekanju" — POEN
+            postoji isključivo kao zapis u Protokolu (čl. 16 st. 3), a to pravilo čuva
             `potvrda-uslov-izvor.test.ts`.
 
             🔴 Rezervisano za nabavku NIJE ovde i ne sme da se doda: taj POEN je već
-            upisan u zapis, samo je vezan do preuzimanja (čl. 23 st. 2) — drugi institut
+            upisan u zapis, samo je vezan do preuzimanja (nabavke čl. 21 st. 3) — drugi institut
             i drugi ishod. */}
         {zabelezenoUkupno > 0 && (
           <div className="mt-3 rounded-kartica border border-kolo-border bg-kolo-surface px-5 py-4 shadow-kartica">
@@ -384,9 +384,9 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
         )}
 
         {/* Rezervisano za kolektivnu nabavku (Pravilnik o projektima i kolektivnim
-            nabavkama čl. 23 st. 2). Zaseban red, NIKAD sabran sa stanjem — isti
+            nabavkama čl. 21 st. 3). Zaseban red, NIKAD sabran sa stanjem — isti
             razlog kao zabeležen doprinos. Red se prikazuje samo kad rezervacija
-            postoji; do preuzimanja POEN nije poništen (čl. 27 st. 3). */}
+            postoji; do preuzimanja POEN nije poništen (čl. 25 st. 2). */}
         {rezervisanoNabavka > 0 && (
           <div className="mt-3 rounded-kartica border border-kolo-border bg-kolo-surface px-5 py-4 shadow-kartica">
             <div className="flex items-baseline justify-between gap-3">
@@ -559,7 +559,7 @@ function SendForma({ onClose, onSuccess, initialPseudonim, initialIznos, initial
       // Bez iznosa i bez primaoca — samo da se prepis desio.
       dogadjaj("prepis_poen");
       // Prepis iz dečjeg zapisa iznad praga se NE izvršava odmah nego čeka roditelja
-      // (Pravilnik o učešću dece, čl. 14). Ekran to mora da kaže — inače dete vidi
+      // (Pravilnik o učešću dece, čl. 30). Ekran to mora da kaže — inače dete vidi
       // „prepisano" a POEN se nije pomerio.
       setUspeh({ iznos, pseudonim: pseudonim.trim(), naCekanju: data?.naCekanju === true });
     } catch {
@@ -648,7 +648,7 @@ function SendForma({ onClose, onSuccess, initialPseudonim, initialIznos, initial
         {error && <Obavestenje vrsta="greska">{error}</Obavestenje>}
         {/* Šta prepis JESTE, rečeno na mestu gde se radi. Reč „prepis" u govoru
             vuče na dve pogrešne strane — „prepisati kuću" (prenos svojine, a POEN
-            nije imovinsko pravo, čl. 12–13) i „prepisati" kao kopirati (kopija bi
+            nije imovinsko pravo, Pravilnik čl. 12 i 16) i „prepisati" kao kopirati (kopija bi
             značila da POEN nastaje ni iz čega, protiv zero-suma). Ova rečenica
             gasi obe. */}
         <p className="text-xs text-kolo-muted leading-snug">{t("send_napomena")}</p>

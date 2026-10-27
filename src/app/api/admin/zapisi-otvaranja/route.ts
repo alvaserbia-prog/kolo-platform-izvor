@@ -7,7 +7,7 @@ import { zapisiOtvaranja } from "@/lib/protokol/zahtev-razgovor";
 
 /**
  * GET — ko je otvorio ime i broj korisnika sa spiska za poziv (dokaz stvarnosti čl.
- * 4a st. 5; Uslovi čl. 16b st. 3; radnja obrade br. 24). Samo superadmin.
+ * 10 st. 4; radnja obrade br. 24). Samo superadmin.
  * Zapis nosi pseudonim člana Kola, pseudonim pozvanog i vreme — bez imena i broja.
  * Filter `?pseudonim=` traži po bilo kojoj od dve strane.
  */

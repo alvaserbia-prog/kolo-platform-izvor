@@ -16,6 +16,7 @@ import { pocetnoIzAdrese } from "@/hooks/useStanjeUAdresi";
 import Pseudonim from "@/components/Pseudonim";
 import AdminLogotip from "./AdminLogotip";
 import { RANG_TABELA } from "@/lib/donacija-pravila";
+import { dnevniLimit as dnevniLimitZa } from "@/lib/programi-iznosi-pravila";
 import OznakaStatusa from "@/components/OznakaStatusa";
 import type { StatusUcesnika } from "@/lib/status-ucesnika-pravila";
 import { klaseDugmeta } from "@/components/ui/Dugme";
@@ -45,6 +46,7 @@ const ZadrugeTab = dynamic(() => import("./ZadrugeTab"), { ssr: false });
 const GazdinstvaTab = dynamic(() => import("./GazdinstvaTab"), { ssr: false });
 const OdlukeTab = dynamic(() => import("./OdlukeTab"), { ssr: false });
 const KutijaZeljaTab = dynamic(() => import("./KutijaZeljaTab"), { ssr: false });
+const OperativniUoTab = dynamic(() => import("./OperativniUoTab"), { ssr: false });
 
 interface KorisnikInfo {
   id: string;
@@ -101,10 +103,10 @@ interface PendingEnrollment {
   label: string;
   metadata: Record<string, unknown> | null;
   /**
-   * Osnov po kome je pravo ostvareno u Posebnoj podršci (čl. 12).
+   * Osnov po kome je pravo ostvareno u Posebnoj podršci (programi čl. 14).
    *
    * 🔴 Ide ISKLJUČIVO superadminu, uz `metadata`: osnov se ne prikazuje nijednom
-   * korisniku (čl. 4 st. 5), a „razlaganje po osnovu dostupno je samom korisniku
+   * korisniku (programi čl. 20 st. 3), a „razlaganje po osnovu dostupno je samom korisniku
    * i licu koje u Fondaciji obrađuje prijavu". Bez njega bi superadmin odlučivao
    * ne videvši ono od čega zavisi rok — odlučivanje na slepo, isti razlog zbog
    * kog su mu i uneti podaci otvoreni.
@@ -112,7 +114,7 @@ interface PendingEnrollment {
   osnov: string | null;
   /**
    * Nijedan zahtev članu Kola nije upućen (nema ko podnosioca lično zna) —
-   * ispunjenost uslova potvrđuje Fondacija uz obrazloženje (programi čl. 4 st. 2).
+   * ispunjenost uslova potvrđuje Fondacija uz obrazloženje (programi čl. 5 st. 1).
    */
   cekaFondaciju?: boolean;
   createdAt: string;
@@ -147,6 +149,10 @@ interface AdminOglasItem {
   saOdobravanjem: boolean;
   positions: number;
   deadline: string | null;
+  rokIzvrsenja?: string | null;
+  kvalifikacioniUslov?: string | null;
+  kvalifikacioniObrazlozenje?: string | null;
+  zadruzni?: boolean;
   status: string;
   createdByPseudonim: string;
   krugName: string | null;
@@ -187,7 +193,7 @@ interface AdminPedData {
 interface PokroviteljItem {
   id: string;
   naziv: string;
-  /** Firma po PIB-u, registrovano gazdinstvo po BPG-u (donacije čl. 10, set 4.7.9). */
+  /** Firma po PIB-u, registrovano gazdinstvo po BPG-u (donacije čl. 22, set 4.7.9). */
   pib: string | null;
   bpg: string | null;
   vlasnikPseudonim: string;
@@ -246,16 +252,16 @@ interface AdminKlijentProps {
   krugoviLista2: { id: string; name: string }[];
   blogObjave: BlogObjavaAdmin[];
   nadzorNalazi: NadzorNalaz[];
-  /** Otvoreni nadzorni predmeti — badge na tabu Odluke (dokaz stvarnosti čl. 11a). */
+  /** Otvoreni nadzorni predmeti — badge na tabu Odluke (dokaz stvarnosti čl. 27). */
   otvorenihPredmeta: number;
   pendingDonacije: DonacijaItem[];
   otvoreniPrigovori: PrigovorItem[];
   viewerJeSuperadmin: boolean;
   viewerId: string;
   pocetniTab: Tab;
-  /** Otvorene prijave oglasa — badge na tabu Pijaca (Uslovi čl. 25 st. 2). */
+  /** Otvorene prijave oglasa — badge na tabu Pijaca (Uslovi čl. 29 st. 2). */
   otvorenihPrijavaOglasa: number;
-  /** Prvi oglasi koji čekaju odobrenje doprinosa — badge na tabu Prvi oglasi (čl. 40a). */
+  /** Prvi oglasi koji čekaju odobrenje doprinosa — badge na tabu Prvi oglasi (Pravilnik čl. 38). */
   prvihOglasaNaCekanju: number;
   otvorenihPrijavaRazmene: number;
   /** Predlozi dece koji čekaju pregled — badge na tabu Kutija želja. */
@@ -357,7 +363,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
     "kutija-zelja": t("tab_kutija_zelja"),
   };
   // Tabovi samo za superadmina: cirkularna pošta (obaveštenja), pristanak na
-  // nove akte (politika — odluka vlasnika, Uslovi čl. 40), audit, aktivnost,
+  // nove akte (politika — odluka vlasnika, Uslovi čl. 43), audit, aktivnost,
   // levak, provere i odluke.
   const SAMO_SUPERADMIN: Tab[] = ["obavestenja", "politika", "audit", "aktivnost", "levak", "nadzor", "odluke"];
   const vidljiv = (k: Tab) => viewerJeSuperadmin || !SAMO_SUPERADMIN.includes(k);
@@ -505,13 +511,13 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
       {/* Korisnici */}
       {tab === "korisnici" && <KorisniciTab users={users} onDone={() => router.refresh()} viewerJeSuperadmin={viewerJeSuperadmin} viewerId={viewerId} />}
 
-      {/* Pijaca — moderacija oglasa (Uslovi čl. 21, 25) */}
+      {/* Pijaca — moderacija oglasa (Uslovi čl. 23, 29) */}
       {tab === "pijaca" && <PijacaTab />}
 
-      {/* Prvi oglasi — odobravanje doprinosa iz čl. 40a (nalozi bez potvrde). */}
+      {/* Prvi oglasi — odobravanje doprinosa iz Pravilnika čl. 38 (nalozi bez potvrde). */}
       {tab === "prvi-oglasi" && <PrviOglasiTab onDone={() => router.refresh()} />}
 
-      {/* Potvrde — POEN po potvrdi koji čeka trag učešća (dokaz stvarnosti čl. 7):
+      {/* Potvrde — POEN po potvrdi koji čeka trag učešća (dokaz stvarnosti čl. 19):
           ručni upis kao ventil + jednokratno usklađivanje zatečenih. */}
       {tab === "potvrde" && (
         <PotvrdeTab jeSuperadmin={viewerJeSuperadmin} onDone={() => router.refresh()} />
@@ -520,7 +526,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
       {/* Razmene — prijave neispunjene razmene; odlučuje se o prepisu POEN-a. */}
       {tab === "razmene" && <RazmeneTab onDone={() => router.refresh()} />}
 
-      {/* Nabavke — sprovođenje kolektivne nabavke (Pravilnik čl. 51a). */}
+      {/* Nabavke — sprovođenje kolektivne nabavke (Pravilnik čl. 47). */}
       {tab === "nabavke" && <NabavkeTab onDone={() => router.refresh()} />}
       {tab === "zadruge" && <ZadrugeTab />}
       {tab === "gazdinstva" && <GazdinstvaTab jeSuperadmin={viewerJeSuperadmin} />}
@@ -569,11 +575,11 @@ const sourceCls: Record<string, string> = {
 function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void }) {
   const locale = useLocale();
   const t = useTranslations("admin");
-  const [view, setView] = useState<"oglasi" | "prijave" | "evidencije" | "novi">("oglasi");
+  const [view, setView] = useState<"oglasi" | "prijave" | "evidencije" | "novi" | "uo">("oglasi");
   const [loading, setLoading] = useState<string | null>(null);
   const [poruke, setPoruke] = useState<Record<string, { text: string; ok: boolean }>>({});
   const [izmenaOglas, setIzmenaOglas] = useState<AdminOglasItem | null>(null);
-  const { dijalog, potvrdi } = useDijalog();
+  const { dijalog, potvrdi, unesi } = useDijalog();
 
   async function odobriPrijavu(id: string) {
     setLoading(id);
@@ -607,8 +613,15 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
   }
 
   async function odbijEvidenciju(id: string) {
+    // Odbijanje se obrazlaže (operativni 5.0 čl. 15 st. 2 t. 2).
+    const obrazlozenje = await unesi({ poruka: t("ped_odbij_obrazlozenje"), oznaka: t("ped_obrazlozenje"), opasno: true });
+    if (obrazlozenje == null) return;
     setLoading(id);
-    const res = await fetch(`/api/admin/doprinos-oglasi/evidencija/${id}/odbij`, { method: "POST" });
+    const res = await fetch(`/api/admin/doprinos-oglasi/evidencija/${id}/odbij`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ obrazlozenje }),
+    });
     const d = await res.json();
     setLoading(null);
     setPoruke((p) => ({ ...p, [id]: { text: res.ok ? t("ped_odbijeno_msg") : (d.error ?? t("greska_generalna")), ok: res.ok } }));
@@ -616,11 +629,19 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
   }
 
   async function zatvoriOglas(id: string) {
-    if (!(await potvrdi({ poruka: t("novi_oglas_zatvori_oglas_confirm"), opasno: true, dugme: t("ped_zatvori") }))) return;
+    // Povlačenje (operativni 5.0 čl. 8): zadatak u izvršenju samo uz javno obrazloženje.
+    const obrazlozenje = await unesi({ poruka: t("ped_povuci_obrazlozenje"), oznaka: t("ped_obrazlozenje"), opasno: true, opciono: true, dugme: t("ped_zatvori") });
+    if (obrazlozenje == null) return;
     setLoading(id);
-    const res = await fetch(`/api/admin/doprinos-oglasi/oglasi/${id}/zatvori`, { method: "POST" });
+    const res = await fetch(`/api/admin/doprinos-oglasi/oglasi/${id}/zatvori`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ obrazlozenje }),
+    });
+    const d = await res.json().catch(() => ({}));
     setLoading(null);
     if (res.ok) onDone();
+    else setPoruke((p) => ({ ...p, [id]: { text: d.error ?? t("greska_generalna"), ok: false } }));
   }
 
   const subTabs: [typeof view, string][] = [
@@ -628,6 +649,7 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
     ["prijave", `${t("ped_tab_prijave")}${data.pendingPrijave.length > 0 ? ` (${data.pendingPrijave.length})` : ""}`],
     ["evidencije", `${t("ped_tab_evidencije")}${data.pendingEvidencije.length > 0 ? ` (${data.pendingEvidencije.length})` : ""}`],
     ["novi", t("ped_tab_novi")],
+    ["uo", t("ped_tab_uo")],
   ];
 
   return (
@@ -642,6 +664,16 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
           opcije={subTabs.map(([key, label]) => ({ vrednost: key, oznaka: label }))}
         />
       </div>
+
+      {/* Odluke lica koje potvrđuje (čl. 12–18) donose čuvari Kola i lice koje UO
+          ovlasti, ne admin nivo; ovde je samo pregled i ulaz (#10, #51). */}
+      {(view === "prijave" || view === "evidencije") && (
+        <Obavestenje vrsta="info">
+          {t("ped_potvrde_ulaz")}{" "}
+          <a href="/doprinos-oglasi/potvrde" className="underline">{t("ped_potvrde_link")}</a>
+        </Obavestenje>
+      )}
+      {view === "uo" && <OperativniUoTab />}
 
       {/* Oglasi */}
       {view === "oglasi" && izmenaOglas && (
@@ -666,7 +698,8 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
                       {o.status === "ACTIVE" ? t("ped_oglas_aktivan") : t("ped_oglas_zatvoren")}
                     </span>
                   </div>
-                  <p className="font-semibold text-kolo-text text-sm">{o.title}</p>
+                  <p className="font-semibold text-kolo-text text-sm">{o.title}{o.zadruzni ? ` · ${t("ped_zadruzni")}` : ""}</p>
+                  {poruke[o.id] && !poruke[o.id].ok && <Obavestenje vrsta="greska">{poruke[o.id].text}</Obavestenje>}
                   <p className="text-xs text-kolo-muted mt-1">
                     {o.predlozeniPoen > 0 ? o.predlozeniPoen.toLocaleString(intlTag(locale)) : t("ped_neograniceno")} {t("ped_predlozeni_poen")}{o.saOdobravanjem ? ` · ${t("ped_oglas_sa_odobravanjem")}` : ""} · {o.positions} {o.positions === 1 ? t("ped_oglas_izvršilac_sing") : t("ped_oglas_izvršilac_pl")} · {o.ukupnoPrijava} {t("ped_oglas_prijava")} · {o.pendingEvidencija} {t("ped_oglas_za_verifikaciju")}
                   </p>
@@ -705,7 +738,7 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
                     <p className="font-semibold text-kolo-text text-sm"><Pseudonim>{p.pseudonim}</Pseudonim></p>
                     <p className="text-xs text-kolo-muted mt-0.5">{p.oglasTitle} · {p.predlozeniPoen > 0 ? p.predlozeniPoen.toLocaleString(intlTag(locale)) : t("ped_neograniceno")} {t("ped_predlozeni_poen")}</p>
                     {p.planIzvrsenja && <p className="text-xs text-kolo-muted mt-1 line-clamp-3"><span className="font-semibold">{t("ped_plan_label")}</span> {p.planIzvrsenja}</p>}
-                    {/* Izjava izvršioca (čl. 10 al. 3) — snimljena uz prijavu. */}
+                    {/* Izjava izvršioca (operativni čl. 10 st. 1 t. 3) — snimljena uz prijavu. */}
                     {p.izjavaTekst && (
                       <details className="mt-1">
                         <summary className="text-xs text-kolo-muted cursor-pointer font-semibold">{t("ped_izjava_label")}</summary>
@@ -818,6 +851,9 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
   const [saOdobravanjem, setSaOdobravanjem] = useState(oglas?.saOdobravanjem ?? false);
   const [positions, setPositions] = useState(oglas ? String(oglas.positions) : "");
   const [deadline, setDeadline] = useState(oglas?.deadline ? oglas.deadline.slice(0, 10) : "");
+  const [rokIzvrsenja, setRokIzvrsenja] = useState(oglas?.rokIzvrsenja ? oglas.rokIzvrsenja.slice(0, 10) : "");
+  const [kvalifikacioniUslov, setKvalifikacioniUslov] = useState(oglas?.kvalifikacioniUslov ?? "");
+  const [kvalifikacioniObrazlozenje, setKvalifikacioniObrazlozenje] = useState(oglas?.kvalifikacioniObrazlozenje ?? "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -846,6 +882,9 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
           saOdobravanjem,
           positions: positions.trim() ? Number(positions) : undefined,
           deadline: deadline || null,
+          rokIzvrsenja: rokIzvrsenja || null,
+          kvalifikacioniUslov: kvalifikacioniUslov.trim() || null,
+          kvalifikacioniObrazlozenje: kvalifikacioniObrazlozenje.trim() || null,
         }),
       });
       const data = await res.json();
@@ -921,6 +960,26 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
         </div>
       </div>
 
+      <div>
+        <label htmlFor="adm-novi-oglas-rok-izvrsenja" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_rok_izvrsenja_label")}</label>
+        <input id="adm-novi-oglas-rok-izvrsenja" type="date" lang="sr-RS" value={rokIzvrsenja} onChange={(e) => setRokIzvrsenja(e.target.value)}
+          className={KLASE_UNOSA} />
+      </div>
+
+      {/* Kvalifikacioni filter (operativni 5.0 čl. 5 t. 10, čl. 9 st. 3) — obrazložen i srazmeran. */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label htmlFor="adm-novi-oglas-uslov" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_uslov_label")}</label>
+          <input id="adm-novi-oglas-uslov" type="text" value={kvalifikacioniUslov} onChange={(e) => setKvalifikacioniUslov(e.target.value)}
+            className={KLASE_UNOSA} />
+        </div>
+        <div>
+          <label htmlFor="adm-novi-oglas-uslov-obr" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_uslov_obrazlozenje_label")}</label>
+          <input id="adm-novi-oglas-uslov-obr" type="text" value={kvalifikacioniObrazlozenje} onChange={(e) => setKvalifikacioniObrazlozenje(e.target.value)}
+            className={KLASE_UNOSA} />
+        </div>
+      </div>
+
       <label className="flex items-center gap-2 text-sm text-kolo-text cursor-pointer">
         <input type="checkbox" checked={saOdobravanjem} onChange={(e) => setSaOdobravanjem(e.target.checked)}
           className="w-4 h-4 accent-kolo-green-700" />
@@ -940,7 +999,7 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
             {t("izmena_oglas_otkazi")}
           </button>
         )}
-        <button type="submit" disabled={loading || !title.trim() || !description.trim() || !celineOk || !opisCeline.trim() || !procenaObima.trim()}
+        <button type="submit" disabled={loading || !title.trim() || !description.trim() || !celineOk || !opisCeline.trim() || !procenaObima.trim() || obrazlozenje.trim().length < 10 || !deadline || !rokIzvrsenja}
           className={klaseDugmeta({ varijanta: "primarno", velicina: "lg" }) + " flex-1"}>
           {loading ? (oglas ? t("izmena_oglas_cuvanje") : t("novi_oglas_kreiranje")) : (oglas ? t("izmena_oglas_sacuvaj") : t("novi_oglas_kreiraj"))}
         </button>
@@ -959,7 +1018,7 @@ function AdminProgramiTab({ data, opticaj, sme, onDone }: { data: AdminProgramiD
   const [nocnaRezultat, setNocnaRezultat] = useState<string | null>(null);
   const [loadingZrno, setLoadingZrno] = useState(false);
   const { dijalog, potvrdi, unesi, obavesti } = useDijalog();
-  const dnevniLimit = Math.floor(opticaj * 0.1);
+  const dnevniLimit = dnevniLimitZa(opticaj);
 
   async function toggleZrnoKanal() {
     setLoadingZrno(true);
@@ -1189,7 +1248,7 @@ function EmisijaTab({ onSuccess }: { onSuccess: () => void }) {
   const t = useTranslations("admin");
   const [pseudonim, setPseudonim] = useState("");
   const [amountRSD, setAmountRSD] = useState("");
-  // Uplatilac iz izvoda (Pravilnik o pokroviteljstvu i donacijama, čl. 3).
+  // Uplatilac iz izvoda (Pravilnik o pokroviteljstvu i donacijama, čl. 6).
   const [uplatilac, setUplatilac] = useState("");
   const [straniPriliv, setStraniPriliv] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -1355,7 +1414,7 @@ function EmisijaTab({ onSuccess }: { onSuccess: () => void }) {
               className={KLASE_UNOSA + " font-mono"}
             />
           </div>
-          {/* Uplatilac iz izvoda (čl. 3) — doprinos ide onome čijim je sredstvima
+          {/* Uplatilac iz izvoda (donacije čl. 6) — doprinos ide onome čijim je sredstvima
               uplata izvršena, a poziv na broj je trajan broj člana. */}
           <div>
             <label htmlFor="adm-donacije-uplatilac-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("donacije_uplatilac_label")}</label>
@@ -1694,6 +1753,7 @@ function DonacijeTab({ donacije, onDone, pocetniNacin = "izvod" }: { donacije: D
 const prigovorTipLabel = (t: ReturnType<typeof useTranslations<"admin">>): Record<string, string> => ({
   RAZMENA: t("prigovori_tip_razmena"),
   NABAVKA: t("prigovori_tip_nabavka"),
+  VAUCER: t("prigovori_tip_vaucer"),
   VERIFIKACIJA: t("prigovori_tip_verifikacija"),
   SUSPENZIJA: t("prigovori_tip_suspenzija"),
   PROGRAM: t("prigovori_tip_program"),
@@ -1702,6 +1762,7 @@ const prigovorTipLabel = (t: ReturnType<typeof useTranslations<"admin">>): Recor
   POTVRDA: t("prigovori_tip_potvrda"),
   RODITELJSTVO: t("prigovori_tip_roditeljstvo"),
   GAZDINSTVO: t("prigovori_tip_gazdinstvo"),
+  VISESTRUKI_NALOG: t("prigovori_tip_visestruki"),
   OSTALO: t("prigovori_tip_ostalo"),
 });
 
@@ -1725,7 +1786,7 @@ function PrigovorKartica({ p, onDone }: { p: PrigovorItem; onDone: () => void })
   const [poruka, setPoruka] = useState<{ text: string; ok: boolean } | null>(null);
 
   // `ispravi` uz usvojen prigovor na deo iz nabavke otklanja poništenje zapisa
-  // (nabavke čl. 30a st. 5). Prigovor na PREPIS se ovde NE rešava dugmetom —
+  // (nabavke čl. 35). Prigovor na PREPIS se ovde NE rešava dugmetom —
   // o njemu se odlučuje u tabu Razmene, koji zatvara i prigovor uz sebe.
   async function posalji(status: "RESENO" | "ODBIJENO" | "U_OBRADI", ispravi = false) {
     setLoading(ispravi ? "ISPRAVKA" : status);
@@ -2493,8 +2554,7 @@ function AdminPokroviteljiTab({
 }) {
   const locale = useLocale();
   const t = useTranslations("admin");
-  const [subTab, setSubTab] = useState<"upisi" | "lista" | "prijave" | "dobra" | "novi" | "doprinos">("upisi");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [subTab, setSubTab] = useState<"upisi" | "lista" | "prijave" | "dobra" | "novi">("upisi");
   const [loading, setLoading] = useState(false);
   const [poruka, setPoruka] = useState<{ text: string; ok: boolean } | null>(null);
 
@@ -2507,12 +2567,6 @@ function AdminPokroviteljiTab({
   const [noviVlasnikId, setNoviVlasnikId] = useState("");
   const [noviKrugId, setNoviKrugId] = useState("");
 
-  // Forma — doprinos
-  const [doprinosRsd, setDoprinosRsd] = useState("");
-  // Samo NOVAC ulazi u kumulativ (donacije čl. 13h st. 3); dobra i usluge idu kroz
-  // pod-tab „Dobra i usluge".
-  const [doprinosTip, setDoprinosTip] = useState<"NOVAC">("NOVAC");
-  const [doprinosNapomena, setDoprinosNapomena] = useState("");
 
   async function kreirajPokrovitelja() {
     if (!noviNaziv.trim() || !noviPib.trim() || !noviVlasnikId) {
@@ -2545,41 +2599,12 @@ function AdminPokroviteljiTab({
     }
   }
 
-  async function dodajDoprinos() {
-    if (!selectedId || !doprinosRsd) return;
-    const iznos = parseFloat(doprinosRsd);
-    if (isNaN(iznos) || iznos <= 0) {
-      setPoruka({ text: t("pokrovitelji_neispravan_iznos"), ok: false });
-      return;
-    }
-    setLoading(true);
-    setPoruka(null);
-    const res = await fetch(`/api/admin/pokrovitelji/${selectedId}/doprinos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rsdIznos: iznos, tip: doprinosTip, napomena: doprinosNapomena.trim() || undefined }),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (res.ok) {
-      const noviNivoi: { nivo: number; bonusPoen: number }[] = data.noviNivoi ?? [];
-      if (noviNivoi.length > 0) {
-        const tekst = noviNivoi.map((n: { nivo: number; bonusPoen: number }) => t("pokrovitelji_nivo_bonus", { nivo: n.nivo, bonus: n.bonusPoen.toLocaleString(intlTag(locale)) })).join(", ");
-        setPoruka({ text: t("pokrovitelji_doprinos_evidentiran_msg", { nivoi: tekst }), ok: true });
-      } else {
-        setPoruka({ text: t("pokrovitelji_doprinos_evidentiran_no_nivo"), ok: true });
-      }
-      setDoprinosRsd(""); setDoprinosNapomena("");
-      setTimeout(() => { onDone(); setSubTab("lista"); }, 2000);
-    } else {
-      setPoruka({ text: data.error ?? t("greska_generalna"), ok: false });
-    }
-  }
-
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
-        {(["upisi", "lista", "prijave", "dobra", "novi", "doprinos"] as const).map((s) => (
+        {/* Pod-tab „doprinos" (ručni upis novčanog doprinosa) je ukinut setom 5.0: novčano
+            pokroviteljstvo ide samo kroz prijavu, a POEN podnosiocu (donacije čl. 19–20, 23). */}
+        {(["upisi", "lista", "prijave", "dobra", "novi"] as const).map((s) => (
           <button
             key={s}
             onClick={() => { setSubTab(s); setPoruka(null); }}
@@ -2588,7 +2613,7 @@ function AdminPokroviteljiTab({
               subTab === s ? "bg-kolo-green-700 text-white" : "bg-kolo-bg text-kolo-muted hover:bg-kolo-border"
             }`}
           >
-            {s === "upisi" ? t("pokrovitelji_tab_upisi") : s === "lista" ? t("pokrovitelji_tab_lista", { count: pokrovitelji.length }) : s === "prijave" ? t("pokrovitelji_tab_prijave") : s === "dobra" ? t("pokrovitelji_tab_dobra") : s === "novi" ? t("pokrovitelji_tab_novi") : t("pokrovitelji_tab_doprinos")}
+            {s === "upisi" ? t("pokrovitelji_tab_upisi") : s === "lista" ? t("pokrovitelji_tab_lista", { count: pokrovitelji.length }) : s === "prijave" ? t("pokrovitelji_tab_prijave") : s === "dobra" ? t("pokrovitelji_tab_dobra") : t("pokrovitelji_tab_novi")}
           </button>
         ))}
       </div>
@@ -2597,7 +2622,7 @@ function AdminPokroviteljiTab({
         <Obavestenje vrsta={poruka.ok ? "uspeh" : "greska"}>{poruka.text}</Obavestenje>
       )}
 
-      {/* Upis u evidenciju pokrovitelja (donacije čl. 6a) — poređenje sa registrom. */}
+      {/* Upis u evidenciju pokrovitelja (donacije čl. 16 i 18) — poređenje sa registrom. */}
       {subTab === "upisi" && <PokroviteljUpisiTab />}
       {subTab === "prijave" && <PokroviteljPrijaveTab onDone={onDone} />}
       {subTab === "dobra" && <PokroviteljstvoDobraTab />}
@@ -2701,59 +2726,6 @@ function AdminPokroviteljiTab({
         </div>
       )}
 
-      {subTab === "doprinos" && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 space-y-4 shadow-kartica">
-          <h3 className="font-semibold text-kolo-text">{t("pokrovitelji_doprinos_naslov")}</h3>
-          <div>
-            <label htmlFor="adm-pokrovitelji-doprinos-pokrovitelj-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("pokrovitelji_doprinos_pokrovitelj_label")}</label>
-            <select id="adm-pokrovitelji-doprinos-pokrovitelj-label" value={selectedId ?? ""} onChange={(e) => setSelectedId(e.target.value || null)}
-              className={KLASE_UNOSA}>
-              <option value="">{t("pokrovitelji_doprinos_select_placeholder")}</option>
-              {pokrovitelji.filter((p) => p.status === "ACTIVE").map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.naziv} ({t("pokrovitelji_nivo", { nivo: p.trenutniNivo })}, {p.rsdKumulativ.toLocaleString(intlTag(locale))} RSD)
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label htmlFor="adm-pokrovitelji-doprinos-iznos-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("pokrovitelji_doprinos_iznos_label")}</label>
-              <input id="adm-pokrovitelji-doprinos-iznos-label"
-                type="number"
-                min="1"
-                value={doprinosRsd}
-                onChange={(e) => setDoprinosRsd(e.target.value)}
-                className={KLASE_UNOSA}
-                placeholder={t("pokrovitelji_doprinos_iznos_placeholder")}
-              />
-            </div>
-            <div>
-              <label htmlFor="adm-pokrovitelji-doprinos-tip-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("pokrovitelji_doprinos_tip_label")}</label>
-              <select id="adm-pokrovitelji-doprinos-tip-label"
-                value={doprinosTip}
-                onChange={(e) => setDoprinosTip(e.target.value as "NOVAC")}
-                className={KLASE_UNOSA}
-              >
-                <option value="NOVAC">{t("pokrovitelji_doprinos_novac")}</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label htmlFor="adm-pokrovitelji-doprinos-napomena-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("pokrovitelji_doprinos_napomena_label")}</label>
-            <input id="adm-pokrovitelji-doprinos-napomena-label" value={doprinosNapomena} onChange={(e) => setDoprinosNapomena(e.target.value)}
-              className={KLASE_UNOSA}
-              placeholder={t("pokrovitelji_doprinos_napomena_placeholder")} />
-          </div>
-          <button
-            onClick={dodajDoprinos}
-            disabled={loading || !selectedId}
-            className={klaseDugmeta() + " w-full"}
-          >
-            {loading ? t("pokrovitelji_doprinos_evidentiranje") : t("pokrovitelji_doprinos_btn")}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

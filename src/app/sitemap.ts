@@ -21,7 +21,7 @@ const JAVNE_PUTANJE: { path: string; priority: number; changeFrequency: Metadata
   { path: "/vesti", priority: 0.6, changeFrequency: "weekly" },
   { path: "/cesto-postavljena-pitanja", priority: 0.8, changeFrequency: "monthly" },
   { path: "/pijaca", priority: 0.7, changeFrequency: "daily" },
-  // Mapa domaćih proizvođača (Pravilnik o gazdinstvima čl. 11) i spisak mesta sa
+  // Mapa domaćih proizvođača (Pravilnik o gazdinstvima čl. 19) i spisak mesta sa
   // zadrugama — javni; profil zadruge traži prijavu i ovde se ne navodi.
   { path: "/gazdinstva", priority: 0.6, changeFrequency: "weekly" },
   { path: "/mapa", priority: 0.6, changeFrequency: "weekly" },
@@ -56,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   }));
 
-  // Aktivni oglasi. Stranica oglasa je javna (Pravilnik čl. 16) i ima svoj
+  // Aktivni oglasi. Stranica oglasa je javna (Uslovi čl. 17 st. 2) i ima svoj
   // naslov, opis i OG sliku — bez ovoga je Gugl nije mogao naći, jer se do nje
   // stizalo samo preko liste na /pijaca. Ovo je jedini stalan izvor priliva
   // ljudi koji traže konkretnu stvar.
@@ -68,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let oglasi: MetadataRoute.Sitemap = [];
   try {
     const listings = await prisma.marketplaceListing.findMany({
-      // Oglas maloletnog korisnika se ne indeksira (Modul Deca, čl. 13 st. 1) —
+      // Oglas maloletnog korisnika se ne indeksira (Pravilnik o učešću dece čl. 24 st. 2) —
       // on nije javno dostupan, pa u sitemap-u nema šta da traži.
       where: { status: "ACTIVE", seller: { maloletan: false } },
       select: { id: true, updatedAt: true },
@@ -86,7 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // Profili odobrenih gazdinstava — javni kao i mapa (Pravilnik o gazdinstvima
-  // čl. 11). Gazdinstvo koje nije odobreno nema javni profil.
+  // čl. 19). Gazdinstvo koje nije odobreno nema javni profil.
   let gazdinstva: MetadataRoute.Sitemap = [];
   try {
     const lista = await prisma.gazdinstvo.findMany({

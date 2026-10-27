@@ -7,7 +7,7 @@ import { potvrdiUcesce, NabavkaGreska } from "@/lib/protokol/nabavka";
 /**
  * POST /api/nabavke/[id]/potvrdi  { dan: "2026-09-21" }
  *
- * Potvrda učešća UPISOM DANA PREUZIMANJA (čl. 23 st. 2). Tek tada se POEN
+ * Potvrda učešća UPISOM DANA PREUZIMANJA (čl. 21 st. 2). Tek tada se POEN
  * rezerviše — prijava je nezavezujuća, obaveza nastaje kad čovek kaže kog dana
  * dolazi. Dan mora pasti unutar objavljenog perioda preuzimanja.
  */

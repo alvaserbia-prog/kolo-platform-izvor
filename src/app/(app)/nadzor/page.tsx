@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 /**
  * /nadzor — stranica za nadzor.
- * Vidljiva samo čuvarima Kola (dokaz stvarnosti čl. 10 st. 2: nadzornik je svaki
+ * Vidljiva samo čuvarima Kola (dokaz stvarnosti čl. 23: nadzornik je svaki
  * čuvar Kola). Predmet je verifikacija, potvrda člana bez potvrde ili potvrda
- * postojanja deteta (čl. 10 st. 1 i 5, set 4.8.2).
+ * postojanja deteta (čl. 22 st. 1, set 4.8.2).
  */
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { listajZaNadzor, signaliZaNadzor } from "@/lib/protokol/nadzor-service";
+import { listajZaNadzorSaSignalima } from "@/lib/protokol/nadzor-service";
 import { mozeNadzor } from "@/lib/dozvole";
 import VerifikacijaCard from "@/components/nadzor/VerifikacijaCard";
 import { getTranslations } from "next-intl/server";
@@ -43,16 +43,10 @@ export default async function NadzorPage() {
     );
   }
 
-  const sve = await listajZaNadzor(session.user.id);
-  // Svaki zapis ostaje u nadzoru (čl. 10). Redosled: prvo verifikacije koje je
-  // obavio član bez potvrde (čl. 11 st. 7), zatim one sa više signala, a među
-  // jednakima najstariji.
-  const signali = await signaliZaNadzor(sve);
-  const lista = [...sve].sort((a, b) => {
-    if (a.verifikatorBezPotvrde !== b.verifikatorBezPotvrde) return a.verifikatorBezPotvrde ? -1 : 1;
-    const razlika = (signali.get(b.id)?.length ?? 0) - (signali.get(a.id)?.length ?? 0);
-    return razlika !== 0 ? razlika : a.datum.getTime() - b.datum.getTime();
-  });
+  // Svaki zapis ostaje u nadzoru (čl. 22). Redosled (čl. 25): prvo verifikacije koje
+  // je obavio član bez potvrde, zatim one sa više signala, a među jednakima
+  // najstariji — isti redosled vraća i `/api/nadzor`.
+  const { lista, signali } = await listajZaNadzorSaSignalima(session.user.id);
 
   return (
     <div className="max-w-3xl mx-auto py-6 space-y-6">

@@ -1,7 +1,7 @@
 /**
  * Pravila za korisnika (nalog koji niko nije ni uveo u Kolo ni potvrdio) — ČISTE
- * funkcije, bez baze. Osnov: Uslovi korišćenja čl. 14, 16 st. 4 i čl. 16b;
- * Pravilnik o dokazu stvarnosti čl. 4a (set 4.8.2). Ime fajla ostaje iz seta 4.8.1.
+ * funkcije, bez baze. Osnov: Uslovi korišćenja čl. 14 st. 2;
+ * Pravilnik o dokazu stvarnosti čl. 8–13 (set 4.8.2). Ime fajla ostaje iz seta 4.8.1.
  *
  * Korisnik učestvuje u razmeni: objavljuje ponudu i potražnju, prepisuje POEN i
  * piše u Pričaonici. Dve stvari su mu uže, i obe su ovde:
@@ -43,9 +43,9 @@ export function smeNovRazgovor(u: { povodOglasom: boolean; pokrenutihDanas: numb
   return { ok: true };
 }
 
-// ── Spisak za poziv („Želim da me neko nazove", Uslovi čl. 16b) ──────────────
+// ── Spisak za poziv („Želim da me neko nazove", dokaz stvarnosti čl. 8) ──────────────
 
-/** Koliko dugo je poziv (ime i broj) otvoren jednom članu Kola (Uslovi čl. 16b st. 3). */
+/** Koliko dugo je poziv (ime i broj) otvoren jednom članu Kola (dokaz stvarnosti čl. 10 st. 2). */
 export const BROJ_OTVOREN_MINUTA = 10;
 
 /** Najduži opis „čime se baviš" i dostupnosti. */
@@ -64,11 +64,11 @@ export function ispravanTelefon(t: string): boolean {
 }
 
 export type UnosZahteva = {
-  /** Osnov dospeća na spisak (dokaz stvarnosti čl. 4a st. 2). Izostavljen = ZAHTEV. */
+  /** Osnov dospeća na spisak (dokaz stvarnosti čl. 8 st. 1). Izostavljen = ZAHTEV. */
   osnov?: OsnovSpiska;
   /**
    * Ime i prezime (set 4.8.4, N4-M2): uslov za spisak za svaki osnov. Upisuje se u
-   * evidenciju identiteta (Pravilnik čl. 31a, izvor SPISAK_ZA_POZIV).
+   * evidenciju identiteta (Pravilnik čl. 31, izvor SPISAK_ZA_POZIV).
    */
   imePrezime: string;
   mesto: string | null;
@@ -82,13 +82,13 @@ export type UnosZahteva = {
  * Sadržinska provera unosa pre upisa na spisak.
  *
  * Ime i prezime, mesto i broj telefona su obavezni za svaki osnov (set 4.8.4,
- * N4-M2; dokaz stvarnosti čl. 4a): čuvaju se uz nalog i porede sa drugim nalozima.
+ * N4-M2; dokaz stvarnosti čl. 9, 13): čuvaju se uz nalog i porede sa drugim nalozima.
  * Opis i dostupnost su obavezni samo kad korisnik sam traži razgovor (osnov ZAHTEV —
- * Uslovi čl. 16b st. 1 t. 1). Pristanak je obavezan uvek (st. 2).
+ * dokaz stvarnosti čl. 8 st. 1 t. 1). Pristanak je obavezan uvek (čl. 9 st. 1).
  */
 export function proveriZahtev(u: UnosZahteva): Provera {
   const zahtev = (u.osnov ?? "ZAHTEV") === "ZAHTEV";
-  // Zahtev radi potvrde (dokaz čl. 5c st. 3): čuvar Kola treba da zna kada da zove.
+  // Zahtev radi potvrde (dokaz čl. 16 st. 2): čuvar Kola treba da zna kada da zove.
   const radiPotvrde = u.osnov === "POTVRDA";
   if (!u.pristanak)
     return {

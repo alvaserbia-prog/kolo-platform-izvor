@@ -3,13 +3,14 @@
  *
  * Čista pravila žive u `src/lib/nabavka-pravila.ts` i odavde se re-eksportuju, pa
  * server ima jedan ulaz. Osnov: Pravilnik o projektima i kolektivnim nabavkama
- * (set 4.4.1); Pravilnik o KOLO sistemu čl. 14a i 51a.
+ * (set 4.4.1); Pravilnik o KOLO sistemu čl. 18 i 47.
  */
 import { prisma } from "@/lib/prisma";
 import { TransactionType } from "@/generated/prisma/client";
 import type { NabavkaPrijavaStatus } from "@/generated/prisma/client";
 import { obavesti } from "@/lib/notifikacije";
 import { ROK_NABAVKA_DANA } from "@/lib/prigovor-pravila";
+import { beogradskiDan } from "@/lib/protokol/obracunski-dan";
 import {
   dohvatiSaldoFondacije,
   dohvatiTrosakPrethodnogMeseca,
@@ -33,6 +34,8 @@ import {
   rokPotvrde,
   krajPeriodaPreuzimanja,
   danJeUPeriodu,
+  pocetakObracunskogDana,
+  krajDana,
   smeUcestvovati,
   utvrdiIzbor,
   predlogIstice,
@@ -173,7 +176,7 @@ export async function registarPredloga(): Promise<RedPredloga[]> {
 }
 
 /**
- * Briše predloge izabranog naziva po sprovedenoj nabavci (čl. 32 st. 1).
+ * Briše predloge izabranog naziva po sprovedenoj nabavci (čl. 10 st. 3).
  *
  * 🔴 Bez ovoga ista reč pobeđuje zauvek: ako tri stotine ljudi napiše „gorivo" i
  * taj upis ostane, gorivo dobija svako sledeće glasanje i registar prestaje da meri
@@ -184,7 +187,7 @@ export async function brisiPredlogeNaziva(nazivId: string): Promise<number> {
   return r.count;
 }
 
-/** Čl. 32 st. 1 — predlozi stariji od dvanaest meseci (čisti ih cron). */
+/** Čl. 10 st. 3 — predlozi stariji od dvanaest meseci (čisti ih cron). */
 export async function brisiIstekle(sada = new Date()): Promise<number> {
   const granica = new Date(sada);
   granica.setMonth(granica.getMonth() - 12);
@@ -221,7 +224,7 @@ export async function sredstvaZaProjekte(): Promise<SredstvaZaProjekte> {
   };
 }
 
-// ─── Priprema nabavke (čl. 12, 15, 20) ────────────────────────────────────────
+// ─── Priprema nabavke (čl. 12, 14, 18) ────────────────────────────────────────
 
 /**
  * Otvara nabavku po izabranom nazivu. Status NACRT — ništa nije objavljeno i
@@ -241,10 +244,10 @@ export async function pripremiNabavku(nazivId: string, glasanjePredlogId?: strin
 }
 
 /**
- * Čl. 17 — odluka utvrđuje ukupnu količinu, veličinu dela i broj POEN-a po delu.
+ * Čl. 13 — odluka utvrđuje ukupnu količinu, veličinu dela i broj POEN-a po delu.
  *
  * 🔴 Mora se izvršiti PRE prve ponude. To nije formalnost nego jedina brana koja
- * tvrdnju iz čl. 19 čini proverljivom: broj POEN-a ne može biti izveden iz cene
+ * tvrdnju iz čl. 17 čini proverljivom: broj POEN-a ne može biti izveden iz cene
  * koja u tom trenutku još ne postoji. Zato `dodajPonudu` odbija ponudu dok
  * parametri nisu utvrđeni, a ovde se odbija izmena kad ponude već postoje.
  */
@@ -259,15 +262,15 @@ export async function utvrdiParametre(
   if (!n) throw new NabavkaGreska("Nabavka nije pronađena.", 404);
   if (n.status !== "NACRT") throw new NabavkaGreska("Parametri se utvrđuju pre objave kalkulacije.");
   if (n._count.ponude > 0) {
-    throw new NabavkaGreska("Parametri se utvrđuju pre prikupljanja ponuda (čl. 17 st. 3).", 409);
+    throw new NabavkaGreska("Parametri se utvrđuju pre prikupljanja ponuda (čl. 13 st. 4).", 409);
   }
   if (!validniParametri(ulaz)) {
     throw new NabavkaGreska(
-      "Količina, veličina dela i broj POEN-a po delu moraju biti celi brojevi veći od nule, a količina deljiva veličinom dela bez ostatka (čl. 17).",
+      "Količina, veličina dela i broj POEN-a po delu moraju biti celi brojevi veći od nule, a količina deljiva veličinom dela bez ostatka (čl. 13 st. 3).",
     );
   }
   if (!ulaz.poenObrazlozenje.trim()) {
-    throw new NabavkaGreska("Obrazloženje parametara je obavezno (čl. 17 st. 3).");
+    throw new NabavkaGreska("Obrazloženje parametara je obavezno (čl. 13 st. 4).");
   }
 
   return prisma.nabavka.update({
@@ -290,7 +293,7 @@ export async function dodajPonudu(nabavkaId: string, ponudjac: string, cenaPoJed
   if (!n) throw new NabavkaGreska("Nabavka nije pronađena.", 404);
   if (n.status !== "NACRT") throw new NabavkaGreska("Ponude se dodaju samo dok kalkulacija nije objavljena.");
   if (n.poenPoDelu === null) {
-    throw new NabavkaGreska("Prvo se utvrđuju parametri nabavke, pa se prikupljaju ponude (čl. 17 st. 3).", 409);
+    throw new NabavkaGreska("Prvo se utvrđuju parametri nabavke, pa se prikupljaju ponude (čl. 13 st. 4).", 409);
   }
   if (!ponudjac.trim()) throw new NabavkaGreska("Naziv ponuđača je obavezan.");
   if (!(cenaPoJedinici > 0)) throw new NabavkaGreska("Cena po jedinici mora biti veća od nule.");
@@ -318,9 +321,9 @@ export interface ObjavaUlaz {
 }
 
 /**
- * Objavljuje kalkulaciju i otvara prijave (čl. 20).
+ * Objavljuje kalkulaciju i otvara prijave (čl. 18).
  *
- * 🔴 Svi brojevi se SNIMAJU na zapis. Po čl. 20 st. 2 kalkulacija se posle objave
+ * 🔴 Svi brojevi se SNIMAJU na zapis. Po čl. 18 st. 3 kalkulacija se posle objave
  * ne menja; bez snimka bi se prikazani iznosi menjali sa saldom Fondacije i sa
  * tržišnom cenom, pa bi čovek koji se prijavio video druge brojeve nego onaj koji
  * je odlučivao.
@@ -334,21 +337,21 @@ export async function objaviNabavku(nabavkaId: string, ulaz: ObjavaUlaz) {
   if (n.status !== "NACRT") throw new NabavkaGreska("Nabavka je već objavljena.");
 
   if (n.ponude.length < NAJMANJE_PONUDA) {
-    throw new NabavkaGreska(`Potrebno je najmanje ${NAJMANJE_PONUDA} ponude pre objave (čl. 15).`);
+    throw new NabavkaGreska(`Potrebno je najmanje ${NAJMANJE_PONUDA} ponude pre objave (čl. 14).`);
   }
   const izabrana = n.ponude.find((p) => p.id === ulaz.ponudaId);
   if (!izabrana) throw new NabavkaGreska("Izabrana ponuda ne pripada ovoj nabavci.");
 
-  // Čl. 15 st. 1 — bira se NAJPOVOLJNIJA. Ako izabrana nije najjeftinija, izbor je
+  // Čl. 14 st. 1 — bira se NAJPOVOLJNIJA. Ako izabrana nije najjeftinija, izbor je
   // ili greška ili odluka koju akt ne dopušta; u oba slučaja bolje da padne ovde.
   const najjeftinija = n.ponude.reduce((a, b) => (Number(a.cenaPoJedinici) <= Number(b.cenaPoJedinici) ? a : b));
   if (izabrana.id !== najjeftinija.id) {
-    throw new NabavkaGreska("Bira se najpovoljnija ponuda (čl. 15 st. 1).");
+    throw new NabavkaGreska("Bira se najpovoljnija ponuda (čl. 14 st. 1).");
   }
 
   const sredstva = await sredstvaZaProjekte();
   if (n.brojJedinica === null || n.velicinaDela === null || n.poenPoDelu === null) {
-    throw new NabavkaGreska("Parametri nabavke nisu utvrđeni (čl. 17).", 409);
+    throw new NabavkaGreska("Parametri nabavke nisu utvrđeni (čl. 13).", 409);
   }
 
   const kalk = izracunajKalkulaciju({
@@ -362,15 +365,15 @@ export async function objaviNabavku(nabavkaId: string, ulaz: ObjavaUlaz) {
     },
   });
   if (!kalk) {
-    // Čl. 18 st. 2 — prekoračenje granice nije greška u unosu nego ishod tendera.
+    // Čl. 16 st. 2 — prekoračenje granice nije greška u unosu nego ishod tendera.
     throw new NabavkaGreska(
-      "Nabavka se ne sprovodi: ili nema sredstava iznad rezerve, ili ukupan dinarski trošak prelazi gornju granicu iz čl. 8. Sredstva ostaju za narednu nabavku, a nova odluka može utvrditi manju količinu."
+      "Nabavka se ne sprovodi: ili nema sredstava iznad rezerve, ili ukupan dinarski trošak prelazi gornju granicu iz čl. 7. Sredstva ostaju za narednu nabavku, a nova odluka može utvrditi manju količinu."
     );
   }
 
   const sada = new Date();
-  const preuzimanjeOd = new Date(ulaz.preuzimanjeOd);
-  preuzimanjeOd.setHours(0, 0, 0, 0);
+  // Prvi dan preuzimanja počinje ponoću po srpskom vremenu (obračunski dan), ne po satu servera.
+  const preuzimanjeOd = pocetakObracunskogDana(new Date(ulaz.preuzimanjeOd));
 
   await prisma.$transaction(async (tx) => {
     await tx.nabavkaPonuda.updateMany({ where: { nabavkaId }, data: { izabrana: false } });
@@ -397,7 +400,7 @@ export async function objaviNabavku(nabavkaId: string, ulaz: ObjavaUlaz) {
   return kalk;
 }
 
-// ─── Prijava (čl. 21) ─────────────────────────────────────────────────────────
+// ─── Prijava (čl. 19) ─────────────────────────────────────────────────────────
 
 export async function prijaviSe(userId: string, nabavkaId: string) {
   const [korisnik, n] = await Promise.all([
@@ -412,8 +415,8 @@ export async function prijaviSe(userId: string, nabavkaId: string) {
   if (!smeUcestvovati(korisnik)) {
     throw new NabavkaGreska("U nabavci učestvuju punoletni korisnici sa aktivnim nalogom i potvrđenom stvarnošću (čl. 4).", 403);
   }
-  // Čl. 21 st. 2 — prijava ne zavisi od broja POEN-a u zapisu; broj POEN-a
-  // određuje samo mesto u redu (čl. 22), a dovoljnost se proverava pri potvrdi (čl. 23).
+  // Čl. 19 st. 2 — prijava ne zavisi od broja POEN-a u zapisu; broj POEN-a
+  // određuje samo mesto u redu (čl. 20), a dovoljnost se proverava pri potvrdi (čl. 21).
   if (n.status !== "OBJAVLJENA") throw new NabavkaGreska("Prijave nisu otvorene.");
   if (n.prijaveDo && n.prijaveDo.getTime() <= Date.now()) throw new NabavkaGreska("Rok za prijavu je istekao.");
 
@@ -424,7 +427,7 @@ export async function prijaviSe(userId: string, nabavkaId: string) {
   }
 }
 
-/** Odustanak — pre poziva i posle njega (čl. 24 st. 1). */
+/** Odustanak — pre poziva i posle njega (čl. 22 st. 1). */
 export async function odustani(userId: string, nabavkaId: string) {
   const p = await prisma.nabavkaPrijava.findUnique({
     where: { nabavkaId_userId: { nabavkaId, userId } },
@@ -441,10 +444,10 @@ export async function odustani(userId: string, nabavkaId: string) {
   await pozoviSledeceg(nabavkaId);
 }
 
-// ─── Red i pozivi (čl. 22, 23, 24) ────────────────────────────────────────────
+// ─── Red i pozivi (čl. 20, 21, 22) ────────────────────────────────────────────
 
 /**
- * Zatvara prijave, snima red i šalje prve pozive (čl. 22).
+ * Zatvara prijave, snima red i šalje prve pozive (čl. 20).
  *
  * 🔴 Broj POEN-a se SNIMA. Rolanje poziva traje danima, a ljudi u međuvremenu troše
  * POEN — pri živom rangiranju red bi se premeštao pod nogama onima koji čekaju
@@ -468,8 +471,8 @@ export async function zatvoriPrijaveIUtvrdiRed(nabavkaId: string) {
     },
   });
 
-  // Čl. 21 st. 2 i čl. 22 — u red ulazi svaka prijava, bez najmanjeg broja POEN-a.
-  // Zapis u minusu ulazi sa nulom; dovoljnost se proverava tek pri potvrdi (čl. 23).
+  // Čl. 19 st. 2 i čl. 20 — u red ulazi svaka prijava, bez najmanjeg broja POEN-a.
+  // Zapis u minusu ulazi sa nulom; dovoljnost se proverava tek pri potvrdi (čl. 21).
   const red = poredjajRed(
     prijave
       .map((p) => ({
@@ -499,11 +502,11 @@ export async function zatvoriPrijaveIUtvrdiRed(nabavkaId: string) {
 }
 
 /**
- * Popunjava mesta pozivima, prema redu, do broja delova (čl. 23 st. 1).
+ * Popunjava mesta pozivima, prema redu, do broja delova (čl. 21 st. 1).
  *
  * Isti poziv rešava i prvo popunjavanje i svako kasnije oslobađanje mesta — jedno
  * pravilo, tri povoda (odustanak, istek roka, nepreuzimanje). Posebna lista čekanja
- * se ne vodi: red iz čl. 22 se prosto nastavlja preko broja delova.
+ * se ne vodi: red iz čl. 20 se prosto nastavlja preko broja delova.
  */
 export async function pozoviSledeceg(nabavkaId: string): Promise<number> {
   const n = await prisma.nabavka.findUnique({
@@ -518,7 +521,7 @@ export async function pozoviSledeceg(nabavkaId: string): Promise<number> {
   });
   if (!n || !n.brojDelova) return 0;
   if (n.status !== "RED_UTVRDJEN" && n.status !== "PLACENA") return 0;
-  // Kad period preuzimanja istekne, lanac poziva se zaustavlja (čl. 29).
+  // Kad period preuzimanja istekne, lanac poziva se zaustavlja (čl. 22 st. 2).
   if (n.preuzimanjeDo && n.preuzimanjeDo.getTime() <= Date.now()) return 0;
 
   const zauzeto = await prisma.nabavkaPrijava.count({
@@ -564,11 +567,11 @@ function generisiKod(): string {
 }
 
 /**
- * Potvrda učešća upisom dana preuzimanja (čl. 23 st. 2).
+ * Potvrda učešća upisom dana preuzimanja (čl. 21 st. 2).
  *
  * 🔴 Tek tada se POEN REZERVIŠE. Prijava je jeftina i nezavezujuća; obaveza nastaje
  * kad čovek kaže kog dana dolazi. Ko u tom trenutku nema dovoljno POEN-a ne može da
- * potvrdi (st. 4) — inače bi rezervacija pukla i mesto ostalo prazno bez ijednog traga.
+ * potvrdi (st. 2) — inače bi rezervacija pukla i mesto ostalo prazno bez ijednog traga.
  */
 export async function potvrdiUcesce(userId: string, nabavkaId: string, dan: Date) {
   const [p, n] = await Promise.all([
@@ -598,8 +601,7 @@ export async function potvrdiUcesce(userId: string, nabavkaId: string, dan: Date
     throw new NabavkaGreska(`Za potvrdu je potrebno ${n.poenPoDelu} POEN.`, 409);
   }
 
-  const danPreuzimanja = new Date(dan);
-  danPreuzimanja.setHours(0, 0, 0, 0);
+  const danPreuzimanja = pocetakObracunskogDana(dan);
 
   await prisma.nabavkaPrijava.update({
     where: { id: p.id },
@@ -618,10 +620,10 @@ export async function potvrdiUcesce(userId: string, nabavkaId: string, dan: Date
   });
 }
 
-// ─── Preuzimanje i poništenje zapisa (čl. 26, 27) ─────────────────────────────
+// ─── Preuzimanje i poništenje zapisa (čl. 24, 25) ─────────────────────────────
 
 /**
- * Preuzimanje dela i poništenje zapisa PO ISKORIŠĆENJU (čl. 26 i 27).
+ * Preuzimanje dela i poništenje zapisa PO ISKORIŠĆENJU (čl. 24 i 25).
  *
  * 🔴 POEN se gasi TEK OVDE, ne pri potvrdi. Do preuzimanja je rezervisan, ali
  * postoji — čovek koji nije došao ne sme ništa da izgubi.
@@ -630,7 +632,7 @@ export async function potvrdiUcesce(userId: string, nabavkaId: string, dan: Date
  * ovde se poništava EMISIJA, pa Protokolov minus opada i sa njim ukupan opticaj.
  * Kod prepisa se POEN samo seli između dva korisnička zapisa i opticaj se ne miče.
  *
- * 🔴 Zapis NE SME u minus (čl. 28). Poništava se tačno onoliko koliko je rezervisano,
+ * 🔴 Zapis NE SME u minus (čl. 25 st. 3). Poništava se tačno onoliko koliko je rezervisano,
  * a rezervacija je pri potvrdi proverena prema stanju; ako je stanje u međuvremenu
  * palo (npr. poništenjem lažne potvrde), preuzimanje se odbija umesto da napravi
  * četvrti izuzetak od zabrane negativnog zapisa.
@@ -656,7 +658,7 @@ export async function oznaciPreuzeto(prijavaId: string) {
   if (!w) throw new NabavkaGreska("Član nema zapis u Protokolu.", 500);
   if (w.balance < p.rezervisano) {
     throw new NabavkaGreska(
-      "Zapis korisnika više ne pokriva rezervisani iznos — poništenje po iskorišćenju ne sme da napravi negativan zapis (čl. 28).",
+      "Zapis korisnika više ne pokriva rezervisani iznos — poništenje po iskorišćenju ne sme da napravi negativan zapis (čl. 25 st. 3).",
       409
     );
   }
@@ -690,7 +692,7 @@ export async function oznaciPreuzeto(prijavaId: string) {
       kljuc: "nabavka_preuzeto",
       parametri: { dobro, poen: iznos, dana: ROK_NABAVKA_DANA },
       naslov: "Deo je preuzet",
-      // Pouka o pravu i roku je obavezan deo obaveštenja (nabavke čl. 30a st. 7):
+      // Pouka o pravu i roku je obavezan deo obaveštenja (nabavke čl. 28 st. 2):
       // rok od sedam dana teče od OVOG obaveštenja, pa bez pouke nije zaštita nego zamka.
       tekst:
         `Preuzeo si svoj deo iz nabavke „${dobro}". Poništeno je ${iznos} POEN. ` +
@@ -716,10 +718,10 @@ export async function prijavaPoKodu(nabavkaId: string, kod: string) {
   });
 }
 
-// ─── Plaćanje i zatvaranje (čl. 25, 29, 32) ───────────────────────────────────
+// ─── Plaćanje i zatvaranje (čl. 23, 26, 10) ───────────────────────────────────
 
 /**
- * Beleži plaćanje dobavljaču i otvara period preuzimanja (čl. 25).
+ * Beleži plaćanje dobavljaču i otvara period preuzimanja (čl. 23).
  *
  * 🔴 Plaća se TEK sada, kad je poznato koliko je delova potvrđeno. Ako je potvrđeno
  * manje od broja delova iz kalkulacije, kupuje se manje jedinica i plaća srazmerno
@@ -738,8 +740,8 @@ export async function zabeleziPlacanje(nabavkaId: string, iznosRSD: number, krei
   if (n.status !== "RED_UTVRDJEN") throw new NabavkaGreska("Plaćanje se beleži po utvrđenom redu.");
   if (!(iznosRSD > 0)) throw new NabavkaGreska("Iznos plaćanja mora biti veći od nule.");
 
-  const danas = new Date();
-  danas.setHours(0, 0, 0, 0);
+  // Dan troška je kalendarski dan po srpskom vremenu, ne po satu servera.
+  const danas = beogradskiDan(new Date());
 
   await prisma.$transaction(async (tx) => {
     await tx.projekatTrosak.create({
@@ -758,7 +760,7 @@ export async function zabeleziPlacanje(nabavkaId: string, iznosRSD: number, krei
   });
 }
 
-/** Zatvara nabavku i briše predloge izabranog naziva (čl. 32 st. 1). */
+/** Zatvara nabavku i briše predloge izabranog naziva (čl. 10 st. 3). */
 export async function zavrsiNabavku(nabavkaId: string) {
   const n = await prisma.nabavka.findUnique({ where: { id: nabavkaId }, select: { status: true, nazivId: true } });
   if (!n) throw new NabavkaGreska("Nabavka nije pronađena.", 404);
@@ -773,7 +775,7 @@ export async function zavrsiNabavku(nabavkaId: string) {
 }
 
 /**
- * Obustava nabavke. Sve rezervacije se oslobađaju — POEN se ne gasi (čl. 27 st. 3:
+ * Obustava nabavke. Sve rezervacije se oslobađaju — POEN se ne gasi (čl. 25 st. 2:
  * poništenje nastupa tek u trenutku preuzimanja).
  */
 export async function obustaviNabavku(nabavkaId: string, razlog: string) {
@@ -809,7 +811,7 @@ export async function rezervisanoZaNabavku(userId: string): Promise<number> {
   return r._sum.rezervisano ?? 0;
 }
 
-// ─── Noćni posao (čl. 21, 23, 24, 29) ─────────────────────────────────────────
+// ─── Noćni posao (čl. 19, 21, 22, 26) ─────────────────────────────────────────
 
 export interface IzvestajObrade {
   prijaveZatvorene: number;
@@ -851,7 +853,7 @@ export async function obradiNabavke(sada = new Date()): Promise<IzvestajObrade> 
     }
   }
 
-  // 2) Istekli pozivi → mesto se oslobađa (čl. 24 st. 1).
+  // 2) Istekli pozivi → mesto se oslobađa (čl. 22 st. 1).
   const pozvani = await prisma.nabavkaPrijava.findMany({
     where: { status: "POZVAN", pozvanAt: { not: null } },
     select: { id: true, nabavkaId: true, pozvanAt: true },
@@ -865,15 +867,15 @@ export async function obradiNabavke(sada = new Date()): Promise<IzvestajObrade> 
     }
   }
 
-  // 3) Potvrđeni koji nisu došli svog dana (čl. 24 st. 1).
+  // 3) Potvrđeni koji nisu došli svog dana (čl. 22 st. 1).
   const potvrdjeni = await prisma.nabavkaPrijava.findMany({
     where: { status: "POTVRDIO", danPreuzimanja: { not: null } },
     select: { id: true, nabavkaId: true, danPreuzimanja: true },
   });
   for (const p of potvrdjeni) {
     if (!p.danPreuzimanja) continue;
-    const kraj = new Date(p.danPreuzimanja);
-    kraj.setDate(kraj.getDate() + 1);
+    // Kraj upisanog dana je ponoć po srpskom vremenu (obračunski dan).
+    const kraj = krajDana(p.danPreuzimanja, 0);
     if (kraj.getTime() <= sada.getTime()) {
       await prisma.nabavkaPrijava.update({
         where: { id: p.id },
@@ -893,7 +895,7 @@ export async function obradiNabavke(sada = new Date()): Promise<IzvestajObrade> 
     }
   }
 
-  // 5) Istekao period preuzimanja → nabavka se zatvara (čl. 29, 32).
+  // 5) Istekao period preuzimanja → nabavka se zatvara (čl. 26, 10 st. 3).
   const zaZavrsetak = await prisma.nabavka.findMany({
     where: { status: "PLACENA", preuzimanjeDo: { lte: sada } },
     select: { id: true },
@@ -907,19 +909,19 @@ export async function obradiNabavke(sada = new Date()): Promise<IzvestajObrade> 
     }
   }
 
-  // 6) Predlozi stariji od dvanaest meseci (čl. 32 st. 1).
+  // 6) Predlozi stariji od dvanaest meseci (čl. 10 st. 3).
   izv.istekliPredlozi = await brisiIstekle(sada);
 
   return izv;
 }
 
-// ─── Izborno glasanje (Gornje Kolo čl. 8 st. 4) ───────────────────────────────
+// ─── Izborno glasanje (Gornje Kolo čl. 8 st. 1) ───────────────────────────────
 
 /**
  * Utvrđuje izabran naziv iz zatvorenog izbornog glasanja i otvara nabavku.
  *
  * Zbir glasačke moći se čita iz `GlasanjeGlas.glasackaGlasova` — moći zapamćene u
- * trenutku davanja glasa (Gornje Kolo čl. 6), pa kašnjenje zatvaranja ne može da
+ * trenutku davanja glasa (Gornje Kolo čl. 12 st. 2), pa kašnjenje zatvaranja ne može da
  * pomeri ishod.
  */
 export async function utvrdiIzborNabavke(predlogId: string) {

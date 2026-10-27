@@ -16,7 +16,9 @@ import {
 } from "@/lib/protokol/zrno";
 import { ucitajStatus } from "@/lib/protokol/status";
 import { beogradskiDan } from "@/lib/protokol/obracunski-dan";
-import { fazaPredloga, zatvoriIstekleIObjaviIshod } from "@/lib/protokol/glasanje";
+import { dohvatiPredlogeZaPrikaz } from "@/lib/protokol/glasanje";
+import { dohvatiFazuStatus } from "@/lib/protokol/faza-sistema";
+import { smePodnetiPredlog, vidiPseudonimeGornjegKola } from "@/lib/gornje-kolo-pravila";
 import ZrnoKlijent from "./ZrnoKlijent";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
@@ -31,9 +33,6 @@ export default async function ZrnoPage() {
 
   const danas = beogradskiDan();
   const now = new Date();
-
-  // Zatvori istekle predloge i utvrdi ishod pre čitanja (čl. 13)
-  await zatvoriIstekleIObjaviIshod(now);
 
   const [status, stanje, wallet, upisZahtev, otpisZahtev, statusZahtevi, delegacija, kanal, koeficijent, predlozi] = await Promise.all([
     // Status iz baze (set 4.8.2), ne iz sesije: ZRNO upisuje član bez potvrde i
@@ -50,15 +49,19 @@ export default async function ZrnoPage() {
     }),
     prisma.zrnoKanal.findUnique({ where: { id: "singleton" } }),
     poslednjiKoeficijent(),
-    prisma.glasanjePredlog.findMany({
-      orderBy: { createdAt: "desc" },
-      include: { author: { select: { pseudonim: true } }, glasovi: true },
-    }),
+    // Predlozi Gornjeg Kola — isti prikaz kao `GET /api/glasanje` (zatvara istekle i
+    // utvrđuje ishod pre čitanja; Pravilnik o Gornjem Kolu čl. 10 st. 4, 11 st. 2, 19).
+    // Pseudonime vide samo učesnici (čl. 9 st. 3, 10 st. 5).
+    ucitajStatus(session.user.id).then((s) =>
+      dohvatiPredlogeZaPrikaz(session.user.id, vidiPseudonimeGornjegKola(s), now),
+    ),
   ]);
 
+  // U Fazi 1 Gornje Kolo ne postoji (Pravilnik čl. 41–42): predlog se ne nudi.
+  const faza2 = (await dohvatiFazuStatus()).faza === "FAZA_2";
   const slobodno = stanje?.slobodno ?? 0;
   const aktivno = stanje?.aktivno ?? 0;
-  // Glasačka moć ima samo čuvar Kola (Pravilnik čl. 30 st. 3, 45).
+  // Glasačka moć ima samo čuvar Kola (Pravilnik čl. 29, 43).
   const st = status ?? "KORISNIK";
   const moc = smeAktiviratiZrno(st) ? glasackaMoc(aktivno) : 0;
 
@@ -87,21 +90,8 @@ export default async function ZrnoPage() {
         imaZakazano: delegacija.imaZakazano,
         zakazaniPseudonim: delegacija.zakazaniDelegat?.pseudonim ?? null,
       } : null}
-      predlozi={predlozi.map((p) => ({
-        id: p.id,
-        title: p.title,
-        description: p.description,
-        authorPseudonim: p.author.pseudonim,
-        glasanjePocetak: p.glasanjePocetak.toISOString(),
-        deadline: p.deadline.toISOString(),
-        status: p.status as "ACTIVE" | "CLOSED",
-        faza: fazaPredloga(p, now),
-        ishodUsvojen: p.ishodUsvojen,
-        zaGlasova: p.glasovi.filter((g) => g.za).reduce((s, g) => s + g.glasackaGlasova, 0),
-        protiGlasova: p.glasovi.filter((g) => !g.za).reduce((s, g) => s + g.glasackaGlasova, 0),
-        mojGlas: p.glasovi.find((g) => g.userId === session.user.id)?.za ?? null,
-        createdAt: p.createdAt.toISOString(),
-      }))}
+      predlozi={predlozi}
+      smePredloziti={faza2 && smePodnetiPredlog(st)}
     />
   );
 }

@@ -25,7 +25,7 @@ type Predmet = {
 };
 
 /**
- * Admin → Potvrde → „Mogući višestruki nalozi" (dokaz stvarnosti čl. 4a i 4b; set
+ * Admin → Potvrde → „Mogući višestruki nalozi" (dokaz stvarnosti čl. 13 i 14; set
  * 4.8.4; registar 2026-10, N4-M2 i N4-M3). Samo superadmin — ruta odbija ostale, pa
  * se tada ne prikazuje ništa.
  *

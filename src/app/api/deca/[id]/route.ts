@@ -10,7 +10,7 @@ import {
 } from "@/lib/protokol/deca";
 
 /**
- * PATCH /api/deca/[id] — prekidač iz čl. 10 st. 2.
+ * PATCH /api/deca/[id] — prekidač iz čl. 20 st. 2.
  *
  * Jedina saglasnost koju roditelj daje posle otvaranja naloga: komunikacija i
  * razmena maloletnog korisnika sa punoletnim korisnicima. Povlači se istim putem.
@@ -39,7 +39,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 /**
- * DELETE /api/deca/[id] — brisanje naloga deteta (čl. 17).
+ * DELETE /api/deca/[id] — brisanje naloga deteta (čl. 36).
  *
  * Traži da roditelj otkuca pseudonim deteta: klik ne sme da promaši red u spisku,
  * a radnja poništava sav POEN i uklanja sve oglase. Isti obrazac kao kod vraćanja

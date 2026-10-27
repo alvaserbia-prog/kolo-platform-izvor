@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { pozoviClana, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
-/** POST — poziv punoletnom korisniku da pristupi gazdinstvu (čl. 7 st. 2). */
+/** POST — poziv punoletnom korisniku da pristupi gazdinstvu (čl. 9 st. 2). */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);

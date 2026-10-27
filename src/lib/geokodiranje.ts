@@ -2,11 +2,11 @@ import { lokacijaUSrbiji } from "@/lib/gazdinstvo-pravila";
 
 /**
  * Pretraga adrese → tačka na mapi, za prijavu gazdinstva (Politika privatnosti
- * 4.13, Registar radnji obrade br. 20).
+ * čl. 25, Registar radnji obrade br. 20).
  *
  * Upit ide iz pretraživača korisnika pravo servisu za pretragu adresa
  * OpenStreetMap-a (Nominatim), ne preko našeg servera. Adresa se od seta 4.7.5
- * čuva uz prijavu (čl. 4 t. 3), ali je vidi samo administratorski tim — u javni
+ * čuva uz prijavu (gazdinstva čl. 5 st. 1 t. 3), ali je vidi samo administratorski tim — u javni
  * prikaz ne ide (brana `gazdinstvo-izvor.test.ts`).
  *
  * Pravila korišćenja Nominatim-a: najviše jedan upit u sekundi i bez pretrage

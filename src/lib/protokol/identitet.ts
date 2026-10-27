@@ -5,8 +5,8 @@ import { ishodUpisa, type IshodUpisa, type IzvorIdentiteta } from "@/lib/identit
 export * from "@/lib/identitet-pravila";
 
 /**
- * Evidencija identiteta — Pravilnik o KOLO sistemu čl. 31a, Politika privatnosti
- * odeljak 4.14, Registar radnji obrade br. 21 (set 4.7.3).
+ * Evidencija identiteta — Pravilnik o KOLO sistemu čl. 31, Politika privatnosti
+ * čl. 24, Registar radnji obrade br. 21 (set 4.7.3).
  *
  * 🔴 Jedan nalog, jedno ime: jedini ulaz za upis je `upisiIdentitet`. Upisano ime
  * se ne prepisuje drugim imenom iz kasnijeg izvora; ispravka ide prigovorom
@@ -24,7 +24,7 @@ export async function upisiIdentitet(
   izvor: IzvorIdentiteta,
   tx: Klijent = prisma,
 ): Promise<IshodUpisa> {
-  // 🔴 Brana na jedinom ulazu (čl. 31a st. 6): maloletni nalog se ne upisuje, bez
+  // 🔴 Brana na jedinom ulazu (čl. 31 st. 7): maloletni nalog se ne upisuje, bez
   // obzira na to koji ga je izvor doveo. Ulazne tačke ga i same odbijaju; ovo je
   // poslednja reč, jer je pokroviteljstvo do seta 4.7.7 proveravalo samo potvrdu,
   // a potvrđeno dete ima `verified: true`.
@@ -44,12 +44,12 @@ export async function imeNaloga(userId: string): Promise<string | null> {
   return r?.imePrezime ?? null;
 }
 
-/** Ispravka po prigovoru „Ispravka podatka" (čl. 31a st. 3) — samo superadmin. */
+/** Ispravka po prigovoru „Ispravka podatka" (čl. 31 st. 3) — samo superadmin. */
 export async function ispraviIdentitet(userId: string, imePrezime: string) {
   await prisma.identitetNaloga.update({ where: { userId }, data: { imePrezime } });
 }
 
-/** Gašenje naloga (čl. 34) — zapis identiteta se briše. */
+/** Gašenje naloga (čl. 33 st. 4) — zapis identiteta se briše. */
 export async function obrisiIdentitet(userId: string, tx: Klijent = prisma) {
   await tx.identitetNaloga.deleteMany({ where: { userId } });
 }

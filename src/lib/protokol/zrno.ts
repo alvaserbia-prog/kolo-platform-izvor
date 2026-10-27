@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { danObracuna, prethodniDan } from "./obracunski-dan";
+import { proveriZbir, snimiZbir } from "./zbir-zapisa";
 import { TransactionType } from "@/generated/prisma/client";
 import {
   IZBOR_STATUSA,
@@ -18,22 +19,24 @@ import {
 
 // Čista pravila ZRNA i Gornjeg Kola (set 4.8.2) — jedan ulaz za server (pravilo 9).
 export * from "@/lib/gornje-kolo-pravila";
+import { najviseZaUpisZrna, upisZrnaOtvoren } from "@/lib/zrno-upis-pravila";
+export * from "@/lib/zrno-upis-pravila";
 
 export const UKUPNO_ZRNA = 1_000_000;
 export const PROTOKOL_WALLET_ID = "banka-singleton";
 
-// Pravilnik v3.7.5, čl. 19: upis ZRNA pretpostavlja minimum od 20.000 evidentiranih POEN-a
+// Pravilnik čl. 22 st. 4: upis ZRNA pretpostavlja minimum od 20.000 evidentiranih POEN-a
 export const MINIMUM_POEN_ZA_UPIS_ZRNA = 20_000;
 
 // ── Računanje ─────────────────────────────────────────────────────────────────
 // `glasackaMoc` i `razresiGlasackuMoc` žive u `gornje-kolo-pravila.ts`.
 
 /**
- * Tekući obračunski koeficijent (Pravilnik čl. 23): odnos ukupnog broja
+ * Tekući obračunski koeficijent (Pravilnik čl. 25): odnos ukupnog broja
  * evidentiranih POEN-a i broja ZRNA raspoloživih za upis u Protokolu.
  *
  * 🔴 Funkcija se do 13.09.2026. zvala `trendsKurs`, a promenljive `kurs` —
- * uklonjeno uz R-04. Čl. 23 st. 4: koeficijent „nije cena, nije kurs i nije
+ * uklonjeno uz R-04. Čl. 25 st. 4: koeficijent „nije cena, nije kurs i nije
  * indeks performansi". Ne vraćati reč „kurs" ni u jedan identifikator ni u
  * ijedan opis transakcije.
  *
@@ -114,7 +117,10 @@ export async function izvrsiZrnoOperacije(datum: Date) {
     throw e;
   }
 
-  // 2. Obradi upise
+  // 2. Obradi upise. Upis je otvoren samo u Fazi 2 (Pravilnik čl. 22 st. 1) — za
+  // svakoga, i za osnivača (osnivački čl. 9): zahtev koji bi se zatekao van Faze 2
+  // se ne izvršava.
+  const fazaUpisa = upisZrnaOtvoren(await prisma.zrnoKanal.findUnique({ where: { id: "singleton" } }));
   const upisi = await prisma.zrnoUpisZahtev.findMany({
     where: { date: { lte: doDana }, status: "PENDING" },
     include: { user: { include: { wallet: true, zrnoStanje: true } } },
@@ -126,17 +132,18 @@ export async function izvrsiZrnoOperacije(datum: Date) {
 
   for (const z of upisi) {
     try {
+      if (!fazaUpisa) { await cancel(z.id, "upis"); continue; }
       if (!z.user.wallet) { await cancel(z.id, "upis"); continue; }
       // Set 4.8.2: status se proverava i pri izvršenju — korisnik (kome je u
-      // međuvremenu pala verifikacija) i dete ZRNO ne upisuju (Pravilnik čl. 19 st. 2).
+      // međuvremenu pala verifikacija) i dete ZRNO ne upisuju (Pravilnik čl. 22 st. 3, čl. 52 st. 2).
       if (!smeUpisatiZrno(statusUcesnika(z.user))) { await cancel(z.id, "upis"); continue; }
       const walletBalance = z.user.wallet.balance;
 
       // Proveri minimalni balans
       if (walletBalance < MINIMUM_POEN_ZA_UPIS_ZRNA) { await cancel(z.id, "upis"); continue; }
 
-      // Proveri limit (1% balansa)
-      const maxPoen = Math.floor(walletBalance * 0.01);
+      // Limit po obračunskom periodu (čl. 22 st. 4; `PROCENAT_UPISA_ZRNA_PO_PERIODU`)
+      const maxPoen = najviseZaUpisZrna(walletBalance);
       const poenZaTrosak = Math.min(z.poenIznos, maxPoen);
 
       // Zaokruži
@@ -150,6 +157,8 @@ export async function izvrsiZrnoOperacije(datum: Date) {
       if (zrnaDobija > slobodnoUProtokolu) { await cancel(z.id, "upis"); continue; }
 
       const promena = await prisma.$transaction(async (tx) => {
+        // Pravilo 1: provera zbira po novčaniku i zero-sum u istoj transakciji.
+        const snimak = await snimiZbir(tx, [z.user.wallet!.id]);
         // POEN: user → Protokol (reverse emission)
         await tx.wallet.update({ where: { id: z.user.wallet!.id }, data: { balance: { decrement: utrosenoPoen } } });
         await tx.wallet.update({ where: { id: PROTOKOL_WALLET_ID }, data: { balance: { increment: utrosenoPoen } } });
@@ -170,9 +179,9 @@ export async function izvrsiZrnoOperacije(datum: Date) {
           update: { slobodno: { increment: zrnaDobija } },
         });
 
-        // Pravilnik čl. 19 st. 1–2, 29 st. 3: član Kola upisom ZRNA postaje čuvar
+        // Pravilnik čl. 22 st. 2–3, čl. 28 st. 3: član Kola upisom ZRNA postaje čuvar
         // Kola; član bez potvrde upisom NE postaje čuvar (ostaje REGULARNI) i
-        // ZRNO ne aktivira dok ne bude potvrđen (čl. 28a). Status piše samo
+        // ZRNO ne aktivira dok ne bude potvrđen (čl. 28 st. 3). Status piše samo
         // `preracunajStatusNaloga` (set 4.8.2) — ovde nema direktnog upisa
         // `tipKorisnika`.
         const p = await preracunajStatusNaloga(tx, z.userId);
@@ -181,6 +190,7 @@ export async function izvrsiZrnoOperacije(datum: Date) {
           where: { id: z.id },
           data: { status: "EXECUTED", zrnaUpisana: zrnaDobija, utrosenoPoen },
         });
+        await proveriZbir(tx, snimak, "Upis ZRNA");
         return p;
       });
       // Tek po uspešnoj transakciji uvećaj brojač izdatih ZRNA (K3).
@@ -201,7 +211,7 @@ export async function izvrsiZrnoOperacije(datum: Date) {
   for (const z of otpisi) {
     try {
       if (!z.user.wallet || !z.user.zrnoStanje) { await cancel(z.id, "otpis"); continue; }
-      // Korisniku je ZRNO zamrznuto — ne otpisuje ga (Pravilnik čl. 30 st. 3).
+      // Korisniku je ZRNO zamrznuto — ne otpisuje ga (Pravilnik čl. 29 st. 1).
       if (!smeOtpisatiZrno(statusUcesnika(z.user))) { await cancel(z.id, "otpis"); continue; }
       if (z.user.zrnoStanje.slobodno < z.kolicina) { await cancel(z.id, "otpis"); continue; }
 
@@ -209,6 +219,8 @@ export async function izvrsiZrnoOperacije(datum: Date) {
       if (evidentiranoPoen <= 0) { await cancel(z.id, "otpis"); continue; }
 
       const promena = await prisma.$transaction(async (tx) => {
+        // Pravilo 1: provera zbira po novčaniku i zero-sum u istoj transakciji.
+        const snimak = await snimiZbir(tx, [z.user.wallet!.id]);
         // POEN: Protokol → user
         await tx.wallet.update({ where: { id: PROTOKOL_WALLET_ID }, data: { balance: { decrement: evidentiranoPoen } } });
         await tx.wallet.update({ where: { id: z.user.wallet!.id }, data: { balance: { increment: evidentiranoPoen } } });
@@ -228,7 +240,7 @@ export async function izvrsiZrnoOperacije(datum: Date) {
           data: { slobodno: { decrement: z.kolicina } },
         });
 
-        // Pravilnik čl. 21 st. 4, 30 st. 4: čuvar Kola čije je ZRNO u celosti
+        // Pravilnik čl. 23 st. 3: čuvar Kola čije je ZRNO u celosti
         // otpisano postaje član Kola — kroz `preracunajStatusNaloga` (set 4.8.2).
         const p = await preracunajStatusNaloga(tx, z.userId);
 
@@ -236,6 +248,7 @@ export async function izvrsiZrnoOperacije(datum: Date) {
           where: { id: z.id },
           data: { status: "EXECUTED", evidentiranoPoen },
         });
+        await proveriZbir(tx, snimak, "Otpis ZRNA");
         return p;
       });
       await posledice(z.userId, promena);
@@ -257,8 +270,8 @@ export async function izvrsiZrnoOperacije(datum: Date) {
       const st = z.user.zrnoStanje;
 
       if (z.akcija === "ZAKLJUCAJ") {
-        // Aktivira samo čuvar Kola u trenutku izvršenja (Pravilnik čl. 20 st. 2,
-        // 29 st. 3, 30 st. 3): član bez potvrde, korisnik kome je ZRNO zamrznuto
+        // Aktivira samo čuvar Kola u trenutku izvršenja (Pravilnik čl. 23 st. 2,
+        // 28 st. 3, 29): član bez potvrde, korisnik kome je ZRNO zamrznuto
         // i čuvar kome je u međuvremenu pala potvrda — odbija se.
         if (!smeAktiviratiZrno(statusUcesnika(z.user))) { await cancelStatus(z.id); continue; }
         if (st.slobodno < z.kolicina) { await cancelStatus(z.id); continue; }
@@ -327,7 +340,7 @@ async function cancelStatus(id: string) {
  *
  * Set 4.8.2: moć ima samo čuvar Kola (u `baza` ulaze samo čuvari), a delegacija
  * čiji delegator ili delegat nije čuvar ne proizvodi dejstvo — moć iz nje se ne
- * računa nikome (Gornje Kolo čl. 4, 14; Pravilnik čl. 30 st. 3, 47).
+ * računa nikome (Gornje Kolo čl. 4 st. 3, 14 st. 3; Pravilnik čl. 29, 44 st. 2).
  *
  * Računa se nad VAŽEĆIM delegacijama (delegatId != null). Zakazane promene
  * (imaZakazano) stupaju na snagu tek u ponoć i ne utiču na trenutni obračun.

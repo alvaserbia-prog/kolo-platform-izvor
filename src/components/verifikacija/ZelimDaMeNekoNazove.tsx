@@ -14,8 +14,8 @@ export type MojZahtevNaSpisku = {
 } | null;
 
 /**
- * „Želim da me neko nazove" — kartica za KORISNIKA (dokaz stvarnosti čl. 4a; Uslovi
- * čl. 16b; set 4.8.2). Zamenjuje karticu „Tvoj put do potvrde": potvrda uplatom i
+ * „Želim da me neko nazove" — kartica za KORISNIKA (dokaz stvarnosti čl. 8
+ * i 9; set 4.8.2). Zamenjuje karticu „Tvoj put do potvrde": potvrda uplatom i
  * izvodom iz registra je ukinuta, pa su ovde samo spisak za poziv i njegovi osnovi.
  *
  * - `osnovi`: osnovi van zahteva koje je Fondacija utvrdila (DONACIJA,
@@ -23,11 +23,11 @@ export type MojZahtevNaSpisku = {
  *   samo sa brojem i pristankom.
  * - `mojZahtev`: upis na spisku, ako postoji (`mojZahtev`).
  *
- * Pre ulaska korisnik se obaveštava ko će ga zvati i šta će taj videti (čl. 4a st.
+ * Pre ulaska korisnik se obaveštava ko će ga zvati i šta će taj videti (čl. 9 st.
  * 4); pristanak se daje u obrascu na `/kontaktiraj-nas`. Povlačenje je ovde.
  *
- * `radiPotvrde` (set 4.8.3; čl. 5c): ista kartica za ČLANA BEZ POTVRDE — „Želim da me
- * neko nazove radi potvrde". Zove čuvar Kola. Kad uslovi iz čl. 5c st. 2 nisu
+ * `radiPotvrde` (set 4.8.3; čl. 16): ista kartica za ČLANA BEZ POTVRDE — „Želim da me
+ * neko nazove radi potvrde". Zove čuvar Kola. Kad uslovi iz čl. 16 st. 1 nisu
  * ispunjeni, kartica kaže koji uslov nedostaje i od kog dana će biti ispunjen.
  */
 export type UslovPrikaz = { ok: true } | { ok: false; uslov: string; odDana: string | null };

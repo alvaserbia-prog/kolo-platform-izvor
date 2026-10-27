@@ -12,19 +12,19 @@ import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
 /**
- * Radnje člana gazdinstva (Pravilnik o gazdinstvima čl. 4–12a, set 4.8.2):
+ * Radnje člana gazdinstva (Pravilnik o gazdinstvima čl. 4–25, set 4.8.2):
  * prihvatanje poziva uz izjavu, oglasi uz prijavu, izvod iz Registra, slanje na
  * pregled, pozivanje članova, preuzimanje izjave, upit o preuzimanju izjave,
  * istupanje i brisanje.
  *
  * Prava se izvode na serveru (`pravaUGazdinstvu`) i ovde samo prikazuju:
- *  - `upravlja` — oglasi u ime gazdinstva i profil (čl. 9 st. 1, 9a);
- *  - `poziva` — član Kola, kad gazdinstvo prima članove (čl. 4a, 7);
- *  - `odgovaram` — lice koje odgovara za izjavu: podaci iz čl. 4 t. 1–3, izvod,
- *    slanje na pregled, izjava o adresi i brisanje (čl. 9 st. 2, 11 st. 5).
+ *  - `upravlja` — oglasi u ime gazdinstva i profil (čl. 11, 14);
+ *  - `poziva` — član Kola, kad gazdinstvo prima članove (čl. 4, 9);
+ *  - `odgovaram` — lice koje odgovara za izjavu: podaci iz čl. 5 st. 1 t. 1–3, izvod,
+ *    slanje na pregled, izjava o adresi i brisanje (čl. 12, 21).
  *
- * Ime i prezime (čl. 7 st. 2, set 4.7.3) upisuje svaki član za sopstveni nalog.
- * Broj telefona se od člana ne traži — Fondacija razgovara samo sa nosiocem (čl. 6a).
+ * Ime i prezime (čl. 9 st. 3, set 4.7.3) upisuje svaki član za sopstveni nalog.
+ * Broj telefona se od člana ne traži — Fondacija razgovara samo sa nosiocem (čl. 8).
  */
 export default function UpravljanjeGazdinstvom({
   gazdinstvoId,
@@ -55,12 +55,12 @@ export default function UpravljanjeGazdinstvom({
   status: string;
   mojStatus: string;
   mojaUloga: "NOSILAC" | "CLAN";
-  /** Odgovara za izjavu o tačnosti (čl. 9 st. 2). */
+  /** Odgovara za izjavu o tačnosti (čl. 12). */
   odgovaram: boolean;
   upravlja: boolean;
   poziva: boolean;
   smeClanove: boolean;
-  /** Član Kola ili osnivač — uslov pristupanja (čl. 7a). */
+  /** Član Kola ili osnivač — uslov pristupanja (čl. 10). */
   uKolu: boolean;
   trebaIzvod: boolean;
   imaIzvod: boolean;
@@ -75,7 +75,7 @@ export default function UpravljanjeGazdinstvom({
   pozvani: string[];
   naCekanju: string[];
   imaIme: boolean;
-  /** Izjava o prikazu adrese (čl. 4 t. 3) — gazdinstva odobrena ranije je nemaju. */
+  /** Izjava o prikazu adrese (čl. 5 st. 1 t. 3) — gazdinstva odobrena ranije je nemaju. */
   imaIzjavuAdrese: boolean;
 }) {
   const t = useTranslations("gazdinstva");
@@ -185,7 +185,7 @@ export default function UpravljanjeGazdinstvom({
         {dijalog}
         <h2 className="font-semibold text-kolo-green-900">{t("poziv_naslov")}</h2>
         <p className="text-sm text-kolo-text">{t("poziv_tekst")}</p>
-        {/* Uslov pristupanja (čl. 7a): pozvani je član Kola u trenutku odobrenja. */}
+        {/* Uslov pristupanja (čl. 10): pozvani je član Kola u trenutku odobrenja. */}
         {!uKolu && <Obavestenje vrsta="upozorenje">{t("poziv_uslov_kolo")}</Obavestenje>}
         {!imaNosioca && (
           <div className="flex flex-wrap gap-4 text-sm">
@@ -239,7 +239,7 @@ export default function UpravljanjeGazdinstvom({
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
       {poruka && <Obavestenje vrsta="uspeh">{poruka}</Obavestenje>}
 
-      {/* Upit o preuzimanju izjave (čl. 9 st. 3, 11 st. 6). */}
+      {/* Upit o preuzimanju izjave (čl. 13, 21 st. 3). */}
       {upit && zivo && (
         <div className={`${napomena} space-y-2`}>
           <p className="font-semibold">{t("upit_naslov")}</p>
@@ -282,7 +282,7 @@ export default function UpravljanjeGazdinstvom({
         </div>
       )}
 
-      {/* Izjava o prikazu adrese (čl. 11 st. 1) za gazdinstvo odobreno ranije — daje je
+      {/* Izjava o prikazu adrese (čl. 19 st. 1) za gazdinstvo odobreno ranije — daje je
           lice koje odgovara za izjavu, jednom. 🔴 Nema „povuci": izlaz je brisanje gazdinstva. */}
       {odgovaram && zivo && !imaIzjavuAdrese && (
         <div className={`${napomena} space-y-2`}>
@@ -309,7 +309,7 @@ export default function UpravljanjeGazdinstvom({
       )}
       {status === "NA_PREGLEDU" && <p className="text-sm text-kolo-muted">{t("prijava_na_pregledu")}</p>}
 
-      {/* Izvod iz Registra se od seta 4.8.3 ne prilaže (gazdinstva čl. 4b, `trebaIzvod()`
+      {/* Izvod iz Registra se od seta 4.8.3 ne prilaže (gazdinstva čl. 3 st. 3, `trebaIzvod()`
           vraća false); ekran za otpremanje je uklonjen, a uslov za slanje na pregled
           i dalje čita `trebaIzvod`, pa vraćanje izvoda ne bi prošlo tiho. */}
       {uPripremi && (upravlja || odgovaram) && (
@@ -346,7 +346,7 @@ export default function UpravljanjeGazdinstvom({
         </Link>
       )}
 
-      {/* Profil gazdinstva (čl. 9 st. 1) uređuje svaki član koji upravlja. */}
+      {/* Profil gazdinstva (čl. 11) uređuje svaki član koji upravlja. */}
       {zivo && upravlja && !(uPripremi && odgovaram) && (
         <div className="space-y-2 pt-2 border-t border-kolo-border">
           <p className="text-sm font-semibold">{t("opis_naslov")}</p>
@@ -402,7 +402,7 @@ export default function UpravljanjeGazdinstvom({
       )}
 
       <div className="flex flex-wrap gap-2 pt-2 border-t border-kolo-border">
-        {/* Nosilac upisanog gazdinstva preuzima izjavu o tačnosti (čl. 9 st. 2). */}
+        {/* Nosilac upisanog gazdinstva preuzima izjavu o tačnosti (čl. 12). */}
         {mojaUloga === "NOSILAC" && registrovano && !odgovaram && zivo && !(status === "ODOBRENO" && mojStatus === "PRISTUPIO") && (
           <button
             type="button"
@@ -424,7 +424,7 @@ export default function UpravljanjeGazdinstvom({
         >
           {t("istupi")}
         </button>
-        {/* Brisanje gazdinstva sa platforme (čl. 11 st. 5–6) — lice koje odgovara za izjavu. */}
+        {/* Brisanje gazdinstva sa platforme (čl. 21) — lice koje odgovara za izjavu. */}
         {odgovaram && zivo && (
           <button
             type="button"

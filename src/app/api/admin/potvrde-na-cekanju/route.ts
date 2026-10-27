@@ -10,7 +10,7 @@ import { POEN_VERIFIKATOR, POEN_VERIFIKOVANI } from "@/lib/protokol/dokaz-stvarn
 /**
  * GET /api/admin/potvrde-na-cekanju
  *
- * Spisak potvrda čiji POEN čeka trag stvarnog učešća (dokaz stvarnosti čl. 7).
+ * Spisak potvrda čiji POEN čeka trag stvarnog učešća (dokaz stvarnosti čl. 19 st. 2).
  *
  * Tab postoji zbog VENTILA: ima ljudi koji doprinose a nikad neće objaviti ponudu ni
  * donirati — onaj ko samo kupuje, stariji član na programu podrške. Bez ručnog upisa

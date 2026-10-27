@@ -1,8 +1,8 @@
 /**
  * POST /api/zahtev-razgovor/[id]/gazdinstvo — jedan razgovor (Pravilnik o
- * gazdinstvima čl. 6a st. 2; set 4.8.3). Član Kola koji je otvorio poziv nosioca sa
+ * gazdinstvima čl. 8 st. 2; set 4.8.3). Član Kola koji je otvorio poziv nosioca sa
  * spiska beleži i da je razgovor radi odobrenja gazdinstva obavljen.
- * Body: { sumnja: boolean } — posle razgovora postoji osnov za sumnju (st. 4).
+ * Body: { sumnja: boolean } — posle razgovora postoji osnov za sumnju (čl. 8 st. 4).
  */
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";

@@ -2,7 +2,7 @@
  * GET /api/nadzor
  *
  * Sve što čeka nadzor ovog nadzornika: verifikacije, potvrde člana bez potvrde i
- * potvrde postojanja deteta (dokaz stvarnosti čl. 10, set 4.8.2). Dostupno samo
+ * potvrde postojanja deteta (dokaz stvarnosti čl. 22, set 4.8.2). Dostupno samo
  * čuvaru Kola (`mozeNadzor`). Filtrira predmete u kojima je nadzornik učestvovao.
  */
 import { NextResponse } from "next/server";
@@ -24,7 +24,7 @@ export async function GET() {
     select: { tipKorisnika: true, maloletan: true, jeOsnivac: true, verified: true, indeksStvarnosti: true, potvrdjenAt: true },
   });
   if (!user || !mozeNadzor(user)) {
-    return await greska("Nemaš ovlašćenje za nadzor (čl. 10 Pravilnika).", 403);
+    return await greska("Nemaš ovlašćenje za nadzor (čl. 23 Pravilnika o dokazu stvarnosti).", 403);
   }
 
   const lista = await listajZaNadzor(session.user.id);

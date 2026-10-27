@@ -59,7 +59,7 @@ interface ProfilProps {
    * Deca tog uzrasta pritiskaju crvena dugmad da vide šta rade.
    */
   maloletan?: boolean;
-  /** Stanje naloga deteta (čl. 4c) — za odeljke koji zavise od preuzimanja naloga. */
+  /** Stanje naloga deteta (deca čl. 5) — za odeljke koji zavise od preuzimanja naloga. */
   stanjeDeteta?: "NA_CEKANJU" | "POVEZANO" | "AKTIVNO" | null;
   /**
    * Status učesnika (set 4.8.2), izveden na serveru (`prikazStatusa`). Imenuje ga
@@ -73,7 +73,7 @@ interface ProfilProps {
   mojaDeca?: React.ReactNode;
 }
 
-/** Predmeti prigovora i izjašnjenja koja se od korisnika traže (Uslovi čl. 37a). */
+/** Predmeti prigovora i izjašnjenja koja se od korisnika traže (Uslovi čl. 40). */
 type Predmeti = {
   razmena: { id: string; iznos: number; datum: string; strana: string; smer: "poslao" | "ponisten" }[];
   nabavka: { id: string; dobro: string; datum: string | null }[];
@@ -102,6 +102,8 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
     // POTVRDA (poništenje potvrde zbog neaktivnosti) je ukinuta setom 4.8.2 i ne nudi se.
     { value: "RODITELJSTVO", label: t("prigovor_tip_roditeljstvo") },
     { value: "GAZDINSTVO", label: t("prigovor_tip_gazdinstvo") },
+    // Utvrđenje višestrukog naloga (Uslovi čl. 40 st. 2 t. 9; rok 15 dana, st. 4 t. 3).
+    { value: "VISESTRUKI_NALOG", label: t("prigovor_tip_visestruki") },
     { value: "OSTALO", label: t("prigovor_tip_ostalo") },
   ];
   const [avatar, setAvatar] = useState<string | null>(user.avatar);
@@ -413,7 +415,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
   useEffect(() => { ucitajPredmete(); }, [ucitajPredmete]);
 
   // Ulaz sa vaučera („Moji vaučeri"): /profil?prigovor=VAUCER&predmet=<id>. Ulaz u
-  // prigovor ostaje profil (Uslovi čl. 37a) — vaučer samo vodi ovamo sa izabranim
+  // prigovor ostaje profil (Uslovi čl. 40 st. 1) — vaučer samo vodi ovamo sa izabranim
   // predmetom.
   useEffect(() => {
     try {
@@ -469,7 +471,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
     return res.ok;
   }
 
-  // Dete čiji nalog čeka preuzimanje briše nalog samo (čl. 4a st. 6). Zaseban tok
+  // Dete čiji nalog čeka preuzimanje briše nalog samo (deca čl. 8 st. 3). Zaseban tok
   // od `obrisiNalog`: tamo se nalog anonimizuje i ostaje, ovde nestaje.
   const [deteBrisiOpen, setDeteBrisiOpen] = useState(false);
   const [deteBrisiLoading, setDeteBrisiLoading] = useState(false);
@@ -514,8 +516,8 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
       <NaslovStranice naslov={t("naslov")} />
 
       {/* Kartica statusa: opis, obavezne rečenice člana bez potvrde (Pravilnik
-          čl. 2, 28a; Uslovi čl. 2), položaj ZRNA, a kod deteta na šta se čeka
-          (deca čl. 4c poslednji stav). */}
+          čl. 2, 28; dokaz stvarnosti čl. 6; Uslovi čl. 2), položaj ZRNA, a kod deteta
+          na šta se čeka (deca čl. 5 st. 4). */}
       {status && (
         <OznakaStatusa varijanta="kartica" svoj status={status} naStaSeCeka={naStaSeCeka} zrno={zrno} vezaNazove />
       )}
@@ -857,11 +859,11 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
       {/* Podaci i privatnost — prigovor levo; desno prenosivost (gore) + gašenje (dole).
           Detetu se ne prikazuje: prigovor Fondaciji, GDPR eksport i nepovratno
           gašenje naloga nisu radnje sedmogodišnjaka. Prava po ZZPL-u time nisu
-          uskraćena — ostvaruje ih roditelj, koji za dete i odgovara (čl. 10). */}
+          uskraćena — ostvaruje ih roditelj, koji za dete i odgovara (deca čl. 20 st. 4). */}
       <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 items-start ${maloletan ? "hidden" : ""}`}>
         {/* Prigovor na odluku — levo */}
         <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-          {/* Izjašnjenje pre odluke (Pravilnik čl. 16 st. 10) — stoji IZNAD obrasca
+          {/* Izjašnjenje pre odluke (Uslovi čl. 40 st. 5) — stoji IZNAD obrasca
               jer je vezano rokom: dok traje, Fondacija ne odlučuje. */}
           {(predmeti?.izjasnjenja.length ?? 0) > 0 && (
             <div className="mb-6 rounded-kontrola border-l-4 border-kolo-gold-600 bg-kolo-gold-100 p-4 space-y-4">
@@ -893,7 +895,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
                 <option key={tip.value} value={tip.value}>{tip.label}</option>
               ))}
             </select>
-            {/* Predmet — obavezan za dve vrste (Uslovi čl. 37a st. 3): o prepisu i
+            {/* Predmet — obavezan za dve vrste (Uslovi čl. 40 st. 3): o prepisu i
                 o delu iz nabavke odlučuje se pojedinačno, pa se mora reći o kom. */}
             {(prigovorTip === "RAZMENA" || prigovorTip === "NABAVKA" || prigovorTip === "VAUCER") && (
               predmetiZaTip.length > 0 ? (
@@ -1005,7 +1007,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
         </div>
       </div>
 
-      {/* Sopstveni izlaz deteta iz naloga koji čeka preuzimanje (čl. 4a st. 6).
+      {/* Sopstveni izlaz deteta iz naloga koji čeka preuzimanje (deca čl. 8 st. 3).
           Stoji IZVAN grida iznad, koji je detetu sakriven: prigovor, GDPR eksport
           i anonimizacija punoletnog naloga nisu radnje sedmogodišnjaka, ali izlaz
           iz obrade koja se u tom razdoblju vodi po legitimnom interesu jeste.
@@ -1051,7 +1053,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
 }
 
 /**
- * Izjašnjenje druge strane o prigovoru na prepis (Pravilnik čl. 16 st. 10).
+ * Izjašnjenje druge strane o prigovoru na prepis (Uslovi čl. 40 st. 5).
  *
  * Zaseban mali komponent samo zbog sopstvenog stanja teksta — bez njega bi svako
  * kucanje preiscrtavalo ceo profil.

@@ -4,13 +4,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PROTOKOL_WALLET_ID } from "@/lib/protokol/zrno";
-import { ROK_NABAVKA_DANA, ROK_RAZMENA_DANA, ROK_VAUCER_POSLE_ISTEKA_DANA, rokOd } from "@/lib/prigovor-pravila";
+import { krajRokaVaucera, ROK_NABAVKA_DANA, ROK_RAZMENA_DANA, ROK_VAUCER_POSLE_ISTEKA_DANA, rokOd } from "@/lib/prigovor-pravila";
 
 /**
  * GET /api/prigovor/predmeti
  *
- * Šta korisnik sme da izabere kao PREDMET prigovora (Uslovi čl. 37a st. 3), i
- * koja izjašnjenja se od njega traže (Pravilnik čl. 16 st. 10).
+ * Šta korisnik sme da izabere kao PREDMET prigovora (Uslovi čl. 40 st. 2–3), i
+ * koja izjašnjenja se od njega traže (Uslovi čl. 40 st. 5).
  *
  * Spisak je već filtriran rokom, pa čovek ne bira nešto što će ruta odbiti —
  * ruta ipak proverava sve ponovo, jer ekran nije poslednja reč.
@@ -80,8 +80,9 @@ export async function GET() {
         transakcija: { select: { amount: true, createdAt: true } },
       },
     }),
-    // Vaučeri na koje se može podneti prigovor zbog neizvršenja (Uslovi čl. 37a):
-    // dodeljeni, iskorišćeni ili istekli, najkasnije 15 dana od isteka roka važenja.
+    // Vaučeri na koje se može podneti prigovor zbog neizvršenja (Uslovi čl. 40 st. 4 t. 4):
+    // dodeljeni, iskorišćeni ili istekli — 30 dana od označavanja kao iskorišćen, a
+    // najkasnije 15 dana od isteka roka važenja (dodatno se filtrira `krajRokaVaucera`).
     prisma.vaucer.findMany({
       where: {
         imalacId: ja,
@@ -90,7 +91,7 @@ export async function GET() {
       },
       orderBy: { dodeljenAt: "desc" },
       take: 50,
-      select: { id: true, ugovor: { select: { opis: true, naziv: true, vaziDo: true } } },
+      select: { id: true, status: true, iskoriscenAt: true, ugovor: { select: { opis: true, naziv: true, vaziDo: true } } },
     }),
   ]);
 
@@ -116,12 +117,21 @@ export async function GET() {
       dobro: d.nabavka.naziv.naziv,
       datum: d.preuzetoAt,
     })),
-    vaucer: vauceri.map((v) => ({
-      id: v.id,
-      opis: v.ugovor.opis,
-      davalac: v.ugovor.naziv,
-      vaziDo: v.ugovor.vaziDo,
-    })),
+    vaucer: vauceri
+      .filter(
+        (v) =>
+          !v.ugovor.vaziDo ||
+          krajRokaVaucera({
+            vaziDo: v.ugovor.vaziDo,
+            iskoriscenAt: v.status === "ISKORISCEN" ? v.iskoriscenAt : null,
+          }).getTime() >= sada.getTime(),
+      )
+      .map((v) => ({
+        id: v.id,
+        opis: v.ugovor.opis,
+        davalac: v.ugovor.naziv,
+        vaziDo: v.ugovor.vaziDo,
+      })),
     izjasnjenja: izjasnjenja.map((p) => ({
       id: p.id,
       pseudonim: p.prijavioc.pseudonim,

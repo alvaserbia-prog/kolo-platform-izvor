@@ -2,21 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { jeAdmin } from "@/lib/dozvole";
-import { logAdminAkcija } from "@/lib/audit";
+import { OperativniGreska, povuciZadatak } from "@/lib/protokol/operativni-postupak";
 
-// POST /api/admin/doprinos-oglasi/oglasi/[id]/zatvori
-export async function POST(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+/**
+ * POST — povlačenje zadatka (operativni 5.0 čl. 8): `{ obrazlozenje }`, obavezno i
+ * javno kad je zadatak u izvršenju. Adresa „zatvori" ostaje radi starih poziva.
+ */
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
-  if (!session || !jeAdmin(session.user))
-    return await greska("Pristup odbijen.", 403);
-
+  if (!session || !jeAdmin(session.user)) return await greska("Pristup odbijen.", 403);
   const { id } = await params;
-  const oglas = await prisma.doprinosOglas.update({ where: { id }, data: { status: "CLOSED" } });
-  await logAdminAkcija(session.user.id, "DOPRINOS_OGLAS_ZATVOREN", id, oglas.title);
-  return NextResponse.json({ ok: true });
+  const body = await req.json().catch(() => ({}));
+  try {
+    await povuciZadatak(session.user.id, id, body.obrazlozenje);
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    if (e instanceof OperativniGreska) return await greska(e.message, e.status);
+    throw e;
+  }
 }

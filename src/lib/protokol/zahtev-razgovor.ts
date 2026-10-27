@@ -1,11 +1,11 @@
 /**
- * Spisak za poziv — „Želim da me neko nazove" (Pravilnik o dokazu stvarnosti čl. 4a;
- * Uslovi korišćenja čl. 16b; Registar radnji obrade br. 24; set 4.8.2). Ime fajla,
+ * Spisak za poziv — „Želim da me neko nazove" (Pravilnik o dokazu stvarnosti čl. 8–13;
+ * Registar radnji obrade br. 24; set 4.8.2). Ime fajla,
  * tabela `ZahtevZaRazgovor`, ruta `/api/zahtev-razgovor` i stranica
  * `/kontaktiraj-nas` ostaju (CLAUDE.md pravilo 12).
  *
  * Korisnik koji ne poznaje nijednog člana Kola dolazi na spisak po jednom od četiri
- * osnova (čl. 4a st. 2): sam zatraži razgovor (mesto, čime se bavi, kada je
+ * osnova (čl. 8 st. 1): sam zatraži razgovor (mesto, čime se bavi, kada je
  * dostupan), javna donacija od praga, novčano pokroviteljstvo, prijava gazdinstva
  * iz RPG kojom je nosilac. Za osnove van zahteva Fondacija mu samo NUDI spisak
  * (`ponudiSpisak`); broj telefona i pristanak ostavlja sam.
@@ -15,11 +15,11 @@
  * „Otvori ime i broj" — samo članu Kola koji je poziv otvorio i samo dok je
  * otvoren (`BROJ_OTVOREN_MINUTA`). Poziv je u isto vreme otvoren kod jednog člana
  * Kola, a jedan član Kola drži jedan otvoren poziv. Član Kola posle razgovora
- * korisnika UVODI u Kolo (dokaz čl. 5 st. 7, 5a) — to radi `verifikacija-service.ts`
+ * korisnika UVODI u Kolo (dokaz čl. 4 st. 1, čl. 12 st. 2) — to radi `verifikacija-service.ts`
  * uz `jeOtvorioPoziv`.
  *
- * 🔴 Fondacija BELEŽI koji je član Kola podatke otvorio (čl. 4a st. 5; Uslovi čl.
- * 16b st. 3): `ZapisOtvaranjaPoziva` se upisuje u ISTOJ transakciji sa otvaranjem.
+ * 🔴 Fondacija BELEŽI koji je član Kola podatke otvorio (čl. 10 st. 4):
+ * `ZapisOtvaranjaPoziva` se upisuje u ISTOJ transakciji sa otvaranjem.
  * Zapis vidi samo administratorski tim, kroz Platformu se ne izvozi i briše se
  * gašenjem naloga pozvanog. `otvorioId`/`otvorenDo` na zahtevu nose samo TEKUĆE
  * otvaranje i brišu se zatvaranjem ili istekom; zapis otvaranja ostaje.
@@ -28,9 +28,9 @@
  * otvaranje. Brana `spisak-za-poziv-izvor.test.ts`, `zahtev-razgovor-izvor.test.ts`.
  *
  * 🔴 Dospeće na spisak ne potvrđuje stvarnost; od njega ne zavise donacija,
- * pokroviteljstvo, gazdinstvo ni doprinos po njima (čl. 4a st. 6).
+ * pokroviteljstvo, gazdinstvo ni doprinos po njima (čl. 12 st. 1).
  *
- * Zahtev radi potvrde (set 4.8.3; čl. 4a, 5c; osnov `POTVRDA`): član bez potvrde koji
+ * Zahtev radi potvrde (set 4.8.3; čl. 8 st. 4, 16; osnov `POTVRDA`): član bez potvrde koji
  * je u Kolu najmanje 30 dana, bez usvojene prijave razmene ili oglasa i bez nadzornog
  * predmeta završenog utvrđenjem lažne verifikacije, traži razgovor sa čuvarom Kola.
  * Taj red vide i otvaraju SAMO čuvari Kola (`smeVidetiRed`). Upisnik ZRNA je prvi na
@@ -91,8 +91,7 @@ export class ZahtevGreska extends Error {
 /**
  * Tekst obaveštenja i pristanka koji se snima uz upis na spisak (ne generiše se
  * ponovo pri čitanju — CLAUDE.md pravilo 11). Imenuje ko zove, šta vidi, da se
- * beleži ko je podatke otvorio i kada se šta briše (čl. 4a st. 4–5; Uslovi čl. 16b
- * st. 2, 3 i 6).
+ * beleži ko je podatke otvorio i kada se šta briše (čl. 9, 10 st. 4 i 12 st. 3).
  */
 export const PRISTANAK_ZAHTEVA =
   "Saglasan sam da budem na spisku za poziv. Pozvaće me član Kola koji će videti moje " +
@@ -107,7 +106,7 @@ export const PRISTANAK_ZAHTEVA =
   "mi prestane status učesnika. Dospeće na spisak ne potvrđuje stvarnost.";
 
 /**
- * Tekst pristanka za zahtev radi potvrde (čl. 4a, 5c st. 3): zove čuvar Kola.
+ * Tekst pristanka za zahtev radi potvrde (čl. 8 st. 4, 16 st. 2): zove čuvar Kola.
  */
 export const PRISTANAK_ZAHTEVA_POTVRDA =
   "Saglasan sam da budem na spisku za poziv radi potvrde. Pozvaće me čuvar Kola koji će " +
@@ -124,7 +123,7 @@ export const PRISTANAK_ZAHTEVA_POTVRDA =
 /**
  * Uslov „član Kola koji sme da vidi spisak i otvori poziv" (tabela dozvola
  * `VIDI_SPISAK_ZA_POZIV`): potvrđen (`potvrdjenAt`) ili osnivač, punoletan, aktivan.
- * 🔴 Član bez potvrde (verifikovan, bez `potvrdjenAt`) spisak ne vidi (čl. 4a st. 6).
+ * 🔴 Član bez potvrde (verifikovan, bez `potvrdjenAt`) spisak ne vidi (čl. 10 st. 1).
  */
 const POTVRDJEN_AKTIVAN = {
   maloletan: false,
@@ -153,7 +152,7 @@ const CUVAR_AKTIVAN = {
 } satisfies Prisma.UserWhereInput;
 
 /**
- * Uslovi iz čl. 5c st. 2 za člana bez potvrde: najmanje 30 dana od uvođenja, bez
+ * Uslovi iz čl. 16 st. 1 za člana bez potvrde: najmanje 30 dana od uvođenja, bez
  * usvojene prijave razmene (prepis poništen) ili prijave oglasa (oglas uklonjen), i
  * bez nadzornog predmeta protiv njega završenog utvrđenjem lažne verifikacije. Isto
  * proverava i potvrda telefonom (`verifikacija-service.ts`).
@@ -187,7 +186,7 @@ export async function uslovRazgovoraRadiPotvrde(userId: string, db: Klijent = pr
   });
 }
 
-/** Poruka za neispunjen uslov iz čl. 5c st. 2 (srpski original; ekran ide kroz ključeve). */
+/** Poruka za neispunjen uslov iz čl. 16 st. 1 (srpski original; ekran ide kroz ključeve). */
 export function porukaUslovaRazgovora(p: ProveraRazgovora): string {
   if (p.ok) return "";
   if (p.uslov === "PRIJAVA")
@@ -199,7 +198,7 @@ export function porukaUslovaRazgovora(p: ProveraRazgovora): string {
     : "Razgovor radi potvrde moguć je posle 30 dana u Kolu.";
 }
 
-/** Da li je član bez potvrde upisao ZRNO (prvo mesto na spisku, čl. 4a). */
+/** Da li je član bez potvrde upisao ZRNO (prvo mesto na spisku, čl. 8 st. 4). */
 export async function upisaoZrno(userId: string, db: Klijent = prisma): Promise<boolean> {
   const z = await db.zrnoStanje.findUnique({ where: { userId }, select: { slobodno: true, aktivno: true } });
   return !!z && z.slobodno + z.aktivno > 0;
@@ -232,7 +231,7 @@ export async function podaciZaSpisak(userId: string) {
 }
 
 /**
- * Osnovi van zahteva po kojima korisnik SME na spisak (čl. 4a st. 2 t. 2–4).
+ * Osnovi van zahteva po kojima korisnik SME na spisak (čl. 8 st. 1 t. 2–4).
  * Zahtev (t. 1) je uvek moguć i ne navodi se. Prazan niz za svakog ko nije korisnik.
  *
  *  - DONACIJA: javna, potvrđena, jedna uplata od praga, ime uplatioca iz izvoda se
@@ -306,7 +305,7 @@ export async function posaljiZahtev(userId: string, unos: Omit<UnosZahteva, "mes
   if (!jeOsnovSpiska(osnov)) throw new ZahtevGreska("Nepoznat osnov.", 400);
 
   if (osnov === "POTVRDA") {
-    // Zahtev radi potvrde (čl. 5c st. 3) — samo član bez potvrde koji ispunjava uslove.
+    // Zahtev radi potvrde (čl. 16 st. 2) — samo član bez potvrde koji ispunjava uslove.
     if (!status || !smeNaSpisakRadiPotvrde(status))
       throw new ZahtevGreska("Razgovor radi potvrde traži član bez potvrde.", 409);
     const uslov = await uslovRazgovoraRadiPotvrde(userId);
@@ -324,7 +323,7 @@ export async function posaljiZahtev(userId: string, unos: Omit<UnosZahteva, "mes
   if (!ime.ok) throw new ZahtevGreska(ime.razlog, 400);
 
   // Ime i prezime, mesto i broj ostaju uz nalog (set 4.8.4, N4-M2): ime u evidenciji
-  // identiteta (Pravilnik čl. 31a, peti izvor), mesto i broj na profilu. Jedan nalog,
+  // identiteta (Pravilnik čl. 31 st. 2, peti izvor), mesto i broj na profilu. Jedan nalog,
   // jedno ime — drugo ime ne prepisuje upisano. Porede se sa drugim nalozima
   // (`visestruki-nalog.ts`), a poređenje ništa ne blokira.
   const ishodImena = await upisiIdentitet(userId, ime.imePrezime, "SPISAK_ZA_POZIV");
@@ -362,7 +361,7 @@ export async function povuciZahtev(userId: string) {
 
 /**
  * Uklanjanje sa spiska pri SVAKOJ verifikaciji korisnika — i uvođenju i potvrdi
- * (Uslovi čl. 16b st. 6). Potvrda člana bez potvrde ovo ne zove: on na spisku ni
+ * (dokaz stvarnosti čl. 12 st. 3). Potvrda člana bez potvrde ovo ne zove: on na spisku ni
  * ne može biti. Vraća da li je korisnik bio na spisku (ugovor sa
  * `verifikacija-service.ts`). Zapis otvaranja ostaje (čuva se dok postoji nalog
  * pozvanog). Ne baca na praznom spisku.
@@ -378,7 +377,7 @@ export async function ukloniSaSpiskaPoVerifikaciji(
 /**
  * Da li je verifikator ikad otvorio poziv ovog korisnika (`ZapisOtvaranjaPoziva`).
  * Ugovor sa `verifikacija-service.ts`: verifikacija posle otvorenog poziva je
- * uvođenje u Kolo (dokaz čl. 5a st. 1; otvoreno pitanje 1 specifikacije).
+ * uvođenje u Kolo (dokaz čl. 4 st. 1; otvoreno pitanje 1 specifikacije).
  */
 export async function jeOtvorioPoziv(verifikatorId: string, pozvaniId: string, tx: Klijent = prisma): Promise<boolean> {
   const n = await tx.zapisOtvaranjaPoziva.count({ where: { otvorioId: verifikatorId, pozvaniId } });
@@ -397,13 +396,13 @@ const PONUDA: Record<Exclude<OsnovSpiska, "ZAHTEV" | "POTVRDA">, string> = {
 };
 
 /**
- * Ponuda spiska posle donacije, pokroviteljstva ili prijave gazdinstva (čl. 4a st.
- * 2 t. 2–4): obaveštenje sa linkom na „Želim da me neko nazove". Korisnik na
+ * Ponuda spiska posle donacije, pokroviteljstva ili prijave gazdinstva (čl. 8 st.
+ * 1 t. 2–4): obaveštenje sa linkom na „Želim da me neko nazove". Korisnik na
  * spisak dolazi tek kad sam ostavi broj i pristanak. Šalje se samo korisniku koji
  * još nije na spisku.
  *
  * 🔴 Ne baca i ništa ne menja: donacija, pokroviteljstvo i gazdinstvo, i doprinos
- * po njima, od ovoga ne zavise (čl. 4a st. 6).
+ * po njima, od ovoga ne zavise (čl. 12 st. 1).
  */
 export async function ponudiSpisak(userId: string, osnov: OsnovSpiska): Promise<void> {
   try {
@@ -437,7 +436,7 @@ export async function ponudiSpisak(userId: string, osnov: OsnovSpiska): Promise<
  * Obaveštenje članovima Kola da je neko nov na spisku. Samo pseudonim — bez imena,
  * broja i mejla (zvonce i push; radnja br. 24). Zahtev radi potvrde ide samo čuvarima
  * Kola; Fondacija dobija upozorenje sa rokom poziva — tri dana za upisnika ZRNA, sedam za
- * sve ostale (čl. 4a).
+ * sve ostale (čl. 11).
  * Ne baca — upis je već sačuvan.
  */
 async function obavestiClanoveKola(autorId: string, pseudonim: string, osnov: OsnovSpiska = "ZAHTEV") {
@@ -475,16 +474,16 @@ async function obavestiClanoveKola(autorId: string, pseudonim: string, osnov: Os
       const rok = rokPozivaUpisnika(new Date()).toLocaleDateString("sr-RS");
       await posaljiAdminAlert(
         "Upisnik ZRNA čeka poziv radi potvrde",
-        `„${pseudonim}" je upisao ZRNO i traži razgovor radi potvrde. Fondacija obezbeđuje da ga čuvar Kola pozove najkasnije do ${rok} (Pravilnik o dokazu stvarnosti čl. 4a).`,
+        `„${pseudonim}" je upisao ZRNO i traži razgovor radi potvrde. Fondacija obezbeđuje da ga čuvar Kola pozove najkasnije do ${rok} (Pravilnik o dokazu stvarnosti čl. 11).`,
       );
     } else {
-      // Rok od sedam dana važi za svakoga na spisku (čl. 4a, set 4.8.3); Fondacija ga
+      // Rok od sedam dana važi za svakoga na spisku (čl. 11, set 4.8.3); Fondacija ga
       // ne može obezbediti ako ne zna da je neko dospeo na spisak. Bez pseudonima:
       // upozorenje ide i van EU (mejl, Telegram), a ko je na spisku vidi se na Potvrdama.
       const rok = rokPoziva(new Date(), false).toLocaleDateString("sr-RS");
       await posaljiAdminAlert(
         "Nov zahtev na spisku za poziv",
-        `Neko je dospeo na spisak za poziv${radiPotvrde ? " radi potvrde" : ""}. Fondacija obezbeđuje da ga ${radiPotvrde ? "čuvar" : "član"} Kola pozove najkasnije do ${rok} (Pravilnik o dokazu stvarnosti čl. 4a).`,
+        `Neko je dospeo na spisak za poziv${radiPotvrde ? " radi potvrde" : ""}. Fondacija obezbeđuje da ga ${radiPotvrde ? "čuvar" : "član"} Kola pozove najkasnije do ${rok} (Pravilnik o dokazu stvarnosti čl. 11).`,
       );
     }
   } catch (e) {
@@ -526,7 +525,7 @@ export async function spisakZaPoziv(posmatracId: string) {
       user: { select: { id: true, pseudonim: true } },
     },
   });
-  // Zahtev radi potvrde vide samo čuvari Kola (čl. 4a); upisnik ZRNA je prvi.
+  // Zahtev radi potvrde vide samo čuvari Kola (čl. 10 st. 1); upisnik ZRNA je prvi.
   const vidljivi = redovi.filter((z) => smeVidetiRed(z.osnov, posmatrac));
   const { gazdinstvoZaRazgovorSaSpiska } = await import("./gazdinstvo");
   const sPrioritetom = await Promise.all(
@@ -535,7 +534,7 @@ export async function spisakZaPoziv(posmatracId: string) {
       prioritet: z.osnov === "POTVRDA" && (await upisaoZrno(z.user.id)),
       otvorenPosleUlaska:
         (await prisma.zapisOtvaranjaPoziva.count({ where: { pozvaniId: z.user.id, otvorenoAt: { gte: z.createdAt } } })) > 0,
-      // Jedan razgovor (gazd. čl. 6a st. 2): nosilac čije gazdinstvo čeka razgovor.
+      // Jedan razgovor (gazd. čl. 8 st. 2): nosilac čije gazdinstvo čeka razgovor.
       gazdinstvo: z.osnov === "GAZDINSTVO_RPG" ? await gazdinstvoZaRazgovorSaSpiska(z.user.id) : null,
     })),
   );
@@ -626,7 +625,7 @@ export async function podsetiNaZakasnelePozive(): Promise<number> {
     if (n > 0) {
       await posaljiAdminAlert(
         "Pozivi sa spiska kasne",
-        `Na spisku za poziv ${n === 1 ? "je jedan zahtev" : `je ${n} zahteva`} čiji je rok prošao, a ime i broj niko nije otvorio. Fondacija obezbeđuje poziv (Pravilnik o dokazu stvarnosti čl. 4a) — spisak je na stranici Potvrde.`,
+        `Na spisku za poziv ${n === 1 ? "je jedan zahtev" : `je ${n} zahteva`} čiji je rok prošao, a ime i broj niko nije otvorio. Fondacija obezbeđuje poziv (Pravilnik o dokazu stvarnosti čl. 11) — spisak je na stranici Potvrde.`,
       );
     }
     return n;
@@ -648,16 +647,16 @@ async function ocistiIstekla(sada: Date) {
 }
 
 /**
- * „Otvori ime i broj" (Uslovi čl. 16b st. 3). Uspeva samo ako poziv nije otvoren
+ * „Otvori ime i broj" (dokaz stvarnosti čl. 10 st. 2). Uspeva samo ako poziv nije otvoren
  * kod drugog člana Kola i ako posmatrač nema drugi otvoren poziv; uslov je u samom
  * `updateMany`, pa je otvaranje atomično. U ISTOJ transakciji se upisuje
- * `ZapisOtvaranjaPoziva` (čl. 4a st. 5). Ponovni prikaz poziva koji je posmatraču
+ * `ZapisOtvaranjaPoziva` (čl. 10 st. 4). Ponovni prikaz poziva koji je posmatraču
  * već otvoren ne produžava rok i ne pravi nov zapis.
  *
  * Vraća ime i prezime iz evidencije identiteta SAMO kad je upisano (za korisnika
  * bez upisanog imena otvara se samo broj), broj telefona i rok.
  */
-/** Da li je član Kola već dao izjavu o poverljivosti (dokaz stvarnosti čl. 4a; S2-M1). */
+/** Da li je član Kola već dao izjavu o poverljivosti (dokaz stvarnosti čl. 10 st. 3; S2-M1). */
 export async function dataPoverljivostPoziva(userId: string): Promise<boolean> {
   const u = await prisma.user.findUnique({ where: { id: userId }, select: { poverljivostPozivaAt: true } });
   return u?.poverljivostPozivaAt != null;
@@ -666,7 +665,7 @@ export async function dataPoverljivostPoziva(userId: string): Promise<boolean> {
 /**
  * Otvaranje poziva. 🔴 Pre PRVOG otvaranja član Kola jednom izjavljuje da ime i
  * broj koristi samo za taj razgovor, da ih ne beleži i ne prosleđuje (dokaz
- * stvarnosti čl. 4a; registar 2026-10, S2-M1) — bez izjave se ništa ne otvara.
+ * stvarnosti čl. 10 st. 3; registar 2026-10, S2-M1) — bez izjave se ništa ne otvara.
  * Beleži se samo trenutak izjave (`User.poverljivostPozivaAt`), u istoj
  * transakciji sa otvaranjem.
  */
@@ -739,7 +738,7 @@ export async function zatvoriPoziv(posmatracId: string, zahtevId: string) {
 }
 
 /**
- * Zapisi otvaranja za administratorski tim (čl. 4a st. 5; radnja br. 24): samo
+ * Zapisi otvaranja za administratorski tim (čl. 10 st. 4; radnja br. 24): samo
  * pseudonim člana Kola, pseudonim pozvanog i vreme — bez imena i broja.
  */
 export async function zapisiOtvaranja(opcije: { pseudonim?: string; limit?: number } = {}) {

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 
 /**
  * Upis u audit log privilegovanih akcija (admin/UO, nosioci ZRNA u službenoj
- * ulozi po čl. 36, GDPR pristupi sa table jemstva).
+ * ulozi po Pravilniku čl. 34, GDPR pristupi sa table jemstva).
  *
  * Konvencije:
  *  - `akcija`: SCREAMING_SNAKE, srpski trpni oblik (npr. KORISNIK_SUSPENDOVAN).

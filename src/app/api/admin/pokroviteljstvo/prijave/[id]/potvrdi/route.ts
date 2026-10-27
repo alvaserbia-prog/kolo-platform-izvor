@@ -7,7 +7,7 @@ import { logAdminAkcija } from "@/lib/audit";
 import { obavesti } from "@/lib/notifikacije";
 import { jeAdmin } from "@/lib/dozvole";
 
-// POST /api/admin/pokroviteljstvo/prijave/[id]/potvrdi — Fondacija potvrđuje prijem (čl. 8)
+// POST /api/admin/pokroviteljstvo/prijave/[id]/potvrdi — Fondacija potvrđuje prijem (čl. 20)
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeAdmin(session.user))
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const body = await req.json().catch(() => ({}));
   try {
     // `aprUporedjeno`: administrator potvrđuje da je naziv, MB i zastupnika
-    // uporedio sa APR-om (čl. 31a st. 4) — beleži se samo činjenica poređenja.
+    // uporedio sa APR-om (Pravilnik čl. 31 st. 4) — beleži se samo činjenica poređenja.
     const rez = await potvrdiPrijavu(id, session.user.id, body.aprUporedjeno === true);
     await logAdminAkcija(session.user.id, "POKROVITELJSTVO_POTVRDJENO", id,
       `Bonus ${rez.bonus.toLocaleString("sr-RS")} POEN (${rez.noviNivoi.length} nivo(a))`);

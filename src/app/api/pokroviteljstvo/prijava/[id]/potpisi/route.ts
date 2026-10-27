@@ -6,7 +6,7 @@ import { potpisiPrijavuNovca, PotpisGreska } from "@/lib/protokol/pokroviteljstv
 
 /**
  * POST /api/pokroviteljstvo/prijava/[id]/potpisi — podnosilac potpisuje ugovor o
- * novčanom pokroviteljstvu (čl. 8 st. 1 → postupak iz čl. 13g st. 4; F5-M1).
+ * novčanom pokroviteljstvu (čl. 20 st. 1 → postupak iz čl. 32 st. 1; F5-M1).
  * Telo: { kod, procitao, ovlascen, saglasan }. Jedan klik više nije potpis.
  */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

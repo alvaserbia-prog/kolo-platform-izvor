@@ -16,7 +16,7 @@ import { ocistiAdresu, ocistiPutanju } from "@/lib/analitika-putanja";
 const GA_KOLACIC_SEKUNDI = 365 * 24 * 60 * 60;
 
 /**
- * Google Analytics — ISKLJUČIVO uz pristanak (Politika privatnosti čl. 7).
+ * Google Analytics — ISKLJUČIVO uz pristanak (Politika privatnosti čl. 10).
  *
  * `gaId` dolazi iz serverskog layout-a i je `null`:
  *  - van produkcije (test i preview ne smeju da mešaju podatke sa ekolo.rs),
@@ -122,7 +122,7 @@ export function Analitika({ gaId }: { gaId: string | null }) {
 }
 
 /**
- * Vercel Analytics — bez kolačića, po legitimnom interesu (Politika čl. 7), pa
+ * Vercel Analytics — bez kolačića, po legitimnom interesu (Politika čl. 10), pa
  * se učitava bez pristanka. I on beleži adresu, pa kroz isto čišćenje:
  * tokeni i pseudonimi ne izlaze ni ovuda.
  */

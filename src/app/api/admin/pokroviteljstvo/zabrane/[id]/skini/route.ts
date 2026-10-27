@@ -7,7 +7,7 @@ import { skiniZabranu, odgovorNaGresku } from "@/lib/protokol/pokroviteljstvo-do
 
 /**
  * POST /api/admin/pokroviteljstvo/zabrane/[id]/skini — Fondacija skida davaoca sa
- * liste zabrane (donacije čl. 13j st. 2), uz obrazloženje. Telo: { razlog }.
+ * liste zabrane (donacije čl. 35 st. 5), uz obrazloženje. Telo: { razlog }.
  */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

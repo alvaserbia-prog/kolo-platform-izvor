@@ -7,14 +7,14 @@ import { LOGOTIP_PRIHVATA, proveriLogotip } from "@/lib/logotip-pokrovitelja-pra
 
 /**
  * Polje za logotip u prijavi pokroviteljstva (novcem i dobrima i uslugama) —
- * Pravilnik o pokroviteljstvu i donacijama čl. 13 st. 4.
+ * Pravilnik o pokroviteljstvu i donacijama čl. 26 st. 2.
  *
  * Logotip je deo evidencije pokrovitelja (naziv i logotip) i prilaže se kad
  * saradnja počinje; nije obavezan. Fajl odmah ide na skladište, a prijava nosi
  * samo vraćeni URL.
  *
  * 🔴 Copy ne pominje „pravo", „promociju" ni „reklamu" — objavljivanje logotipa je
- * akt Fondacije, ne protivčinidba (čl. 13 st. 4 i 5).
+ * akt Fondacije, ne protivčinidba (čl. 26 st. 2 i 3).
  */
 export default function LogotipPolje({
   url,

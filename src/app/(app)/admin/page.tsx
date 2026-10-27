@@ -127,7 +127,7 @@ export default async function AdminPage({
     // Badge na tabu Pijaca — sami oglasi se učitavaju lenjo, iz taba.
     prisma.prijavaOglasa.count({ where: { status: "OTVORENA" } }),
     // Badge na tabu Prvi oglasi — doprinosi naloga bez potvrde koji čekaju
-    // odobrenje (čl. 40a st. 4). Sam spisak se učitava lenjo, iz taba.
+    // odobrenje (Pravilnik čl. 38 st. 2). Sam spisak se učitava lenjo, iz taba.
     prisma.doprinosSadrzaju.count({ where: { status: "ZABELEZEN" } }),
     // Badge na tabu Razmene — prijave neispunjene razmene koje čekaju odluku.
     prisma.prijavaRazmene.count({ where: { status: "OTVORENA" } }),
@@ -140,7 +140,7 @@ export default async function AdminPage({
   const nadzorRedovi = viewerJeSuperadmin
     ? await prisma.rizikNalaz.findMany({ where: { status: "OTVOREN" }, orderBy: { rizik: "desc" }, take: 200 })
     : [];
-  // Badge na tabu Odluke — sami predmeti se učitavaju lenjo, iz taba (čl. 11a).
+  // Badge na tabu Odluke — sami predmeti se učitavaju lenjo, iz taba (dokaz stvarnosti čl. 27).
   const otvorenihPredmeta = viewerJeSuperadmin
     ? await prisma.nadzorniPredmet.count({ where: { status: "OTVOREN" } })
     : 0;
@@ -209,9 +209,9 @@ export default async function AdminPage({
         }),
         pendingEnrollments: adminProgrami[2].map((e) => ({
           id: e.id, pseudonim: e.user.pseudonim, type: e.type, label: labelPrograma(e.type),
-          // Posebne kategorije — samo superadminu (DPIA 5.6). Vidi /api/admin/programi.
-          // 🔴 I osnov: ne prikazuje se nijednom korisniku (čl. 4 st. 5), a licu
-          // koje obrađuje prijavu mora — od njega zavisi rok iz čl. 12.
+          // Posebne kategorije — samo superadminu (DPIA 5.9). Vidi /api/admin/programi.
+          // 🔴 I osnov: ne prikazuje se nijednom korisniku (programi čl. 20 st. 3), a licu
+          // koje obrađuje prijavu mora — od njega zavisi rok iz čl. 18.
           metadata: viewerJeSuperadmin ? (e.metadata as Record<string, unknown> | null) : null,
           osnov: viewerJeSuperadmin ? e.osnov : null,
           // Set 4.8.2: nema potvrđivača — Fondacija potvrđuje uslove uz obrazloženje.
@@ -265,6 +265,9 @@ export default async function AdminPage({
           predlozeniPoen: o.predlozeniPoen, brojCelina: o.brojCelina, opisCeline: o.opisCeline, procenaObima: o.procenaObima,
           saOdobravanjem: o.saOdobravanjem, positions: o.positions,
           deadline: o.deadline?.toISOString() ?? null, status: o.status as string,
+          rokIzvrsenja: o.rokIzvrsenja?.toISOString() ?? null,
+          kvalifikacioniUslov: o.kvalifikacioniUslov, kvalifikacioniObrazlozenje: o.kvalifikacioniObrazlozenje,
+          zadruzni: o.zadruzni,
           createdByPseudonim: o.createdBy.pseudonim, krugName: o.krug?.name ?? null,
           ukupnoPrijava: o._count.prijave, pendingEvidencija: o._count.evidencije,
           createdAt: o.createdAt.toISOString(),

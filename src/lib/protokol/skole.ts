@@ -4,16 +4,16 @@
  * Čista pravila su u `src/lib/skola.ts`, podaci u `src/lib/skole-srbije.ts`. Ovaj
  * modul ih re-eksportuje, pa server ima jedan ulaz.
  *
- * Osnov: Pravilnik o učešću dece — čl. 7 (škola kao podatak koji navodi sámo dete)
- * i član o pregledu po školama. Plan: `docs/plan-ranglista-skola.html`.
+ * Osnov: Pravilnik o učešću dece — čl. 26 (škola kao podatak koji navodi sámo dete
+ * i pregled po školama). Plan: `docs/plan-ranglista-skola.html`.
  *
  * ─── Šta ovaj modul NE radi ─────────────────────────────────────────────────
  *
  * 🔴 Ne dodiruje POEN. Ni izbor škole ni mesto na listi ne nose nijedan zapis.
- * Da nose, bio bi to deseti kanal iz čl. 15 Pravilnika o KOLO sistemu, sa dnevnim
+ * Da nose, bio bi to jedanaesti kanal iz čl. 19 Pravilnika o KOLO sistemu, sa dnevnim
  * limitom i celim aparatom — a emisija vezana za broj naloga gura opticaj ka
  * osnivačkom koraku. Ranglista postojećoj motivaciji (500 POEN po prijateljstvu,
- * čl. 14b) daje samo PRAVAC.
+ * deca čl. 33) daje samo PRAVAC.
  */
 
 import { prisma } from "@/lib/prisma";
@@ -57,7 +57,7 @@ export type { Skola, TipSkole, RedSkole, RedSkoleSaProcentom, Pozicija, KarticaS
  *
  * 🔴 Ovo je Prisma prevod stanja `AKTIVNO` iz `stanjeDeteta()` (`deca-pravila.ts`,
  * set 4.8.2): maloletan nalog koji radi i ima BAR JEDNU vezu sa roditeljem u kojoj
- * su istovremeno ispunjena sva tri uslova (Pravilnik o učešću dece čl. 4c t. 3, 5, 6, 4e):
+ * su istovremeno ispunjena sva tri uslova (Pravilnik o učešću dece čl. 5 st. 1 t. 3, čl. 13, 17):
  *  - veza nije zaustavljena po prijavi lažnog roditeljstva (`zaustavljenaAt: null`);
  *  - roditelj je aktivan i član Kola ili osnivač (`potvrdjenIzPolja`: osnivač, ili
  *    verifikovan sa indeksom ≥ praga i `potvrdjenAt`);
@@ -82,13 +82,13 @@ export const USLOV_AKTIVNO_DETE = {
         status: UserStatus.ACTIVE,
         deaktiviranAt: null,
         maloletan: false,
-        // `potvrdjen`: član Kola ili osnivač (član bez potvrde NE — čl. 5 st. 4).
+        // `potvrdjen`: član Kola ili osnivač (član bez potvrde NE — čl. 5 st. 2).
         OR: [
           { jeOsnivac: true },
           { verified: true, indeksStvarnosti: { gte: FUNKCIONALNI_PRAG_INDEKSA }, potvrdjenAt: { not: null } },
         ],
       },
-      // `postojanjePotvrdjeno`: živa potvrda postojanja deteta za OVU vezu (čl. 6).
+      // `postojanjePotvrdjeno`: živa potvrda postojanja deteta za OVU vezu (čl. 13).
       potvrdePostojanja: { some: { potvrdjenoAt: { not: null }, ponistenaAt: null } },
     },
   },
@@ -215,8 +215,8 @@ export async function postaviSkolu(userId: string, sifra: string | null): Promis
   if (!nalog.maloletan) {
     throw new SkolaGreska("Školu navodi dete na svom nalogu.", 403);
   }
-  // Dete na čekanju školu ne navodi (čl. 7 st. 2, 15a st. 1) — do preuzimanja se
-  // obrađuje samo ono što služi kontaktu sa roditeljem (čl. 4a).
+  // Dete na čekanju školu ne navodi (čl. 5 st. 1 t. 1, 26 st. 1) — do preuzimanja se
+  // obrađuje samo ono što služi kontaktu sa roditeljem (čl. 9).
   const { stanjeNaloga } = await import("./deca");
   if ((await stanjeNaloga(userId)) === "NA_CEKANJU") {
     throw new SkolaGreska("Školu biraš kad mama ili tata preuzmu tvoj nalog.", 403);

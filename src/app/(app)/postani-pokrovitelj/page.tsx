@@ -18,10 +18,10 @@ import Obavestenje from "@/components/ui/Obavestenje";
 export const metadata = { title: "Pokroviteljstvo — KOLO" };
 
 /**
- * Pokroviteljstvo (Pravilnik o pokroviteljstvu i donacijama čl. 6–13l).
+ * Pokroviteljstvo (Pravilnik o pokroviteljstvu i donacijama čl. 15–36).
  *
  * Kratko objašnjenje (novac; roba i usluge), „Moje firme i gazdinstva" — upisi u
- * evidenciju pokrovitelja koje korisnik vodi (čl. 6a) — i dugme za nov upis. Iz
+ * evidenciju pokrovitelja koje korisnik vodi (čl. 16) — i dugme za nov upis. Iz
  * odobrenog upisa se, na stranici pokrovitelja, podnose prijave. Zaposleni koga je
  * pokrovitelj odredio ovde vidi „Firme za koje potvrđujem vaučere" i proveru koda.
  *
@@ -37,9 +37,9 @@ export default async function PokroviteljstvoPage() {
   const [upisi, davaoci] = await Promise.all([mojiUpisi(session.user.id), davaociZaposlenog(session.user.id)]);
   const zivi = upisi.filter((u) => !u.obrisanAt);
   const obrisani = upisi.filter((u) => u.obrisanAt);
-  // Maloletni korisnik upis ne vrši (čl. 6a st. 1). Potvrda stvarnosti nije uslov
+  // Maloletni korisnik upis ne vrši (čl. 16 st. 1). Potvrda stvarnosti nije uslov
   // (set 4.8.0): novčano pokroviteljstvo i samo potvrđuje podnosioca (dokaz
-  // stvarnosti čl. 4a); dobra i usluge i dalje traže potvrdu (ruta `dobra`).
+  // stvarnosti čl. 8 st. 1 t. 3); dobra i usluge i dalje traže potvrdu (ruta `dobra`).
   const smeUpis = !session.user.maloletan;
 
   const STATUS: Record<string, string> = {
@@ -61,7 +61,7 @@ export default async function PokroviteljstvoPage() {
             <p className="text-sm font-semibold text-kolo-text">{t("objasnjenje_dobra_naslov")}</p>
             <p className="mt-1 text-sm text-kolo-muted">{t("objasnjenje_dobra")}</p>
           </Kartica>
-          {/* Nalaz građana (24.10.2026): „Šta ja dobijam?“ — samo ono što je tačno (donacije čl. 13). */}
+          {/* Nalaz građana (24.10.2026): „Šta ja dobijam?“ — samo ono što je tačno (donacije čl. 26). */}
           <Kartica padding="sm" className="sm:col-span-2">
             <p className="text-sm font-semibold text-kolo-text">{t("sta_dobija_naslov")}</p>
             <p className="mt-1 text-sm text-kolo-muted">{t("sta_dobija_tekst")}</p>
@@ -124,7 +124,7 @@ export default async function PokroviteljstvoPage() {
           </ul>
         )}
         {/* Obrisan upis: doprinosi ostaju na rang-listi; na zahtev korisnika koji je
-            vodio upis pokrovitelj se uklanja i sa nje (čl. 6a st. 6). */}
+            vodio upis pokrovitelj se uklanja i sa nje (čl. 18 st. 4). */}
         {obrisani.length > 0 && (
           <div className="rounded-kontrola bg-kolo-bg p-4 space-y-2">
             <p className="text-sm font-semibold text-kolo-text">{t("obrisani_naslov")}</p>
@@ -163,7 +163,7 @@ export default async function PokroviteljstvoPage() {
         <Link href="/pokrovitelji" className="font-medium text-kolo-green-700 hover:underline">{t("ranglista_link")}</Link>
       </p>
 
-      {/* Ista tabela kao na ekranu Donacije (čl. 10 — pokroviteljstvo ide po tabeli
+      {/* Ista tabela kao na ekranu Donacije (čl. 22 — pokroviteljstvo ide po tabeli
           donacije fizičkog lica). Čita se iz pravila, ne prepisuje se ovde. */}
       <details className="bg-kolo-surface rounded-kartica shadow-kartica border border-kolo-border overflow-hidden">
         <summary className="px-4 py-3 min-h-11 cursor-pointer text-sm font-semibold text-kolo-text">{td("tabela_naslov")}</summary>

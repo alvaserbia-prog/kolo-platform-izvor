@@ -1,10 +1,10 @@
 /**
- * /api/preporuke/[id] — preporuka člana (Uslovi čl. 17a, set 4.8.0).
+ * /api/preporuke/[id] — preporuka člana (dokaz stvarnosti čl. 20, set 4.8.0).
  *
  * POST daje preporuku, DELETE je povlači. `[id]` je adresa profila (pseudonim ili
  * interni id), ista kao u `/profil/[id]`. Preporuka se daje sa profila: važi kapija
  * zatvorenog profila deteta, a preporuku daje samo član Kola, odnosno osnivač
- * (Uslovi čl. 17a st. 1; set 4.8.2 — `session.user.potvrdjen`). Servis
+ * (dokaz stvarnosti čl. 20 st. 1; set 4.8.2 — `session.user.potvrdjen`). Servis
  * (`smePreporuciti`) to proverava ponovo iz baze.
  */
 import { NextRequest, NextResponse } from "next/server";

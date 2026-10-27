@@ -39,31 +39,31 @@ export type PonistavanjeRezultat = {
 };
 
 /**
- * Poništavanje lažne verifikacije (Pravilnik o dokazu stvarnosti 4.2.0, Glava VIII).
+ * Poništavanje lažne verifikacije (Pravilnik o dokazu stvarnosti, Glava IX; promena iz 4.2.0).
  *
  * 🔴 ŠTA SE PROMENILO U 4.2.0 — ne vraćati na staro:
  *
- *  1. LAŽNOST SE CENI PO ČOVEKU, NE PO VERIFIKATORU (čl. 19). Do 4.2.0 je utvrđenje
+ *  1. LAŽNOST SE CENI PO ČOVEKU, NE PO VERIFIKATORU (čl. 33). Do 4.2.0 je utvrđenje
  *     jedne lažne verifikacije obaralo SVE verifikacije tog verifikatora, a kod je
  *     išao i dalje od norme — BFS je gurao svakog pogođenog u red bez ijedne provere
  *     i čistio celo podstablo. Stvarni ljudi su gubili status zbog tuđe radnje.
  *     Sada se poništava samo utvrđena verifikacija; ostale se preispituju.
  *
- *  2. KASKADA IDE KROZ NEPOSTOJANJE (čl. 20). Nalog za koji je Upravni odbor utvrdio
+ *  2. KASKADA IDE KROZ NEPOSTOJANJE (čl. 34). Nalog za koji je Upravni odbor utvrdio
  *     da iza njega ne stoji stvarna osoba nikoga ne može poznavati, pa padaju sve
  *     verifikacije koje ga dodiruju — i primljene i obavljene. Kaskada se zaustavlja
  *     na prvom nalogu koji NIJE tako označen. Farma lažnih naloga pada tako što se
  *     označi svaki njen član; nijedan stvaran čovek ne biva pokošen usput.
  *
- *  3. PONIŠTAVA SE SAMO ONO ŠTO JE VERIFIKACIJOM NASTALO (čl. 20a). POEN iz razmene,
+ *  3. PONIŠTAVA SE SAMO ONO ŠTO JE VERIFIKACIJOM NASTALO (čl. 35). POEN iz razmene,
  *     operativnog doprinosa ili donacije se NE dira; upućivanje na čl. 34 Pravilnika,
  *     koje je brisalo celu istoriju uključujući nepovratne donacije, je iseceno.
  *
- *  4. NADZORNI POEN PADA SAMO UZ ISHOD „UREDNO" (čl. 20a st. 2). Ko je sumnju prijavio
+ *  4. NADZORNI POEN PADA SAMO UZ ISHOD „UREDNO" (raniji čl. 20a st. 2; od seta 4.7.5 nadzor ne nosi POEN). Ko je sumnju prijavio
  *     i pokazao se u pravu, zadržava svojih 500 — inače bi ga sopstvena ispravna
  *     prijava koštala.
  *
- *  5. U MINUS IDE SAMO VERIFIKATOR (čl. 20b, 20c). Verifikovani i nadzornik idu najviše
+ *  5. U MINUS IDE SAMO VERIFIKATOR (čl. 36, 37). Verifikovani i nadzornik idu najviše
  *     do nule, nepokriveni deo prelazi na verifikatora kao nadoknada.
  *
  * Zero-sum je očuvan: svako poništenje ima tačan protivzapis Protokola, a prenos
@@ -109,17 +109,17 @@ export type PonistavanjeOpcije = {
   /**
    * Opis koji ide u zapise umesto podrazumevanog. Obavezan svuda gde poništenje
    * NIJE utvrđena lažna verifikacija — inače bi čoveku koji nije slagao u zapisu
-   * i u GDPR izvozu stajalo da jeste (čl. 20a se poziva samo u svom slučaju).
+   * i u GDPR izvozu stajalo da jeste (čl. 35 se poziva samo u svom slučaju).
    */
   opis?: string;
   /**
    * 🔴 Teret se NE prenosi: svaki pogođeni vraća tačno ono što je po toj potvrdi
-   * dobio, i njegov zapis sme u minus. Nadoknada iz čl. 20b je posledica UTVRĐENE
+   * dobio, i njegov zapis sme u minus. Nadoknada iz čl. 36 je posledica UTVRĐENE
    * lažne verifikacije i vezuje se za verifikatora zato što je on uveo nalog koji
    * ne postoji; tamo gde utvrđenja nema, nema ni razloga da jedan čovek nosi tuđe.
    *
-   * Koristi poništenje potvrde zbog neaktivnosti (Pravilnik o učešću dece, čl. 6),
-   * za koje Pravilnik čl. 14 st. 3 tačka 4 propisuje upravo taj režim.
+   * Koristilo ga je poništenje potvrde zbog neaktivnosti (ukinuto u setu 4.8.2);
+   * isti režim Pravilnik čl. 17 st. 2 t. 4 propisuje za prevođenje u maloletni.
    */
   bezNadoknade?: boolean;
 };
@@ -143,14 +143,14 @@ async function ponistiVezu(
 
   const opis =
     opcije?.opis ??
-    `Poništavanje lažne verifikacije ${v.verifikator.pseudonim} → ${v.verifikovani.pseudonim} (čl. 20a)`;
+    `Poništavanje lažne verifikacije ${v.verifikator.pseudonim} → ${v.verifikovani.pseudonim} (dokaz stvarnosti čl. 35)`;
   const bezNadoknade = opcije?.bezNadoknade === true;
 
-  // 🔴 POEN PO OVOJ POTVRDI MOŽDA NIKAD NIJE NI UPISAN (dokaz stvarnosti čl. 7, set
+  // 🔴 POEN PO OVOJ POTVRDI MOŽDA NIKAD NIJE NI UPISAN (dokaz stvarnosti čl. 19, set
   // 4.6.4): upis čeka trag stvarnog učešća potvrđenog korisnika. Dok je veza u stanju
   // ZABELEZEN, nema šta da se poništi — protivzapis bi bio LAŽAN: oduzeo bi POEN koji
   // Protokol nikad nije emitovao, gurnuo bi ljude u minus bez ijednog upisa iza toga
-  // i pokvario zero-sum. Iz istog razloga tu nema ni nadoknade po čl. 20b: ona pokriva
+  // i pokvario zero-sum. Iz istog razloga tu nema ni nadoknade po čl. 36: ona pokriva
   // nepokriven deo PONIŠTENOG upisa, a poništenja nema.
   //
   // 🔴 Nadzornikovih 500 imaju SVOJE stanje (`nadzorPoenStatus`) i proveravaju se
@@ -160,7 +160,7 @@ async function ponistiVezu(
   // POEN-a. Potvrda zabeležena a neupisana tako naprosto nestaje.
   const poenUpisan = v.poenStatus === PotvrdaPoenStatus.EVIDENTIRAN;
 
-  // 1. Verifikovani — najviše do nule; nepokriveni deo tereti verifikatora (čl. 20c st. 2).
+  // 1. Verifikovani — najviše do nule; nepokriveni deo tereti verifikatora (čl. 37 st. 1).
   //    Bez nadoknade: pun iznos, i njegov zapis sme u minus.
   let podelaVerifikovani = { saKorisnika: 0, naVerifikatora: 0 };
   if (poenUpisan) {
@@ -170,7 +170,7 @@ async function ponistiVezu(
     await uProtokol(tx, v.verifikovaniId, podelaVerifikovani.saKorisnika, opis);
   }
 
-  // 2. Nadzornik — samo ako je ishod bio „uredno" (čl. 20a st. 2). Ko je evidentirao
+  // 2. Nadzornik — samo ako je ishod bio „uredno" (raniji čl. 20a st. 2). Ko je evidentirao
   //    „za proveru" ili „sporno" zadržava svojih 500. Pravilo važi u oba režima:
   //    ko je sumnju prijavio i bio u pravu ne sme da prođe gore od onoga ko je ćutao.
   //
@@ -188,10 +188,10 @@ async function ponistiVezu(
   }
 
   // 3. Verifikator — pun iznos, bez ograničenja.
-  //    🔴 Osim kad je ugasio nalog: potvrda je tada ostala (dokaz stvarnosti čl. 16,
-  //    set 4.7.5), ali je njegov zapis pri gašenju već poništen u celini (čl. 34 glavnog
+  //    🔴 Osim kad je ugasio nalog: potvrda je tada ostala (dokaz stvarnosti čl. 30,
+  //    set 4.7.5), ali je njegov zapis pri gašenju već poništen u celini (čl. 33 glavnog
   //    Pravilnika), pa bi ovih 1.000 bilo skinuto dvaput. Nadoknada iz koraka 4 ga i
-  //    tada tereti — po čl. 20b ona ostaje i po prestanku statusa.
+  //    tada tereti — po čl. 36 st. 7 ona ostaje i po prestanku statusa.
   const verifikatorUgasen = await tx.user.findUnique({
     where: { id: v.verifikatorId },
     select: { deaktiviranAt: true },
@@ -200,7 +200,7 @@ async function ponistiVezu(
     await uProtokol(tx, v.verifikatorId, POEN_VERIFIKATOR, opis);
   }
 
-  // 4. Nadoknada — nepokriveni delovi prelaze na verifikatora (čl. 20b st. 2).
+  // 4. Nadoknada — nepokriveni delovi prelaze na verifikatora (čl. 36 st. 2).
   //    U režimu bez nadoknade oba sabirka su nula, pa se ovde ništa ne dešava.
   const teretVerifikatora = podelaVerifikovani.naVerifikatora + podelaNadzornik.naVerifikatora;
   if (teretVerifikatora > 0) {
@@ -208,7 +208,7 @@ async function ponistiVezu(
       tx,
       v.verifikatorId,
       teretVerifikatora,
-      `Nadoknada za nepokriveni deo poništenja — ${v.verifikovani.pseudonim} (čl. 20b)`
+      `Nadoknada za nepokriveni deo poništenja — ${v.verifikovani.pseudonim} (dokaz stvarnosti čl. 36)`
     );
     nadoknade.set(
       v.verifikatorId,
@@ -219,7 +219,7 @@ async function ponistiVezu(
   // 5. Veza pada (sa njom kaskadno i potvrda člana bez potvrde uz nju), pa se status
   //    verifikovanog preračunava iz grafa (status.ts). 🔴 Ukinuto je „status ostaje,
   //    potvrđenost pada": učesnik čija je verifikacija prestala postaje KORISNIK
-  //    (dokaz stvarnosti čl. 17 st. 2). Osnivača se to ne tiče (čl. 14, 17 st. 4).
+  //    (dokaz stvarnosti čl. 31 st. 2). Osnivača se to ne tiče (čl. 29, 31 st. 4).
   //    Posledice (ZRNO, deca, gazdinstva, obaveštenje) idu VAN transakcije.
   await tx.verifikacionaVeza.delete({ where: { id: vezaId } });
   const promena = await preracunajStatusNaloga(tx, v.verifikovaniId);
@@ -255,12 +255,15 @@ async function skupiNadoknade(nadoknade: Map<string, number>): Promise<Nadoknada
 }
 
 /**
- * Poništi JEDNU utvrđenu lažnu verifikaciju, bez kaskade (čl. 19).
+ * Poništi JEDNU utvrđenu lažnu verifikaciju, bez kaskade (čl. 33).
  *
  * Koristi se kad je verifikovani stvarna osoba — verifikator je slagao o
- * poznavanju, jedinstvenosti ili kontinuitetu. Verifikovanom verifikacija prestaje,
- * pa postaje korisnik (čl. 17 st. 2), gubi POEN-e iz te verifikacije, ali zadržava
- * nalog i verifikacije koje je sam obavio, i može ponovo biti verifikovan (čl. 20c).
+ * poznavanju ili kontinuitetu, ili je znao da verifikovani ima drugi nalog.
+ * Jedinstvenost verifikator ne jemči (dokaz stvarnosti čl. 14 st. 1, čl. 15 st. 1):
+ * za drugi nalog za koji nije znao verifikacija nije lažna (čl. 32 st. 1), a
+ * višestruki nalog utvrđuje samo Fondacija po čl. 14. Verifikovanom verifikacija prestaje,
+ * pa postaje korisnik (čl. 31 st. 2), gubi POEN-e iz te verifikacije, ali zadržava
+ * nalog i verifikacije koje je sam obavio, i može ponovo biti verifikovan (čl. 37).
  */
 export async function ponistiVerifikaciju(
   verifikacijaId: string,
@@ -294,7 +297,7 @@ export async function ponistiVerifikaciju(
 
 /**
  * Utvrđenje da iza naloga ne stoji stvarna osoba, ili da nalog nije jedinstven
- * (čl. 18), i poništavanje svih verifikacija koje taj nalog dodiruju (čl. 20).
+ * (čl. 32), i poništavanje svih verifikacija koje taj nalog dodiruju (čl. 34).
  *
  * Nalog koji ne postoji nikoga ne može poznavati, pa su i verifikacije koje je
  * obavio i one koje je primio lažne po prirodi stvari. Kaskada se ne prostire dalje:
@@ -331,9 +334,9 @@ export async function ponistiNepostojeciNalog(
       }
 
       // Potvrde člana bez potvrde koje je ovaj nalog DAO padaju iz istog razloga (čl.
-      // 20 st. 2; čl. 5a st. 4): nalog koji ne postoji nikoga ne poznaje. Ne brišu se,
+      // 34 st. 2; čl. 5 st. 4): nalog koji ne postoji nikoga ne poznaje. Ne brišu se,
       // nego se poništavaju — trag ostaje. Automatske potvrde lanca koje su iz njih
-      // proizašle ostaju (čl. 5a st. 5: za njih odgovara onaj ko je uveo).
+      // proizašle ostaju (raniji čl. 5a st. 5: za njih odgovara onaj ko je uveo; automatska potvrda lanca ukinuta u setu 4.8.3).
       const datePotvrde = await tx.potvrdaClana.findMany({
         where: { potvrdioId: userId, aktivnaKljuc: { not: null } },
         select: { id: true, potvrdjeniId: true },
@@ -344,7 +347,7 @@ export async function ponistiNepostojeciNalog(
           data: {
             ponistenaAt: new Date(),
             aktivnaKljuc: null,
-            razlogPonistenja: "Utvrđeno da iza naloga koji je dao potvrdu ne stoji stvarna osoba (čl. 18, 20)",
+            razlogPonistenja: "Utvrđeno da iza naloga koji je dao potvrdu ne stoji stvarna osoba (dokaz stvarnosti čl. 32, 34)",
           },
         });
         const promena = await preracunajStatusNaloga(tx, p.potvrdjeniId);
@@ -360,11 +363,11 @@ export async function ponistiNepostojeciNalog(
           status: UserStatus.EXCLUDED,
           suspendedAt: new Date(),
           suspendedReason:
-            "Utvrđeno da iza naloga ne stoji stvarna osoba (Pravilnik o dokazu stvarnosti, čl. 18)",
+            "Utvrđeno da iza naloga ne stoji stvarna osoba (Pravilnik o dokazu stvarnosti, čl. 32)",
         },
       });
-      // Nalog je isključen (čl. 33): keš statusa se gasi i bez obzira na graf (i
-      // osnivaču), a sa njim i ostale žive oznake — evidencija identiteta (čl. 34),
+      // Nalog je isključen (Pravilnik čl. 32): keš statusa se gasi i bez obzira na graf (i
+      // osnivaču), a sa njim i ostale žive oznake — evidencija identiteta (Pravilnik čl. 33 st. 4),
       // spisak za poziv, preporuke, zadruga, delegiranje, programi… Jedna funkcija za
       // sva tri izlaza (`izlaz-naloga.ts`).
       return ugasiOznakeNaloga(tx, userId);
@@ -390,13 +393,13 @@ export async function ponistiNepostojeciNalog(
 }
 
 /**
- * Poništenje potvrde člana bez potvrde (dokaz stvarnosti čl. 5a st. 4, 17 st. 3,
- * 19 st. 1): potvrđenost prestaje, a učesnik ostaje član bez potvrde dok mu važi
+ * Poništenje potvrde člana bez potvrde (dokaz stvarnosti čl. 5 st. 4, 31 st. 3,
+ * 33 st. 1): potvrđenost prestaje, a učesnik ostaje član bez potvrde dok mu važi
  * uvođenje u Kolo. Aktivno ZRNO ide u otključavanje (posledice, status.ts). POEN-a za
  * vraćanje nema — potvrda ga ne nosi.
  *
  * 🔴 Potvrde iz automatske potvrde lanca koje je ova pokrenula (`lanacOdId`) se NE
- * poništavaju (čl. 19, 20): istinitost se ceni po učesniku.
+ * poništavaju (čl. 33, 34): istinitost se ceni po učesniku.
  */
 export async function ponistiPotvrduClana(
   potvrdaClanaId: string,
@@ -416,7 +419,7 @@ export async function ponistiPotvrduClana(
         ponistenaAt: new Date(),
         ponistioId: adminId,
         aktivnaKljuc: null,
-        razlogPonistenja: razlog?.trim() || "Utvrđena lažna potvrda člana bez potvrde (čl. 18, 19)",
+        razlogPonistenja: razlog?.trim() || "Utvrđena lažna potvrda člana bez potvrde (dokaz stvarnosti čl. 32, 33)",
       },
     });
     const promena = await preracunajStatusNaloga(tx, p.potvrdjeniId);

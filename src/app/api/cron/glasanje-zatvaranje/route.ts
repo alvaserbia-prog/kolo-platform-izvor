@@ -6,7 +6,7 @@ import { zatvoriIstekleIObjaviIshod } from "@/lib/protokol/glasanje";
  * GET /api/cron/glasanje-zatvaranje
  *
  * Zatvara glasanja kojima je istekao rok i objavljuje ishod (Pravilnik o Gornjem
- * Kolu čl. 11 i 13).
+ * Kolu čl. 11 i 19).
  *
  * 🔴 Zašto cron: do ovoga se `zatvoriIstekleIObjaviIshod` zvao ISKLJUČIVO lenjo —
  * iz `GET /api/glasanje`, `GET /api/glasanje/[id]` i sa stranice `/zrno`. Ako posle
@@ -16,7 +16,7 @@ import { zatvoriIstekleIObjaviIshod } from "@/lib/protokol/glasanje";
  *
  * Ishod se time ne menja: glas nosi glasačku moć zapamćenu u trenutku davanja
  * (`GlasanjeGlas.glasackaGlasova`), pa kašnjenje nije moglo da pomeri rezultat —
- * moglo je samo da ga zadrži. Kod odluka o trošenju dinarskih sredstava (čl. 51a
+ * moglo je samo da ga zadrži. Kod odluka o trošenju dinarskih sredstava (čl. 47
  * Pravilnika o KOLO sistemu) to zadržavanje blokira ceo postupak nabavke.
  *
  * Lenji pozivi se NE uklanjaju — bezbedni su (idempotentni) i drže ekran tačnim

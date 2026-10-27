@@ -1,5 +1,5 @@
 /**
- * Pričaonica — koja soba je čija i ko šta u njoj vidi (Modul Deca, čl. 12, 18).
+ * Pričaonica — koja soba je čija i ko šta u njoj vidi (Pravilnik o učešću dece, čl. 22, 27).
  *
  * ─── Zašto ovo stoji na jednom mestu ────────────────────────────────────────
  *
@@ -22,7 +22,7 @@
  * upisuje u trenutku pisanja i sama po sebi ne pokriva dva zatečena slučaja:
  * poruke starije od kolone (migracija ih je sve ostavila u sobi odraslih, kako i
  * piše u njenom komentaru) i nalog koji je Fondacija naknadno prevela u maloletni
- * (čl. 4d) — tu je reč o detetu koje je promašilo dečji ulaz, pa su mu reči ostale
+ * (čl. 15) — tu je reč o detetu koje je promašilo dečji ulaz, pa su mu reči ostale
  * među odraslima iako tu nikad nisu smele da budu. Uslov nad autorom ih sklanja
  * bez brisanja ijednog reda.
  *
@@ -46,13 +46,13 @@ export async function sobaKorisnika(userId: string): Promise<ChatSoba> {
  * Uslov nad porukama koje korisnik sme da vidi u svojoj sobi.
  *
  * Vraća `null` kad korisnik sobu ne vidi uopšte — nalog deteta koje još čeka
- * roditelja (čl. 4c). Nije prazan uslov nego izostanak upita: ekran deteta na
+ * roditelja (čl. 5). Nije prazan uslov nego izostanak upita: ekran deteta na
  * tom mestu objašnjava šta mu Pričaonicu otvara.
  *
  * `bezSvojih` služi badge-u uz Početnu: brojati i sopstvene poruke dalo bi broj
  * koji se ne može spustiti.
  *
- * ─── Dečja soba: svako vidi samo poruke SVOJIH PRIJATELJA (čl. 18 st. 3) ────
+ * ─── Dečja soba: svako vidi samo poruke SVOJIH PRIJATELJA (čl. 27 st. 3) ────
  *
  * Jedna soba za svu decu, ali filtrirana grafom prijateljstava. Posledica koja se
  * dobija besplatno: kad su svi učesnici međusobno prijatelji, sam od sebe nastaje
@@ -70,7 +70,7 @@ export async function usloviSobe(
   soba: ChatSoba,
   opcije: { bezSvojih?: boolean } = {},
 ): Promise<Prisma.ChatMessageWhereInput | null> {
-  // Uklonjene poruke (Uslovi čl. 25 st. 2) nestaju iz sobe za sve — i za autora.
+  // Uklonjene poruke (Uslovi čl. 29 st. 2) nestaju iz sobe za sve — i za autora.
   if (soba === ChatSoba.DECA) {
     if (!(await smeUSobu(userId))) return null;
     // `idPrijatelja` vraća i sam nalog, pa se svoje poruke vide i pre prvog

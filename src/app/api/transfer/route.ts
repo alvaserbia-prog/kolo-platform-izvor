@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
   // indeks stvarnosti: ko je jednom verifikovan sme da prepisuje POEN i ako mu indeks
   // kasnije padne. Čita se iz baze, ne iz sesije — token se osvežava sa zakašnjenjem,
   // pa bi tek verifikovan korisnik još neko vreme bio odbijan.
-  // ── Modul Deca (čl. 14) ────────────────────────────────────────────────────
+  // ── Modul Deca (deca čl. 30) ────────────────────────────────────────────────────
   //
   // Kad je bar jedna strana maloletna, o prepisu odlučuje `smeDaPrepise`, a ne opšte
   // pravilo o neverifikovanom nalogu: maloletni korisnik jeste NEVERIFIKOVAN u smislu
@@ -75,8 +75,8 @@ export async function POST(req: NextRequest) {
   const jeDecjiPar = odUcesnik.maloletan || kaUcesnik.maloletan;
 
   if (jeDecjiPar) {
-    // `smeDaPrepise` sam odbija nalog koji još čeka roditelja (čl. 4c) i par u kome
-    // je dete mlađe od 15 a druga strana punoletna (čl. 12) — oba uslova su deo
+    // `smeDaPrepise` sam odbija nalog koji još čeka roditelja (deca čl. 30 st. 6) i par u kome
+    // je dete mlađe od 15 a druga strana punoletna (deca čl. 22 st. 4) — oba uslova su deo
     // `Ucesnik`-a, pa nema odvojene provere.
     const dozvoljeno = smeDaPrepise(odUcesnik, kaUcesnik);
     if (!dozvoljeno.ok) return await greska(dozvoljeno.razlog, dozvoljeno.status);
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       403,
     );
   }
-  // Nadoknada (negativan zapis po čl. 20b Pravilnika o dokazu stvarnosti) ne
+  // Nadoknada (negativan zapis po čl. 36 Pravilnika o dokazu stvarnosti) ne
   // sprečava razmenu dobara i usluga, ali POEN-i koji pristignu prvo popunjavaju
   // nadoknadu — dok zapis ne pređe nulu nema čime da se prepisuje drugome.
   if (jeNadoknada(posiljac.wallet.balance)) {
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Prepis iz dečjeg zapisa iznad praga NE ide odmah nego čeka roditelja (Pravilnik
-  // o učešću dece, čl. 14). Provera stoji POSLE pokrića — nema smisla tražiti
+  // o učešću dece, čl. 30 st. 3–4). Provera stoji POSLE pokrića — nema smisla tražiti
   // odobrenje za iznos koji ionako ne postoji na zapisu.
   if (trebaOdobrenjeRoditelja(odUcesnik, kaUcesnik, iznos)) {
     return NextResponse.json(
@@ -119,8 +119,8 @@ export async function POST(req: NextRequest) {
   }
 
   // Ažuriranje evidencije 1:1 — bez posrednika, bez provizije; nije prenos monetarne
-  // vrednosti (Pravilnik čl. 16). Sam posao živi u `izvrsiPrepis`, jer isti prepis
-  // kreće i odavde i iz odluke roditelja danima kasnije (čl. 14 Pravilnika o učešću
+  // vrednosti (Pravilnik čl. 20 st. 2). Sam posao živi u `izvrsiPrepis`, jer isti prepis
+  // kreće i odavde i iz odluke roditelja danima kasnije (čl. 30 Pravilnika o učešću
   // dece) — dve kopije bi se razišle, a razlaz znači pokvaren zero-sum.
   try {
     await izvrsiPrepis(

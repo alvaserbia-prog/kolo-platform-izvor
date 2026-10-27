@@ -12,9 +12,9 @@ import { ucitajStatus, sme } from "@/lib/protokol/status";
 // POST /api/programi/potvrde/[id]/odgovori
 // Telo: { potvrdi: boolean, obrazlozenje?: string }
 // Verifikator potvrđuje ispunjenost uslova pod punom odgovornošću, ili odbija uz
-// obavezno obrazloženje (čl. 4, set 4.8.0). Dovoljna je potvrda jednog verifikatora;
+// obavezno obrazloženje (čl. 5 st. 3–4, set 4.8.0). Dovoljna je potvrda jednog verifikatora;
 // odbijanje obara prijavu tek kad niko nije potvrdio i nijedan zahtev više ne čeka
-// (više verifikatora ima samo ko je potvrde stekao pre seta 4.8.0, čl. 22).
+// (više verifikatora ima samo ko je potvrde stekao pre seta 4.8.0, dokaz stvarnosti 4.8.x čl. 22).
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -43,8 +43,8 @@ export async function POST(
     return await greska("Već ste odgovorili na ovaj zahtev.", 400);
   if (potvrda.enrollment.status !== "PENDING")
     return await greska("Prijava više nije na čekanju.", 400);
-  // Ispunjenost uslova potvrđuje ČLAN KOLA, odnosno osnivač (programi čl. 4 st. 2;
-  // Pravilnik čl. 28a st. 3). Ko je u međuvremenu prestao da bude član Kola, više
+  // Ispunjenost uslova potvrđuje ČLAN KOLA, odnosno osnivač (programi čl. 5 st. 1–2;
+  // dokaz stvarnosti čl. 6 st. 2 t. 2). Ko je u međuvremenu prestao da bude član Kola, više
   // ne odgovara na zahtev.
   const mojStatus = await ucitajStatus(session.user.id);
   if (!mojStatus || !sme("POTVRDJUJE_USLOVE_PROGRAMA", mojStatus))
@@ -70,7 +70,7 @@ export async function POST(
   // 🔴 Naziv programa NE ide u kanal upozorenja (Telegram + mejl na ADMIN_EMAIL).
   // Iz para „pseudonim + POSEBNA_BRIGA" čita se pripadnost posebnoj kategoriji
   // podataka, a taj kanal ide preko obrađivača u SAD koje Politika navodi samo za
-  // uzak obim (čl. 8, 9). Ko odlučuje o prijavi vidi je u admin panelu, gde su
+  // uzak obim (čl. 39, 40). Ko odlučuje o prijavi vidi je u admin panelu, gde su
   // uneti podaci ionako otvoreni samo superadminu.
       void posaljiAdminAlert(
         "Prijava spremna za odobravanje",

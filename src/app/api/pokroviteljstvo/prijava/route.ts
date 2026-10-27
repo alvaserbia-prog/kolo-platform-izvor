@@ -51,18 +51,18 @@ export async function GET(req: NextRequest) {
   });
 }
 
-// POST /api/pokroviteljstvo/prijava — prijava novčanog pokroviteljstva (čl. 7) iz
-// ODOBRENOG upisa (čl. 6a): telo nosi samo `upisId` i iznos. Podaci o pokrovitelju
+// POST /api/pokroviteljstvo/prijava — prijava novčanog pokroviteljstva (čl. 19) iz
+// ODOBRENOG upisa (čl. 18 st. 3): telo nosi samo `upisId` i iznos. Podaci o pokrovitelju
 // i zastupniku su snimak upisa; ugovor se generiše iz njih. Od seta 4.7.9 i iz
-// upisa registrovanog gazdinstva (čl. 6): nosilac je strana ugovora, uz naziv i BPG.
+// upisa registrovanog gazdinstva (čl. 15 st. 1, 16 st. 4): nosilac je strana ugovora, uz naziv i BPG.
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
   // Verifikacija nije uslov: novčano pokroviteljstvo podnosi i korisnik (donacije
-  // čl. 8; tabela dozvola br. 34). Potvrđen prijem ga NE potvrđuje — samo ga vodi na
-  // spisak za poziv (dokaz stvarnosti čl. 4a st. 2 t. 3, set 4.8.2). Ostaje uslov
+  // čl. 16 st. 1, 20 st. 4; tabela dozvola br. 34). Potvrđen prijem ga NE potvrđuje — samo ga vodi na
+  // spisak za poziv (dokaz stvarnosti čl. 8 st. 1 t. 3, set 4.8.2). Ostaje uslov
   // punoletstva.
-  // 🔴 Maloletni nalog ne podnosi prijavu (donacije čl. 6a st. 1, set 4.7.7). Čita se iz baze,
+  // 🔴 Maloletni nalog ne podnosi prijavu (donacije čl. 16 st. 1, set 4.7.7). Čita se iz baze,
   // ne iz tokena — status se menja prevođenjem naloga.
   const podnosilac = await prisma.user.findUnique({ where: { id: session.user.id }, select: { maloletan: true } });
   if (!podnosilac || podnosilac.maloletan)
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
   const vrednostRsd = Number(body.vrednostRsd);
   if (!vrednostRsd || isNaN(vrednostRsd) || vrednostRsd <= 0)
     return await greska("Vrednost donacije mora biti pozitivna.", 400);
-  // Najmanja prijava (čl. 7) — ispod toga ugovor, potpis i knjiženje koštaju
+  // Najmanja prijava (čl. 19 st. 2) — ispod toga ugovor, potpis i knjiženje koštaju
   // više nego što donacija vredi.
   if (vrednostRsd < MINIMUM_PRIJAVE_POKROVITELJSTVA)
     return await greska(
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
       400
     );
 
-  // 🔴 Upis je uslov prijave (čl. 6a st. 6, čl. 7 st. 1): odobren, neobrisan, vodi ga podnosilac.
+  // 🔴 Upis je uslov prijave (čl. 18 st. 3, čl. 19 st. 1): odobren, neobrisan, vodi ga podnosilac.
   const upisId = typeof body.upisId === "string" ? body.upisId : "";
   const upis = upisId ? await prisma.upisPokrovitelja.findUnique({ where: { id: upisId } }) : null;
   if (!upis) return await greska("Prijava se podnosi iz upisa pokrovitelja u evidenciju.", 400);
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
   });
   if (!spreman.ok) return await greska(spreman.razlog, upis.vlasnikUserId === session.user.id ? 409 : 403);
 
-  // Jedan nalog, jedno ime (Pravilnik čl. 31a st. 3): ime iz upisa mora biti ime
+  // Jedan nalog, jedno ime (Pravilnik čl. 31 st. 3): ime iz upisa mora biti ime
   // uz ovaj nalog, ako je upisano. Upis u evidenciju identiteta ide pri potvrdi prijema.
   const zastupnikImePrezime = upis.imePrezime!;
   if (ishodUpisa(await imeNaloga(session.user.id), zastupnikImePrezime) === "RAZLIKUJE_SE")

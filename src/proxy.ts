@@ -10,7 +10,7 @@ import { jeAdmin, jeZadruzniAdmin } from "@/lib/dozvole";
  * detetu, dete koje otvara poštu na tuđem telefonu, primaoca koji hoće da se
  * odjavi. Dok su bile van ovog spiska, proxy ih je slao na `/login` pre nego što
  * se stranica iscrta, pa su:
- *  - „Ovo nije moje dete" i „Obriši nalog" (Pravilnik o učešću dece čl. 4b st. 4)
+ *  - „Ovo nije moje dete" i „Obriši nalog" (Pravilnik o učešću dece čl. 10 st. 4)
  *    bili nedostupni upravo osobi kojoj su namenjeni — onome ko nije član a čiju
  *    je adresu dete pogrešno unelo;
  *  - uputstvo „Ako još niste na KOLU" stajalo na stranici koju neregistrovan
@@ -35,12 +35,12 @@ export const JAVNE_RUTE = [
   "/whitepaper", "/dpia", "/radnje-obrade", "/rizici", "/osnivacki-doprinos", "/zajednicko-dobro",
   // Jedan javni ulaz za podršku (donacija i pokroviteljstvo); radni ekrani traže prijavu.
   "/podrzi-kolo",
-  // Mapa i profili gazdinstava su javni (Pravilnik o gazdinstvima čl. 11); prijava
+  // Mapa i profili gazdinstava su javni (Pravilnik o gazdinstvima čl. 19); prijava
   // i upravljanje traže sesiju i to proveravaju same stranice i rute.
   "/gazdinstva",
-  // Jedna mapa gazdinstava i pokrovitelja (donacije čl. 13 st. 4) — javna kao i gazdinstva.
+  // Jedna mapa gazdinstava i pokrovitelja (donacije čl. 26 st. 2) — javna kao i gazdinstva.
   "/mapa",
-  // Spisak firmi sa vaučerima — javan kao mapa (donacije čl. 13 st. 4).
+  // Spisak firmi sa vaučerima — javan kao mapa (donacije čl. 26 st. 2).
   "/firme",
 ];
 
@@ -49,7 +49,7 @@ export const JAVNE_RUTE = [
  *
  * 🔴 Zašto zaseban spisak: `JAVNE_RUTE` se poklapa i po prefiksu (`r + "/"`), pa
  * bi `/skole` upisano tamo otvorilo i `/skole/<šifra>`. Pravilnik o učešću dece
- * čl. 15a razlikuje dva pregleda i daje im različit obim: zbirni pregled je čist
+ * čl. 26 (st. 2 i 3) razlikuje dva pregleda i daje im različit obim: zbirni pregled je čist
  * zbir bez ijednog podatka o ličnosti, dok se pojedinačna škola — gde se vide
  * pseudonimi dece te škole — daje „prijavljenima". Jedan spisak sa poklapanjem
  * po prefiksu ne ume da napravi tu razliku.
@@ -60,10 +60,10 @@ export const JAVNE_RUTE = [
  *
  * `/zadruge` je ista podela: spisak mesta je zbir bez imena i javan je, a stranica
  * zadruge nosi zapise i zadrugare pod pseudonimom i vide je redovni članovi
- * (Pravilnik o zadrugama čl. 19).
+ * (Pravilnik o zadrugama čl. 21).
  */
 // `/sistem` (odluka vlasnika, 24.10.2026): kartice i zbirovi su javni, a spiskove
-// gostu stranica ni ne čita (Politika privatnosti čl. 6).
+// gostu stranica ni ne čita (Politika privatnosti čl. 11 st. 4).
 // `/sistem/zdravlje` (odluka vlasnika 25.10.2026): pokazatelji su zbir, javni kao `/sistem`.
 export const JAVNE_TACNE_RUTE = ["/skole", "/zadruge", "/sistem", "/sistem/zdravlje"];
 

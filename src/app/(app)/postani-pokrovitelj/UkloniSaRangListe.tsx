@@ -8,7 +8,7 @@ import { useDijalog } from "@/components/ui/Dijalog";
 
 /**
  * Zahtev korisnika koji je vodio obrisan upis da se pokrovitelj ukloni i sa
- * rang-liste (donacije čl. 6a st. 6). Bez zahteva doprinosi dati do brisanja ostaju
+ * rang-liste (donacije čl. 18 st. 4). Bez zahteva doprinosi dati do brisanja ostaju
  * na rang-listi sa nazivom i logotipom.
  */
 export default function UkloniSaRangListe({ upisId, naziv }: { upisId: string; naziv: string }) {

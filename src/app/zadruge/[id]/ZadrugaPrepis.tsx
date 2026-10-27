@@ -11,8 +11,8 @@ import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
  * Zadrugar prepisuje POEN u zapis svoje zadruge, uvek uz osnov (Pravilnik o
- * zadrugama čl. 13): izdato dobro, korišćenje opreme, usluga zadruge. Broj POEN-a
- * određuje zadruga (čl. 15) — zadrugar ga ovde upisuje onako kako ga je zadruga
+ * zadrugama čl. 11): izdato dobro, korišćenje opreme, usluga zadruge. Broj POEN-a
+ * određuje zadruga (čl. 14) — zadrugar ga ovde upisuje onako kako ga je zadruga
  * odredila; ekran ne predlaže iznos.
  */
 export default function ZadrugaPrepis({ zadrugaId }: { zadrugaId: string }) {

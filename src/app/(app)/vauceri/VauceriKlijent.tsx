@@ -16,17 +16,19 @@ import NaslovStranice from "@/components/ui/NaslovStranice";
 const QRCodeSVG = dynamic(() => import("qrcode.react").then((m) => m.QRCodeSVG), { ssr: false });
 
 /**
- * Vaučeri iz pokroviteljstva dobrima i uslugama (nabavke Glava VIIIa).
+ * Vaučeri iz pokroviteljstva dobrima i uslugama (nabavke Glava VII).
  *
  * Vaučeri su dostupni od izdavanja; reda i roka za prijavu nema — vaučer uzima
- * korisnik koji ga prvi zatraži (čl. 30e). Za uzimanje su obavezne izjava o
- * nepovezanosti i pristanak na prikaz zapisa uz pseudonim (čl. 30f st. 1).
+ * korisnik koji ga prvi zatraži (čl. 32). Za uzimanje su obavezne izjava o
+ * nepovezanosti i pristanak na prikaz zapisa uz pseudonim (čl. 33 st. 1).
  *
  * 🔴 Na ovom ekranu se uz broj POEN-a NIKAD ne prikazuje dinarska vrednost (cena,
- * vrednost ugovora) — nabavke čl. 30d st. 3, R-01. Vaučer pokazuje samo: opis,
- * naziv davaoca (uz logotip, ako ga je davalac priložio — donacije čl. 13 st. 4;
+ * vrednost ugovora) — nabavke čl. 31, R-01. Vaučer pokazuje samo: opis,
+ * naziv davaoca (uz logotip, ako ga je davalac priložio — donacije čl. 26 st. 2;
  * logotip nikad nije link), mesto i adresu, broj preostalih, rok i broj POEN-a. Brana:
- * `vaucer-izvor.test.ts`. 🔴 Dugme je „Preuzmi vaučer", nikad „kupi" ni „plati".
+ * `vaucer-izvor.test.ts`. 🔴 Dugme je „Uzmi vaučer" (nabavke čl. 33: vaučer se UZIMA, dobro
+ * se PREDAJE), nikad „kupi" ni „plati". Pristanak na prikaz opisa se povlači u „Moji
+ * vaučeri" (čl. 33 st. 2): opis i naziv pokrovitelja brišu se iz opisa zapisa, zapis ostaje.
  *
  * `?upis=<id>` (veza „Vaučeri" sa kartice pokrovitelja na mapi) prikazuje samo
  * ponudu tog pokrovitelja, uz vezu ka celoj ponudi.
@@ -56,6 +58,9 @@ type MojVaucer = {
   adresaPredaje: string | null;
   vaziDo: string | null;
   poen: number;
+  /** Pristanak na prikaz opisa uz pseudonim (nabavke čl. 33 st. 1) i njegovo povlačenje (st. 2). */
+  pristanakDat: boolean;
+  pristanakPovucenAt: string | null;
 };
 
 export default function VauceriKlijent() {
@@ -108,6 +113,17 @@ export default function VauceriKlijent() {
     await ucitaj();
   }
 
+  async function povuciPristanak(id: string) {
+    if (!window.confirm(t("pristanak_povuci_potvrda"))) return;
+    setPoruka(null);
+    setRadi(id);
+    const r = await fetch(`/api/vauceri/${id}/povuci-pristanak`, { method: "POST" });
+    const d = await r.json().catch(() => ({}));
+    setRadi(null);
+    setPoruka(r.ok ? { tekst: t("pristanak_povucen_poruka"), ok: true } : { tekst: d.error ?? t("greska"), ok: false });
+    await ucitaj();
+  }
+
   const STATUS: Record<MojVaucer["status"], string> = {
     SLOBODAN: t("status_vazi"),
     DODELJEN: t("status_vazi"),
@@ -126,7 +142,7 @@ export default function VauceriKlijent() {
         </Obavestenje>
       )}
 
-      {/* ── Dostupni vaučeri (nabavke čl. 30e, 30f) ───────────────────────── */}
+      {/* ── Dostupni vaučeri (nabavke čl. 32, 33) ───────────────────────── */}
       <Kartica as="section" className="space-y-3">
         <h2 className="text-lg font-semibold">{t("dostupni_naslov")}</h2>
         <p className="text-sm text-kolo-muted">{t("dostupni_opis")}</p>
@@ -223,6 +239,15 @@ export default function VauceriKlijent() {
                   </div>
                 )}
               </div>
+            )}
+            {v.pristanakPovucenAt ? (
+              <p className="text-xs text-kolo-muted">{t("pristanak_povucen", { datum: datum(v.pristanakPovucenAt) })}</p>
+            ) : (
+              v.pristanakDat && (
+                <Dugme varijanta="sekundarno" velicina="sm" onClick={() => povuciPristanak(v.id)} disabled={radi === v.id}>
+                  {t("pristanak_povuci")}
+                </Dugme>
+              )
             )}
             {(v.status === "DODELJEN" || v.status === "ISKORISCEN" || v.status === "ISTEKAO") && (
               <Link

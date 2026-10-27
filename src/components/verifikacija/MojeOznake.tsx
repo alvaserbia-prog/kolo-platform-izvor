@@ -21,15 +21,18 @@ export type VerifikovanaOsoba = {
   oznaka: string | null;
   /**
    * POEN po ovoj potvrdi još nije upisan — čeka prvi potvrđen doprinos potvrđenog
-   * člana (dokaz stvarnosti čl. 7). Takav red se obeležava bojom, da se iz spiska
+   * člana (dokaz stvarnosti čl. 19). Takav red se obeležava bojom, da se iz spiska
    * vidi koga treba podsetiti da objavi ponudu.
    */
   cekaDoprinos?: boolean;
-  /** Vrsta verifikacije (dokaz stvarnosti čl. 5a): potvrda ili uvođenje u Kolo. */
+  /** Vrsta verifikacije (dokaz stvarnosti čl. 4): potvrda ili uvođenje u Kolo. */
   vrsta?: "POTVRDA" | "UVODJENJE";
   /** Uvedeni je u međuvremenu potvrđen (član Kola). */
   potvrdjen?: boolean;
-  /** Stanje nadzora ove verifikacije — ista oznaka kao u lancu potvrda. */
+  /**
+   * Stanje nadzora ove verifikacije — ista oznaka kao u lancu potvrda. 🔴 Puni se
+   * samo za administratorski tim; verifikator ga ne vidi (Politika čl. 15 st. 7).
+   */
   statusNadzora?: CvorVerifikovani["statusNadzora"];
 };
 
@@ -124,7 +127,7 @@ function Red({ osoba }: { osoba: VerifikovanaOsoba }) {
 
 /**
  * `rezim="UVODJENJE"` — pogled člana bez potvrde: „Koga si uveo", uz rečenicu da
- * oni mu dolaze na spisak povezanih kad njega neko potvrdi (čl. 5d; ranije automatska potvrda lanca, čl. 5a
+ * oni mu dolaze na spisak povezanih kad njega neko potvrdi (čl. 17; ranije automatska potvrda lanca, čl. 5a
  * st. 5).
  */
 export default function MojeOznake({

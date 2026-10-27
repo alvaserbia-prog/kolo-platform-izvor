@@ -1,6 +1,6 @@
 /**
  * GET /api/admin/provere/zatvorene-grupe — provera zatvorene grupe (Pravilnik o
- * dokazu stvarnosti čl. 11 poslednji stav, set 4.8.2).
+ * dokazu stvarnosti čl. 26, set 4.8.2).
  *
  * Grupe članova bez potvrde koji su jedni druge uveli u Kolo i razmenjuju samo
  * unutar grupe, bez razmene sa članom Kola. Računa se pri svakom pozivu iz grafa

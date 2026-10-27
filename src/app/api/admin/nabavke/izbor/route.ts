@@ -12,14 +12,14 @@ import { registarPredloga } from "@/lib/protokol/nabavka";
 /**
  * POST /api/admin/nabavke/izbor
  *
- * Pokreće izborno glasanje o predmetu nabavke (čl. 12 st. 1, Gornje Kolo čl. 8 st. 4).
+ * Pokreće izborno glasanje o predmetu nabavke (čl. 12 st. 1, Gornje Kolo čl. 8 st. 1).
  *
  * 🔴 Vrstu `IZBOR_NABAVKE` stvara ISKLJUČIVO server, nikad klijent kroz opšti
  * obrazac predloga: listić tada nije „za/protiv" nego izbor jedne reči iz registra,
  * pa predlog te vrste poslat spolja ne bi imao registar iza sebe.
  *
  * U Fazi 1 Gornje Kolo ne glasa; tada istu odluku donosi Upravni odbor, po istom
- * postupku i uz istu objavu (čl. 12 st. 2) — kroz `POST /api/admin/nabavke`.
+ * postupku i uz istu objavu (čl. 12 st. 1) — kroz `POST /api/admin/nabavke`.
  */
 export async function POST() {
   const session = await getServerSession(authOptions);
@@ -30,7 +30,7 @@ export async function POST() {
   const faza = await dohvatiFazuStatus();
   if (faza.faza !== "FAZA_2") {
     return await greska(
-      "Gornje Kolo glasa tek u Fazi 2. Do tada predmet nabavke određuje Upravni odbor (čl. 12 st. 2).",
+      "Gornje Kolo glasa tek u Fazi 2. Do tada predmet nabavke određuje Upravni odbor (čl. 12 st. 1).",
       403
     );
   }
@@ -50,7 +50,7 @@ export async function POST() {
       title: "Izbor predmeta kolektivne nabavke",
       description:
         "Bira se jedan naziv dobra iz registra predloga. Izabran je naziv sa najvećim zbirom glasačke moći; " +
-        "pri izjednačenosti prevagne veći broj različitih predlagača, pa raniji upis u registar (čl. 13).",
+        "pri izjednačenosti prevagne veći broj različitih predlagača, pa raniji upis u registar (čl. 12 st. 2).",
       vrsta: "IZBOR_NABAVKE",
       authorId: session.user.id,
       glasanjePocetak,

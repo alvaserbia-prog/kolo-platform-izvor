@@ -8,11 +8,15 @@ import { logAdminAkcija } from "@/lib/audit";
 import { dohvatiIliKreirajKanal } from "@/lib/protokol/osnivacki";
 
 /**
- * POST   /api/admin/osnivaci/zakljucaj — zakljucava listu osnivaca.
- *   Uslov: bar jedan osnivac, svi sa istim imeniocem, zbir brojilaca = imenilac (100%).
- *   Koraci osnivackog doprinosa se evidentiraju samo nad zakljucanom listom.
- * DELETE /api/admin/osnivaci/zakljucaj — otkljucava listu za izmene,
- *   dozvoljeno samo dok kanal nije aktiviran (brojKoraka = 0).
+ * POST   /api/admin/osnivaci/zakljucaj — zaključava listu osnivača.
+ *   Uslov: bar jedan osnivač, svi sa istim imeniocem, zbir brojilaca = imenilac (100%).
+ *   Zaključavanjem se objavljuje odluka o raspodeli (Pravilnik o osnivačkom doprinosu
+ *   čl. 8 st. 4): lista mora odgovarati odluci Upravnog odbora pre nego što se zaključa.
+ *   Koraci osnivačkog doprinosa se evidentiraju samo nad zaključanom listom.
+ * DELETE /api/admin/osnivaci/zakljucaj — 🔴 otključavanja nema. Posle objave odluke o
+ *   raspodeli krug osnivača je zatvoren i nijedna kasnija odluka ga ne može proširiti
+ *   (čl. 2 st. 3), pa lista ostaje zaključana i dok je broj koraka 0. Brana
+ *   `osnivacki-izvor.test.ts`.
  */
 
 async function proveriAdmin() {
@@ -57,18 +61,8 @@ export async function POST() {
 export async function DELETE() {
   const auth = await proveriAdmin();
   if (!auth.ok) return await greska(auth.error, auth.status);
-
-  const kanal = await dohvatiIliKreirajKanal();
-  if (kanal.brojKoraka > 0) {
-    return NextResponse.json({
-      error: "Kanal je već aktiviran (broj koraka > 0) — lista se više ne može otključati.",
-    }, { status: 409 });
-  }
-
-  await prisma.osnivackiKanal.update({
-    where: { id: "singleton" },
-    data: { osnivaciZakljucani: false, osnivaciZakljucaniAt: null },
-  });
-  await logAdminAkcija(auth.session.user.id, "OSNIVACI_OTKLJUCANI");
-  return NextResponse.json({ ok: true, poruka: "Lista osnivača je otključana." });
+  return await greska(
+    "Odluka o raspodeli je objavljena zaključavanjem liste; krug osnivača je zatvoren i lista se ne otključava (Pravilnik o osnivačkom doprinosu čl. 2 st. 3).",
+    409,
+  );
 }

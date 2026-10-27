@@ -17,7 +17,7 @@ type Zapis = {
 
 /**
  * „Ko je otvorio ime i broj" — zapis otvaranja poziva sa spiska za poziv (dokaz
- * stvarnosti čl. 4a st. 5; Uslovi čl. 16b st. 3; radnja br. 24). Samo superadmin
+ * stvarnosti čl. 10 st. 4; radnja br. 24). Samo superadmin
  * (ruta odbija ostale, pa se tada ne prikazuje ništa). Bez propova; ugrađuje se u
  * `NadzorTab`.
  *

@@ -10,7 +10,7 @@ import { prijavaPoKodu, oznaciPreuzeto, NabavkaGreska } from "@/lib/protokol/nab
 /**
  * POST /api/admin/nabavke/[id]/preuzimanje { kod }
  *
- * Potvrda preuzimanja uz kod (čl. 26) i poništenje zapisa PO ISKORIŠĆENJU (čl. 27).
+ * Potvrda preuzimanja uz kod (čl. 24) i poništenje zapisa PO ISKORIŠĆENJU (čl. 25).
  *
  * 🔴 POEN se gasi TEK OVDE, ne pri potvrdi. Do preuzimanja je rezervisan, ali
  * postoji — čovek koji nije došao ne sme ništa da izgubi.

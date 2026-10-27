@@ -6,7 +6,7 @@ import VauceriKlijent from "./VauceriKlijent";
 export const metadata = { title: "Vaučeri — KOLO" };
 
 /**
- * Raspodela dobara i usluga iz pokroviteljstva (nabavke Glava VIIIa) i
+ * Raspodela dobara i usluga iz pokroviteljstva (nabavke Glava VII) i
  * „Moji vaučeri". 🔴 Uz broj POEN-a se nigde ne prikazuje dinarska vrednost.
  */
 export default async function VauceriPage() {

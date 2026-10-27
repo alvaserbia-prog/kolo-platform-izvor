@@ -7,7 +7,7 @@ import { prijaveRoditeljstva } from "@/lib/protokol/deca";
 
 /**
  * GET /api/admin/deca/prijave-roditeljstva[?sve=1] — prijave lažnog roditeljstva
- * (Pravilnik o učešću dece čl. 4e). Podrazumevano samo otvorene.
+ * (Pravilnik o učešću dece čl. 17). Podrazumevano samo otvorene.
  *
  * Podnosilac se vidi SAMO ovde, ovlašćenom licu Fondacije; licu na koje se prijava
  * odnosi se ne otkriva (st. 3).

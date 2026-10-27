@@ -20,7 +20,7 @@ interface Mreza {
 }
 
 // Dugme za deljenje oglasa na društvenim mrežama.
-// Pregled oglasa je javan svim posetiocima (Pravilnik čl. 16), pa je deljenje
+// Pregled oglasa je javan svim posetiocima (Uslovi čl. 17 st. 2), pa je deljenje
 // javnog URL-a oglasa primereno. Ne prosleđuje se nikakav lični/kontakt podatak —
 // deli se samo javna adresa stranice oglasa.
 export default function PodeliOglas({ naslov }: Props) {

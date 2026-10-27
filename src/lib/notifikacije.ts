@@ -29,7 +29,7 @@ export interface NotifikacijaOpcije {
    *
    * 🔴 Postoji zbog obaveštenja koja u sebi nose podatak koji ne sme da izađe iz
    * Platforme (naziv socijalnog programa otkriva pripadnost posebnoj kategoriji
-   * podataka — Pravilnik o programima podrške čl. 4, DPIA R11). Kad je postavljen,
+   * podataka — Pravilnik o programima podrške čl. 5 st. 6, DPIA R11). Kad je postavljen,
    * zvonce nosi pun tekst, a mejl i push samo poziv da se obaveštenje otvori u
    * aplikaciji. Bez njega su sva tri kanala ista rečenica.
    *

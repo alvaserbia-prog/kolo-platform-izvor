@@ -15,13 +15,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Zahtevi za potvrdu socijalnih programa koje čeka prijavljeni verifikator.
-// Verifikator NE vidi osetljive prijavljene podatke (čl. 4) — potvrđuje na osnovu
+// Verifikator NE vidi osetljive prijavljene podatke (programi čl. 21 st. 3) — potvrđuje na osnovu
 // ličnog poznavanja osobe koju je verifikovao.
 export default async function PotvrdePage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
-  // Spisak vidi samo član Kola, odnosno osnivač (programi čl. 4 st. 2; set 4.8.2).
+  // Spisak vidi samo član Kola, odnosno osnivač (programi čl. 5).
   const status = await ucitajStatus(session.user.id);
   if (!status || !sme("POTVRDJUJE_USLOVE_PROGRAMA", status)) return <PotvrdeKlijent stavke={[]} />;
 

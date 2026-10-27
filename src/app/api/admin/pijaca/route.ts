@@ -17,7 +17,7 @@ const STRANA = 40;
  *   ?q=<pretraga po naslovu ili pseudonimu oglašivača>
  *
  * „Prijavljeni" je podrazumevan prikaz jer je to red čekanja: Fondacija nije
- * obavezna da unapred pregleda sadržaj (Uslovi čl. 25 st. 1), pa je prijava
+ * obavezna da unapred pregleda sadržaj (Uslovi čl. 29 st. 2), pa je prijava
  * korisnika glavni okidač moderacije.
  */
 export async function GET(req: NextRequest) {

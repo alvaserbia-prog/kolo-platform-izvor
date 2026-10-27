@@ -18,10 +18,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * Gazdinstva — spisak odobrenih gazdinstava po naseljima i put do mape `/mapa`
- * (Pravilnik o gazdinstvima čl. 11: na istoj mapi prikazuju se i pokrovitelji).
+ * (Pravilnik o gazdinstvima čl. 19 st. 2: na istoj mapi prikazuju se i pokrovitelji).
  * Prijavljenom članu i njegovo gazdinstvo, pozivi i prijava.
  *
- * Maloletni nalog ne može biti član gazdinstva (Pravilnik o učešću dece čl. 15),
+ * Maloletni nalog ne može biti član gazdinstva (Pravilnik o učešću dece čl. 29 st. 3),
  * a profil gazdinstva vodi na oglase punoletnih — pa mu se stranica ne otvara.
  */
 export default async function GazdinstvaPage() {
@@ -40,7 +40,7 @@ export default async function GazdinstvaPage() {
       : Promise.resolve([]),
   ]);
 
-  // Član koji upravlja gazdinstvom (čl. 9 st. 1, 9a — izvodi se iz statusa,
+  // Član koji upravlja gazdinstvom (čl. 11, 14 — izvodi se iz statusa,
   // `smeUpravljati`) donira iz upisa pokrovitelja: postojeći upis vezan za ovo
   // gazdinstvo, ili nov upis popunjen iz gazdinstva.
   let donirajHref: string | null = null;
@@ -88,7 +88,7 @@ export default async function GazdinstvaPage() {
                 {t(`status_${clanstvo.gazdinstvo.status}`)}
               </Link>
               {/* Doniranje u ime gazdinstva ide kroz upis pokrovitelja (donacije
-                  čl. 6a), koji vodi samo nosilac — upis se popunjava podacima
+                  čl. 16), koji vodi samo nosilac — upis se popunjava podacima
                   gazdinstva, pa se gazdinstvo ne unosi dvaput. */}
               {donirajHref && (
                 <Link href={donirajHref} className="inline-flex min-h-9 items-center text-sm font-medium text-kolo-green-700 hover:underline">
@@ -115,7 +115,7 @@ export default async function GazdinstvaPage() {
       )}
 
       {/* Gost: kako se postaje deo mape — tri koraka iz Pravilnika o gazdinstvima
-          (čl. 4–6). Odobrenje utvrđuje potpunost prijave, ne proverava gazdinstvo. */}
+          (čl. 4–7). Odobrenje utvrđuje potpunost prijave, ne proverava gazdinstvo. */}
       {!session && (
         <Kartica>
           <p className="text-sm font-semibold text-kolo-text">{t("gost_koraci_naslov")}</p>

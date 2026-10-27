@@ -45,7 +45,7 @@ const rsd = (n: number | null) => (n === null ? "—" : `${Math.round(n).toLocal
  * iskorišćenju — zaseban posao, zaseban tab.
  *
  * Sve što ekran računa dolazi sa servera: kalkulacija se snima na zapis pri objavi
- * (čl. 20 st. 2), pa se posle ne menja.
+ * (nabavke čl. 18 st. 3), pa se posle ne menja.
  */
 export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
   const t = useTranslations("admin");
@@ -141,7 +141,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
       {poruka && <Obavestenje vrsta="uspeh">{poruka}</Obavestenje>}
 
-      {/* ── Registar i otvaranje nabavke (čl. 12) ──────────────────────────── */}
+      {/* ── Registar i otvaranje nabavke (čl. 10, 12) ──────────────────────────── */}
       {!uToku && (
         <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
           <h3 className="font-semibold">{t("nab_registar_naslov")}</h3>
@@ -180,7 +180,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
           </div>
           <p className="mt-1 text-sm text-kolo-muted">{t("nab_prijavljenih", { n: uToku.brojPrijava })}</p>
 
-          {/* Ponude (čl. 15) */}
+          {/* Ponude (čl. 14) */}
           <div className="mt-4">
             <h4 className="text-sm font-semibold">{t("nab_ponude", { n: uToku.ponude.length })}</h4>
             <ul className="mt-2 space-y-1 text-sm">
@@ -246,7 +246,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
             )}
           </div>
 
-          {/* Parametri odluke (čl. 17) — PRE prikupljanja ponuda */}
+          {/* Parametri odluke (čl. 13) — PRE prikupljanja ponuda */}
           {uToku.status === "NACRT" && uToku.poenPoDelu === null && (
             <div className="mt-4 rounded-kontrola bg-kolo-bg p-4">
               <h4 className="text-sm font-semibold">{t("nab_parametri_naslov")}</h4>
@@ -304,7 +304,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
             </div>
           )}
 
-          {/* Objava kalkulacije (čl. 15, 18, 20) */}
+          {/* Objava kalkulacije (čl. 14, 16, 18) */}
           {uToku.status === "NACRT" && uToku.poenPoDelu !== null && uToku.ponude.length >= 3 && (
             <div className="mt-4 rounded-kontrola bg-kolo-bg p-4">
               <h4 className="text-sm font-semibold">{t("nab_objava_naslov")}</h4>
@@ -372,7 +372,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
             </dl>
           )}
 
-          {/* Zatvaranje prijava (čl. 22) */}
+          {/* Zatvaranje prijava (čl. 20) */}
           {uToku.status === "OBJAVLJENA" && (
             <button
               onClick={() => posalji(`/api/admin/nabavke/${uToku.id}/zatvori-prijave`)}
@@ -383,7 +383,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
             </button>
           )}
 
-          {/* Plaćanje (čl. 25) */}
+          {/* Plaćanje (čl. 23) */}
           {uToku.status === "RED_UTVRDJEN" && (
             <div className="mt-3 flex flex-wrap gap-2">
               <input
@@ -404,7 +404,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
             </div>
           )}
 
-          {/* Preuzimanje uz kod (čl. 26, 27) */}
+          {/* Preuzimanje uz kod (čl. 24, 25) */}
           {uToku.status === "PLACENA" && (
             <div className="mt-3">
               <div className="flex flex-wrap gap-2">

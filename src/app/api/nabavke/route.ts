@@ -9,8 +9,8 @@ import { dohvatiGodisnjiProjektniPregled } from "@/lib/protokol/fondacija";
 /**
  * GET /api/nabavke
  *
- * Registar predloga (zbirno, bez pseudonima — čl. 10 st. 2) i spisak nabavki, uz
- * zbirni godišnji pregled projekata (čl. 31 st. 4) — evidencija obima, ne granica.
+ * Registar predloga (zbirno, bez pseudonima — čl. 10 st. 1) i spisak nabavki, uz
+ * zbirni godišnji pregled projekata (čl. 37 st. 5) — evidencija obima, ne granica.
  *
  * 🔴 Godišnja granica dinarske vrednosti preuzetih dobara po korisniku (bivši
  * čl. 21a) obrisana je odlukom vlasnika (19.10.2026, O-15) — ne vraćati je.

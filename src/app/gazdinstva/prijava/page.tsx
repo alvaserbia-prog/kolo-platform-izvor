@@ -18,14 +18,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Prijava gazdinstva (Pravilnik o gazdinstvima čl. 4), odnosno izmena prijave
+ * Prijava gazdinstva (Pravilnik o gazdinstvima čl. 5), odnosno izmena prijave
  * dok nije odobrena (`?izmena=<id>`, samo onaj ko upravlja).
  *
  * Ruta je pod javnim prefiksom `/gazdinstva` (mapa je javna), pa sesiju
  * proverava sama. Maloletni nalog ne može biti član gazdinstva.
  *
- * Ko šta sme da prijavi zavisi od statusa (čl. 4a): korisnik i član bez potvrde
- * samo kao nosilac gazdinstva upisanog u Registar, bez članova i uz izvod (čl. 4b).
+ * Ko šta sme da prijavi zavisi od statusa (čl. 4): korisnik i član bez potvrde
+ * samo kao nosilac, bez članova; izvod iz Registra se ne prilaže (čl. 3 st. 3).
  * Forma to prikazuje; server (`smePrijaviti`) proverava isto.
  */
 export default async function PrijavaGazdinstvaPage({
@@ -40,7 +40,7 @@ export default async function PrijavaGazdinstvaPage({
   const { izmena } = await searchParams;
 
   const clanstvo = await aktivnoClanstvo(session.user.id);
-  // Sopstveno upisano ime — vidi ga samo vlasnik naloga (evidencija identiteta, čl. 31a).
+  // Sopstveno upisano ime — vidi ga samo vlasnik naloga (evidencija identiteta, Pravilnik čl. 31).
   const upisanoIme = await imeNaloga(session.user.id);
   const status = await ucitajStatus(session.user.id);
   const samoNosilac = !status || !jePotvrdjen(status);
@@ -83,7 +83,7 @@ export default async function PrijavaGazdinstvaPage({
     );
   }
 
-  // Lice može biti član samo jednog gazdinstva (čl. 7 st. 3).
+  // Lice može biti član samo jednog gazdinstva (čl. 9 st. 5).
   if (clanstvo) redirect(`/gazdinstva/${clanstvo.gazdinstvo.id}`);
 
   return (

@@ -11,7 +11,7 @@ import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 type Podaci = { imePrezime: string; mesto: string; opis: string; dostupnost: string; telefon: string };
 
 /**
- * Obrazac „Želim da me neko nazove" (Uslovi čl. 16b; dokaz stvarnosti čl. 4a).
+ * Obrazac „Želim da me neko nazove" (dokaz stvarnosti čl. 8 i 9).
  * Pristanak se traži uz svako slanje. Ime i prezime, mesto i broj telefona su
  * obavezni za svaki osnov (set 4.8.4, N4-M2) i ostaju uz nalog: ime u evidenciji
  * identiteta (jednom upisano se ovde ne menja), mesto i broj na profilu. Opis i
@@ -72,7 +72,7 @@ export default function KontaktObrazac({
   }
 
   const zahtev = osnov === "ZAHTEV";
-  // Zahtev radi potvrde (dokaz čl. 5c st. 3): obavezno je samo kada si dostupan.
+  // Zahtev radi potvrde (dokaz čl. 8 st. 4, 16 st. 2): obavezno je samo kada si dostupan.
   const radiPotvrde = osnov === "POTVRDA";
   const oznaka = (kljuc: string, obavezno = zahtev) => (obavezno ? t(kljuc) : `${t(kljuc)} (${t("neobavezno")})`);
   const polje = KLASE_UNOSA;

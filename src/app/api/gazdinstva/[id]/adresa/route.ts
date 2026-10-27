@@ -6,7 +6,7 @@ import { dajIzjavuOAdresi, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
  * POST — izjava člana koji upravlja da je saglasan da se adresa prikazuje uz tačku
- * na mapi (Pravilnik o gazdinstvima čl. 4 t. 3, čl. 11 st. 1), za gazdinstvo odobreno
+ * na mapi (Pravilnik o gazdinstvima čl. 5 st. 1 t. 3, čl. 19 st. 1), za gazdinstvo odobreno
  * pre dopune od 20.10.2026. Daje se jednom. 🔴 Nema rute za povlačenje — izlaz je
  * brisanje gazdinstva (`DELETE /api/gazdinstva/[id]`).
  */

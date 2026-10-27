@@ -7,9 +7,9 @@ import { prijaviSe, NabavkaGreska } from "@/lib/protokol/nabavka";
 /**
  * POST /api/nabavke/[id]/prijavi
  *
- * Prijava na objavljenu nabavku (čl. 21). Otvorena SVAKOM punoletnom korisniku sa
- * aktivnim nalogom — bez obzira koji je naziv predložio i da li je uopšte podneo
- * predlog. Prijava ne dira POEN; obaveza nastaje tek potvrdom (čl. 23).
+ * Prijava na objavljenu nabavku (čl. 19). Otvorena SVAKOM učesniku iz čl. 4
+ * (`smeUcestvovati`) — bez obzira koji je naziv predložio i da li je uopšte podneo
+ * predlog. Prijava ne dira POEN; obaveza nastaje tek potvrdom (čl. 21).
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

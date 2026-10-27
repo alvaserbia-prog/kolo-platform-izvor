@@ -15,7 +15,7 @@ import { procitajImePrezime } from "@/lib/identitet-pravila";
 
 /**
  * Jedanaest nivoa, koeficijent od 1,00 do 2,00 (Pravilnik o pokroviteljstvu i
- * donacijama, čl. 4). Nivo 1 nema donji prag: pokriva svaku donaciju ispod
+ * donacijama, čl. 8). Nivo 1 nema donji prag: pokriva svaku donaciju ispod
  * 5.000 RSD; Nivo 2 počinje na 5.000 RSD.
  *
  * Broj evidentiranih POENA = iznos donacije (RSD) × koeficijent evidencije
@@ -41,7 +41,7 @@ import { procitajImePrezime } from "@/lib/identitet-pravila";
  * (korak se pali na svakih 100.000 POEN opticaja).
  *
  * Veći iznos ide uplatom na račun (domaći) ili deviznom doznakom (inostranstvo),
- * gde se uplatilac vidi iz izvoda — što čl. 3 Pravilnika o pokroviteljstvu i
+ * gde se uplatilac vidi iz izvoda — što čl. 4 i 6 Pravilnika o pokroviteljstvu i
  * donacijama ionako traži.
  */
 export const MAX_KARTICNA_UPLATA_RSD = 100_000;
@@ -56,6 +56,14 @@ export const MAX_KARTICNA_UPLATA_RSD = 100_000;
  * protiv toga ne radi ništa.
  */
 export const MAX_KARTICNIH_UPLATA_DNEVNO = 3;
+
+/**
+ * 🔴 Maloletni korisnik ne donira (odluka vlasnika, 26.10.2026). Ekran `/donacije`
+ * dete vraća na početnu, ali ekran nije poslednja reč: istu poruku vraćaju
+ * kartična i IPS ruta, a `evidentirajDonaciju` je baca za svaki put evidentiranja
+ * (i ručni, iz izvoda po pozivu na broj). Brana `donacija-dete-izvor.test.ts`.
+ */
+export const PORUKA_DETE_NE_DONIRA = "Maloletni korisnik ne može da donira.";
 
 /**
  * Normalizuje ime uplatioca u ključ za poređenje (mera C-1 uz R-01).
@@ -104,16 +112,16 @@ export const RANG_TABELA: { nivo: number; do: number; kurs: number }[] = [
  * Prag se računa (`pragZaNivo`), a `RANG_TABELA` služi kao provera.
  */
 
-/** Najviši nivo tabele (čl. 4); njegov koeficijent je 2,00. */
+/** Najviši nivo tabele (čl. 8 st. 3); njegov koeficijent je 2,00. */
 export const NAJVISI_NIVO = 11;
 
-/** Korak koeficijenta po nivou (čl. 4). */
+/** Korak koeficijenta po nivou (čl. 8 st. 2). */
 export const KORAK_KOEFICIJENTA = 0.1;
 
-/** Najmanji iznos prijave pokroviteljstva (čl. 7) — ispod toga ugovor košta više. */
+/** Najmanji iznos prijave pokroviteljstva (čl. 19 st. 2) — ispod toga ugovor košta više. */
 export const MINIMUM_PRIJAVE_POKROVITELJSTVA = 10_000;
 
-/** Podaci o pokrovitelju i zastupniku iz prijave (čl. 7 st. 2, set 4.7.5). */
+/** Podaci o pokrovitelju i zastupniku iz prijave (čl. 16 st. 2 i čl. 19, set 4.7.5). */
 export type PodaciPrijavePokroviteljstva = {
   naziv: string;
   pib: string;
@@ -193,7 +201,7 @@ export function nivoZaKumulativ(kumulativRSD: number): { nivo: number; kurs: num
 }
 
 /**
- * 🔴 Pokroviteljstvo ide po ISTOJ tabeli kao donacija fizičkog lica (čl. 10, set
+ * 🔴 Pokroviteljstvo ide po ISTOJ tabeli kao donacija fizičkog lica (čl. 22, set
  * 4.6.8, odluka vlasnika 2026-10-17). Uvećanje od 20% je ukinuto: premija po
  * pravnom obliku davaoca nagrađivala je jeftiniji put (donacija firme vlasnika
  * lično košta manje od lične donacije, priznat rashod ili ne), ubrzavala je
@@ -216,8 +224,8 @@ export function nivoPokroviteljstvaZaKumulativ(kumulativRSD: number): {
 }
 
 /**
- * Redovi tabele iz čl. 4 za ekran pokroviteljstva — ISTI redovi kao za donaciju
- * fizičkog lica (čl. 10, set 4.6.8; odluka vlasnika 18.10.2026). Do tada je tabela
+ * Redovi tabele iz čl. 8 za ekran pokroviteljstva — ISTI redovi kao za donaciju
+ * fizičkog lica (čl. 22, set 4.6.8; odluka vlasnika 18.10.2026). Do tada je tabela
  * počinjala od nivoa 3 (najmanja prijava), pa je na ekranu izgledala kao zasebna
  * lestvica. Najmanja prijava (10.000 RSD) stoji u napomeni ispod tabele.
  */
@@ -240,7 +248,7 @@ export function tabelaZaPrikaz(doNivoa = NAJVISI_NIVO): { nivo: number; do: numb
 }
 
 /**
- * Izračunava POEN za novu donaciju po koeficijentnom modelu (čl. 4):
+ * Izračunava POEN za novu donaciju po koeficijentnom modelu (čl. 8):
  * koeficijent novodostignutog nivoa (na osnovu novog kumulativa) primenjuje se
  * na celu novu donaciju. Zaokruživanje: Math.round() (POEN je ceo broj).
  */

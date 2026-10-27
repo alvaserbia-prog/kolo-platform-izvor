@@ -1,6 +1,6 @@
 /**
  * Pravila doprinosa sadržaju platforme — ČISTE funkcije, bez baze.
- * Osnov: Pravilnik o KOLO sistemu 4.1.1 čl. 40a, Uslovi korišćenja 4.1.1.
+ * Osnov: Pravilnik o KOLO sistemu čl. 38, Uslovi korišćenja čl. 18–19.
  *
  * Izdvojeno iz `src/lib/protokol/doprinos-sadrzaju.ts` (koji radi sa Prismom) zato
  * što ova pravila koristi i FORMA OGLASA u pretraživaču. Da su u istom modulu,
@@ -8,7 +8,7 @@
  * Servisni modul ih re-eksportuje, pa server ima jedan ulaz.
  */
 
-/** Iznos jednokratnog doprinosa (čl. 40a st. 2). */
+/** Iznos jednokratnog doprinosa (čl. 38 st. 1). */
 export const IZNOS = 1000;
 
 /**
@@ -40,7 +40,7 @@ export type OglasMinimum = {
  *
  * Minimum ima dve uloge i one se ne poklapaju:
  *  - USLOV ZA OBJAVU važi samo za neverifikovanog korisnika (vidi `smeDaPostaviOglas`);
- *  - USLOV ZA DOPRINOS važi za svakoga (čl. 40a st. 2), pa i za verifikovanog.
+ *  - USLOV ZA DOPRINOS važi za svakoga (Pravilnik čl. 38 st. 1; Uslovi čl. 18 st. 1), pa i za verifikovanog.
  * Verifikovanom se, dakle, oglas ispod minimuma i dalje objavljuje — samo mu se
  * povodom njega ne beleži doprinos.
  */
@@ -63,7 +63,7 @@ export function oglasIspunjavaMinimum(oglas: OglasMinimum): Provera {
  *
  * Potvrđen član — bez ograničenja (zatečeno ponašanje se ne dira).
  * Nov član — od seta 4.8.1 (odluka vlasnika 20.10.2026) sme i potražnju i više od
- * tri aktivna oglasa (Uslovi čl. 16 st. 5); od njega se pri objavi traži samo
+ * tri aktivna oglasa (Uslovi čl. 14 st. 2); od njega se pri objavi traži samo
  * sadržinski minimum, jer iza naloga još niko ne jemči za sadržaj.
  *
  * 🔴 Ne vraćati ograničenje na ponudu ni broj aktivnih oglasa bez naloga vlasnika.
@@ -80,9 +80,9 @@ export function smeDaPostaviOglas(input: {
  * Sme li korisnik da inicira ažuriranje evidencije POEN-a u korist drugog.
  *
  * 🔴 Od seta 4.8.1 (odluka vlasnika 20.10.2026) prepis je otvoren i novom članu
- * (Pravilnik čl. 28 st. 2): prepis samo seli zapis koji već postoji i ukupan broj
- * POEN-a ne menja (čl. 15). Ono što čeka potvrdu je NASTANAK zapisa — POEN po
- * potvrdi (dokaz stvarnosti čl. 7) i doprinos gazdinstva (čl. 40c) — a ne njegovo
+ * (Uslovi čl. 14 st. 3): prepis samo seli zapis koji već postoji i ukupan broj
+ * POEN-a ne menja (Pravilnik čl. 17 st. 5). Ono što čeka potvrdu je NASTANAK zapisa — POEN po
+ * potvrdi (dokaz stvarnosti čl. 19) i doprinos gazdinstva (Pravilnik čl. 39) — a ne njegovo
  * kretanje. Dečji parovi idu kroz `smeDaPrepise` (Modul Deca) pre ove provere, a
  * nadoknada kroz `jeNadoknada`.
  *

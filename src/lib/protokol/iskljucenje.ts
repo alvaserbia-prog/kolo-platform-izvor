@@ -4,12 +4,12 @@ import { jeSuperadmin } from "@/lib/dozvole";
 import { ugasiOznakeNaloga, poslediceIzlaskaNaloga } from "./izlaz-naloga";
 
 /**
- * Isključenje korisnika iz sistema (Uslovi čl. 28): prestanak statusa odlukom
- * Fondacije (Pravilnik čl. 33).
+ * Isključenje korisnika iz sistema (Uslovi čl. 32): prestanak statusa odlukom
+ * Fondacije (Pravilnik čl. 32).
  *
  * Izdvojeno iz rute `/api/admin/korisnici/[id]/iskljuci` kad je uvedeno drugo
  * mesto koje isključuje — poništenje odobrenja gazdinstva isključuje SVE članove
- * (Pravilnik o gazdinstvima čl. 12). Dva mesta sa sopstvenom kopijom koraka bi se
+ * (Pravilnik o gazdinstvima čl. 20). Dva mesta sa sopstvenom kopijom koraka bi se
  * razišla pri prvoj izmeni.
  *
  * 🔴 Sve što prestankom statusa mora da se ugasi (keš statusa, spisak za poziv,
@@ -33,7 +33,7 @@ export async function iskljuciKorisnika(adminId: string, userId: string, razlog:
       data: {
         status: "EXCLUDED",
         suspendedAt: new Date(),
-        suspendedReason: razlog || "Isključenje (Čl. 33)",
+        suspendedReason: razlog || "Isključenje (Pravilnik čl. 32)",
       },
     });
     return ugasiOznakeNaloga(tx, userId);

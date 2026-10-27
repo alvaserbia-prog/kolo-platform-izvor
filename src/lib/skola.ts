@@ -1,7 +1,7 @@
 /**
  * Škola maloletnog korisnika i rangiranje škola — ČISTE funkcije, bez baze.
  *
- * Osnov: Pravilnik o učešću dece (čl. 7 — škola kao podatak koji navodi sámo dete;
+ * Osnov: Pravilnik o učešću dece (čl. 26 st. 1 — škola kao podatak koji navodi sámo dete;
  * član o pregledu po školama). Plan: `docs/plan-ranglista-skola.html`.
  *
  * ─── Zašto se škola BIRA sa spiska, a ne kuca ───────────────────────────────

@@ -19,7 +19,7 @@ type Poziv = {
 };
 
 /**
- * Stranica na koju vodi link iz poruke roditelju (Modul Deca, čl. 4b).
+ * Stranica na koju vodi link iz poruke roditelju (Pravilnik o učešću dece čl. 10 i 11).
  *
  * Tri radnje, kao i u poruci: **preuzmi nalog**, **ovo nije moje dete**, **obriši
  * nalog**. Preuzimanje traži prijavu (veza mora da stoji na nečijem nalogu) i datum
@@ -187,7 +187,7 @@ export default function DetePozivPage({ params }: { params: Promise<{ token: str
               max={najkasnije}
               porukaGreske={t("datum_raspon")}
             />
-            {/* Datum se posle upisa NE menja (čl. 7) — to mora da piše pre unosa, ne posle. */}
+            {/* Datum se posle upisa NE menja (deca čl. 4 st. 2) — to mora da piše pre unosa, ne posle. */}
             <p className="mt-1 text-xs text-kolo-muted">{t("datum_opis")}</p>
           </div>
 

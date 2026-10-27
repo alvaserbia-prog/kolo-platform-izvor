@@ -8,8 +8,8 @@ import UpisProfil from "./UpisProfil";
 export const metadata = { title: "Pokrovitelj — KOLO" };
 
 /**
- * Stranica pokrovitelja (Pravilnik o pokroviteljstvu i donacijama čl. 6a, 7, 13e,
- * 13g st. 6): zaglavlje sa logotipom, nazivom i statusom; „Doniraj novac" i „Doniraj
+ * Stranica pokrovitelja (Pravilnik o pokroviteljstvu i donacijama čl. 16, 19, 28,
+ * 32 st. 3): zaglavlje sa logotipom, nazivom i statusom; „Doniraj novac" i „Doniraj
  * robu ili usluge" (samo iz odobrenog upisa — i firme i registrovanog gazdinstva, set
  * 4.7.9; roba i usluge ne i kad je pokrovitelj na listi zabrane); tabovi Ugovori,
  * Vaučeri, Zaposleni, Podaci.

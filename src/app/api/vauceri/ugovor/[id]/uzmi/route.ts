@@ -8,10 +8,10 @@ import { uzmiVaucer, odgovorNaGresku } from "@/lib/protokol/pokroviteljstvo-dobr
 
 /**
  * POST /api/vauceri/ugovor/[id]/uzmi — korisnik uzima vaučer ugovora `id`
- * (nabavke čl. 30f). Ko prvi zatraži, dobija vaučer; reda i roka nema (čl. 30e).
+ * (nabavke čl. 33). Ko prvi zatraži, dobija vaučer; reda i roka nema (čl. 32 st. 2).
  * Telo: { izjavaNepovezan, pristanakPrikaz } — oba moraju biti `true`.
  *
- * Tekst pristanka na prikaz zapisa uz pseudonim (čl. 30f st. 1) sklapa se OVDE,
+ * Tekst pristanka na prikaz zapisa uz pseudonim (čl. 33 st. 1) sklapa se OVDE,
  * iz istog ključa iz kog ga ekran prikazuje, na jeziku prikaza — tekst koji šalje
  * pretraživač dokazivao bi samo šta je pretraživač poslao.
  */

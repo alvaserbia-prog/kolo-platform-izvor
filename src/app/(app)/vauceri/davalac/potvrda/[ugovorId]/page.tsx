@@ -24,7 +24,7 @@ export async function generateMetadata() {
  *
  * Sadrži podatke davaoca iz SNIMKA ugovora, datum i kontrolni broj ugovora, i za
  * svaki iskorišćen vaučer oznaku, opis, količinu, vreme potvrde, pseudonim imaoca
- * i onoga ko je potvrdio (Politika 4.15 i čl. 8 — davalac vidi pseudonim imaoca),
+ * i onoga ko je potvrdio (Politika čl. 29 st. 2 i čl. 39 — davalac vidi pseudonim imaoca),
  * te vrednost po cenovniku iz ugovora. 🔴 Bez POEN-a i bez reči o kasi i plaćanju
  * (brana `potvrda-predaje-izvor.test.ts`).
  *

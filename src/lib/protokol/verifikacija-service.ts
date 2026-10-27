@@ -1,23 +1,23 @@
 /**
  * Servis za izvršenje verifikacije (Pravilnik o dokazu stvarnosti, set 4.8.3,
- * čl. 3, 5, 5a, 5b, 5c, 5d, 7, 8, 12).
+ * čl. 2, 4–7, 15–17, 19, 21, 28).
  *
- * Verifikacija je POTVRDA ili UVOĐENJE U KOLO (čl. 5a st. 1):
+ * Verifikacija je POTVRDA ili UVOĐENJE U KOLO (čl. 4 st. 1):
  *  - član Kola, čuvar ili osnivač koji osobu lično zna je POTVRĐUJE → član Kola;
  *  - član Kola posle razgovora telefonom sa korisnikom sa spiska za poziv ga UVODI
  *    (`poPozivu`) → član bez potvrde;
- *  - član bez potvrde UVEK samo uvodi (čl. 5a st. 2) → član bez potvrde.
+ *  - član bez potvrde UVEK samo uvodi (čl. 4 st. 2) → član bez potvrde.
  *
- * Potvrda člana bez potvrde (čl. 5a st. 3–4) NIJE nova verifikacija: ne nastaje
+ * Potvrda člana bez potvrde (čl. 5) NIJE nova verifikacija: ne nastaje
  * nova `VerifikacionaVeza`, ne upisuje se POEN, nego se uz uvođenje beleži
- * `PotvrdaClana` sa načinom potvrde: lično (čl. 5a st. 3), čuvar Kola posle razgovora
- * telefonom (čl. 5c) ili sa spiska povezanih (čl. 5d).
+ * `PotvrdaClana` sa načinom potvrde: lično (čl. 5 st. 1 t. 1), čuvar Kola posle razgovora
+ * telefonom (čl. 16) ili sa spiska povezanih (čl. 17).
  *
  * 🔴 Automatska potvrda lanca je UKINUTA (set 4.8.3): potvrda nikad ne nastupa
  * automatski. Ko postane član Kola dobija spisak povezanih — jedan nivo naniže (koje je
  * uveo dok je bio bez potvrde) i jedan naviše (ko je njega uveo) — i sa njega lično
  * potvrđuje one koje zna (`potvrdiSaSpiskaPovezanih`). Potvrda uvodioca je izuzetak
- * od čl. 12 i uvek je u nadzoru. Stari zapisi `izvor: LANAC` ostaju.
+ * od čl. 28 i uvek je u nadzoru. Stari zapisi `izvor: LANAC` ostaju.
  *
  * 🔴 Keš statusa (`verified`, `indeksStvarnosti`, `potvrdjenAt`, `tipKorisnika`)
  * ovde se NE piše ručno — samo `preracunajStatusNaloga()` (status.ts).
@@ -70,7 +70,7 @@ export class VerifikacijaGreska extends Error {
   constructor(
     message: string,
     public statusCode: number = 400,
-    /** Peta potvrda u danu — potvrđivanje je zaustavljeno (dokaz stvarnosti čl. 8). */
+    /** Peta potvrda u danu — potvrđivanje je zaustavljeno (dokaz stvarnosti čl. 21). */
     public zaustavljeno: boolean = false
   ) {
     super(message);
@@ -101,7 +101,7 @@ export async function generisiTokenZaVerifikaciju(korisnikId: string) {
   if (!korisnik) {
     throw new VerifikacijaGreska("Korisnik ne postoji", 404);
   }
-  // Detetu se kod ne izdaje (čl. 15). Ekran `/verifikacija` maloletan nalog i
+  // Detetu se kod ne izdaje (Pravilnik o učešću dece čl. 29 st. 2). Ekran `/verifikacija` maloletan nalog i
   // inače preusmerava, ali ekran nije poslednja reč — ruta je dostižna svakome
   // ko zna adresu, a kod koji ništa ne otvara je poziv da se pokuša.
   if (!smeULanacPotvrda(korisnik)) {
@@ -109,7 +109,7 @@ export async function generisiTokenZaVerifikaciju(korisnikId: string) {
   }
   // Kod generiše onaj ko verifikaciju prima (tabela dozvola 1.5, red 13): korisnik
   // (od bilo kog verifikovanog) i član bez potvrde (da ga potvrdi član Kola). Član
-  // Kola i osnivač ne primaju ništa (čl. 3 st. 3, čl. 14 st. 3).
+  // Kola i osnivač ne primaju ništa (čl. 2 st. 2, čl. 29 st. 4).
   if (!sme("PRIMA_VERIFIKACIJU", statusUcesnika(korisnik))) {
     throw new VerifikacijaGreska("Ovaj član je već potvrđen. Stvarnost se potvrđuje jednom.", 409);
   }
@@ -156,7 +156,7 @@ export type IzvrsiVerifikacijuInput = {
   /**
    * Kad je meta na spisku za poziv, a verifikator nije otvarao njen poziv: „Znam ga
    * lično" (potvrda) ili „Upoznali smo se telefonom" (uvođenje u Kolo). Ako je
-   * verifikator otvorio poziv te osobe, verifikacija je uvek uvođenje (čl. 5 st. 7).
+   * verifikator otvorio poziv te osobe, verifikacija je uvek uvođenje (čl. 12 st. 2).
    */
   nacin?: NacinVerifikacije;
 };
@@ -176,12 +176,12 @@ export type IzvrsiVerifikacijuRezultat = {
   status: StatusUcesnika;
   /**
    * Koliko ljudi ima na spisku povezanih onaj ko je ovom radnjom postao član Kola
-   * (čl. 5d). 0 kad nije postao član Kola ili kad je spisak prazan.
+   * (čl. 17). 0 kad nije postao član Kola ili kad je spisak prazan.
    */
   povezani: number;
   /**
    * Koja je ovo verifikacija u danu, ako ide uz upozorenje (3. ili 4. — dokaz
-   * stvarnosti čl. 8). `null` kad upozorenja nema.
+   * stvarnosti čl. 21). `null` kad upozorenja nema.
    */
   upozorenjeDnevno: number | null;
 };
@@ -215,7 +215,7 @@ const IZBOR_UCESNIKA = {
 } as const;
 
 /**
- * Broj verifikacija koje je verifikator obavio danas, za dnevni tempo (čl. 8 st. 1):
+ * Broj verifikacija koje je verifikator obavio danas, za dnevni tempo (čl. 21 st. 1):
  * verifikacije (potvrde i uvođenja) i potvrde člana bez potvrde koje je on dao — lično,
  * telefonom i sa spiska povezanih (sve su `izvor: CLAN_KOLA`). Odluka Fondacije i
  * stari zapisi automatske potvrde lanca se ne broje. Ekran `/verifikacija`
@@ -235,7 +235,7 @@ export async function brojVerifikacijaDanas(
   return veze + potvrde;
 }
 
-/** Dnevni tempo (čl. 8): baca na petoj, vraća redni broj uz 3. i 4. */
+/** Dnevni tempo (čl. 21): baca na petoj, vraća redni broj uz 3. i 4. */
 async function proveriTempo(tx: Tx, verifikatorId: string): Promise<number | null> {
   const tempo = dnevniTempo(await brojVerifikacijaDanas(verifikatorId, tx));
   if (!tempo.sme) {
@@ -250,7 +250,7 @@ async function proveriTempo(tx: Tx, verifikatorId: string): Promise<number | nul
   return tempo.upozorenje ? tempo.sledeca : null;
 }
 
-/** Lanac bez kruga (čl. 12) — važi i za potvrdu člana bez potvrde (čl. 5a st. 4). */
+/** Lanac bez kruga (čl. 28) — važi i za potvrdu člana bez potvrde (čl. 5 st. 4). */
 async function proveriKrug(tx: Tx, verifikatorId: string, metaId: string): Promise<void> {
   const zapisi = await tx.verifikacionaVeza.findMany({
     select: { verifikatorId: true, verifikovaniId: true },
@@ -262,10 +262,10 @@ async function proveriKrug(tx: Tx, verifikatorId: string, metaId: string): Promi
 }
 
 /**
- * Potvrda člana bez potvrde (čl. 5a st. 3–4, 5c, 5d). NIJE nova verifikacija: nema
+ * Potvrda člana bez potvrde (čl. 5, 16, 17). NIJE nova verifikacija: nema
  * `verifikacionaVeza.create`, nema POEN-a; beleži se `PotvrdaClana` uz uvođenje kojim
  * je član verifikovan, sa načinom potvrde, i preračunava se status. Potvrđeni silazi
- * sa spiska za poziv (Uslovi čl. 16b). 🔴 Ništa se ne potvrđuje automatski.
+ * sa spiska za poziv (dokaz stvarnosti čl. 12 st. 3). 🔴 Ništa se ne potvrđuje automatski.
  */
 async function potvrdiClana(
   tx: Tx,
@@ -277,7 +277,7 @@ async function potvrdiClana(
     obrazlozenje?: string | null;
     /** Samo uz CLAN_KOLA. */
     nacin?: NacinPotvrdeClana;
-    /** Potvrda uvodioca sa spiska povezanih (čl. 5d st. 3). */
+    /** Potvrda uvodioca sa spiska povezanih (čl. 17 st. 3). */
     premaUvodiocu?: boolean;
   },
 ): Promise<{ potvrdaId: string; verifikacijaId: string; promena: Promena }> {
@@ -309,7 +309,7 @@ async function potvrdiClana(
     },
     select: { id: true },
   });
-  // Zahtev radi potvrde (čl. 5c st. 3) više nema svrhu — briše se sa brojem.
+  // Zahtev radi potvrde (čl. 16 st. 2) više nema svrhu — briše se sa brojem.
   await ukloniSaSpiskaPoVerifikaciji(ulaz.potvrdjeniId, tx);
   const promena = await preracunajStatusNaloga(tx, ulaz.potvrdjeniId);
   return {
@@ -320,7 +320,7 @@ async function potvrdiClana(
 }
 
 /**
- * Spisak povezanih (dokaz stvarnosti čl. 5d st. 1): za člana Kola, odnosno osnivača,
+ * Spisak povezanih (dokaz stvarnosti čl. 17 st. 1): za člana Kola, odnosno osnivača,
  * oni koje je uveo dok je bio član bez potvrde (naniže) i onaj ko je njega uveo
  * (naviše) — samo dok su još članovi bez potvrde. Prazan za svakog ko nije potvrđen.
  * Sastavlja se iz grafa verifikacija; ništa se ne prikuplja.
@@ -363,8 +363,8 @@ export async function spisakPovezanihZa(
 
 /**
  * Jezgro verifikacije unutar otvorene transakcije: učita oba učesnika, sprovede SVE
- * provere (statusi, čl. 4, 5a; jedna verifikacija, čl. 3; lanac bez kruga, čl. 12;
- * osnivač nije meta, čl. 14; dnevni tempo, čl. 8) i grana po statusu mete:
+ * provere (statusi, čl. 3, 4, 6; jedna verifikacija, čl. 2; lanac bez kruga, čl. 28;
+ * osnivač nije meta, čl. 29; dnevni tempo, čl. 21) i grana po statusu mete:
  *
  *  1. meta je ČLAN BEZ POTVRDE → potvrda člana bez potvrde (samo potvrđen davalac);
  *  2. meta je KORISNIK → verifikacija; vrsta po statusu verifikatora i spisku za poziv;
@@ -378,10 +378,10 @@ async function izvrsiJezgroVerifikacije(
   verifikovaniId: string,
   oznaka: string | null,
   opcije: {
-    /** `false` samo za verifikaciju pri punoletstvu (čl. 8 st. 5). */
+    /** `false` samo za verifikaciju pri punoletstvu (čl. 21 st. 5). */
     dnevnoPravilo?: boolean;
     nacin?: NacinVerifikacije;
-    /** Samo punoletstvo (čl. 5b): vrsta koju daje roditelj. */
+    /** Samo punoletstvo (čl. 7): vrsta koju daje roditelj. */
     vrsta?: VrstaVerifikacije;
   } = {},
 ): Promise<FazaJedan> {
@@ -399,7 +399,7 @@ async function izvrsiJezgroVerifikacije(
     throw new VerifikacijaGreska("Član koga potvrđuješ ne postoji.", 404);
   }
 
-  // Maloletni nalog ne ulazi u lanac potvrda — ni sa jedne strane (čl. 15
+  // Maloletni nalog ne ulazi u lanac potvrda — ni sa jedne strane (čl. 29 st. 2
   // Pravilnika o učešću dece). Provera stoji PRE svih ostalih.
   if (!smeULanacPotvrda(verifikator) || !smeULanacPotvrda(verifikovani)) {
     throw new VerifikacijaGreska(PORUKA_DETE_VAN_LANCA, 403);
@@ -409,7 +409,7 @@ async function izvrsiJezgroVerifikacije(
   const statusVerifikatora = statusUcesnika(verifikator);
   const statusMete = statusUcesnika(verifikovani);
 
-  // Korisnik ne verifikuje nikoga (čl. 5 st. 1: verifikator je član Kola, osnivač
+  // Korisnik ne verifikuje nikoga (čl. 15 st. 1: verifikator je član Kola, osnivač
   // ili član bez potvrde). 🔴 Imunitet NOSILAC_ZRNA je ukinut — status se čita iz
   // grafa, ne iz `tipKorisnika`.
   if (!jeVerifikovan(statusVerifikatora)) {
@@ -419,16 +419,16 @@ async function izvrsiJezgroVerifikacije(
     );
   }
 
-  // Osnivač ne može biti verifikovan u lancu potvrda (čl. 14 st. 3).
+  // Osnivač ne može biti verifikovan u lancu potvrda (čl. 29 st. 4).
   if (verifikovani.jeOsnivac) {
     throw new VerifikacijaGreska("Početni član se ne potvrđuje u lancu potvrda.", 403);
   }
-  // Jedna potvrda (čl. 3 st. 3): potvrđen član ne prima ništa više.
+  // Jedna potvrda (čl. 2 st. 2): potvrđen član ne prima ništa više.
   if (jePotvrdjen(statusMete)) {
     throw new VerifikacijaGreska("Ovaj član je već potvrđen. Stvarnost se potvrđuje jednom.", 409);
   }
 
-  // ── 1. Potvrda člana bez potvrde (čl. 5a st. 3–4) ────────────────────────────
+  // ── 1. Potvrda člana bez potvrde (čl. 5) ────────────────────────────
   if (statusMete === "CLAN_BEZ_POTVRDE") {
     if (opcije.vrsta) {
       // Punoletstvo cilja tek punoletnog korisnika, nikad člana bez potvrde.
@@ -440,9 +440,9 @@ async function izvrsiJezgroVerifikacije(
         403
       );
     }
-    // Potvrda posle razgovora telefonom (čl. 5c): kad je verifikator otvorio njegov
+    // Potvrda posle razgovora telefonom (čl. 16): kad je verifikator otvorio njegov
     // zahtev radi potvrde, ili sam kaže da su se upoznali telefonom. Daje je samo
-    // čuvar Kola, pod uslovima iz čl. 5c st. 2, i uvek ide u nadzor.
+    // čuvar Kola, pod uslovima iz čl. 16 st. 1, i uvek ide u nadzor.
     const zahtev = await tx.zahtevZaRazgovor.findUnique({
       where: { userId: verifikovani.id },
       select: { osnov: true },
@@ -483,8 +483,8 @@ async function izvrsiJezgroVerifikacije(
   }
 
   // ── 2. Meta je korisnik: verifikacija (potvrda ili uvođenje) ──────────────────
-  // Jedna verifikacija (čl. 3): ko ima važeću verifikaciju, ne prima drugu. Broje se
-  // veze koje stoje — poništena verifikacija je obrisana (čl. 20c).
+  // Jedna verifikacija (čl. 2): ko ima važeću verifikaciju, ne prima drugu. Broje se
+  // veze koje stoje — poništena verifikacija je obrisana (čl. 37).
   const vecPrimljenihVerifikacija = await tx.verifikacionaVeza.count({
     where: { verifikovaniId: verifikovani.id },
   });
@@ -495,19 +495,19 @@ async function izvrsiJezgroVerifikacije(
     );
   }
 
-  // Dnevni tempo (čl. 8) — važi i za osnivače, čuvare i članove bez potvrde.
+  // Dnevni tempo (čl. 21) — važi i za osnivače, čuvare i članove bez potvrde.
   const upozorenjeDnevno = dnevnoPravilo ? await proveriTempo(tx, verifikatorId) : null;
   await proveriKrug(tx, verifikatorId, verifikovani.id);
 
-  // Vrsta verifikacije (čl. 5a st. 1–2; otvoreno pitanje 1).
+  // Vrsta verifikacije (čl. 4 st. 1–2; otvoreno pitanje 1).
   const verifikatorBezPotvrde = statusVerifikatora === "CLAN_BEZ_POTVRDE";
   let vrsta: VrstaVerifikacije;
   let poPozivu = false;
   if (verifikatorBezPotvrde) {
-    // Član bez potvrde uvek samo uvodi (čl. 5a st. 2), i pri punoletstvu (čl. 5b st. 2).
+    // Član bez potvrde uvek samo uvodi (čl. 4 st. 2), i pri punoletstvu (čl. 7 st. 2).
     vrsta = "UVODJENJE";
   } else if (opcije.vrsta) {
-    // Punoletstvo: roditelj član Kola daje potvrdu (čl. 5b st. 1).
+    // Punoletstvo: roditelj član Kola daje potvrdu (čl. 7 st. 1).
     vrsta = "POTVRDA";
   } else {
     const naSpisku = await tx.zahtevZaRazgovor.findUnique({
@@ -516,7 +516,7 @@ async function izvrsiJezgroVerifikacije(
     });
     const otvorio = await jeOtvorioPoziv(verifikatorId, verifikovani.id, tx);
     if (otvorio || (naSpisku && opcije.nacin === "TELEFONOM")) {
-      // Uvođenje u Kolo posle razgovora telefonom sa korisnikom sa spiska (čl. 5 st. 7).
+      // Uvođenje u Kolo posle razgovora telefonom sa korisnikom sa spiska (čl. 12 st. 2).
       vrsta = "UVODJENJE";
       poPozivu = true;
     } else {
@@ -535,8 +535,8 @@ async function izvrsiJezgroVerifikacije(
   const redniBroj = (poslednja._max.redniBroj ?? 0) + 1;
   const treboNadzor = podlezeNadzoru({ verifikatorStatus: statusVerifikatora, vrsta, poPozivu });
 
-  // Spisak za poziv: korisnik silazi sa spiska pri SVAKOJ verifikaciji (Uslovi čl.
-  // 16b st. 6), ne i pri potvrdi člana bez potvrde.
+  // Spisak za poziv: korisnik silazi sa spiska pri SVAKOJ verifikaciji (dokaz stvarnosti čl.
+  // 12 st. 3), ne i pri potvrdi člana bez potvrde.
   await ukloniSaSpiskaPoVerifikaciji(verifikovani.id, tx);
 
   const veza = await tx.verifikacionaVeza.create({
@@ -559,7 +559,7 @@ async function izvrsiJezgroVerifikacije(
     select: { indeksStvarnosti: true },
   });
 
-  // Osiguraj wallet za obe strane (POEN po verifikaciji, čl. 7).
+  // Osiguraj wallet za obe strane (POEN po verifikaciji, čl. 19).
   for (const userId of [verifikovani.id, verifikator.id]) {
     const w = await tx.wallet.findUnique({ where: { userId }, select: { id: true } });
     if (!w) await tx.wallet.create({ data: { userId, type: "USER", balance: 0 } });
@@ -593,7 +593,7 @@ function mapTransakcijaGreska(e: unknown): never {
 }
 
 /**
- * Ko je ovom radnjom postao član Kola dobija spisak povezanih (čl. 5d st. 1). Kad
+ * Ko je ovom radnjom postao član Kola dobija spisak povezanih (čl. 17 st. 1). Kad
  * spisak nije prazan, javlja mu se gde je. Ne baca. Vraća broj ljudi na spisku.
  */
 async function javiSpisakPovezanih(promena: Promena): Promise<number> {
@@ -621,10 +621,10 @@ async function javiSpisakPovezanih(promena: Promena): Promise<number> {
 
 /**
  * Faza 2: sve što ide POSLE upisa i VAN transakcije iz Faze 1 — upis POEN-a po
- * verifikaciji (čl. 7; i uvođenje nosi POEN, čl. 5a st. 9), doprinos gazdinstva i
+ * verifikaciji (čl. 19; i uvođenje nosi POEN, čl. 4 st. 3), doprinos gazdinstva i
  * posledice promene statusa (ZRNO, deca, gazdinstva).
  *
- * 🔴 Potvrda člana bez potvrde ne nosi POEN (čl. 5a st. 4, 5c, 5d):
+ * 🔴 Potvrda člana bez potvrde ne nosi POEN (čl. 5 st. 3, 16 st. 3, 17 st. 2):
  * za `POTVRDA_CLANA` se `probajUpisatiPotvrdu` NE zove.
  */
 async function dovrsiVerifikaciju(
@@ -634,7 +634,7 @@ async function dovrsiVerifikaciju(
   const { verifikacijaId, verifikovaniId } = fazaJedan;
 
   if (fazaJedan.vrsta !== "POTVRDA_CLANA") {
-    // 🔴 POEN PO VERIFIKACIJI NE NASTAJE SAMIM ČINOM (dokaz stvarnosti čl. 7): upisuje se
+    // 🔴 POEN PO VERIFIKACIJI NE NASTAJE SAMIM ČINOM (dokaz stvarnosti čl. 19): upisuje se
     // kad verifikovani ostvari prvi potvrđen doprinos. Sam čin verifikacije se ne
     // vezuje za uslov. Ne baca: verifikacija je u bazi.
     const upis = await probajUpisatiPotvrdu(verifikacijaId, {
@@ -643,7 +643,7 @@ async function dovrsiVerifikaciju(
     if (!upis.upisano) {
       await javiZabelezeno(verifikacijaId);
     }
-    // Doprinos gazdinstva (čl. 40c st. 4) čeka i verifikaciju. Ne baca.
+    // Doprinos gazdinstva (Pravilnik o gazdinstvima čl. 16) čeka i verifikaciju. Ne baca.
     await probajEvidentiratiGazdinstvo(verifikovaniId);
   }
 
@@ -673,7 +673,7 @@ async function dovrsiVerifikaciju(
 }
 
 /**
- * Peta potvrda u danu je odbijena (čl. 8 st. 3): Fondacija se obaveštava. Jednom
+ * Peta potvrda u danu je odbijena (čl. 21 st. 3): Fondacija se obaveštava. Jednom
  * dnevno po članu — ponovljeni pokušaji istog dana ne šalju novo obaveštenje.
  * Ne baca: obaveštenje ne sme da pokvari odgovor korisniku.
  */
@@ -692,7 +692,7 @@ async function javiZaustavljanje(verifikatorId: string): Promise<void> {
     await logAdminAkcija(verifikatorId, "POTVRDJIVANJE_ZAUSTAVLJENO", verifikatorId, `pokušaj ${PRAG_ZAUSTAVLJANJA}. potvrde u danu`);
     await posaljiAdminAlert(
       "Potvrđivanje zaustavljeno do ponoći",
-      `Član „${u?.pseudonim ?? verifikatorId}" je pokušao ${PRAG_ZAUSTAVLJANJA}. potvrdu u istom danu (dokaz stvarnosti čl. 8). Potvrđivanje mu je zaustavljeno do ponoći; ostalo radi. Proceniti da li treba pokrenuti postupak iz Glave VIII ili suspenziju po Uslovima.`
+      `Član „${u?.pseudonim ?? verifikatorId}" je pokušao ${PRAG_ZAUSTAVLJANJA}. potvrdu u istom danu (dokaz stvarnosti čl. 21). Potvrđivanje mu je zaustavljeno do ponoći; ostalo radi. Proceniti da li treba pokrenuti postupak iz Glave IX ili suspenziju po Uslovima.`
     );
   } catch (e) {
     console.error("[verifikacija] obaveštenje o zaustavljanju nije poslato", e);
@@ -801,22 +801,22 @@ export async function izvrsiVerifikaciju(
  * Verifikacija BEZ jednokratnog koda — jedini put kojim ne upravlja čovek pred
  * ekranom, nego sam sistem.
  *
- * 🔴 Postoji ISKLJUČIVO zbog verifikacije pri punoletstvu (dokaz stvarnosti čl. 5b;
- * Modul Deca čl. 19 st. 3): prvi roditelj po redu povezivanja koji je član Kola,
+ * 🔴 Postoji ISKLJUČIVO zbog verifikacije pri punoletstvu (dokaz stvarnosti čl. 7;
+ * Pravilnik o učešću dece čl. 35 st. 4): prvi roditelj po redu povezivanja koji je član Kola,
  * odnosno osnivač, daje POTVRDU; ako takvog nema, prvi roditelj član bez potvrde daje
  * UVOĐENJE U KOLO; ako nijedan roditelj nije verifikovan, nalog ostaje korisnik.
  * Pozivalac (`punoletstvo.ts`) bira roditelja i šalje `vrsta`; jezgro vrstu ipak
- * izvodi iz stvarnog statusa roditelja — član bez potvrde uvek samo uvodi (čl. 5a st. 2).
+ * izvodi iz stvarnog statusa roditelja — član bez potvrde uvek samo uvodi (čl. 4 st. 2).
  *
  * 🔴 NE otvarati ovaj put ničemu drugom. Sve ostale verifikacije idu kroz
  * `izvrsiVerifikaciju`, gde jednokratni kod dokazuje da su se dvoje stvarno našli.
  *
- * Provere jezgra ostaju na snazi (lanac bez kruga, čl. 12). Dnevni tempo iz čl. 8 se
- * NE primenjuje (čl. 8 st. 5): verifikaciju daje sistem, ne čovek koji brzo potvrđuje.
+ * Provere jezgra ostaju na snazi (lanac bez kruga, čl. 28). Dnevni tempo iz čl. 21 se
+ * NE primenjuje (čl. 21 st. 5): verifikaciju daje sistem, ne čovek koji brzo potvrđuje.
  * Pozivalac hvata `VerifikacijaGreska` i preskače tu verifikaciju.
  *
  * 🔴 `bezUslovaZaPoen` — POEN po verifikaciji se upisuje ODMAH, bez traga stvarnog
- * učešća iz dokaza stvarnosti čl. 7 (čl. 7 st. 6). Koristi ga ISKLJUČIVO prelazak u
+ * učešća iz dokaza stvarnosti čl. 19 (čl. 19 st. 4). Koristi ga ISKLJUČIVO prelazak u
  * punoletstvo. Ne otvarati ga ničemu drugom.
  */
 export async function izvrsiVerifikacijuBezTokena(
@@ -842,11 +842,11 @@ export async function izvrsiVerifikacijuBezTokena(
 }
 
 /**
- * Potvrda sa spiska povezanih (dokaz stvarnosti čl. 5d): član Kola, odnosno osnivač,
+ * Potvrda sa spiska povezanih (dokaz stvarnosti čl. 17): član Kola, odnosno osnivač,
  * označava povezanog koga lično zna — bez koda i bez novog razgovora. Svaka označena
- * osoba je posebna potvrda člana bez potvrde (čl. 5a st. 4): ulazi u dnevni tempo,
- * podleže nadzoru po čl. 10, ne nosi POEN. Potvrda uvodioca (naviše) je izuzetak od
- * čl. 12 i uvek je u nadzoru (čl. 5d st. 3). Potvrđeni dobija sopstveni spisak.
+ * osoba je posebna potvrda člana bez potvrde (čl. 5): ulazi u dnevni tempo,
+ * podleže nadzoru po čl. 22, ne nosi POEN. Potvrda uvodioca (naviše) je izuzetak od
+ * čl. 28 i uvek je u nadzoru (čl. 17 st. 3). Potvrđeni dobija sopstveni spisak.
  */
 export async function potvrdiSaSpiskaPovezanih(
   potvrdilacId: string,
@@ -874,7 +874,7 @@ export async function potvrdiSaSpiskaPovezanih(
         if (!meta) throw new VerifikacijaGreska("Član koga potvrđuješ ne postoji.", 404);
         const upozorenjeDnevno = await proveriTempo(tx, potvrdilacId);
         const navise = povezan.smer === "NAVISE";
-        // Naniže važi zabrana iz čl. 12; naviše je izuzetak (čl. 5d st. 3).
+        // Naniže važi zabrana iz čl. 28; naviše je izuzetak (čl. 17 st. 3).
         if (!navise) await proveriKrug(tx, potvrdilacId, metaId);
         const p = await potvrdiClana(tx, {
           potvrdjeniId: metaId,
@@ -928,12 +928,13 @@ export async function potvrdiSaSpiskaPovezanih(
 export const MIN_OBRAZLOZENJE_FONDACIJE = 10;
 
 /**
- * Potvrda člana bez potvrde odlukom Fondacije (dokaz stvarnosti čl. 5a st. 3;
- * Pravilnik čl. 28a st. 4). Merila utvrđuje posebna odluka; dok je nema, radnju sme
- * samo superadmin, uz obavezno obrazloženje sa pozivom na odluku (otvoreno pitanje 2).
+ * Potvrda člana bez potvrde odlukom Fondacije (dokaz stvarnosti čl. 5 st. 1 t. 4;
+ * Pravilnik čl. 28 st. 3). Fondacija potvrđuje po sopstvenoj odluci, uz obrazloženje;
+ * merila posebnom odlukom ne postoje (brisana u setu 4.9.0). Radnju sme samo superadmin,
+ * a obrazloženje je obavezno.
  *
  * Nije nova verifikacija i ne nosi POEN; ne ulazi u dnevni tempo i ne podleže nadzoru
- * (čl. 9/10 je ne pominju) — trag ide u audit. Potvrđeni dobija spisak povezanih.
+ * (čl. 22 st. 2) — trag ide u audit. Potvrđeni dobija spisak povezanih.
  */
 export async function potvrdiClanaOdlukomFondacije(
   adminId: string,

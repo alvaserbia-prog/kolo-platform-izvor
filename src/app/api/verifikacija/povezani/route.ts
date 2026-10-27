@@ -1,5 +1,5 @@
 /**
- * Spisak povezanih (Pravilnik o dokazu stvarnosti čl. 5d; set 4.8.3).
+ * Spisak povezanih (Pravilnik o dokazu stvarnosti čl. 17; set 4.8.3).
  *
  * GET  — spisak za prijavljenog člana Kola: pseudonim i smer (NANIZE: koga je uveo
  *        dok je bio član bez potvrde; NAVISE: ko je njega uveo). Prazan za ostale.

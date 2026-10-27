@@ -1,10 +1,10 @@
 /**
- * Spisak za poziv — „Želim da me neko nazove" (dokaz stvarnosti čl. 4a; Uslovi čl.
- * 16b; set 4.8.3). Putanja ostaje iz seta 4.8.1 (CLAUDE.md pravilo 12).
+ * Spisak za poziv — „Želim da me neko nazove" (dokaz stvarnosti čl. 8–12;
+ * set 4.8.3). Putanja ostaje iz seta 4.8.1 (CLAUDE.md pravilo 12).
  *
  * GET    — član Kola: spisak (bez imena i brojeva telefona; zahteve radi potvrde
  *          samo čuvar); korisnik: sopstveni upis i osnovi van zahteva; član bez
- *          potvrde: sopstveni zahtev radi potvrde, uslovi iz čl. 5c st. 2 i da li je
+ *          potvrde: sopstveni zahtev radi potvrde, uslovi iz čl. 16 st. 1 i da li je
  *          upisao ZRNO (plutajuća kartica); dete: 403.
  * POST   — korisnik ulazi na spisak ili menja upis (telo nosi `osnov`); član bez
  *          potvrde sa osnovom POTVRDA.

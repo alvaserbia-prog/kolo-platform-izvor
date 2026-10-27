@@ -32,17 +32,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Profil gazdinstva (Pravilnik o gazdinstvima čl. 6 i 11).
+ * Profil gazdinstva (Pravilnik o gazdinstvima čl. 7 i 19).
  *
  * Odobreno gazdinstvo je javno: naziv, naselje, opis, tačka na mapi, oglasi u ime
  * gazdinstva i pseudonimi članova. Adresa se ispisuje uz tačku SAMO kad je data
- * izjava iz čl. 4 t. 3 (`adresaZaMapu`). 🔴 BPG se ne prikazuje nikome ovde.
+ * izjava iz čl. 5 st. 1 t. 3 (`adresaZaMapu`). 🔴 BPG se ne prikazuje nikome ovde.
  * Gazdinstvo koje nije odobreno vide samo njegovi članovi, pozvani i admin.
  *
  * Radnje člana se izvode iz statusa (set 4.8.2, `pravaUGazdinstvu`): upravlja
- * član Kola i podnosilac koji radi bez članova (čl. 9, 9a), poziva član Kola kad
- * gazdinstvo prima članove (čl. 4a, 7), a izjavu, izmenu podataka, izvod i
- * brisanje vodi lice koje odgovara za izjavu (čl. 9 st. 2, 11 st. 5).
+ * član Kola i podnosilac koji radi bez članova (čl. 11, 14), poziva član Kola kad
+ * gazdinstvo prima članove (čl. 4, 9), a izjavu, izmenu podataka, izvod i
+ * brisanje vodi lice koje odgovara za izjavu (čl. 12, 21).
  */
 export default async function GazdinstvoPage({ params }: Props) {
   const { id } = await params;
@@ -91,7 +91,7 @@ export default async function GazdinstvoPage({ params }: Props) {
         AND: [
           usloviVidljivostiOglasa(posmatrac),
           // Pre odobrenja oglas stoji u ime gazdinstva i kad je oglašivač tek
-          // pristupio; posle odobrenja oznaku nosi samo odobren član (čl. 10).
+          // pristupio; posle odobrenja oznaku nosi samo odobren član (čl. 18 st. 2).
           { clanstvaGazdinstva: { some: { gazdinstvoId: g.id, status: { in: odobreno ? ["ODOBREN"] : ["PRISTUPIO", "ODOBREN"] } } } },
         ],
       },
@@ -103,7 +103,7 @@ export default async function GazdinstvoPage({ params }: Props) {
   const javniClanovi = g.clanovi.filter((c) => c.status === (odobreno ? "ODOBREN" : "PRISTUPIO") || c.status === "ODOBREN");
   const jeClan = moje?.status === "PRISTUPIO" || moje?.status === "ODOBREN";
   const brojValidnih = jeClan || admin ? await brojOglasaUzPrijavu(g.id) : 0;
-  // Samo da li ime postoji — samo ime se ovde ne čita (evidencija identiteta, čl. 31a).
+  // Samo da li ime postoji — samo ime se ovde ne čita (evidencija identiteta, Pravilnik čl. 31).
   const imaIme = moje
     ? (await prisma.identitetNaloga.count({ where: { userId: moje.userId } })) > 0
     : false;

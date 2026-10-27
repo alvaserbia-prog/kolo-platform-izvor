@@ -1,5 +1,5 @@
 /**
- * Celine operativnog doprinosa (Pravilnik o operativnom doprinosu čl. 5, 6 i 18,
+ * Celine operativnog doprinosa (Pravilnik o operativnom doprinosu čl. 5, 6 i 15,
  * set 4.8.5; registar rizika 2026-10, S1-M1/M2). ČISTA pravila, bez Prisme.
  *
  * Zadatak se deli na celine — male delove posla, po pravilu takve da se jedna
@@ -9,9 +9,9 @@
  *
  * 🔴 Zašto: kada je izvršilac sam upisivao POEN za svaki dan rada, zapis je
  * ličio na dnevnicu koju čovek sam sebi zaračunava. Celina se određuje prema
- * delu posla, a ne prema utrošenom vremenu (čl. 6 st. 3) — zato je opis celine
+ * delu posla, a ne prema utrošenom vremenu (čl. 6 st. 1 i 3) — zato je opis celine
  * obavezan. 🔴 Predloženi POEN zadatka više ne može biti 0 („bez ograničenja"),
- * a procena obima rada je obavezna (čl. 5). Zatečeni zadaci bez celina
+ * a procena obima rada je obavezna (čl. 5 t. 4). Zatečeni zadaci bez celina
  * (`brojCelina = null`) rade po starom pravilu dok se ne zatvore; ne popunjavaju
  * se naknadno (pravilo 11).
  */
@@ -60,7 +60,7 @@ export function poenPoCelini(predlozeniPoen: number, brojCelina: number): number
 }
 
 /**
- * Izvršenje celina (čl. 18): izvršilac navodi broj izvršenih celina; predloženi
+ * Izvršenje celina (čl. 15): izvršilac navodi broj izvršenih celina; predloženi
  * POEN zapisa je broj celina × POEN po celini. Zbir celina (bez odbijenih) ne
  * prelazi broj celina zadatka.
  */

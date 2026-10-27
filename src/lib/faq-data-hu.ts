@@ -390,7 +390,7 @@ Ugyanaz a státusz, mint bármely más POEN-é. Nem átváltható, a rendszeren 
 
 Az ütem nem önkényes. Egy 24.000 POEN-es lépés csak akkor rögzül, amikor a rendszerben lévő POEN teljes mennyisége a következő 100.000-rel nő, és ebbe a küszöbbe maga az alapítói bejegyzés is beleszámít. Ez azt jelenti, hogy amíg a csatorna működik, az alapítói hozzájárulás minden újonnan bejegyzett POEN 24%-át teszi ki. Amikor a csatorna 2.400.000-ig kiürül, a rendszer 10.000.000 POEN-nel nőtt, és a csatorna véglegesen és visszavonhatatlanul bezárul. Ettől kezdve az alapítók részesedése csak csökken, mert a rendszer tovább nő, a csatorna pedig már nem működik.
 
-A nagyobb egyenleg nem ad arányosan nagyobb hatalmat. A szavazás a Felső Koloban négyzetes: a szavazatok száma az aktív ZRNO-k számának négyzetgyöke. Akinek százszor több ZRNO-ja van, annak tízszer több szavazata van, nem százszor, így a legnagyobb POEN-egyenleg sem ad ellenőrzést a döntések felett.
+A nagyobb egyenleg nem ad arányosan nagyobb hatalmat. A Felső Kolóban négyzetgyök szerint szavaznak: a szavazatok száma az aktív ZRNO-k számának négyzetgyöke. Akinek százszor több ZRNO-ja van, annak tízszer több szavazata van, nem százszor, így a legnagyobb POEN-egyenleg sem ad ellenőrzést a döntések felett.
 
 Mit ellenőrizhetsz. A bejegyzett teljes összeg, a megtett lépések száma és a határig hátralévő rész az Alapítói hozzájárulás oldalon érhető el. Az alapítók nyilvántartása álnevekkel és részesedésekkel, beleértve azt is, kinek mennyit jegyeztek be, a résztvevők számára hozzáférhető.`,
       },
@@ -591,27 +591,27 @@ A szövetkezeti tagok és minden más felhasználó nyilvántartásában lévő 
         pitanje: `Mik a szociális programok, és melyek léteznek?`,
         odgovor: `A részvétel egyes formái nem rögzíthetők egyedi cserékként, ezért vannak rájuk a szociális programok.
 
-A szociális programok azokat a csoportokat fedik le, amelyek részvétele a közösségben állandó és szétszórt: Anyák Támogatása (és más elsődleges gondviselőké), Idősek Támogatása, Különleges Támogatás (nehéz körülmények között élő felhasználók) és Tanulás. Amint a kérelmedet megerősítik, a Protokoll napi szinten, automatikusan rögzít neked POEN-t, az egyes tevékenységek bejelentése nélkül. Ez nem szociális segély és nem juttatás — ez az a mód, ahogyan az ilyen részvétel is egyenrangú helyet kap a rendszerben.
+A szociális programok azokat a csoportokat fedik le, amelyek részvétele a közösségben állandó és szétszórt: Anyák támogatása (és más elsődleges gondviselőké), Idősek támogatása, Különleges támogatás (nehéz körülmények között élő résztvevők) és Hallgatók támogatása. Amint a kérelmedet megerősítik, a Protokoll napi szinten, automatikusan rögzít neked POEN-t, az egyes tevékenységek bejelentése nélkül. Ez nem szociális segély és nem juttatás — ez az a mód, ahogyan az ilyen részvétel is egyenrangú helyet kap a rendszerben.
 
 Rajtuk kívül a Programokhoz tartoznak a hozzájárulások is: a platform tartalmához való hozzájárulás (az első hirdetés és a gazdaság), az működési hozzájárulás (munka a közös jóért közzétett feladatokon keresztül) és a gyerekhozzájárulás (a gyerekek részvétele a gyermektérben, lásd a „Gyerekek és szülők” szakaszt). Mindegyiket külön kérdés magyarázza.
 
-A szociális programokra a résztvevők jelentkezhetnek, a megerősítés nélküli tag is. A feltételek teljesülését a jóváhagyás előtt egy Kolo-tag erősíti meg, aki személyesen ismer, illetve az Alapítvány.`,
+A szociális programokra a résztvevők jelentkezhetnek, a megerősítés nélküli tag is. Kiskorú felhasználó nem jogosult támogatási programokra. A feltételek teljesülését a jóváhagyás előtt egy Kolo-tag erősíti meg, aki személyesen ismer, illetve az Alapítvány.`,
       },
       {
         id: 17,
-        pitanje: `Ki jelentkezhet az Anyák Támogatására?`,
+        pitanje: `Ki jelentkezhet az Anyák támogatására?`,
         odgovor: `Az anya vagy a gyerek más elsődleges gondviselője — a program a gyerekről való gondoskodást követi, nem kizárólag az anyaságot.
 
-Az összeg a gyerekek számától és korától függ: a gyerekenkénti alap csökken, ahogy a gyerek nő, a szorzó pedig minden további gyerekkel emelkedik, így a nagyobb családok arányosan nagyobb támogatást kapnak. A pontos összegek és példák az Anyák Támogatásának összegeiről szóló külön kérdésben szerepelnek.
+Az összeg a gyerekek számától és korától függ: a gyerekenkénti alap csökken, ahogy a gyerek nő, a szorzó pedig minden további gyerekkel emelkedik, így a nagyobb családok arányosan nagyobb támogatást kapnak. A pontos összegek és példák az Anyák támogatásának összegeiről szóló külön kérdésben szerepelnek.
 
-A kérelem a platformon keresztül megy — a gyerekek adatait űrlapon adod meg, dokumentumok csatolása nélkül.`,
+A kérelem a platformon keresztül megy: minden gyereknek csak a születési dátumát adod meg, dokumentumok csatolása nélkül.`,
       },
       {
         id: 79,
-        pitanje: `Naponta hány POEN-t hoz gyerekenként az Anyák Támogatása, és hogyan hat az összegre a gyerekek száma és kora?`,
+        pitanje: `Naponta hány POEN-t hoz gyerekenként az Anyák támogatása, és hogyan hat az összegre a gyerekek száma és kora?`,
         odgovor: `Minden gyerekre a kiinduló napi alap 2.000 POEN, csökkentve 100 POEN-nel a gyerek életkorának minden éve után — a támogatás fokozatosan csökken, ahogy a gyerek nő, és megszűnik, amikor a gyerek betölti a 20. évét.
 
-A gyerekek száma növeli a teljes összeget, de nem egyszerű összeadással: minden további gyerek nagyobb szorzót hordoz. Az első gyerek ×1,00, a második ×1,20, a harmadik ×1,50, a negyedik ×2,00, az ötödik ×3,00, a hatodik ×4,50, a hetedik ×6,00, a nyolcadik ×8,00, a kilencedik ×10,00. Így a nagyobb családok arányosan nagyobb támogatást kapnak.
+A gyerekek száma növeli a teljes összeget, de nem egyszerű összeadással: minden további gyerek nagyobb szorzót hordoz. A gyerek sorszámát születés szerint, a legidősebbtől kezdve határozzák meg, nem a dátumok megadásának sorrendje szerint. Az első gyerek ×1,00, a második ×1,20, a harmadik ×1,50, a negyedik ×2,00, az ötödik ×3,00, a hatodik ×4,50, a hetedik ×6,00, a nyolcadik ×8,00, a kilencedik ×10,00. Így a nagyobb családok arányosan nagyobb támogatást kapnak.
 
 Példa: egy hároméves gyerek — (2.000 − 300) × 1,00 = 1.700 POEN naponta. Ugyanez a gyerek harmadikként — (2.000 − 300) × 1,50 = 2.550 POEN naponta.
 
@@ -619,8 +619,8 @@ A támogatás automatikusan, napi szinten rögzül, amíg a státusz tart, az eg
       },
       {
         id: 61,
-        pitanje: `Mi az „Idősek Támogatása” — ki jogosult és hogyan jelentkezem?`,
-        odgovor: `Az Idősek Támogatása szociális program az 50 éves és idősebb résztvevők számára.
+        pitanje: `Mi az „Idősek támogatása” — ki jogosult és hogyan jelentkezem?`,
+        odgovor: `Az Idősek támogatása szociális program az 50 éves és idősebb résztvevők számára.
 
 A napi összeg az életkorral nő: a betöltött 50. életévtől 1.000 POEN, minden további évvel 100 POEN-nel több — a 65 éves résztvevő napi 2.500 POEN-t, a 80 éves résztvevő napi 4.000 POEN-t kap.
 
@@ -628,8 +628,8 @@ A jelentkezés a platformon keresztül történik, és a résztvevők számára 
       },
       {
         id: 18,
-        pitanje: `Mi a Különleges Támogatás és hogyan lehet jelentkezni?`,
-        odgovor: `A Különleges Támogatás a nehéz körülmények között élő felhasználók programja. Két jogalap van.
+        pitanje: `Mi a Különleges támogatás és hogyan lehet jelentkezni?`,
+        odgovor: `A Különleges támogatás a nehéz körülmények között élő résztvevők programja. Két jogalap van.
 
 Az első a csökkent képesség: van olyan határozatod az illetékes hatóságtól, amely a fogyatékosság fokát megállapította — ideértve a munkaképesség-értékelő bizottság határozatát is —, vagy akut, illetve krónikus betegség miatt nem tudsz részt venni, vagy ebben lényegesen korlátozott vagy. Ha a csökkent képességű személy nagykorú résztvevő, a jogosultság az övé; ha nem résztvevő, azé, aki közvetlenül gondoskodik róla; ha kiskorú, a szülőé, annak nagykorúvá válásáig. Egy ilyen helyzetből egy összeg jár — a jogalap csak azt dönti el, kinek a nyilvántartásába.
 
@@ -637,34 +637,34 @@ A második az otthon elvesztése: elemi csapásban, tűzvészben, árvízben vag
 
 A jelentkezéskor csak azt kérdezzük, LÉTEZIK-e a határozat — nem a tartalmát, nem a fokot, nem a munkaképesség értékelését, nem a diagnózist, nem az orvosi dokumentációt. Betegség és otthonvesztés esetén az igazolás a nyilatkozatod, egyetlen okirat nélkül, egy téged személyesen ismerő Kolo-tag, illetve az Alapítvány megerősítésével.
 
-Az összeg fix, napi 2.000 POEN, minden jogalap esetén ugyanannyi. Ez a program nem zárja ki az Anyák Támogatását — mindkettőt megkapod, akkor is, ha mindkettő ugyanarra a gyerekre vonatkozik.
+Az összeg fix, napi 2.000 POEN, minden jogalap esetén ugyanannyi. Ez a program nem zárja ki az Anyák támogatását — mindkettőt megkapod, akkor is, ha mindkettő ugyanarra a gyerekre vonatkozik.
 
-A résztvevők látják, hogy Különleges Támogatást kapsz, és mennyit, mert a közösség nyilvántartásának ellenőrizhetőnek kell lennie. De NEM látják, milyen jogalapon — a program pedig a csökkent képességet és az otthon elvesztését egyaránt magában foglalja, így a megnevezés semmit nem árul el. A jogalapot te látod, és az a személy, aki a kérelmet az Alapítványnál feldolgozza.`,
+A résztvevők látják, hogy Különleges támogatást kapsz, és mennyit, mert a közösség nyilvántartásának ellenőrizhetőnek kell lennie. De NEM látják, milyen jogalapon — a program pedig a csökkent képességet és az otthon elvesztését egyaránt magában foglalja, így a megnevezés semmit nem árul el. A jogalapot te látod, és az a személy, aki a kérelmet az Alapítványnál feldolgozza.`,
       },
       {
         id: 96,
-        pitanje: `Mi a Tanulás program, és kikre vonatkozik?`,
-        odgovor: `A Tanulás szociális program azoknak, akik tanulnak: általános és középiskolás tanulóknak és egyetemi hallgatóknak.
+        pitanje: `Mi a Hallgatók támogatása program, és kikre vonatkozik?`,
+        odgovor: `A Hallgatók támogatása szociális program azoknak a résztvevőknek, akik nappali tagozaton be vannak iratkozva egy felsőoktatási intézménybe. Az általános és középiskolás tanulókra nem terjed ki, kiskorú felhasználó pedig nem jogosult támogatási programokra.
 
-A napi összeg fix, 2.000 POEN, amíg a jogállás fennáll. A jogállást évente egyszer ellenőrzik; ha a felülvizsgálatkor nem erősítik meg, a bejegyzés megszűnik.
+A napi összeg fix, 2.000 POEN, amíg a jelentkezés érvényes. A jogosultságot a jóváhagyástól számítva hathavonta ellenőrzik: e határidő lejártával a jelentkezés érvényét veszti, és ha továbbra is hallgató vagy, új jelentkezést nyújtasz be új nyilatkozattal.
 
-A jelentkezés ugyanazok szerint a szabályok szerint történik, mint a többi szociális programnál: a platformon keresztül, az adatok űrlapba való beírásával (ennél a programnál a beíratott osztály, illetve évfolyam), dokumentumok csatolása nélkül. Gyermek helyett a kérelmet a szülő nyújtja be, és a jogosultság addig tart, amíg a gyerek fiókja Kolo-gyermek.`,
+A jelentkezés ugyanazok szerint a szabályok szerint történik, mint a többi szociális programnál: a platformon keresztül, dokumentumok csatolása nélkül. A bizonyíték a teljes felelősséged tudatában tett nyilatkozatod, amelyben megadod az intézményt és az évfolyamot; beiratkozási igazolást és más igazolásokat nem kérünk. A valótlan nyilatkozat a Felhasználási feltételekben előírt intézkedéseket és az e program szerinti bejegyzés megszűnését vonja maga után.`,
       },
       {
         id: 62,
         pitanje: `Mi a „státusz igazolása” a szociális programnál — be kell nyújtanom anyakönyvi kivonatot vagy a gyerek dokumentumát?`,
         odgovor: `Egyetlen dokumentumot sem csatolsz, semmit nem kell beszkennelni vagy elküldeni.
 
-Az adatokat a platformon egy űrlapba írod be: az Anyák Támogatásánál például a gyerek nevét és születési dátumát. A neked rögzülő összeg a gyerekek számától és életkorától függ.
+Az adatokat a platformon egy űrlapba írod be: az Anyák támogatásánál például csak minden gyerek születési dátumát. A neked rögzülő összeg a gyerekek számától és életkorától függ.
 
-A feltételek teljesülését ezután, a beírt adatokba való betekintés nélkül egy Kolo-tag erősíti meg, aki személyesen ismer: aki megerősített, vagy egy másik Kolo-tag, aki ismer. Az a Kolo-tag, aki csak telefonos beszélgetés után vezetett be a Kolóba, valamint a megerősítés nélküli tag erre nem jogosult; ha ilyen Kolo-tag nincs, a feltételek teljesülését az Alapítvány állapítja meg. A kérelmet ezután az Alapítvány hagyja jóvá. A beírt adatok nem nyilvánosak: csak az látja őket, aki a kérelmet feldolgozza. Érzékeny adatokról van szó, ezért csak a kifejezett hozzájárulásoddal kezelik őket, a hozzájárulást pedig bármikor visszavonhatod — ekkor a POEN automatikus bejegyzése is megszűnik.
+A feltételek teljesülését ezután, a beírt adatokba való betekintés nélkül egy Kolo-tag erősíti meg, aki személyesen ismer: aki megerősített, vagy egy másik Kolo-tag, aki ismer. Az a Kolo-tag, aki telefonos beszélgetés után vezetett be a Kolóba vagy erősített meg, valamint a megerősítés nélküli tag erre nem jogosult; ha ilyen Kolo-tag nincs, a feltételek teljesülését az Alapítvány állapítja meg. A kérelmet ezután az Alapítvány hagyja jóvá. A beírt adatok nem nyilvánosak: csak az látja őket, aki a kérelmet feldolgozza. Érzékeny adatokról van szó, ezért csak a kifejezett hozzájárulásoddal kezelik őket, a hozzájárulást pedig bármikor visszavonhatod — ekkor a POEN automatikus bejegyzése is megszűnik.
 
 Az egyes csoportok jogállásának megerősítésére vonatkozó részletes feltételeket a honlapon közzétett, Támogatási programokról szóló szabályzat határozza meg.`,
       },
       {
         id: 20,
         pitanje: `Lehetek egyszerre több programban?`,
-        odgovor: `Igen, ha több program feltételeinek is megfelelsz — az az anya, aki tanul, lehet az Anyák Támogatásában és a Tanulásban is. Minden programra külön kell jelentkezni.
+        odgovor: `Igen, ha több program feltételeinek is megfelelsz — az az anya, aki egyetemre jár, lehet az Anyák támogatásában és a Hallgatók támogatásában is. Minden programra külön kell jelentkezni.
 
 A szociális programok és a működési hozzájárulás közös napi keretet osztanak, amely a rendszerben lévő POEN teljes mennyiségének 10%-a, hogy ne rögzüljön túl sok POEN egyszerre — ha több a hozzájárulás, mint amennyit a keret befogad, a napi összegek arányosan csökkennek. A platform tartalmához való hozzájárulás és a gyerekhozzájárulás nem tartozik ebbe a keretbe.`,
       },
@@ -675,7 +675,7 @@ A szociális programok és a működési hozzájárulás közös napi keretet os
 
 Első hirdetés: amikor közzéteszed az első szabályos hirdetésedet, amellyel árut vagy szolgáltatást kínálsz, 1.000 POEN rögzül neked, mégpedig akkor, amikor az Alapítvány jóváhagyja a hirdetést. Ez a hozzájárulás fiókonként egyszer rögzül, függetlenül attól, hány hirdetést teszel közzé később.
 
-Gazdaság: amikor a gazdaságodat jóváhagyják, illetve amikor csatlakozol hozzá, feljegyzik neked a gazdaság hozzájárulását (a tagonkénti összeget a KOLO rendszer szabályzatának 40c. cikke határozza meg). Akkor jegyzik be, amikor közzéteszel egy hirdetést, amellyel kínálsz valamit, és amikor belépsz a Kolóba, megerősítéssel vagy bevezetéssel.
+Gazdaság: amikor a gazdaságodat jóváhagyják, illetve amikor csatlakozol hozzá, feljegyzik neked a gazdaság hozzájárulását (a tagonkénti összeget a gazdaságokról szóló szabályzat 15. cikke határozza meg). Akkor jegyzik be, amikor közzéteszel egy hirdetést, amellyel kínálsz valamit, és amikor belépsz a Kolóba, megerősítéssel vagy bevezetéssel.
 
 A csere önmagában nem jegyez be új POEN-t: amikor valakinek átírsz POEN-t, az csak a te nyilvántartásodból az övébe kerül át. Semmit sem kell bejelentened.`,
       },
@@ -959,7 +959,7 @@ Az Alapítvány nem ad adótanácsot, és nem részese a cserédnek: a teljesít
         pitanje: `Hat-e a KOLO rendszerben való részvétel és a POEN a nyugdíjamra vagy a szociális juttatásaimra?`,
         odgovor: `A rendszer felől nézve — nem. A POEN nem pénz, nem kereset és nem jövedelem: belső nyilvántartási bejegyzés arról, mit adtál a közösségnek, és nem alakítható át a rendszeren kívül értékkel bíró eszközzé. Az Alapítvány semmilyen jogcímen nem fizet neked pénzt: a bejegyzéssel sem pénzt, sem dolgot nem kapsz, semmi nem kerül át a vagyonából a tiédbe, a bejegyzés pedig nem tehető pénzzé, nem engedményezhető és nem érvényesíthető. Ezen a jogcímen ezért pénzben kifejezett összeg sincs.
 
-Ha a POEN valamelyik szociális programon keresztül rögzül neked (például elsődleges gondviselőként, idősebb személyként vagy a Tanulás révén), az sem térítés — nem fizet meg semmilyen munkát vagy szolgáltatást, és cserébe semmit nem kérnek tőled. Ez a nyilvántartás automatikus frissítése, amely az ilyen részvételnek egyenrangú helyet ad a rendszerben, a programot pedig az Alapítvány alapszabály szerinti céljainak megvalósítása érdekében hajtják végre.
+Ha a POEN valamelyik szociális programon keresztül rögzül neked (például elsődleges gondviselőként, idősebb személyként vagy hallgatóként), az sem térítés — nem fizet meg semmilyen munkát vagy szolgáltatást, és cserébe semmit nem kérnek tőled. Ez a nyilvántartás automatikus frissítése, amely az ilyen részvételnek egyenrangú helyet ad a rendszerben, a programot pedig az Alapítvány alapszabály szerinti céljainak megvalósítása érdekében hajtják végre.
 
 Meg kell azonban különböztetni a POEN-t attól, amit a rendszeren kívül csinálsz. Mindaz, amiért pénzt kérsz, a te tevékenységed, amelyre az általános szabályok vonatkoznak — és ennek következményei lehetnek a jogállásodra nézve, attól függően, mit és milyen mértékben csinálsz.
 
@@ -985,9 +985,9 @@ Az adományok adatait az Alapítvány a pénzügyi beszámolásra vonatkozó sza
         pitanje: `Ki irányítja a KOLO-t?`,
         odgovor: `Jelenleg (1. fázis) minden döntést a KOLO Alapítvány hoz meg az Igazgatóságon keresztül.
 
-Amint a bejegyzett POEN összmennyisége eléri az 1.000.000-t, aktiválódik a Felső Kolo — az a testület, amelyet a ZRNO-t aktiváló Kolo-őrzők alkotnak, és amely a kulcsfontosságú rendszerkérdésekről négyzetes szavazással dönt.
+Amint a bejegyzett POEN összmennyisége eléri az 1.000.000-t, aktiválódik a Felső Kolo — az a testület, amelyet a ZRNO-t aktiváló Kolo-őrzők alkotnak, és amely a kulcsfontosságú rendszerkérdésekről négyzetgyök szerinti szavazással dönt.
 
-Ettől a pillanattól az Alapítvány szolgáltató szerepet tölt be: a Protokoll szabályairól nem saját belátása szerint dönt, hanem az Igazgatóság végrehajtja a Felső Kolo döntéseit, és közben nem mérlegeli azok célszerűségét. Döntést csak a Szabályzatban kifejezetten megjelölt okokból utasíthat el (törvénybe vagy az Alapszabályba ütközés, a Felső Kolo hatáskörén kívül eső kérdés, védelmi vétó annak tartama alatt), nyilvánosan közzétett indoklással. A dináreszközökről a Felső Kolo ajánlásokat tesz, amelyekre az Igazgatóság indokoltan válaszol.`,
+Ettől a pillanattól az Alapítvány szolgáltató szerepet tölt be: a Protokoll szabályairól nem saját belátása szerint dönt, hanem az Igazgatóság végrehajtja a Felső Kolo döntéseit, és közben nem mérlegeli azok célszerűségét. Döntést csak a Szabályzatban kifejezetten megjelölt okokból utasíthat el (törvénybe vagy az Alapszabályba ütközés, a Felső Kolo hatáskörén kívül eső kérdés), nyilvánosan közzétett indoklással. A dináreszközökről a Felső Kolo ajánlásokat tesz, amelyekre az Igazgatóság indokoltan válaszol.`,
       },
       {
         id: 27,
@@ -1013,39 +1013,23 @@ Mivel az aktív ZRNO-k száma folyamatosan változik, a Felső Kolo összetétel
 
 Automatikusan aktiválódik, amikor a bejegyzett POEN összmennyisége eléri az 1.000.000-t (a Protokoll nyilvántartásában ez −1.000.000-es egyenleg), ami azt jelzi, hogy a rendszer kellően aktív, és a résztvevők jelentős közös felelősséget viselnek.
 
-Addig minden döntést az Alapítvány hoz; ezt követően a kulcsfontosságú rendszerdöntéseket (a Szabályzat módosításai, új programok, programok felfüggesztése) a Felső Kolo hozza négyzetes szavazással. A Felső Kolo nem az Alapítvány szerve: döntését az Igazgatóságnak továbbítja, amely végrehajtja.`,
+Addig minden döntést az Alapítvány hoz; ezt követően a kulcsfontosságú rendszerdöntéseket (a Szabályzat módosításai, új programok, programok felfüggesztése) a Felső Kolo hozza négyzetgyök szerinti szavazással. A Felső Kolo nem az Alapítvány szerve: döntését az Igazgatóságnak továbbítja, amely végrehajtja.
+
+Javaslatot bármely résztvevő (megerősítés nélküli tag, Kolo-tag, Kolo-őrző) benyújthat, mégpedig egyenként: amíg a javaslatáról folyó eljárás tart, újat nem nyújt be. Az eljárás három napig tart, éjféltől éjfélig. Az első napon benyújtják a javaslatot, és attól kezdve minden felhasználó látja. A második napon a Felső Kolo Kolo-őrzői támogathatják; a támogatás nem szavazat, nem kötelez „mellette” szavazásra, és nem ruházható át, a Felső Kolóhoz tartozó Kolo-őrző javaslata pedig már a benyújtással támogatottnak minősül. A harmadik napon a támogatott javaslatról a Felső Kolo szavaz. Az a javaslat, amelyet senki sem támogat, szavazás nélkül lezárul, és bekerül a döntések nyilvántartásába. Az Alapítvány nem dönt arról, hogy a javaslatról szavaznak-e.
+
+Az el nem fogadott vagy nem támogatott, azonos tartalmú javaslat csak 30 nap elteltével nyújtható be újra. A javaslattevő és a javaslatot támogatók álnevét csak a résztvevők látják, a támogatások számát pedig minden felhasználó látja.`,
       },
       {
         id: 29,
-        pitanje: `Mi az a négyzetes szavazás?`,
-        odgovor: `Olyan szavazási mód, amelyben a szavazóerő a ZRNO-k számának négyzetgyökeként nő: 1 ZRNO — 1 szavazat, 100 ZRNO — 10 szavazat, 10.000 ZRNO — 100 szavazat.
+        pitanje: `Mi az a négyzetgyök szerinti szavazás?`,
+        odgovor: `Olyan szavazási mód, amelyben a Kolo-őrző szavazóereje aktív ZRNO-i számának lefelé kerekített négyzetgyöke: 1 ZRNO 1 szavazatot ad, 100 ZRNO 10 szavazatot, 10.000 ZRNO 100 szavazatot.
 
 A cél, hogy senki ne dönthesse el a kérdést pusztán a ZRNO mennyiségével: a befolyás sokkal lassabban nő, mint a ZRNO száma, így a döntést inkább a részvétel szélessége viszi el, mint a hatalom koncentrációja.`,
-      },
-      {
-        id: 30,
-        pitanje: `Mi az Alapítvány védelmi vétója?`,
-        odgovor: `Amíg az Alapítvány nem pénzügyileg önálló, megtagadhatja a Felső Kolo olyan döntésének végrehajtását, amely veszélyeztetné a működési és pénzügyi fenntarthatóságát — mindenekelőtt a források elköltéséről szóló döntésekét (a közösségi beszerzéseket is beleértve), amelyek aláásnák az Alapítvány képességét az alapköltségek fedezésére és a rendszer fenntartására.
-
-A vétó nem mérlegelési jogkör: konkrét fenntarthatósági fenyegetésre hivatkozva meg kell indokolni, az indokolás nélküli vétó pedig önmagában visszaélés. Ez nem politikai ellenőrzés, hanem a rendszer folytonosságának védelme.
-
-A vétó véglegesen és egy irányban szűnik meg, amint az Alapítvány forrásai elérik a pénzügyi önállóság küszöbét — az előző havi működési költség háromszorosát, amelyet a Felső Koloról szóló szabályzat állapít meg.`,
       },
       {
         id: 120,
         pitanje: `Mi a megerősítések felügyelete?`,
         odgovor: `A felügyelet a megerősítések és bevezetések utólagos átvizsgálása. Minden Kolo-őrző végzi, soha nem olyan ügyben, amelyben maga is részt vett. Átvizsgálja a megerősítés nélküli tagok és a nem őrző Kolo-tagok által adott megerősítéseket és bevezetéseket, minden telefonos beszélgetés utáni megerősítést, valamint annak megerősítését, aki a megerősítőt bevezette. A hívási listáról történő bevezetés mindig felügyeletre kerül, kivéve, ha alapító adja. Felügyelet nélküliek az alapítók megerősítései és bevezetései, az őrzők egyéb megerősítései és bevezetései, valamint az a megerősítés, amelyet az Alapítvány saját döntésével ad. A felügyelet nem változtat a megerősítés hatályán, és nem jár érte díjazás.`,
-      },
-      {
-        id: 72,
-        pitanje: `Mit változtatnak pontosan a Kolo-őrzők a „teljes önigazgatásban”, és mikor kezdődik ez?`,
-        odgovor: `Két külön küszöb van, és könnyű összekeverni őket.
-
-Az első küszöb: a Felső Kolo aktiválása. Amikor a rendszerben bejegyzett POEN összmennyisége eléri az 1.000.000-t (ami a Protokoll nyilvántartásában −1.000.000-es egyenlegnek felel meg), automatikusan megnyílik a ZRNO jegyzése, és létrejön a Felső Kolo, az a testület, amelyet a ZRNO-t aktiváló Kolo-őrzők alkotnak. Ettől a pillanattól a Kolo-őrzők négyzetes szavazással döntenek a rendszer szabályairól: a Szabályzat módosításairól, a programokról és más, a közös jót érintő kérdésekről. Az Alapítvány szuverén szervből végrehajtó és szolgáltató szervvé válik, a döntéseket végrehajtja, nem maga hozza.
-
-A második küszöb: a védelmi vétó megszűnése. Amíg az Alapítvány pénzügyileg nem önálló, védelmi vétóval rendelkezik: megtagadhatja a Felső Kolo olyan döntésének végrehajtását, amely veszélyeztetné működési fenntarthatóságát, mindenekelőtt az eszközök elköltéséről szóló döntésekét, például a közös beszerzésekét, mielőtt a fenntarthatóság biztosított. A vétót indokolni kell, nem önkényes. Véglegesen és egyirányúan csak akkor szűnik meg, amikor az Alapítvány eszközei elérik a pénzügyi önállóság küszöbét, az előző havi működési költség háromszorosát, amelyet a Felső Koloról szóló szabályzat határoz meg.
-
-A Felső Kolo aktiválásáig (1. fázis) minden döntést az Alapítvány hoz az Igazgatóságon keresztül.`,
       },
     ],
   },

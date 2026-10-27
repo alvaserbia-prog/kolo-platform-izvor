@@ -8,7 +8,7 @@ import { listaUpisaZaAdmina } from "@/lib/protokol/upis-pokrovitelja";
 
 /**
  * GET /api/admin/pokroviteljstvo/upisi — upisi pokrovitelja u evidenciju (donacije
- * čl. 6a) za administratorski tim: podaci za poređenje sa registrom (naziv, MB,
+ * čl. 16–18) za administratorski tim: podaci za poređenje sa registrom (naziv, MB,
  * zastupnik), kontakt, izmena na proveri i lista zabrane. Samo admin.
  */
 export async function GET() {

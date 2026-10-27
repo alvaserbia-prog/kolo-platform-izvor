@@ -1,39 +1,39 @@
 /**
  * Doprinos sadržaju platforme — osmi kanal evidentiranja POEN-a.
- * Osnov: Pravilnik o KOLO sistemu 4.1.1 čl. 15 tačka 8 i čl. 40a.
+ * Osnov: Pravilnik o KOLO sistemu čl. 19 st. 1 t. 8 i čl. 38.
  *
  * Suština kanala je u tome što BELEŽENJE i EVIDENTIRANJE nisu isti trenutak:
  *
  *   objavljen oglas  →  ZABELEZEN — oglas je odmah na Pijaci, ali doprinos nije
  *                       zapis POEN-a: ne ulazi ni u jedno stanje, ni u opticaj,
  *                       ni u agregate
- *   pa ODOBRENJE FONDACIJE (čl. 40a)  →  EVIDENTIRAN
+ *   pa ODOBRENJE FONDACIJE (čl. 38)  →  EVIDENTIRAN
  *
  * 🔴 Od seta 4.6.4 odobrenje važi za SVAKI prvi oglas — i potvrđenog i
  * nepotvrđenog člana. Ranije se verifikovanom doprinos evidentirao odmah pri
  * objavi, a čekanje je važilo samo za nalog bez potvrde.
  *
  * Razlog za proširenje: odobren oglas od tog seta otključava i POEN po potvrdi
- * (1.000 verifikatoru i 1.000 verifikovanom, dokaz stvarnosti čl. 7), pa jedan
+ * (1.000 verifikatoru i 1.000 verifikovanom, dokaz stvarnosti čl. 19), pa jedan
  * klik upisuje najmanje 3.000 POEN-a. Takav upis ne sme da nastane bez ijedne
  * ljudske odluke, a oglas koji formalno ispunjava sadržinski minimum ne mora biti
  * stvarna ponuda.
  *
  * 🔴 UKLONJENI OKIDAČI `VERIFIKACIJA` I `PRIMLJEN_POEN`. Bez toga bi odobrenje
  * bilo šupljikavo: potvrda bi evidentirala oglas koji čovek iz UO nikad nije
- * pogledao, a uz to bi nastao krug — potvrda otključava čl. 40a, a čl. 40a
+ * pogledao, a uz to bi nastao krug — potvrda otključava čl. 38, a čl. 38
  * otključava POEN po potvrdi. Enum vrednosti ostaju u bazi jer ih nose zatečeni
  * zapisi; kod ih više ne koristi.
  *
  * 🔴 Odobrenje NIJE diskreciona odluka da se nekome dâ POEN. Fondacija utvrđuje
  * da je uslov ispunjen — proverava sadržinski minimum i da je reč o stvarnoj
- * ponudi (čl. 40a). Razlika nije stilska: POEN nije naknada i niko o njemu ne
- * odlučuje (Pravilnik čl. 13, operativni čl. 27), pa se ni ovde ne sme pisati
+ * ponudi (čl. 38 st. 3). Razlika nije stilska: POEN nije naknada i niko o njemu ne
+ * odlučuje (Pravilnik čl. 16, operativni čl. 24), pa se ni ovde ne sme pisati
  * ni govoriti da ga Fondacija „dodeljuje".
  *
  * Bez čekanja bi pedeset praznih naloga sa pedeset oglasa naduvalo opticaj — a
  * opticaj okida osnivački korak od 24.000 POEN-a i gasi prelazno ograničenje iz
- * čl. 22 Pravilnika o dokazu stvarnosti.
+ * ranijeg čl. 22 Pravilnika o dokazu stvarnosti (brisan u setu 5.0).
  *
  * Obrazac poziva (obavezan):
  *   - DB promene u jednoj `prisma.$transaction()`
@@ -66,7 +66,7 @@ export * from "@/lib/doprinos-pravila";
  * `userId`, ne kod — ni dve paralelne objave, ni izmena oglasa čiji je doprinos
  * već zabeležen ili evidentiran, ne mogu da zabeleže drugi doprinos.
  *
- * VERIFIKOVANOM korisniku doprinos se odmah i evidentira (čl. 40a st. 3): čekanje
+ * VERIFIKOVANOM korisniku doprinos se odmah i evidentira (do seta 4.6.4; sada i njegov prvi oglas čeka odobrenje, Pravilnik čl. 38 st. 2): čekanje
  * postoji da prazan nalog ne naduva opticaj, a nalog čija je stvarnost potvrđena
  * nije prazan nalog. NEVERIFIKOVANOM ostaje zabeležen dok ga Fondacija ne odobri
  * (ili dok ne nastupi verifikacija odn. primljen POEN — st. 4); admin se o tome
@@ -85,7 +85,7 @@ export async function zabeleziDoprinos(
   if (oglas.tip !== "PONUDA") return false;
   if (!oglasIspunjavaMinimum(oglas).ok) return false;
 
-  // 🔴 Modul Deca, čl. 14 st. 1: kanali doprinosa sadržaju i doprinosa razmeni se na
+  // 🔴 Pravilnik o učešću dece, čl. 33 st. 1: kanali doprinosa sadržaju i doprinosa razmeni se na
   // maloletne korisnike NE primenjuju. Bez ovoga bi prvi oglas svakog deteta emitovao
   // 1.000 POEN, pa bi dečji nalozi pomerali opticaj — a preko njega osnivački korak
   // od 24.000 POEN-a, koji se pali na svakih 100.000 POEN-a opticaja.
@@ -112,15 +112,15 @@ export async function zabeleziDoprinos(
   await logAdminAkcija(userId, "DOPRINOS_SADRZAJU_ZABELEZEN", oglas.id, `${IZNOS} POEN`);
 
   // 🔴 SVAKI prvi oglas ide na odobrenje — i potvrđenog i nepotvrđenog člana
-  // (set 4.6.4, čl. 40a). Do tada se verifikovanom doprinos evidentirao odmah pri
+  // (set 4.6.4, čl. 38). Do tada se verifikovanom doprinos evidentirao odmah pri
   // objavi, a čekanje je važilo samo za nalog bez potvrde.
   //
   // Razlog za proširenje: od ovog seta odobren oglas otključava i POEN po potvrdi
-  // (1.000 verifikatoru i 1.000 verifikovanom, dokaz stvarnosti čl. 7), pa jedan klik
+  // (1.000 verifikatoru i 1.000 verifikovanom, dokaz stvarnosti čl. 19), pa jedan klik
   // upisuje najmanje 3.000 POEN-a. Takav upis ne sme da nastane bez ijedne ljudske
   // odluke, a oglas koji formalno ispunjava sadržinski minimum ne mora biti stvarna
   // ponuda. Odobrenje NIJE diskreciona odluka da se nekome dâ POEN — Fondacija
-  // utvrđuje da je uslov ispunjen (čl. 40a: proverava minimum i stvarnu ponudu).
+  // utvrđuje da je uslov ispunjen (čl. 38 st. 3: proverava minimum i stvarnu ponudu).
   const korisnik = await prisma.user.findUnique({
     where: { id: userId },
     select: { pseudonim: true },
@@ -171,7 +171,7 @@ async function najaviNaCekanju(userId: string, pseudonim: string, oglasId: strin
 }
 
 /**
- * Fondacija odobrava doprinos za prvi oglas (čl. 40a st. 4) — glavni put za nalog
+ * Fondacija odobrava doprinos za prvi oglas (čl. 38 st. 2) — glavni put za nalog
  * bez potvrde. Emituje 1.000 POEN i javlja korisniku.
  *
  * Idempotentno: prelaz se rezerviše uslovnim `updateMany` u `probajEvidentirati`,
@@ -249,7 +249,7 @@ export async function odbijDoprinos(
 
 /**
  * Poništava zabeležen doprinos kad je oglas uklonjen zbog povrede Uslova pre nego
- * što je doprinos evidentiran (čl. 40a st. 4). Već evidentiran doprinos se NE dira —
+ * što je doprinos evidentiran (čl. 38 st. 4). Već evidentiran doprinos se NE dira —
  * zapis POEN-a je nastao i ne poništava se unazad.
  *
  * Poništenje ne oslobađa kanal: `userId` ostaje zauzet, pa se doprinos ne može
@@ -287,7 +287,7 @@ async function javiEvidentiran(userId: string, doprinosId: string, iznos: number
       naslov: `Evidentiran ti je doprinos od ${iznos.toLocaleString("sr-RS")} POEN`,
       tekst:
         `Za oglas kojim nudiš dobro ili uslugu evidentiran ti je doprinos sadržaju ` +
-        `platforme — ${iznos.toLocaleString("sr-RS")} POEN (Pravilnik čl. 40a).`,
+        `platforme — ${iznos.toLocaleString("sr-RS")} POEN (Pravilnik čl. 38).`,
       link: "/novcanik",
     });
     await prisma.doprinosSadrzaju.update({
@@ -352,7 +352,7 @@ export async function probajEvidentirati(
         zabelezen.iznos,
         TransactionType.EMISIJA_SADRZAJ,
         // Opis imenuje konkretnu aktivnost, ne kanal: danas je jedina aktivnost
-        // ovog kanala prvi oglas (čl. 40a). Nova aktivnost dobija svoj ključ.
+        // ovog kanala prvi oglas (čl. 38). Nova aktivnost dobija svoj ključ.
         "Prvi oglas",
         { kljuc: "transakcije.prvi_oglas" },
       );
@@ -390,7 +390,7 @@ export async function probajEvidentirati(
     await javiEvidentiran(userId, zabelezen.id, zabelezen.iznos);
 
     // Odobren prvi oglas je jedan od četiri traga učešća koji otključavaju POEN po
-    // potvrdi (dokaz stvarnosti čl. 7). Ne baca — doprinos je već evidentiran.
+    // potvrdi (dokaz stvarnosti čl. 19). Ne baca — doprinos je već evidentiran.
     await probajEvidentiratiPotvrde(userId);
     return true;
   } catch (e) {
@@ -399,7 +399,7 @@ export async function probajEvidentirati(
   }
 }
 
-/** Zabeležen doprinos koji korisnik vidi u svom novčaniku (čl. 67). */
+/** Zabeležen doprinos koji korisnik vidi u svom novčaniku (Pravilnik čl. 56). */
 export async function dohvatiZabelezen(userId: string): Promise<number> {
   const d = await prisma.doprinosSadrzaju.findFirst({
     where: { userId, status: DoprinosStatus.ZABELEZEN },
@@ -411,7 +411,7 @@ export async function dohvatiZabelezen(userId: string): Promise<number> {
 export type RevizijaStavka = { userId: string; pseudonim: string; oglasId?: string };
 
 export type RevizijaDoprinosa = {
-  /** Korisnika sa bar jednim oglasom koji ispunjava uslove kanala (čl. 40a st. 2). */
+  /** Korisnika sa bar jednim oglasom koji ispunjava uslove kanala (čl. 38 st. 1). */
   kvalifikovanih: number;
   /** Od toga: koliko ih ima zapis o doprinosu, u bilo kom statusu. */
   saZapisom: number;
@@ -419,8 +419,8 @@ export type RevizijaDoprinosa = {
   nedostaju: RevizijaStavka[];
   /**
    * Ima objavljenu ponudu, ali nijedna ne ispunjava sadržinski minimum — pa mu
-   * doprinos nikada nije ni zabeležen. Nije kvar: kanal traži minimum (čl. 40a
-   * st. 2). Bez ove stavke takav čovek nigde ne bi bio prikazan, a upravo on je
+   * doprinos nikada nije ni zabeležen. Nije kvar: kanal traži minimum (čl. 38
+   * st. 1). Bez ove stavke takav čovek nigde ne bi bio prikazan, a upravo on je
    * onaj koji „ima oglas a nije dobio POEN".
    */
   bezMinimuma: Array<RevizijaStavka & { razlog: string }>;
@@ -449,7 +449,7 @@ export type RevizijaDoprinosa = {
  * je uslov napisan dvaput, revizija bi mogla da pokaže da je sve u redu upravo
  * zato što ponavlja istu grešku kao i beleženje.
  *
- * Ugašeni nalozi se preskaču: njihovi zapisi se po čl. 34 anonimizuju.
+ * Ugašeni nalozi se preskaču: njihovi zapisi se po Pravilniku čl. 33 anonimizuju.
  */
 export async function revidirajDoprinose(): Promise<RevizijaDoprinosa> {
   const [oglasi, zapisi] = await Promise.all([
@@ -480,7 +480,7 @@ export async function revidirajDoprinose(): Promise<RevizijaDoprinosa> {
     }),
   ]);
 
-  // Prvi kvalifikovan oglas po korisniku — „prvi oglas kojim nudi" iz čl. 40a.
+  // Prvi kvalifikovan oglas po korisniku — „prvi oglas kojim nudi" iz čl. 38.
   const prviKvalifikovan = new Map<string, { oglasId: string; pseudonim: string }>();
   // Ko ima ponudu, ali nijednu koja prolazi minimum — uz razlog prvog pokušaja.
   const paoNaMinimumu = new Map<string, { oglasId: string; pseudonim: string; razlog: string }>();
@@ -581,7 +581,7 @@ async function zabeleziNedostajuce(): Promise<number> {
 
 /**
  * Jednokratno evidentiranje zatečenih doprinosa verifikovanih korisnika
- * (čl. 40a, prelazni stav).
+ * (raniji prelazni stav čl. 40a, brisan u setu 5.0).
  *
  * Do izmene čl. 40a doprinos je verifikovanom korisniku samo BELEŽEN i čekao je
  * okidač — a verifikacija mu je već bila iza leđa, pa mu je ostajao samo primljen

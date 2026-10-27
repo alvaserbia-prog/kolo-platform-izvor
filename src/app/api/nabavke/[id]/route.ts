@@ -7,13 +7,19 @@ import { prisma } from "@/lib/prisma";
 /**
  * GET /api/nabavke/[id]
  *
- * Kartica nabavke sa celom kalkulacijom (čl. 20) i stanjem sopstvene prijave.
+ * Kartica nabavke sa kalkulacijom (nabavke čl. 18) i stanjem sopstvene prijave.
  *
- * 🔴 Objavljuju se SVE ponude, i one koje nisu izabrane (čl. 15 st. 2) — bez toga
- * „najpovoljnija" nije provera nego tvrdnja.
+ * 🔴 Dinarska strana (ponude sa iznosima i ponuđačima, izabrani dobavljač, nabavna
+ * cena, sredstva, gornja granica, plaćen iznos) NE ide uz kalkulaciju (čl. 18 st. 2):
+ * objavljuje se u celini u izveštaju o raspolaganju sredstvima Fondacije, odvojeno
+ * (čl. 37 st. 2; `GET /api/javno/fondacija/projekti`). Uz broj POEN-a po delu bi se
+ * deljenjem čitao odnos POEN-a prema dinaru (R-01). Odbijena mera: dinarski trošak
+ * se ne vraća u tabelu sa brojem POEN-a po delu. Brana: `nabavka-dinarska-strana-izvor.test.ts`.
  *
- * 🔴 Spisak preuzimalaca nosi pseudonim i mesto u redu, ali NIKAD broj POEN-a u
- * zapisu (čl. 31 st. 2). Kod za preuzimanje vidi isključivo sam korisnik.
+ * 🔴 Spisak preuzimalaca (pseudonim i mesto u redu) dobijaju SAMO učesnici (čl. 37
+ * st. 3; Pravilnik čl. 56) — korisnik koji nije u Kolu i dete dobijaju samo broj.
+ * Broj POEN-a u zapisu se uz spisak nikad ne objavljuje. Kod za preuzimanje vidi
+ * isključivo sam korisnik.
  */
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
@@ -22,12 +28,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const { id } = await params;
   const n = await prisma.nabavka.findUnique({
     where: { id },
-    include: {
-      naziv: { select: { naziv: true } },
-      ponude: { orderBy: { cenaPoJedinici: "asc" } },
-    },
+    include: { naziv: { select: { naziv: true } } },
   });
   if (!n) return await greska("Nabavka nije pronađena.", 404);
+
+  // Učesnik = u Kolu (verifikovan), nikad dete (Pravilnik čl. 2, 56).
+  const ucesnik = !!session.user.verified && session.user.maloletan !== true;
 
   const [moja, brojPrijava, preuzeli] = await Promise.all([
     prisma.nabavkaPrijava.findUnique({
@@ -42,26 +48,21 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       },
     }),
     prisma.nabavkaPrijava.count({ where: { nabavkaId: id } }),
-    prisma.nabavkaPrijava.findMany({
-      where: { nabavkaId: id, status: "PREUZEO" },
-      orderBy: { mesto: "asc" },
-      select: { mesto: true, user: { select: { pseudonim: true } } },
-    }),
+    ucesnik
+      ? prisma.nabavkaPrijava.findMany({
+          where: { nabavkaId: id, status: "PREUZEO" },
+          orderBy: { mesto: "asc" },
+          select: { mesto: true, user: { select: { pseudonim: true } } },
+        })
+      : Promise.resolve([]),
   ]);
-
-  const nabavna = n.nabavnaCena ? Number(n.nabavnaCena) : null;
 
   return NextResponse.json({
     id: n.id,
     naziv: n.naziv.naziv,
     status: n.status,
-    dobavljac: n.dobavljac,
     jedinicaMere: n.jedinicaMere,
-    nabavnaCena: nabavna,
     poenObrazlozenje: n.poenObrazlozenje,
-    saldoSnimak: n.saldoSnimak ? Number(n.saldoSnimak) : null,
-    rezervaSnimak: n.rezervaSnimak ? Number(n.rezervaSnimak) : null,
-    iznosNabavke: n.iznosNabavke ? Number(n.iznosNabavke) : null,
     brojJedinica: n.brojJedinica,
     brojDelova: n.brojDelova,
     velicinaDela: n.velicinaDela,
@@ -72,18 +73,11 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     preuzimanjeDo: n.preuzimanjeDo?.toISOString() ?? null,
     prijaveDo: n.prijaveDo?.toISOString() ?? null,
     objavljenoAt: n.objavljenoAt?.toISOString() ?? null,
-    placenoRSD: n.placenoRSD ? Number(n.placenoRSD) : null,
     obustavaRazlog: n.obustavaRazlog,
-    ponude: n.ponude.map((p) => ({
-      ponudjac: p.ponudjac,
-      cena: Number(p.cenaPoJedinici),
-      izabrana: p.izabrana,
-      napomena: p.napomena,
-    })),
     brojPrijava,
     // Tokom otvorenih prijava vidi se samo brojka — spisak bi ljude terao da se
-    // povlače gledajući tuđa imena.
-    preuzeli: preuzeli.map((p) => ({ pseudonim: p.user.pseudonim, mesto: p.mesto })),
+    // povlače gledajući tuđa imena. Spisak preuzimalaca samo učesnicima (čl. 37 st. 3).
+    preuzeli: ucesnik ? preuzeli.map((p) => ({ pseudonim: p.user.pseudonim, mesto: p.mesto })) : null,
     moja: moja
       ? {
           status: moja.status,

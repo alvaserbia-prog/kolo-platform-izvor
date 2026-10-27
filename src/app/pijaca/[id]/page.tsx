@@ -38,7 +38,7 @@ export async function generateMetadata({
   });
   if (!listing) return {};
 
-  // Oglas maloletnog korisnika nije javno dostupan (Modul Deca, čl. 13), pa mu
+  // Oglas maloletnog korisnika nije javno dostupan (Pravilnik o učešću dece čl. 24), pa mu
   // naslov i opis ne smeju u zaglavlje stranice ni u OG karticu — odatle ih
   // pokupe Gugl i svaki program za poruke, bez ijedne prijave. Sliku zatvara
   // `opengraph-image.tsx` sopstvenom proverom.
@@ -96,7 +96,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
 
   if (!listing) notFound();
 
-  // Vidljivost oglasa maloletnog korisnika (Modul Deca, čl. 13).
+  // Vidljivost oglasa maloletnog korisnika (Pravilnik o učešću dece čl. 24).
   //
   // 🔴 `notFound()`, ne poruka o zabrani: poruka bi potvrdila da oglas postoji, a
   // time i da postoji dete koje ga je objavilo — upravo ono što se skriva. Isti
@@ -110,7 +110,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
   if (!smem) notFound();
 
   // Dete sa roditeljem oglas vidi BEZ pseudonima oglašivača, osim oglasa svojih
-  // prijatelja, i piše samo prijateljima (Pravilnik o učešću dece čl. 4c t. 2, 13 st. 4).
+  // prijatelja, i piše samo prijateljima (Pravilnik o učešću dece čl. 5 st. 1 t. 2).
   const deteSaRoditeljem = !!posmatrac?.maloletan && posmatrac.stanje === "POVEZANO";
   const prijatelji = deteSaRoditeljem && posmatrac ? await idPrijatelja(posmatrac.id) : [];
   const vidiPseudonim = smeVidetiPseudonimOglasivaca(posmatrac, listing.sellerId, prijatelji);
@@ -119,7 +119,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
   /**
    * Sme li posmatrač da pokrene razgovor povodom oglasa.
    *
-   * 🔴 NE `session.user.verified`. Maloletni nalog je trajno neverifikovan (čl. 15),
+   * 🔴 NE `session.user.verified`. Maloletni nalog je trajno neverifikovan (deca čl. 29 st. 2),
    * pa je dete na svakom tuđem oglasu dobijalo poziv da postane redovan član — a
    * ruta `POST /api/poruke` mu razgovor sve vreme dozvoljava. Ista funkcija odlučuje
    * i tamo i ovde, pa se to dvoje više ne može raziće.
@@ -129,7 +129,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
         posmatrac,
         prodavac,
         (session?.user?.verified ?? false) || (await imaRazgovor(posmatrac.id, prodavac.id)),
-        // Nov član sa stranice oglasa: povod je ovaj oglas (Uslovi čl. 16 st. 5).
+        // Nov član sa stranice oglasa: povod je ovaj oglas (Uslovi čl. 14 st. 2).
         { povodOglasom: true, pokrenutihDanas: await pokrenutihDanas(posmatrac.id) },
         suPrijatelji,
       )
@@ -148,7 +148,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
         category: listing.category,
         images: listing.images,
         location: listing.location ?? null,
-        // Kontakt (telefon) se ne šalje klijentu osim verifikovanima (Politika čl. 6) —
+        // Kontakt (telefon) se ne šalje klijentu osim verifikovanima (Politika čl. 12 st. 2) —
         // ne sme „procuriti" kroz props ni za neverifikovane, čak i da se ne renderuje.
         phone: session?.user?.verified ? (listing.phone ?? null) : null,
         status: listing.status,
@@ -162,7 +162,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
           : null,
         isMine: listing.seller.id === session?.user?.id,
         pregledi: listing.pregledi,
-        // Razlog uklanjanja se saopštava vlasniku (Uslovi čl. 25 st. 2), ne javnosti.
+        // Razlog uklanjanja se saopštava vlasniku (Uslovi čl. 29 st. 2), ne javnosti.
         uklonjenRazlog:
           listing.seller.id === session?.user?.id ? (listing.uklonjenRazlog ?? null) : null,
       }}

@@ -13,7 +13,7 @@ import { registarPredloga, sredstvaZaProjekte, pripremiNabavku, NabavkaGreska } 
  *
  * Fondacija sprovodi odluku o predmetu nabavke (čl. 12). Otvaranje je NACRT —
  * ništa nije objavljeno i nijedan dinar nije obećan dok se ne prikupe ponude
- * (najmanje tri, čl. 15) i ne objavi kalkulacija (čl. 20).
+ * (najmanje tri, čl. 14) i ne objavi kalkulacija (čl. 18).
  */
 export async function GET() {
   const session = await getServerSession(authOptions);

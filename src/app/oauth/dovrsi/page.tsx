@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { AKT_POLITIKA, AKT_USLOVI } from "@/lib/verzije-akata";
+import { AKT_POLITIKA, AKT_RIZICI, AKT_USLOVI } from "@/lib/verzije-akata";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -153,7 +153,10 @@ export default function OAuthDovrsiPage() {
                 className="mt-0.5 accent-kolo-green-700 w-5 h-5 shrink-0" />
               <span className="text-sm text-kolo-text">
                 {tReg("uslovi")} <a href="/uslovi" target="_blank" className="text-kolo-green-700 underline">{tReg("uslovi_link")}</a>{" "}
-                <span className="text-kolo-muted">(v{AKT_USLOVI.verzija})</span>
+                <span className="text-kolo-muted">(v{AKT_USLOVI.verzija})</span>{" "}
+                {/* Izjava o rizicima: ista kvačica kao Uslovi (rizici čl. 2 st. 1; odluka vlasnika 12). */}
+                {tReg("i_veznik")} <a href="/rizici" target="_blank" className="text-kolo-green-700 underline">{tReg("rizici_link")}</a>{" "}
+                <span className="text-kolo-muted">(v{AKT_RIZICI.verzija})</span>
               </span>
             </label>
             <label className="flex items-start gap-3 cursor-pointer py-2 min-h-11">

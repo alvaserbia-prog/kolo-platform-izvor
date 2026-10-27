@@ -38,8 +38,8 @@ export default async function PijacaPage({
   // Predizabrane kategorije iz URL-a (?kat=slug1,slug2) — deljivi linkovi, SSR.
   const { kat, gazdinstvo: gazdinstvoParam } = await searchParams;
   // Oglasi u ime jednog gazdinstva (?gazdinstvo=<id>) — veza „Pijaca" sa kartice na
-  // mapi (Pravilnik o gazdinstvima čl. 11). Samo odobreno gazdinstvo; oznaku nosi
-  // samo odobren član, kao na profilu gazdinstva (čl. 10).
+  // mapi (Pravilnik o gazdinstvima čl. 19). Samo odobreno gazdinstvo; oznaku nosi
+  // samo odobren član, kao na profilu gazdinstva (čl. 18 st. 2).
   const gazdinstvoFilter = gazdinstvoParam
     ? await prisma.gazdinstvo.findFirst({
         where: { id: gazdinstvoParam, status: "ODOBRENO" },
@@ -58,7 +58,7 @@ export default async function PijacaPage({
     : null;
   const pracene = korisnik?.praceneKategorije.map((p) => p.category) ?? [];
 
-  // Vidljivost oglasa maloletnog korisnika (Modul Deca, čl. 13).
+  // Vidljivost oglasa maloletnog korisnika (Pravilnik o učešću dece čl. 24).
   //
   // 🔴 Filter mora da stoji OVDE, a ne samo u `GET /api/pijaca`: `PijacaKlijent`
   // ceo spisak dobija kroz props sa servera i dalje filtrira samo u pretraživaču,
@@ -93,7 +93,7 @@ export default async function PijacaPage({
   const isVerified = session?.user?.verified ?? false;
 
   // Dete sa roditeljem oglase vidi BEZ pseudonima oglašivača, osim oglasa svojih
-  // prijatelja, i piše samo prijateljima (Pravilnik o učešću dece čl. 4c t. 2, 13 st. 4).
+  // prijatelja, i piše samo prijateljima (Pravilnik o učešću dece čl. 5 st. 1 t. 2).
   const deteSaRoditeljem = !!posmatrac?.maloletan && posmatrac.stanje === "POVEZANO";
   const prijatelji = deteSaRoditeljem && posmatrac ? new Set(await idPrijatelja(posmatrac.id)) : new Set<string>();
 
@@ -145,11 +145,11 @@ export default async function PijacaPage({
         isVerified={isVerified}
         prijavljen={!!session?.user}
         posmatracMaloletan={posmatrac?.maloletan ?? false}
-        // Dete Kola piše po čl. 12; dete sa roditeljem samo prijateljima.
+        // Dete Kola piše po deca čl. 22; dete sa roditeljem samo prijateljima.
         detePise={!!posmatrac?.maloletan && posmatrac.stanje === "AKTIVNO"}
         deteSaRoditeljem={deteSaRoditeljem}
         deteSmeSaOdraslima={
-          // 🔴 Uz prekidač ide i uzrasna granica (čl. 12 st. 4): do 15 dete sa
+          // 🔴 Uz prekidač ide i uzrasna granica (deca čl. 22 st. 4): do 15 dete sa
           // punoletnima ne komunicira, pa mu se dugme „Kontaktiraj" na tuđem
           // oglasu ne sme nuditi ni kad je prekidač uključen.
           !!posmatrac && smeSaOdraslima(posmatrac) && posmatrac.dozvolaOdrasli

@@ -11,6 +11,22 @@ import { jeAdmin } from "@/lib/dozvole";
 import { rasclaniPozivNaBroj } from "@/lib/placanje/ips-qr";
 
 // POST — potvrdi ili ručno evidentiraj donaciju
+/**
+ * 🔴 Poruka o potvrđenoj donaciji ne nosi iznos u dinarima (odluka vlasnika
+ * 26.10.2026). Dinari i POEN u istoj rečenici daju „cenu" POEN-a deljenjem —
+ * isti razlog zbog koga ni ugovor o donaciji ne nosi broj POEN-a. Anonimna
+ * donacija ne nosi POEN, pa poruka o evidentiranju izostaje.
+ * Brana `donacija-ugovor-bez-poena-izvor.test.ts`.
+ */
+function porukaDonacije(poen: number) {
+  return poen > 0
+    ? {
+        kljuc: "notifikacije.donacija_potvrdjena",
+        tekst: `Tvoja donacija je potvrđena. Evidentirano ti je ${poen.toLocaleString("sr-RS")} POEN.`,
+      }
+    : { kljuc: "notifikacije.donacija_potvrdjena_anonimna", tekst: "Tvoja donacija je potvrđena." };
+}
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || !jeAdmin(session.user)) {
@@ -22,8 +38,8 @@ export async function POST(req: NextRequest) {
   // Anonimna donacija (javno=false) ne nosi POEN. Default je javna.
   const javnoBody = body.javno !== false;
 
-  // Uplatilac iz izvoda (Pravilnik o pokroviteljstvu i donacijama, čl. 3 i glava
-  // IV). OBAVEZAN je na oba ručna puta: doprinos se evidentira isključivo
+  // Uplatilac iz izvoda (Pravilnik o pokroviteljstvu i donacijama, čl. 6 i Glava
+  // V). OBAVEZAN je na oba ručna puta: doprinos se evidentira isključivo
   // korisniku čijim je sredstvima uplata izvršena, a poziv na broj je trajan broj
   // člana — bilo ko sa bilo kog računa može da uplati na njega. Bez ovog polja
   // se uplatilac i donator nigde ne porede, pa se treće lice evidentira kao
@@ -39,7 +55,7 @@ export async function POST(req: NextRequest) {
   }
   if (uplatilac.length < 2) {
     return await greska(
-      "Unesite ime uplatioca iz izvoda. Doprinos se evidentira isključivo korisniku čijim je sredstvima uplata izvršena (čl. 3 Pravilnika o pokroviteljstvu i donacijama).",
+      "Unesite ime uplatioca iz izvoda. Doprinos se evidentira isključivo korisniku čijim je sredstvima uplata izvršena (čl. 6 Pravilnika o pokroviteljstvu i donacijama).",
       400
     );
   }
@@ -88,7 +104,7 @@ export async function POST(req: NextRequest) {
         javno: donation.javno,
         uplatilac,
         straniPriliv,
-        // Potvrda stvarnosti uplatom (dokaz stvarnosti čl. 4a) traži jedinstvenog uplatioca.
+        // Ponuda spiska za poziv po uplati (dokaz stvarnosti čl. 8 st. 1 t. 2) traži jedinstvenog uplatioca.
         uplatilacJedinstven: !potvrdiDuplikat,
       });
 
@@ -96,11 +112,11 @@ export async function POST(req: NextRequest) {
         `${iznos.toLocaleString("sr-RS")} RSD → ${result.poenEmitted} POEN; uplatilac: ${uplatilac}${straniPriliv ? "; strani priliv" : ""}${potvrdiDuplikat ? "; potvrđeno uprkos poklapanju uplatioca (C-1)" : ""}`);
       await obavesti(donation.userId, {
         tip: "donacija_potvrdjena",
-        kljuc: "notifikacije.donacija_potvrdjena",
-        parametri: { rsd: iznos, poen: result.poenEmitted },
+        kljuc: porukaDonacije(result.poenEmitted).kljuc,
+        parametri: { poen: result.poenEmitted },
         naslov: "Donacija potvrđena!",
-        tekst: `Tvoja donacija od ${iznos.toLocaleString("sr-RS")} RSD je potvrđena. Evidentirano ti je ${result.poenEmitted.toLocaleString("sr-RS")} POEN.`,
-        // Ugovor o donaciji (čl. 5b) se isporučuje kroz Platformu — link vodi
+        tekst: porukaDonacije(result.poenEmitted).tekst,
+        // Ugovor o donaciji (čl. 14) se isporučuje kroz Platformu — link vodi
         // pravo na njega, ne na spisak donacija.
         link: `/donacije/${result.zapisId}/ugovor`,
       });
@@ -167,10 +183,10 @@ export async function POST(req: NextRequest) {
       `${iznos.toLocaleString("sr-RS")} RSD → ${result.poenEmitted} POEN; uplatilac: ${uplatilac}${straniPriliv ? "; strani priliv" : ""}${potvrdiDuplikat ? "; potvrđeno uprkos poklapanju uplatioca (C-1)" : ""}`);
     await obavesti(user.id, {
       tip: "donacija_potvrdjena",
-      kljuc: "notifikacije.donacija_potvrdjena",
-      parametri: { rsd: iznos, poen: result.poenEmitted },
+      kljuc: porukaDonacije(result.poenEmitted).kljuc,
+      parametri: { poen: result.poenEmitted },
       naslov: "Donacija potvrđena!",
-      tekst: `Tvoja donacija od ${iznos.toLocaleString("sr-RS")} RSD je potvrđena. Evidentirano ti je ${result.poenEmitted.toLocaleString("sr-RS")} POEN.`,
+      tekst: porukaDonacije(result.poenEmitted).tekst,
       link: `/donacije/${result.zapisId}/ugovor`,
     });
 

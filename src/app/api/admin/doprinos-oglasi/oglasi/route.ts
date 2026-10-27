@@ -6,15 +6,17 @@ import { prisma } from "@/lib/prisma";
 import { jeAdmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
 import { proveriCelineZadatka } from "@/lib/operativni-celine-pravila";
+import { proveriZadatak, traziOdobravanjePoPragu, PARAMETAR_PRAG_ODOBRAVANJA } from "@/lib/operativni-pravila";
+import { vazeciParametar } from "@/lib/protokol/operativni-postupak";
 
-// POST /api/admin/doprinos-oglasi/oglasi — kreiranje oglasa
+// POST /api/admin/doprinos-oglasi/oglasi — objava zadatka (operativni 5.0 čl. 4–6, 12)
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || !jeAdmin(session.user))
     return await greska("Pristup odbijen.", 403);
 
   const body = await req.json().catch(() => ({}));
-  const { title, description, poenPoCelini, brojCelina, opisCeline, procenaObima, obrazlozenje, saOdobravanjem, positions, deadline, krugId } = body;
+  const { title, description, poenPoCelini, brojCelina, opisCeline, procenaObima, obrazlozenje, saOdobravanjem, positions, deadline, rokIzvrsenja, kvalifikacioniUslov, kvalifikacioniObrazlozenje } = body;
 
   if (!title?.trim() || !description?.trim()) return await greska("Naziv i opis su obavezni.", 400);
 
@@ -23,6 +25,14 @@ export async function POST(req: NextRequest) {
   const celine = proveriCelineZadatka({ poenPoCelini, brojCelina, opisCeline, procenaObima });
   if (!celine.ok) return await greska(celine.greska, 400);
   const predlozeni = celine.predlozeniPoen;
+
+  // Čl. 5 t. 6–7, 10 (set 5.0): obrazloženje predloženog POEN-a, rok za prijavu i rok
+  // za izvršenje su obavezni; kvalifikacioni filter se obrazlaže (čl. 9 st. 3).
+  const ostalo = proveriZadatak({ obrazlozenje, deadline, rokIzvrsenja, kvalifikacioniUslov, kvalifikacioniObrazlozenje });
+  if (!ostalo.ok) return await greska(ostalo.greska, 400);
+  // Čl. 12 st. 1 t. 3 — iznad praga UO zadatak je sa odobravanjem (dok prag nije
+  // utvrđen, pravilo nema dejstva).
+  const poPragu = traziOdobravanjePoPragu(predlozeni, await vazeciParametar(PARAMETAR_PRAG_ODOBRAVANJA));
 
   const brMesta = Number(positions ?? 1);
   if (!Number.isInteger(brMesta) || brMesta < 1 || brMesta > 1000)
@@ -37,11 +47,16 @@ export async function POST(req: NextRequest) {
       brojCelina: celine.brojCelina,
       opisCeline: celine.opisCeline,
       procenaObima: celine.procenaObima,
-      obrazlozenje: typeof obrazlozenje === "string" && obrazlozenje.trim() ? obrazlozenje.trim() : null,
-      saOdobravanjem: Boolean(saOdobravanjem),
+      obrazlozenje: ostalo.obrazlozenje,
+      saOdobravanjem: Boolean(saOdobravanjem) || poPragu,
       positions: brMesta,
-      deadline: deadline ? new Date(deadline) : null,
-      krugId: krugId || null,
+      deadline: ostalo.deadline,
+      rokIzvrsenja: ostalo.rokIzvrsenja,
+      kvalifikacioniUslov: ostalo.kvalifikacioniUslov,
+      kvalifikacioniObrazlozenje: ostalo.kvalifikacioniObrazlozenje,
+      // Zadatak vezan za zadrugu je zadružni doprinos i objavljuje se samo kroz
+      // /api/admin/zadruge/[id]/zadruzni (operativni 5.0 čl. 23).
+      krugId: null,
       createdById: session.user.id,
     },
   });
@@ -86,6 +101,11 @@ export async function GET(_req: NextRequest) {
       saOdobravanjem: o.saOdobravanjem,
       positions: o.positions,
       deadline: o.deadline?.toISOString() ?? null,
+      rokIzvrsenja: o.rokIzvrsenja?.toISOString() ?? null,
+      kvalifikacioniUslov: o.kvalifikacioniUslov,
+      kvalifikacioniObrazlozenje: o.kvalifikacioniObrazlozenje,
+      zadruzni: o.zadruzni,
+      obustavljeno: o.obustavljenoAt != null,
       status: o.status,
       createdByPseudonim: o.createdBy.pseudonim,
       krugName: o.krug?.name ?? null,

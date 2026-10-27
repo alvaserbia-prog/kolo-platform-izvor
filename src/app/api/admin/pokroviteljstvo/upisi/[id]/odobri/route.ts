@@ -6,7 +6,7 @@ import { jeAdmin } from "@/lib/dozvole";
 import { odobriUpis, odgovorNaGreskuUpisa } from "@/lib/protokol/upis-pokrovitelja";
 
 // POST /api/admin/pokroviteljstvo/upisi/[id]/odobri — Fondacija je naziv, MB i
-// zastupnika uporedila sa registrom (donacije čl. 6a st. 4). 🔴 Za pravno lice i
+// zastupnika uporedila sa registrom (donacije čl. 18 st. 1). 🔴 Za pravno lice i
 // preduzetnika `aprUporedjeno: true` je obavezno; beleži se samo da je poređenje izvršeno.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

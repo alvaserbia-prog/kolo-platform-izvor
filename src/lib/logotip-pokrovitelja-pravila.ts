@@ -1,14 +1,14 @@
 /**
  * Logotip pokrovitelja — čista pravila (bez Prisme; uvozi ih i pretraživač).
  *
- * Pravilnik o pokroviteljstvu i donacijama čl. 13 st. 4 (set 4.7.8): pokrovitelj
+ * Pravilnik o pokroviteljstvu i donacijama čl. 26 st. 2 (set 4.7.8): pokrovitelj
  * može priložiti logotip, koji Fondacija objavljuje uz naziv na rang-listi, a kod
  * pokroviteljstva dobrima i uslugama i na vaučerima i uz ponudu vaučera. Logotip
  * je deo evidencije pokrovitelja (naziv i logotip, ništa drugo) i prilaže se u
  * prijavi, kad saradnja počinje. Nije obavezan.
  *
  * 🔴 Uz logotip se ne objavljuje ništa drugo: ni veza ka internet stranici, ni
- * slogan, ni opis (čl. 13 st. 5 — pokrovitelj ne stiče pravo na upućivanje na svoju
+ * slogan, ni opis (čl. 26 st. 3 — pokrovitelj ne stiče pravo na upućivanje na svoju
  * internet stranicu ni na bilo koju promotivnu činidbu). Zato logotip nikad nije
  * link. Brana: `__tests__/logotip-pokrovitelja-izvor.test.ts`.
  *

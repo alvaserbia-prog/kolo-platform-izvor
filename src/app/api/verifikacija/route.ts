@@ -1,17 +1,17 @@
 /**
  * POST /api/verifikacija
  *
- * Verifikator izvršava verifikaciju koristeći kod osobe (dokaz stvarnosti čl. 5, 5a).
+ * Verifikator izvršava verifikaciju koristeći kod osobe (dokaz stvarnosti čl. 4, 5, 15).
  * Body: { token: string, potvrdaPoznavanja: boolean, oznaka?: string, nacin?: "LICNO" | "TELEFONOM" }
  *   - token: 64-char hex (iz QR-a) ili 6-cifren broj
- *   - potvrdaPoznavanja: mora biti true (lično poznavanje + odgovornost, čl. 5)
+ *   - potvrdaPoznavanja: mora biti true (lično poznavanje + odgovornost, čl. 15 st. 3, 6)
  *   - nacin: kad je osoba na spisku za poziv — „Znam ga lično" ili „Upoznali smo
  *     se telefonom" (uvođenje u Kolo)
  *
  * Ishod (`vrsta`): POTVRDA (član Kola) · UVODJENJE (član bez potvrde) ·
  * POTVRDA_CLANA (član bez potvrde je potvrđen; bez POEN-a; potvrđeni dobija spisak
- * povezanih, čl. 5d — automatske potvrde lanca nema od seta 4.8.3). Kod verifikacije se POEN beleži za oba (upis čeka prvi doprinos).
- * Dnevni tempo (dokaz stvarnosti čl. 8): uz 3. i 4. potvrdu u danu vraća
+ * povezanih, čl. 17 — automatske potvrde lanca nema od seta 4.8.3). Kod verifikacije se POEN beleži za oba (upis čeka prvi doprinos).
+ * Dnevni tempo (dokaz stvarnosti čl. 21): uz 3. i 4. potvrdu u danu vraća
  * `upozorenjeDnevno`; peta se odbija sa 429.
  */
 import { NextRequest, NextResponse } from "next/server";
@@ -107,9 +107,9 @@ export async function POST(req: NextRequest) {
       verifikacijaId: rez.verifikacijaId,
       verifikovaniPseudonim: rez.verifikovaniPseudonim,
       vrsta: rez.vrsta,
-      // Koliko ljudi ima na spisku povezanih onaj ko je sada postao član Kola (čl. 5d).
+      // Koliko ljudi ima na spisku povezanih onaj ko je sada postao član Kola (čl. 17).
       povezani: rez.povezani,
-      // 3. ili 4. potvrda u danu (dokaz stvarnosti čl. 8) — ekran uz uspeh pokazuje
+      // 3. ili 4. potvrda u danu (dokaz stvarnosti čl. 21) — ekran uz uspeh pokazuje
       // i upozorenje da peta zaustavlja potvrđivanje do ponoći.
       upozorenjeDnevno: rez.upozorenjeDnevno,
     });

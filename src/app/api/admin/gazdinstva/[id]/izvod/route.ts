@@ -8,7 +8,7 @@ import { procitajIzvod, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
  * GET — izvod iz Registra poljoprivrednih gazdinstava za pregled prijave (Pravilnik
- * o gazdinstvima čl. 4b st. 4). 🔴 JEDINA ruta koja čita izvod: samo admin, prikaz
+ * o gazdinstvima čl. 3 st. 3). 🔴 JEDINA ruta koja čita izvod: samo admin, prikaz
  * u pregledaču (`inline`), bez keširanja. Izvod se briše pri odluci o prijavi.
  */
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {

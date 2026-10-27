@@ -70,7 +70,7 @@ export default function LoginForm() {
 
     if (!email.trim()) { setError(t("greska_email_obavezan")); return; }
     // Bez znaka „@" unos se čita kao PSEUDONIM — tako se prijavljuje maloletni
-    // korisnik, koji imejl nema (Modul Deca, čl. 4). Zato ovde više ne stoji
+    // korisnik, koji imejl nema (Pravilnik o učešću dece čl. 7). Zato ovde više ne stoji
     // uslov da unos mora biti imejl; oblik pseudonima proverava server.
     if (!password) { setError(t("greska_lozinka_obavezna")); return; }
 

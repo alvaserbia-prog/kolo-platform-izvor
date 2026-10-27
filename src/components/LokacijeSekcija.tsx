@@ -38,7 +38,7 @@ interface LokAgg {
 
 // Prva zadruga u mestu otključava se sa 50 REDOVNIH članova sa tog područja;
 // svaka sledeća u istom mestu osniva se sa pet zadrugara (Pravilnik o zadrugama
-// čl. 5 i 6, set 4.7.1). Brojevi se čitaju iz pravila, ne prepisuju (pravilo 10).
+// čl. 4 i 5, set 4.7.1). Brojevi se čitaju iz pravila, ne prepisuju (pravilo 10).
 const LOK_PRAG_ZADRUGA = PRAG_PRVE_ZADRUGE;
 
 export default function LokacijeSekcija({

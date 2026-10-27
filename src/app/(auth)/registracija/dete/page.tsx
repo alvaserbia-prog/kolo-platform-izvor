@@ -13,13 +13,13 @@ import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 import { MIN_LOZINKA } from "@/lib/deca-pravila";
 
 /**
- * Registracija deteta (Modul Deca, čl. 4a).
+ * Registracija deteta (Pravilnik o učešću dece čl. 8).
  *
  * 🔴 Zaseban obrazac, ne prekidač u obrascu za odrasle. Traži se drugačiji skup
  * podataka (imejl RODITELJA umesto svog, bez mesta, bez datuma rođenja), a rečenice
  * su pisane detetu. Jedan obrazac koji se granа bio bi duži i za odraslog i za dete.
  *
- * Dete NE unosi datum rođenja — upisuje ga roditelj pri preuzimanju (čl. 7), jer je
+ * Dete NE unosi datum rođenja — upisuje ga roditelj pri preuzimanju (deca čl. 4 st. 2), jer je
  * roditeljska izjava jedina provera godina kojom sistem raspolaže.
  */
 export default function RegistracijaDetetaPage() {

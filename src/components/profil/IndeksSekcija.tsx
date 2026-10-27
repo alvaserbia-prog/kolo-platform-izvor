@@ -30,8 +30,8 @@ type LanacResponse = {
 };
 
 /**
- * Sekcija na profilu drugog /profil/[id] — status učesnika i mini stablo (lanac
- * verifikacija).
+ * Sekcija na sopstvenom profilu /profil/[id] — status učesnika i mini stablo (lanac
+ * verifikacija). Tuđi lanac se ne prikazuje (Politika čl. 15 st. 7); server ga ne vraća.
  *
  * Status (set 4.8.2) stiže gotov sa servera (`statusUcesnika` iz `/api/profil/[id]`)
  * i crta ga `OznakaStatusa` kroz `IndeksPrikaz`; ovde se ne izvodi iz `tip` ni iz

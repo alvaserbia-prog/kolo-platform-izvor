@@ -56,7 +56,7 @@ interface ZatvorenProfil {
 interface ProfilData {
   id: string;
   pseudonim: string;
-  /** Škola maloletnog korisnika (čl. 7). Punoletan nalog je nema. */
+  /** Škola maloletnog korisnika (deca čl. 26). Punoletan nalog je nema. */
   skola: { sifra: string; naziv: string; mesto: string } | null;
   /** Veza roditelj–dete je javna u oba smera (odluka vlasnika, 18.08.2026). */
   roditelji: { id: string; pseudonim: string }[];
@@ -73,7 +73,12 @@ interface ProfilData {
   maloletan?: boolean;
   /** Posmatrač je roditelj ovog deteta — vidi dugme ka podešavanjima deteta. */
   jaSamRoditelj?: boolean;
-  /** Preporuka člana (Uslovi čl. 17a) — samo broj; `null` kod maloletnog. */
+  /**
+   * Posmatrač gleda sopstveni profil. Samo tada se crta lanac potvrda: evidencija
+   * lanca nije dostupna drugim korisnicima (Politika čl. 15 st. 7).
+   */
+  jaSam?: boolean;
+  /** Preporuka člana (dokaz stvarnosti čl. 20) — samo broj; `null` kod maloletnog. */
   preporuke?: { broj: number; moja: boolean; smem: boolean } | null;
   verified: boolean;
   /**
@@ -81,7 +86,7 @@ interface ProfilData {
    * Na ekranu ga imenuje samo `OznakaStatusa`.
    */
   statusUcesnika?: StatusUcesnika | null;
-  /** Dete: na šta nalog čeka (deca čl. 4c poslednji stav). `null` kod deteta Kola. */
+  /** Dete: na šta nalog čeka (deca čl. 5 st. 4). `null` kod deteta Kola. */
   naStaSeCeka?: NaStaSeCeka | null;
   verifiedAt: string | null;
   status: string;
@@ -231,7 +236,7 @@ export default function JavniProfilPage() {
   // 🔴 Zatvoren prikaz ide PRE svake druge grane. Odluka je doneta na serveru
   // (`pristupProfiluDeteta`); ovde se samo iscrtava ono što je poslao. Ekran mora
   // da uradi tri stvari, inače izgleda kao kvar: kaže zašto, imenuje roditelja
-  // kome se čovek obraća (čl. 10), i pokaže jedini dozvoljeni put — oglas.
+  // kome se čovek obraća (deca čl. 25 st. 1), i pokaže jedini dozvoljeni put — oglas.
   if (profil?.zatvoren) {
     const z = profil.zatvoren;
     return (
@@ -263,7 +268,7 @@ export default function JavniProfilPage() {
           <p className="mt-4 text-sm text-kolo-muted">{t("zatvoren_oglas")}</p>
         )}
 
-        {/* Prijava lažnog roditeljstva — bilo koji učesnik (deca čl. 4e st. 1).
+        {/* Prijava lažnog roditeljstva — bilo koji učesnik (deca čl. 17 st. 1).
             Nudi se samo tamo gde je roditelj već imenovan; zatvoren prikaz ne
             otvara ništa od profila. */}
         {z.razlog === "PUNOLETAN" && z.roditelji.length > 0 && (
@@ -359,7 +364,7 @@ export default function JavniProfilPage() {
             {profil.preporuke && (
               <PreporukaRed adresa={adresa} pocetno={profil.preporuke} />
             )}
-            {/* Škola maloletnog korisnika (čl. 7). Ovaj profil vide samo roditelj,
+            {/* Škola maloletnog korisnika (deca čl. 26). Ovaj profil vide samo roditelj,
                 prijatelj i Fondacija — punoletnom članu se uopšte ne otvara. */}
             {profil.skola && (
               <div className="flex justify-between gap-2">
@@ -459,7 +464,7 @@ export default function JavniProfilPage() {
               izgleda 22.10.2026): status već stoji ispod pseudonima, a kartica od
               ~320 px sa jednom pilulom izgledala je kao greška. */}
           {/* Profil deteta (vide ga roditelj, prijatelj i Fondacija): status i na
-              šta se čeka (deca čl. 4c poslednji stav). */}
+              šta se čeka (deca čl. 5 st. 4). */}
           {profil.maloletan && profil.statusUcesnika && (
             <OznakaStatusa
               varijanta="kartica"
@@ -470,7 +475,7 @@ export default function JavniProfilPage() {
         </div>
       </div>
 
-      {/* Prijava lažnog roditeljstva sa profila deteta (deca čl. 4e st. 1) —
+      {/* Prijava lažnog roditeljstva sa profila deteta (deca čl. 17 st. 1) —
           drugi učesnik koji vidi ko je upisan kao roditelj. Roditelj prijavljuje
           drugog roditelja iz podešavanja deteta, pa mu se ovde ne nudi. */}
       {profil.maloletan && !profil.jaSamRoditelj && profil.roditelji.length > 0 && (
@@ -481,10 +486,11 @@ export default function JavniProfilPage() {
           suženom pregledu (R-01) — prazna kartica „nema transakcija" nije isto
           što i „ne vidiš istoriju", a druga stvar je ono što se ovde dešava. */}
       {!profil.suzen && (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
-        {/* LEVO — lanac potvrda (mini stablo). Dete u njemu ne postoji; u suženom
-            pregledu se mreža potvrda ne otvara (R-01). */}
-        {!profil.maloletan && !profil.suzen && (
+      <div className={`grid grid-cols-1 ${profil.jaSam && !profil.maloletan ? "lg:grid-cols-2" : ""} gap-4 items-stretch`}>
+        {/* LEVO — lanac potvrda (mini stablo), samo na sopstvenom profilu: evidencija
+            lanca potvrda nije dostupna drugim korisnicima (Politika čl. 15 st. 7;
+            Pravilnik čl. 30 st. 5, čl. 56 st. 3). Dete u lancu ne postoji. */}
+        {profil.jaSam && !profil.maloletan && !profil.suzen && (
           <IndeksSekcija korisnikId={profil.id} prikaziIndeks={false} ispuniVisinu />
         )}
 

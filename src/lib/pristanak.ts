@@ -11,7 +11,7 @@
  * primao nijedno polje o prihvatanju niti upisivao ijedan red — nalog se otvarao i
  * bez ijedne kvačice, čim se zaobiđe obrazac. Time nije nedostajao samo dokaz
  * pristanka nego i dokaz da je ugovor zaključen, a „izvršenje ugovornog odnosa"
- * (ZZPL čl. 12 st. 1 t. 2) je pravni osnov za većinu obrada iz Politike čl. 4.
+ * (ZZPL čl. 12 st. 1 t. 2) je pravni osnov za većinu obrada iz Politike (Glave II–VIII).
  *
  * ─── Šta se snima ───────────────────────────────────────────────────────────
  *
@@ -29,7 +29,7 @@
  * 🔴 Ne snimaju se IP adresa ni podaci o uređaju. Vidi `ZapisPristanka` u šemi.
  */
 import { prevedi } from "./prevod-servera";
-import { AKT_POLITIKA, AKT_USLOVI, VERZIJA_PRISTANKA_KOLACICI } from "./verzije-akata";
+import { AKT_POLITIKA, AKT_RIZICI, AKT_USLOVI, VERZIJA_PRISTANKA_KOLACICI } from "./verzije-akata";
 
 export type VrstaPristankaKod = "USLOVI_KORISCENJA" | "POLITIKA_PRIVATNOSTI" | "KOLACICI_ANALITIKA";
 
@@ -58,12 +58,17 @@ export function tekstPristankaNaAkt(vrsta: Exclude<VrstaPristankaKod, "KOLACICI_
   const kljucNaziva =
     vrsta === "USLOVI_KORISCENJA" ? "registracija.uslovi_link" : "registracija.privatnost_link";
   const naziv = prevedi(jezik, kljucNaziva);
-  return {
-    vrsta,
-    verzija: akt.verzija,
-    tekst: prevedi(jezik, "pristanak.zapis_akt", { naziv, verzija: akt.verzija }),
-    jezik,
-  };
+  let tekst = prevedi(jezik, "pristanak.zapis_akt", { naziv, verzija: akt.verzija });
+  // 🔴 Izjava o prihvatanju rizika prihvata se ISTOM kvačicom kao Uslovi (rizici
+  // čl. 2 st. 1; odluka vlasnika 12): bez nove kvačice i bez nove vrste zapisa,
+  // pa njena verzija ide u snimljen tekst reda Uslova. Brana `pristanak-izvor.test.ts`.
+  if (vrsta === "USLOVI_KORISCENJA") {
+    tekst = `${tekst} ${prevedi(jezik, "pristanak.zapis_rizici", {
+      naziv: prevedi(jezik, "registracija.rizici_link"),
+      verzija: AKT_RIZICI.verzija,
+    })}`;
+  }
+  return { vrsta, verzija: akt.verzija, tekst, jezik };
 }
 
 /** Tekst pristanka na analitičke kolačiće — ono što stoji u banneru. */

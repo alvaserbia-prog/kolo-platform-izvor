@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { istupi, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
-/** POST — istupanje iz gazdinstva (čl. 9 st. 3); POEN ostaje članu. Kad istupa poslednji član, gazdinstvo prestaje (čl. 12a st. 1 t. 1). */
+/** POST — istupanje iz gazdinstva (čl. 13 st. 1); POEN ostaje članu. Kad istupa poslednji član, gazdinstvo prestaje (čl. 22 st. 1 t. 1). */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);

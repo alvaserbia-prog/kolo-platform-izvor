@@ -29,8 +29,8 @@ export async function GET(
     return await greska("Profil nije pronađen.", 404);
   }
 
-  // Kapija "samo verifikovani vide profile" odnosi se na TUĐE profile (Pravilnik čl. 28–30,
-  // 67): nepotvrđen član ne vidi pseudonime/profile drugih. Sopstveni profil korisnik uvek
+  // Kapija "samo verifikovani vide profile" odnosi se na TUĐE profile (Pravilnik čl. 28,
+  // 56): nepotvrđen član ne vidi pseudonime/profile drugih. Sopstveni profil korisnik uvek
   // sme da vidi — inače bi klik na "Moj profil" blokirao i njega samog.
   //
   // R-01, mera M-9: članu čiji je identitet utvrđen na donatorskom putu profil se
@@ -40,7 +40,7 @@ export async function GET(
   // odluka je NA SERVERU, ne u komponenti.
   // 🔴 Od seta 4.8.1 (odluka vlasnika 20.10.2026) sužen pregled dobija i NOV ČLAN:
   // pseudonim, slika, mesto (ako ga je vlasnik odlučio da prikaže), status, od kada
-  // je član, aktivni oglasi i broj preporuka (Uslovi čl. 17 st. 2). Stanje POEN-a,
+  // je član, aktivni oglasi i broj preporuka (Uslovi čl. 16 st. 3). Stanje POEN-a,
   // istorija, rang, telefon, ime, opis i veza roditelj–dete ostaju potvrđenima.
 
   // Modul Deca: profil maloletnog korisnika punoletni članovi NE otvaraju
@@ -69,7 +69,7 @@ export async function GET(
       id: true,
       pseudonim: true,
       // Modul Deca: profil maloletnog korisnika ne prikazuje indeks stvarnosti ni
-      // lanac potvrda — dete nikoga ne potvrđuje i njega niko ne potvrđuje (čl. 15).
+      // lanac potvrda — dete nikoga ne potvrđuje i njega niko ne potvrđuje (deca čl. 29 st. 2).
       maloletan: true,
       verified: true,
       verifiedAt: true,
@@ -79,7 +79,7 @@ export async function GET(
       createdAt: true,
       tipKorisnika: true,
       status: true,
-      // Škola maloletnog korisnika (čl. 7). Ovde stoji šifra; naziv i mesto se
+      // Škola maloletnog korisnika (deca čl. 26). Ovde stoji šifra; naziv i mesto se
       // razrešavaju iz šifarnika u aplikaciji, jer sistem o školi ne čuva ništa
       // svoje. Punoletan nalog je nema.
       skolaSifra: true,
@@ -88,7 +88,7 @@ export async function GET(
       //
       // 🔴 Posledica koja je svesno prihvaćena: time deca postaju popisiva preko
       // odraslih. Zaštitu tada ne nosi skrivenost nego ZATVOREN PROFIL (vidi
-      // `pristupProfiluDeteta`) i roditeljski prekidač iz čl. 10 — spisak pokazuje
+      // `pristupProfiluDeteta`) i roditeljski prekidač iz čl. 20 st. 2 Pravilnika o učešću dece — spisak pokazuje
       // da dete postoji, ali ni sa jednog reda ne vodi nigde.
       roditeljstvaKaoDete: {
         select: { roditelj: { select: { id: true, pseudonim: true } } },
@@ -180,7 +180,7 @@ export async function GET(
 
   // V3: neverifikovan korisnik (na sopstvenom profilu — jedini koji ovde dospeva bez
   // punog pristupa) sme da vidi iznose/vremena, ali NE pseudonime druge strane ni
-  // stanje računa (Pravilnik čl. 28–30, 67). Maskiramo protivstranu i izostavljamo bilans.
+  // stanje računa (Pravilnik čl. 28, 56). Maskiramo protivstranu i izostavljamo bilans.
   const punPristup = smeProsireno(session.user);
   // Sužen pregled: nov član gleda TUĐI profil (set 4.8.1). Na sopstvenom
   // profilu se ništa ne sužava — tamo važi zatečeno maskiranje protivstrane.
@@ -236,10 +236,10 @@ export async function GET(
     select: { id: true, title: true, cenaTip: true, price: true, cenaDo: true, category: true, createdAt: true },
   });
 
-  // Preporuka člana (Uslovi čl. 17a): samo BROJ i da li ju je posmatrač dao —
-  // spisak onih koji su preporučili ne izlazi iz servera (Politika 4.16).
+  // Preporuka člana (dokaz stvarnosti čl. 20): samo BROJ i da li ju je posmatrač dao —
+  // spisak onih koji su preporučili ne izlazi iz servera (Politika čl. 18).
   // Maloletni korisnik preporuke ne prima, pa je kod njega nema.
-  // Preporuku daje samo član Kola, odnosno osnivač (Uslovi čl. 17a st. 1, set 4.8.2).
+  // Preporuku daje samo član Kola, odnosno osnivač (dokaz stvarnosti čl. 20 st. 1, set 4.8.2).
   const preporuke = korisnik.maloletan ? null : await stanjePreporuka(session.user.id, id, session.user.potvrdjen === true);
 
   // Status učesnika (set 4.8.2) za `OznakaStatusa` — izvodi se iz jezgra statusa,
@@ -261,6 +261,8 @@ export async function GET(
     roditelji: suzen ? [] : korisnik.roditeljstvaKaoDete.map((r) => r.roditelj),
     // Roditelj na profilu svog deteta dobija put nazad u podešavanja deteta
     // (`/deca/[id]`). Odluku donosi server, iz iste veze koju čita i ta stranica.
+    // Lanac potvrda se crta samo na sopstvenom profilu (Politika čl. 15 st. 7).
+    jaSam: jeVlasnik,
     jaSamRoditelj:
       korisnik.maloletan &&
       korisnik.roditeljstvaKaoDete.some((r) => r.roditelj.id === session.user.id),
@@ -276,8 +278,8 @@ export async function GET(
     lokacija: (jeVlasnik || podaci?.prikaziLokaciju) ? korisnik.location : null,
     opis: (!suzen && (jeVlasnik || podaci?.prikaziOpis)) ? podaci?.opis ?? null : null,
     punoIme: (!suzen && (jeVlasnik || podaci?.prikaziPunoIme)) ? podaci?.punoIme ?? null : null,
-    // Telefon ostaje zatvoren i identifikovanom članu: Politika 4.8 obećava da ga
-    // vide „isključivo verifikovani korisnici", pa bi širenje prešlo dati pristanak.
+    // Telefon ostaje zatvoren i identifikovanom članu: Politika čl. 12 st. 2 obećava da ga
+    // vide samo učesnici (ranije: „isključivo verifikovani korisnici"), pa bi širenje prešlo dati pristanak.
     telefon: (!suzen && (jeVlasnik || podaci?.prikaziTelefon)) ? korisnik.telefon : null,
     // POEN balans, rang donacija i oglasi su uvek vidljivi (ne podležu togglu)
     // — osim za neverifikovanog na sopstvenom profilu, kome se stanje računa ne prikazuje (V3).

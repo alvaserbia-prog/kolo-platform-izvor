@@ -1,17 +1,17 @@
 /**
  * Potvrda ispunjenosti uslova socijalnih programa (anti-malverzacija).
  *
- * Prijava na socijalni program (Pravilnik o programima podrške čl. 4, set 4.8.2):
+ * Prijava na socijalni program (Pravilnik o programima podrške čl. 4–6, set 4.8.2):
  *  - pravo ostvaruje VERIFIKOVAN učesnik (član bez potvrde, član Kola, čuvar Kola,
  *    osnivač) — st. 1;
  *  - izričit pristanak podnosioca pre nego što se od bilo koga zatraži potvrda;
  *  - ispunjenost uslova potvrđuje ČLAN KOLA, odnosno osnivač, koji podnosioca
  *    LIČNO zna — verifikator koji ga je potvrdio, ili drugi član Kola koji ga lično
- *    zna — odnosno Fondacija (st. 2). 🔴 Ne potvrđuje je član Kola koji je
+ *    zna — odnosno Fondacija (čl. 5). 🔴 Ne potvrđuje je član Kola koji je
  *    podnosioca samo uveo u Kolo posle razgovora telefonom (dokaz stvarnosti čl.
- *    5a st. 1), ni član bez potvrde (Pravilnik čl. 28a). Potvrđivači ne vide
+ *    4 i 16), ni član bez potvrde (dokaz stvarnosti čl. 6). Potvrđivači ne vide
  *    unete podatke; odbijanje traži obrazloženje.
- *  - Ako ih je više (zatečene višestruke verifikacije, dokaz stvarnosti čl. 22),
+ *  - Ako ih je više (zatečene višestruke verifikacije, programi čl. 5 st. 3),
  *    potvrda se traži od svih, a dovoljna je potvrda jednog.
  *  - Kad podobnog potvrđivača nema, odlučuje Fondacija uz obrazloženje
  *    (`potvrdiUsloveFondacija`; otvoreno pitanje 18 specifikacije).
@@ -35,18 +35,22 @@ type TxLike = Omit<
 >;
 
 /**
- * Ko sme da potvrdi ispunjenost uslova programa za datog učesnika (programi čl. 4
- * st. 2, čl. 13 st. 4; tabela dozvola br. 22). Unija:
+ * Ko sme da potvrdi ispunjenost uslova programa za datog učesnika (programi čl. 5
+ * st. 1; tabela dozvola br. 22). Unija:
  *
  *  - verifikatori veza vrste POTVRDA (potvrdili su ga kao ljudi koji ga lično znaju);
  *  - verifikatori uvođenja koje je obavio član bez potvrde (uvodi samo onoga koga
- *    lično zna, Pravilnik čl. 28a st. 2), a koji su DANAS član Kola;
+ *    lično zna, dokaz stvarnosti čl. 15), a koji su DANAS član Kola;
  *  - članovi Kola koji su ga potvrdili kao člana bez potvrde (`PotvrdaClana`,
- *    izvor CLAN_KOLA, živa).
+ *    izvor CLAN_KOLA, živa) — lično ili sa spiska povezanih.
  *
- * Svi moraju DANAS biti član Kola, čuvar Kola ili osnivač. 🔴 Ne ulaze: uvođenje
- * posle razgovora telefonom (`poPozivu`), član bez potvrde i korisnik. Prazan
- * skup znači da odlučuje Fondacija.
+ * Svi moraju DANAS biti član Kola, čuvar Kola ili osnivač. 🔴 Ne ulaze (programi
+ * čl. 5 st. 2): uvođenje posle razgovora telefonom (`poPozivu`), potvrda člana bez
+ * potvrde posle razgovora telefonom (`PotvrdaClana.nacin = TELEFONOM`), član bez
+ * potvrde i korisnik. Ko je čoveka upoznao samo telefonom ne zna ga lično, a
+ * zahtev bi mu otkrio da je podnosilac u programu (posebna kategorija podataka).
+ * Zatečene potvrde bez upisanog načina (`nacin = null`) su lične. Prazan skup
+ * znači da odlučuje Fondacija.
  */
 export async function dohvatiPotvrdioceUslova(
   tx: TxLike,
@@ -57,14 +61,22 @@ export async function dohvatiPotvrdioceUslova(
       where: {
         verifikovaniId: korisnikId,
         OR: [
-          { vrsta: "POTVRDA" },
+          { vrsta: "POTVRDA", poPozivu: false },
           { vrsta: "UVODJENJE", poPozivu: false, verifikatorBezPotvrde: true },
         ],
       },
       select: { verifikatorId: true },
     }),
     tx.potvrdaClana.findMany({
-      where: { potvrdjeniId: korisnikId, izvor: "CLAN_KOLA", aktivnaKljuc: { not: null }, potvrdioId: { not: null } },
+      where: {
+        potvrdjeniId: korisnikId,
+        izvor: "CLAN_KOLA",
+        aktivnaKljuc: { not: null },
+        potvrdioId: { not: null },
+        // 🔴 Potvrda telefonom ne ulazi (programi čl. 5 st. 2). `null` je zatečena
+        // lična potvrda — Prisma `not` sam ne bi pustio NULL, pa je OR izričit.
+        OR: [{ nacin: null }, { nacin: { not: "TELEFONOM" } }],
+      },
       select: { potvrdioId: true },
     }),
   ]);
@@ -85,7 +97,7 @@ export async function dohvatiPotvrdioceUslova(
 
 /**
  * Fondacija potvrđuje ispunjenost uslova kad podnosilac nema podobnog potvrđivača
- * (programi čl. 4 st. 2 „odnosno Fondacija"). Obrazloženje je obavezno i snima se
+ * (programi čl. 5 st. 5). Obrazloženje je obavezno i snima se
  * u potvrdu; upisuje superadmin, jedini koji vidi unete podatke (DPIA 5.6).
  *
  * Potvrda Fondacije nosi `odFondacije = true`, a `verifikatorId` je administrator
@@ -140,7 +152,7 @@ export async function kreirajPotvrde(
  * Fondacije i od strane verifikatora), obustavi i povlačenju pristanka. Bez toga
  * podatak o tome za koji se program neko prijavio ostaje verifikatorima u zvoncetu
  * i u spisku zahteva zauvek, iako postupka više nema; naziv programa otkriva
- * pripadnost posebnoj kategoriji podataka (čl. 4 st. 3, DPIA R11), pa je to
+ * pripadnost posebnoj kategoriji podataka (čl. 6 st. 2 t. 2, DPIA R11), pa je to
  * obrada koja traje bez svrhe.
  *
  * Nedovršene potvrde se BRIŠU, ne označavaju: bez odgovora nemaju dokaznu

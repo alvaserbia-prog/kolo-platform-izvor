@@ -31,14 +31,14 @@ export interface DnevniBrojevi {
  * Badge uz „Početna" — šta je novo na tom ekranu od poslednjeg otvaranja.
  *
  * Ekran nosi Pričaonicu i Vesti Fondacije, pa se broji tačno to što se na njemu
- * vidi. 🔴 Soba se izvodi iz uzrasta, kao u `GET /api/chat` (Modul Deca, čl. 12):
- * dete broji SAMO dečju sobu i u njoj samo poruke svojih prijatelja (čl. 18
+ * vidi. 🔴 Soba se izvodi iz uzrasta, kao u `GET /api/chat` (Modul Deca, čl. 22):
+ * dete broji SAMO dečju sobu i u njoj samo poruke svojih prijatelja (čl. 27
  * st. 3), a dečja Početna nema Vesti pa se Blog ne broji. Brojanje šire od
  * vidljivog dalo bi badge koji se ne može spustiti — otvoriš ekran, a poruke
  * koja ga je podigla nema.
  *
- * Nalog koji još čeka roditelja (čl. 4c) sobu uopšte ne vidi, pa mu je badge 0.
- * Uklonjene poruke (Uslovi čl. 25 st. 2) i sopstvene poruke se ne broje.
+ * Nalog koji još čeka roditelja (čl. 5) sobu uopšte ne vidi, pa mu je badge 0.
+ * Uklonjene poruke (Uslovi čl. 29 st. 2) i sopstvene poruke se ne broje.
  */
 async function brojNovoNaPocetnoj(
   userId: string,
@@ -112,14 +112,14 @@ export async function izracunajDnevniBrojeve(
       // NAPLACENO (kartica prošla, POEN čeka potvrdu) je isti red čekanja (M-4a).
       prisma.donationRecord.count({ where: { status: { in: ["PENDING", "NAPLACENO"] } } }),
       prisma.prigovorNaOdluku.count({ where: { status: { in: ["PENDING", "U_OBRADI"] } } }),
-      // Prijavljeni oglasi na Pijaci — red čekanja za moderaciju (Uslovi čl. 25).
+      // Prijavljeni oglasi na Pijaci — red čekanja za moderaciju (Uslovi čl. 29).
       prisma.prijavaOglasa.count({ where: { status: "OTVORENA" } }),
-      // Prvi oglasi naloga bez potvrde — čekaju odobrenje doprinosa (čl. 40a st. 4).
+      // Prvi oglasi naloga bez potvrde — čekaju odobrenje doprinosa (Uslovi čl. 19).
       prisma.doprinosSadrzaju.count({ where: { status: "ZABELEZEN" } }),
       // Prijave neispunjene razmene — čekaju odluku o poništenju prepisa.
       prisma.prijavaRazmene.count({ where: { status: "OTVORENA" } }),
       // Gazdinstva — prijave i kasnija pristupanja čekaju pregled Fondacije
-      // (Pravilnik o gazdinstvima čl. 6 i 8).
+      // (Pravilnik o gazdinstvima čl. 7 i 9 st. 4).
       prisma.gazdinstvo.count({ where: { status: "NA_PREGLEDU" } }),
       prisma.clanGazdinstva.count({ where: { status: "PRISTUPIO", gazdinstvo: { status: "ODOBRENO" } } }),
     ]);
@@ -142,7 +142,7 @@ export async function izracunajDnevniBrojeve(
 
 /**
  * Broj verifikacija koje čekaju nadzor — samo čuvaru Kola i osnivaču (`mozeNadzor`,
- * dokaz stvarnosti čl. 10 st. 2; set 4.8.2). Ovaj fajl ne broji naloge po statusu
+ * dokaz stvarnosti čl. 23 st. 1; set 4.8.2). Ovaj fajl ne broji naloge po statusu
  * i ne imenuje status (to radi `OznakaStatusa`).
  */
 export async function izracunajNadzorBroj(

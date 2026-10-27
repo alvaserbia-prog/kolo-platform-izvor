@@ -7,10 +7,10 @@ import { obrisiSopstveniNalogNaCekanju } from "@/lib/protokol/deca-poziv";
 
 /**
  * DELETE /api/deca/nalog — maloletni korisnik briše sopstveni nalog koji čeka
- * preuzimanje (Pravilnik o učešću dece, čl. 4a st. 6).
+ * preuzimanje (Pravilnik o učešću dece, čl. 8 st. 3).
  *
  * Zašto zasebna ruta, a ne `DELETE /api/profil`: taj tok nalog ANONIMIZUJE i
- * čuva ga kao zapis (čl. 34 Pravilnika o KOLO sistemu), a ovde nalog treba da
+ * čuva ga kao zapis (čl. 33 Pravilnika o KOLO sistemu), a ovde nalog treba da
  * NESTANE — u razdoblju pre pristanka nema šta da se čuva.
  */
 export async function DELETE() {

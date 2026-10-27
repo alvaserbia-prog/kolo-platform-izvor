@@ -9,11 +9,11 @@
  *
  * 🔴 Dete se proverava PRVO i nikad nije „korisnik" — to drži `statusUcesnika()`
  * (dete na čekanju, dete sa roditeljem, dete Kola), a ovde se dete i boji
- * zasebno. Uz dete kartica kaže na šta se čeka (deca čl. 4c poslednji stav).
+ * zasebno. Uz dete kartica kaže na šta se čeka (deca čl. 5 st. 4).
  *
  * 🔴 Lestvica se ne prikazuje kao rang: nema koraka, procenta, „nivoa" ni boje koja
  * raste. Korisnik je jedna boja (još nije u Kolu), svi u Kolu druga, deca treća —
- * status kaže šta ko sme (Pravilnik čl. 2, 28–30), ne ko je „viši".
+ * status kaže šta ko sme (Pravilnik čl. 2, 28–29), ne ko je „viši".
  *
  * Bez `"use client"`: `useTranslations` radi i u serverskoj komponenti, pa se ista
  * oznaka crta i na serverskim stranicama i u klijentskim ekranima.
@@ -24,7 +24,7 @@ import { useTranslations } from "next-intl";
 import { jeDete, porukaStatusa, type StatusUcesnika } from "@/lib/status-ucesnika-pravila";
 import type { NaStaSeCeka } from "@/lib/deca-pravila";
 
-/** Položaj ZRNA koji status menja (Pravilnik čl. 28a, 30 st. 3; dokaz čl. 4 st. 4). */
+/** Položaj ZRNA koji status menja (Pravilnik čl. 22 st. 3, 29). */
 export type ZrnoPolozaj = "ZAMRZNUTO" | "BEZ_POTVRDE" | null;
 
 type Props = {
@@ -124,8 +124,8 @@ export default function OznakaStatusa({
         </div>
       )}
 
-      {/* Obavezne rečenice za člana bez potvrde (Pravilnik čl. 2, 28a; Uslovi čl. 2;
-          dokaz stvarnosti čl. 7). Ne skraćuju se i ne sklanjaju iza „više". */}
+      {/* Obavezne rečenice za člana bez potvrde (Pravilnik čl. 2, 28; Uslovi čl. 2;
+          dokaz stvarnosti čl. 6 i 19). Ne skraćuju se i ne sklanjaju iza „više". */}
       {status === "CLAN_BEZ_POTVRDE" && (
         <div className="mt-3 space-y-2 text-sm text-kolo-text">
           <p className="font-medium">{t("bez_potvrde_ne_mozes")}</p>

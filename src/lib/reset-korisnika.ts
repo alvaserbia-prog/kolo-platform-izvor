@@ -9,11 +9,11 @@
  * prijavljuje istim podacima i zatiče prazan sistem.
  *
  * 🔴 Nalog se NE briše i NE anonimizuje — za to postoji `DELETE /api/profil`
- * (čl. 34, prestanak statusa). Ovde nalog ostaje živ, samo mu se skida sve što
+ * (Pravilnik čl. 33, prestanak statusa). Ovde nalog ostaje živ, samo mu se skida sve što
  * je stekao. Zato ovde nema ni protivzapisa u istoriji: zapisi se brišu, a ne
  * poništavaju.
  *
- * Zero-sum ostaje očuvan (čl. 14): koliko se skine sa zapisa korisnika, toliko
+ * Zero-sum ostaje očuvan (Pravilnik čl. 17): koliko se skine sa zapisa korisnika, toliko
  * se vrati na protivzapis Protokola. Isto važi za POEN koji su povodom njegovih
  * verifikacija dobili DRUGI ljudi — te veze padaju, pa im se i POEN vraća
  * Protokolu, indeks preračunava, a slot oslobađa (isti postupak kao pri
@@ -91,8 +91,8 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
   }
 
   // Reset obara sve potvrde stvarnosti naloga. Kod roditelja bi to njegovo dete
-  // vratilo iz stanja `AKTIVNO` u `POVEZANO` (Modul Deca, čl. 4c) — prestao bi upis
-  // POEN-a po prijateljstvima — a postupak potvrde iz čl. 6 ostao bi da visi nad
+  // vratilo iz stanja `AKTIVNO` u `POVEZANO` (Modul Deca, čl. 6) — prestao bi upis
+  // POEN-a po prijateljstvima — a postupak potvrde iz čl. 13 ostao bi da visi nad
   // potvrđivačima koji sa detetom nemaju veze. Nalog deteta se briše preko
   // roditeljskog ekrana, ne ovim alatom.
   const brojDece = await prisma.roditeljstvo.count({
@@ -118,7 +118,7 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
     throw new ResetGreska("Nalog je vlasnik pokrovitelja — reset bi pokidao evidenciju pokroviteljstva.", 400);
   }
 
-  // Registar odluka Gornjeg Kola je nepromenljiv (Pravilnik o Gornjem Kolu čl. 21),
+  // Registar odluka Gornjeg Kola je nepromenljiv (Pravilnik o Gornjem Kolu čl. 19),
   // pa se zatvoren predlog ne briše ni zbog reseta test naloga.
   const zatvoreniPredlozi = await prisma.glasanjePredlog.count({
     where: { authorId: userId, status: PredlogStatus.CLOSED },
@@ -142,7 +142,7 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
   const { ponisteno: ponistenoVerifikacija, poenVracenOdDrugih } =
     await oboriVerifikacijeNaloga(userId);
 
-  // Potvrde člana bez potvrde (dokaz stvarnosti čl. 5a st. 3–5, set 4.8.2) koje je
+  // Potvrde člana bez potvrde (dokaz stvarnosti čl. 5, set 4.8.2) koje je
   // ovaj nalog DAO drugima: padaju zajedno sa njegovim verifikacijama, pa se
   // potvrđenima status preračunava (keš piše samo `preracunajStatusNaloga`).
   // Primljene padaju kaskadno sa vezama iznad, ali se brišu i ovde, za svaki slučaj.
@@ -162,7 +162,7 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
     const p = await prisma.$transaction((tx) => preracunajStatusNaloga(tx, potvrdjeniId));
     promeneDrugih.push({ id: potvrdjeniId, p });
   }
-  // Potvrde postojanja deteta koje je ovaj nalog dao (deca čl. 6, set 4.8.2).
+  // Potvrde postojanja deteta koje je ovaj nalog dao (deca čl. 13, set 4.8.2).
   prebroj(await prisma.potvrdaPostojanjaDeteta.deleteMany({ where: { potvrdioId: userId } }));
 
   // Nadzori nad tuđim verifikacijama koje ovaj nalog nije dodirivao kao strana
@@ -172,7 +172,7 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
 
   // ── 2. ZRNO ────────────────────────────────────────────────────────────────
   // Otpis bez evidentiranja POEN-a: ZRNA se vraćaju u raspoloživa u Protokolu
-  // (imenilac obračunskog koeficijenta), kao pri prestanku statusa (čl. 34 st. 1).
+  // (imenilac obračunskog koeficijenta), kao pri prestanku statusa (Pravilnik čl. 33 st. 1).
   const zrnaOtpisana = (user.zrnoStanje?.aktivno ?? 0) + (user.zrnoStanje?.slobodno ?? 0);
   await prisma.zrnoDelegacija.updateMany({ where: { delegatId: userId }, data: { delegatId: null } });
   await prisma.zrnoDelegacija.updateMany({
@@ -187,7 +187,7 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
 
   // ── 3. POEN ────────────────────────────────────────────────────────────────
   // Stanje ide na nulu, protivzapis Protokola se pomera za isti iznos (zero-sum).
-  // `increment` pokriva i negativno stanje (nadoknada, čl. 20b): tada Protokol
+  // `increment` pokriva i negativno stanje (nadoknada, dokaz stvarnosti čl. 36): tada Protokol
   // ide dublje u minus, koliko je nadoknade otpisano.
   const svezWallet = await prisma.wallet.findUnique({ where: { userId } });
   const balans = svezWallet?.balance ?? 0;
@@ -226,10 +226,10 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
   prebroj(await prisma.prijavaOglasa.deleteMany({ where: { prijaviocId: userId } }));
   prebroj(await prisma.followedCategory.deleteMany({ where: { userId } }));
 
-  // ── 5. Kanali doprinosa (čl. 40a i 40b) ────────────────────────────────────
+  // ── 5. Kanali doprinosa (Pravilnik čl. 38 i ukinuta putanja doprinosa razmeni) ────────────────────────────────────
   prebroj(await prisma.doprinosSadrzaju.deleteMany({ where: { userId } }));
   prebroj(await prisma.doprinosRazmeni.deleteMany({ where: { userId } }));
-  // Gazdinstvo (čl. 40c): prvo istupanje (gazdinstvo bez članova se gasi), pa zapisi.
+  // Gazdinstvo (Pravilnik čl. 39): prvo istupanje (gazdinstvo bez članova se gasi), pa zapisi.
   await istupiPriGasenjuNaloga(userId);
   prebroj(await prisma.doprinosGazdinstva.deleteMany({ where: { userId } }));
   prebroj(await prisma.clanGazdinstva.deleteMany({ where: { userId } }));
@@ -269,6 +269,7 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
   prebroj(await prisma.krugPristupnica.deleteMany({ where: { userId } }));
   prebroj(await prisma.krugOsnivanjeZahtev.deleteMany({ where: { inicijatorId: userId } }));
   prebroj(await prisma.glasanjeGlas.deleteMany({ where: { userId } }));
+  prebroj(await prisma.glasanjePodrska.deleteMany({ where: { userId } }));
   const sopstveniPredlozi = await prisma.glasanjePredlog.findMany({
     where: { authorId: userId },
     select: { id: true },
@@ -276,6 +277,7 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
   if (sopstveniPredlozi.length > 0) {
     const ids = sopstveniPredlozi.map((p) => p.id);
     prebroj(await prisma.glasanjeGlas.deleteMany({ where: { predlogId: { in: ids } } }));
+    prebroj(await prisma.glasanjePodrska.deleteMany({ where: { predlogId: { in: ids } } }));
     prebroj(await prisma.glasanjePredlog.deleteMany({ where: { id: { in: ids } } }));
   }
   prebroj(await prisma.donationRecord.deleteMany({ where: { userId } }));
@@ -294,14 +296,14 @@ export async function resetujNalogNaPrviDan(userId: string): Promise<ResetRezult
   prebroj(await prisma.politikaPrihvatanje.deleteMany({ where: { userId } }));
   prebroj(await prisma.pravilnikPrihvatanje.deleteMany({ where: { userId } }));
   prebroj(await prisma.userPodaci.deleteMany({ where: { userId } }));
-  // Nov nalog nema upisano ime (evidencija identiteta, čl. 31a).
+  // Nov nalog nema upisano ime (evidencija identiteta, Pravilnik čl. 31).
   prebroj(await prisma.identitetNaloga.deleteMany({ where: { userId } }));
-  // Spisak za poziv (dokaz stvarnosti čl. 4a, set 4.8.2): nov nalog nije na
+  // Spisak za poziv (dokaz stvarnosti čl. 8, set 4.8.2): nov nalog nije na
   // spisku, pa ni zapisa o tome ko je njegove podatke otvarao nema. Zapisi u
   // kojima je OVAJ nalog otvarao tuđe podatke pripadaju pozvanima i ostaju.
   prebroj(await prisma.zahtevZaRazgovor.deleteMany({ where: { userId } }));
   prebroj(await prisma.zapisOtvaranjaPoziva.deleteMany({ where: { pozvaniId: userId } }));
-  // Prijave lažnog roditeljstva koje je nalog podneo (deca čl. 4e).
+  // Prijave lažnog roditeljstva koje je nalog podneo (deca čl. 17).
   prebroj(await prisma.prijavaRoditeljstva.deleteMany({ where: { podnosilacId: userId } }));
 
   // ── 10. Sam nalog ──────────────────────────────────────────────────────────

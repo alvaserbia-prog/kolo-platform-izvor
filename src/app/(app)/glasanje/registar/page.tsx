@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { dohvatiRegistarOdluka } from "@/lib/protokol/glasanje";
+import { ucitajStatus } from "@/lib/protokol/status";
+import { vidiPseudonimeGornjegKola } from "@/lib/gornje-kolo-pravila";
 import IzvrsenjeKontrole from "./IzvrsenjeKontrole";
 import PreporukaOdgovor from "./PreporukaOdgovor";
 import { jeAdmin } from "@/lib/dozvole";
@@ -18,8 +20,11 @@ export async function generateMetadata() {
   return { title: `${t("registar_naslov")} — KOLO` };
 }
 
-// Registar odluka Gornjeg Kola (Pravilnik o Gornjem Kolu 3.7.6, čl. 21).
-// Nepromenljiv, javno vidljiv pregled svih zatvorenih predloga sa ishodom.
+// Registar odluka Gornjeg Kola (Pravilnik o Gornjem Kolu čl. 19).
+// Nepromenljiv pregled svih zatvorenih predloga: sa ishodom, zbirovima i brojem
+// podrški, i predloga o kojima se nije glasalo (naslov, predlagač, razlog).
+// Dostupan korisnicima; pseudonime predlagača i onih koji su podržali vide samo
+// učesnici (čl. 19 st. 2) — server ih drugima ne šalje.
 export default async function RegistarOdlukaPage() {
   const locale = await getLocale();
   const session = await getServerSession(authOptions);
@@ -27,7 +32,7 @@ export default async function RegistarOdlukaPage() {
   const korisnikJeAdmin = jeAdmin(session.user);
   const t = await getTranslations("glasanje");
 
-  const odluke = await dohvatiRegistarOdluka();
+  const odluke = await dohvatiRegistarOdluka(vidiPseudonimeGornjegKola(await ucitajStatus(session.user.id)));
 
   return (
     <div className="space-y-6">
@@ -50,7 +55,8 @@ export default async function RegistarOdlukaPage() {
         <div className="space-y-3">
           {odluke.map((o) => {
             const usvojen = o.ishodUsvojen === true;
-            const datum = new Date(o.rok).toLocaleDateString(intlTag(locale), { day: "2-digit", month: "long", year: "numeric" });
+            // Rok je ponoć kojom se postupak zatvorio (srpsko vreme); ispisuje se poslednji dan.
+            const datum = new Date(new Date(o.rok).getTime() - 1).toLocaleDateString(intlTag(locale), { day: "2-digit", month: "long", year: "numeric", timeZone: "Europe/Belgrade" });
             return (
               <Kartica key={o.id} className="space-y-2">
                 <div className="flex items-start justify-between gap-3">
@@ -61,24 +67,51 @@ export default async function RegistarOdlukaPage() {
                     )}
                   </div>
                   <span className={`shrink-0 text-xs px-2 py-0.5 rounded-lg font-medium ${usvojen ? "bg-kolo-green-100 text-kolo-green-700" : "bg-kolo-bg text-kolo-muted"}`}>
-                    {usvojen ? t("usvojeno") : t("neusvojeno")}
+                    {o.nijeSeGlasalo ? t("nije_glasano") : usvojen ? t("usvojeno") : t("neusvojeno")}
                   </span>
                 </div>
-                <p className="text-xs text-kolo-muted">{t.rich("registar_predlagac", { pseudonim: o.authorPseudonim, ime: (c) => <Pseudonim>{c}</Pseudonim> })} · {t("registar_zatvoreno", { datum })}</p>
+                <p className="text-xs text-kolo-muted">
+                  {o.authorPseudonim && <>{t.rich("registar_predlagac", { pseudonim: o.authorPseudonim, ime: (c) => <Pseudonim>{c}</Pseudonim> })} · </>}
+                  {t("registar_zatvoreno", { datum })}
+                </p>
                 <p className="text-sm text-kolo-muted whitespace-pre-line">{o.description}</p>
-                <div className="flex gap-4 text-xs text-kolo-muted pt-1 border-t border-kolo-border">
-                  <span>{t("registar_za_zbir", { zbir: o.zaZbir })}</span>
-                  <span>{t("registar_protiv_zbir", { zbir: o.protivZbir })}</span>
+                {/* Predlog o kome se nije glasalo: naslov, predlagač i razlog (čl. 10 st. 3–4, 19 st. 1) */}
+                {o.nijeSeGlasalo ? (
+                  <p className="text-xs text-kolo-muted pt-1 border-t border-kolo-border">
+                    {o.neglasanjeRazlog === "NEDOPUSTEN" ? t("registar_razlog_nedopusten") : t("registar_razlog_nepodrzan")}
+                  </p>
+                ) : (
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-kolo-muted pt-1 border-t border-kolo-border">
+                  {o.imaFazuPodrske && (
+                    <span>
+                      {t("br_podrski", { count: o.brPodrski })}
+                      {o.podrzavaoci.length > 0 && (
+                        <> ({o.podrzavaoci.map((ime, i) => (
+                          <span key={ime}>{i > 0 && ", "}<Pseudonim>{ime}</Pseudonim></span>
+                        ))})</>
+                      )}
+                    </span>
+                  )}
+                  {/* Izborno glasanje nema „protiv" (čl. 8): iskazuje se ukupna data moć. */}
+                  {o.izborno ? (
+                    <span>{t("izborno_ukupno", { count: o.zaZbir })}</span>
+                  ) : (
+                    <>
+                      <span>{t("registar_za_zbir", { zbir: o.zaZbir })}</span>
+                      <span>{t("registar_protiv_zbir", { zbir: o.protivZbir })}</span>
+                    </>
+                  )}
                   <span>· {t("registar_br_glasaca", { count: o.brGlasova })}</span>
-                  {/* Koliko čuvara čini većinu datih glasova (GK nacrt čl. 20 st. 1;
+                  {/* Koliko čuvara čini većinu datih glasova (Pravilnik o Gornjem Kolu čl. 19 st. 1;
                       pokazatelj K10). Iskazuje se od pet glasača — manji zbir bi
                       otkrivao pojedinca; pojedinačan glas se ne objavljuje. */}
                   {o.brGlasova >= MIN_LICA_U_ZBIRU && najmanjiBrojZaVecinu(o.tezineGlasova) !== null && (
                     <span>· {t("registar_vecina", { count: najmanjiBrojZaVecinu(o.tezineGlasova)! })}</span>
                   )}
                 </div>
+                )}
 
-                {/* Izvršenje usvojene odluke (čl. 17, 18) */}
+                {/* Izvršenje usvojene odluke (Pravilnik o Gornjem Kolu čl. 17) */}
                 {o.izvrsenjeStatus && (
                   <div className="text-xs">
                     <span className={`inline-block px-2 py-0.5 rounded-lg font-medium ${
@@ -92,7 +125,7 @@ export default async function RegistarOdlukaPage() {
                         : o.izvrsenjeStatus === "NIJE_SPROVEDENO" ? t("izvrsenje_nije_sprovedeno")
                         : t("izvrsenje_veto")}
                     </span>
-                    {/* Akt UO kojim je odluka sprovedena (čl. 51) — bez njega registar
+                    {/* Akt UO kojim je odluka sprovedena (Pravilnik čl. 46) — bez njega registar
                         ne pokazuje da je nadležni organ išta doneo. */}
                     {o.izvrsenjeAkt && (
                       <p className="mt-1 text-kolo-muted">{t("izvrsenje_akt_label")} {o.izvrsenjeAkt}</p>
@@ -111,7 +144,7 @@ export default async function RegistarOdlukaPage() {
 
                 {korisnikJeAdmin && o.izvrsenjeStatus === "ZA_IZVRSENJE" && <IzvrsenjeKontrole id={o.id} />}
 
-                {/* Usvojena dinarska preporuka — odgovor UO (čl. 20) */}
+                {/* Usvojena dinarska preporuka — odgovor UO (Pravilnik o Gornjem Kolu čl. 18) */}
                 {usvojen && o.vrsta === "DINARSKA_PREPORUKA" && (
                   o.uoOdgovor ? (
                     <div className="text-xs">

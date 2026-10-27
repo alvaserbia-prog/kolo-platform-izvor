@@ -7,8 +7,8 @@ import { jeAdmin } from "@/lib/dozvole";
 import { odobriGazdinstvo, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
- * POST — Fondacija odobrava gazdinstvo (Pravilnik o gazdinstvima čl. 6); članovima se
- * beleži doprinos. 🔴 Odobrenje ne potvrđuje stvarnost (čl. 4a poslednji stav, 4b st. 5).
+ * POST — Fondacija odobrava gazdinstvo (Pravilnik o gazdinstvima čl. 7); članovima se
+ * beleži doprinos. 🔴 Odobrenje ne potvrđuje stvarnost (čl. 4 st. 3).
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

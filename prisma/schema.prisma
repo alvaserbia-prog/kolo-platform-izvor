@@ -74,28 +74,28 @@ enum TransactionType {
   /// i uzrast dece (Podrška majkama). Javno se objavljuje dnevni agregat po
   /// programu iz `DailyEmissionSummary.breakdown`.
   EMISIJA_PROGRAM
-  /// Operativni doprinos (čl. 36). Do R-03 je delio tip sa socijalnim programima,
+  /// Operativni doprinos (Pravilnik čl. 34). Do R-03 je delio tip sa socijalnim programima,
   /// pa se u javnom prikazu nije mogao razdvojiti od njih. Nije posebna kategorija
   /// i ostaje vidljiv pojedinačno.
   EMISIJA_OPERATIVNI
   UPIS_ZRNO
   OTPIS_ZRNO
   EMISIJA_OSNIVACKI
-  EMISIJA_SADRZAJ // doprinos sadržaju platforme (Pravilnik čl. 15 t. 8, čl. 40a)
-  EMISIJA_RAZMENA // doprinos razmeni — koraci 2–5 putanje prvog kruga (čl. 40a)
+  EMISIJA_SADRZAJ // doprinos sadržaju platforme (Pravilnik čl. 19 t. 8, čl. 38)
+  EMISIJA_RAZMENA // doprinos razmeni — koraci 2–5 putanje prvog kruga (ukinuta setom 4.8.0)
   PONISTENJE_PREPISA // protivzapis prepisa poništenog po prijavi razmene
-  // Modul Deca: 500 POEN po sklopljenom prijateljstvu, obema stranama (čl. 14b).
+  // Modul Deca: 500 POEN po sklopljenom prijateljstvu, obema stranama (deca čl. 33).
   // Zaseban tip, da se u istoriji i u opticaju vidi šta je došlo iz dečjeg prostora.
   EMISIJA_PRIJATELJSTVO
   // Protivzapis Protokola pri raskidu prijateljstva i pri prelasku u punoletstvo
-  // (čl. 14c, čl. 19). Nije „poništenje prepisa" — poništava se EMISIJA, pa opticaj
+  // (deca čl. 34, 35). Nije „poništenje prepisa" — poništava se EMISIJA, pa opticaj
   // opada, dok prepis samo seli POEN između dva korisnička zapisa.
   OTPIS_PRIJATELJSTVO
   // Prevođenje punoletnog naloga u maloletni: poništenje svega što je Protokol
   // upisao tom nalogu, i skidanje POENA ljudima kojima je upisan povodom njegovih
   // potvrda. Poništava se EMISIJA, pa opticaj opada.
   OTPIS_PREVOD_U_MALOLETNI
-  // Kolektivna nabavka: poništenje zapisa PO ISKORIŠĆENJU (Pravilnik čl. 14a).
+  // Kolektivna nabavka: poništenje zapisa PO ISKORIŠĆENJU (Pravilnik čl. 18).
   // Poništava se EMISIJA — Protokolov minus se smanjuje i opticaj opada. Nije
   // PONISTENJE_PREPISA: tamo se POEN seli između dva korisnička zapisa, ovde
   // nestaje iz sistema zato što je iskorišćen.
@@ -103,59 +103,61 @@ enum TransactionType {
   /// Jednokratno usklađivanje zatečenih potvrda sa dokazom stvarnosti čl. 7 (set
   /// 4.6.4): POEN upisan po ranijem pravilu vraća se u „zabeleženo" onima koji nemaju
   /// nijedan trag učešća. Zaseban tip, da se u istoriji vidi da to NIJE ni poništenje
-  /// lažne potvrde (čl. 20a) ni otpis — nego prelazna radnja, i da se može prebrojati.
-  /// Povlači se najviše do nule; zapis nikad ne ide u minus.
+  /// lažne potvrde (dokaz stvarnosti čl. 35) ni otpis — nego prelazna radnja, i da se može prebrojati.
+  /// Povlači se pun iznos, bez kapiranja: zapis sme u minus po petom osnovu iz
+  /// Pravilnika čl. 17 st. 2 t. 5 (dokaz stvarnosti čl. 39; `potvrde-uskladjivanje.ts`).
   USKLADJIVANJE_POTVRDE
   /// Ispravka poništenja po iskorišćenju kad uslov iskorišćenja nije bio ispunjen
-  /// (Pravilnik čl. 14a, nabavke čl. 30a). Protokol → korisnik; NIJE upis kroz
-  /// kanal iz čl. 15 nego otklanjanje poništenja izvršenog bez osnova.
+  /// (Pravilnik čl. 18 st. 5, nabavke čl. 35). Protokol → korisnik; NIJE upis kroz
+  /// kanal iz čl. 19 nego otklanjanje poništenja izvršenog bez osnova.
   ISPRAVKA_NABAVKA
-  /// Poništenje zapisa POEN-a uz protivzapis Protokola (Pravilnik čl. 34): prestanak
+  /// Poništenje zapisa POEN-a uz protivzapis Protokola (Pravilnik čl. 33): prestanak
   /// statusa (gašenje naloga i kaskada potvrda tog naloga), poništenje lažne potvrde
-  /// (čl. 20a) i brisanje dečjeg naloga. Do 06.10.2026. ove radnje su upisivane kao
+  /// (dokaz stvarnosti čl. 35) i brisanje dečjeg naloga. Do 06.10.2026. ove radnje su upisivane kao
   /// `TRANSFER`, pa su ulazile u brojač razmena i zbir prepisa (pravilo 5). Zatečeni
   /// redovi ostaju `TRANSFER` — istorija se ne prepravlja; brojač ih isključuje
   /// uslovom u `USLOV_RAZMENE`.
   PONISTENJE_ZAPISA
-  /// Modul Zadruga (Pravilnik o zadrugama čl. 13). Prepis iz zapisa zadruge ili u
+  /// Modul Zadruga (Pravilnik o zadrugama čl. 11). Prepis iz zapisa zadruge ili u
   /// njega — uvek uz osnov, svaki svojim tipom, nikad `TRANSFER`: brojač razmena
   /// i zbir prepisa među korisnicima ne smeju ih brojati, a osnov mora ostati u
   /// zapisu zauvek.
-  /// Zadruga → korisnik: dobro primljeno na raspodelu (čl. 14 st. 1).
+  /// Zadruga → korisnik: dobro primljeno na raspodelu (čl. 12 st. 1).
   ZADRUGA_PRIJEM
-  /// Zadrugar odnosno druga zadruga → zadruga: dobro izdato iz raspodele (čl. 14 st. 2).
+  /// Zadrugar odnosno druga zadruga → zadruga: dobro izdato iz raspodele (čl. 12 st. 2).
   ZADRUGA_IZDAVANJE
-  /// Zadruga → izvršilac: zadružni doprinos (čl. 17).
+  /// Zadruga → izvršilac: zadatak zadruge (čl. 16; do seta 5.0 „zadružni doprinos“).
   ZADRUGA_DOPRINOS
-  /// Zadrugar → zadruga: korišćenje opreme, mehanizacije ili zemljišta (čl. 13 t. 4).
+  /// Zadrugar → zadruga: korišćenje opreme, mehanizacije ili zemljišta (čl. 11 st. 1 t. 4).
   ZADRUGA_OPREMA
-  /// Usluga koju zadruga pruža ili prima (čl. 13 t. 5); smer čita se iz zapisa.
+  /// Usluga koju zadruga pruža ili prima (čl. 11 st. 1 t. 5); smer čita se iz zapisa.
   ZADRUGA_USLUGA
   /// Prestanak učešća zadruge: POEN zapisa zadruge poništava se protivzapisom u
-  /// korist Protokola (Pravilnik o KOLO sistemu čl. 56). Opticaj opada.
+  /// korist Protokola (Pravilnik o KOLO sistemu čl. 50 st. 4). Opticaj opada.
   PONISTENJE_ZAPISA_ZADRUGE
-  /// Doprinos gazdinstva (Pravilnik čl. 40c) — sopstveni tip, da se iz brojača
+  /// Doprinos gazdinstva (Pravilnik čl. 39) — sopstveni tip, da se iz brojača
   /// kanala 8 ne pomeša sa prvim oglasom (EMISIJA_SADRZAJ) ni sa putanjom.
   EMISIJA_GAZDINSTVO
   /// Otpis po prestanku gazdinstva — šesti osnov negativnog zapisa
-  /// (čl. 14 st. 3 t. 6). Zapis SME u minus.
+  /// (Pravilnik čl. 17 st. 2 t. 6). Zapis SME u minus.
   OTPIS_GAZDINSTVO
   /// Pokroviteljstvo dobrima i uslugama (Pravilnik o pokroviteljstvu i donacijama
-  /// Glava IVa, čl. 13h). Sopstveni tip, ne `EMISIJA_POKROVITELJ`: brojači putanja
+  /// Glava IV, čl. 33). Sopstveni tip, ne `EMISIJA_POKROVITELJ`: brojači putanja
   /// i opticaj ne smeju da mešaju novac i robu (odluka vlasnika, 19.10.2026).
   EMISIJA_POKROVITELJ_DOBRA
-  /// Poništenje rezervisanog POEN-a imaoca vaučera po realizaciji (nabavke čl. 30g,
-  /// Pravilnik čl. 14a). Korisnik → Protokol; opticaj opada.
+  /// Poništenje POEN-a imaoca vaučera PRI UZIMANJU vaučera (nabavke čl. 33 st. 4,
+  /// Pravilnik čl. 18), ne pri iskorišćenju; istek ga ne ispravlja (čl. 34 st. 4).
+  /// Korisnik → Protokol; opticaj opada.
   PONISTENJE_VAUCER
   /// Ispravka poništenja izvršenog bez predaje dobra, odnosno pružanja usluge
-  /// (nabavke čl. 30g st. 3, Pravilnik čl. 14a st. 5). Protokol → korisnik.
+  /// (nabavke čl. 35, Pravilnik čl. 18 st. 5). Protokol → korisnik.
   ISPRAVKA_VAUCER
   /// Otpis po neizvršenju pokroviteljstva dobrima i uslugama — sedmi osnov
-  /// negativnog zapisa (čl. 14 st. 3 t. 7; donacije čl. 13j). Zapis SME u minus.
+  /// negativnog zapisa (Pravilnik čl. 17 st. 2 t. 7; donacije čl. 35). Zapis SME u minus.
   OTPIS_POKROVITELJ_DOBRA
   /// Otpis neto prepisa sa ugašenog naloga na nalog koji ostaje, po utvrđenju
-  /// višestrukog naloga istog lica — osmi osnov negativnog zapisa (čl. 14 st. 3
-  /// t. 8; dokaz stvarnosti čl. 4b; registar 2026-10, N4-M3). Korisnik → Protokol;
+  /// višestrukog naloga istog lica — osmi osnov negativnog zapisa (Pravilnik čl. 17 st. 2
+  /// t. 8; dokaz stvarnosti čl. 14; registar 2026-10, N4-M3). Korisnik → Protokol;
   /// zapis SME u minus. Nikad `TRANSFER`.
   OTPIS_VISESTRUKI_NALOG
 }
@@ -173,7 +175,7 @@ enum AdminNivo {
   NONE
   ADMIN
   SUPERADMIN
-  /// Lice koje predloži zadruga (Pravilnik o zadrugama čl. 16, registar 2026-10 U2):
+  /// Lice koje predloži zadruga (Pravilnik o zadrugama čl. 15, registar 2026-10 U2):
   /// radi samo u svojoj zadruzi (`User.adminZadrugaId`), van nje ne vidi ništa.
   ZADRUGA
 }
@@ -194,34 +196,40 @@ enum PredlogStatus {
   CLOSED
 }
 
-// Stanje izvršenja usvojene odluke Gornjeg Kola (čl. 17, 18)
-enum IzvrsenjeStatus {
-  ZA_IZVRSENJE // usvojeno, čeka izvršenje od strane Fondacije
-  IZVRSENO // UO sproveo odluku svojim aktom (čl. 51 Pravilnika, čl. 17 Gornjeg Kola)
-  VETO_OBUSTAVLJENO // izvršenje obustavljeno zaštitnim vetom (čl. 18, 48)
-  NIJE_SPROVEDENO // UO odbio da sprovede odluku iz razloga sa zatvorene liste (čl. 51)
+// Zašto se o predlogu Gornjeg Kola nije glasalo (Pravilnik o Gornjem Kolu čl. 10 st. 3–4).
+enum NeglasanjeRazlog {
+  NEPODRZAN // do kraja perioda podrške niko ga nije podržao (čl. 10 st. 4)
+  NEDOPUSTEN // nedopušten predlog (čl. 6 st. 3) — ko to utvrđuje, čeka odluku vlasnika
 }
 
-// Zatvorena lista razloga za odbijanje sprovođenja odluke Gornjeg Kola (čl. 51
+// Stanje izvršenja usvojene odluke Gornjeg Kola (Pravilnik o Gornjem Kolu čl. 17)
+enum IzvrsenjeStatus {
+  ZA_IZVRSENJE // usvojeno, čeka izvršenje od strane Fondacije
+  IZVRSENO // UO sproveo odluku svojim aktom (čl. 46 Pravilnika, čl. 17 Pravilnika o Gornjem Kolu)
+  VETO_OBUSTAVLJENO // izvršenje obustavljeno zaštitnim vetom (veto ukinut u setu 5.0; vrednost ostaje kao istorija)
+  NIJE_SPROVEDENO // UO odbio da sprovede odluku iz razloga sa zatvorene liste (Pravilnik čl. 46 st. 3)
+}
+
+// Zatvorena lista razloga za odbijanje sprovođenja odluke Gornjeg Kola (čl. 46 st. 3
 // Pravilnika, set 4.4.6). Zaštitni veto NIJE ovde — on ima sopstveni status
-// VETO_OBUSTAVLJENO, jer je privremen i gasi se trajno po čl. 49.
+// VETO_OBUSTAVLJENO, koji ostaje kao istorija (veto ukinut u setu 5.0).
 enum OdbijanjeRazlog {
   ZAKON // odluka je suprotna zakonu
   STATUT // odluka je suprotna Statutu Fondacije
-  VAN_NADLEZNOSTI // pitanje izuzeto iz nadležnosti Gornjeg Kola (čl. 50)
+  VAN_NADLEZNOSTI // pitanje izuzeto iz nadležnosti Gornjeg Kola (Pravilnik čl. 45)
 }
 
-// Vrsta predloga: obavezujuća odluka ili neobavezujuća dinarska preporuka (čl. 20)
+// Vrsta predloga: obavezujuća odluka ili neobavezujuća dinarska preporuka (Pravilnik čl. 46 st. 6; Pravilnik o Gornjem Kolu čl. 18)
 enum PredlogVrsta {
   ODLUKA
   DINARSKA_PREPORUKA
-  // Izbor jedne mogućnosti između više ponuđenih (Gornje Kolo čl. 8 st. 4).
+  // Izbor jedne mogućnosti između više ponuđenih (Gornje Kolo čl. 8 st. 1).
   // Predmet nabavke je dinarsko pitanje, pa ovaj tip NIKAD ne ide u izvršenje
-  // po čl. 17 — kao ni DINARSKA_PREPORUKA. Stvara ga isključivo server.
+  // po čl. 17 Pravilnika o Gornjem Kolu — kao ni DINARSKA_PREPORUKA. Stvara ga isključivo server.
   IZBOR_NABAVKE
 }
 
-// Obrazložen odgovor UO na usvojenu dinarsku preporuku (čl. 20)
+// Obrazložen odgovor UO na usvojenu dinarsku preporuku (Pravilnik o Gornjem Kolu čl. 18)
 enum UoOdgovor {
   PRIHVACENO
   ODBIJENO
@@ -235,7 +243,7 @@ enum ProgramType {
   SKOLOVANJE
 }
 
-/// Osnov prava u programu Posebna podrška (Pravilnik o programima podrške čl. 12).
+/// Osnov prava u programu Posebna podrška (Pravilnik o programima podrške čl. 14).
 ///
 /// 🔴 Dva osnova, kako ih akt i nabraja. Akutna i hronična bolest NISU treći osnov
 /// nego deo smanjene sposobnosti: razdvojeni, naziv programa bi odao da je reč o
@@ -264,6 +272,7 @@ enum EvidencijaStatus {
   APPROVED
   REJECTED
   EMITTED
+  DOPUNA
 }
 
 enum UserStatus {
@@ -296,20 +305,20 @@ enum VrstaDonacije {
   USLUGE
 }
 
-/// Pokroviteljstvo dobrima i uslugama (donacije Glava IVa).
+/// Pokroviteljstvo dobrima i uslugama (donacije Glava IV).
 enum VrstaDobraPokrovitelja {
   DOBRO
   USLUGA
 }
 
-/// Ko je davalac (donacije čl. 13e st. 1 i 3): pravno lice ili preduzetnik, odnosno
+/// Ko je davalac (donacije čl. 16 st. 1 i 4, čl. 28 st. 1): pravno lice ili preduzetnik, odnosno
 /// nosilac registrovanog poljoprivrednog gazdinstva.
 enum VrstaDavaoca {
   FIRMA
   GAZDINSTVO
 }
 
-/// Odnos podnosioca prijave prema davaocu (donacije čl. 13e st. 1). Za
+/// Odnos podnosioca prijave prema davaocu (donacije čl. 16 st. 2 t. 4, čl. 28 st. 1). Za
 /// registrovano poljoprivredno gazdinstvo prijavu podnosi samo nosilac.
 enum OdnosPremaDavaocu {
   ZASTUPNIK
@@ -322,7 +331,7 @@ enum OdnosPremaDavaocu {
   OVLASCENO_LICE
 }
 
-/// Pravni oblik pokrovitelja (donacije čl. 6a st. 2). Ne utiče na obračun doprinosa.
+/// Pravni oblik pokrovitelja (donacije čl. 16 st. 2 t. 1 i st. 3). Ne utiče na obračun doprinosa.
 enum PravniOblik {
   PRIVREDNO_DRUSTVO
   PREDUZETNIK
@@ -332,7 +341,7 @@ enum PravniOblik {
   DRUGO_PRAVNO_LICE
 }
 
-/// Status upisa pokrovitelja u evidenciju (donacije čl. 6a).
+/// Status upisa pokrovitelja u evidenciju (donacije čl. 16, 18).
 enum StatusUpisaPokrovitelja {
   /// Čeka da Fondacija naziv, matični broj i zastupnika uporedi sa registrom.
   NA_PROVERI
@@ -341,14 +350,16 @@ enum StatusUpisaPokrovitelja {
 }
 
 enum UgovorDobraStatus {
-  /// Prijava čeka uporedbu cene sa dokazom i podataka sa APR-om (čl. 13f st. 2).
+  /// Prijava čeka pregled: Fondacija proverava da je fotografija cenovnika priložena (donacije
+  /// čl. 29 st. 2; cenu ne procenjuje, ne upoređuje i ne određuje). Podaci o davaocu su
+  /// upoređeni sa registrom pri odobrenju upisa (čl. 18 st. 1).
   NA_PREGLEDU
   /// Prijava prihvaćena, ugovor generisan i snimljen; čeka potpis zastupnika.
   CEKA_POTPIS
-  /// Ugovor potpisan, vaučeri izdati, POEN evidentiran (čl. 13h).
+  /// Ugovor potpisan, vaučeri izdati, POEN evidentiran (donacije čl. 33).
   POTPISAN
   ODBIJEN
-  /// Ugovor raskinut po neizvršenju (čl. 13j): neiskorišćeni vaučeri prestaju,
+  /// Ugovor raskinut po neizvršenju (donacije čl. 35): neiskorišćeni vaučeri prestaju,
   /// podnosiocu se otpisuje, davalac se upisuje na listu zabrane (`ZabranaDavaoca`).
   RASKINUT
 }
@@ -356,13 +367,13 @@ enum UgovorDobraStatus {
 enum VaucerStatus {
   /// Izdat, niko ga još nije uzeo.
   SLOBODAN
-  /// Uzet, glasi na imaoca; POEN imaoca je poništen pri uzimanju (nabavke čl. 30f).
+  /// Uzet, glasi na imaoca; POEN imaoca je poništen pri uzimanju (nabavke čl. 33 st. 4).
   DODELJEN
   /// Davalac je potvrdio predaju odnosno pružanje; POEN se tada ne pomera.
   ISKORISCEN
-  /// Rok važenja je istekao; poništenje se ne ispravlja, otpisa nema (čl. 30g st. 2).
+  /// Rok važenja je istekao; poništenje se ne ispravlja, otpisa nema (nabavke čl. 34 st. 4).
   ISTEKAO
-  /// Prestao raskidom ugovora po neizvršenju (čl. 13j); dodeljenom se poništenje ispravlja.
+  /// Prestao raskidom ugovora po neizvršenju (donacije čl. 35); dodeljenom se poništenje ispravlja.
   NEIZVRSEN
 }
 
@@ -420,7 +431,7 @@ model User {
   verifiedAt             DateTime?
   tipKorisnika           TipKorisnika @default(NEVERIFIKOVAN)
   admin                  AdminNivo    @default(NONE)
-  /// Zadruga za koju radi nalog sa nivoom `ZADRUGA` (zadruge čl. 16). Kod drugih nivoa prazno.
+  /// Zadruga za koju radi nalog sa nivoom `ZADRUGA` (zadruge čl. 15). Kod drugih nivoa prazno.
   adminZadrugaId         String?
   adminZadruga           Krug?        @relation("ZadruzniAdmini", fields: [adminZadrugaId], references: [id])
   // Oznaka početnog nosioca ZRNA (osnivač). Zaseban marker pored tipKorisnika —
@@ -428,8 +439,8 @@ model User {
   // pokazatelj osnivača. Osnivač NE sme da verifikuje drugog osnivača (anti-malverzacija).
   jeOsnivac              Boolean      @default(false)
   indeksStvarnosti       Int          @default(0)
-  /// Član je POTVRĐEN (član Kola, Pravilnik čl. 29; set 4.8.2). Null = korisnik ili
-  /// član bez potvrde (čl. 28a). Keš izveden iz grafa (veza vrste POTVRDA ili
+  /// Član je POTVRĐEN (član Kola, Pravilnik čl. 28; set 4.8.2). Null = korisnik ili
+  /// član bez potvrde (Pravilnik čl. 28 st. 3). Keš izveden iz grafa (veza vrste POTVRDA ili
   /// uvođenje sa živom `PotvrdaClana`; osnivač uvek). 🔴 Upisuje ga ISKLJUČIVO
   /// `preracunajStatusNaloga()` u `src/lib/protokol/status.ts` (izuzeci: migracija,
   /// seed, skripta prelaza, `reset-korisnika.ts`). Brana `status-ucesnika-izvor.test.ts`.
@@ -443,6 +454,10 @@ model User {
   utvrdjenNepostojeci    DateTime?
   pocetnaEmisijaIzvrsena Boolean      @default(false)
   pseudonimChangedAt     DateTime?
+  /// Trenutak kad je pseudonim zamenjen oznakom koja ni posredno ne upućuje na lice
+  /// (Pravilnik čl. 55 st. 3, Politika čl. 11 st. 8 i čl. 42 st. 6: 10 godina od prestanka statusa;
+  /// `protokol/anonimizacija.ts`, mesečno iz `cron/gdpr-cistenje`). Numerička istorija ostaje.
+  pseudonimAnonimizovanAt DateTime?
   // "Viđeno" vremena za sidebar badge-eve: badge broji samo stavke novije od ovog
   // trenutka. Postavlja se kad korisnik otvori odgovarajući tab → badge ide na 0.
   vidjenoNovcanikAt      DateTime?
@@ -480,7 +495,7 @@ model User {
   stvarnostIzRegistraAt            DateTime?
   // ─── Modul Deca (Pravilnik o Modulu Deca) ─────────────────────────────────
   // Nenulto samo kod maloletnih korisnika. Jedini izvor uzrasta; posle upisa se ne
-  // menja (čl. 7) — roditeljska izjava je jedina provera godina kojom sistem
+  // menja (deca čl. 4 st. 2) — roditeljska izjava je jedina provera godina kojom sistem
   // raspolaže.
   //
   // 🔴 SME da bude NULL i kod maloletnog naloga: dete koje se registrovalo samo
@@ -491,7 +506,7 @@ model User {
   // upit mora da isključi decu, a računanje datuma po redu to ne bi podnelo.
   // 🔴 Oba polja se pišu ISKLJUČIVO kroz `poljaDeteta()` u `src/lib/protokol/deca.ts`.
   maloletan                        Boolean                        @default(false)
-  // Roditelji (čl. 4). Zaseban model, jer dete ima najviše DVA roditelja i oba
+  // Roditelji (deca čl. 2 st. 4). Zaseban model, jer dete ima najviše DVA roditelja i oba
   // imaju ista ovlašćenja — kolona na nalogu bi jednog činila glavnim, a drugog
   // dopisanim. Prazan skup znači „dete na čekanju": nalog postoji, veza ne.
   roditeljstvaKaoDete              Roditeljstvo[]                 @relation("RoditeljstvoDete")
@@ -499,23 +514,23 @@ model User {
   // Poziv upućen roditelju pri samostalnoj registraciji deteta. Najviše jedan
   // živ po detetu (`@unique` na `deteId`).
   roditeljPoziv                    RoditeljPoziv?
-  // Prekidač iz čl. 10 st. 2: komunikacija i razmena maloletnog korisnika sa
+  // Prekidač iz deca čl. 20 st. 2: komunikacija i razmena maloletnog korisnika sa
   // punoletnim korisnicima. Isključen pri otvaranju naloga, povlači se u svakom
   // trenutku. Stoji na DETETU, a menja ga bilo koji od roditelja.
   dozvolaOdrasli                   Boolean                        @default(false)
-  // Škola koju maloletni korisnik pohađa (Pravilnik o učešću dece, čl. 7). Bira je
+  // Škola koju maloletni korisnik pohađa (Pravilnik o učešću dece, čl. 26). Bira je
   // SÁMO dete, sa spiska u `src/lib/skole-srbije.ts` — ovde stoji ŠIFRA, nikad
   // naziv, jer isto ime nosi preko trideset škola u Srbiji.
   //
   // 🔴 Briše se na dva mesta i oba se lako previde: pri prelasku u punoletni nalog
   // (`punoletstvo.ts` — inače punoletan čovek zauvek ostaje u brojanju svoje
-  // osnovne škole) i pri gašenju naloga (čl. 34).
+  // osnovne škole) i pri gašenju naloga (Pravilnik čl. 33).
   skolaSifra                       String?
   // Nosi rok od 30 dana između dve promene. 🔴 PRVA postavka nije promena i ostavlja
   // ovo polje prazno — dete koje tek bira školu ne čeka ništa. Istorija škola se NE
   // čuva (minimizacija): pamti se samo tekuća vrednost i trenutak poslednje izmene.
   skolaPromenjenaAt                DateTime?
-  // Prelaz u punoletstvo (Modul Deca, Glava VI). Dva odvojena stuba, jer se dešavaju
+  // Prelaz u punoletstvo (Pravilnik o učešću dece, Glava VII). Dva odvojena stuba, jer se dešavaju
   // mesec dana jedan od drugog i oba moraju biti idempotentna: obaveštenje se šalje
   // jednom, obrada se izvodi jednom.
   punoletstvoNajavaAt              DateTime?
@@ -555,7 +570,7 @@ model User {
   /// i broj telefona se na profilu menjaju, ali ne brišu: porede se sa drugim
   /// nalozima radi sprečavanja višestrukih naloga, a brišu se gašenjem naloga.
   telefonZaPozivAt                 DateTime?
-  poverljivostPozivaAt             DateTime? // izjava o poverljivosti pre prvog otvaranja poziva (dokaz stvarnosti čl. 4a, S2-M1); samo trenutak
+  poverljivostPozivaAt             DateTime? // izjava o poverljivosti pre prvog otvaranja poziva (dokaz stvarnosti čl. 10 st. 3, S2-M1); samo trenutak
   avatar                           String?
   // Izabrani jezik korisnika (next-intl locale): "sr" | "sr-Cyrl" | "en" | "hu".
   // Koristi se za jezik notifikacija/email-ova i podrazumevani prikaz po prijavi.
@@ -617,6 +632,7 @@ model User {
   zakazanZaDelegata                ZrnoDelegacija[]               @relation("ZakazaniDelegat")
   kreiraniPredlozi                 GlasanjePredlog[]
   glasovi                          GlasanjeGlas[]
+  glasanjePodrske                  GlasanjePodrska[]
   auditLogs                        AuditLog[]                     @relation("AdminActions")
   aktivnosti                       AktivnostLog[]
   notifikacije                     Notifikacija[]
@@ -664,7 +680,7 @@ model User {
   @@index([maloletan, skolaSifra])
 }
 
-/// Veza roditelj — dete (Modul Deca, čl. 4 i 5).
+/// Veza roditelj — dete (Pravilnik o učešću dece, čl. 2 st. 4 i čl. 7).
 ///
 /// Dete ima najviše dva roditelja i **oba imaju ista ovlašćenja**: prekidač za
 /// odrasle, uklanjanje oglasa, uvid u razgovore sa punoletnim licima i brisanje
@@ -715,7 +731,7 @@ model Roditeljstvo {
   // izvrsio nijednu radnju kojom bi izjavu dao. Neaktivnost roditelja do ovog roka
   // obara sve potvrde koje za to dete cekaju izjasnjenje.
   izjavaRokDo       DateTime?
-  /// Veza je privremeno zaustavljena po prijavi lažnog roditeljstva (deca čl. 4e
+  /// Veza je privremeno zaustavljena po prijavi lažnog roditeljstva (deca čl. 17
   /// st. 2, set 4.8.2). Dok traje, roditelj nema ovlašćenja ni uvid, a dete nije
   /// dete Kola po ovoj vezi. Null = veza radi.
   zaustavljenaAt    DateTime?
@@ -728,7 +744,7 @@ model Roditeljstvo {
   @@index([izjavaRokDo])
 }
 
-/// Poziv roditelju pri samostalnoj registraciji deteta (Modul Deca, čl. 4a).
+/// Poziv roditelju pri samostalnoj registraciji deteta (Pravilnik o učešću dece, čl. 8 i 10).
 ///
 /// Dete unosi svoj pseudonim i **email roditelja**; datum rođenja ne unosi — njega
 /// upisuje roditelj pri preuzimanju. Roditelju stiže poruka sa tri radnje: preuzmi
@@ -808,7 +824,7 @@ model RoditeljstvoPotvrda {
   @@index([roditeljId, status])
 }
 
-/// Ishod odlučivanja roditelja o prepisu iznad praga (Pravilnik o učešću dece, čl. 14).
+/// Ishod odlučivanja roditelja o prepisu iznad praga (Pravilnik o učešću dece, čl. 30).
 enum PrepisOdobrenjeStatus {
   CEKA
   ODOBREN
@@ -817,7 +833,7 @@ enum PrepisOdobrenjeStatus {
 }
 
 /// Prepis POEN-a iz zapisa maloletnog korisnika koji čeka odobrenje roditelja
-/// (Pravilnik o učešću dece, čl. 14).
+/// (Pravilnik o učešću dece, čl. 30).
 ///
 /// 🔴 Ovo NIJE transakcija i NE ulazi u zero-sum. POEN se ne pomera dok roditelj
 /// ne odobri; do tada ovde stoji samo NAMERA. Kad bi se POEN skidao unapred,
@@ -876,24 +892,24 @@ enum RoditeljstvoPotvrdaStatus {
   ISTEKLA
 }
 
-/// Odakle potvrda postojanja deteta (Pravilnik o učešću dece čl. 6, 22a; set 4.8.2).
+/// Odakle potvrda postojanja deteta (Pravilnik o učešću dece čl. 13, 37; set 4.8.2).
 enum IzvorPotvrdePostojanja {
-  /// Potvrdio član Kola ili osnivač koji roditelja lično zna (čl. 6 st. 4).
+  /// Potvrdio član Kola ili osnivač koji roditelja lično zna (čl. 13 st. 3).
   CLAN_KOLA
-  /// Zatečena potvrda iz ranijeg postupka (čl. 22a st. 1).
+  /// Zatečena potvrda iz ranijeg postupka (čl. 37, prva rečenica).
   ZATECENA
-  /// Dete osnivača povezano pre stupanja na snagu (čl. 22a st. 2).
+  /// Dete osnivača povezano pre stupanja na snagu (čl. 37, druga rečenica).
   OSNIVAC_PRELAZNA
 }
 
-/// Potvrda postojanja deteta (Pravilnik o učešću dece čl. 6, set 4.8.2). Zahtev se
+/// Potvrda postojanja deteta (Pravilnik o učešću dece čl. 13, set 4.8.2). Zahtev se
 /// podnosi za svako dete posebno, bez roka; potvrda je bez POEN-a. Stari postupak
 /// (`RoditeljstvoPotvrda`, `RoditeljstvoPotvrdaFondacije`) nema novih upisa.
 /// `aktivnaKljuc` = `roditeljstvoId` dok je zahtev otvoren ili potvrđen.
 model PotvrdaPostojanjaDeteta {
   id              String                  @id @default(uuid())
-  /// Null kad je veza ukinuta (deca čl. 4e): potvrda i njen nadzorni predmet ostaju,
-  /// da bi se moglo oceniti da li je potvrda bila lažna (čl. 6 st. 6).
+  /// Null kad je veza ukinuta (deca čl. 18): potvrda i njen nadzorni predmet ostaju,
+  /// da bi se moglo oceniti da li je potvrda bila lažna (deca čl. 13 st. 5).
   roditeljstvoId  String?
   roditeljstvo    Roditeljstvo?           @relation(fields: [roditeljstvoId], references: [id], onDelete: SetNull)
   deteId          String
@@ -930,7 +946,7 @@ enum PrijavaRoditeljstvaStatus {
   UKINUTA
 }
 
-/// Prijava lažnog roditeljstva (Pravilnik o učešću dece čl. 4e, set 4.8.2). Po
+/// Prijava lažnog roditeljstva (Pravilnik o učešću dece čl. 17, set 4.8.2). Po
 /// prijavi se veza odmah zaustavlja. 🔴 Podnosilac se NE otkriva licu na koje se
 /// prijava odnosi. `roditeljId` je snimak (veza se pri ukidanju briše).
 model PrijavaRoditeljstva {
@@ -964,7 +980,7 @@ model PrijavaRoditeljstva {
 ///     osobu — što je gore od mrtvog linka, jer izgleda ispravno.
 ///
 /// Red se briše kad se korisnik vrati na svoje staro ime i pri gašenju naloga
-/// (čl. 34 — anonimizacija; napušteni pseudonim je i dalje trag o nalogu).
+/// (Pravilnik čl. 33 st. 4 — pseudonimizacija; napušteni pseudonim je i dalje trag o nalogu).
 model PseudonimIstorija {
   id             String   @id @default(uuid())
   userId         String
@@ -977,12 +993,12 @@ model PseudonimIstorija {
 }
 
 /// Cirkularno SISTEMSKO obaveštenje svim korisnicima — izmene Uslova/Politike
-/// (Uslovi čl. 40, Politika čl. 16), planirani zastoj duži od 24h (Uslovi čl. 33)
+/// (Uslovi čl. 43, Politika čl. 47), planirani zastoj duži od 24h (Uslovi čl. 36)
 /// i slična obaveštenja koja Fondacija duguje korisnicima.
 ///
 /// NE poštuje `User.emailObavestenja` — to je obaveza iz akata, ne izbor. Zato je
 /// `pravniOsnov` obavezan i upisuje se u audit log: sistemska pošta bez osnova iz
-/// akata je bilten, a bilten traži zaseban pristanak i dopunu Politike (čl. 8,
+/// akata je bilten, a bilten traži zaseban pristanak i dopunu Politike (čl. 39,
 /// gde je Resend deklarisan isključivo za sistemska obaveštenja).
 ///
 /// Slanje je nastavljivo: `kursorId` je poslednji obrađeni `User.id` u stabilnom
@@ -993,7 +1009,7 @@ model SistemskoObavestenje {
   tekst       String
   /// Relativna putanja u aplikaciji (npr. "/uslovi"), opciono.
   link        String?
-  /// Odredba akta iz koje proizlazi obaveza slanja (npr. "Uslovi čl. 40").
+  /// Odredba akta iz koje proizlazi obaveza slanja (npr. "Uslovi čl. 43").
   pravniOsnov String
   status      SistemskoStatus @default(NACRT)
   ukupno      Int             @default(0)
@@ -1023,7 +1039,7 @@ model PasswordResetToken {
 }
 
 /// Potvrda imejl adrese koju maloletni korisnik sam upiše (Pravilnik o učešću dece,
-/// čl. 7 — školu i ostale dobrovoljne podatke navodi sámo dete).
+/// čl. 26 st. 1 — školu i ostale dobrovoljne podatke navodi sámo dete).
 ///
 /// 🔴 Adresa se NE upisuje u `User.email` dok se ne potvrdi klikom na link poslat
 /// NA NJU. Bez tog koraka jedna omaška u kucanju predaje ključ od dečjeg naloga
@@ -1114,7 +1130,7 @@ model Transaction {
   /// izmisliti danas. Posledica je da stariji zapisi ne ulaze u pojedinačan
   /// prikaz — ulaze u dnevni zbir, kao i do sada.
   ///
-  /// `onDelete: SetNull` — brisanjem prijave (prestanak svojstva korisnika, čl. 34)
+  /// `onDelete: SetNull` — brisanjem prijave (prestanak statusa korisnika, Pravilnik čl. 33)
   /// gasi se prikaz, a sam zapis ostaje. Kaskadno brisanje zapisa oborilo bi
   /// zero-sum.
   enrollmentId String?
@@ -1133,17 +1149,23 @@ model Krug {
   location       String?
   status         KrugStatus        @default(ACTIVE)
   /// Krug i zadruga su ISTI kolektivni oblik pod drugim imenom (Pravilnik o
-  /// zadrugama čl. 11). `zadruga = true` znači da je upisana zadruga sa ugovorom
+  /// zadrugama do seta 5.0, čl. 11 st. 3). `zadruga = true` znači da je upisana zadruga sa ugovorom
   /// o saradnji; zapis i pragovi ostaju isti, pa se dostignut prag ne ponavlja.
   zadruga        Boolean           @default(false)
   zadruzniAdmini User[]            @relation("ZadruzniAdmini")
   maticniBroj    String?
   pib            String?
   adresa         String?
-  /// Dan zaključenja ugovora o saradnji (čl. 5 t. 3).
+  /// Dan zaključenja ugovora o saradnji (zadruge čl. 4 st. 1 t. 2).
   ugovorAt       DateTime?
-  /// Prestanak učešća (čl. 20) — zapis se zatvara, POEN se poništava.
+  /// Prestanak učešća (zadruge čl. 22) — zapis se zatvara, POEN se poništava.
   prestanakAt    DateTime?
+  /// Od otkaza ugovora o saradnji, odnosno pokretanja brisanja iz registra (zadruge
+  /// 5.0 čl. 22 st. 2; Pravilnik čl. 50 st. 4): iz zapisa i u njega se ne prepisuje, a
+  /// zadružni doprinos se ne evidentira. Zapis ostaje otvoren do prestanka učešća.
+  zamrznutoAt    DateTime?
+  /// OTKAZ_UGOVORA | BRISANJE_IZ_REGISTRA (`OSNOVI_ZAMRZAVANJA` u zadruga-pravila.ts).
+  zamrznutoOsnov String?
   wallet         Wallet?           @relation("KrugWallet")
   memberships    KrugClanstvo[]
   pristupnice    KrugPristupnica[]
@@ -1164,7 +1186,7 @@ model KrugClanstvo {
   joinedAt    DateTime  @default(now())
   leftAt      DateTime?
   /// Ime i prezime zadrugara koje dostavlja zadruga, uz pristanak lica (Pravilnik
-  /// o zadrugama čl. 7, Registar radnji obrade br. 19). 🔴 Ne prikazuje se drugim
+  /// o zadrugama čl. 6 st. 2, Registar radnji obrade br. 19). 🔴 Ne prikazuje se drugim
   /// korisnicima; briše se prestankom svojstva i gašenjem naloga — veza ostaje
   /// pseudonimna, jer broji pragove koji su već evidentirani.
   imePrezime  String?
@@ -1257,7 +1279,7 @@ model MarketplaceListing {
   // isti posetilac se broji jednom dnevno (guard je u pretraživaču). Vidi ga
   // SAMO oglašivač — povratna informacija da oglas nije otišao u prazno.
   pregledi       Int           @default(0)
-  // Uklanjanje od strane Fondacije (Uslovi čl. 21 st. 2 i čl. 25 st. 2). Razlog je
+  // Uklanjanje od strane Fondacije (Uslovi čl. 23 st. 5 i čl. 29 st. 2). Razlog je
   // obavezan jer se korisniku mora saopštiti — nije opcioni komentar za internu upotrebu.
   uklonjenAt     DateTime?
   uklonjenRazlog String?
@@ -1270,7 +1292,7 @@ model MarketplaceListing {
   poruke       Poruka[]           @relation("PorukaOglas")
   povodKonverz Konverzacija[]     @relation("KonvPovod")
 
-  /// Oglas postavljen u ime gazdinstva (Pravilnik o gazdinstvima čl. 10). Oznaka
+  /// Oglas postavljen u ime gazdinstva (Pravilnik o gazdinstvima čl. 18). Oznaka
   /// DOMAĆE se ne čuva — izvodi se iz toga da je gazdinstvo odobreno i da je
   /// oglašivač i dalje njegov član, pa ne može da preživi poništenje ni istupanje.
   gazdinstvoId String?
@@ -1281,7 +1303,7 @@ model MarketplaceListing {
 }
 
 /**
- * Prijava oglasa od strane korisnika (Uslovi čl. 25 st. 2 — Fondacija može ukloniti
+ * Prijava oglasa od strane korisnika (Uslovi čl. 29 st. 2 — Fondacija može ukloniti
  * sadržaj „koji je prijavljen od strane drugih korisnika kao problematičan").
  * Jedan korisnik može prijaviti isti oglas samo jednom (@@unique) — inače je
  * brojač prijava merilo glasnosti, a ne ozbiljnosti.
@@ -1305,15 +1327,15 @@ model PrijavaOglasa {
 }
 
 /**
- * Razlozi prijave — prate zabrane iz Uslova čl. 20, 21, 22 i 24.
+ * Razlozi prijave — prate zabrane iz Uslova čl. 22, 23, 27 i 28.
  */
 enum PrijavaRazlog {
-  ZABRANJENO_DOBRO // čl. 21 — dobra/usluge čiji je promet zabranjen
-  OBMANA // čl. 20 — lažan ili obmanjujuć prikaz dobra/usluge
-  UVREDLJIVO // čl. 22 — uznemiravanje, pretnje, diskriminacija
-  LICNI_PODACI // čl. 24 — lični podaci trećih lica
-  PREVARA // čl. 24 — prevara, manipulacija, nezakonita aktivnost
-  TRGOVINA_POENOM // čl. 21 st. 2 i čl. 24 st. 2 — oglas za zamenu POEN-a za novac
+  ZABRANJENO_DOBRO // čl. 23 — dobra/usluge čiji je promet zabranjen
+  OBMANA // čl. 22 st. 2 — lažan ili obmanjujuć prikaz dobra/usluge
+  UVREDLJIVO // čl. 27 st. 2 — uznemiravanje, pretnje, diskriminacija
+  LICNI_PODACI // čl. 28 st. 1 — lični podaci trećih lica
+  PREVARA // čl. 28 st. 1 — prevara, manipulacija, nezakonita aktivnost
+  TRGOVINA_POENOM // čl. 23 st. 2 i čl. 28 st. 3 — oglas za zamenu POEN-a za novac
   DRUGO
 }
 
@@ -1325,9 +1347,9 @@ enum PrijavaOglasaStatus {
 
 /**
  * Prijava da razmena povodom prepisa POEN-a nije ispunjena.
- * Prepis je ažuriranje evidencije između dva zapisa (Pravilnik čl. 14, 16) i
+ * Prepis je ažuriranje evidencije između dva zapisa (Pravilnik čl. 17, 20) i
  * ne poništava se sam od sebe — za razmenu odgovaraju sami korisnici po
- * obligacionom pravu, a Fondacija nije strana u tom odnosu (Uslovi čl. 22).
+ * obligacionom pravu, a Fondacija nije strana u tom odnosu (Uslovi čl. 24).
  * Zato ovo NIJE automatski povraćaj nego evidencija prijave o kojoj Fondacija
  * odlučuje: može da poništi prepis protivzapisom ili da prijavu odbaci.
  * Prijavljuje ISKLJUČIVO onaj ko je POEN prepisao — samo on je nešto izgubio.
@@ -1346,7 +1368,7 @@ model PrijavaRazmene {
   protivId    String
   protiv      User   @relation("ProtivRazmene", fields: [protivId], references: [id])
 
-  /// Prigovor sa profila kroz koji je slučaj otvoren (Uslovi čl. 37a). Ulazna
+  /// Prigovor sa profila kroz koji je slučaj otvoren (Uslovi čl. 40). Ulazna
   /// tačka je od 4.5.4 isključivo profil — dugme uz prepis u istoriji je uklonjeno.
   prigovorId String?           @unique
   prigovor   PrigovorNaOdluku? @relation(fields: [prigovorId], references: [id])
@@ -1354,7 +1376,7 @@ model PrijavaRazmene {
   opis   String
   status PrijavaRazmeneStatus @default(OTVORENA)
 
-  /// 🔴 Rok u kome se druga strana izjašnjava PRE odluke (Pravilnik čl. 16 st. 10).
+  /// 🔴 Rok u kome se druga strana izjašnjava PRE odluke (Uslovi čl. 40 st. 5).
   /// Odluka se ne donosi dok rok ne istekne ili dok se druga strana ne izjasni —
   /// to sprovodi `ponistiPrepis`, pa je norma svojstvo redosleda, ne obećanje.
   izjasnjenjeDo   DateTime?
@@ -1366,7 +1388,7 @@ model PrijavaRazmene {
   resioId String?
   resenAt DateTime?
   /// Koliko je POEN-a stvarno vraćeno. Može biti manje od prepisanog iznosa i
-  /// može biti 0: zapis primaoca ne sme u minus (Pravilnik čl. 14), pa se vraća
+  /// može biti 0: zapis primaoca ne sme u minus (Pravilnik čl. 17), pa se vraća
   /// najviše ono što na njemu zatekne.
   vraceno Int?
 
@@ -1383,36 +1405,36 @@ enum PrijavaRazmeneStatus {
   ODBACENA // pregledano, prepis ostaje
 }
 
-/// Stanje doprinosa sadržaju platforme (Pravilnik čl. 40a st. 3).
+/// Stanje doprinosa sadržaju platforme (Pravilnik čl. 38 st. 2).
 /// ZABELEZEN nije zapis POEN-a — do evidentiranja ne ulazi ni u jedno stanje
 /// računa, ni u opticaj, ni u javne agregate. To razdvajanje je pravno srce
 /// kanala: drži zero-sum i sve pragove sistema van domašaja praznih naloga.
 enum DoprinosStatus {
   ZABELEZEN
   EVIDENTIRAN
-  PONISTEN // oglas uklonjen zbog povrede Uslova pre evidentiranja (čl. 40a st. 4)
+  PONISTEN // oglas uklonjen zbog povrede Uslova pre evidentiranja (Pravilnik čl. 38 st. 4)
 }
 
-/// Događaj koji je pretvorio zabeležen doprinos u zapis POEN-a (čl. 40a st. 3).
+/// Događaj koji je pretvorio zabeležen doprinos u zapis POEN-a (Pravilnik čl. 38 st. 2).
 enum DoprinosOkidac {
   VERIFIKACIJA
   PRIMLJEN_POEN
-  /// Verifikovan korisnik objavio kvalifikovan oglas — evidentira se odmah (čl. 40a st. 3).
+  /// Verifikovan korisnik objavio kvalifikovan oglas — evidentira se odmah (ranije pravilo; Pravilnik čl. 38 st. 2 sada traži odobrenje).
   /// Ranije se zvao OBJAVA_VERIFIKOVAN; preimenovan 2026-08-11 (isto značenje).
   OBJAVA
-  /// Fondacija odobrila prvi oglas naloga bez potvrde (čl. 40a st. 4) — glavni put
+  /// Fondacija odobrila prvi oglas naloga bez potvrde (Pravilnik čl. 38 st. 2, postupak Uslovi čl. 19) — glavni put
   /// do evidentiranja za neverifikovanog korisnika, admin tab „Prvi oglasi".
   ODOBRENJE
 }
 
-/// Doprinos sadržaju platforme — osmi kanal evidentiranja (Pravilnik čl. 15 t. 8,
-/// čl. 40a). Korisniku se jednokratno evidentira 1.000 POEN-a za prvi oglas kojim
+/// Doprinos sadržaju platforme — osmi kanal evidentiranja (Pravilnik čl. 19 t. 8,
+/// čl. 38). Korisniku se jednokratno evidentira 1.000 POEN-a za prvi oglas kojim
 /// nudi dobro ili uslugu i koji ispunjava sadržinski minimum iz Uslova.
 ///
 /// `userId` je @unique — jednokratnost kanala po čoveku obezbeđuje BAZA, ne kod.
 /// Bez toga bi dve paralelne objave oglasa mogle da zabeleže dva doprinosa.
 ///
-/// Evidentiranje je automatski akt Protokola i NE ulazi u dnevni limit (čl. 40a st. 5).
+/// Evidentiranje je automatski akt Protokola i NE ulazi u dnevni limit (Pravilnik čl. 19 st. 4).
 model DoprinosSadrzaju {
   id     String @id @default(uuid())
   userId String @unique
@@ -1508,7 +1530,7 @@ model ProgramEnrollment {
   metadata              Json?
   dailyAmount           Int?
   // Izričit pristanak da verifikatori budu zamoljeni da potvrde ispunjenost uslova
-  // (Pravilnik o programima podrške čl. 4 — pravni osnov obrade je pristanak).
+  // (Pravilnik o programima podrške čl. 6 — pravni osnov obrade je pristanak).
   pristanakVerifikatori Boolean          @default(false)
   /// Tekst pristanka koji je korisnik video, SNIMLJEN, i trenutak davanja (R-06).
   ///
@@ -1544,15 +1566,15 @@ model ProgramEnrollment {
   /// „Socijalni program" i ne zna koji je koji. Razlaganje se zato prikazuje na
   /// kartici programa, gde mu je i kontekst.
   isplacenoPoen         Int              @default(0)
-  /// Osnov po kome je pravo ostvareno u programu Posebna podrška (čl. 12).
+  /// Osnov po kome je pravo ostvareno u programu Posebna podrška (programi čl. 14).
   ///
-  /// 🔴 Osnov se NE PRIKAZUJE nijednom korisniku (čl. 4 st. 5) — ni verifikovanom,
+  /// 🔴 Osnov se NE PRIKAZUJE nijednom korisniku (programi čl. 20 st. 3; čl. 6 st. 2 t. 5) — ni verifikovanom,
   /// kome je set 4.6.7 otvorio naziv programa i iznos. Program obuhvata i smanjenu
   /// sposobnost i gubitak doma, pa objavljen naziv ne kazuje koji je osnov u
   /// pitanju; prikaz osnova bio bi prikaz podatka o zdravlju, odnosno o prinudnoj
   /// raseljenosti, koja je blizu podatka o nacionalnoj pripadnosti.
   ///
-  /// Postoji zato što od osnova zavisi TRAJANJE prava (čl. 12): smanjena sposobnost
+  /// Postoji zato što od osnova zavisi TRAJANJE prava (programi čl. 18): smanjena sposobnost
   /// podleže godišnjoj reviziji, gubitak doma traje dvanaest meseci od događaja bez
   /// revizije. Finija razlika unutar smanjene sposobnosti (rešenje naspram izjave o
   /// akutnoj bolesti, koja traje šest meseci) živi u `metadata`, koju vidi samo
@@ -1574,7 +1596,7 @@ model ProgramEnrollment {
 // Potvrda verifikatora da prijavljeni korisnik ispunjava uslov socijalnog programa.
 // Verifikator potvrđuje pod punom odgovornošću, na osnovu ličnog poznavanja osobe —
 // NEMA uvid u osetljive prijavljene podatke (datumi rođenja dece, rešenje o
-// invaliditetu i sl.), koji ostaju dostupni samo licu koje obrađuje prijavu (čl. 4).
+// invaliditetu i sl.), koji ostaju dostupni samo licu koje obrađuje prijavu (programi čl. 21 st. 3).
 // Odbijanje zahteva obrazloženje.
 model ProgramPotvrda {
   id            String            @id @default(uuid())
@@ -1585,7 +1607,7 @@ model ProgramPotvrda {
   status        PotvrdaStatus     @default(CEKA)
   obrazlozenje  String?
   odgovorAt     DateTime?
-  /// Programi čl. 4 st. 2 „odnosno Fondacija": ispunjenost uslova potvrdila je
+  /// Programi čl. 5 st. 5 „utvrđuje Fondacija": ispunjenost uslova potvrdila je
   /// Fondacija (nema podobnog člana Kola). `verifikatorId` je tada administrator
   /// koji je odluku upisao. Set 4.8.2.
   odFondacije   Boolean           @default(false)
@@ -1595,7 +1617,7 @@ model ProgramPotvrda {
   @@index([verifikatorId, status])
 }
 
-/// Preporuka člana (Uslovi čl. 17a, Registar radnja br. 23, set 4.8.0).
+/// Preporuka člana (dokaz stvarnosti čl. 20, Registar radnja br. 23, set 4.8.0).
 /// Jedan red po paru; nosi samo ko je koga preporučio i kada — bez teksta i ocene.
 /// Drugima se prikazuje samo BROJ; ko je preporučio ne vidi niko osim onoga ko je
 /// preporuku dao. Preporuka ne proizvodi POEN i ne utiče na pristup.
@@ -1636,84 +1658,186 @@ model DailyEmissionSummary {
 // ─── Program Doprinosa Zajedničkom Dobru — Oglasi ─────────────────────────────
 
 model DoprinosOglas {
-  id             String            @id @default(uuid())
-  title          String
-  description    String
-  source         OglasSource
-  predlozeniPoen Int // predloženi POEN za potpuno izvršenje (čl. 5/6) — težinski koeficijent, nije garantovan iznos; 0 = bez ograničenja zbira dnevnih izvršenja
-  obrazlozenje   String? // obrazloženje predloženog POEN-a (čl. 6)
-  saOdobravanjem Boolean           @default(false) // čl. 14 — prijava primljena tek po izričitom odobrenju plana izvršenja
-  procenaObima   String? // procena obima rada (čl. 5) — opisno, ne sati × iznos; NULL kod zatečenih zadataka
-  opisCeline     String? // šta je jedna celina — deo posla, ne vreme (čl. 5, 6; S1)
-  brojCelina     Int? // broj celina; predlozeniPoen = POEN po celini × brojCelina; NULL = zatečen zadatak (staro pravilo)
-  positions      Int               @default(1)
-  deadline       DateTime? // rok za prijavu
-  status         OglasStatus       @default(ACTIVE)
-  createdById    String
-  createdBy      User              @relation("KreiraniOglasi", fields: [createdById], references: [id])
-  krugId         String?
-  krug           Krug?             @relation("KrugOglasi", fields: [krugId], references: [id])
-  prijave        OglasPrijava[]
-  evidencije     OglasEvidencija[]
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id                         String               @id @default(uuid())
+  title                      String
+  description                String
+  source                     OglasSource
+  predlozeniPoen             Int // predloženi POEN za potpuno izvršenje (čl. 5/6) — težinski koeficijent, nije garantovan iznos; 0 = bez ograničenja zbira dnevnih izvršenja
+  obrazlozenje               String? // obrazloženje predloženog POEN-a (čl. 6)
+  saOdobravanjem             Boolean              @default(false) // čl. 12 — prijava primljena tek po izričitom odobrenju plana izvršenja
+  procenaObima               String? // procena obima rada (čl. 5) — opisno, ne sati × iznos; NULL kod zatečenih zadataka
+  opisCeline                 String? // šta je jedna celina — deo posla, ne vreme (čl. 5, 6; S1)
+  brojCelina                 Int? // broj celina; predlozeniPoen = POEN po celini × brojCelina; NULL = zatečen zadatak (staro pravilo)
+  positions                  Int                  @default(1)
+  deadline                   DateTime? // rok za prijavu
+  rokIzvrsenja               DateTime? // rok za izvršenje (operativni 5.0 čl. 5 t. 7); NULL kod zatečenih zadataka
+  /// Kvalifikacioni filter (čl. 5 t. 10, čl. 9 st. 3) i njegovo obrazloženje — oba ili nijedno.
+  kvalifikacioniUslov        String?
+  kvalifikacioniObrazlozenje String?
+  /// Obrazloženje odluke UO kojom je zadatak posle objave prebačen u režim odobravanja (čl. 12 st. 2).
+  odobravanjeObrazlozenje    String?
+  /// Povlačenje zadatka (čl. 8): obrazloženje je javno kad je zadatak u izvršenju.
+  povucenoAt                 DateTime?
+  povucenoObrazlozenje       String?
+  /// Privremena obustava potvrde i raspodele odlukom UO dok se ne odluči o primedbi (čl. 18 st. 2).
+  obustavljenoAt             DateTime?
+  obustavaObrazlozenje       String?
+  /// Zadružni doprinos (operativni čl. 23; zadruge čl. 17): celina u zadruzi `krugId`,
+  /// izvršioca određuje zadruga (bez prijave), potvrđuje samo čuvar Kola.
+  zadruzni                   Boolean              @default(false)
+  status                     OglasStatus          @default(ACTIVE)
+  createdById                String
+  createdBy                  User                 @relation("KreiraniOglasi", fields: [createdById], references: [id])
+  krugId                     String?
+  krug                       Krug?                @relation("KrugOglasi", fields: [krugId], references: [id])
+  prijave                    OglasPrijava[]
+  evidencije                 OglasEvidencija[]
+  primedbe                   OperativnaPrimedba[]
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
 
   @@index([status, createdAt(sort: Desc)])
 }
 
 model OglasPrijava {
-  id              String             @id @default(uuid())
-  oglasId         String
-  oglas           DoprinosOglas      @relation(fields: [oglasId], references: [id])
-  userId          String
-  user            User               @relation("OglasPrijave", fields: [userId], references: [id])
-  planIzvrsenja   String? // plan izvršenja (čl. 10, 11) — obavezan uz svaku prijavu
-  // Izjava izvršioca o pravnoj prirodi operativnog doprinosa (čl. 10 al. 3).
+  id                  String               @id @default(uuid())
+  oglasId             String
+  oglas               DoprinosOglas        @relation(fields: [oglasId], references: [id])
+  userId              String
+  user                User                 @relation("OglasPrijave", fields: [userId], references: [id])
+  planIzvrsenja       String? // plan izvršenja (čl. 10) — obavezan uz svaku prijavu
+  // Izjava izvršioca o pravnoj prirodi operativnog doprinosa (čl. 10 st. 1 t. 3).
   // Tekst se SNIMA i posle toga se ne menja — dokument mora da govori ono što je
   // govorio u trenutku prijave. Zatečene prijave ostaju bez izjave (null): za njih
   // izjava nije ni data, a retroaktivno „data" izjava bila bi netačan dokument.
-  izjavaTekst     String?
-  izjavaAt        DateTime?
-  status          OglasPrijavaStatus @default(PENDING)
-  approvedById    String?
-  approvedAt      DateTime?
-  rejectionReason String?
-  evidencije      OglasEvidencija[]
-  createdAt       DateTime           @default(now())
+  izjavaTekst         String?
+  izjavaAt            DateTime?
+  status              OglasPrijavaStatus   @default(PENDING)
+  approvedById        String?
+  approvedAt          DateTime?
+  rejectionReason     String?
+  /// `oglasId:userId` dok je prijava živa (na čekanju ili primljena, bez odustanka); NULL
+  /// posle odbijanja i odustanka, pa podnosilac sme da podnese izmenjenu prijavu (čl. 12 st. 4).
+  aktivanKljuc        String?              @unique
+  /// Kako podnosilac ispunjava kvalifikacioni filter (čl. 9 st. 3, 11 st. 2), kad ga zadatak ima.
+  ispunjenostUslova   String?
+  /// Odustanak izvršioca (čl. 17) — elektronska izjava, bez obrazloženja.
+  odustaoAt           DateTime?
+  /// Prijava završetka (čl. 16 st. 1) i završna odluka lica koje potvrđuje (st. 2).
+  zavrsetakAt         DateTime?
+  zavrsnaOdluka       ZavrsnaOdluka?
+  zavrsnaOdlukaAt     DateTime?
+  zavrsnaOdlukaById   String?
+  zavrsnoObrazlozenje String?
+  /// Zadružni doprinos (operativni čl. 23 st. 2): lice koje je izvršiocu dodelilo celinu u ime zadruge.
+  dodelioId           String?
+  evidencije          OglasEvidencija[]
+  primedbe            OperativnaPrimedba[]
+  createdAt           DateTime             @default(now())
 
-  @@unique([oglasId, userId])
+  @@index([oglasId, userId])
   @@index([status, oglasId])
 }
 
-model OglasEvidencija {
-  id             String           @id @default(uuid())
-  userId         String
-  user           User             @relation("OglasEvidencije", fields: [userId], references: [id])
-  oglasId        String
-  oglas          DoprinosOglas    @relation(fields: [oglasId], references: [id])
-  prijavaId      String
-  prijava        OglasPrijava     @relation(fields: [prijavaId], references: [id])
-  date           DateTime         @db.Date // dan na koji se odnosi izvršenje
-  predlozeniPoen Int // predloženi POEN za ovo dnevno izvršenje (čl. 18) — težina u raspodeli
-  celina         Int? // broj izvršenih celina (čl. 18, S1); predlozeniPoen = celina × POEN po celini; NULL kod zatečenih
-  amount         Int              @default(0) // evidentirani POEN nakon noćne raspodele (čl. 24); 0 dok nije obračunato
-  dokaz          String? // link/opis dokaza izvršenja (čl. 18)
-  description    String
-  status         EvidencijaStatus @default(PENDING) // PENDING→APPROVED (potvrđeno, ulazi u raspodelu)→EMITTED / REJECTED
-  approvedById   String?
-  approvedAt     DateTime?
-  createdAt      DateTime         @default(now())
+/// Završna odluka o izvršenju zadatka (operativni 5.0 čl. 16 st. 2).
+enum ZavrsnaOdluka {
+  IZVRSEN
+  DELIMICNO
+  ODBIJEN
+}
 
-  @@unique([userId, oglasId, date])
+/// Primedba učesnika na prijavu, plan, potvrdu celina ili završnu potvrdu (operativni
+/// 5.0 čl. 18). Dostupna svim učesnicima, bez pseudonima podnosioca; lice koje
+/// potvrđuje se izjašnjava u roku od 7 dana.
+model OperativnaPrimedba {
+  id           String           @id @default(uuid())
+  oglasId      String
+  oglas        DoprinosOglas    @relation(fields: [oglasId], references: [id])
+  prijavaId    String?
+  prijava      OglasPrijava?    @relation(fields: [prijavaId], references: [id])
+  evidencijaId String?
+  evidencija   OglasEvidencija? @relation(fields: [evidencijaId], references: [id])
+  /// PRIJAVA | IZVRSENJE_CELINA | ZAVRSNA (`PREDMETI_PRIMEDBE` u operativni-pravila.ts)
+  predmet      String
+  autorId      String
+  tekst        String
+  odluka       String?
+  odlukaAt     DateTime?
+  odlukaById   String?
+  createdAt    DateTime         @default(now())
+
+  @@index([oglasId, createdAt])
+}
+
+/// Lice koje Upravni odbor ovlasti da potvrđuje izvršenje operativnog doprinosa
+/// (operativni 5.0 čl. 13 st. 1; Pravilnik čl. 34 st. 1). Upisuje superadmin po
+/// odluci UO; `izuzetakPredlagaca` je izričito ovlašćenje iz čl. 13 st. 4 da
+/// potvrđuje i zadatke koje je Fondacija objavila preko njega.
+model OperativnoOvlascenje {
+  id                 String    @id @default(uuid())
+  userId             String    @unique
+  odluka             String
+  izuzetakPredlagaca Boolean   @default(false)
+  upisaoId           String
+  createdAt          DateTime  @default(now())
+  opozvanoAt         DateTime?
+}
+
+/// Operativni parametar koji Upravni odbor utvrđuje odlukom (npr. iznos jedinice
+/// zadružnog doprinosa, operativni čl. 23 st. 4; prag za režim odobravanja, čl. 12
+/// st. 1 t. 3). 🔴 Bez podrazumevane vrednosti: dok red ne postoji, parametar nije
+/// utvrđen. Istorija se ne prepravlja — izmena je nov red sa `vaziOd`.
+model OdlukaParametra {
+  id        String   @id @default(uuid())
+  kljuc     String
+  vrednost  Int
+  vaziOd    DateTime @db.Date
+  odluka    String
+  upisaoId  String
+  createdAt DateTime @default(now())
+
+  @@index([kljuc, vaziOd])
+}
+
+model OglasEvidencija {
+  id                 String               @id @default(uuid())
+  userId             String
+  user               User                 @relation("OglasEvidencije", fields: [userId], references: [id])
+  oglasId            String
+  oglas              DoprinosOglas        @relation(fields: [oglasId], references: [id])
+  prijavaId          String
+  prijava            OglasPrijava         @relation(fields: [prijavaId], references: [id])
+  date               DateTime             @db.Date // dan na koji se odnosi izvršenje
+  predlozeniPoen     Int // predloženi POEN za ovo dnevno izvršenje (čl. 15) — težina u raspodeli
+  celina             Int? // broj izvršenih celina (čl. 15, S1); predlozeniPoen = celina × POEN po celini; NULL kod zatečenih
+  amount             Int                  @default(0) // evidentirani POEN nakon noćne raspodele (čl. 21); 0 dok nije obračunato
+  dokaz              String? // link/opis dokaza izvršenja (čl. 15)
+  description        String
+  status             EvidencijaStatus     @default(PENDING) // PENDING→APPROVED (potvrđeno, ulazi u raspodelu)→EMITTED / REJECTED; DOPUNA = uslovno potvrđeno, čeka dopunu dokaza (čl. 15 st. 2 t. 3)
+  approvedById       String?
+  approvedAt         DateTime?
+  /// Obrazloženje odbijanja, odnosno šta se traži kao dopuna dokaza (čl. 15 st. 2 t. 2–3).
+  odlukaObrazlozenje String?
+  /// Kada je izvršilac dopunio dokaz posle uslovne potvrde; od tada teče novi rok od 3 dana.
+  dopunaAt           DateTime?
+  /// Red nastao završnom potvrdom (čl. 16 st. 2) za celine koje do tada nisu potvrđene.
+  zavrsna            Boolean              @default(false)
+  /// Zadružni doprinos: deo predloženog POEN-a koji ne ulazi u raspodelu jer prelazi
+  /// najveći dnevni iznos zadruge (zadruge čl. 17 st. 3; operativni čl. 23 st. 3).
+  visakZadruge       Int?
+  primedbe           OperativnaPrimedba[]
+  createdAt          DateTime             @default(now())
+
+  @@unique([userId, oglasId, date, zavrsna])
   @@index([date, status])
   @@index([status])
 }
 
 // ─── ZRNO sistem ─────────────────────────────────────────────────────────────
 
-/// Prekidač kanala upisa i otpisa ZRNA (Pravilnik čl. 19, 21; faza-sistema.ts).
+/// Prekidač kanala upisa i otpisa ZRNA (Pravilnik čl. 22, 23; faza-sistema.ts).
 /// 🔴 Model se do 13.09.2026. zvao `ZrnoTrziste` — ime je uklonjeno uz R-04, jer
-/// Pravilnik čl. 22 st. 3 izričito kaže da za ZRNO tržište ne postoji. Repo je
+/// Pravilnik čl. 24 izričito kaže da za ZRNO tržište ne postoji. Repo je
 /// javan pod AGPL-om, pa je šema prvo mesto koje se čita; ime modela ne sme da
 /// govori suprotno od akta. Ne vraćati „tržište" ni u jedan identifikator.
 model ZrnoKanal {
@@ -1734,7 +1858,7 @@ model ZrnoStanje {
 
 /// 🔴 Polja su se do 13.09.2026. zvala `zrnaKupljeno` i `poenPlaceno` — uklonjeno
 /// uz R-04. ZRNO se ne kupuje i POEN se ne plaća: upisom se evidentirani doprinos
-/// korisnika umanjuje prema obračunskom koeficijentu (Pravilnik čl. 19 st. 6).
+/// korisnika umanjuje prema obračunskom koeficijentu (Pravilnik čl. 22 st. 5).
 model ZrnoUpisZahtev {
   id           String           @id @default(uuid())
   userId       String
@@ -1750,7 +1874,7 @@ model ZrnoUpisZahtev {
   @@index([date, status])
 }
 
-/// Pri otpisu Protokol evidentira POEN-e nosiocu (Pravilnik čl. 21 st. 2) — otud
+/// Pri otpisu Protokol evidentira POEN-e nosiocu (Pravilnik čl. 23 st. 3) — otud
 /// `evidentiranoPoen`; polje se do 13.09.2026. zvalo `poenDobijeno`.
 model ZrnoOtpisZahtev {
   id               String           @id @default(uuid())
@@ -1779,12 +1903,12 @@ model ZrnoStatusZahtev {
   @@index([date, status])
 }
 
-/// Dnevni snimak obračunskog koeficijenta (Pravilnik čl. 23, 24).
+/// Dnevni snimak obračunskog koeficijenta (Pravilnik čl. 25, 26).
 /// 🔴 Model se do 13.09.2026. zvao `ZrnoDailyRate`, a polje `kurs` — oba imena su
-/// uklonjena uz R-04. Čl. 23 st. 4: koeficijent „nije cena, nije kurs i nije
+/// uklonjena uz R-04. Čl. 25 st. 4: koeficijent „nije cena, nije kurs i nije
 /// indeks performansi".
 /// 🟢 Snimak se NE briše: on je dokaz da koeficijent izračunava Protokol
-/// automatski i bez diskrecije (čl. 23 st. 2). Menja se ime, ne postojanje.
+/// automatski i bez diskrecije (čl. 25 st. 1). Menja se ime, ne postojanje.
 model ZrnoDnevniKoeficijent {
   date           DateTime @unique @db.Date
   koeficijent    Decimal  @db.Decimal(20, 2)
@@ -1809,33 +1933,40 @@ model ZrnoDelegacija {
 // ─── Glasanje ─────────────────────────────────────────────────────────────────
 
 model GlasanjePredlog {
-  id                    String           @id @default(uuid())
+  id                    String            @id @default(uuid())
   title                 String
   description           String
   authorId              String
-  author                User             @relation(fields: [authorId], references: [id])
-  vrsta                 PredlogVrsta     @default(ODLUKA) // odluka (obavezujuća) ili dinarska preporuka (čl. 20)
+  author                User              @relation(fields: [authorId], references: [id])
+  vrsta                 PredlogVrsta      @default(ODLUKA) // odluka (obavezujuća) ili dinarska preporuka (Gornje Kolo čl. 6 st. 1)
   glasanjePocetak       DateTime // ponoć narednog obračunskog perioda (čl. 11)
   deadline              DateTime // kraj glasanja = kraj tog perioda
-  status                PredlogStatus    @default(ACTIVE)
-  ishodUsvojen          Boolean? // utvrđen po zatvaranju, prosta većina (čl. 8, 9, 13)
+  status                PredlogStatus     @default(ACTIVE)
+  ishodUsvojen          Boolean? // utvrđen po zatvaranju, prosta većina (Gornje Kolo čl. 7, 19)
   zaZbir                Int? // zbir glasačke moći „za" u trenutku zatvaranja
   protivZbir            Int? // zbir glasačke moći „protiv" u trenutku zatvaranja
   izvrsenjeStatus       IzvrsenjeStatus? // postavlja se na ZA_IZVRSENJE kad je odluka usvojena (čl. 17)
-  vetoObrazlozenje      String? // obavezno obrazloženje zaštitnog veta (čl. 18)
-  izvrsenjeAkt          String? // oznaka akta UO kojim je odluka sprovedena (čl. 51) — bez njega registar ne pokazuje da je nadležni organ išta doneo
-  odbijanjeRazlog       OdbijanjeRazlog? // razlog sa zatvorene liste iz čl. 51
-  odbijanjeObrazlozenje String? // obavezno obrazloženje odbijanja (čl. 51)
+  vetoObrazlozenje      String? // obavezno obrazloženje zaštitnog veta (veto ukinut u setu 5.0; polje ostaje kao istorija)
+  izvrsenjeAkt          String? // oznaka akta UO kojim je odluka sprovedena (Pravilnik čl. 46 st. 2) — bez njega registar ne pokazuje da je nadležni organ išta doneo
+  odbijanjeRazlog       OdbijanjeRazlog? // razlog sa zatvorene liste iz Pravilnika čl. 46 st. 3
+  odbijanjeObrazlozenje String? // obavezno obrazloženje odbijanja (Pravilnik čl. 46 st. 4)
   odbijanjeAt           DateTime?
   izvrsenoAt            DateTime?
   vetoAt                DateTime?
-  uoOdgovor             UoOdgovor? // obrazložen odgovor UO na usvojenu preporuku (čl. 20)
+  uoOdgovor             UoOdgovor? // obrazložen odgovor UO na usvojenu preporuku (Gornje Kolo čl. 18)
   uoObrazlozenje        String?
   uoOdgovorAt           DateTime?
+  /// Početak perioda podrške (Pravilnik o Gornjem Kolu čl. 10 st. 1): obračunski period
+  /// posle podnošenja. Null = postupak bez faze podrške (izborno glasanje koje pokreće
+  /// Fondacija po pravilniku o nabavkama; predlozi zatečeni pre seta 5.0).
+  podrskaPocetak        DateTime?
+  /// Zašto se o predlogu nije glasalo (GK čl. 10 st. 3–4, 19 st. 1). Null = glasalo se.
+  neglasanjeRazlog      NeglasanjeRazlog?
+  podrske               GlasanjePodrska[]
   glasovi               GlasanjeGlas[]
   nabavka               Nabavka?
-  createdAt             DateTime         @default(now())
-  updatedAt             DateTime         @updatedAt
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
 }
 
 model GlasanjeGlas {
@@ -1856,6 +1987,22 @@ model GlasanjeGlas {
   @@index([predlogId])
 }
 
+/// Podrška čuvara Kola predlogu (Pravilnik o Gornjem Kolu čl. 10). Podrška nije glas,
+/// ne nosi glasačku moć i ne delegira se. `podnosenjem` = predlog je podneo čuvar Kola
+/// u sastavu Gornjeg Kola, pa se smatra podržanim njegovim podnošenjem (čl. 10 st. 1).
+model GlasanjePodrska {
+  id          String          @id @default(uuid())
+  predlogId   String
+  predlog     GlasanjePredlog @relation(fields: [predlogId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  podnosenjem Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+
+  @@unique([predlogId, userId])
+  @@index([predlogId])
+}
+
 model AuditLog {
   id        String   @id @default(uuid())
   adminId   String
@@ -1871,7 +2018,7 @@ model AuditLog {
 // Dnevnik aktivnosti prijavljenih korisnika: koja stranica je otvorena i kada.
 // Beleži se SAMO za prijavljene korisnike (gosti nikad); ponovna poseta iste
 // stranice unutar 5 min se ne duplira. Retencija 12 meseci (GDPR cron —
-// „tehnički logovi", Politika čl. 10). Vidljivo isključivo superadminu.
+// „tehnički logovi", Politika čl. 41). Vidljivo isključivo superadminu.
 model AktivnostLog {
   id        String   @id @default(uuid())
   userId    String
@@ -1904,8 +2051,8 @@ model DonationRecord {
   oid         String? @unique
   bankRef     String?
 
-  // Javna vs anonimna donacija (Pravilnik o pokroviteljstvu i donacijama, čl. 3,
-  // 5a). Javna donacija (true) → ime i prezime donatora vidljivi u listi donacija
+  // Javna vs anonimna donacija (Pravilnik o pokroviteljstvu i donacijama, čl. 7
+  // i 11). Javna donacija (true) → ime i prezime donatora vidljivi u listi donacija
   // i evidentira se POEN. Anonimna (false) → bez imena i BEZ POEN-a.
   javno Boolean @default(true)
 
@@ -1913,10 +2060,10 @@ model DonationRecord {
   // trajan zapis (kao i podaci o uplati), nezavisan od kasnijih izmena profila.
   // Lista donacija prikazuje upravo ovo polje. Null = anonimna ili istorijska
   // donacija (pre uvođenja pravila) → ne prikazuje se u listi.
-  // 🔴 Od seta 4.6.8 ime NIJE trajno: donator sme da povuče pristanak (čl. 5a
-  // st. 4), a briše se i prestankom svojstva korisnika. Tada se `donatorIme`
-  // briše, a `imePovucenoAt` beleži trenutak — donacija ostaje u listi iznosom,
-  // datumom i pseudonimom.
+  // 🔴 Od seta 4.6.8 ime NIJE trajno: donator sme da povuče pristanak (donacije
+  // čl. 12), a briše se i prestankom svojstva korisnika. Tada se `donatorIme`
+  // briše, a `imePovucenoAt` beleži trenutak — donacija ostaje u listi iznosom
+  // i datumom (pseudonim se u listi ne prikazuje).
   donatorIme String?
 
   // Trenutak kada je ime uklonjeno iz liste (povlačenje ili gašenje naloga).
@@ -1963,13 +2110,13 @@ model Pokrovitelj {
   id             String                    @id @default(uuid())
   naziv          String
   /// Ključ novčanog pokrovitelja: pravno lice i preduzetnik po PIB-u, registrovano
-  /// poljoprivredno gazdinstvo po BPG-u (donacije čl. 6 i 10, set 4.7.9). Tačno
+  /// poljoprivredno gazdinstvo po BPG-u (donacije čl. 15 i 22, set 4.7.9). Tačno
   /// jedno od dva je upisano; kumulativ gazdinstva je zaseban red — ne sabira se ni
-  /// sa ličnim donacijama nosioca ni sa firmom (čl. 10 st. 3).
+  /// sa ličnim donacijama nosioca ni sa firmom (čl. 22 st. 3).
   pib            String?                   @unique
   bpg            String?                   @unique
   maticniBroj    String?
-  /// Adresa sedišta. Ne objavljuje se na ranglisti (čl. 13) — preduzetniku je
+  /// Adresa sedišta. Ne objavljuje se na ranglisti (donacije čl. 25 st. 2) — preduzetniku je
   /// to često kućna adresa.
   adresa         String?
   kontaktEmail   String?
@@ -1978,14 +2125,14 @@ model Pokrovitelj {
   vlasnik        User                      @relation("VlasnikP", fields: [vlasnikId], references: [id])
   kreiraoId      String
   kreirao        User                      @relation("AdminKreiraoP", fields: [kreiraoId], references: [id])
-  /// Logotip pokrovitelja (donacije čl. 13 st. 4): javni URL slike na R2, deo
+  /// Logotip pokrovitelja (donacije čl. 26 st. 2): javni URL slike na R2, deo
   /// evidencije pokrovitelja (naziv i logotip). Objavljuje se uz naziv na
   /// rang-listi — najnoviji iz potvrđene prijave. 🔴 Bez veze ka internet stranici
-  /// pokrovitelja (čl. 13 st. 5). Moderacija ga samo uklanja, nikad ne menja.
+  /// pokrovitelja (čl. 26 st. 3). Moderacija ga samo uklanja, nikad ne menja.
   logoUrl        String?
   rsdKumulativ   Decimal                   @default(0) @db.Decimal(12, 2)
   trenutniNivo   Int                       @default(0)
-  /// Upis u evidenciju pokrovitelja (donacije čl. 6a) — odatle se čitaju naziv i
+  /// Upis u evidenciju pokrovitelja (donacije čl. 16) — odatle se čitaju naziv i
   /// logotip za rang-listu. Zatečeni redovi su povezani migracijom po PIB-u.
   upisId         String?
   upis           UpisPokrovitelja?         @relation(fields: [upisId], references: [id])
@@ -2000,43 +2147,43 @@ model Pokrovitelj {
   @@index([status])
 }
 
-// Prijava pokroviteljstva (čl. 7–9) — verifikovani korisnik pokreće evidenciju
+// Prijava pokroviteljstva (donacije čl. 19–21) — verifikovani korisnik pokreće evidenciju
 // doprinosa pravnog lica; platforma generiše ugovor; po potvrdi Fondacije emituje
-// se bonus POEN prema nivoima (čl. 10).
+// se bonus POEN prema nivoima (čl. 22).
 model PokroviteljPrijava {
   id                  String                   @id @default(uuid())
   podnosilacId        String
   podnosilac          User                     @relation("PodnosilacPrijave", fields: [podnosilacId], references: [id])
   /// FIRMA (pravno lice, preduzetnik) ili GAZDINSTVO (nosilac registrovanog
-  /// poljoprivrednog gazdinstva, donacije čl. 6, set 4.7.9). Zatečene prijave: FIRMA.
+  /// poljoprivrednog gazdinstva, donacije čl. 15, set 4.7.9). Zatečene prijave: FIRMA.
   vrstaDavaoca        VrstaDavaoca             @default(FIRMA)
   naziv               String
   /// PIB — samo FIRMA; gazdinstvo umesto njega nosi `bpg`.
   pib                 String?
   bpg                 String?
   /// Matični broj i adresa sedišta (Pravilnik o pokroviteljstvu i donacijama
-  /// čl. 7, set 4.7.5). Zatečene prijave ostaju `null`.
+  /// čl. 16 st. 2 t. 1, set 4.7.5). Zatečene prijave ostaju `null`.
   maticniBroj         String?
   adresaSedista       String?
   /// Zastupnik koji podnosi prijavu — ime i prezime ide i u evidenciju
-  /// identiteta (Pravilnik čl. 31a st. 2 t. 4) pri potvrdi prijema; ne
+  /// identiteta (Pravilnik čl. 31 st. 2; donacije čl. 19 st. 3) pri potvrdi prijema; ne
   /// prikazuje se drugim korisnicima.
   zastupnikImePrezime String?
   zastupnikFunkcija   String?
   /// Fondacija pre potvrde upoređuje naziv, MB i zastupnika sa podacima APR-a;
-  /// beleži se samo da je poređenje izvršeno (čl. 31a st. 4).
+  /// beleži se samo da je poređenje izvršeno (Pravilnik čl. 31 st. 4).
   aprUporedjenAt      DateTime?
   aprUporedioId       String?
   vrstaDonacije       VrstaDonacije
   vrednostRsd         Decimal                  @db.Decimal(12, 2)
   cenovnikSlika       String?
-  /// Logotip iz prijave (donacije čl. 13 st. 4) — pri potvrdi prelazi na red
+  /// Logotip iz prijave (donacije čl. 26 st. 2) — pri potvrdi prelazi na red
   /// `Pokrovitelj`. Nije obavezan.
   logoUrl             String?
   ugovorTekst         String
   status              PokroviteljPrijavaStatus @default(CEKA_POTPIS)
   potpisanoAt         DateTime?
-  /// Potpis jednokratnim kodom (donacije čl. 8 st. 1 → čl. 13g st. 4; registar
+  /// Potpis jednokratnim kodom (donacije čl. 20 st. 1 → čl. 32 st. 1; registar
   /// 2026-10, F5-M1): kontrolni broj snimljenog teksta i heš koda sa rokom i brojem
   /// pokušaja. Posle potpisa se heš briše. 🔴 Bez IP adrese i podataka o uređaju.
   /// Prijave potpisane pre ove izmene (jednim klikom) ostaju bez kontrolnog broja.
@@ -2047,7 +2194,7 @@ model PokroviteljPrijava {
   potpisKodPoslatAt   DateTime?
   pokroviteljId       String?
   pokrovitelj         Pokrovitelj?             @relation(fields: [pokroviteljId], references: [id])
-  /// Upis iz koga je prijava podneta (donacije čl. 6a, čl. 7 st. 1). Podaci o
+  /// Upis iz koga je prijava podneta (donacije čl. 18 st. 3, čl. 19 st. 1). Podaci o
   /// pokrovitelju gore su SNIMAK upisa u trenutku podnošenja (ugovor je snimljen).
   upisId              String?
   upis                UpisPokrovitelja?        @relation(fields: [upisId], references: [id])
@@ -2061,57 +2208,57 @@ model PokroviteljPrijava {
   @@index([status])
 }
 
-// ─── Pokroviteljstvo dobrima i uslugama (donacije Glava IVa) ─────────────────
+// ─── Pokroviteljstvo dobrima i uslugama (donacije Glava IV) ─────────────────
 //
 // Jedan red = prijava, pa ugovor (ugovor u korist trećih lica, ZOO čl. 149). Fondacija
 // ne stiče svojinu ni državinu dobara; vaučer glasi na tačno određeno dobro odnosno
-// uslugu, NE na iznos (čl. 13d, 13f).
+// uslugu, NE na iznos (donacije čl. 27, 29).
 //
 // 🔴 Vrednost ugovora NE ulazi u `Pokrovitelj.rsdKumulativ` i ne utiče na nivo ni na
-// rang-listu (čl. 13h st. 3, čl. 13 st. 1). Zato ovaj model ne pravi red `Pokrovitelj`
+// rang-listu (donacije čl. 33 st. 3, čl. 25 st. 1). Zato ovaj model ne pravi red `Pokrovitelj`
 // — samo čita kumulativ novčanog doprinosa po PIB-u, odnosno BPG-u gazdinstva, ako ga ima.
 model UgovorDobra {
   id                        String                 @id @default(uuid())
-  /// Upis iz koga je prijava podneta (donacije čl. 6a, čl. 13e st. 1). Podaci o
+  /// Upis iz koga je prijava podneta (donacije čl. 18 st. 3, čl. 28 st. 1). Podaci o
   /// davaocu ispod su SNIMAK upisa u trenutku podnošenja.
   upisId                    String?
   upis                      UpisPokrovitelja?      @relation(fields: [upisId], references: [id])
   podnosilacId              String
   podnosilac                User                   @relation("PodnosilacUgovoraDobra", fields: [podnosilacId], references: [id])
   /// FIRMA (pravno lice, preduzetnik) ili GAZDINSTVO (nosilac registrovanog
-  /// poljoprivrednog gazdinstva, čl. 13e st. 3).
+  /// poljoprivrednog gazdinstva, čl. 28 st. 1).
   vrstaDavaoca              VrstaDavaoca           @default(FIRMA)
   /// Naziv pravnog lica ili preduzetnika, odnosno naziv gazdinstva.
   naziv                     String
   /// PIB, matični broj i sedište — samo FIRMA. Gazdinstvo umesto njih navodi broj
-  /// gazdinstva (čl. 13e st. 3).
+  /// gazdinstva (čl. 16 st. 4).
   pib                       String?
   maticniBroj               String?
   adresaSedista             String?
   /// Broj poljoprivrednog gazdinstva (BPG) — samo GAZDINSTVO. Po njemu se gazdinstvo
-  /// prepoznaje za kvotu (čl. 13f st. 4) i zabranu posle raskida (čl. 13j st. 2).
+  /// prepoznaje za kvotu (čl. 29 st. 4) i zabranu posle raskida (čl. 35 st. 5).
   bpg                       String?
   /// Ime i prezime podnosioca (zastupnika, preduzetnika, vlasnika, stvarnog vlasnika,
-  /// odnosno nosioca gazdinstva) ide u evidenciju identiteta pri potpisu (čl. 13e,
-  /// čl. 31a). `zastupnikFunkcija` nosi funkciju zastupnika, odnosno opis odnosa.
+  /// odnosno nosioca gazdinstva) ide u evidenciju identiteta pri potpisu (donacije čl. 28 st. 4,
+  /// Pravilnik čl. 31). `zastupnikFunkcija` nosi funkciju zastupnika, odnosno opis odnosa.
   zastupnikImePrezime       String
   zastupnikFunkcija         String
-  /// Odnos podnosioca prema davaocu (čl. 13e st. 1). Zatečeni redovi ostaju `null`.
+  /// Odnos podnosioca prema davaocu (čl. 16 st. 2 t. 4). Zatečeni redovi ostaju `null`.
   odnosPremaDavaocu         OdnosPremaDavaocu?
-  /// Kontakt sa davaocem (čl. 13e st. 2): primerak zaključenog ugovora ide na ovaj mejl.
+  /// Kontakt sa davaocem (čl. 16 st. 2 t. 2): primerak zaključenog ugovora ide na ovaj mejl.
   kontaktEmail              String?
   kontaktTelefon            String?
-  /// Izjava o ovlašćenju (čl. 13e st. 4) — kad podnosilac nije zakonski zastupnik,
+  /// Izjava o ovlašćenju (čl. 17 st. 1) — kad podnosilac nije zakonski zastupnik,
   /// preduzetnik ni nosilac gazdinstva.
   izjavaOvlascenjeAt        DateTime?
-  /// Potvrda da je podnosilac upoznat sa načinom evidentiranja doprinosa (čl. 13e
-  /// st. 5): trenutak i SNIMAK teksta koji mu je bio prikazan.
+  /// Potvrda da je podnosilac upoznat sa načinom evidentiranja doprinosa (čl. 17
+  /// st. 2): trenutak i SNIMAK teksta koji mu je bio prikazan.
   potvrdaEvidentiranjaAt    DateTime?
   potvrdaEvidentiranjaTekst String?
-  /// Kontrolni broj teksta zaključenog ugovora (SHA-256 snimljenog teksta, čl. 13g
-  /// st. 4). 🔴 Uz potpis se NE beleže IP adresa ni podaci o uređaju.
+  /// Kontrolni broj teksta zaključenog ugovora (SHA-256 snimljenog teksta, čl. 32
+  /// st. 1). 🔴 Uz potpis se NE beleže IP adresa ni podaci o uređaju.
   kontrolniBroj             String?
-  /// Jednokratni kod za potpis (čl. 13g st. 4): čuva se samo heš, uz rok i broj
+  /// Jednokratni kod za potpis (čl. 32 st. 1): čuva se samo heš, uz rok i broj
   /// pokušaja. Posle potpisa se briše.
   potpisKodHash             String?
   potpisKodIstice           DateTime?
@@ -2121,50 +2268,51 @@ model UgovorDobra {
   opis                      String
   brojVaucera               Int
   cenaPoJedinici            Decimal                @db.Decimal(12, 2)
-  /// brojVaucera × cenaPoJedinici (čl. 13f st. 1). Snima se pri prijavi.
+  /// brojVaucera × cenaPoJedinici (čl. 29 st. 1). Snima se pri prijavi.
   vrednostRsd               Decimal                @db.Decimal(12, 2)
-  /// Rok važenja u mesecima od izdavanja — jedna godina (čl. 13f st. 5).
+  /// Rok važenja u mesecima od izdavanja — jedna godina (čl. 29 st. 5).
   rokVazenjaMeseci          Int
   /// Naselje iz šifarnika (`razresiNaselje`).
   mesto                     String
   /// Slobodan opis mesta predaje (ulica, radnja) — prikazuje se na vaučeru.
   adresaPredaje             String?
-  /// Logotip davaoca (donacije čl. 13 st. 4): uz naziv na rang-listi „Dobra i
+  /// Logotip davaoca (donacije čl. 26 st. 2): uz naziv na rang-listi „Dobra i
   /// usluge", na vaučerima i uz ponudu vaučera. Nije obavezan; javni URL na R2.
-  /// 🔴 Bez veze ka internet stranici davaoca (čl. 13 st. 5).
+  /// 🔴 Bez veze ka internet stranici davaoca (čl. 26 st. 3).
   logoUrl                   String?
   /// Napušteno (set 4.7.8, 20.10.2026): kapacitet se više ne traži. Kolona ostaje
   /// zbog zatečenih redova; kod je ne čita.
   nedeljniKapacitet         Int?
-  /// Izjava o propisima za promet (čl. 13e st. 3) — trenutak davanja izjave.
+  /// Izjava o propisima za promet (čl. 28 st. 3) — trenutak davanja izjave.
   izjavaPropisiAt           DateTime
   status                    UgovorDobraStatus      @default(NA_PREGLEDU)
   odbijenoRazlog            String?
   pregledaoId               String?
   pregledanoAt              DateTime?
-  /// Fondacija je uporedila cenu sa dokazom i podatke sa APR-om (čl. 13f st. 2).
-  /// Beleži se samo da je poređenje izvršeno.
+  /// `aprUporedjenAt`: podaci o davaocu upoređeni sa registrom (čl. 18 st. 1; beleži se samo da je
+  /// poređenje izvršeno). `cenaUporedjenaAt`: samo zatečeni redovi — od seta 5.0 cena se ne
+  /// upoređuje (čl. 29 st. 2: Fondacija proverava samo da je fotografija cenovnika priložena).
   aprUporedjenAt            DateTime?
   cenaUporedjenaAt          DateTime?
-  /// 🔴 Snimljen tekst ugovora (čl. 13g st. 1) — ne generiše se ponovo pri čitanju.
+  /// 🔴 Snimljen tekst ugovora (čl. 31 st. 1) — ne generiše se ponovo pri čitanju.
   ugovorTekst               String?
   potpisanoAt               DateTime?
   vaziDo                    DateTime?
-  /// Snimci pri potpisu: koeficijent iz NOVČANOG kumulativa (čl. 13h st. 2) i broj
+  /// Snimci pri potpisu: koeficijent iz NOVČANOG kumulativa (čl. 33 st. 2) i broj
   /// evidentiranih POEN-a. Otpis po neizvršenju čita ove snimke, ne računa ponovo.
   koeficijent               Decimal?               @db.Decimal(4, 2)
   poenEvidentirano          Int?
   emisijaTxId               String?
   // 🔴 Napušteno (set 4.7.8, 20.10.2026): raspodele u krugovima nema — vaučeri se
-  // uzimaju slobodno od izdavanja (nabavke čl. 30e). Kolone krugova ostaju zbog
+  // uzimaju slobodno od izdavanja (nabavke čl. 32 st. 2). Kolone krugova ostaju zbog
   // zatečenih redova; kod ih ne čita.
   raspodelaKrug             Int                    @default(0)
-  /// Broj POEN-a po vaučeru (nabavke čl. 30d) — snima se pri potpisu.
+  /// Broj POEN-a po vaučeru (nabavke čl. 31) — snima se pri potpisu.
   poenaPoVauceru            Int?
   raspodelaObjavljenaAt     DateTime?
   rokPrijaveRaspodele       DateTime?
   raspodelaDodeljenaAt      DateTime?
-  // Raskid po neizvršenju (čl. 13j).
+  // Raskid po neizvršenju (donacije čl. 35).
   raskinutoAt               DateTime?
   raskidObrazlozenje        String?
   raskinuoId                String?
@@ -2172,7 +2320,7 @@ model UgovorDobra {
   raskidOtpis               Int?
   raskidOtpisTxId           String?
   /// Odluka Fondacije da davalac sme da zaključi naredni ugovor iako nije
-  /// iskorišćena polovina vaučera ovog ugovora (čl. 13f st. 4, set 4.8.4; N2-M6).
+  /// iskorišćena polovina vaučera ovog ugovora (čl. 29 st. 4, set 4.8.4; N2-M6).
   /// Samo superadmin, obrazloženje obavezno.
   naredniDozvoljenAt        DateTime?
   naredniDozvolioId         String?
@@ -2194,17 +2342,17 @@ model UgovorDobra {
   @@index([status, raskinutoAt])
 }
 
-/// Dokaz cene (cenovnik i najmanje dva računa, čl. 13e st. 2). 🔴 Čuva se u bazi, a
+/// Dokaz cene: SAMO fotografija cenovnika (donacije čl. 28 st. 2 t. 4, čl. 29 st. 2). 🔴 Čuva se u bazi, a
 /// ne na javnom R2 skladištu: vidi ga SAMO administratorski tim (ruta pod
 /// `/api/admin/`), nikad javnost ni drugi korisnici.
 model DokazCeneDobra {
   id          String      @id @default(uuid())
   ugovorId    String
   ugovor      UgovorDobra @relation(fields: [ugovorId], references: [id], onDelete: Cascade)
-  /// CENOVNIK | RACUN | POTVRDA_RPG (potvrda o upisu u registar i aktivnom statusu,
-  /// čl. 13e st. 3) | SNIMAK_IZVORA (snimak javnog izvora cene, uz `izvorRedni`)
+  /// CENOVNIK. Vrednosti RACUN, POTVRDA_RPG i SNIMAK_IZVORA nose samo zatečeni redovi (do
+  /// seta 5.0); ruta ih više ne prima (`proveriDokaze`).
   vrsta       String
-  /// Za SNIMAK_IZVORA: redni broj izvora cene (`IzvorCeneDobra.redniBroj`).
+  /// Samo zatečeni redovi SNIMAK_IZVORA: redni broj izvora cene (`IzvorCeneDobra.redniBroj`).
   izvorRedni  Int?
   nazivFajla  String
   contentType String
@@ -2215,7 +2363,7 @@ model DokazCeneDobra {
   @@index([ugovorId])
 }
 
-/// Vaučer (donacije čl. 2, čl. 13d). Imenski i neprenosiv; ne glasi na iznos.
+/// Vaučer (donacije čl. 2, čl. 27). Imenski i neprenosiv; ne glasi na iznos.
 model Vaucer {
   id                   String       @id @default(uuid())
   ugovorId             String
@@ -2228,12 +2376,12 @@ model Vaucer {
   /// 🔴 Napušteno (set 4.7.8, odluka 20.10.2026): vaučeri se više ne rezervišu, POEN
   /// se poništava pri dodeli. Kolona ostaje zbog zatečenih redova; kod je ne čita.
   rezervisano          Int          @default(0)
-  /// Snimak broja POEN-a poništenog pri DODELI (nabavke čl. 30f) — za ispravku po
-  /// čl. 30g st. 3 i čl. 14a st. 5.
+  /// Snimak broja POEN-a poništenog pri DODELI (nabavke čl. 33 st. 4) — za ispravku po
+  /// nabavke čl. 35 i Pravilniku čl. 18 st. 5.
   ponisteno            Int          @default(0)
   iskoriscenAt         DateTime?
   ponistenjeTxId       String?
-  /// Ko je potvrdio realizaciju (nabavke čl. 30g st. 1): podnosilac ili zaposleni
+  /// Ko je potvrdio realizaciju (nabavke čl. 34 st. 1): podnosilac ili zaposleni
   /// davaoca. Za potvrdu zaposlenog odgovara davalac. Zatečeni redovi ostaju `null`.
   potvrdioId           String?
   potvrdio             User?        @relation("PotvrdilacVaucera", fields: [potvrdioId], references: [id], onDelete: SetNull)
@@ -2242,21 +2390,26 @@ model Vaucer {
   ispravkaTxId         String?
   otpisTxId            String?
   otpisano             Int?
-  /// Izjava „nisam povezano lice sa davaocem" pri uzimanju (donacije čl. 13k).
+  /// Izjava „nisam povezano lice sa davaocem" pri uzimanju (donacije čl. 36).
   izjavaNepovezanAt    DateTime?
   /// Pristanak na prikaz zapisa o poništenju sa opisom i nazivom davaoca uz
-  /// pseudonim (nabavke čl. 30f st. 1): trenutak i SNIMAK prikazanog teksta.
+  /// pseudonim (nabavke čl. 33 st. 1): trenutak i SNIMAK prikazanog teksta.
   pristanakPrikazAt    DateTime?
   pristanakPrikazTekst String?
+  /// Povlačenje pristanka na prikaz (nabavke čl. 33 st. 2): opis dobra, odnosno usluge i
+  /// naziv davaoca brišu se iz opisa zapisa o poništenju (i ispravke), a zapis ostaje.
+  /// `pristanakPrikazAt`/`Tekst` ostaju kao dokaz pristanka za prikaz pre povlačenja.
+  pristanakPovucenAt   DateTime?
   createdAt            DateTime     @default(now())
 
   @@index([ugovorId, status])
   @@index([imalacId, status])
 }
 
-/// Javno dostupan izvor cene (donacije čl. 13e st. 3, čl. 13f st. 2) — za gazdinstvo
-/// koje za dobro nema računa izdatih drugim licima. Cena iz prijave ne može biti viša
-/// od najniže cene iz izvora. Vidi ga samo administratorski tim.
+/// 🔴 NAPUŠTENO (set 5.0): javno dostupan izvor cene (ranije donacije čl. 13e–13f). Donacije
+/// čl. 29 st. 2: Fondacija proverava samo da je fotografija cenovnika priložena, a cenu ne
+/// procenjuje, ne upoređuje i ne određuje — pravila „najniže cene iz izvora" više nema.
+/// Tabela ostaje zbog zatečenih redova; kod je ne čita i u nju ne upisuje.
 model IzvorCeneDobra {
   id          String      @id @default(uuid())
   ugovorId    String
@@ -2270,15 +2423,15 @@ model IzvorCeneDobra {
   @@unique([ugovorId, redniBroj])
 }
 
-/// Zaposleni davaoca (donacije čl. 13g st. 6, nabavke čl. 30g st. 1): korisnik koga je
+/// Zaposleni davaoca (donacije čl. 32 st. 3, nabavke čl. 34 st. 1): korisnik koga je
 /// podnosilac prijave odredio da u ime davaoca potvrđuje vaučere SVIH njegovih ugovora,
 /// preko sopstvenog naloga. Nijedno drugo ovlašćenje ne stiče; opoziv u svakom trenutku.
 /// 🔴 Najviše jedan aktivan red po paru drži delimičan jedinstveni indeks u migraciji
 /// (`WHERE "opozvanAt" IS NULL`) — Prisma ga ne izražava u šemi.
 model DavalacZaposleni {
   id              String            @id @default(uuid())
-  /// Upis pokrovitelja za koji zaposleni potvrđuje vaučere (donacije čl. 6a, čl.
-  /// 13g st. 6). Zatečeni redovi su povezani migracijom.
+  /// Upis pokrovitelja za koji zaposleni potvrđuje vaučere (donacije čl. 16, čl.
+  /// 32 st. 3). Zatečeni redovi su povezani migracijom.
   upisId          String?
   upis            UpisPokrovitelja? @relation(fields: [upisId], references: [id])
   /// Korisnik koji je zaposlenog odredio (vodi upis).
@@ -2296,13 +2449,13 @@ model DavalacZaposleni {
   @@index([zaposleniUserId, opozvanAt])
 }
 
-/// Lista zabrane (donacije čl. 13j st. 2): davalac čiji je ugovor raskinut ne
+/// Lista zabrane (donacije čl. 35 st. 5): davalac čiji je ugovor raskinut ne
 /// zaključuje nov ugovor o pokroviteljstvu dobrima i uslugama DOK GA Fondacija ne
 /// skine sa liste. Davalac se prepoznaje po matičnom broju (pravno lice,
 /// preduzetnik), odnosno po broju gazdinstva. Skinut red ostaje kao istorija.
 model ZabranaDavaoca {
   id             String            @id @default(uuid())
-  /// Lista zabrane se vezuje za upis (donacije čl. 6a st. 6). MB/BPG ostaju kao
+  /// Lista zabrane se vezuje za upis (donacije čl. 18 st. 3). MB/BPG ostaju kao
   /// zatečeni ključ.
   upisId         String?
   upis           UpisPokrovitelja? @relation(fields: [upisId], references: [id])
@@ -2325,19 +2478,19 @@ model ZabranaDavaoca {
   @@index([upisId, skinutoAt])
 }
 
-/// Upis pokrovitelja u evidenciju (Pravilnik o pokroviteljstvu i donacijama čl. 6a).
+/// Upis pokrovitelja u evidenciju (Pravilnik o pokroviteljstvu i donacijama čl. 16).
 /// Pravno lice, preduzetnik ili registrovano poljoprivredno gazdinstvo upisuje se
 /// JEDNOM; upis vodi korisnik koji ga je izvršio (`vlasnikUserId`) i iz odobrenog
-/// upisa podnosi prijave novčanog pokroviteljstva (čl. 7) i pokroviteljstva dobrima
-/// i uslugama (čl. 13e).
+/// upisa podnosi prijave novčanog pokroviteljstva (čl. 19) i pokroviteljstva dobrima
+/// i uslugama (čl. 28).
 ///
 /// 🔴 Najviše jedan živ upis po matičnom broju, odnosno BPG-u: drži delimičan
 /// jedinstveni indeks u migraciji (`WHERE "obrisanAt" IS NULL AND status <>
 /// 'ODBIJEN'`) — Prisma ga ne izražava u šemi.
-/// 🔴 Javno se prikazuju SAMO naziv, logotip, mesto i adresa za mapu (čl. 13 st. 4).
+/// 🔴 Javno se prikazuju SAMO naziv, logotip, mesto i adresa za mapu (čl. 26 st. 2).
 /// MB, PIB, BPG, sedište, ime i kontakt čita samo administratorski tim i vlasnik upisa.
 /// 🔴 Adresa na mapi nije opoziv pristanak: izjava je obavezna pri upisu, a izlaz je
-/// samo brisanje upisa (čl. 6a st. 6), kad nema neiskorišćenih vaučera.
+/// samo brisanje upisa (čl. 18 st. 4), kad nema neiskorišćenih vaučera.
 model UpisPokrovitelja {
   id                        String                  @id @default(uuid())
   vrsta                     VrstaDavaoca
@@ -2346,7 +2499,7 @@ model UpisPokrovitelja {
   vlasnik                   User                    @relation("VlasnikUpisa", fields: [vlasnikUserId], references: [id])
   /// Naziv pravnog lica ili preduzetnika, odnosno naziv gazdinstva.
   naziv                     String
-  /// Samo FIRMA. Pravni oblik određuje odnos i izjave (čl. 6a st. 2 i 3); zatečeni upisi `null`.
+  /// Samo FIRMA. Pravni oblik određuje odnos i izjave (čl. 16 st. 2–3, čl. 17); zatečeni upisi `null`.
   pravniOblik               PravniOblik?
   /// Samo FIRMA.
   adresaSedista             String?
@@ -2358,42 +2511,42 @@ model UpisPokrovitelja {
   gazdinstvoId              String?
   /// Ime i prezime korisnika koji upis vrši (zastupnik, preduzetnik, vlasnik,
   /// stvarni vlasnik, nosilac gazdinstva). U evidenciju identiteta ide tek pri
-  /// potvrdi prijema donacije (čl. 7 st. 3). Zatečeni redovi mogu biti `null`.
+  /// potvrdi prijema donacije (čl. 19 st. 3). Zatečeni redovi mogu biti `null`.
   imePrezime                String?
   /// Funkcija zakonskog zastupnika (npr. direktor) — samo uz odnos ZASTUPNIK.
   zastupnikFunkcija         String?
   odnosPremaDavaocu         OdnosPremaDavaocu?
   kontaktEmail              String?
   kontaktTelefon            String?
-  /// Logotip (čl. 13 st. 4) — javni URL na R2. 🔴 Bez veze ka internet stranici.
+  /// Logotip (čl. 26 st. 2) — javni URL na R2. 🔴 Bez veze ka internet stranici.
   logoUrl                   String?
   /// Mesto (naselje iz šifarnika), adresa i tačka za prikaz na mapi.
   mapaMesto                 String?
   mapaAdresa                String?
   mapaLat                   Float?
   mapaLng                   Float?
-  /// Izjava da je pokrovitelj saglasan da se adresa prikazuje (čl. 6a st. 2).
+  /// Izjava da je pokrovitelj saglasan da se adresa prikazuje (čl. 16 st. 2 t. 3).
   izjavaAdresaAt            DateTime?
-  /// Izjava o ovlašćenju (čl. 6a st. 3) — kad korisnik nije zastupnik ni preduzetnik.
+  /// Izjava o ovlašćenju (čl. 17 st. 1) — kad korisnik nije zastupnik ni preduzetnik.
   izjavaOvlascenjaAt        DateTime?
-  /// Potvrda o načinu evidentiranja doprinosa (čl. 6a st. 3): trenutak i SNIMAK teksta.
+  /// Potvrda o načinu evidentiranja doprinosa (čl. 17 st. 2): trenutak i SNIMAK teksta.
   potvrdaEvidentiranjaAt    DateTime?
   potvrdaEvidentiranjaTekst String?
-  /// Fondacija je naziv, MB i zastupnika uporedila sa registrom (čl. 6a st. 4) —
+  /// Fondacija je naziv, MB i zastupnika uporedila sa registrom (čl. 18 st. 1) —
   /// beleži se samo da je poređenje izvršeno.
   aprProveraAt              DateTime?
   aprProverioId             String?
   odlukaAt                  DateTime?
   odlukaAdminId             String?
   odbijenoRazlog            String?
-  /// Izmena naziva, MB odnosno logotipa na ponovnoj proveri (čl. 6a st. 5). Do
+  /// Izmena naziva, MB odnosno logotipa na ponovnoj proveri (čl. 18 st. 2). Do
   /// odluke važe ranije odobrene vrednosti.
   izmenaNaziv               String?
   izmenaMaticniBroj         String?
   izmenaLogoUrl             String?
   izmenaPodnetaAt           DateTime?
   izmenaOdbijenaRazlog      String?
-  /// Brisanje upisa (čl. 6a st. 6): prestaju prikaz na mapi i ponuda vaučera.
+  /// Brisanje upisa (čl. 18 st. 4): prestaju prikaz na mapi i ponuda vaučera.
   obrisanAt                 DateTime?
   /// Na zahtev korisnika koji je vodio upis, pokrovitelj se uklanja i sa rang-liste.
   uklonjenSaRangListeAt     DateTime?
@@ -2414,9 +2567,9 @@ model UpisPokrovitelja {
 }
 
 /// 🔴 Napušteno (set 4.7.8, 20.10.2026): prijava na raspodelu u krugovima više ne
-/// postoji — vaučer se uzima slobodno (nabavke čl. 30e). Tabela ostaje zbog
+/// postoji — vaučer se uzima slobodno (nabavke čl. 32 st. 2). Tabela ostaje zbog
 /// zatečenih redova i GDPR izvoza; kod u nju ne piše.
-/// Prijava člana na raspodelu vaučera (nabavke čl. 30c, 30e).
+/// Prijava člana na raspodelu vaučera (nabavke čl. 30, 32).
 model PrijavaRaspodele {
   id                String      @id @default(uuid())
   ugovorId          String
@@ -2424,7 +2577,7 @@ model PrijavaRaspodele {
   krug              Int
   userId            String
   user              User        @relation(fields: [userId], references: [id])
-  /// Izjava „nisam povezano lice sa davaocem" (donacije čl. 13k) — trenutak davanja.
+  /// Izjava „nisam povezano lice sa davaocem" (donacije čl. 36) — trenutak davanja.
   izjavaNepovezanAt DateTime
   /// DODELJEN | PRESKOCEN (nema dovoljno POEN-a, već ima dva vaučera, nema mesta)
   ishod             String?
@@ -2522,7 +2675,7 @@ model Konverzacija {
   /// ko nije vlasnik oglasa i prelazi na `Poruka.oglasId`.
   povodOglasId String?
   povodOglas   MarketplaceListing? @relation("KonvPovod", fields: [povodOglasId], references: [id], onDelete: SetNull)
-  /// Ko je razgovor otvorio — broji dnevni limit novog člana (Uslovi čl. 16 st. 5).
+  /// Ko je razgovor otvorio — broji dnevni limit novog člana (Uslovi čl. 14 st. 2).
   /// Zatečeni razgovori ostaju `null`.
   pokrenuoId   String?
 
@@ -2672,16 +2825,16 @@ model PravilnikPrihvatanje {
   @@index([userId])
 }
 
-// ─── Osnivacki doprinos (Pravilnik o osnivackom doprinosu v3.7.0) ────────────
+// ─── Osnivacki doprinos (Pravilnik o osnivackom doprinosu; Pravilnik cl. 35) ──
 
 model OsnivackiKanal {
   id                   String    @id @default("singleton")
-  ukupnoEvidentirano   Int       @default(0) // ukupno POEN-a evidentirano kroz kanal (max 2.400.000)
+  ukupnoEvidentirano   Int       @default(0) // ukupno POEN-a stvarno evidentirano kroz kanal (max 2.400.000; manje kad su koraci umanjeni, cl. 8 st. 3)
   brojKoraka           Int       @default(0) // broj izvrsenih koraka (max 100)
-  zatvoren             Boolean   @default(false) // postaje true kad brojKoraka = 120
+  zatvoren             Boolean   @default(false) // postaje true kad brojKoraka = 100 (cl. 10)
   zatvorenAt           DateTime?
   poslednjiPrag        Int       @default(0) // posljednji aktiviran prag (100.000, 200.000, ...)
-  osnivaciZakljucani   Boolean   @default(false) // admin zakljucao listu (uslov: zbir udela = 1); emisija ide samo kad je zakljucano
+  osnivaciZakljucani   Boolean   @default(false) // lista zakljucana = odluka o raspodeli objavljena (cl. 8 st. 4); trajno, ne otkljucava se (cl. 2 st. 3); emisija ide samo kad je zakljucano
   osnivaciZakljucaniAt DateTime?
   updatedAt            DateTime  @updatedAt
 }
@@ -2704,7 +2857,7 @@ model OsnivackiKorakLog {
   brojKoraka         Int                     @unique // 1, 2, ..., 100
   prag               Int // POEN prag koji je aktivirao korak (100k, 200k, ...)
   ukupanPoenUSistemu Int // total POEN-a u sistemu u trenutku okidanja
-  iznosKoraka        Int                     @default(24000) // 24.000 POEN po koraku (v3.9.1)
+  iznosKoraka        Int                     @default(24000) // stvarno evidentirano u koraku: 24.000, umanjeno za udeo osnivaca kome je prestao status (cl. 8 st. 3)
   createdAt          DateTime                @default(now())
   emisije            OsnivackiKorakEmisija[]
 }
@@ -2773,7 +2926,7 @@ model PrigovorNaOdluku {
   user        User           @relation(fields: [userId], references: [id])
   opis        String
   tipOdluke   String // vidi VRSTE_PRIGOVORA u src/lib/prigovor-pravila.ts
-  /// Predmet na koji se prigovor odnosi (Uslovi čl. 37a st. 3): id prepisa za
+  /// Predmet na koji se prigovor odnosi (Uslovi čl. 40 st. 3): id prepisa za
   /// RAZMENA, id prijave na nabavku za NABAVKA. Bez njega se o tim vrstama ne
   /// može odlučiti — odluka se vodi o TAČNO JEDNOM zapisu.
   predmetId   String?
@@ -2810,7 +2963,7 @@ model BlogPost {
 /// Soba Pričaonice. 🔴 Soba se NE BIRA nego se izvodi iz toga ko piše: maloletni
 /// korisnik uvek dobija dečju, punoletni uvek sobu odraslih. Nema parametra kojim
 /// bi se prešlo iz jedne u drugu — to je jedini način da se sigurno zna da odrasli
-/// nisu u dečjoj sobi (Modul Deca, čl. 12).
+/// nisu u dečjoj sobi (Pravilnik o učešću dece, čl. 27 st. 1).
 enum ChatSoba {
   ODRASLI
   DECA
@@ -2823,7 +2976,7 @@ model ChatMessage {
   user           User      @relation("ChatPoruke", fields: [userId], references: [id])
   content        String
   createdAt      DateTime  @default(now())
-  // Uklanjanje od strane Fondacije (Uslovi čl. 25 st. 2 — obuhvata „svu drugu
+  // Uklanjanje od strane Fondacije (Uslovi čl. 29 st. 2 — obuhvata „svu drugu
   // komunikaciju putem Platforme"). Meko brisanje: poruka nestaje iz sobe, ali
   // ostaje trag ko je i zašto uklonio dok je noćni cron ne pobriše sa ostalima.
   uklonjenoAt    DateTime?
@@ -2862,7 +3015,7 @@ model VerifikacionaVeza {
   nadzorZapisi       NadzorZapis[]
   nadzorniPredmet    NadzorniPredmet?
 
-  // ── POEN po potvrdi čeka trag stvarnog učešća (dokaz stvarnosti čl. 7) ──────────
+  // ── POEN po potvrdi čeka trag stvarnog učešća (dokaz stvarnosti čl. 19) ──────────
   // Do seta 4.6.4 je Protokol upisivao 1.000 + 1.000 ODMAH po potvrdi, automatski i
   // bez ijednog traga da je potvrđeni išta uradio. Sada se POEN beleži, a upisuje kad
   // potvrđeni ostvari doprinos koji je NEKO POTVRDIO — Fondacija (odobren prvi oglas,
@@ -2894,15 +3047,15 @@ model VerifikacionaVeza {
   /// (noćni nadzor integriteta, set 4.8.0). Obaveštava se jednom.
   bezRazmeneJavljenoAt    DateTime?
   /// Uvođenje u Kolo posle razgovora telefonom sa korisnikom sa spiska za poziv
-  /// (dokaz stvarnosti čl. 5a st. 5, čl. 9 st. 2, čl. 11; set 4.8.2). Na takvoj vezi
+  /// (dokaz stvarnosti čl. 4 st. 1, čl. 22 st. 1 t. 5, čl. 25; set 4.8.2). Na takvoj vezi
   /// automatska potvrda lanca staje; uvek podleže nadzoru (osim kod osnivača).
   /// Ime kolone ostaje iz seta 4.8.1 (CLAUDE.md pravilo 12), značenje je novo.
   poPozivu                Boolean           @default(false)
-  /// Vrsta verifikacije (dokaz stvarnosti čl. 5a st. 1, čl. 6 al. 5): potvrda (član
+  /// Vrsta verifikacije (dokaz stvarnosti čl. 4, čl. 18 st. 1 t. 5): potvrda (član
   /// Kola koji osobu lično zna) ili uvođenje u Kolo.
   vrsta                   VrstaVerifikacije @default(POTVRDA)
-  /// Verifikator je u trenutku verifikacije bio član bez potvrde (čl. 5a st. 5 —
-  /// lanac teče samo kroz takva uvođenja; čl. 11 st. 7–8 — red i signal nadzora).
+  /// Verifikator je u trenutku verifikacije bio član bez potvrde (čl. 4 st. 2 —
+  /// lanac teče samo kroz takva uvođenja; čl. 25 — red i signal nadzora).
   verifikatorBezPotvrde   Boolean           @default(false)
   potvrdeClana            PotvrdaClana[]
 
@@ -2918,13 +3071,13 @@ model VerifikacionaVeza {
   @@index([verifikovaniId, poenStatus])
 }
 
-/// Vrsta verifikacije (dokaz stvarnosti čl. 5a, set 4.8.2).
+/// Vrsta verifikacije (dokaz stvarnosti čl. 4, set 4.8.2).
 enum VrstaVerifikacije {
   POTVRDA
   UVODJENJE
 }
 
-/// Ko je potvrdio člana bez potvrde (dokaz stvarnosti čl. 5a st. 3–5).
+/// Ko je potvrdio člana bez potvrde (dokaz stvarnosti čl. 5).
 enum IzvorPotvrdeClana {
   CLAN_KOLA
   FONDACIJA
@@ -2933,22 +3086,22 @@ enum IzvorPotvrdeClana {
   LANAC
 }
 
-/// Kako je član Kola potvrdio člana bez potvrde (dokaz stvarnosti čl. 5a, 5c, 5d;
+/// Kako je član Kola potvrdio člana bez potvrde (dokaz stvarnosti čl. 5, 16, 17;
 /// set 4.8.3). Samo uz izvor CLAN_KOLA; zatečeni redovi ostaju null (pravilo 11).
 enum NacinPotvrdeClana {
-  /// Lično poznanstvo (čl. 5a st. 3).
+  /// Lično poznanstvo (čl. 5 st. 1 t. 1).
   LICNO
-  /// Čuvar Kola posle razgovora telefonom (čl. 5c) — uvek nadzor.
+  /// Čuvar Kola posle razgovora telefonom (čl. 16) — uvek nadzor.
   TELEFONOM
-  /// Označavanje sa spiska povezanih (čl. 5d).
+  /// Označavanje sa spiska povezanih (čl. 17).
   SPISAK_POVEZANIH
 }
 
-/// Potvrda člana bez potvrde (dokaz stvarnosti čl. 5a st. 3–5, set 4.8.2).
+/// Potvrda člana bez potvrde (dokaz stvarnosti čl. 5, set 4.8.2).
 ///
 /// NIJE nova verifikacija: ne nastaje nova `VerifikacionaVeza`, ne nosi POEN i ne
 /// menja indeks. Vezuje se za uvođenje kojim je član verifikovan i beleži ko je
-/// potvrdio i kada. Poništava se posebno (čl. 19 st. 1) — `aktivnaKljuc` je tada
+/// potvrdio i kada. Poništava se posebno (čl. 33 st. 1) — `aktivnaKljuc` je tada
 /// null, pa je najviše jedna živa potvrda po uvođenju.
 ///
 /// 🔴 Poništenje potvrde koja je pokrenula lanac NE obara potvrde iz lanca
@@ -2974,7 +3127,7 @@ model PotvrdaClana {
   obrazlozenje     String?
   /// Samo kod CLAN_KOLA, od seta 4.8.3; zatečeni redovi su null.
   nacin            NacinPotvrdeClana?
-  /// Potvrda onoga ko je potvrdiocu bio uvodilac (čl. 5d st. 3) — izuzetak od čl. 12,
+  /// Potvrda onoga ko je potvrdiocu bio uvodilac (čl. 17 st. 3) — izuzetak od čl. 28,
   /// uvek nadzor.
   premaUvodiocu    Boolean            @default(false)
   createdAt        DateTime           @default(now())
@@ -2995,7 +3148,7 @@ model PotvrdaClana {
   @@index([podlezeNadzoru, nadzorIshod])
 }
 
-/// Spisak za poziv — „Želim da me neko nazove" (dokaz stvarnosti čl. 4a, Uslovi
+/// Spisak za poziv — „Želim da me neko nazove" (dokaz stvarnosti čl. 8–13; do seta 5.0 i Uslovi
 /// čl. 16b; set 4.8.2). Ime modela i ruta ostaju iz seta 4.8.1 (pravilo 12).
 ///
 /// Vide ga članovi Kola; ime i broj se otvaraju klikom, jednom po jednom članu, na
@@ -3006,7 +3159,7 @@ model ZahtevZaRazgovor {
   id             String      @id @default(uuid())
   userId         String      @unique
   user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  /// Osnov ulaska na spisak (čl. 4a st. 2).
+  /// Osnov ulaska na spisak (čl. 8).
   osnov          OsnovSpiska @default(ZAHTEV)
   /// Mesto, opis i dostupnost su obavezni samo za osnov ZAHTEV.
   mesto          String?
@@ -3022,19 +3175,19 @@ model ZahtevZaRazgovor {
   @@index([otvorioId])
 }
 
-/// Osnov ulaska na spisak za poziv (dokaz stvarnosti čl. 4a st. 2).
+/// Osnov ulaska na spisak za poziv (dokaz stvarnosti čl. 8).
 enum OsnovSpiska {
   ZAHTEV
   DONACIJA
   POKROVITELJSTVO
   /// Ime ostaje (pravilo 12); od seta 4.8.3 svako gazdinstvo, i van registra.
   GAZDINSTVO_RPG
-  /// Član bez potvrde traži razgovor radi potvrde sa čuvarom Kola (čl. 5c; set 4.8.3).
+  /// Član bez potvrde traži razgovor radi potvrde sa čuvarom Kola (čl. 8 st. 4, čl. 16; set 4.8.3).
   POTVRDA
 }
 
 /// Zapis o tome ko je otvorio ime i broj korisnika sa spiska za poziv (dokaz
-/// stvarnosti čl. 4a st. 5; Uslovi čl. 16b st. 3; radnja obrade br. 24). Bez imena
+/// stvarnosti čl. 10 st. 4; radnja obrade br. 24). Bez imena
 /// i broja. Briše se gašenjem naloga POZVANOG; kroz Platformu se ne izvozi.
 model ZapisOtvaranjaPoziva {
   id         String   @id @default(uuid())
@@ -3051,7 +3204,7 @@ model ZapisOtvaranjaPoziva {
 // ─── Nadzor verifikacija — ishod i predmet (dokaz stvarnosti 4.2.0) ──────────
 // Do 4.2.0 nadzornik je mogao samo da POTVRDI verifikaciju ili da ne uradi ništa —
 // polja za "proverio sam i nešto ne štima" nije bilo, pa je podsticaj gurao ka
-// propuštanju. Sada svaki nadzor ostavlja zabeležen ishod (čl. 11).
+// propuštanju. Sada svaki nadzor ostavlja zabeležen ishod (čl. 24).
 
 enum NadzorIshod {
   UREDNO // nema primedbi → dopunjava se slot kapaciteta verifikatora
@@ -3073,7 +3226,7 @@ enum NadzorniPredmetStatus {
 }
 
 // Jedan red po nadzorniku po verifikaciji. `@@unique` je ono što tehnički sprovodi
-// zabranu iz čl. 10 st. 4 — isti nadzornik ne sme dvaput da gleda isti zapis.
+// zabranu iz čl. 23 st. 3 — isti nadzornik ne sme dvaput da gleda isti zapis.
 // Set 4.8.2: predmet nadzora je TAČNO JEDNO od tri — verifikacija, potvrda člana
 // bez potvrde ili potvrda postojanja deteta (CHECK u migraciji).
 model NadzorZapis {
@@ -3087,9 +3240,9 @@ model NadzorZapis {
   nadzornikId         String
   nadzornik           User                     @relation("NadzorZapisi", fields: [nadzornikId], references: [id])
   ishod               NadzorIshod
-  // Obavezni uz ZA_PROVERU i SPORNO, prazni uz UREDNO (čl. 11 st. 3).
+  // Obavezni uz ZA_PROVERU i SPORNO, prazni uz UREDNO (čl. 24 st. 3).
   subjekt             NadzorSubjekt?
-  razlog              String? // šifra sa liste iz čl. 11 st. 4
+  razlog              String? // šifra sa liste iz čl. 24 st. 4
   opis                String? // samo uz razlog "ostalo"
   // 500 POEN ide PRVOM nadzorniku koji evidentira ishod, bez obzira koji je (čl. 7 st. 2).
   // Drugi ne dobija ništa — inače bi se isplatilo lančano dodavati nadzornike.
@@ -3103,7 +3256,7 @@ model NadzorZapis {
   @@index([nadzornikId])
 }
 
-// Nadzorni predmet (čl. 11a). Alat, ne organ — odlučuje UO po čl. 18.
+// Nadzorni predmet (čl. 27). Alat, ne organ — odlučuje Fondacija po čl. 32.
 // Jedan po verifikaciji: drugi nadzornik koji doda ishod ažurira postojeći predmet.
 // Vidi ga SAMO superadmin. Cascade je namerna: poništenjem verifikacije nestaje i
 // predmet, a trag radnje ostaje u audit logu.
@@ -3138,14 +3291,14 @@ model NadzorniPredmet {
 // i sinhronizuje u istoj transakciji sa svakim upisom, poništavanjem ili
 // prestankom statusa. Skup je monoton pri upisu (unije), a pri poništavanju se
 // NE oduzima inkrementalno (unija nije invertibilna) nego preračunava od nule.
-/// Stanje upisa POEN-a po potvrdi (dokaz stvarnosti čl. 7).
+/// Stanje upisa POEN-a po potvrdi (dokaz stvarnosti čl. 19).
 /// ZABELEZEN = potvrda važi i indeks je upisan, ali POEN još nije zapis — ne ulazi ni
 /// u jedno stanje, ni u opticaj, ni u javne agregate. Isti odnos kao `DoprinosStatus`.
 enum PotvrdaPoenStatus {
   ZABELEZEN
   EVIDENTIRAN
   /// Potvrda je oborena pre nego što je POEN upisan — tada se samo gasi, BEZ
-  /// protivzapisa i BEZ nadoknade po čl. 20b: nema šta da se poništi.
+  /// protivzapisa i BEZ nadoknade po čl. 36: nema šta da se poništi.
   PONISTEN
 }
 
@@ -3322,7 +3475,7 @@ model Bug {
 //
 // ─── Zašto red ostaje i posle raskida ──────────────────────────────────────
 //
-// Raskinut par SME da se obnovi (čl. 14c st. 5) — pomirene drugarice ne gube
+// Raskinut par SME da se obnovi (deca čl. 34 st. 4) — pomirene drugarice ne gube
 // ništa trajno. Kad bi se red brisao, `@@unique([aId, bId])` ne bi imao šta da
 // čuva i isti par bi mogao da postoji dvaput. Zato se raskid beleži `raskinutAt`,
 // a obnova ga vraća na `null`.
@@ -3332,13 +3485,13 @@ model Prijateljstvo {
   a               User      @relation("PrijateljA", fields: [aId], references: [id], onDelete: Cascade)
   bId             String
   b               User      @relation("PrijateljB", fields: [bId], references: [id], onDelete: Cascade)
-  // Da li je 500 POEN upisano OBEMA stranama (čl. 14b). Isplata čeka da obe strane
+  // Da li je 500 POEN upisano OBEMA stranama (deca čl. 33). Isplata čeka da obe strane
   // budu aktivne, pa red često stoji neisplaćen. Ovo polje je jedini izvor istine
   // o tome duguje li se otpis pri raskidu i pri punoletstvu — broj transakcija se
   // ne prebrojava unazad.
   poenEvidentiran Boolean   @default(false)
   evidentiranAt   DateTime?
-  // Raskid (čl. 14c). Raskinuti može samo dete, bilo koje od dvoje; roditelj ne
+  // Raskid (deca čl. 34). Raskinuti može samo dete, bilo koje od dvoje; roditelj ne
   // može. `raskinuoId` je zato uvek jedna od dve strane.
   raskinutAt      DateTime?
   raskinuoId      String?
@@ -3368,7 +3521,7 @@ model PrijateljToken {
 }
 
 // ─── Projekti i kolektivne nabavke ───────────────────────────────────────────
-// Pravilnik o KOLO sistemu čl. 14a i 51a; Pravilnik o projektima i kolektivnim
+// Pravilnik o KOLO sistemu čl. 18 i 47; Pravilnik o projektima i kolektivnim
 // nabavkama (set 4.4.1).
 
 /// Rečnik naziva dobara. Zaseban model, a ne slobodan tekst na predlogu: bez
@@ -3426,7 +3579,7 @@ enum NabavkaPrijavaStatus {
 }
 
 /// Jedna kolektivna nabavka, od izbora predmeta do preuzimanja.
-/// Svi brojevi kalkulacije se SNIMAJU na zapis u trenutku objave (čl. 20 st. 2:
+/// Svi brojevi kalkulacije se SNIMAJU na zapis u trenutku objave (čl. 18 st. 3:
 /// kalkulacija se posle objave ne menja). Bez snimka bi se prikazana kalkulacija
 /// menjala kad se promeni saldo Fondacije ili nabavna cena.
 model Nabavka {
@@ -3440,12 +3593,12 @@ model Nabavka {
   glasanjePredlogId String?          @unique
   glasanjePredlog   GlasanjePredlog? @relation(fields: [glasanjePredlogId], references: [id])
 
-  // ── Sredstva (čl. 5 i 8) — snimak u trenutku objave
+  // ── Sredstva (čl. 5 i 7) — snimak u trenutku objave
   saldoSnimak   Decimal? @db.Decimal(12, 2)
   rezervaSnimak Decimal? @db.Decimal(12, 2)
   iznosNabavke  Decimal? @db.Decimal(12, 2)
 
-  // ── Ponuda i kalkulacija (čl. 15, 17, 18, 19)
+  // ── Ponuda i kalkulacija (čl. 13, 14, 16, 17, 18)
   dobavljac        String?
   jedinicaMere     String? // „vreća 25 kg" — samo za prikaz
   nabavnaCena      Decimal? @db.Decimal(12, 2)
@@ -3460,7 +3613,7 @@ model Nabavka {
   /// kalkulacijom, jer je bez njega parametar odluke neproverljiv.
   poenObrazlozenje String?
 
-  // ── Rokovi (čl. 21, 23, 26)
+  // ── Rokovi (čl. 19, 21, 24)
   prijaveDo        DateTime?
   mestoPreuzimanja String?
   preuzimanjeOd    DateTime?
@@ -3485,7 +3638,7 @@ model Nabavka {
   @@index([nazivId])
 }
 
-/// Prikupljena ponuda (čl. 15). Objavljuju se SVE, i one koje nisu izabrane —
+/// Prikupljena ponuda (čl. 14). Objavljuju se SVE, i one koje nisu izabrane —
 /// bez toga „najpovoljnija" nije provera nego tvrdnja.
 model NabavkaPonuda {
   id             String   @id @default(uuid())
@@ -3509,7 +3662,7 @@ model NabavkaPrijava {
   user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   status    NabavkaPrijavaStatus @default(PRIJAVLJEN)
 
-  /// 🔴 SNIMAK broja POEN-a u trenutku isteka roka za prijavu (čl. 22 st. 2).
+  /// 🔴 SNIMAK broja POEN-a u trenutku isteka roka za prijavu (čl. 20 st. 2).
   /// Red mora biti snimak, ne živa vrednost: rolanje poziva traje danima, a ljudi
   /// u međuvremenu troše POEN — pri živom rangiranju red bi se premeštao pod
   /// nogama onima koji čekaju poziv.
@@ -3521,7 +3674,7 @@ model NabavkaPrijava {
   potvrdjenoAt   DateTime?
   danPreuzimanja DateTime?
   /// Kod koji korisnik pokazuje dobavljaču. Dobavljač dobija SAMO spisak kodova —
-  /// nikad pseudonim ni bilo koji drugi podatak o licu (čl. 26 st. 3).
+  /// nikad pseudonim ni bilo koji drugi podatak o licu (čl. 24 st. 3).
   kod            String?   @unique
   preuzetoAt     DateTime?
 
@@ -3529,7 +3682,7 @@ model NabavkaPrijava {
   /// prikazuje samo kad postoji.
   rezervisano Int @default(0)
 
-  /// Ispravka poništenja po prijavljenom nedostatku (nabavke čl. 30a st. 5).
+  /// Ispravka poništenja po prijavljenom nedostatku (nabavke čl. 35 st. 1 t. 1).
   /// Postoji da se ista prijava ne bi ispravila dvaput; iznos je snimak, jer
   /// `poenPoDelu` nabavke može biti drugačiji u nekoj kasnijoj nabavci.
   ispravljenoAt   DateTime?
@@ -3566,15 +3719,15 @@ model ProjekatTrosak {
   @@index([datum])
 }
 
-/// Stanje gazdinstva (Pravilnik o gazdinstvima čl. 4–6, 11, 12).
+/// Stanje gazdinstva (Pravilnik o gazdinstvima čl. 4–7, 19–21).
 enum GazdinstvoStatus {
   /// Prijava je otvorena; podnosilac postavlja oglase i poziva članove.
   NACRT
   NA_PREGLEDU
-  /// Fondacija vratila na dopunu (čl. 6 st. 2) — razlog u `razlogVracanja`.
+  /// Fondacija vratila na dopunu (čl. 7 st. 2) — razlog u `razlogVracanja`.
   VRACENO
   ODOBRENO
-  /// Odobrenje poništeno zbog lažne izjave (čl. 12).
+  /// Odobrenje poništeno zbog lažne izjave (čl. 20).
   PONISTENO
   /// Gazdinstvo ostalo bez članova ili ga je podnosilac povukao.
   UGASENO
@@ -3588,17 +3741,17 @@ enum UlogaUGazdinstvu {
 enum ClanGazdinstvaStatus {
   POZVAN
   /// Prihvatio poziv uz izjavu; pre odobrenja gazdinstva čeka odobrenje gazdinstva,
-  /// posle njega čeka da Fondacija pregleda pristupanje (čl. 8 st. 1).
+  /// posle njega čeka da Fondacija pregleda pristupanje (gazd. čl. 9 st. 4).
   PRISTUPIO
   ODOBREN
   ODBIJEN
   ISTUPIO
 }
 
-/// Gazdinstvo (Pravilnik čl. 40c, Pravilnik o gazdinstvima). Nije korisnik ni
+/// Gazdinstvo (Pravilnik čl. 39, Pravilnik o gazdinstvima). Nije korisnik ni
 /// kolektivni oblik i NEMA zapis u Protokolu — doprinos ide u lični zapis člana.
 ///
-/// Lokacija je tačna (koordinate), ali se adresa ne ispisuje (čl. 11). BPG je
+/// Lokacija je tačna (koordinate), ali se adresa ne ispisuje bez izjave (gazd. čl. 19). BPG je
 /// neobavezan i nikad se ne prikazuje drugim korisnicima.
 model Gazdinstvo {
   id                 String           @id @default(uuid())
@@ -3608,22 +3761,22 @@ model Gazdinstvo {
   neregistrovano     Boolean          @default(false)
   /// Naselje iz šifarnika (`razresiNaselje`).
   naselje            String
-  /// Adresa gazdinstva (Pravilnik o gazdinstvima čl. 4 t. 3, set 4.7.5) — obavezna
+  /// Adresa gazdinstva (Pravilnik o gazdinstvima čl. 5 st. 1 t. 3, set 4.7.5) — obavezna
   /// za novu prijavu, vidi je SAMO administratorski tim; nikad u javni prikaz.
   /// Zatečeni redovi ostaju `null` (CLAUDE.md pravilo 11).
   adresa             String?
   lat                Float?
   lng                Float?
   /// Izjava podnosioca da je saglasan da se adresa prikazuje uz tačku na mapi
-  /// (Pravilnik o gazdinstvima čl. 4 t. 3). 🔴 Nije opoziv pristanak — izlaz je
-  /// samo brisanje gazdinstva (čl. 11). Gazdinstva odobrena ranije ostaju `null`
+  /// (Pravilnik o gazdinstvima čl. 5 st. 1 t. 3). 🔴 Nije opoziv pristanak — izlaz je
+  /// samo brisanje gazdinstva (čl. 21). Gazdinstva odobrena ranije ostaju `null`
   /// i adresa im se ne ispisuje dok upravljač ne da izjavu.
   izjavaAdresaAt     DateTime?
-  /// Gazdinstvo obrisano sa platforme (čl. 11 st. 5): status UGASENO, podaci brisani.
+  /// Gazdinstvo obrisano sa platforme (gazd. čl. 21 st. 1): status UGASENO, podaci brisani.
   obrisanoAt         DateTime?
   opis               String
   status             GazdinstvoStatus @default(NACRT)
-  /// Član koji upravlja gazdinstvom na platformi (čl. 9) — podnosilac, nosilac koji je preuzeo, ili sledeći po redu.
+  /// Član koji upravlja gazdinstvom na platformi (gazd. čl. 11, 12) — podnosilac, nosilac koji je preuzeo, ili sledeći po redu.
   upravljaId         String?
   razlogVracanja     String?
   podnetoAt          DateTime?
@@ -3637,22 +3790,22 @@ model Gazdinstvo {
   /// stvarnosti čl. 4a st. 2 t. 3). Izvod se ne čuva — beleži se samo da je poređenje izvršeno.
   rpgUporedjenAt     DateTime?
   rpgUporedioId      String?
-  /// Od kada gazdinstvo sme imati članove (gazd. čl. 4a, 9a; set 4.8.2). Postavlja se
+  /// Od kada gazdinstvo sme imati članove (gazd. čl. 4 st. 2, čl. 14; set 4.8.2). Postavlja se
   /// kad je podnosilac član Kola ili osnivač; monotono — pad potvrđenosti ga ne briše.
   smeClanoveOd       DateTime?
   /// Od kada bar jedan član neprekidno ima aktivan oglas kojim nudi (pokazatelj Z5,
   /// „stalna ponuda“; `protokol/pokazatelji.ts`). Upisuje ga noćni obračun: dan bez
   /// ponude vraća `null`. Stanje gazdinstva, ne istorija lica.
   ponudaNeprekidnoOd DateTime?
-  /// Telefon za razgovor Fondacije sa nosiocem (gazd. čl. 4 t. 9, 6a) — nosioca,
+  /// Telefon za razgovor Fondacije sa nosiocem (gazd. čl. 5 st. 1 t. 9, čl. 8) — nosioca,
   /// odnosno podnosioca kad nosilac nema nalog. Vidi ga samo admin; briše se odlukom.
   telefonZaRazgovor  String?
-  /// Fondacija je razgovarala sa nosiocem pre odobrenja (gazd. čl. 6a).
+  /// Fondacija je razgovarala sa nosiocem pre odobrenja (gazd. čl. 8).
   razgovorObavljenAt DateTime?
   /// Ko je razgovor zabeležio: admin ili član Kola koji je nosioca pozvao sa spiska
-  /// za poziv (gazd. čl. 6a st. 2; set 4.8.3). Zatečeni redovi su null.
+  /// za poziv (gazd. čl. 8 st. 2; set 4.8.3). Zatečeni redovi su null.
   razgovorBeleziId   String?
-  /// Član Kola posle razgovora sa spiska: postoji osnov za sumnju (čl. 6a st. 4).
+  /// Član Kola posle razgovora sa spiska: postoji osnov za sumnju (gazd. čl. 8 st. 4).
   razgovorSumnja     Boolean?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
@@ -3666,7 +3819,7 @@ model Gazdinstvo {
   @@index([status])
 }
 
-/// Članstvo u gazdinstvu. Samo punoletni nalozi (Pravilnik o učešću dece čl. 15).
+/// Članstvo u gazdinstvu. Samo punoletni nalozi (Pravilnik o učešću dece čl. 29 st. 3).
 /// Lice je aktivan član najviše jednog gazdinstva — proverava servis; živ doprinos
 /// ima najviše jedan — to drži BAZA (`DoprinosGazdinstva.aktivanKljuc @unique`, set 4.8.2).
 model ClanGazdinstva {
@@ -3679,7 +3832,7 @@ model ClanGazdinstva {
   status             ClanGazdinstvaStatus @default(POZVAN)
   pozvaoId           String?
   pozvanAt           DateTime             @default(now())
-  /// Trenutak prihvatanja poziva — određuje red pristupanja (čl. 8 st. 3).
+  /// Trenutak prihvatanja poziva — određuje red pristupanja (gazd. čl. 15 st. 2).
   pristupioAt        DateTime?
   odobrenAt          DateTime?
   istupioAt          DateTime?
@@ -3701,10 +3854,10 @@ model ClanGazdinstva {
   @@index([userId, status])
 }
 
-/// Doprinos gazdinstva (Pravilnik čl. 40c). Beleži se pri odobrenju gazdinstva,
+/// Doprinos gazdinstva (Pravilnik čl. 39). Beleži se pri odobrenju gazdinstva,
 /// odnosno pristupanja; evidentira se kad je član verifikovan i ima objavljen oglas.
 /// Set 4.8.2: doprinos se može PONOVO steći posle poništenja ili otpisa pri
-/// prestanku (Pravilnik čl. 40c st. 3; gazd. čl. 7 st. 3, 12a st. 6), pa `userId`
+/// prestanku (gazd. čl. 17, 24), pa `userId`
 /// više nije jedinstven. Živ doprinos (ZABELEZEN/EVIDENTIRAN, neotpisan) je najviše
 /// jedan po licu — to drži `aktivanKljuc @unique` (= userId dok je živ, null posle).
 model DoprinosGazdinstva {
@@ -3726,7 +3879,7 @@ model DoprinosGazdinstva {
   evidentiranAt      DateTime?
   obavestenAt        DateTime?
   ponistenAt         DateTime?
-  /// Otpis po čl. 14 st. 3 t. 6 (prestanak gazdinstva, set 4.8.2; do 4.8.1 t. 7).
+  /// Otpis po Pravilniku čl. 17 st. 2 t. 6 (prestanak gazdinstva, set 4.8.2; do 4.8.1 t. 7).
   otpisanAt          DateTime?
   otpisTransakcijaId String?
 
@@ -3760,7 +3913,7 @@ enum UpitIzjaveStatus {
 }
 
 /// Upit članu gazdinstva da preuzme izjavu kad lice koje za nju odgovara istupi
-/// (gazd. čl. 9 st. 3, 11 st. 6, 12a st. 1 t. 1; set 4.8.2). Rok 30 dana.
+/// (gazd. čl. 13, 21 st. 3, 22 st. 1 t. 1; set 4.8.2). Rok 30 dana.
 model UpitIzjaveGazdinstva {
   id           String           @id @default(uuid())
   gazdinstvoId String
@@ -3776,7 +3929,7 @@ model UpitIzjaveGazdinstva {
   @@index([gazdinstvoId])
 }
 
-// ─── Evidencija identiteta (Pravilnik čl. 31a, set 4.7.3) ────────────────────
+// ─── Evidencija identiteta (Pravilnik čl. 31, set 4.7.3) ────────────────────
 // Zasebna evidencija od evidencije doprinosa: veza pseudonim → ime i prezime.
 // Upisuje se iz tri izvora (gazdinstvo, javna donacija, zadruga), jedno ime po
 // nalogu. 🔴 Ne prikazuje se drugim korisnicima i ne ulazi u zapise POEN-a; čitaju
@@ -3789,7 +3942,7 @@ enum IzvorIdentiteta {
   DONACIJA
   ZADRUGA
   POKROVITELJSTVO
-  /// Ulazak na spisak za poziv (Pravilnik čl. 31a st. 2, set 4.8.4; N4-M2).
+  /// Ulazak na spisak za poziv (Pravilnik čl. 31 st. 2, set 4.8.4; N4-M2).
   SPISAK_ZA_POZIV
 }
 
@@ -3804,7 +3957,7 @@ model IdentitetNaloga {
   updatedAt  DateTime        @updatedAt
 }
 
-/// Utvrđenje višestrukog naloga istog lica (Pravilnik o dokazu stvarnosti čl. 4b,
+/// Utvrđenje višestrukog naloga istog lica (Pravilnik o dokazu stvarnosti čl. 14,
 /// set 4.8.4; registar 2026-10, N4-M3). Jedan red po ugašenom nalogu. Utvrđuje samo
 /// Fondacija (superadmin), uz obrazloženje; lice zadržava nalog `zadrzaniId`.
 ///
@@ -3822,11 +3975,11 @@ model UtvrdjenjeVisestrukogNaloga {
   utvrdioId         String
   utvrdjenoAt       DateTime  @default(now())
   /// Neto prepis sa ugašenog naloga na zadržani, otpisan tipom
-  /// `OTPIS_VISESTRUKI_NALOG` (osmi osnov, Pravilnik čl. 14 st. 3 t. 8). 0 kad
+  /// `OTPIS_VISESTRUKI_NALOG` (osmi osnov, Pravilnik čl. 17 st. 2 t. 8). 0 kad
   /// neto prepisa nije bilo.
   otpisano          Int       @default(0)
   otpisTxId         String?
-  /// Isključenje lica (Uslovi čl. 28) kad je drugi nalog korišćen za sticanje
+  /// Isključenje lica (Uslovi čl. 32) kad je drugi nalog korišćen za sticanje
   /// POEN-a ili glasa.
   iskljucen         Boolean   @default(false)
   /// Nadzorni predmet nad primaocima prepisa sa ugašenog naloga.
@@ -3854,20 +4007,20 @@ enum StanjeZelje {
 /// odgovorom pri brisanju naloga deteta, svakom izlasku naloga i punoletstvu
 /// (odluka vlasnika 25.10.2026).
 model ZeljaDeteta {
-  id               String          @id @default(uuid())
-  autorId          String
-  autor            User            @relation("ZeljaAutor", fields: [autorId], references: [id], onDelete: Cascade)
-  tekst            String
-  stanje           StanjeZelje     @default(NA_PREGLEDU)
+  id              String          @id @default(uuid())
+  autorId         String
+  autor           User            @relation("ZeljaAutor", fields: [autorId], references: [id], onDelete: Cascade)
+  tekst           String
+  stanje          StanjeZelje     @default(NA_PREGLEDU)
   /// Ko je iz Fondacije pregledao predlog pre prikaza, i kada.
-  pregledaoId      String?
-  pregledao        User?           @relation("ZeljaPregledao", fields: [pregledaoId], references: [id], onDelete: SetNull)
-  pregledanoAt     DateTime?
+  pregledaoId     String?
+  pregledao       User?           @relation("ZeljaPregledao", fields: [pregledaoId], references: [id], onDelete: SetNull)
+  pregledanoAt    DateTime?
   /// Razlog odbijanja — prikazuje se autoru, jednostavnim jezikom.
-  razlogOdbijanja  String?
-  createdAt        DateTime        @default(now())
-  podrske          PodrskaZelje[]
-  odgovor          OdgovorNaZelju?
+  razlogOdbijanja String?
+  createdAt       DateTime        @default(now())
+  podrske         PodrskaZelje[]
+  odgovor         OdgovorNaZelju?
 
   @@index([autorId])
   @@index([stanje])

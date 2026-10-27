@@ -10,7 +10,7 @@ import { jeAdmin } from "@/lib/dozvole";
 // POST /api/admin/pijaca/[id]/vrati — poništenje uklanjanja.
 //
 // Postoji zato što je uklanjanje jednostrana odluka Fondacije: pogrešnu procenu
-// i usvojen prigovor (Uslovi čl. 30) mora biti moguće ispraviti bez traženja od
+// i usvojen prigovor (Uslovi čl. 40 st. 2 t. 10) mora biti moguće ispraviti bez traženja od
 // korisnika da ponovo kuca oglas.
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

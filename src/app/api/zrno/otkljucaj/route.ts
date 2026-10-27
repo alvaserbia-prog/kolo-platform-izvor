@@ -12,8 +12,8 @@ import { smeOtkljucatiZrno } from "@/lib/gornje-kolo-pravila";
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  // Na zahtev vraća čuvar Kola (Pravilnik čl. 20 st. 3). Kome padne potvrda, aktivno
-  // ZRNO prelazi u slobodno samo od sebe (`posledicePromeneStatusa`, čl. 30 st. 3).
+  // Na zahtev vraća čuvar Kola (Pravilnik čl. 23 st. 2). Kome padne potvrda, aktivno
+  // ZRNO prelazi u slobodno samo od sebe (`posledicePromeneStatusa`, čl. 29 st. 2).
   const status = await ucitajStatus(session.user.id);
   if (!status || !smeOtkljucatiZrno(status))
     return await greska("Aktivno ZRNO vraća u slobodno stanje čuvar Kola.", 403);

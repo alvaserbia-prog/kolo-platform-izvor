@@ -11,29 +11,25 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import Pseudonim from "@/components/Pseudonim";
+import type { PrikazPredloga } from "@/lib/protokol/glasanje";
 
-interface Predlog {
-  id: string;
-  title: string;
-  description: string;
-  authorPseudonim: string;
-  glasanjePocetak: string;
-  deadline: string;
-  status: "ACTIVE" | "CLOSED";
-  faza: "NAJAVLJEN" | "U_TOKU" | "ZATVOREN";
-  ishodUsvojen: boolean | null;
-  zaGlasova: number;
-  protiGlasova: number;
-  mojGlas: boolean | null;
-  createdAt: string;
-}
+// Obračunski period je po srpskom vremenu (Pravilnik čl. 26) — datumi se tako i ispisuju.
+const ZONA = "Europe/Belgrade";
+/** Poslednji dan perioda koji se završava u ponoć `kraj` (kraj je isključiv). */
+const poslednjiDan = (kraj: string) => new Date(new Date(kraj).getTime() - 1);
+
+// Oblik iz `prikazPredloga` (Pravilnik o Gornjem Kolu čl. 9–11, 19).
+type Predlog = PrikazPredloga;
 
 interface Props {
   predlozi: Predlog[];
+  /** Sopstvena moć; > 0 znači da je u sastavu Gornjeg Kola (glasa i podržava). */
   mojaGlasackaMoc: number;
+  /** Predlog podnosi svaki učesnik, samo u Fazi 2 (Gornje Kolo čl. 3, 9 st. 1). */
+  smePredloziti: boolean;
 }
 
-export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc }: Props) {
+export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc, smePredloziti }: Props) {
   const t = useTranslations("glasanje");
   const router = useRouter();
   const [showNovi, setShowNovi] = useState(false);
@@ -55,7 +51,7 @@ export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc }: Props) {
                 {t("glasova_badge", { count: mojaGlasackaMoc })}
               </span>
             )}
-            {mojaGlasackaMoc > 0 && (
+            {smePredloziti && (
               <Dugme onClick={() => setShowNovi((v) => !v)}>
                 {t("novi_predlog")}
               </Dugme>
@@ -96,24 +92,37 @@ const PredlogKartica = memo(function PredlogKartica({ p, mojaGlasackaMoc, onRefr
   const t = useTranslations("glasanje");
   const tc = useTranslations("common");
   const [loading, setLoading] = useState<boolean | null>(null);
+  const [podrskaLoading, setPodrskaLoading] = useState(false);
   const [poruka, setPoruka] = useState<string | null>(null);
 
+  const fmt = (d: Date) => d.toLocaleDateString(intlTag(locale), { day: "2-digit", month: "long", year: "numeric", timeZone: ZONA });
   const ukupno = p.zaGlasova + p.protiGlasova;
   const zaProc = ukupno > 0 ? Math.round((p.zaGlasova / ukupno) * 100) : 0;
   const uToku = p.faza === "U_TOKU";
   const najavljen = p.faza === "NAJAVLJEN";
+  const podnet = p.faza === "PODNET";
+  const podrska = p.faza === "PODRSKA";
+  // Nepodržan predlog (Gornje Kolo čl. 10 st. 4): zatvoren bez glasanja, i pre nego
+  // što ga zatvaranje upiše u bazu.
+  const nijeGlasano = p.neglasanjeRazlog != null || (p.faza === "ZATVOREN" && p.podrskaPocetak != null && p.brPodrski === 0);
 
-  // Oznaka statusa: najavljen / u toku / ishod po zatvaranju
-  const statusLabel = najavljen
-    ? t("najavljeno")
-    : uToku
-      ? t("u_toku")
-      : p.ishodUsvojen === true
-        ? t("usvojeno")
-        : p.ishodUsvojen === false
-          ? t("neusvojeno")
-          : t("zatvoreno");
-  const statusZelen = uToku || p.ishodUsvojen === true;
+  // Oznaka statusa: podnet / podrška / najavljen / u toku / ishod po zatvaranju
+  const statusLabel = podnet
+    ? t("podnet")
+    : podrska
+      ? t("podrska_u_toku")
+      : najavljen
+        ? t("najavljeno")
+        : uToku
+          ? t("u_toku")
+          : nijeGlasano
+            ? t("nije_glasano")
+            : p.ishodUsvojen === true
+              ? t("usvojeno")
+              : p.ishodUsvojen === false
+                ? t("neusvojeno")
+                : t("zatvoreno");
+  const statusZelen = uToku || podrska || p.ishodUsvojen === true;
 
   async function glasaj(za: boolean) {
     setLoading(za); setPoruka(null);
@@ -126,13 +135,24 @@ const PredlogKartica = memo(function PredlogKartica({ p, mojaGlasackaMoc, onRefr
     else { setPoruka(data.error ?? tc("greska_ucitavanja")); }
   }
 
+  async function podrzi() {
+    setPodrskaLoading(true); setPoruka(null);
+    const res = await fetch(`/api/glasanje/${p.id}/podrzi`, { method: "POST" });
+    const data = await res.json();
+    setPodrskaLoading(false);
+    if (res.ok) { onRefresh(); }
+    else { setPoruka(data.error ?? tc("greska_ucitavanja")); }
+  }
+
   return (
     <Kartica className="space-y-3">
       <div className="flex justify-between items-start gap-3">
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-kolo-text">{p.title}</p>
           <p className="text-xs text-kolo-muted mt-0.5">
-            <Pseudonim>{p.authorPseudonim}</Pseudonim> · {new Date(p.createdAt).toLocaleDateString(intlTag(locale))}
+            {/* Pseudonim predlagača vide samo učesnici (Gornje Kolo čl. 9 st. 3) — server ga drugima ne šalje. */}
+            {p.authorPseudonim && <><Pseudonim>{p.authorPseudonim}</Pseudonim> · </>}
+            {new Date(p.createdAt).toLocaleDateString(intlTag(locale), { timeZone: ZONA })}
           </p>
         </div>
         <span className={`shrink-0 text-xs px-2 py-0.5 rounded-lg font-medium ${statusZelen ? "bg-kolo-green-100 text-kolo-green-700" : "bg-kolo-bg text-kolo-muted"}`}>
@@ -142,8 +162,24 @@ const PredlogKartica = memo(function PredlogKartica({ p, mojaGlasackaMoc, onRefr
 
       <p className="text-sm text-kolo-muted line-clamp-2">{p.description}</p>
 
-      {/* Rezultati */}
-      {ukupno > 0 && (
+      {/* Podrška čuvara Kola (Gornje Kolo čl. 10): broj je javan, pseudonimi samo učesnicima */}
+      {p.podrskaPocetak && (
+        <p className="text-xs text-kolo-muted">
+          {t("br_podrski", { count: p.brPodrski })}
+          {p.podrzavaoci.length > 0 && (
+            <> · {t("podrzali")}{" "}
+              {p.podrzavaoci.map((ime, i) => (
+                <span key={ime}>{i > 0 && ", "}<Pseudonim>{ime}</Pseudonim></span>
+              ))}
+            </>
+          )}
+        </p>
+      )}
+
+      {/* Rezultati. Izborni glas nema „protiv" (čl. 8) — iskazuje se samo data moć. */}
+      {p.izborno ? (
+        p.ukupnoGlasova > 0 && <p className="text-xs text-kolo-muted">{t("izborno_ukupno", { count: p.ukupnoGlasova })}</p>
+      ) : ukupno > 0 && (
         <div className="space-y-1">
           <div className="flex justify-between text-xs text-kolo-muted">
             <span>{t("za_glasova", { count: p.zaGlasova, pct: zaProc })}</span>
@@ -156,14 +192,27 @@ const PredlogKartica = memo(function PredlogKartica({ p, mojaGlasackaMoc, onRefr
       )}
 
       {/* Moj glas */}
-      {p.mojGlas !== null && (
+      {!p.izborno && p.mojGlas !== null && (
         <p className="text-xs text-kolo-gold-700 font-medium">
           {t("moj_glas", { glas: p.mojGlas ? t("za") : t("protiv"), moc: mojaGlasackaMoc })}
         </p>
       )}
 
+      {/* Podrška — samo tokom perioda podrške, čuvar Kola u sastavu Gornjeg Kola */}
+      {podrska && mojaGlasackaMoc > 0 && !p.mojaPodrska && (
+        <div className="space-y-1">
+          <Dugme varijanta="sekundarno" punaSirina onClick={podrzi} disabled={podrskaLoading}>
+            {podrskaLoading ? "..." : t("podrzi")}
+          </Dugme>
+          <p className="text-xs text-kolo-muted">{t("podrska_napomena")}</p>
+        </div>
+      )}
+      {p.mojaPodrska && !nijeGlasano && p.status === "ACTIVE" && (
+        <p className="text-xs text-kolo-gold-700 font-medium">{t("moja_podrska")}</p>
+      )}
+
       {/* Akcije — glasanje samo dok je U_TOKU */}
-      {uToku && mojaGlasackaMoc > 0 && (
+      {uToku && mojaGlasackaMoc > 0 && !p.izborno && (
         <div className="flex gap-2">
           <Dugme varijanta={p.mojGlas === true ? "primarno" : "sekundarno"} punaSirina className="flex-1" onClick={() => glasaj(true)} disabled={loading !== null}>
             {loading === true ? "..." : t("za")}
@@ -173,12 +222,21 @@ const PredlogKartica = memo(function PredlogKartica({ p, mojaGlasackaMoc, onRefr
           </Dugme>
         </div>
       )}
+      {p.izborno && (uToku || najavljen) && (
+        <p className="text-xs text-kolo-muted">{t("izborno_napomena")}</p>
+      )}
 
+      {podnet && p.podrskaPocetak && (
+        <p className="text-xs text-kolo-muted">{t("podrska_pocinje", { datum: fmt(new Date(p.podrskaPocetak)) })}</p>
+      )}
+      {podrska && (
+        <p className="text-xs text-kolo-muted">{t("podrska_traje", { datum: fmt(poslednjiDan(p.glasanjePocetak)) })}</p>
+      )}
       {najavljen && (
-        <p className="text-xs text-kolo-muted">{t("glasanje_pocinje", { datum: new Date(p.glasanjePocetak).toLocaleDateString(intlTag(locale), { day: "2-digit", month: "long", year: "numeric" }) })}</p>
+        <p className="text-xs text-kolo-muted">{t("glasanje_pocinje", { datum: fmt(new Date(p.glasanjePocetak)) })}</p>
       )}
       {uToku && (
-        <p className="text-xs text-kolo-muted">{t("rok")} {new Date(p.deadline).toLocaleDateString(intlTag(locale), { day: "2-digit", month: "long", year: "numeric" })}</p>
+        <p className="text-xs text-kolo-muted">{t("rok")} {fmt(poslednjiDan(p.deadline))}</p>
       )}
 
       {poruka && <Obavestenje vrsta="greska">{poruka}</Obavestenje>}

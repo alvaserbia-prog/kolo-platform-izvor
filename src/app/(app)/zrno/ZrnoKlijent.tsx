@@ -9,28 +9,17 @@ import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { useState, useCallback } from "react";
 import { intlTag } from "@/lib/format";
+import { najviseZaUpisZrna } from "@/lib/zrno-upis-pravila";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import GlasanjeKlijent from "@/app/(app)/glasanje/GlasanjeKlijent";
+import type { PrikazPredloga } from "@/lib/protokol/glasanje";
 
 import Pojam from "@/components/Pojam";
 import Pseudonim from "@/components/Pseudonim";
 
-interface Predlog {
-  id: string;
-  title: string;
-  description: string;
-  authorPseudonim: string;
-  glasanjePocetak: string;
-  deadline: string;
-  status: "ACTIVE" | "CLOSED";
-  faza: "NAJAVLJEN" | "U_TOKU" | "ZATVOREN";
-  ishodUsvojen: boolean | null;
-  zaGlasova: number;
-  protiGlasova: number;
-  mojGlas: boolean | null;
-  createdAt: string;
-}
+// Isti oblik kao `prikazPredloga` (Pravilnik o Gornjem Kolu čl. 9–11, 19).
+type Predlog = PrikazPredloga;
 
 interface Props {
   slobodno: number;
@@ -42,15 +31,15 @@ interface Props {
   isVerified: boolean;
   /** Set 4.8.2: položaj ZRNA koji se objašnjava (`zamrznuto` / `bez_potvrde`). */
   polozaj: "zamrznuto" | "bez_potvrde" | null;
-  /** Član bez potvrde: upisom ne postaje čuvar Kola (Pravilnik čl. 19 st. 2, 28a). */
+  /** Član bez potvrde: upisom ne postaje čuvar Kola (Pravilnik čl. 22 st. 3, 28 st. 3). */
   jeBezPotvrde: boolean;
-  /** Upis: član bez potvrde i član Kola (Pravilnik čl. 19 st. 2). */
+  /** Upis: član bez potvrde i član Kola (Pravilnik čl. 22 st. 3). */
   smeUpis: boolean;
-  /** Otpis slobodnog: čuvar Kola i član bez potvrde (čl. 20, 21, 30 st. 3). */
+  /** Otpis slobodnog: čuvar Kola i član bez potvrde (čl. 23 st. 2, 29 st. 1). */
   smeOtpis: boolean;
-  /** Aktiviranje i vraćanje u slobodno: čuvar Kola (čl. 20 st. 2, 29 st. 3). */
+  /** Aktiviranje i vraćanje u slobodno: čuvar Kola (čl. 23 st. 2, 29 st. 2). */
   smeAktivirati: boolean;
-  /** Delegiranje: čuvar Kola (čl. 47; Gornje Kolo čl. 14). */
+  /** Delegiranje: čuvar Kola (čl. 44 st. 2; Gornje Kolo čl. 14). */
   smeDelegirati: boolean;
   minimumPoenZaUpis: number;
   upisZahtev: { poenIznos: number; status: string } | null;
@@ -63,6 +52,8 @@ interface Props {
     zakazaniPseudonim: string | null;
   } | null;
   predlozi: Predlog[];
+  /** Predlog Gornjem Kolu podnosi svaki učesnik (Gornje Kolo čl. 9 st. 1). */
+  smePredloziti: boolean;
 }
 
 export default function ZrnoKlijent(props: Props) {
@@ -133,7 +124,7 @@ export default function ZrnoKlijent(props: Props) {
       <UpisOtpisSekcija {...props} onRefresh={onRefresh} />
 
       {/* Glasanje sekcija */}
-      <GlasanjeKlijent predlozi={props.predlozi} mojaGlasackaMoc={props.glasackaMoc} />
+      <GlasanjeKlijent predlozi={props.predlozi} mojaGlasackaMoc={props.glasackaMoc} smePredloziti={props.smePredloziti} />
 
       {/* Delegacija */}
       <DelegacijaSekcija {...props} onRefresh={onRefresh} />
@@ -144,16 +135,16 @@ export default function ZrnoKlijent(props: Props) {
 // ── Upis, otpis i aktiviranje ─────────────────────────────────
 
 /**
- * Ekran za upis i otpis ZRNA (Pravilnik čl. 19–22).
+ * Ekran za upis i otpis ZRNA (Pravilnik čl. 21–24).
  *
  * Do R-01 ovog ekrana NIJE bilo — stranica je prikazivala stanja, glasanje i
  * delegaciju, a rute `/api/zrno/{upis,otpis,zakljucaj,otkljucaj}` su postojale bez
  * ijedne ulazne tačke. Upis je odlukom B otvoren i identifikovanom članu, pa je
  * ekran postao neophodan: bez njega to pravo nema gde da se ostvari.
  *
- * Set 4.8.2: ZRNO upisuje član Kola i član bez potvrde (Pravilnik čl. 19 st. 2);
+ * Set 4.8.2: ZRNO upisuje član Kola i član bez potvrde (Pravilnik čl. 22 st. 3);
  * član bez potvrde ga ne aktivira dok ne bude potvrđen, ali slobodno ZRNO sme da
- * otpiše (čl. 20, 28a). Korisniku je upisano ZRNO zamrznuto (čl. 30 st. 3).
+ * otpiše (čl. 23 st. 2). Korisniku je upisano ZRNO zamrznuto (čl. 29 st. 1).
  * 🔴 Napomena članu bez potvrde pre upisa se ne uklanja: upisom ne postaje čuvar
  * Kola. Ekran samo prati pravilo — sprovode ga rute i noćna obrada.
  */
@@ -181,7 +172,7 @@ function UpisOtpisSekcija({
   const [loading, setLoading] = useState<string | null>(null);
   const [poruka, setPoruka] = useState<{ text: string; ok: boolean } | null>(null);
 
-  const maxUpis = Math.floor(poenBalans * 0.01);
+  const maxUpis = najviseZaUpisZrna(poenBalans);
   const ispodMinimuma = poenBalans < minimumPoenZaUpis;
 
   const posalji = useCallback(

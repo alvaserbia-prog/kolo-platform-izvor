@@ -1,6 +1,6 @@
 /**
  * Gradiran prikaz evidentiranja po socijalnom programu (Pravilnik o programima
- * podrške čl. 4 st. 4 i st. 5, set 4.6.7).
+ * podrške čl. 20, set 4.6.7).
  *
  * Do tog seta su pojedinačni zapisi socijalnih programa izlazili iz SVIH spiskova,
  * a proverljivost je nosio samo dnevni zbir. Odlukom vlasnika od 25.09.2026. se
@@ -14,7 +14,7 @@
  * četiri puta — svaki nov spisak transakcija uzima OVE dve funkcije, ne svoju kopiju.
  *
  * 🔴 Ono što se NE prikazuje nikome, ni verifikovanom: **osnov** po kome je pravo
- * ostvareno (čl. 4 st. 5). Program Posebna podrška obuhvata i smanjenu sposobnost i
+ * ostvareno (čl. 20 st. 3). Program Posebna podrška obuhvata i smanjenu sposobnost i
  * gubitak doma, pa objavljen naziv ne kazuje koji je osnov u pitanju; prikaz osnova
  * bio bi prikaz podatka o zdravlju odnosno o prinudnoj raseljenosti. Zato ni jedna
  * funkcija ispod ne dodiruje `ProgramEnrollment.osnov`.
@@ -30,7 +30,7 @@ import { labelPrograma } from "./programi";
  *
  * 🔴 Zapis socijalnog programa ulazi u spisak samo verifikovanom posmatraču, i
  * samo ako nosi vezu do prijave. Bez veze se naziv programa ne može izvesti, pa
- * red ne bi mogao da izgleda kako ga čl. 4 st. 4 propisuje — a pseudonim uz
+ * red ne bi mogao da izgleda kako ga čl. 20 st. 1–2 propisuje — a pseudonim uz
  * neimenovan „socijalni program" je prikaz koji akt ne predviđa. Takvi su zatečeni
  * redovi (veza se ne popunjava naknadno) i oni ostaju u dnevnom zbiru.
  */

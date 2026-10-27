@@ -8,7 +8,7 @@ import { odluciOPrepisu } from "@/lib/protokol/prepis-odobrenje";
 /**
  * POST /api/deca/prepis/[id]
  *
- * Odluka roditelja o prepisu iznad praga (Pravilnik o učešću dece, čl. 14).
+ * Odluka roditelja o prepisu iznad praga (Pravilnik o učešću dece, čl. 30 st. 3–4).
  * Odobrenje izvršava prepis odmah; odbijanje ga gasi. Ovlašćenje se proverava u
  * servisu (`mojeDeteIliBaci`), pa tuđe dete vraća 404, ne 403.
  */

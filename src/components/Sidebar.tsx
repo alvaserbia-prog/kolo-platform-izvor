@@ -62,7 +62,7 @@ function NavIkona({ href, mali }: { href: string; mali?: boolean }) {
     case "/sistem":
       return <svg {...p}><path d="m12 2 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5" /><path d="m3 17 9 5 9-5" /></svg>;
     // Knjiga zapisa, ne novčanik: POEN je zapis u Protokolu, a ne sredstvo koje
-    // se drži (Pravilnik čl. 12). Ikonica novčanika je vraćala asocijaciju na
+    // se drži (Pravilnik čl. 16 st. 3). Ikonica novčanika je vraćala asocijaciju na
     // novac jaču od same reči u labeli.
     // Zadruga — kuća sa ambarom: lokalno mesto razmene, ne zgrada ustanove.
     case "/zadruge":
@@ -285,9 +285,11 @@ function SidebarContent({
 
   type Grupa = { label?: string; padajuca?: "zajednica" | "zajednicko_dobro"; links: Stavka[] };
 
-  // Korisniku su ove stavke vidljive, ali zaključane (Uslovi čl. 14, Pravilnik
-  // čl. 28): vaučeri, ZRNO, programi, operativni doprinos, nabavka i zadruga
-  // otvaraju se tek kad uđe u Kolo. Članu bez potvrde su sve otvorene (čl. 5a st. 8).
+  // Korisniku su ove stavke vidljive, ali zaključane (Uslovi čl. 14 st. 4, Pravilnik
+  // čl. 28 st. 2): vaučeri, ZRNO, programi, nabavka i zadruga otvaraju se tek kad
+  // uđe u Kolo. Operativni doprinos (Zadaci) NIJE zaključan: korisnik zadatke sme da
+  // pregleda, samo ne podnosi prijavu (Pravilnik o operativnom doprinosu čl. 9 st. 2;
+  // stranica mu sama ne nudi prijavu). Članu bez potvrde su sve otvorene (dokaz stvarnosti čl. 6 st. 1).
   const zakljucano = !verified;
 
   // Zadružni admin (U2) dobija isti link; `/admin` ga vodi na ekran njegove zadruge.
@@ -305,22 +307,22 @@ function SidebarContent({
   //    firma, udruženje ili registrovano gazdinstvo (pokroviteljstvo u novcu ili u
   //    dobrima i uslugama).
   //  - Poverenje: put kroz Kolo — Potvrde, Nadzor (čuvari), ZRNO (položaj čuvara Kola).
-  //    ZRNO stoji uz čuvanje, ne uz dobra i sredstva (ZRNO nije ulaganje, čl. 25).
+  //    ZRNO stoji uz čuvanje, ne uz dobra i sredstva (ZRNO nije ulaganje, čl. 27).
   //  - Zajedničko dobro (padajuća): ono što zajednica radi za sebe — Zadaci, Nabavke,
   //    Programi.
-  //  - „Nadzor" vidi samo čuvar Kola (`jeNadzornik`, dokaz čl. 10 st. 2) — to nije
+  //  - „Nadzor" vidi samo čuvar Kola (`jeNadzornik`, dokaz čl. 23) — to nije
   //    stavka koja se otključava ulaskom u Kolo, pa je ostali ne vide ni zaključanu.
   const grupe: Grupa[] = maloletan
     ? // Modul Deca — navigacija je KRAĆA VERZIJA, ne filtrirana. Filtrirana bi pri
       // svakoj budućoj izmeni tiho propuštala nove stavke detetu. Potvrde, ZRNO,
       // Doprinos, Programi i Donacije se ne prikazuju jer maloletni korisnik nijedno
-      // od toga ne može (čl. 15), a Početna nosi Pričaonicu — sobu punoletnih.
+      // od toga ne može (deca čl. 29), a Početna nosi Pričaonicu — sobu punoletnih.
       [
         { links: [
           { href: "/pocetna", label: t("pocetna") },
           { href: "/pijaca", label: t("pijaca") },
           { href: "/novcanik", label: t("novcanik") },
-          // Dečja zamena za „Potvrde": dete nikoga ne potvrđuje (čl. 15), pa mu
+          // Dečja zamena za „Potvrde": dete nikoga ne potvrđuje (deca čl. 29 st. 2), pa mu
           // na tom mestu stoje prijatelji.
           { href: "/prijatelji", label: t("prijatelji") },
           // Ranglista škola: detetu je to razlog da dovede druga, pa stavka stoji
@@ -344,14 +346,14 @@ function SidebarContent({
           { href: "/mapa", label: t("mapa") },
           { href: "/gazdinstva", label: t("gazdinstva") },
           { href: "/firme", label: t("firme") },
-          // Zadruge su po lokalitetima (Pravilnik čl. 56, `docs/zadruge-model.md`).
+          // Zadruge su po lokalitetima (Pravilnik čl. 50, `docs/zadruge-model.md`).
           { href: "/zadruge", label: t("zadruge"), zakljucano },
           // Škole su ovde informativne: broj dece Kola po školi.
           { href: "/skole", label: t("skole") },
         ] },
         { links: [{ href: "/podrzi-kolo", label: t("podrzi") }] },
         // Korisniku su u „Poverenju" dva puta: Potvrde („Moj kod") i „Želim da me
-        // neko nazove" — ulaz na spisak za poziv (Uslovi čl. 16b, set 4.8.2).
+        // neko nazove" — ulaz na spisak za poziv (dokaz stvarnosti čl. 8, set 4.8.2).
         { label: t("grupa_poverenje"), links: [
           { href: "/verifikacija", label: t("verifikacija") },
           ...(verified ? [] : [{ href: "/kontaktiraj-nas", label: t("kontaktiraj_nas") }]),
@@ -359,7 +361,7 @@ function SidebarContent({
           { href: "/zrno", label: t("zrno"), zakljucano },
         ] },
         { label: t("grupa_zajednicko_dobro"), padajuca: "zajednicko_dobro", links: [
-          { href: "/doprinos-oglasi", label: t("doprinos"), zakljucano },
+          { href: "/doprinos-oglasi", label: t("doprinos") },
           // Registar predloga radi i pre ijedne nabavke — on je mapa rupa u
           // zajednici (Pravilnik o projektima i kolektivnim nabavkama čl. 10).
           { href: "/nabavke", label: t("nabavke"), zakljucano },
@@ -413,7 +415,7 @@ function SidebarContent({
       </nav>
       <div className="px-3 pb-3 pt-2 border-t border-white/10 space-y-2">
         {/* Poziv „Pridruži se Kolu" samo korisniku.
-            🔴 Dete NIKAD nije `verified` (Modul Deca, čl. 15), pa mu se ovaj poziv
+            🔴 Dete NIKAD nije `verified` (Pravilnik o učešću dece čl. 29 st. 2), pa mu se ovaj poziv
             prikazivao uvek i gurao ga na potvrde odraslih — a on nikoga ne potvrđuje
             niti se potvrđuje. Njegovo mesto u mreži su prijatelji. */}
         {!verified && !maloletan && (

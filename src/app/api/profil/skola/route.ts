@@ -5,10 +5,10 @@ import { authOptions } from "@/lib/auth";
 import { postaviSkolu, SkolaGreska } from "@/lib/protokol/skole";
 
 /**
- * Izbor škole maloletnog korisnika (Pravilnik o učešću dece, čl. 7).
+ * Izbor škole maloletnog korisnika (Pravilnik o učešću dece, čl. 26 st. 1).
  *
  * 🔴 Školu bira SÁMO dete — ruta uzima nalog iz sesije i ne prima tuđi id. Ni
- * roditelj je ne postavlja: uvid iz čl. 9 mu daje da vidi i da ukloni sadržaj,
+ * roditelj je ne postavlja: uvid iz čl. 19 i 20 st. 1 mu daje da vidi i da ukloni sadržaj,
  * ne i da govori u ime deteta.
  *
  * `sifra: null` briše izbor i NE troši rok od 30 dana (vidi `postaviSkolu`).

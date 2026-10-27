@@ -49,18 +49,18 @@ interface OglasProps {
   /**
    * `null` kad posmatrač pseudonim ne sme da vidi — dete sa roditeljem oglase vidi
    * bez pseudonima oglašivača, osim oglasa prijatelja (Pravilnik o učešću dece
-   * čl. 4c t. 2, 13 st. 4). Odluku donosi server.
+   * čl. 5 st. 1 t. 2). Odluku donosi server.
    */
   sellerPseudonim: string | null;
   sellerVerified: boolean;
-  /** Oglašivač je maloletan korisnik — pečat i objašnjenje su drugi (čl. 9, 13). */
+  /** Oglašivač je maloletan korisnik — pečat i objašnjenje su drugi (deca čl. 19, 24). */
   sellerMaloletan: boolean;
-  /** Oglas u ime odobrenog gazdinstva (Pravilnik o gazdinstvima čl. 10) — vodi na profil. */
+  /** Oglas u ime odobrenog gazdinstva (Pravilnik o gazdinstvima čl. 18 st. 2) — vodi na profil. */
   domace?: { gazdinstvoId: string; naziv: string } | null;
   isMine: boolean;
   /** Broj pregleda — prikazuje se samo oglašivaču. */
   pregledi: number;
-  /** Razlog uklanjanja — šalje se samo vlasniku (Uslovi čl. 25 st. 2). */
+  /** Razlog uklanjanja — šalje se samo vlasniku (Uslovi čl. 29 st. 2). */
   uklonjenRazlog: string | null;
 }
 
@@ -73,7 +73,7 @@ interface Props {
    * Da li je i sam posmatrač maloletan.
    *
    * 🔴 Odlučuje SAMO da li se pominje roditeljsko čitanje. Roditelj čita razgovor
-   * deteta sa PUNOLETNIM licem (čl. 9); razgovore između dece ne čita niko. Detetu
+   * deteta sa PUNOLETNIM licem (deca čl. 19 st. 3); razgovore između dece ne čita niko. Detetu
    * koje gleda tuđi dečji oglas ta rečenica bi bila neistinita.
    */
   posmatracMaloletan?: boolean;
@@ -82,10 +82,10 @@ interface Props {
    * (`smePokrenutiRazgovor`), istom funkcijom koju zove i `POST /api/poruke`.
    *
    * 🔴 Ne izvodi se iz `isVerified`. Maloletni nalog je trajno neverifikovan
-   * (čl. 15), pa je dete na svakom oglasu dobijalo poziv da postane redovan član
+   * (deca čl. 29 st. 2), pa je dete na svakom oglasu dobijalo poziv da postane redovan član
    * i link na `/verifikacija` — stranicu koju ne sme ni da otvori — dok mu je ruta
    * razgovor sve vreme dozvoljavala. `isVerified` od sada odlučuje samo o
-   * prikazu telefona (Politika čl. 6).
+   * prikazu telefona (Politika čl. 12 st. 2).
    */
   smePisati?: boolean;
   /** Zašto dete ne može da piše; `null` za punoletnog posmatrača. */
@@ -133,8 +133,8 @@ export default function OglasDetalj({
     const res = await fetch("/api/poruke", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // `oglasId` beleži upit povodom oglasa — uslov koraka 3 na putanji
-      // doprinosa razmeni (Pravilnik čl. 40a). Razgovor se otvara i bez njega.
+      // `oglasId` služi samo prikazu povoda u razgovoru (putanja doprinosa
+      // razmeni, koja je beležila upit, ukinuta je setom 4.8.0). Razgovor se otvara i bez njega.
       body: JSON.stringify({ userId: oglas.sellerId, oglasId: oglas.id }),
     });
     setChatLoading(false);
@@ -250,17 +250,17 @@ export default function OglasDetalj({
 
           {/* Javna oznaka da oglašivač nije verifikovan (Uslovi 4.1.1). Vide je i
               neprijavljeni posetioci — pregled oglasa je javan, pa i upozorenje
-              mora biti. Za razmenu odgovaraju sami korisnici (Pravilnik čl. 16).
+              mora biti. Za razmenu odgovaraju sami korisnici (Pravilnik čl. 20 st. 2).
 
               🔴 Oglas deteta nosi SVOJU oznaku umesto „bez potvrde": maloletni
-              nalog u lanac potvrda ne ulazi (čl. 15), pa mu manjak potvrde nije
+              nalog u lanac potvrda ne ulazi (deca čl. 29 st. 2), pa mu manjak potvrde nije
               stanje koje prolazi nego trajno svojstvo — a rečenica o tome ništa
               ne govori onome ko treba da zna da je sa druge strane dete i da
-              razgovor čita njegov roditelj (čl. 9). */}
+              razgovor čita njegov roditelj (deca čl. 19 st. 3). */}
           {oglas.sellerMaloletan ? (
             // Detetu koje gleda tuđi dečji oglas ostaje sam pečat: ceo tekst nosi
             // napomenu o roditeljskom uvidu, a nju roditelj ima nad razgovorom
-            // deteta sa PUNOLETNIM licem (čl. 9) — razgovore između dece ne čita
+            // deteta sa PUNOLETNIM licem (deca čl. 19 st. 3) — razgovore između dece ne čita
             // niko, pa bi ista rečenica detetu bila neistinita.
             posmatracMaloletan ? null : (
               <div className="flex items-start gap-2 text-xs text-kolo-green-700 bg-kolo-green-100 border border-kolo-green-500/20 rounded-xl px-3 py-2">
@@ -353,7 +353,7 @@ export default function OglasDetalj({
               {t("oglas_deaktiviran")}
             </div>
           )}
-          {/* Uklonjen oglas — razlog vidi samo vlasnik (Uslovi čl. 25 st. 2). */}
+          {/* Uklonjen oglas — razlog vidi samo vlasnik (Uslovi čl. 29 st. 2). */}
           {oglas.status === "UKLONJEN" && (
             <Obavestenje vrsta="greska" naslov={t("oglas_uklonjen")}>
               {oglas.isMine && oglas.uklonjenRazlog && (
@@ -391,7 +391,7 @@ export default function OglasDetalj({
               ) : posmatracMaloletan ? (
                 /* Dete koje ne može da piše dobija ISTINIT razlog i kraj koji se
                    vidi — nikad poziv da postane redovan član, jer to za maloletni
-                   nalog nije put (čl. 15). */
+                   nalog nije put (deca čl. 29 st. 2). */
                 <div className="rounded-xl border border-deca-sunce-400 bg-deca-sunce-100 px-4 py-3">
                   <p className="text-base text-deca-sunce-ink">
                     {razlogZabrane === "ceka_odobrenje"
@@ -426,7 +426,7 @@ export default function OglasDetalj({
                 </Obavestenje>
               ) : (
                 /* Nov član koji je danas već pokrenuo dozvoljen broj novih
-                   razgovora (Uslovi čl. 16 st. 5, set 4.8.1). Kaže mu se istina
+                   razgovora (Uslovi čl. 14 st. 2, set 4.8.1). Kaže mu se istina
                    i kada može ponovo; u otvorenim razgovorima piše i dalje. */
                 <Obavestenje vrsta="upozorenje">
                   <p>{t("kontakt_nov_limit", { broj: NOVIH_RAZGOVORA_DNEVNO })}</p>
@@ -463,7 +463,7 @@ export default function OglasDetalj({
             </div>
           )}
 
-          {/* Prijava spornog oglasa (Uslovi čl. 25 st. 2). Otvorena svim
+          {/* Prijava spornog oglasa (Uslovi čl. 29 st. 2). Otvorena svim
               prijavljenima — pregled oglasa je javan, pa i neverifikovani vidi
               sporan sadržaj i treba da može da ga prijavi. */}
           {dostupan && !oglas.isMine && jePrijavljen && (

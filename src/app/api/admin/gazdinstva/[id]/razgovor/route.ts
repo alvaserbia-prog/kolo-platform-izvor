@@ -8,7 +8,7 @@ import { oznaciRazgovor, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
  * POST — Fondacija je pre odobrenja razgovarala sa NOSIOCEM gazdinstva (Pravilnik o
- * gazdinstvima čl. 6a, set 4.8.2). Sa ostalim članovima se po tom članu ne razgovara.
+ * gazdinstvima čl. 8, set 4.8.2). Sa ostalim članovima se po tom članu ne razgovara.
  * Beleži se samo da je razgovor obavljen; broj se briše odlukom o prijavi.
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {

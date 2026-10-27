@@ -13,7 +13,7 @@ export * from "@/lib/razmena-prijava";
  * server ima jedan ulaz.
  *
  * Poništenje ide PROTIVZAPISOM tipa `PONISTENJE_PREPISA`, ne brisanjem reda:
- *  - istorija se ne prepravlja (isti obrazac kao pri prestanku statusa, čl. 34);
+ *  - istorija se ne prepravlja (isti obrazac kao pri prestanku statusa, Pravilnik čl. 33);
  *  - zaseban tip, ne TRANSFER, jer brojač putanje doprinosa razmeni (čl. 40b)
  *    čita transakcije tipa TRANSFER — povraćaj upisan kao TRANSFER bi lažno
  *    otvorio korak 2 onome kome je prepis poništen.
@@ -30,7 +30,7 @@ export type IshodOdluke =
  * Poništi prepis po prijavi.
  *
  * Vraća se CEO prepisani iznos, pa zapis primaoca ume da ode u minus — minus
- * radi isto što i nadoknada iz čl. 20b (nije dug, ne naplaćuje se, POEN-i koji
+ * radi isto što i nadoknada iz dokaz stvarnosti čl. 36 (nije dug, ne naplaćuje se, POEN-i koji
  * pristignu prvo ga popunjavaju, prepis drugome tek preko nule). Bez toga bi
  * onaj ko brže potroši tuđi POEN prolazio jeftinije od onog ko ga sačuva.
  */
@@ -43,8 +43,8 @@ export async function ponistiPrepis(
     where: { id: prijavaId },
     include: {
       transakcija: true,
-      prijavioc: { select: { id: true, pseudonim: true, wallet: { select: { id: true } } } },
-      protiv: { select: { id: true, pseudonim: true, wallet: { select: { id: true, balance: true } } } },
+      prijavioc: { select: { id: true, pseudonim: true, maloletan: true, wallet: { select: { id: true } } } },
+      protiv: { select: { id: true, pseudonim: true, maloletan: true, wallet: { select: { id: true, balance: true } } } },
     },
   });
 
@@ -53,7 +53,19 @@ export async function ponistiPrepis(
   if (!prijava.prijavioc.wallet || !prijava.protiv.wallet)
     return { ok: false, razlog: "Jedna od strana nema zapis u Protokolu." };
 
-  // 🔴 Druga strana se izjašnjava PRE odluke (Pravilnik čl. 16 st. 10, set 4.5.4).
+  // 🔴 Maloletnost se proverava PONOVO pri odluci, kao u `smePrijaviti` (Pravilnik o
+  // učešću dece čl. 23 st. 3: Platforma ne obara ažuriranje evidencije POEN-a kad je
+  // strana u razmeni maloletni korisnik). Između prijave i odluke nalog je mogao biti
+  // preveden u maloletni (deca čl. 15–16), a minus primaoca bi tada bio van osnova iz
+  // Pravilnika čl. 17 st. 2.
+  if (prijava.prijavioc.maloletan || prijava.protiv.maloletan)
+    return {
+      ok: false,
+      razlog:
+        "Prepis u kome je strana maloletni korisnik se ne poništava kroz Platformu; poništenje posla ostvaruje se između strana, uz roditelja.",
+    };
+
+  // 🔴 Druga strana se izjašnjava PRE odluke (Uslovi čl. 40 st. 5, set 4.5.4).
   // Odluka gura tuđi zapis u minus; postupak u kome se čuje samo jedna strana za
   // takvu posledicu nije dovoljan. Provera je ovde, u servisu, a ne u ruti — reč
   // je o pravilu, ne o zaštiti ekrana.
@@ -150,7 +162,7 @@ export async function ponistiPrepis(
  * Odbaci prijavu — prepis ostaje kakav jeste.
  *
  * Obrazloženje je obavezno i ide prijaviocu: odluka bez razloga je za čoveka
- * isto što i ćutanje (isti zahtev kao pri uklanjanju oglasa, Uslovi čl. 25 st. 2).
+ * isto što i ćutanje (isti zahtev kao pri uklanjanju oglasa, Uslovi čl. 29 st. 2).
  */
 export async function odbaciPrijavu(
   prijavaId: string,
@@ -223,7 +235,7 @@ async function zatvoriPrigovorUzPrijavu(
 }
 
 /**
- * Otvori slučaj po prigovoru sa profila (Uslovi čl. 37a).
+ * Otvori slučaj po prigovoru sa profila (Uslovi čl. 40).
  *
  * Ulazna tačka je od seta 4.5.4 isključivo profil — dugme uz prepis u istoriji
  * POEN-a je uklonjeno, jer je bilo jedino mesto u sistemu na kome je jedan čovek
@@ -268,7 +280,7 @@ export async function otvoriPrijavuRazmene(args: {
   return prijava.id;
 }
 
-/** Izjašnjenje druge strane pre odluke (Pravilnik čl. 16 st. 10). */
+/** Izjašnjenje druge strane pre odluke (Uslovi čl. 40 st. 5). */
 export async function odgovoriNaPrijavuRazmene(
   prijavaId: string,
   korisnikId: string,

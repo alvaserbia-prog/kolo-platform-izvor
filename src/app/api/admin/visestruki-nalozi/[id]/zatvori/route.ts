@@ -7,7 +7,7 @@ import { zatvoriPredmetVisestrukog, VisestrukiGreska } from "@/lib/protokol/vise
 
 /**
  * POST — zatvaranje nadzornog predmeta nad primaocima prepisa sa ugašenog naloga
- * (dokaz stvarnosti čl. 4b). Samo superadmin; beleška obavezna. Bez dejstva na
+ * (dokaz stvarnosti čl. 14 st. 6). Samo superadmin; beleška obavezna. Bez dejstva na
  * naloge primalaca. Telo: { beleska }.
  */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

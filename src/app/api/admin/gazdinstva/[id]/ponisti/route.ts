@@ -7,9 +7,9 @@ import { jeSuperadmin } from "@/lib/dozvole";
 import { ponistiZbogLazneIzjave, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
- * POST { razlog, iskljuci: userId[] } — poništenje odobrenja zbog lažne izjave (čl. 12):
+ * POST { razlog, iskljuci: userId[] } — poništenje odobrenja zbog lažne izjave (čl. 20):
  * otpis doprinosa gazdinstva svim članovima iz perioda izjave (i u minus), a
- * isključenje samo označenima — ko je lagao ili znao (st. 3; U5). Samo superadmin.
+ * isključenje samo označenima — ko je lagao ili znao (čl. 20 st. 3; U5). Samo superadmin.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

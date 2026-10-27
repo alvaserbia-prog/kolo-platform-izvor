@@ -9,8 +9,8 @@ import { dohvatiIpsConfig, pozivNaBrojZaClana, prikazPozivNaBroj } from "@/lib/p
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  // Donirati sme i korisnik (donacije čl. 3, 8). Lista TUĐIH donacija (čl. 5a; Uslovi
-  // čl. 17 st. 3, 6; Pravilnik čl. 67 st. 3) ide korisniku i verifikovanom učesniku
+  // Donirati sme i korisnik (donacije čl. 3 st. 1). Lista TUĐIH donacija (čl. 11; Uslovi
+  // čl. 16 st. 5; Pravilnik čl. 56 st. 2) ide korisniku i verifikovanom učesniku
   // ISTO: ime i prezime donatora javne donacije, iznos i datum — BEZ pseudonima.
   // 🔴 Dete listu ne dobija (dečji prostor nije javan; tabela dozvola br. 9).
   // Sopstvene donacije vidi svako — to je njegov podatak.
@@ -31,7 +31,7 @@ export async function GET() {
           poenEmitted: true,
           status: true,
           javno: true,
-          // Da li ime još stoji u listi — ekran po tome nudi povlačenje (čl. 5a st. 4).
+          // Da li ime još stoji u listi — ekran po tome nudi povlačenje (čl. 12).
           donatorIme: true,
           imePovucenoAt: true,
           createdAt: true,
@@ -53,7 +53,7 @@ export async function GET() {
 
   // ── Lista donacija ──────────────────────────────────────────────────────────
   //
-  // 🔴 Set 4.8.2 (donacije čl. 5a st. 1; Uslovi čl. 17 st. 3, 6): lista je ista za
+  // 🔴 Set 4.8.2 (donacije čl. 11 st. 1; Uslovi čl. 16 st. 5): lista je ista za
   // korisnika i za verifikovanog učesnika — ime i prezime donatora javne donacije,
   // iznos i datum. Pseudonim donatora i veza ka profilu se u listi NE prikazuju
   // NIKOME (ni verifikovanom); pseudonim se vidi samo u pregledu transakcija POEN-a,
@@ -65,10 +65,10 @@ export async function GET() {
   // ekran na kome se videla odavao je upravo ono što anonimnost obećava. Sada je
   // obrnuto: iznos ulazi u zbir svuda, a lice nigde.
   //
-  // Ime se čita iz `donatorIme` snimljenog na zapisu (čl. 5a) — ne iz profila,
+  // Ime se čita iz `donatorIme` snimljenog na zapisu (čl. 11 st. 2) — ne iz profila,
   // pa ga kasnija izmena profila ne menja.
   //
-  // 🔴 Od seta 4.6.8 ime NIJE trajno (čl. 5a st. 4): donator ga povlači, a gašenje
+  // 🔴 Od seta 4.6.8 ime NIJE trajno (čl. 12): donator ga povlači, a gašenje
   // naloga ga briše. Donacija kojoj je ime povučeno OSTAJE u listi — iznosom i
   // datumom — jer je upis POEN-a i dalje pripisan nalogu. Ispadanje iz liste bi
   // menjalo zbir koji lista pokazuje.
@@ -130,18 +130,18 @@ export async function GET() {
     listaZakljucana: dete,
     listaDonacija: javneDonacije.map((d) => ({
       id: d.id,
-      // Ime, iznos i datum — isto korisniku i verifikovanom (čl. 5a st. 1).
+      // Ime, iznos i datum — isto korisniku i verifikovanom (čl. 11 st. 1).
       ime: d.javno ? d.donatorIme : null,
       anonimno: !d.javno,
       imePovuceno: d.javno && d.imePovucenoAt !== null,
-      // 🔴 Pseudonim i veza ka profilu se u listi ne prikazuju nikome (čl. 5a st. 1).
+      // 🔴 Pseudonim i veza ka profilu se u listi ne prikazuju nikome (čl. 11 st. 1).
       pseudonim: null,
       userId: null,
       amountRSD: Number(d.amountRSD),
       createdAt: (d.confirmedAt ?? d.createdAt).toISOString(),
     })),
-    // Tabela nema kraj (čl. 4) — šalje se nekoliko redova iznad zaključanih
-    // jedanaest, da se na ekranu vidi da se niz nastavlja.
+    // Tabela staje na nivou 11 (čl. 8 st. 3) — šalju se svi redovi do
+    // `NAJVISI_NIVO`.
     rangTabela: tabelaZaPrikaz(),
   });
 }

@@ -1,5 +1,5 @@
 /**
- * Preporuka člana — servis (Uslovi čl. 17a, Politika 4.16, Registar radnja br. 23,
+ * Preporuka člana — servis (dokaz stvarnosti čl. 20, Politika čl. 18, Registar radnja br. 23,
  * set 4.8.0). Pravila su u `@/lib/preporuka-pravila`.
  */
 import { prisma } from "@/lib/prisma";
@@ -23,7 +23,7 @@ async function ucesnik(id: string): Promise<UcesnikPreporuke | null> {
   });
   if (!u) return null;
   // Status iz jezgra statusa (set 4.8.2) — preporuku daje samo član Kola, odnosno
-  // osnivač (Uslovi čl. 17a st. 1). Dete se ovde ne razrešava do stanja: dete
+  // osnivač (dokaz stvarnosti čl. 20 st. 1). Dete se ovde ne razrešava do stanja: dete
   // preporuku ne daje ni ne prima, pa je dovoljno da nije potvrđeno.
   const status = u.maloletan ? null : await ucitajStatus(u.id);
   return {
@@ -45,7 +45,7 @@ export async function stanjePreporuka(posmatracId: string, zaId: string, posmatr
     ucesnik(posmatracId),
     ucesnik(zaId),
   ]);
-  // Preporuku daje samo član Kola, odnosno osnivač (Uslovi čl. 17a st. 1, set 4.8.2):
+  // Preporuku daje samo član Kola, odnosno osnivač (dokaz stvarnosti čl. 20 st. 1, set 4.8.2):
   // profil vidi i član bez potvrde, ali preporuku ne daje. Pravilo sprovodi i
   // `smePreporuciti` (polje `potvrdjen`), a ne samo ova zastavica posmatrača.
   const smem = posmatracPotvrdjen && Boolean(od && za && smePreporuciti(od, za).ok);
@@ -65,14 +65,14 @@ export async function dajPreporuku(odId: string, zaId: string) {
   });
 }
 
-/** Povlači preporuku (Uslovi čl. 17a st. 2). Nepostojeća preporuka nije greška. */
+/** Povlači preporuku (dokaz stvarnosti čl. 20 st. 2). Nepostojeća preporuka nije greška. */
 export async function povuciPreporuku(odId: string, zaId: string) {
   await prisma.preporuka.deleteMany({ where: { odId, zaId } });
 }
 
 /**
  * Briše preporuke koje je korisnik dao i koje je primio — pri prestanku statusa
- * (Uslovi čl. 17a st. 5) i pri prevođenju naloga u maloletni (dete ih ne daje i
+ * (dokaz stvarnosti čl. 20 st. 5) i pri prevođenju naloga u maloletni (dete ih ne daje i
  * ne prima). Gašenje naloga anonimizuje red korisnika umesto da ga briše, pa
  * kaskada iz šeme tu ne pomaže — zato poziv postoji izričito.
  */

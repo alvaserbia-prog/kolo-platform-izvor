@@ -2,9 +2,9 @@
 
 /**
  * Odluke — nadzorni predmeti koje su otvorili nadzornici
- * (Pravilnik o dokazu stvarnosti čl. 11a i 18). Predmet se odnosi na verifikaciju
+ * (Pravilnik o dokazu stvarnosti čl. 27 i 32). Predmet se odnosi na verifikaciju
  * (potvrdu ili uvođenje u Kolo), potvrdu člana bez potvrde ili potvrdu postojanja
- * deteta (čl. 10 st. 1 i 5, set 4.8.2) — prikazuje se vrsta predmeta.
+ * deteta (čl. 22 st. 1, set 4.8.2) — prikazuje se vrsta predmeta.
  *
  * Razdvojen je od taba „Nadzor": Nadzor je AUTOMAT (noćni radnik obeležava sumnjive
  * naloge u `RizikNalaz`), a Odluke su LJUDSKA prijava — nadzornik je pogledao
@@ -25,7 +25,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { intlTag } from "@/lib/format";
 import Pseudonim from "@/components/Pseudonim";
-// Prijave lažnog roditeljstva (deca čl. 4e) — odluka ovlašćenog lica, isti tab.
+// Prijave lažnog roditeljstva (deca čl. 17) — odluka ovlašćenog lica, isti tab.
 import PrijaveRoditeljstva from "./PrijaveRoditeljstva";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -224,9 +224,9 @@ export default function OdlukeTab() {
       <div>
         <h2 className="text-lg font-semibold text-kolo-text">Odluke o spornim potvrdama</h2>
         <p className="text-sm text-kolo-muted">
-          Predmeti koje su otvorili nadzornici ishodom „za proveru" ili „sporno" (čl. 11a).
+          Predmeti koje su otvorili nadzornici ishodom „za proveru" ili „sporno" (čl. 27).
           Predmet sam po sebi ne proizvodi dejstvo prema članu — lažnu potvrdu
-          utvrđuje Upravni odbor (čl. 18).
+          utvrđuje Fondacija (čl. 32).
         </p>
       </div>
 
@@ -334,8 +334,8 @@ export default function OdlukeTab() {
                       stoji stvarna osoba, odnosno da nalog nije jedinstven.
                       <span className="block text-xs text-kolo-muted">
                         Bez ovoga pada samo ova potvrda, a onaj koga su potvrdili zadržava
-                        status i potvrde koje je sam dao (čl. 19). Sa ovim padaju sve potvrde
-                        koje nalog dodiruje, a kaskada staje na prvom stvarnom čoveku (čl. 20).
+                        status i potvrde koje je sam dao (čl. 33). Sa ovim padaju sve potvrde
+                        koje nalog dodiruje, a kaskada staje na prvom stvarnom čoveku (čl. 34).
                       </span>
                     </span>
                   </label>

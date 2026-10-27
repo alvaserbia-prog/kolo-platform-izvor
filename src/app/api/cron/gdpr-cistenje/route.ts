@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";
 import { jeCronPoziv } from "@/lib/cron-auth";
 import { prisma } from "@/lib/prisma";
+import { anonimizujPseudonime } from "@/lib/protokol/anonimizacija";
 
 /**
  * POST /api/cron/gdpr-cistenje
@@ -9,8 +10,8 @@ import { prisma } from "@/lib/prisma";
  * Pokreće se mesečno (preporučeno 1. u mesecu u 02:00).
  *
  * Briše poruke u konverzaciji kada je ISPUNJEN BILO KOJI od dva uslova:
- *   — bar jedna strana je ugasila nalog (čl. 11 Politike), ili
- *   — poslednja poruka je starija od 24 meseca (čl. 10 Politike).
+ *   — bar jedna strana je ugasila nalog (čl. 13 st. 6 Politike), ili
+ *   — poslednja poruka je starija od 24 meseca (čl. 13 st. 6 Politike).
  *
  * 🔴 Do seta 4.5.1 su oba uslova morala da budu ispunjena ISTOVREMENO, i to uz
  * uslov da su ugašena OBA naloga — pa su poruke onoga ko ode ostajale kod
@@ -18,8 +19,12 @@ import { prisma } from "@/lib/prisma";
  * godine. I ovaj komentar i CLAUDE.md su pri tom tvrdili „jedna strana ILI 24
  * meseca". Uslov je sada takav kakav je opisan.
  *
- * Briše i zapise dnevnika aktivnosti (AktivnostLog) starije od 12 meseci —
- * rok za tehničke logove po Politici čl. 10.
+ * Briše i zapise dnevnika aktivnosti (AktivnostLog) i revizijskog dnevnika
+ * (AuditLog) starije od 12 meseci — Politika čl. 9 st. 3 i 6 (set 5.0).
+ *
+ * Anonimizuje pseudonim naloga kome je od prestanka statusa prošlo 10 godina
+ * (Pravilnik čl. 55 st. 3, Politika čl. 42 st. 6; `protokol/anonimizacija.ts`).
+ * Numerička istorija ostaje trajno.
  */
 export async function POST(req: NextRequest) {
   if (!jeCronPoziv(req)) {
@@ -58,12 +63,25 @@ export async function POST(req: NextRequest) {
     where: { createdAt: { lte: dvanaestMeseciUnazad } },
   });
 
-  console.log(`[GDPR Cron] Poruke obrisane: ${obrPoruke}, zapisi aktivnosti obrisani: ${obrAktivnosti.count}`);
+  // --- Retencija revizijskog dnevnika — 12 meseci (Politika čl. 9 st. 3 i 6) ---
+  const obrRevizije = await prisma.auditLog.deleteMany({
+    where: { createdAt: { lte: dvanaestMeseciUnazad } },
+  });
+
+  // --- Anonimizacija pseudonima 10 godina posle prestanka statusa ---
+  const { anonimizovano } = await anonimizujPseudonime(sada);
+
+  console.log(
+    `[GDPR Cron] Poruke obrisane: ${obrPoruke}, zapisi aktivnosti obrisani: ${obrAktivnosti.count}, ` +
+      `revizijski zapisi obrisani: ${obrRevizije.count}, anonimizovano pseudonima: ${anonimizovano}`,
+  );
 
   return NextResponse.json({
     ok: true,
     porukeObrisane: obrPoruke,
     aktivnostiObrisane: obrAktivnosti.count,
+    revizijaObrisana: obrRevizije.count,
+    anonimizovano,
   });
 }
 

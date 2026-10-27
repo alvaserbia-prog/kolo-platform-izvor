@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { jeAdmin } from "@/lib/dozvole";
 import { odlukaOPristupanju, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
-/** POST — odluka o pristupanju posle odobrenja gazdinstva (čl. 8 st. 1): { odobri, razlog }. */
+/** POST — odluka o pristupanju posle odobrenja gazdinstva (čl. 9 st. 4): { odobri, razlog }. */
 export async function POST(req: Request, { params }: { params: Promise<{ clanId: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);

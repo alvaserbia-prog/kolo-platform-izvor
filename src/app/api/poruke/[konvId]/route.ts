@@ -39,7 +39,7 @@ export async function GET(
     }),
   ]);
 
-  // Modul Deca, čl. 9 st. 3: kad punoletni korisnik piše detetu, u razgovoru mu
+  // Modul Deca, deca čl. 19 st. 3: kad punoletni korisnik piše detetu, u razgovoru mu
   // stoji vidljiv natpis da razgovor čita roditelj. To je i odvraćanje i poštenje —
   // ko piše detetu, treba da zna pred kim piše.
   const roditeljCita = (drugiUser?.maloletan ?? false) && !(jaUser?.maloletan ?? false);
@@ -111,11 +111,11 @@ export async function POST(
   // Slanje je dozvoljeno svakom UČESNIKU konverzacije (getKonv to proverava).
   // Neverifikovani NE MOŽE da inicira konverzaciju (vidi POST /api/poruke), pa
   // može biti učesnik samo u konverzaciji koju je verifikovani pokrenuo povodom
-  // njegovog zahteva za jemstvo (Uslovi čl. 16, Politika čl. 6) — tu sme da uzvrati.
+  // njegovog zahteva za jemstvo (Uslovi čl. 14 st. 2, Politika čl. 13) — tu sme da uzvrati.
   const k = await getKonv(konvId, session.user.id);
   if (!k) return await greska("Konverzacija nije pronađena.", 404);
 
-  // ── Modul Deca (čl. 12) ───────────────────────────────────────────────────
+  // ── Modul Deca (deca čl. 22) ───────────────────────────────────────────────────
   //
   // 🔴 Ovlašćenje za pisanje se proverava PRI SVAKOJ PORUCI, ne samo pri otvaranju
   // razgovora. Bez toga bi zatečen razgovor nastavio da radi i pošto roditelj povuče
@@ -127,8 +127,8 @@ export async function POST(
   ]);
   if (!jaUcesnik || !drugiUcesnik) return await greska("Konverzacija nije pronađena.", 404);
   if (jaUcesnik.maloletan || drugiUcesnik.maloletan) {
-    // `smeDaKomunicira` sam odbija nalog koji još čeka roditelja (čl. 4c), a dete
-    // sa roditeljem pušta samo prema prijatelju (čl. 4c t. 2, 12 st. 6).
+    // `smeDaKomunicira` sam odbija nalog koji još čeka roditelja (čl. 5 st. 1 t. 1), a dete
+    // sa roditeljem pušta samo prema prijatelju (čl. 5 st. 1 t. 2, 22 st. 6).
     const prijatelji =
       jaUcesnik.maloletan && drugiUcesnik.maloletan
         ? await suPrijatelji(jaUcesnik.id, drugiUcesnik.id)
@@ -219,7 +219,7 @@ export async function POST(
     }
   })();
 
-  // Modul Deca, čl. 9 st. 4: roditelj se obaveštava SAMO pri prvom javljanju u
+  // Modul Deca, deca čl. 19 st. 3: roditelj se obaveštava SAMO pri prvom javljanju u
   // novom razgovoru sa punoletnim licem. Svaka poruka bi značila da roditelj prati
   // ritam prepiske, a on je ni ne čita — ono što mu treba je da zna da je razgovor
   // uopšte počeo. Ne baca i ne blokira odgovor.

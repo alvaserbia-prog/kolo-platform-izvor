@@ -1,5 +1,5 @@
 /**
- * Čista pravila evidencije identiteta — Pravilnik o KOLO sistemu čl. 31a
+ * Čista pravila evidencije identiteta — Pravilnik o KOLO sistemu čl. 31
  * (set 4.7.3). Bez Prisme: uvozi ih i pretraživač.
  *
  * 🔴 Evidencija identiteta je ZASEBNA od evidencije doprinosa: ime i prezime se
@@ -57,14 +57,14 @@ export function istoIme(a: string | null | undefined, b: string | null | undefin
 }
 
 /**
- * Jedan nalog, jedno ime (čl. 31a st. 3): prvi izvor upisuje, kasniji izvor koji
+ * Jedan nalog, jedno ime (čl. 31 st. 3): prvi izvor upisuje, kasniji izvor koji
  * donese DRUGO ime ne prepisuje upisano. Gazdinstvo i zadruga tada odbijaju
  * unos, isto kao i prijava pokroviteljstva (ispravka ide prigovorom vrste
  * „Ispravka podatka"); donacija se evidentira,
  * a upisano ime ostaje, jer uplatilac može biti i zajednički račun.
  */
 /**
- * `MALOLETAN` — evidencija se za maloletni nalog ne vodi (čl. 31a st. 6). Pozivaoci
+ * `MALOLETAN` — evidencija se za maloletni nalog ne vodi (čl. 31 st. 7). Pozivaoci
  * proveravaju samo `RAZLIKUJE_SE`, pa za njih ovaj ishod znači „ništa nije upisano".
  */
 export type IshodUpisa = "UPISANO" | "ISTO" | "RAZLIKUJE_SE" | "MALOLETAN";

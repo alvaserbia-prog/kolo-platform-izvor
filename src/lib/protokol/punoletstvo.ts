@@ -1,5 +1,5 @@
 /**
- * Prelazak maloletnog naloga u punoletni (Modul Deca, čl. 19) — noćni posao.
+ * Prelazak maloletnog naloga u punoletni (Pravilnik o učešću dece, čl. 35) — noćni posao.
  *
  * Osamnaesti rođendan menja tri stvari, i sve tri se dešavaju istog dana:
  *
@@ -10,7 +10,7 @@
  *  2. **Dete dobija verifikaciju od roditelja** — jednu (set 4.8.2): prvi roditelj
  *     po redu povezivanja koji je član Kola ili osnivač daje potvrdu; ako takvog
  *     nema, prvi član bez potvrde daje uvođenje u Kolo; ako nijedan roditelj nije
- *     verifikovan, punoletni je korisnik (čl. 19 st. 3; dokaz stvarnosti čl. 5b).
+ *     verifikovan, punoletni je korisnik (deca čl. 35 st. 4; dokaz stvarnosti čl. 7).
  *  3. **Prijateljstva se brišu.** Bila su mehanizam dečjeg prostora; njihovo mesto
  *     zauzima lanac potvrda.
  *
@@ -105,7 +105,7 @@ export async function obradiPunoletstva(sada: Date = beogradskiDan()): Promise<I
 }
 
 /**
- * Najava mesec dana ranije (čl. 19 st. 6) — detetu i SVAKOM njegovom prijatelju.
+ * Najava mesec dana ranije (deca čl. 35 st. 5) — detetu i SVAKOM njegovom prijatelju.
  *
  * Prijatelji se obaveštavaju zato što i njima odlazi po 500 POEN. Bez toga je
  * iznenađenje na najgorem mogućem mestu: čoveku nestane POEN, a nigde ne piše zašto.
@@ -137,7 +137,7 @@ async function najaviPunoletstvo(
     parametri: { dana, iznos, broj: prijateljstva.length },
     naslov: `Za ${dana} dana puniš ${UZRAST_PUNOLETSTVO}`,
     tekst:
-      // Šta posle punoletstva zavisi od roditelja (deca čl. 19 st. 3), pa najava to
+      // Šta posle punoletstva zavisi od roditelja (deca čl. 35 st. 4), pa najava to
       // ne obećava — tačnu varijantu nosi obaveštenje na sam dan (paket F, F7-10).
       `Tog dana biće ti otpisano ${iznos.toLocaleString("sr-RS")} POENA iz ${prijateljstva.length} prijateljstava, ` +
       `a prijateljstva se zatvaraju.`,
@@ -173,9 +173,9 @@ async function prevediUPunoletni(deteId: string) {
     select: {
       id: true,
       pseudonim: true,
-      // Red povezivanja: najranija veza prva (čl. 19 st. 3). Uz roditelja se čita
+      // Red povezivanja: najranija veza prva (dokaz stvarnosti čl. 7). Uz roditelja se čita
       // položaj — prvi član Kola/osnivač daje potvrdu, a ako ga nema, prvi član bez
-      // potvrde daje uvođenje (set 4.8.2; dokaz stvarnosti čl. 5b).
+      // potvrde daje uvođenje (set 4.8.2; dokaz stvarnosti čl. 7).
       roditeljstvaKaoDete: {
         select: {
           roditeljId: true,
@@ -206,7 +206,7 @@ async function prevediUPunoletni(deteId: string) {
   });
   if (rezervisano.count === 0) return;
 
-  // ── 1. Otpis (čl. 19 st. 2) ────────────────────────────────────────────────
+  // ── 1. Otpis (deca čl. 35 st. 2) ────────────────────────────────────────────────
   //
   // Broje se SAMO živa isplaćena prijateljstva. Ne broje se: raskinuta (njihovih 500
   // je već otpisano — inače bi isti POEN bio oduzet dvaput), prijateljstva sa braćom
@@ -238,17 +238,17 @@ async function prevediUPunoletni(deteId: string) {
     }
   }
 
-  // ── 2. i 3. Prijateljstva odlaze, nalog postaje punoletan (čl. 19 st. 1 i 4) ──
+  // ── 2. i 3. Prijateljstva odlaze, nalog postaje punoletan (deca čl. 35 st. 1 i 3) ──
   await prisma.$transaction(async (tx) => {
     await tx.prijateljstvo.deleteMany({ where: { OR: [{ aId: deteId }, { bId: deteId }] } });
     await tx.prijateljToken.deleteMany({ where: { korisnikId: deteId } });
     await tx.roditeljPoziv.deleteMany({ where: { deteId } });
     // Veza sa roditeljem gubi dejstvo — punoletno lice nema roditeljski prekidač,
-    // niti roditelj nad njim ima ijedno ovlašćenje iz čl. 10.
+    // niti roditelj nad njim ima ijedno ovlašćenje iz deca čl. 20.
     await tx.roditeljstvo.deleteMany({ where: { deteId } });
     await tx.roditeljstvoPotvrda.deleteMany({ where: { deteId, status: "CEKA" } });
     await tx.roditeljstvoPotvrdaFondacije.deleteMany({ where: { deteId, status: "CEKA" } });
-    // Potvrde postojanja deteta (čl. 6) gube predmet punoletstvom; padaju i
+    // Potvrde postojanja deteta (deca čl. 13) gube predmet punoletstvom; padaju i
     // kaskadno sa vezom iznad, ali se brišu izričito da redosled ne zavisi od šeme.
     await tx.potvrdaPostojanjaDeteta.deleteMany({ where: { deteId } });
     // Kutija želja je samo dečji prostor: predlozi i podrške punoletnog se brišu,
@@ -269,17 +269,17 @@ async function prevediUPunoletni(deteId: string) {
     });
   });
 
-  // ── 4. Verifikacija od roditelja (čl. 19 st. 3, set 4.8.2) ─────────────────
+  // ── 4. Verifikacija od roditelja (deca čl. 35 st. 4, dokaz stvarnosti čl. 7; set 4.8.2) ─────────────────
   //
   // Po redu povezivanja: prvi roditelj koji je ČLAN KOLA ili OSNIVAČ daje POTVRDU
   // (punoletni postaje član Kola). Ako takvog nema, prvi roditelj koji je ČLAN BEZ
-  // POTVRDE daje UVOĐENJE (punoletni postaje član bez potvrde; dokaz čl. 5b). Drugi
+  // POTVRDE daje UVOĐENJE (punoletni postaje član bez potvrde; dokaz čl. 7 st. 2). Drugi
   // roditelj ne daje ništa. Ako nijedan roditelj nije verifikovan, punoletni ostaje
   // korisnik. Položaj se čita PRE brisanja veza (korak 2–3), a zaustavljena veza
-  // (čl. 4e) ne daje ovlašćenja roditelja, pa ni verifikaciju.
+  // (deca čl. 17 st. 2) ne daje ovlašćenja roditelja, pa ni verifikaciju.
   //
   // 🔴 POEN po ovoj verifikaciji upisuje se ODMAH, bez uslova iz dokaza stvarnosti
-  // čl. 7: istog dana se detetu poništava POEN evidentiran po prijateljstvima
+  // čl. 19 st. 4: istog dana se detetu poništava POEN evidentiran po prijateljstvima
   // (korak 1), često u minus, a tek punoletan čovek tog dana nije ništa skrivio.
   const kandidati = dete.roditeljstvaKaoDete
     .filter((v) => !v.zaustavljenaAt && v.roditelj.status === "ACTIVE" && !v.roditelj.deaktiviranAt)

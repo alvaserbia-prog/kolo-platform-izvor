@@ -88,7 +88,7 @@ async function upisiPrihvatanjeTekuceVerzije(tx: Tx, userId: string): Promise<vo
  * 🔴 Samo za PRIJAVLJENOG korisnika, i to je granica mere M-5. Zapis pristanka
  * neprijavljenog posetioca tražio bi da se posetilac nekako identifikuje — dakle
  * nov podatak o njemu, radi dokazivanja pristanka na obradu. Kružno, i suprotno
- * čl. 3 Politike, gde minimizacija stoji kao strukturni princip. Za posetioca
+ * čl. 5 st. 3 Politike, gde minimizacija stoji kao princip. Za posetioca
  * odluku nosi kolačić, a dokaz je u tome što je mehanizam ispravan: ništa se ne
  * učitava pre odluke i odbijanje je jednako lako kao prihvatanje.
  *

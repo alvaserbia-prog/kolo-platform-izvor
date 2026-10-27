@@ -63,14 +63,14 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Unauthorized", 401);
-  // INICIRANJE razgovora (Uslovi čl. 16 st. 5, set 4.8.1): potvrđen član piše kome
+  // INICIRANJE razgovora (Uslovi čl. 14 st. 2, set 4.8.1): potvrđen član piše kome
   // hoće; nov član prvi piše samo oglašivaču povodom njegovog oglasa, najviše
   // `NOVIH_RAZGOVORA_DNEVNO` novih razgovora dnevno. U razgovoru koji je neko drugi
   // pokrenuo nov član SME da odgovara — POST /api/poruke/[konvId] proverava samo
   // članstvo u razgovoru.
   const meId = session.user.id;
 
-  // ── Modul Deca (čl. 12) ───────────────────────────────────────────────────
+  // ── Modul Deca (deca čl. 22) ───────────────────────────────────────────────────
   //
   // Maloletni korisnik JESTE neverifikovan u smislu šeme, ali u dečjem prostoru sme
   // sam da pokrene razgovor. Zato se za parove u kojima ima deteta odlučuje po
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
       ? 0
       : await prisma.konverzacija.count({ where: { pokrenuoId: meId, createdAt: { gte: pocetakDana() } } });
   // Dete sa roditeljem piše samo svojim prijateljima (Pravilnik o učešću dece
-  // čl. 4c t. 2, 12 st. 6) — prijateljstvo se čita samo kad su obe strane deca.
+  // čl. 5 st. 1 t. 2, 22 st. 6) — prijateljstvo se čita samo kad su obe strane deca.
   const prijatelji =
     jaUcesnik.maloletan && drugiUcesnik.maloletan ? await suPrijatelji(jaUcesnik.id, drugiUcesnik.id) : false;
   const dozvoljeno = postojeci

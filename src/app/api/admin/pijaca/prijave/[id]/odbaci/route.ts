@@ -9,7 +9,7 @@ import { jeAdmin } from "@/lib/dozvole";
 // POST /api/admin/pijaca/prijave/[id]/odbaci — prijava pregledana, povrede nema.
 //
 // Oglas ostaje na Pijaci. Prijavilac se NE obaveštava: obaveza obaveštavanja iz
-// Uslova čl. 25 st. 2 vezana je za uklanjanje sadržaja, a povratna informacija
+// Uslova čl. 29 st. 2 vezana je za uklanjanje sadržaja, a povratna informacija
 // o tuđem oglasu bi otkrivala ishod postupka prema trećem licu.
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

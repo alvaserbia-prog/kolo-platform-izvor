@@ -9,7 +9,7 @@ import { DoprinosStatus } from "@/generated/prisma/client";
 const STRANA = 60;
 
 /**
- * GET /api/admin/prvi-oglasi — red čekanja za odobrenje doprinosa iz čl. 40a.
+ * GET /api/admin/prvi-oglasi — red čekanja za odobrenje doprinosa iz Pravilnika čl. 38.
  *
  * Query: ?prikaz=cekanje (podrazumevano) | odobreni
  *

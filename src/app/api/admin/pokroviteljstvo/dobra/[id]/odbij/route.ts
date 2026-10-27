@@ -6,7 +6,7 @@ import { jeAdmin } from "@/lib/dozvole";
 import { odbijPrijavuDobra, odgovorNaGresku } from "@/lib/protokol/pokroviteljstvo-dobrima";
 
 // POST /api/admin/pokroviteljstvo/dobra/[id]/odbij — odbijanje uz obrazloženje
-// (donacije čl. 13f st. 2: nema fotografije cenovnika, ili podaci ne odgovaraju APR-u).
+// (donacije čl. 29 st. 2: nema fotografije cenovnika, ili podaci ne odgovaraju APR-u).
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeAdmin(session.user)) return await greska("Pristup odbijen.", 403);

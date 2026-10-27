@@ -105,10 +105,10 @@ export type PromenaStatusa = {
  *    osnivač; inače REGULARNI. Član bez potvrde sa ZRNOM je zato REGULARNI.
  *
  * 🔴 Nalog kome je status PRESTAO (`prestaoStatus`: `EXCLUDED` ili `deaktiviranAt`;
- * Pravilnik čl. 33, 34) nema status učesnika: upisuje mu se `verified = false`,
+ * Pravilnik čl. 32, 33) nema status učesnika: upisuje mu se `verified = false`,
  * `verifiedAt = null`, indeks 0, `potvrdjenAt = null`, NEVERIFIKOVAN — bez obzira
  * na zatečene veze, i osnivaču. Veze se pri tom NE brišu (veze koje je dao ostaju po
- * dokaz stvarnosti čl. 16). Suspenzija nije prestanak i ne dira se. Izlazi iz
+ * dokaz stvarnosti čl. 30). Suspenzija nije prestanak i ne dira se. Izlazi iz
  * sistema ovo ne zovu neposredno, nego kroz `ugasiOznakeNaloga` (`izlaz-naloga.ts`).
  *
  * Mora se zvati u transakciji koja je promenila graf. Ne izvršava posledice —
@@ -222,9 +222,9 @@ export type OpcijePosledica = {
  * Posledice promene statusa — VAN transakcije, ne baca (svaki korak zasebno):
  *
  *  - aktivno ZRNO učesnika koji više nije čuvar ide u `OTKLJUCAJ` zahtev za danas,
- *    pa prelazi u slobodno na kraju perioda (Pravilnik čl. 20 st. 4, 30 st. 3;
- *    dokaz čl. 17 st. 3);
- *  - deca roditelja: `posleStatusaRoditelja` (deca čl. 6 st. 8, 20);
+ *    pa prelazi u slobodno na kraju perioda (Pravilnik čl. 23 st. 5, 29 st. 2;
+ *    dokaz čl. 31 st. 3);
+ *  - deca roditelja: `posleStatusaRoditelja` (deca čl. 6, 13 st. 1);
  *  - gazdinstva: `osveziPravaGazdinstvaPoStatusu` i `probajEvidentiratiGazdinstvo`;
  *  - obaveštenje samom učesniku (za člana bez potvrde sa obaveznim rečenicama, §4.3).
  */

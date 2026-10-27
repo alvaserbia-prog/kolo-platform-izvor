@@ -15,11 +15,11 @@ const BEZ_KARTICE = ["/verifikacija", "/kontaktiraj-nas"];
 
 /**
  * Plutajuća kartica „Želim da me neko nazove radi potvrde" (Pravilnik o dokazu
- * stvarnosti čl. 4a, 5c; set 4.8.3) — na svakoj stranici posle prijave, i na Pijaci.
+ * stvarnosti čl. 8, 16; set 4.8.3) — na svakoj stranici posle prijave, i na Pijaci.
  *
- * Samo za ČLANA BEZ POTVRDE koji ispunjava uslove iz čl. 5c st. 2 i još nije na
+ * Samo za ČLANA BEZ POTVRDE koji ispunjava uslove iz čl. 16 st. 1 i još nije na
  * spisku. „Kasnije" je sklanja na `KASNIJE_DANA` dana (pamti pretraživač); upisnik
- * ZRNA je ne može skloniti dok ne ostavi broj, jer bez potvrde nema glas (čl. 4a).
+ * ZRNA je ne može skloniti dok ne ostavi broj, jer bez potvrde nema glas (čl. 6 st. 2, 8 st. 4).
  * Korisnik, član Kola i dete je ne vide: server za njih ne vraća `radiPotvrde`.
  */
 export default function PlutajucaPotvrda() {

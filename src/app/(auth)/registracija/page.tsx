@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { AKT_POLITIKA, AKT_USLOVI } from "@/lib/verzije-akata";
+import { AKT_POLITIKA, AKT_RIZICI, AKT_USLOVI } from "@/lib/verzije-akata";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -121,7 +121,7 @@ export default function RegistracijaPage() {
       <Kartica padding="lg">
         <h1 className="kolo-naslov mb-5 text-kolo-text">{t("naslov")}</h1>
 
-        {/* Modul Deca, čl. 4a: dete se registruje samo, pre nego što je iko od
+        {/* Pravilnik o učešću dece čl. 8: dete se registruje samo, pre nego što je iko od
             njegovih roditelja na platformi. Zaseban obrazac — traži imejl RODITELJA,
             a ne svoj, i ne traži datum rođenja.
 
@@ -237,7 +237,10 @@ export default function RegistracijaPage() {
                 className="mt-0.5 accent-kolo-green-700 w-5 h-5 shrink-0" />
               <span className="text-sm text-kolo-text">
                 {t("uslovi")} <Link href="/uslovi" target="_blank" className="text-kolo-green-700 underline">{t("uslovi_link")}</Link>{" "}
-                <span className="text-kolo-muted">(v{AKT_USLOVI.verzija})</span>
+                <span className="text-kolo-muted">(v{AKT_USLOVI.verzija})</span>{" "}
+                {/* Izjava o rizicima: ista kvačica kao Uslovi (rizici čl. 2 st. 1; odluka vlasnika 12). */}
+                {t("i_veznik")} <Link href="/rizici" target="_blank" className="text-kolo-green-700 underline">{t("rizici_link")}</Link>{" "}
+                <span className="text-kolo-muted">(v{AKT_RIZICI.verzija})</span>
               </span>
             </label>
             <label className="flex items-start gap-3 cursor-pointer py-2 min-h-11">

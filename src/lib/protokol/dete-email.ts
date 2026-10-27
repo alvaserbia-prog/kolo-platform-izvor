@@ -4,7 +4,7 @@
  * ─── Zašto adresa uopšte postoji ────────────────────────────────────────────
  *
  * Nalog deteta po pravilu nema imejl: pri samostalnoj registraciji dete unosi
- * adresu SVOG RODITELJA, i ona se namerno ne upisuje u `User.email` (čl. 4a,
+ * adresu SVOG RODITELJA, i ona se namerno ne upisuje u `User.email` (deca čl. 8,
  * `deca-poziv.ts`). Posledica je bila da detetu tok „zaboravljena lozinka" ne
  * stoji na raspolaganju — a taj tok traži imejl. Zaboravljena lozinka je značila
  * trajno zaključan nalog, sa prijateljstvima i POEN-om u njemu.
@@ -28,9 +28,9 @@
  * koje je podatak dat. Dete kasnije može da uključi obaveštenja u podešavanjima,
  * ali podrazumevano ćutimo.
  *
- * 🟡 AKTI OVO JOŠ NE POZNAJU. Pravilnik o učešću dece čl. 7 nabraja podatke koje
+ * 🟡 AKTI OVO JOŠ NE POZNAJU. Pravilnik o učešću dece čl. 12 i 26 nabraja podatke koje
  * dete navodi (datum rođenja upisuje roditelj, školu bira dete); imejl deteta nije
- * među njima, a Politika privatnosti 4.7 i Registar radnji obrade (radnja br. 11)
+ * među njima, a Politika privatnosti čl. 33–35 i Registar radnji obrade (radnja br. 11)
  * govore o adresi RODITELJA, po legitimnom interesu. Pre puštanja u rad ovome
  * treba odredba: dobrovoljnost, svrha (isključivo povratak u nalog), brisanje pri
  * punoletstvu i pri gašenju naloga. Do tada je ovo mogućnost koju sistem nudi, a

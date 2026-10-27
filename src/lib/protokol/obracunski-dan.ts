@@ -47,3 +47,49 @@ export function prethodniDan(dan: Date): Date {
   p.setUTCDate(p.getUTCDate() - 1);
   return p;
 }
+
+/**
+ * Stvarni trenutak ponoći po srpskom vremenu kojom POČINJE dati obračunski dan
+ * (`dan` je oblik iz `beogradskiDan`: Date na UTC ponoći kalendarskog dana).
+ * Leti je to 22:00 UTC prethodnog dana, zimi 23:00 UTC. Letnje računanje se
+ * menja u 02:00/03:00, pa je pomak u ponoć isti kao sat ranije.
+ */
+export function ponocUSrbiji(dan: Date): Date {
+  const utcPonoc = Date.UTC(dan.getUTCFullYear(), dan.getUTCMonth(), dan.getUTCDate());
+  const proba = new Date(utcPonoc - 60 * 60 * 1000);
+  const delovi = new Intl.DateTimeFormat("en-GB", {
+    timeZone: ZONA,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(proba);
+  const v = (t: string) => Number(delovi.find((d) => d.type === t)?.value);
+  const zidno = Date.UTC(v("year"), v("month") - 1, v("day"), v("hour"), v("minute"), v("second"));
+  const pomak = zidno - proba.getTime(); // +1h zimi, +2h leti
+  return new Date(utcPonoc - pomak);
+}
+
+/**
+ * Početak obračunskog perioda koji je `n` perioda posle onoga u kome je
+ * `trenutak` (n = 1: naredna ponoć po srpskom vremenu). Pravilnik čl. 26.
+ */
+export function pocetakPeriodaPosle(trenutak: Date, n: number): Date {
+  const dan = beogradskiDan(trenutak);
+  dan.setUTCDate(dan.getUTCDate() + n);
+  return ponocUSrbiji(dan);
+}
+
+/**
+ * Granice prethodnog kalendarskog meseca po srpskom vremenu, u obliku `date`
+ * kolona (UTC ponoć): `[od, doIskljucivo)`.
+ */
+export function granicePrethodnogMeseca(trenutak: Date = new Date()): { od: Date; doIskljucivo: Date } {
+  const danas = beogradskiDan(trenutak);
+  const g = danas.getUTCFullYear();
+  const m = danas.getUTCMonth();
+  return { od: new Date(Date.UTC(g, m - 1, 1)), doIskljucivo: new Date(Date.UTC(g, m, 1)) };
+}

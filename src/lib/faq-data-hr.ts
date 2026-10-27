@@ -380,7 +380,7 @@ Osnivača je pet i krug je zatvoren. Utvrđeni su unaprijed internim aktom Fonda
 
 Tempo nije proizvoljan. Jedan korak od 24.000 POEN upisuje se tek kad ukupan broj POEN-a u sustavu poraste za sljedećih 100.000, a u taj prag ulazi i sam osnivački upis. To znači da dok kanal traje, osnivački doprinos čini 24% svakog novoupisanog POEN-a. Kad se kanal isprazni na 2.400.000, sustav je porastao za 10.000.000 POEN i kanal se trajno i neopozivo zatvara. Odatle nadalje udio osnivača samo pada, jer sustav nastavlja rasti a kanal više ne radi.
 
-Veći saldo ne daje razmjerno veću moć. Glasanje u Gornjem Kolu je kvadratno: broj glasova je kvadratni korijen broja aktivnih ZRNA. Tko ima sto puta više ZRNA ima deset puta više glasova, a ne sto, pa ni najveći saldo POEN-a ne daje kontrolu nad odlukama.
+Veći saldo ne daje razmjerno veću moć. U Gornjem Kolu glasa se po kvadratnom korijenu: broj glasova je kvadratni korijen broja aktivnih ZRNA. Tko ima sto puta više ZRNA ima deset puta više glasova, a ne sto, pa ni najveći saldo POEN-a ne daje kontrolu nad odlukama.
 
 Što možeš provjeriti. Ukupan upisan iznos, broj izvršenih koraka i preostalo do granice dostupni su na stranici Osnivački doprinos. Registar osnivača s pseudonimima i udjelima, uključujući to kome je koliko upisano, dostupan je sudionicima.`,
       },
@@ -582,45 +582,45 @@ POEN u zapisima zadrugara i svih drugih korisnika ostaje netaknut.`,
         pitanje: `Što su socijalni programi i koji postoje?`,
         odgovor: `Neki oblici sudjelovanja ne mogu se evidentirati kao pojedinačne razmjene, pa za njih postoje socijalni programi.
 
-Socijalni programi pokrivaju skupine čije je sudjelovanje u zajednici stalno i razuđeno: Podrška Majkama (i drugim primarnim skrbnicima), Podrška Starijima, Posebna Podrška (korisnici u otežanim okolnostima) i Školovanje. Kad se tvoja prijava potvrdi, Protokol ti automatski upisuje POEN na dnevnoj razini, bez prijavljivanja pojedinačnih aktivnosti. To nije socijalna pomoć ni naknada, to je način da i takvo sudjelovanje dobije ravnopravno mjesto u sustavu.
+Socijalni programi pokrivaju skupine čije je sudjelovanje u zajednici stalno i razuđeno: Potpora majkama (i drugim primarnim skrbnicima), Potpora starijima, Posebna potpora (sudionici u otežanim okolnostima) i Potpora studentima. Kad se tvoja prijava potvrdi, Protokol ti automatski upisuje POEN na dnevnoj razini, bez prijavljivanja pojedinačnih aktivnosti. To nije socijalna pomoć ni naknada, to je način da i takvo sudjelovanje dobije ravnopravno mjesto u sustavu.
 
 Pored njih, u Programe spadaju i doprinosi: doprinos sadržaju platforme (prvi oglas i gospodarstvo), operativni doprinos (rad za zajedničko dobro kroz objavljene zadatke) i dječji doprinos (sudjelovanje djece u dječjem prostoru, opisano u odjeljku „Djeca i roditelji“). Svaki je objašnjen u posebnom pitanju.
 
-Prijava na socijalne programe otvorena je sudionicima, i članu bez potvrde. Ispunjenost uvjeta prije odobrenja potvrđuje član Kola koji te osobno poznaje, odnosno Fondacija.`,
+Prijava na socijalne programe otvorena je sudionicima, i članu bez potvrde. Maloljetni korisnik nema pravo na programe potpore. Ispunjenost uvjeta prije odobrenja potvrđuje član Kola koji te osobno poznaje, odnosno Fondacija.`,
       },
       {
         id: 17,
-        pitanje: `Tko se može prijaviti za Podršku Majkama?`,
+        pitanje: `Tko se može prijaviti za Potporu majkama?`,
         odgovor: `Majka ili drugi primarni skrbnik djeteta, program prati brigu o djetetu, ne isključivo majčinstvo.
 
-Iznos ovisi o broju i dobi djece: osnovica po djetetu opada kako dijete raste, a množitelj raste sa svakim sljedećim djetetom, pa veće obitelji dobivaju razmjerno veću podršku. Točni iznosi i primjeri dani su u posebnom pitanju o iznosima Podrške Majkama.
+Iznos ovisi o broju i dobi djece: osnovica po djetetu opada kako dijete raste, a množitelj raste sa svakim sljedećim djetetom, pa veće obitelji dobivaju razmjerno veću potporu. Točni iznosi i primjeri dani su u posebnom pitanju o iznosima Potpore majkama.
 
-Prijava ide kroz platformu, podatke o djeci uneseš u obrazac, bez prilaganja dokumenata.`,
+Prijava ide kroz platformu: za svako dijete uneseš samo datum rođenja, bez prilaganja dokumenata.`,
       },
       {
         id: 79,
-        pitanje: `Koliko POEN dnevno po djetetu donosi Podrška Majkama i kako broj i dob djece utječu na iznos?`,
+        pitanje: `Koliko POEN dnevno po djetetu donosi Potpora majkama i kako broj i dob djece utječu na iznos?`,
         odgovor: `Za svako dijete polazna dnevna osnovica je 2.000 POEN, umanjena za 100 POEN za svaku godinu djetetove dobi, podrška postupno opada kako dijete raste i prestaje kad dijete navrši 20 godina.
 
-Broj djece povećava ukupan iznos, ali ne prostim zbrajanjem: svako sljedeće dijete nosi veći množitelj. Prvo dijete ×1,00, drugo ×1,20, treće ×1,50, četvrto ×2,00, peto ×3,00, šesto ×4,50, sedmo ×6,00, osmo ×8,00, deveto ×10,00. Tako veće obitelji dobivaju razmjerno veću podršku.
+Broj djece povećava ukupan iznos, ali ne prostim zbrajanjem: svako sljedeće dijete nosi veći množitelj. Redni broj djeteta određuje se po rođenju, od najstarijeg, a ne po redu kojim su datumi uneseni. Prvo dijete ×1,00, drugo ×1,20, treće ×1,50, četvrto ×2,00, peto ×3,00, šesto ×4,50, sedmo ×6,00, osmo ×8,00, deveto ×10,00. Tako veće obitelji dobivaju razmjerno veću potporu.
 
 Primjer: jedno dijete od 3 godine ((2.000 − 300) × 1,00 = 1.700 POEN dnevno. Isto dijete kao treće po redu) (2.000 − 300) × 1,50 = 2.550 POEN dnevno.
 
-Podrška se upisuje automatski na dnevnoj razini dok status traje, bez prijavljivanja pojedinačnih aktivnosti. Kao i ostali socijalni programi, dijeli zajednički dnevni okvir, pa se u danima s mnogo doprinosa iznosi mogu razmjerno umanjiti. Parametri su uređeni Pravilnikom o programima podrške i mogu se mijenjati njegovom izmjenom.`,
+Podrška se upisuje automatski na dnevnoj razini dok status traje, bez prijavljivanja pojedinačnih aktivnosti. Kao i ostali socijalni programi, dijeli zajednički dnevni okvir, pa se u danima s mnogo doprinosa iznosi mogu razmjerno umanjiti. Parametri su uređeni Pravilnikom o programima potpore i mogu se mijenjati njegovom izmjenom.`,
       },
       {
         id: 61,
-        pitanje: `Što je „Podrška Starijima“, tko ima pravo i kako se prijavljujem?`,
-        odgovor: `Podrška Starijima je socijalni program za sudionike od 50 godina naviše.
+        pitanje: `Što je „Potpora starijima“, tko ima pravo i kako se prijavljujem?`,
+        odgovor: `Potpora starijima je socijalni program za sudionike od 50 godina naviše.
 
 Dnevni iznos raste s godinama: 1.000 POEN s navršenih 50, uvećano za 100 POEN za svaku sljedeću godinu, sudionik od 65 godina ima 2.500 POEN dnevno, a sudionik od 80 godina 4.000 POEN dnevno.
 
-Prijava ide kroz platformu i otvorena je sudionicima; POEN se potom upisuje automatski, na dnevnoj razini, bez prijavljivanja pojedinačnih aktivnosti. Kao i ostali socijalni programi, ni ovo nije socijalna pomoć ni naknada. Protokol time priznaje sudjelovanje koje se ne vidi kroz pojedinačne razmjene. Bliži uvjeti i način potvrđivanja godina uređeni su Pravilnikom o programima podrške.`,
+Prijava ide kroz platformu i otvorena je sudionicima; POEN se potom upisuje automatski, na dnevnoj razini, bez prijavljivanja pojedinačnih aktivnosti. Kao i ostali socijalni programi, ni ovo nije socijalna pomoć ni naknada. Protokol time priznaje sudjelovanje koje se ne vidi kroz pojedinačne razmjene. Bliži uvjeti i način potvrđivanja godina uređeni su Pravilnikom o programima potpore.`,
       },
       {
         id: 18,
-        pitanje: `Što je Posebna Podrška i kako se prijavljuje?`,
-        odgovor: `Posebna Podrška je program za korisnike u otežanim okolnostima. Dvije su osnove.
+        pitanje: `Što je Posebna potpora i kako se prijavljuje?`,
+        odgovor: `Posebna potpora je program za sudionike u otežanim okolnostima. Dvije su osnove.
 
 Prva je smanjena sposobnost: imaš rješenje nadležnog tijela kojim je utvrđen stupanj invaliditeta — uključujući rješenje komisije za procjenu radne sposobnosti — ili zbog akutne odnosno kronične bolesti ne možeš ili si bitno ograničen sudjelovati. Ako je osoba sa smanjenom sposobnošću punoljetan sudionik, pravo je njezino; ako nije sudionik, pravo ostvaruje onaj koji se o njoj neposredno stara; ako je maloljetna, pravo ostvaruje roditelj, do njezine punoljetnosti. Po jednoj takvoj situaciji ide jedan iznos — osnova samo određuje u čiji zapis.
 
@@ -628,34 +628,34 @@ Druga je gubitak doma: izgubio si dom ili imovinu potrebnu za život u nepogodi,
 
 Pri prijavi se traži samo da rješenje POSTOJI — ne njegov sadržaj, ne stupanj, ne ocjena radne sposobnosti, ne dijagnoza, ne medicinska dokumentacija. Kod bolesti i kod gubitka doma dokaz je tvoja izjava, bez ijedne isprave, uz potvrdu člana Kola koji te osobno poznaje, odnosno Fondacije.
 
-Iznos je fiksan i iznosi 2.000 POEN dnevno, jednak po svim osnovama. Ovaj se program ne isključuje s Podrškom majkama — prima se i jedno i drugo, i kada je oboje povodom istoga djeteta.
+Iznos je fiksan i iznosi 2.000 POEN dnevno, jednak po svim osnovama. Ovaj se program ne isključuje s Potporom majkama — prima se i jedno i drugo, i kada je oboje povodom istoga djeteta.
 
-Sudionici vide da primaš Posebnu Podršku i koliko, jer se evidencija zajednice može provjeriti. Ali NE vide po kojoj osnovi — a program obuhvaća i smanjenu sposobnost i gubitak doma, pa naziv ništa ne kazuje. Osnovu vidiš ti i osoba koja u Fondaciji obrađuje prijavu.`,
+Sudionici vide da primaš Posebnu potporu i koliko, jer se evidencija zajednice može provjeriti. Ali NE vide po kojoj osnovi — a program obuhvaća i smanjenu sposobnost i gubitak doma, pa naziv ništa ne kazuje. Osnovu vidiš ti i osoba koja u Fondaciji obrađuje prijavu.`,
       },
       {
         id: 96,
-        pitanje: `Što je program Školovanje i na koga se odnosi?`,
-        odgovor: `Školovanje je socijalni program za one koji se školuju, učenike osnovne i srednje škole i studente.
+        pitanje: `Što je program Potpora studentima i na koga se odnosi?`,
+        odgovor: `Potpora studentima je socijalni program za sudionike koji su redovito upisani na visokoškolsku ustanovu. Učenici osnovne i srednje škole nisu obuhvaćeni, a maloljetni korisnik nema pravo na programe potpore.
 
-Dnevni iznos je fiksan i iznosi 2.000 POEN, dok status traje. Status se provjerava jednom godišnje; ako se pri reviziji ne potvrdi, upis prestaje.
+Dnevni iznos je fiksan i iznosi 2.000 POEN, dok prijava vrijedi. Pravo se provjerava svakih šest mjeseci od odobrenja: istekom tog roka prijava prestaje vrijediti, a ako i dalje studiraš, podnosiš novu prijavu s novom izjavom.
 
-Prijava ide po istim pravilima kao za druge socijalne programe: kroz platformu, unosom podataka u obrazac (za ovaj program upisanog razreda odnosno godine studija) bez prilaganja dokumenata. Za dijete prijavu podnosi roditelj, a pravo traje dok je račun djeteta dijete Kola.`,
+Prijava ide po istim pravilima kao za druge socijalne programe: kroz platformu, bez prilaganja dokumenata. Dokaz je tvoja izjava pod punom odgovornošću, u kojoj navodiš ustanovu i godinu studija; potvrda o upisu i uvjerenja ne traže se. Neistinita izjava povlači mjere iz Uvjeta korištenja i prestanak upisa po ovom programu.`,
       },
       {
         id: 62,
         pitanje: `Što je „dokaz statusa“ za socijalni program, moram li prilagati izvadak ili dokument djeteta?`,
         odgovor: `Ne prilažeš nijedan dokument, ništa se ne skenira niti šalje.
 
-Podatke uneseš u obrazac na platformi: za Podršku Majkama, na primjer, ime djeteta i datum rođenja. Iznos koji ti se upisuje ovisi o broju i dobi djece.
+Podatke uneseš u obrazac na platformi: za Potporu majkama, na primjer, samo datum rođenja svakog djeteta. Iznos koji ti se upisuje ovisi o broju i dobi djece.
 
-Ispunjenost uvjeta zatim, bez uvida u unesene podatke, potvrđuje član Kola koji te osobno poznaje: onaj tko te je potvrdio ili drugi član Kola koji te poznaje. Član Kola koji te je samo uveo u Kolo nakon razgovora telefonom i član bez potvrde to ne mogu; ako takvog člana Kola nema, ispunjenost uvjeta utvrđuje Fondacija. Prijavu potom odobrava Fondacija. Uneseni podaci nisu javni: vidi ih samo onaj tko obrađuje prijavu. Riječ je o osjetljivim podacima, pa se obrađuju samo uz tvoj izričit pristanak, a pristanak možeš povući u svakom trenutku, tada prestaje i automatski upis POEN-a.
+Ispunjenost uvjeta zatim, bez uvida u unesene podatke, potvrđuje član Kola koji te osobno poznaje: onaj tko te je potvrdio ili drugi član Kola koji te poznaje. Član Kola koji te je uveo u Kolo ili potvrdio nakon razgovora telefonom i član bez potvrde to ne mogu; ako takvog člana Kola nema, ispunjenost uvjeta utvrđuje Fondacija. Prijavu potom odobrava Fondacija. Uneseni podaci nisu javni: vidi ih samo onaj tko obrađuje prijavu. Riječ je o osjetljivim podacima, pa se obrađuju samo uz tvoj izričit pristanak, a pristanak možeš povući u svakom trenutku, tada prestaje i automatski upis POEN-a.
 
-Bliži uvjeti kojima se potvrđuje status za svaku skupinu uređeni su Pravilnikom o programima podrške, objavljenim na stranici.`,
+Bliži uvjeti kojima se potvrđuje status za svaku skupinu uređeni su Pravilnikom o programima potpore, objavljenim na stranici.`,
       },
       {
         id: 20,
         pitanje: `Mogu li biti u više programa istodobno?`,
-        odgovor: `Da, ako ispunjavaš uvjete za više programa, majka koja se školuje može biti i u Podršci Majkama i u Školovanju. Svaki program se prijavljuje posebno.
+        odgovor: `Da, ako ispunjavaš uvjete za više programa, majka koja studira može biti i u Potpori majkama i u Potpori studentima. Svaki program se prijavljuje posebno.
 
 Socijalni programi i operativni doprinos dijele zajednički dnevni okvir od 10% ukupnog broja POEN-a u sustavu, kako se ne bi previše POEN-a upisalo odjednom, kad doprinosa ima više nego što okvir prima, dnevni iznosi se razmjerno umanjuju. Doprinos sadržaju platforme i dječji doprinos ne ulaze u taj okvir.`,
       },
@@ -666,7 +666,7 @@ Socijalni programi i operativni doprinos dijele zajednički dnevni okvir od 10% 
 
 Prvi oglas: kad objaviš prvi uredan oglas kojim nudiš dobro ili uslugu, upisuje ti se 1.000 POEN, i to kad Fondacija odobri oglas. Ovaj se doprinos upisuje jednom po računu, bez obzira na to koliko oglasa kasnije objaviš.
 
-Gospodarstvo: kad tvoje gospodarstvo bude odobreno, odnosno kad mu pristupiš, bilježi ti se doprinos gospodarstva (iznos po članu određuje Pravilnik o KOLO sustavu, čl. 40.c). Upisuje se kad objaviš oglas kojim nešto nudiš i kad uđeš u Kolo, potvrdom ili uvođenjem.
+Gospodarstvo: kad tvoje gospodarstvo bude odobreno, odnosno kad mu pristupiš, bilježi ti se doprinos gospodarstva (iznos po članu određuje Pravilnik o gospodarstvima, čl. 15.). Upisuje se kad objaviš oglas kojim nešto nudiš i kad uđeš u Kolo, potvrdom ili uvođenjem.
 
 Razmjena sama po sebi ne upisuje nov POEN: kad nekome prepišeš POEN, on samo prelazi s tvog zapisa na njegov. Ništa ne prijavljuješ.`,
       },
@@ -951,7 +951,7 @@ Fondacija ne pruža porezni savjet i nije strana u tvojoj razmjeni: za ispunjenj
         pitanje: `Utječe li sudjelovanje u KOLO sustavu i POEN na moju mirovinu ili socijalna davanja?`,
         odgovor: `Sa strane sustava, ne. POEN nije novac, nije zarada ni prihod: to je interni zapis u evidenciji o tome što si dao zajednici, i ne može se pretvoriti u sredstvo s vrijednošću izvan sustava. Zaklada ti ni po jednoj osnovi ne isplaćuje novac: upisom ne primaš ni novac ni stvar, ništa ne prelazi iz njezine imovine u tvoju, a zapis se ne može unovčiti, ustupiti ni naplatiti. Zato po toj osnovi i nema iznosa izraženog u novcu.
 
-Ako ti se POEN upisuje kroz neki od socijalnih programa (na primjer kao primarnom skrbniku, starijoj osobi ili kroz Školovanje), ni to nije naknada — njome se ne plaća nijedan rad ni usluga i od tebe se zauzvrat ne traži ništa. To je automatsko ažuriranje evidencije koje takvom sudjelovanju daje ravnopravno mjesto u sustavu, a program se provodi u ostvarivanju ciljeva Zaklade iz njezina statuta.
+Ako ti se POEN upisuje kroz neki od socijalnih programa (na primjer kao primarnom skrbniku, starijoj osobi ili studentu), ni to nije naknada — njome se ne plaća nijedan rad ni usluga i od tebe se zauzvrat ne traži ništa. To je automatsko ažuriranje evidencije koje takvom sudjelovanju daje ravnopravno mjesto u sustavu, a program se provodi u ostvarivanju ciljeva Zaklade iz njezina statuta.
 
 Treba, međutim, razlikovati POEN od onoga što radiš izvan sustava. Sve što naplaćuješ u novcu tvoja je djelatnost za koju vrijede opći propisi, i to može imati posljedice za tvoj status, ovisno o tome što i u kojem opsegu radiš.
 
@@ -977,9 +977,9 @@ Podatke o donacijama Fondacija čuva u skladu s propisima o financijskom izvješ
         pitanje: `Tko kontrolira KOLO?`,
         odgovor: `Trenutno (Faza 1) sve odluke donosi KOLO Fondacija preko Upravnog odbora.
 
-Kad ukupan broj upisanih POEN-a dostigne 1.000.000, aktivira se Gornje Kolo, tijelo koje čine čuvari Kola koji su aktivirali ZRNO, i koje o ključnim sustavnim pitanjima odlučuje kvadratnim glasanjem.
+Kad ukupan broj upisanih POEN-a dostigne 1.000.000, aktivira se Gornje Kolo, tijelo koje čine čuvari Kola koji su aktivirali ZRNO, i koje o ključnim sustavnim pitanjima odlučuje glasanjem po kvadratnom korijenu.
 
-Od tog trenutka Fondacija ima servisnu ulogu: o pravilima Protokola ne odlučuje po vlastitom nahođenju, nego Upravni odbor provodi odluke Gornjeg Kola i pri tome ne ocjenjuje njihovu svrhovitost. Odluku može odbiti samo iz razloga koje Pravilnik izričito navodi (suprotnost zakonu ili Statutu, pitanje izvan nadležnosti Gornjeg Kola, zaštitni veto dok traje), uz obrazloženje koje se objavljuje. O dinarskim sredstvima Gornje Kolo upućuje preporuke, na koje Upravni odbor obrazloženo odgovara.`,
+Od tog trenutka Fondacija ima servisnu ulogu: o pravilima Protokola ne odlučuje po vlastitom nahođenju, nego Upravni odbor provodi odluke Gornjeg Kola i pri tome ne ocjenjuje njihovu svrhovitost. Odluku može odbiti samo iz razloga koje Pravilnik izričito navodi (suprotnost zakonu ili Statutu, pitanje izvan nadležnosti Gornjeg Kola), uz obrazloženje koje se objavljuje. O dinarskim sredstvima Gornje Kolo upućuje preporuke, na koje Upravni odbor obrazloženo odgovara.`,
       },
       {
         id: 27,
@@ -1005,39 +1005,23 @@ Budući da se broj aktivnih ZRNA stalno mijenja, sastav Gornjeg Kola i glasačka
 
 Aktivira se automatski kad ukupan broj upisanih POEN-a dostigne 1.000.000 (u evidenciji Protokola to je stanje od −1.000.000) što je znak da je sustav dovoljno aktivan i da sudionici nose značajnu kolektivnu odgovornost.
 
-Prije toga sve odluke donosi Fondacija; poslije toga ključne sustavne odluke (izmjene Pravilnika, novi programi, suspenzija programa) donosi Gornje Kolo kvadratnim glasanjem. Gornje Kolo nije tijelo Fondacije: odluku upućuje Upravnom odboru, koji je provodi.`,
+Prije toga sve odluke donosi Fondacija; poslije toga ključne sustavne odluke (izmjene Pravilnika, novi programi, suspenzija programa) donosi Gornje Kolo glasanjem po kvadratnom korijenu. Gornje Kolo nije tijelo Fondacije: odluku upućuje Upravnom odboru, koji je provodi.
+
+Prijedlog može podnijeti svaki sudionik (član bez potvrde, član Kola, čuvar Kola), i to jedan po jedan: dok postupak o njegovu prijedlogu traje, novi ne podnosi. Postupak traje tri dana, od ponoći do ponoći. Prvog dana prijedlog se podnosi i od tada ga vide svi korisnici. Drugog dana čuvari Kola iz Gornjeg Kola mogu ga podržati; podrška nije glas, ne obvezuje na glas „za“ i ne delegira se, a prijedlog čuvara Kola iz Gornjeg Kola smatra se podržanim samim podnošenjem. Trećeg dana o podržanom prijedlogu glasa Gornje Kolo. Prijedlog koji nitko ne podrži zatvara se bez glasanja i upisuje u registar odluka. Fondacija ne odlučuje o tome hoće li se o prijedlogu glasati.
+
+Neusvojen ili nepodržan prijedlog istog sadržaja može se ponovno podnijeti tek nakon 30 dana. Pseudonim predlagatelja i onih koji su prijedlog podržali vide samo sudionici, a broj podrški vidi svaki korisnik.`,
       },
       {
         id: 29,
-        pitanje: `Što je kvadratno glasanje?`,
-        odgovor: `To je način glasanja u kojem glasačka snaga raste kao kvadratni korijen broja ZRNA: 1 ZRNO (1 glas, 100 ZRNA) 10 glasova, 10.000 ZRNA, 100 glasova.
+        pitanje: `Što je glasanje po kvadratnom korijenu?`,
+        odgovor: `To je način glasanja u kojem je glasačka moć čuvara Kola kvadratni korijen broja njegovih aktivnih ZRNA, zaokružen naniže: 1 ZRNO daje 1 glas, 100 ZRNA 10 glasova, 10.000 ZRNA 100 glasova.
 
 Cilj je da nitko ne može prevagnuti odluku samom količinom ZRNA, utjecaj raste mnogo sporije od broja ZRNA, pa odluku prije odnosi širina sudjelovanja nego koncentracija moći.`,
-      },
-      {
-        id: 30,
-        pitanje: `Što je Zaštitni veto Fondacije?`,
-        odgovor: `Dok Fondacija nije financijski samostalna, može odbiti izvršenje odluke Gornjeg Kola koja bi ugrozila njezinu operativnu i financijsku održivost, prije svega odluke o trošenju sredstava (uključujući kolektivne nabave) koje bi narušile sposobnost Fondacije da pokriva osnovne troškove i održava sustav.
-
-Veto nije diskrecijski: mora biti obrazložen pozivanjem na konkretnu prijetnju održivosti, a veto bez obrazloženja već je sam po sebi zlouporaba. To nije politička kontrola, nego zaštita kontinuiteta sustava.
-
-Veto se gasi trajno i jednosmjerno kad sredstva Fondacije dostignu prag financijske samostalnosti, trostruki operativni trošak prethodnog mjeseca, utvrđen Pravilnikom o Gornjem Kolu.`,
       },
       {
         id: 120,
         pitanje: `Što je nadzor potvrda?`,
         odgovor: `Nadzor je naknadni pregled potvrda i uvođenja. Vrši ga svaki čuvar Kola, nikad u predmetu u kojem je sam sudjelovao. Pregledava potvrde i uvođenja koje su dali članovi bez potvrde i članovi Kola koji nisu čuvari, svaku potvrdu nakon razgovora telefonom i potvrdu onoga tko je potvrđivača uveo. Uvođenje s popisa za poziv ide u nadzor uvijek, osim kad ga da osnivač. Bez nadzora su potvrde i uvođenja osnivača, ostale potvrde i uvođenja čuvara i potvrda koju Fondacija da svojom odlukom. Nadzor ne mijenja učinak potvrde i ne plaća se.`,
-      },
-      {
-        id: 72,
-        pitanje: `Što točno mijenjaju čuvari Kola u „punom samoupravljanju“ i kada to nastupa?`,
-        odgovor: `Postoje dva odvojena praga, i lako ih je pomiješati.
-
-Prvi prag, aktivacija Gornjeg Kola. Kad ukupan broj upisanih POEN-a u sustavu dostigne 1.000.000 (što u evidenciji Protokola odgovara stanju −1.000.000), automatski se otvara upis ZRNA i nastaje Gornje Kolo, tijelo koje čine čuvari Kola koji su aktivirali ZRNO. Od tog trenutka čuvari Kola kvadratnim glasanjem odlučuju o pravilima sustava: izmjenama Pravilnika, programima i drugim pitanjima koja utječu na zajedničko dobro. Fondacija od suverenog prelazi u izvršno i servisno tijelo, provodi odluke, ne donosi ih sama.
-
-Drugi prag, gašenje zaštitnog veta. Dok Fondacija nije financijski samostalna, ima zaštitni veto: može odbiti izvršenje odluke Gornjeg Kola koja bi ugrozila njezinu operativnu održivost, prije svega odluke o trošenju sredstava, poput kolektivnih nabava, prije nego što je održivost osigurana. Veto mora biti obrazložen, nije samovoljan. Gasi se trajno i jednosmjerno tek kad sredstva Fondacije dostignu prag financijske samostalnosti, trostruki operativni trošak prethodnog mjeseca, utvrđen Pravilnikom o Gornjem Kolu.
-
-Do aktivacije Gornjeg Kola (Faza 1) sve odluke donosi Fondacija preko Upravnog odbora.`,
       },
     ],
   },

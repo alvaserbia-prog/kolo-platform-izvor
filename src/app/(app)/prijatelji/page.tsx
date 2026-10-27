@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * Prijatelji — dečja zamena za stranicu Potvrde.
  *
  * Odrasli tu vide indeks stvarnosti i kod za potvrđivanje. Dete nema indeks i
- * nikoga ne potvrđuje (Modul Deca, čl. 15), pa umesto indeksa stoji BROJ
+ * nikoga ne potvrđuje (Pravilnik o učešću dece čl. 29 st. 2), pa umesto indeksa stoji BROJ
  * PRIJATELJA, a umesto koda za potvrdu kod za povezivanje.
  */
 export default async function PrijateljiPage() {

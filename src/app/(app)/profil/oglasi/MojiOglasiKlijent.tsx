@@ -24,7 +24,7 @@ interface Oglas {
   slike: number;
   createdAt: string;
   razmenjenoAt: string | null;
-  /** Razlog uklanjanja od strane Fondacije (Uslovi čl. 25 st. 2). */
+  /** Razlog uklanjanja od strane Fondacije (Uslovi čl. 29 st. 2). */
   uklonjenRazlog: string | null;
 }
 
@@ -118,7 +118,7 @@ export default function MojiOglasiKlijent({ listings }: { listings: Oglas[] }) {
                       <span className="text-kolo-muted">· {new Date(l.razmenjenoAt ?? l.createdAt).toLocaleDateString(intlTag(locale))}</span>
                     )}
                   </div>
-                  {/* Razlog uklanjanja — vlasnik mora da zna zašto (Uslovi čl. 25 st. 2). */}
+                  {/* Razlog uklanjanja — vlasnik mora da zna zašto (Uslovi čl. 29 st. 2). */}
                   {l.status === "UKLONJEN" && l.uklonjenRazlog && (
                     <div className="mt-1.5 text-xs text-kolo-danger">
                       {tPijaca("oglas_uklonjen_razlog", { razlog: l.uklonjenRazlog })}

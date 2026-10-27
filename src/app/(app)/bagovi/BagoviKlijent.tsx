@@ -19,12 +19,14 @@ type BugStatus = "PRIJAVLJEN" | "U_RADU" | "RESENO" | "ODBIJENO";
 interface Bag {
   id: string;
   naslov: string;
-  opis: string;
+  /** Opis i odgovor vidi samo podnosilac i administratorski tim (Politika čl. 32 st. 4). */
+  opis: string | null;
   status: BugStatus;
   odgovor: string | null;
   resenoAt: string | null;
   createdAt: string;
-  prijavio: string;
+  /** `null` kad je prijavilac maloletan, a posmatrač nije on sam ni admin. */
+  prijavio: string | null;
   mojBag: boolean;
 }
 
@@ -50,6 +52,8 @@ export default function BagoviKlijent() {
   const tc = useTranslations("common");
   const { data: session } = useSession();
   const jeAdmin = session?.user.admin === "ADMIN" || session?.user.admin === "SUPERADMIN";
+  // Maloletni korisnik vidi samo svoje prijave (server ih tako i vraća).
+  const samoMoje = session?.user.maloletan === true && !jeAdmin;
 
   const [naslov, setNaslov] = useState("");
   const [opis, setOpis] = useState("");
@@ -153,7 +157,7 @@ export default function BagoviKlijent() {
 
       {/* Lista prijava */}
       <div>
-        <h2 className="text-base font-semibold text-kolo-text mb-3">{t("lista_naslov")}</h2>
+        <h2 className="text-base font-semibold text-kolo-text mb-3">{samoMoje ? t("lista_naslov_moje") : t("lista_naslov")}</h2>
         {bagovi === null ? (
           <div className="bg-kolo-surface rounded-kartica shadow-kartica border border-kolo-border p-6 text-center text-sm text-kolo-muted">
             {tc("ucitavanje")}
@@ -170,9 +174,13 @@ export default function BagoviKlijent() {
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-kolo-text break-words">{b.naslov}</p>
                     <p className="text-xs text-kolo-muted mt-0.5">
-                      <Pseudonim>{b.prijavio}</Pseudonim>
-                      {b.mojBag && <span className="text-kolo-green-700"> · {t("ti")}</span>}
-                      {" · "}
+                      {b.prijavio && (
+                        <>
+                          <Pseudonim>{b.prijavio}</Pseudonim>
+                          {b.mojBag && <span className="text-kolo-green-700"> · {t("ti")}</span>}
+                          {" · "}
+                        </>
+                      )}
                       {new Date(b.createdAt).toLocaleDateString(intlTag(locale))}
                     </p>
                   </div>
@@ -183,7 +191,9 @@ export default function BagoviKlijent() {
                   </span>
                 </div>
 
-                <p className="text-sm text-kolo-text mt-2 whitespace-pre-wrap break-words">{b.opis}</p>
+                {b.opis && (
+                  <p className="text-sm text-kolo-text mt-2 whitespace-pre-wrap break-words">{b.opis}</p>
+                )}
 
                 {b.odgovor && (
                   <div className="mt-3 rounded-kontrola bg-kolo-bg p-3">

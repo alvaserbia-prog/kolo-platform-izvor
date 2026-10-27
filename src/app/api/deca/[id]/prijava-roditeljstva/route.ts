@@ -9,7 +9,7 @@ import { razresiKorisnikaIzAdrese } from "@/lib/pseudonim";
 
 /**
  * POST /api/deca/[id]/prijava-roditeljstva — prijava da lice koje je nalog deteta
- * otvorilo ili preuzelo nije njegov roditelj (Pravilnik o učešću dece čl. 4e).
+ * otvorilo ili preuzelo nije njegov roditelj (Pravilnik o učešću dece čl. 17).
  * Podnosi je dete, drugi roditelj ili bilo koji drugi učesnik (st. 1).
  *
  * `[id]` je interni id deteta ili njegov pseudonim (zatvoren prikaz profila

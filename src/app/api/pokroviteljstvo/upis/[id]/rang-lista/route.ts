@@ -6,7 +6,7 @@ import { ukloniUpisSaRangListe, odgovorNaGreskuUpisa } from "@/lib/protokol/upis
 
 /**
  * POST /api/pokroviteljstvo/upis/[id]/rang-lista — na zahtev korisnika koji je vodio
- * OBRISAN upis, pokrovitelj se uklanja i sa rang-liste (donacije čl. 6a st. 6).
+ * OBRISAN upis, pokrovitelj se uklanja i sa rang-liste (donacije čl. 18 st. 4).
  */
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

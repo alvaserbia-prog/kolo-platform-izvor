@@ -8,11 +8,11 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
- * Prijava lažnog roditeljstva (Pravilnik o učešću dece čl. 4e st. 1) za podnosioca
+ * Prijava lažnog roditeljstva (Pravilnik o učešću dece čl. 17 st. 1) za podnosioca
  * koji NIJE roditelj tog deteta:
  *
  *  - `dete` — maloletni učesnik prijavljuje lice upisano kao njegov roditelj
- *    (dečja početna; obaveštenje o preuzimanju naloga upućuje na ovo, čl. 4b);
+ *    (dečja početna; obaveštenje o preuzimanju naloga upućuje na ovo, čl. 11);
  *  - `trece` — bilo koji drugi učesnik, sa profila deteta, gde je veza
  *    roditelj–dete ionako javna.
  *

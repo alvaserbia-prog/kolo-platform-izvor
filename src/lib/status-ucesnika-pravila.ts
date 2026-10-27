@@ -6,13 +6,13 @@
  * koji ove funkcije re-eksportuje (CLAUDE.md pravilo 9).
  *
  * Statusi i članovi akata:
- *  - korisnik — punoletan, nije verifikovan (Pravilnik čl. 2, 28; dokaz čl. 4 st. 3);
- *  - član bez potvrde — verifikovan uvođenjem, nije potvrđen (Pravilnik čl. 28a;
- *    dokaz čl. 3, 5a);
- *  - član Kola — potvrđen (Pravilnik čl. 29);
- *  - čuvar Kola — potvrđen i drži ZRNO (Pravilnik čl. 30);
- *  - osnivač — uvek potvrđen, čuvar Kola (dokaz čl. 14, 15; Pravilnik čl. 82);
- *  - dete na čekanju / dete sa roditeljem / dete Kola (deca čl. 4a, 4c, 5, 6).
+ *  - korisnik — punoletan, nije verifikovan (Pravilnik čl. 2, 28; dokaz čl. 3 st. 2);
+ *  - član bez potvrde — verifikovan uvođenjem, nije potvrđen (Pravilnik čl. 28 st. 3;
+ *    dokaz čl. 2, 4, 6);
+ *  - član Kola — potvrđen (Pravilnik čl. 28);
+ *  - čuvar Kola — potvrđen i drži ZRNO (Pravilnik čl. 22 st. 2);
+ *  - osnivač — uvek potvrđen, čuvar Kola (dokaz čl. 29; Pravilnik čl. 58);
+ *  - dete na čekanju / dete sa roditeljem / dete Kola (deca čl. 5, 6, 8, 13).
  *
  * 🔴 Kolone iz kojih se status čita (`verified`, `indeksStvarnosti`, `potvrdjenAt`,
  * `tipKorisnika`) su KEŠ izveden iz grafa i piše ih samo `preracunajStatusNaloga()`.
@@ -57,18 +57,18 @@ export type UlazStatusa = {
   stanjeDeteta?: "NA_CEKANJU" | "POVEZANO" | "AKTIVNO" | null;
   /** `UserStatus` naloga ("ACTIVE" | "SUSPENDED" | "EXCLUDED"); vidi `prestaoStatus`. */
   status?: string | null;
-  /** Trenutak gašenja naloga (Pravilnik čl. 34); vidi `prestaoStatus`. */
+  /** Trenutak gašenja naloga (Pravilnik čl. 33); vidi `prestaoStatus`. */
   deaktiviranAt?: Date | string | null;
 };
 
 /**
- * Status učesnika je PRESTAO (Pravilnik čl. 33; Uslovi čl. 26, 28, 29): nalog je
+ * Status učesnika je PRESTAO (Pravilnik čl. 32; Uslovi čl. 30, 32, 33): nalog je
  * isključen (`EXCLUDED`) ili ugašen (`deaktiviranAt`). Takav nalog nema status
  * učesnika — ni verifikovanost, ni potvrđenost, ni položaj čuvara, pa ni osnivač.
- * Veze koje je dao ostaju (dokaz stvarnosti čl. 16), ali njemu ne daju ništa.
+ * Veze koje je dao ostaju (dokaz stvarnosti čl. 30), ali njemu ne daju ništa.
  *
- * 🔴 Suspenzija (`SUSPENDED`) NIJE prestanak: učesnik zadržava status (čl. 33 st. 4,
- * Uslovi čl. 27 st. 2).
+ * 🔴 Suspenzija (`SUSPENDED`) NIJE prestanak: učesnik zadržava status (Pravilnik čl. 32 st. 2,
+ * Uslovi čl. 31 st. 2).
  */
 export function prestaoStatus(u: { status?: string | null; deaktiviranAt?: Date | string | null }): boolean {
   return u.status === "EXCLUDED" || u.deaktiviranAt != null;
@@ -105,7 +105,7 @@ export const jeVerifikovan = (s: StatusUcesnika): boolean =>
 export const jePotvrdjen = (s: StatusUcesnika): boolean =>
   s === "CLAN_KOLA" || s === "CUVAR_KOLA" || s === "OSNIVAC";
 
-/** Čuvar Kola: čuvar ili osnivač (dokaz čl. 10 — nadzornik; Pravilnik čl. 30). */
+/** Čuvar Kola: čuvar ili osnivač (dokaz čl. 23 — nadzornik; Pravilnik čl. 22 st. 2). */
 export const jeCuvar = (s: StatusUcesnika): boolean => s === "CUVAR_KOLA" || s === "OSNIVAC";
 
 /**
@@ -199,105 +199,106 @@ const CUVARI = ["CUVAR_KOLA", "OSNIVAC"] as const;
 const DECA = ["DETE_NA_CEKANJU", "DETE_SA_RODITELJEM", "DETE_KOLA"] as const;
 
 export const DOZVOLE: Record<Radnja, readonly StatusUcesnika[]> = {
-  // 1. Pravilnik 28 st. 2; deca 4c, 13 st. 4 — dete na čekanju vidi kao gost,
+  // 1. Uslovi 14 st. 2, 17 st. 2; deca 5 st. 1 t. 1–2 — dete na čekanju vidi kao gost,
   //    dete sa roditeljem bez pseudonima oglašivača (osim prijatelja).
   PREGLED_OGLASA: [...ODRASLI, ...DECA],
-  // 2. Pravilnik 28 st. 2; Uslovi 14, 16; deca 4c, 13 st. 4
+  // 2. Uslovi 14 st. 2, 18; deca 5, 24 st. 1
   OBJAVA_OGLASA: [...ODRASLI, "DETE_KOLA"],
-  // 3. Pravilnik 28 st. 4, 40a; deca 14 st. 1
+  // 3. Pravilnik 28 st. 2, 38; deca 33 st. 1
   DOPRINOS_PRVI_OGLAS: [...ODRASLI],
-  // 4. Pravilnik 28 st. 3; Uslovi 14; deca 4c, 14 st. 9
+  // 4. Uslovi 14 st. 3; deca 5, 30 st. 6
   PREPIS: [...ODRASLI, "DETE_KOLA"],
-  // 5. Uslovi 14; deca 4c t. 2, 18 — dete sa roditeljem vidi samo prijatelje
+  // 5. Uslovi 14 st. 2; deca 5 st. 1 t. 2, 27 — dete sa roditeljem vidi samo prijatelje
   PRICAONICA: [...ODRASLI, "DETE_SA_RODITELJEM", "DETE_KOLA"],
-  // 6. Uslovi 14, 16 st. 4; deca 12 st. 6 — korisnik samo povodom oglasa (≤ 3
-  //    dnevno), dete sa roditeljem samo prijateljima, dete Kola po čl. 12
+  // 6. Uslovi 14 st. 2; deca 22 st. 6 — korisnik samo povodom oglasa (≤ 3
+  //    dnevno), dete sa roditeljem samo prijateljima, dete Kola po čl. 22
   POKRETANJE_RAZGOVORA: [...ODRASLI, "DETE_SA_RODITELJEM", "DETE_KOLA"],
-  // 7. Pravilnik 28 st. 5; Uslovi 14, 17 st. 5
+  // 7. Uslovi 14 st. 2, 17 st. 3
   KONTAKT_OGLASIVACA: [...VERIFIKOVANI],
-  // 8. Pravilnik 67 st. 3; Uslovi 17 st. 3–4 — korisnik vidi samo iznos i vreme
+  // 8. Pravilnik 56 st. 1–2; Uslovi 16 st. 3–4 — korisnik vidi samo iznos i vreme
   EVIDENCIJA_PSEUDONIMI: [...VERIFIKOVANI],
-  // 9. Pravilnik 67; Uslovi 17 st. 3, 6; donacije 5a — ime, iznos, datum; bez pseudonima
+  // 9. Pravilnik 56 st. 2; Uslovi 16 st. 5; donacije 11 — ime, iznos, datum; bez pseudonima
   LISTA_DONACIJA: [...ODRASLI],
-  // 10. Uslovi 17 st. 3 (korisnik vidi sužen); deca 15b za decu
+  // 10. Uslovi 16 st. 3 (korisnik vidi sužen); deca 25 za decu
   PUN_PROFIL_DRUGOG: [...VERIFIKOVANI],
-  // 11. Pravilnik 28 st. 4, 28a st. 3 — korisnik samo 40a, donacija, pokroviteljstvo
+  // 11. Pravilnik 28 st. 2; Uslovi 15 st. 2 — korisnik samo prvi oglas (Pravilnik 38), donacija, pokroviteljstvo
   SVI_KANALI_DOPRINOSA: [...VERIFIKOVANI],
-  // 12. dokaz 4a; Uslovi 14 st. 6, 16b
+  // 12. dokaz 8; Uslovi 14 st. 5
   ULAZ_NA_SPISAK: ["KORISNIK"],
-  // 12a. dokaz 4a, 5c st. 3 (set 4.8.3) — član bez potvrde traži razgovor radi potvrde
+  // 12a. dokaz 8 st. 4, 16 st. 2 (set 4.8.3) — član bez potvrde traži razgovor radi potvrde
   ZAHTEV_RADI_POTVRDE: ["CLAN_BEZ_POTVRDE"],
-  // 13. dokaz 3 st. 3, 5a st. 3, 14 st. 3; deca 15 — član bez potvrde prima samo
+  // 13. dokaz 2 st. 2, 5 st. 1, 29 st. 4; deca 29 st. 2 — član bez potvrde prima samo
   //     potvrdu od člana Kola; osnivač nikad
   PRIMA_VERIFIKACIJU: ["KORISNIK", "CLAN_BEZ_POTVRDE"],
-  // 14. dokaz 5a st. 1–2; Pravilnik 28a st. 2 — član bez potvrde uvek uvodi
+  // 14. dokaz 4 st. 2 — član bez potvrde uvek uvodi
   UVODI_POZNANIKA: ["CLAN_BEZ_POTVRDE"],
-  // 15. dokaz 5a st. 1; Pravilnik 29 st. 2
+  // 15. dokaz 4 st. 1; Uslovi 15 st. 1
   POTVRDJUJE_KORISNIKA: [...POTVRDJENI],
-  // 16. dokaz 4a, 5 st. 7, 5a st. 8 t. 1; Uslovi 16b st. 3
+  // 16. dokaz 10 st. 1, 12 st. 2, 6 st. 2 t. 1
   VIDI_SPISAK_ZA_POZIV: [...POTVRDJENI],
-  // 17. dokaz 5a st. 3–4, 8 t. 2; Pravilnik 28a st. 4
+  // 17. dokaz 5, 6 st. 2 t. 2; Pravilnik 28 st. 3
   POTVRDJUJE_CLANA_BEZ_POTVRDE: [...POTVRDJENI],
-  // 17a. dokaz 5c st. 1, 4a (set 4.8.3) — samo čuvar Kola, i zahtev radi potvrde vidi samo on
+  // 17a. dokaz 16 st. 1, 10 st. 1 (set 4.8.3) — samo čuvar Kola, i zahtev radi potvrde vidi samo on
   POTVRDJUJE_TELEFONOM: [...CUVARI],
-  // 18. deca 5 st. 4, 6 st. 3–4; dokaz 5a st. 8 t. 2 — ne drugi roditelj (domensko)
+  // 18. deca 13 st. 3; dokaz 6 st. 2 t. 2 — ne drugi roditelj (domensko)
   POTVRDJUJE_POSTOJANJE_DETETA: [...POTVRDJENI],
-  // 19. deca 6 st. 2, 8
+  // 19. deca 13 st. 1
   TRAZI_POTVRDU_POSTOJANJA: [...POTVRDJENI],
-  // 20. deca 4, 4b st. 6, 5 st. 1
+  // 20. deca 7 st. 1, 11 st. 1
   OTVARA_NALOG_DETETU: [...ODRASLI],
-  // 21. deca 4c t. 3, 5 st. 2–4 — status roditelja
+  // 21. deca 5 st. 1 t. 3, st. 2–3 — status roditelja
   DETE_POSTAJE_DETE_KOLA: [...POTVRDJENI],
-  // 22. programi 4 st. 2, 13; dokaz 5a st. 8 t. 2 — ako ga je potvrdio ili lično zna
+  // 22. programi 5; dokaz 6 st. 2 t. 2 — ako ga je potvrdio ili lično zna
   POTVRDJUJE_USLOVE_PROGRAMA: [...POTVRDJENI],
-  // 23. programi 4 st. 1, 13 — dete Kola preko roditelja
-  PRIJAVA_NA_PROGRAM: [...VERIFIKOVANI, "DETE_KOLA"],
-  // 24. Uslovi 17a st. 1
+  // 23. programi 4 st. 1; 🔴 maloletni korisnik nema pravo na programe podrške
+  // (programi 2 st. 3; deca 29 st. 4) — ni dete Kola, ni preko roditelja.
+  PRIJAVA_NA_PROGRAM: [...VERIFIKOVANI],
+  // 24. dokaz 20 st. 1
   PREPORUKA: [...POTVRDJENI],
-  // 25. dokaz 10 st. 2, 5a st. 8 t. 5; Pravilnik 30 st. 2
+  // 25. dokaz 23 st. 1, 6 st. 2 t. 5
   NADZOR: [...CUVARI],
-  // 26. Pravilnik 19 st. 1–2, 28a; deca 15 — član bez potvrde ostaje to što jeste
+  // 26. Pravilnik 22 st. 3; deca 29 st. 1 — član bez potvrde ostaje to što jeste
   ZRNO_UPIS: [...VERIFIKOVANI],
-  // 27. Pravilnik 20 st. 2, 29 st. 3; dokaz 5a st. 7, 8 t. 4
+  // 27. Pravilnik 23 st. 2, 28 st. 3; dokaz 6 st. 2 t. 4, st. 3
   ZRNO_AKTIVIRANJE: [...CUVARI],
-  // 28. Pravilnik 20 st. 2, 21, 30 st. 3 — korisniku je ZRNO zamrznuto
+  // 28. Pravilnik 23 st. 2, 29 st. 1 — korisniku je ZRNO zamrznuto
   ZRNO_OTPIS: ["CLAN_BEZ_POTVRDE", ...CUVARI],
-  // 29. Pravilnik 47; Gornje Kolo 14 — daje i prima
+  // 29. Pravilnik 44 st. 2; Gornje Kolo 14 — daje i prima
   DELEGIRANJE: [...CUVARI],
-  // 30. Pravilnik 45, 46; Gornje Kolo 4, 10 — uz aktivno ZRNO (domensko)
+  // 30. Pravilnik 43, 44; Gornje Kolo 4, 12 — uz aktivno ZRNO (domensko)
   GLAS: [...CUVARI],
-  // 31. Uslovi 22a st. 2; nabavke 4
+  // 31. Uslovi 25 st. 1; nabavke 4
   NABAVKA: [...VERIFIKOVANI],
-  // 32. Uslovi 22a st. 6; nabavke 30–30g
+  // 32. Uslovi 25 st. 1; nabavke 29–34
   VAUCER: [...VERIFIKOVANI],
-  // 33. donacije 13e
+  // 33. donacije 28
   POKROVITELJSTVO_DOBRIMA: [...VERIFIKOVANI],
-  // 34. donacije 3, 8 — donacija i novčano pokroviteljstvo
+  // 34. donacije 3, 16 st. 1, 19 — donacija i novčano pokroviteljstvo
   DONACIJA: [...ODRASLI],
-  // 35. zadruge 2, 7
+  // 35. zadruge 6, 7
   ZADRUGAR: [...VERIFIKOVANI],
   // 36. operativni 9
   OPERATIVNI_IZVRSILAC: [...VERIFIKOVANI],
-  // 37. operativni 16 (Faza 2)
+  // 37. operativni 13 (Faza 2)
   OPERATIVNI_VERIFIKACIJA: [...CUVARI],
-  // 38. gazd. 4a t. 1–4, 4b; dokaz 4a t. 4 — korisnik i član bez potvrde kao
+  // 38. gazd. 4 st. 1, 3 st. 3; dokaz 8 st. 1 t. 4 — korisnik i član bez potvrde kao
   //     nosilac, bez članova; izvod se ne prilaže (set 4.8.3; domensko)
   GAZDINSTVO_RPG: [...ODRASLI],
-  // 39. gazd. 4a (set 4.8.3) — isto kao upisano gazdinstvo
+  // 39. gazd. 3 st. 2, 4 (set 4.8.3) — isto kao upisano gazdinstvo
   GAZDINSTVO_VAN_RPG: [...ODRASLI],
-  // 40. gazd. 7 st. 2, 9 st. 1, 9a — kad gazdinstvo sme imati članove (domensko)
+  // 40. gazd. 9 st. 2, 11, 14 — kad gazdinstvo sme imati članove (domensko)
   POZIV_U_GAZDINSTVO: [...POTVRDJENI],
-  // 41. gazd. 7a, 8 — status POZVANOG u trenutku odobrenja
+  // 41. gazd. 10 — status POZVANOG u trenutku odobrenja
   PRISTUPANJE_GAZDINSTVU: [...POTVRDJENI],
-  // 42. gazd. 9 st. 1, 9a — korisnik i član bez potvrde samo kao podnosilac (domensko)
+  // 42. gazd. 11, 14 — korisnik i član bez potvrde samo kao podnosilac (domensko)
   UPRAVLJANJE_GAZDINSTVOM: [...ODRASLI],
-  // 43. deca 4e st. 1
+  // 43. deca 17 st. 1
   PRIJAVA_LAZNOG_RODITELJSTVA: [...ODRASLI, ...DECA],
-  // 44. deca 7 st. 2, 15a st. 1
+  // 44. deca 26 st. 1
   UPIS_SKOLE: ["DETE_SA_RODITELJEM", "DETE_KOLA"],
-  // 45. deca 15a st. 2–3
+  // 45. deca 26 st. 2–3
   SPISAK_SKOLE: ["DETE_KOLA"],
-  // 46. deca 14a, 14b st. 2 — 500 POEN tek kad su obe strane dete Kola (domensko)
+  // 46. deca 32, 33 st. 2 — 500 POEN tek kad su obe strane dete Kola (domensko)
   PRIJATELJSTVO: [...DECA],
 };
 

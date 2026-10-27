@@ -1,9 +1,9 @@
 /**
  * Pokroviteljstvo dobrima i uslugama — servisne funkcije (Prisma).
  *
- * Osnov: Pravilnik o pokroviteljstvu i donacijama Glava IVa (čl. 13d–13l);
- * Pravilnik o projektima i kolektivnim nabavkama Glava VIIIa (čl. 30b–30g);
- * Pravilnik o KOLO sistemu čl. 14 st. 3 t. 8, čl. 14a i čl. 15 st. 5.
+ * Osnov: Pravilnik o pokroviteljstvu i donacijama Glava IV (čl. 27–36) i čl. 24;
+ * Pravilnik o projektima i kolektivnim nabavkama Glava VII (čl. 29–34) i čl. 35;
+ * Pravilnik o KOLO sistemu čl. 17 st. 2 t. 7, čl. 18 i čl. 37 st. 1.
  *
  * Čista pravila žive u `@/lib/pokroviteljstvo-dobrima-pravila` i odavde se
  * re-eksportuju, pa server ima jedan ulaz.
@@ -17,17 +17,17 @@
  * → davalac potvrđuje realizaciju (vaučer je iskorišćen, POEN se ne pomera) →
  * istek (vaučer prestaje, poništenje se ne ispravlja) → po prigovoru raskid
  * ugovora: neiskorišćeni vaučeri prestaju, imaocima se poništenje ispravlja,
- * podnosiocu se otpisuje (osmi osnov, sme u minus), davalac ide na listu zabrane.
+ * podnosiocu se otpisuje (sedmi osnov, Pravilnik čl. 17 st. 2 t. 7, sme u minus), davalac ide na listu zabrane.
  *
  * 🔴 `emitujPoen()` otvara sopstvenu transakciju i zove se VAN `$transaction`.
- * 🔴 Vrednost ugovora NIKAD ne ulazi u `Pokrovitelj.rsdKumulativ` (čl. 13h st. 3) —
+ * 🔴 Vrednost ugovora NIKAD ne ulazi u `Pokrovitelj.rsdKumulativ` (čl. 33 st. 3) —
  * ovaj modul `Pokrovitelj` samo čita, nikad ne piše i ne pravi.
- * 🔴 Uz potpis se NE beleže IP adresa ni podaci o uređaju (Politika čl. 4a).
+ * 🔴 Uz potpis se NE beleže IP adresa ni podaci o uređaju (Politika čl. 8 st. 3).
  */
 import { createHash, randomBytes, randomInt, timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
-import { TransactionType } from "@/generated/prisma/client";
+import { TransactionType, Prisma as PrismaVrednosti } from "@/generated/prisma/client";
 import { emitujPoen } from "./emisija";
 import { probajEvidentiratiPotvrde } from "./potvrda-poen";
 import { imeNaloga, ishodUpisa, upisiIdentitet, PORUKA_DRUGO_IME } from "./identitet";
@@ -35,6 +35,7 @@ import { raspolozivo } from "./nadoknada";
 import { obavesti } from "@/lib/notifikacije";
 import { logAdminAkcija } from "@/lib/audit";
 import { posaljiAdminAlert } from "@/lib/adminAlert";
+import { proveriZbir, snimiZbir } from "./zbir-zapisa";
 import { gdePseudonim } from "@/lib/pseudonim";
 import { bazniUrl, emailLayout, esc, posaljiEmailRaw } from "@/lib/email";
 import { prevedi } from "@/lib/prevod-servera";
@@ -102,14 +103,14 @@ export function prikazKoda(kod: string): string {
 }
 
 /**
- * Heš jednokratnog koda za potpis (čl. 13g st. 4). Kod se NIKAD ne čuva u
+ * Heš jednokratnog koda za potpis (čl. 32 st. 1). Kod se NIKAD ne čuva u
  * čistom obliku; heš je vezan za ugovor, pa isti kod ne važi za drugi ugovor.
  */
 export function hesKodaPotpisa(ugovorId: string, kod: string): string {
   return createHash("sha256").update(`${ugovorId}:${kod}`).digest("hex");
 }
 
-/** Kontrolni broj teksta ugovora (čl. 13g st. 4): SHA-256 snimljenog teksta. */
+/** Kontrolni broj teksta ugovora (čl. 32 st. 1): SHA-256 snimljenog teksta. */
 export function kontrolniBrojTeksta(tekst: string): string {
   return createHash("sha256").update(tekst, "utf8").digest("hex");
 }
@@ -146,8 +147,9 @@ async function upisiPar(
     toWalletId: string;
     iznos: number;
     type: TransactionType;
-    description: string;
-    opisKljuc: string;
+    /** `null` samo kad imalac vaučera nije dao, odnosno povukao je pristanak na prikaz opisa. */
+    description: string | null;
+    opisKljuc: string | null;
     opisParametri?: Record<string, string | number>;
   },
 ): Promise<string> {
@@ -176,7 +178,7 @@ async function upisiPar(
 }
 
 /**
- * Aktivan red liste zabrane (čl. 13j st. 2). Lista se vezuje za UPIS (čl. 6a st. 6);
+ * Aktivan red liste zabrane (čl. 35 st. 5). Lista se vezuje za UPIS (čl. 18 st. 3);
  * zatečeni redovi bez upisa prepoznaju se po MB, odnosno BPG.
  */
 async function aktivnaZabrana(upisId: string, kljuc: { maticniBroj: string } | { bpg: string }) {
@@ -186,7 +188,7 @@ async function aktivnaZabrana(upisId: string, kljuc: { maticniBroj: string } | {
   });
 }
 
-// ─── Prijava (čl. 13e) ───────────────────────────────────────────────────────
+// ─── Prijava (čl. 28) ───────────────────────────────────────────────────────
 
 export type DokazUlaz = {
   vrsta: VrstaDokaza;
@@ -196,7 +198,7 @@ export type DokazUlaz = {
 };
 
 /**
- * Podnošenje prijave (čl. 13e) — iz ODOBRENOG upisa pokrovitelja (čl. 6a st. 6) koji
+ * Podnošenje prijave (čl. 28) — iz ODOBRENOG upisa pokrovitelja (čl. 18 st. 3) koji
  * vodi podnosilac. Podaci o davaocu, odnos, kontakt, izjava o ovlašćenju i potvrda o
  * evidentiranju (trenutak i snimljen tekst) prenose se iz upisa kao SNIMAK — ugovor
  * se generiše iz njih i posle se ne menja.
@@ -216,10 +218,10 @@ export async function podnesiPrijavu(
   if (!korisnik.verified) throw new VaucerGreska("Samo verifikovani korisnici mogu pokrenuti pokroviteljstvo.", 403);
   if (korisnik.maloletan) throw new VaucerGreska("Prijavu pokroviteljstva ne može podneti maloletni korisnik.", 403);
 
-  // 🔴 Upis je uslov prijave (čl. 6a st. 6, čl. 13e st. 1).
+  // 🔴 Upis je uslov prijave (čl. 18 st. 3, čl. 28 st. 1).
   const upis = upisId ? await prisma.upisPokrovitelja.findUnique({ where: { id: upisId } }) : null;
   if (!upis) throw new VaucerGreska("Prijava se podnosi iz upisa pokrovitelja u evidenciju.", 400);
-  // Čl. 13f st. 4 i čl. 13j st. 2 — kvota i lista zabrane, po upisu.
+  // Čl. 29 st. 4 i čl. 35 st. 5 — kvota i lista zabrane, po upisu.
   const kljuc = kljucDavaoca({ vrstaDavaoca: upis.vrsta, maticniBroj: upis.maticniBroj, bpg: upis.bpg });
   const [uToku, prethodni, zabrana] = await Promise.all([
     prisma.ugovorDobra.count({
@@ -235,7 +237,7 @@ export async function podnesiPrijavu(
   const spreman = upisSpremanZaPrijavu(upis, { userId, vrstaPrijave: "DOBRA", naListiZabrane: !!zabrana });
   if (!spreman.ok) throw new VaucerGreska(spreman.razlog, upis.vlasnikUserId === userId ? 409 : 403);
 
-  // Jedan nalog, jedno ime (Pravilnik čl. 31a st. 3).
+  // Jedan nalog, jedno ime (Pravilnik čl. 31 st. 3).
   const imePrezime = upis.imePrezime!;
   if (ishodUpisa(await imeNaloga(userId), imePrezime) === "RAZLIKUJE_SE")
     throw new VaucerGreska(PORUKA_DRUGO_IME, 409);
@@ -281,7 +283,7 @@ export async function podnesiPrijavu(
       adresaPredaje: podaci.adresaPredaje,
       logoUrl: upis.logoUrl,
       izjavaPropisiAt: sada,
-      // Snimak izjava iz upisa (čl. 6a st. 3).
+      // Snimak izjava iz upisa (čl. 17).
       izjavaOvlascenjeAt: upis.izjavaOvlascenjaAt,
       potvrdaEvidentiranjaAt: upis.potvrdaEvidentiranjaAt,
       potvrdaEvidentiranjaTekst: upis.potvrdaEvidentiranjaTekst,
@@ -302,14 +304,14 @@ export async function podnesiPrijavu(
   return ugovor;
 }
 
-// ─── Pregled Fondacije (čl. 13f st. 2) ───────────────────────────────────────
+// ─── Pregled Fondacije (čl. 29 st. 2) ───────────────────────────────────────
 
 /**
  * Prihvatanje prijave. Fondacija proverava SAMO da je fotografija cenovnika
  * priložena — podatke o davaocu je uporedila sa registrom pri odobrenju upisa
- * (čl. 6a st. 4), pa prijava prolazi samo iz odobrenog upisa.
- * 🔴 Cenu ne procenjuje, ne upoređuje i ne određuje (čl. 13f st. 2). Generiše se i
- * SNIMA tekst ugovora (čl. 13g st. 1).
+ * (čl. 18 st. 1), pa prijava prolazi samo iz odobrenog upisa.
+ * 🔴 Cenu ne procenjuje, ne upoređuje i ne određuje (čl. 29 st. 2). Generiše se i
+ * SNIMA tekst ugovora (čl. 31 st. 1).
  */
 export async function prihvatiPrijavu(id: string, adminId: string) {
   const u = await prisma.ugovorDobra.findUnique({
@@ -361,7 +363,7 @@ export async function prihvatiPrijavu(id: string, adminId: string) {
       pregledaoId: adminId,
       pregledanoAt: sada,
       // Za firmu se beleži samo DA je poređenje sa registrom izvršeno — pri odobrenju
-      // upisa (čl. 6a st. 4); gazdinstvo se ne poredi sa APR-om.
+      // upisa (čl. 18 st. 1); gazdinstvo se ne poredi sa APR-om.
       aprUporedjenAt: gazdinstvo ? null : u.upis.aprProveraAt,
     },
   });
@@ -401,7 +403,7 @@ export async function odbijPrijavuDobra(id: string, adminId: string, razlog: str
   });
 }
 
-// ─── Potpis jednokratnim kodom (čl. 13g st. 4) ───────────────────────────────
+// ─── Potpis jednokratnim kodom (čl. 32 st. 1) ───────────────────────────────
 
 /**
  * Šalje jednokratni šestocifreni kod na adresu elektronske pošte podnosioca.
@@ -457,12 +459,12 @@ export async function posaljiKodZaPotpis(id: string, userId: string) {
 }
 
 /**
- * Potpis ugovora (čl. 13g st. 4): tri potvrde (pročitao, ovlašćen, saglasan sa
+ * Potpis ugovora (čl. 32 st. 1): tri potvrde (pročitao, ovlašćen, saglasan sa
  * zaključenjem potvrdom na platformi) i tačan jednokratni kod.
  *
  * U jednoj transakciji: ugovor prelazi u POTPISAN, beleže se vreme zaključenja i
  * kontrolni broj snimljenog teksta, briše se heš koda, izdaju se vaučeri (SLOBODAN,
- * odmah dostupni — nabavke čl. 30e) i snimaju koeficijent i broj POEN-a. Posle nje,
+ * odmah dostupni — nabavke čl. 32) i snimaju koeficijent i broj POEN-a. Posle nje,
  * VAN transakcije, `emitujPoen()` evidentira POEN podnosiocu prijave, a primerak
  * ugovora ide davaocu (kontakt mejl) i podnosiocu.
  *
@@ -507,7 +509,7 @@ export async function potpisiUgovorDobra(
   if (ishodUpisa(await imeNaloga(userId), u.zastupnikImePrezime) === "RAZLIKUJE_SE")
     throw new VaucerGreska(PORUKA_DRUGO_IME, 409);
 
-  // Koeficijent iz novčanog kumulativa (čl. 13h st. 2). Bez novčanog doprinosa 1,00.
+  // Koeficijent iz novčanog kumulativa (čl. 33 st. 2). Bez novčanog doprinosa 1,00.
   // Novčani pokrovitelj se vodi po PIB-u, a registrovano gazdinstvo po BPG-u (set
   // 4.7.9: gazdinstvo daje i novac) — `kljucNovcanogPokrovitelja`, isti ključ kojim
   // novčana prijava vodi kumulativ. Gazdinstvo bez novčanog doprinosa: 1,00.
@@ -564,11 +566,11 @@ export async function potpisiUgovorDobra(
   }
   await prisma.ugovorDobra.update({ where: { id }, data: { emisijaTxId: transakcijaId } });
 
-  // Evidencija identiteta (čl. 13e st. 8, čl. 31a st. 2 t. 4) — ishod je proveren gore.
+  // Evidencija identiteta (čl. 28 st. 4, Pravilnik čl. 31 st. 2) — ishod je proveren gore.
   await upisiIdentitet(userId, u.zastupnikImePrezime, "POKROVITELJSTVO").catch((e) =>
     console.error("[pokroviteljstvo-dobra] upis u evidenciju identiteta nije uspeo", { id, e }),
   );
-  // Pokroviteljstvo je trag učešća (dokaz stvarnosti čl. 7). Ne baca.
+  // Pokroviteljstvo je trag učešća (dokaz stvarnosti čl. 19). Ne baca.
   await probajEvidentiratiPotvrde(userId);
 
   await obavesti(userId, {
@@ -580,7 +582,7 @@ export async function potpisiUgovorDobra(
     link: "/vauceri/davalac",
   });
 
-  // Primerak ugovora za štampu (čl. 13g st. 4): davaocu na kontakt mejl i podnosiocu.
+  // Primerak ugovora za štampu (čl. 32 st. 1): davaocu na kontakt mejl i podnosiocu.
   await posaljiPrimerakUgovora({
     id,
     ugovorTekst: u.ugovorTekst,
@@ -655,11 +657,11 @@ async function posaljiPrimerakUgovora(p: {
   }
 }
 
-// ─── Uzimanje vaučera (nabavke čl. 30c, 30e, 30f) ────────────────────────────
+// ─── Uzimanje vaučera (nabavke čl. 30, 32, 33) ────────────────────────────
 
 /**
- * Korisnik uzima vaučer (nabavke čl. 30f). Reda i roka za prijavu nema: vaučer
- * dobija korisnik koji ga prvi zatraži (čl. 30e st. 2).
+ * Korisnik uzima vaučer (nabavke čl. 33). Reda i roka za prijavu nema: vaučer
+ * dobija korisnik koji ga prvi zatraži (čl. 32 st. 2).
  *
  * Sve ide u JEDNOJ transakciji:
  *  1. zapis korisnika se zaključava (`FOR UPDATE`), pa dva istovremena uzimanja
@@ -706,7 +708,7 @@ export async function uzmiVaucer(
         upis: { select: { vlasnikUserId: true, obrisanAt: true, naziv: true } },
       },
     });
-    // Obrisan upis: ponuda vaučera prestaje (donacije čl. 6a st. 6).
+    // Obrisan upis: ponuda vaučera prestaje (donacije čl. 18 st. 4).
     if (!u || u.status !== "POTPISAN" || !u.vaziDo || u.vaziDo.getTime() <= sada.getTime() || u.upis?.obrisanAt)
       throw new VaucerGreska("Vaučeri ovog ugovora nisu dostupni.", 404);
     const poenaPoV = u.poenaPoVauceru ?? poenaPoVauceru(Number(u.vrednostRsd), u.brojVaucera);
@@ -719,7 +721,7 @@ export async function uzmiVaucer(
     const provera = smeUzetiVaucer({
       ...korisnik,
       userId,
-      // Ni korisnik koji vodi upis ne uzima vaučere svog pokrovitelja (čl. 13k).
+      // Ni korisnik koji vodi upis ne uzima vaučere svog pokrovitelja (čl. 36).
       podnosilacId: u.upis?.vlasnikUserId === userId ? userId : u.podnosilacId,
       izjavaNepovezan: unos.izjavaNepovezan,
       pristanakPrikaz: unos.pristanakPrikaz,
@@ -775,7 +777,52 @@ export async function uzmiVaucer(
   return ishod;
 }
 
-// ─── Davalac: provera koda i realizacija (nabavke čl. 30g) ───────────────────
+// ─── Povlačenje pristanka na prikaz (nabavke čl. 33 st. 2) ───────────────────
+
+/**
+ * Imalac povlači pristanak na prikaz zapisa o poništenju uz pseudonim (nabavke
+ * čl. 33 st. 2; Politika čl. 29 st. 3). Povlači se u svakom trenutku, za svaki
+ * vaučer posebno, bez obzira na stanje vaučera.
+ *
+ * 🔴 Briše se SAMO opis (opis dobra, odnosno usluge i naziv davaoca) iz opisa zapisa
+ * o poništenju i iz ispravke tog poništenja — `description`, `opisKljuc`,
+ * `opisParametri`, isto kao pri prestanku statusa (Pravilnik čl. 55 st. 2). ZAPIS
+ * OSTAJE: iznos, strane, vreme i vrsta se ne menjaju, nema protivzapisa ni povraćaja.
+ * Trenutak i snimljen tekst pristanka ostaju kao dokaz zakonitosti prikaza pre
+ * povlačenja. Ispravka koja nastane posle povlačenja (raskid) ne upisuje opis.
+ * Brana: `vaucer-pristanak-izvor.test.ts`.
+ */
+export async function povuciPristanakPrikaza(userId: string, vaucerId: string) {
+  const sada = new Date();
+  await prisma.$transaction(async (tx) => {
+    const v = await tx.vaucer.findUnique({
+      where: { id: vaucerId },
+      select: { imalacId: true, pristanakPrikazAt: true, pristanakPovucenAt: true, ponistenjeTxId: true, ispravkaTxId: true },
+    });
+    if (!v || v.imalacId !== userId) throw new VaucerGreska("Vaučer nije pronađen.", 404);
+    if (!v.pristanakPrikazAt) throw new VaucerGreska("Za ovaj vaučer pristanak nije dat.", 409);
+    if (v.pristanakPovucenAt) throw new VaucerGreska("Pristanak je već povučen.", 409);
+
+    const r = await tx.vaucer.updateMany({
+      where: { id: vaucerId, imalacId: userId, pristanakPovucenAt: null },
+      data: { pristanakPovucenAt: sada },
+    });
+    if (r.count !== 1) throw new VaucerGreska("Pristanak je već povučen.", 409);
+
+    const zapisi = [v.ponistenjeTxId, v.ispravkaTxId].filter((x): x is string => !!x);
+    if (zapisi.length > 0)
+      await tx.transaction.updateMany({
+        where: {
+          id: { in: zapisi },
+          type: { in: [TransactionType.PONISTENJE_VAUCER, TransactionType.ISPRAVKA_VAUCER] },
+        },
+        data: { description: null, opisKljuc: null, opisParametri: PrismaVrednosti.DbNull },
+      });
+  });
+  return { povucenAt: sada.toISOString() };
+}
+
+// ─── Davalac: provera koda i realizacija (nabavke čl. 34) ───────────────────
 
 /** Ugovor za proveru ovlašćenja: podnosilac i upis (sa korisnikom koji ga vodi). */
 const UGOVOR_ZA_OVLASCENJE = {
@@ -785,7 +832,7 @@ const UGOVOR_ZA_OVLASCENJE = {
 } as const;
 
 /**
- * Šta davalac vidi za uneti kod (nabavke čl. 30g st. 1, Politika 4.15): opis,
+ * Šta davalac vidi za uneti kod (nabavke čl. 34 st. 1, Politika čl. 29): opis,
  * stanje, rok važenja i PSEUDONIM imaoca. 🔴 Ništa drugo o imaocu — ni id, ni
  * ime, ni mejl, ni evidencija identiteta. Kod tuđeg davaoca se ponaša kao nepoznat.
  */
@@ -821,10 +868,10 @@ export async function proveriKodZaDavaoca(korisnikId: string, kodUnos: string): 
 /**
  * Davalac — korisnik koji vodi upis (odnosno podnosilac ugovora) ili zaposleni koga je
  * odredio za taj upis — potvrđuje predaju dobra odnosno pružanje usluge (nabavke čl.
- * 30g st. 1). Ko je potvrdio, beleži se u `Vaucer.potvrdioId`.
+ * 34 st. 1–2). Ko je potvrdio, beleži se u `Vaucer.potvrdioId`.
  *
  * 🔴 Potvrdom je vaučer samo ISKORIŠĆEN — POEN se ne pomera, jer je poništen već
- * pri uzimanju (čl. 30f). Nema upisa u istoriju i nema provere stanja imaoca.
+ * pri uzimanju (čl. 33). Nema upisa u istoriju i nema provere stanja imaoca.
  */
 export async function potvrdiRealizaciju(korisnikId: string, kodUnos: string) {
   const kod = normalizujKod(kodUnos);
@@ -870,7 +917,7 @@ export async function potvrdiRealizaciju(korisnikId: string, kodUnos: string) {
 
 /**
  * Iskorišćeni vaučeri ugovora jednog upisa, za stranicu pokrovitelja (nabavke čl.
- * 30g st. 1: iskorišćen vaučer se beleži kod davaoca uz pseudonim imaoca). Samo
+ * 34 st. 2: iskorišćen vaučer se beleži kod davaoca uz pseudonim imaoca). Samo
  * korisniku koji vodi upis — zaposleni ugovore ne vidi. 🔴 Samo pseudonimi imaoca i
  * potvrdioca, nikad id ni ime.
  */
@@ -898,13 +945,13 @@ export async function iskorisceniVauceriUpisa(upisId: string) {
   }));
 }
 
-// ─── Zaposleni davaoca (donacije čl. 13g st. 6, nabavke čl. 30g st. 1) ───────
+// ─── Zaposleni davaoca (donacije čl. 32 st. 3, nabavke čl. 34 st. 1) ───────
 
 /**
  * Da li korisnik sme da proveri i potvrdi vaučer ugovora: korisnik koji vodi upis
  * pokrovitelja (ili je ugovor podneo), odnosno AKTIVAN zaposleni određen za taj upis
  * (neopozvano ovlašćenje, verifikovan punoletan aktivan nalog u trenutku provere).
- * Niko drugi. Zaposleni se od seta 4.7.8 vezuju za upis (čl. 6a), ne za nalog.
+ * Niko drugi. Zaposleni se od seta 4.7.8 vezuju za upis (čl. 18), ne za nalog.
  */
 export async function ovlascenjeKorisnika(
   korisnikId: string,
@@ -939,7 +986,7 @@ async function upisKojiVodi(userId: string, upisId: string) {
  * Korisnik koji vodi upis određuje korisnika (po pseudonimu) koji u ime pokrovitelja
  * potvrđuje vaučere. 🔴 Određuje SAMO korisnik koji vodi upis — zaposleni ne može
  * odrediti drugog zaposlenog. 🔴 Zaposleni mora biti verifikovan korisnik (donacije
- * čl. 13g st. 6).
+ * čl. 32 st. 3).
  */
 export async function odrediZaposlenog(davalacUserId: string, upisId: string, pseudonimUnos: string) {
   const pseudonim = typeof pseudonimUnos === "string" ? pseudonimUnos.trim() : "";
@@ -1087,11 +1134,11 @@ export async function opozoviZaposlenePriGasenjuNaloga(userId: string) {
   }
 }
 
-// ─── Istek (nabavke čl. 30g st. 2) ───────────────────────────────────────────
+// ─── Istek (nabavke čl. 34 st. 4) ───────────────────────────────────────────
 
 /**
- * Istekli vaučeri prestaju (nabavke čl. 30g st. 2): poništenje izvršeno pri
- * uzimanju se NE ispravlja i ništa se ne otpisuje (donacije čl. 13j st. 4). Zove
+ * Istekli vaučeri prestaju (nabavke čl. 34 st. 4): poništenje izvršeno pri
+ * uzimanju se NE ispravlja i ništa se ne otpisuje (donacije čl. 35 st. 4). Zove
  * se iz noćnog posla nabavki.
  */
 export async function obradiVaucere(sada = new Date()): Promise<{ isteklo: number }> {
@@ -1105,7 +1152,7 @@ export async function obradiVaucere(sada = new Date()): Promise<{ isteklo: numbe
 /**
  * Gašenje naloga: uzeti, a neiskorišćeni vaučeri se vraćaju u SLOBODAN, da bi
  * dobro, odnosno usluga ipak stigli do nekog člana. Poništenje izvršeno pri
- * uzimanju se ne ispravlja — zapis ugašenog naloga se ionako poništava (čl. 34).
+ * uzimanju se ne ispravlja — zapis ugašenog naloga se ionako poništava (Pravilnik čl. 33).
  */
 export async function oslobodiPriGasenjuNaloga(userId: string) {
   try {
@@ -1121,24 +1168,24 @@ export async function oslobodiPriGasenjuNaloga(userId: string) {
   }
 }
 
-// ─── Raskid po neizvršenju (donacije čl. 13j — osmi osnov) ───────────────────
+// ─── Raskid po neizvršenju (donacije čl. 35 — sedmi osnov) ───────────────────
 
 /**
- * Fondacija je po prigovoru imaoca (Uslovi čl. 37a, vrsta VAUCER) utvrdila da
+ * Fondacija je po prigovoru imaoca (Uslovi čl. 40, vrsta VAUCER) utvrdila da
  * davalac dobro nije predao, odnosno uslugu nije pružio, ni u roku od petnaest
- * dana od poziva — UGOVOR SE RASKIDA (čl. 13j st. 1).
+ * dana od poziva — UGOVOR SE RASKIDA (čl. 35 st. 1).
  *
  * Jedna transakcija:
  *  1. ugovor → RASKINUT, a davalac (po MB, odnosno BPG) se upisuje na LISTU
- *     ZABRANE (`ZabranaDavaoca`, čl. 13j st. 2) — nov ugovor nije moguć dok ga
+ *     ZABRANE (`ZabranaDavaoca`, čl. 35 st. 5) — nov ugovor nije moguć dok ga
  *     Fondacija sa liste ne skine (`smeNoviUgovor`);
  *  2. svaki vaučer koji do raskida nije iskorišćen (`ulaziURaskid`) prestaje
  *     (NEIZVRSEN), uzet ili ne; imaocu uzetog poništenje izvršeno pri uzimanju
- *     ispravlja se sopstvenim tipom `ISPRAVKA_VAUCER` (nabavke čl. 30g st. 3,
- *     Pravilnik čl. 14a st. 5);
+ *     ispravlja se sopstvenim tipom `ISPRAVKA_VAUCER` (nabavke čl. 35 st. 1 t. 3,
+ *     Pravilnik čl. 18 st. 5);
  *  3. podnosiocu se otpisuje `otpisPoVauceru × broj vaučera u raskidu` tipom
  *     `OTPIS_POKROVITELJ_DOBRA` — otpisani iznos obuhvata i uvećanje po
- *     koeficijentu. 🔴 Otpis SME u minus (osmi osnov, čl. 14 st. 3 t. 8) —
+ *     koeficijentu. 🔴 Otpis SME u minus (sedmi osnov, Pravilnik čl. 17 st. 2 t. 7) —
  *     kapirati na nulu bi bila greška (pravilo 4). Teret se ne prenosi.
  *
  * Podnosilac dobija SOPSTVENO obaveštenje (pravilo 3: minus se nikad ne pojavljuje
@@ -1159,7 +1206,7 @@ export async function raskiniUgovorDobra(
       id: true, status: true, podnosilacId: true, opis: true, brojVaucera: true, poenEvidentirano: true,
       vrstaDavaoca: true, maticniBroj: true, bpg: true, naziv: true, upisId: true,
       podnosilac: { select: { wallet: { select: { id: true } } } },
-      vauceri: { select: { id: true, status: true, imalacId: true, ponisteno: true } },
+      vauceri: { select: { id: true, status: true, imalacId: true, ponisteno: true, pristanakPovucenAt: true } },
     },
   });
   if (!u) throw new VaucerGreska("Ugovor nije pronađen.", 404);
@@ -1191,15 +1238,18 @@ export async function raskiniUgovorDobra(
   const kljuc = kljucDavaoca(u);
 
   await prisma.$transaction(async (tx) => {
+    // Pravilo 1: zbir svih stanja (zero-sum) se proverava na kraju ove transakcije;
+    // po novčaniku proveru radi `upisiPar`.
+    const snimak = await snimiZbir(tx, []);
     const r = await tx.ugovorDobra.updateMany({
       where: { id: u.id, status: "POTPISAN" },
       data: { status: "RASKINUT", raskinutoAt: sada, raskidObrazlozenje: razlog, raskinuoId: adminId, raskidOtpis: otpis },
     });
     if (r.count !== 1) throw new VaucerGreska("Ugovor je u međuvremenu promenio stanje.", 409);
 
-    // Čl. 13j st. 2 — lista zabrane, do odluke Fondacije. Davalac koji je već na
+    // Čl. 35 st. 5 — lista zabrane, do odluke Fondacije. Davalac koji je već na
     // listi ne dobija drugi aktivan red.
-    // Lista zabrane se vezuje za upis (čl. 6a st. 6).
+    // Lista zabrane se vezuje za upis (čl. 18 st. 3).
     const vecNaListi = await tx.zabranaDavaoca.findFirst({
       where: { skinutoAt: null, OR: [...(u.upisId ? [{ upisId: u.upisId }] : []), { ...kljuc }] },
       select: { id: true },
@@ -1232,9 +1282,15 @@ export async function raskiniUgovorDobra(
           toWalletId: w.id,
           iznos: v.ponisteno,
           type: TransactionType.ISPRAVKA_VAUCER,
-          description: `Ispravka evidencije — vaučer „${opis}"`,
-          opisKljuc: "transakcije.vaucer_ispravka",
-          opisParametri: { opis },
+          // Imalac koji je povukao pristanak na prikaz (nabavke čl. 33 st. 2) ne dobija opis
+          // dobra ni u ispravci — zapis ostaje, opis ne.
+          ...(v.pristanakPovucenAt
+            ? { description: null, opisKljuc: null }
+            : {
+                description: `Ispravka evidencije — vaučer „${opis}"`,
+                opisKljuc: "transakcije.vaucer_ispravka",
+                opisParametri: { opis },
+              }),
         });
         await tx.vaucer.update({ where: { id: v.id }, data: { ispravkaTxId: id } });
         ispravljeno.push({ userId: v.imalacId!, poen: v.ponisteno });
@@ -1254,6 +1310,7 @@ export async function raskiniUgovorDobra(
       await tx.ugovorDobra.update({ where: { id: u.id }, data: { raskidOtpisTxId: id } });
       await tx.vaucer.updateMany({ where: { id: { in: uRaskidu.map((v) => v.id) } }, data: { otpisTxId: id } });
     }
+    await proveriZbir(tx, snimak, "Ispravka po vaučeru i otpis po raskidu ugovora o dobrima");
   });
 
   const stanje = await prisma.wallet.findUnique({ where: { id: podWalletId }, select: { balance: true } });
@@ -1294,7 +1351,7 @@ export async function raskiniUgovorDobra(
   return { otpis, uRaskidu: uRaskidu.length, ispravki: ispravljeno.length };
 }
 
-// ─── Lista zabrane (donacije čl. 13j st. 2) ──────────────────────────────────
+// ─── Lista zabrane (donacije čl. 35 st. 5) ──────────────────────────────────
 
 /** Lista zabrane za administratorski tim — aktivni redovi i istorija skidanja. */
 export async function listaZabrana() {
@@ -1316,7 +1373,7 @@ export async function listaZabrana() {
 }
 
 /**
- * Fondacija skida davaoca sa liste zabrane (čl. 13j st. 2), uz obrazloženje.
+ * Fondacija skida davaoca sa liste zabrane (čl. 35 st. 5), uz obrazloženje.
  * Red ostaje kao istorija; posle toga davalac ponovo sme da podnese prijavu.
  */
 export async function skiniZabranu(id: string, adminId: string, obrazlozenje: string) {
@@ -1332,7 +1389,7 @@ export async function skiniZabranu(id: string, adminId: string, obrazlozenje: st
 
 /**
  * Odluka Fondacije da davalac sme da zaključi naredni ugovor iako nije iskorišćena
- * polovina vaučera prethodnog (čl. 13f st. 4, set 4.8.4; N2-M6). Samo superadmin
+ * polovina vaučera prethodnog (čl. 29 st. 4, set 4.8.4; N2-M6). Samo superadmin
  * (ruta), obrazloženje obavezno. Odnosi se na poslednji potpisan ugovor.
  */
 export async function dozvoliNaredniUgovor(ugovorId: string, adminId: string, obrazlozenje: string) {
@@ -1354,7 +1411,7 @@ export async function odgovorNaGresku(e: unknown) {
   return greska(e instanceof Error ? e.message : "Greška.", 500);
 }
 
-// ─── Rang-lista pokrovitelja, deo „Dobra i usluge" (donacije čl. 13 st. 1) ───
+// ─── Rang-lista pokrovitelja, deo „Dobra i usluge" (donacije čl. 25 st. 1) ───
 
 /**
  * Javna rang-lista pokroviteljstva dobrima i uslugama: zbir vrednosti svih
@@ -1370,8 +1427,8 @@ export async function javnaRangListaDobara() {
       upis: { select: { naziv: true, logoUrl: true, uklonjenSaRangListeAt: true } },
     },
   });
-  // Naziv i logotip iz upisa (čl. 13 st. 4); obrisan upis ostaje na rang-listi,
-  // uklanja se samo na zahtev korisnika koji ga je vodio (čl. 6a st. 6).
+  // Naziv i logotip iz upisa (čl. 26 st. 2); obrisan upis ostaje na rang-listi,
+  // uklanja se samo na zahtev korisnika koji ga je vodio (čl. 18 st. 4).
   return rangListaDobara(
     ugovori
       .filter((u) => naRangListi(u.upis))

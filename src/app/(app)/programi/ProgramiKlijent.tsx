@@ -50,7 +50,7 @@ interface Props {
   brojAktivnih: number;
   isVerified: boolean;
   imaPristupProgramima: boolean;
-  /** Koliko će ljudi biti zamoljeno da potvrdi — ide u tekst pristanka (čl. 4 st. 3). */
+  /** Koliko će ljudi biti zamoljeno da potvrdi — ide u tekst pristanka (programi čl. 6). */
   brojVerifikatora: number;
   emisioniKontekst: EmisioniKontekst;
 }
@@ -95,7 +95,7 @@ export default function ProgramiKlijent({ programi, pedAktivan, brojAktivnih, is
     setActiveProgram((prev) => (prev === type ? null : type));
   }, []);
 
-  // Povlačenje pristanka (čl. 4 st. 3). Potvrda je obavezna: radnja prekida
+  // Povlačenje pristanka (programi čl. 7). Potvrda je obavezna: radnja prekida
   // postupak, gasi evidentiranje i BRIŠE unete podatke — ponovna prijava kreće
   // iz početka, uključujući potvrdu svih verifikatora.
   const povuci = useCallback(async (type: string) => {
@@ -178,9 +178,9 @@ const ProgramKartica = memo(function ProgramKartica({
   const statusBadge = useStatusBadge();
   const enStatus = p.enrollment?.status;
 
-  // Socijalni programi traže indeks stvarnosti od najmanje 10% — jedna primljena
-  // potvrda (čl. 4 Pravilnika o programima podrške, set 4.3.1). Anti-malverzaciju
-  // nosi potvrda svih verifikatora podnosioca, ne visina indeksa.
+  // Na program se prijavljuje učesnik (programi čl. 4 st. 1); maloletni korisnik
+  // nema pravo (čl. 2 st. 3). Anti-malverzaciju nosi potvrda člana Kola koji
+  // podnosioca lično zna (čl. 5), ne visina indeksa.
   const mozePrijaviti = isVerified && imaPristupProgramima && p.programAktivan;
 
   const handleExpand = useCallback(() => onExpand(p.type), [onExpand, p.type]);
@@ -233,7 +233,7 @@ const ProgramKartica = memo(function ProgramKartica({
               {t("pokusaj_ponovo")}
             </Dugme>
           )}
-          {/* Povlačenje pristanka — pravo iz čl. 4 st. 3, dostupno dok postupak
+          {/* Povlačenje pristanka — pravo iz programi čl. 7, dostupno dok postupak
               traje (PENDING) i dok se evidentira (ACTIVE). */}
           {(enStatus === "PENDING" || enStatus === "ACTIVE") && (
             <Dugme varijanta="sekundarno" velicina="sm" onClick={handlePovuci} disabled={loading}>
@@ -290,10 +290,10 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
   const [datumRodjenja, setDatumRodjenja] = useState("");
   const [datumResenja, setDatumResenja] = useState("");
   const [datumIsteka, setDatumIsteka] = useState("");
-  // Posebna podrška ima dva osnova (Pravilnik o programima podrške čl. 12).
+  // Posebna podrška ima dva osnova (Pravilnik o programima podrške čl. 14).
   //
-  // 🔴 Osnov se ovde BIRA, ali se nigde ne prikazuje drugim korisnicima (čl. 4
-  // st. 5): program obuhvata i smanjenu sposobnost i gubitak doma, pa objavljen
+  // 🔴 Osnov se ovde BIRA, ali se nigde ne prikazuje drugim korisnicima (čl. 20
+  // st. 3): program obuhvata i smanjenu sposobnost i gubitak doma, pa objavljen
   // naziv programa ne kazuje koji je osnov u pitanju. Prikaz osnova bio bi prikaz
   // podatka o zdravlju, odnosno o prinudnoj raseljenosti.
   const [osnov, setOsnov] = useState<"SMANJENA_SPOSOBNOST" | "GUBITAK_DOMA">("SMANJENA_SPOSOBNOST");
@@ -303,7 +303,8 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
   const [punoletstvoAt, setPunoletstvoAt] = useState("");
   const [datumDogadjaja, setDatumDogadjaja] = useState("");
   const [ustanova, setUstanova] = useState("");
-  const [program, setProgram] = useState("");
+  const [godinaStudija, setGodinaStudija] = useState("");
+  const [izjavaStudent, setIzjavaStudent] = useState(false);
   const [deca, setDeca] = useState<{ datumRodjenja: string }[]>([{ datumRodjenja: "" }]);
   const [pristanak, setPristanak] = useState(false);
 
@@ -315,7 +316,7 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
       onSubmit({ ...baza, osnov, dokaz, datumResenja, datumIsteka, punoletstvoAt });
       return;
     }
-    if (type === "SKOLOVANJE") { onSubmit({ ...baza, ustanova, program }); return; }
+    if (type === "SKOLOVANJE") { onSubmit({ ...baza, ustanova, godinaStudija, izjavaStudent }); return; }
     if (type === "PODRSKA_MAJKAMA") { onSubmit({ ...baza, deca: deca.filter(d => d.datumRodjenja) }); return; }
   }
 
@@ -383,7 +384,7 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
                 <p className="text-xs text-kolo-muted">{t("posebna_briga_dokaz_izjava")}</p>
               )}
 
-              {/* Pravo za maloletno lice prestaje njegovim punoletstvom (čl. 12).
+              {/* Pravo za maloletno lice prestaje njegovim punoletstvom (programi čl. 15 st. 4, 18 st. 2).
                   🔴 Od tog lica se traži SAMO taj datum — ne ime, ne stanje, ne
                   dijagnoza: „identitet lica o kome se korisnik stara i njegovo
                   stanje ne unose se u prijavu preko onoga što je neophodno za
@@ -408,9 +409,15 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
         <div className="space-y-2">
           <input type="text" placeholder={t("ustanova")} aria-label={t("ustanova")} value={ustanova} onChange={(e) => setUstanova(e.target.value)}
             className={KLASE_UNOSA} />
-          <input type="text" placeholder={t("smer")} aria-label={t("smer")} value={program} onChange={(e) => setProgram(e.target.value)}
+          <input type="text" placeholder={t("smer")} aria-label={t("smer")} value={godinaStudija} onChange={(e) => setGodinaStudija(e.target.value)}
             className={KLASE_UNOSA} />
           <p className="text-xs text-kolo-muted">{t("skolovanje_napomena")}</p>
+          {/* Podrška studentima (programi čl. 19 st. 2): dokaz je izjava pod punom odgovornošću. */}
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" checked={izjavaStudent} onChange={(e) => setIzjavaStudent(e.target.checked)}
+              className="mt-0.5 shrink-0" />
+            <span className="text-xs text-kolo-muted">{t("studenti_izjava")}</span>
+          </label>
         </div>
       )}
 
@@ -430,16 +437,15 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
               )}
             </div>
           ))}
-          {deca.length < 10 && (
-            <Dugme varijanta="tiho" velicina="sm" onClick={() => setDeca((prev) => [...prev, { datumRodjenja: "" }])}>
-              {t("dodaj_dete")}
-            </Dugme>
-          )}
+          {/* Broj dece se ne ograničava: akt ga ne ograničava (programi čl. 11–12). */}
+          <Dugme varijanta="tiho" velicina="sm" onClick={() => setDeca((prev) => [...prev, { datumRodjenja: "" }])}>
+            {t("dodaj_dete")}
+          </Dugme>
           <p className="text-xs text-kolo-muted">{t("majkama_napomena")}</p>
         </div>
       )}
 
-      {/* Pristanak — pravni osnov obrade posebnih kategorija podataka (čl. 4).
+      {/* Pristanak — pravni osnov obrade posebnih kategorija podataka (programi čl. 6 i 21).
           🔴 Tekst mora da imenuje ONO ŠTO SE ZAISTA DEŠAVA: koliko ljudi saznaje
           za koji se program prijavljuješ i da zapis o evidentiranju POEN-a po tom
           programu vide verifikovani učesnici uz pseudonim. Pristanak koji ne
@@ -456,7 +462,8 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
 
       <div className="flex gap-2 pt-1">
         <Dugme varijanta="sekundarno" className="flex-1" onClick={onCancel}>{tc("otkazi")}</Dugme>
-        <Dugme className="flex-1" onClick={handleSubmit} disabled={loading || !pristanak}>
+        <Dugme className="flex-1" onClick={handleSubmit}
+          disabled={loading || !pristanak || (type === "SKOLOVANJE" && !izjavaStudent)}>
           {loading ? "..." : t("posalji_prijavu")}
         </Dugme>
       </div>

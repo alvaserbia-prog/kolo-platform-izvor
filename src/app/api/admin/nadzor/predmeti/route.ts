@@ -1,14 +1,14 @@
 /**
- * GET /api/admin/nadzor/predmeti — nadzorni predmeti (dokaz stvarnosti čl. 11a).
+ * GET /api/admin/nadzor/predmeti — nadzorni predmeti (dokaz stvarnosti čl. 27).
  *
  * Predmet nastaje kad nadzornik evidentira ishod „za proveru" ili „sporno". Predmet
  * se odnosi na verifikaciju, potvrdu člana bez potvrde ili potvrdu postojanja deteta
- * (čl. 10 st. 1 i 5, set 4.8.2) — polje `vrstaPredmeta`.
+ * (čl. 22 st. 1, set 4.8.2) — polje `vrstaPredmeta`.
  * Vidi ga SAMO superadmin (UO Fondacije) — ne ostali nadzornici, ne verifikator,
- * ne verifikovani, ne javnost (čl. 11a st. 2).
+ * ne verifikovani, ne javnost (čl. 27 st. 2).
  *
  * Panel je alat, ne organ: sam predmet ne proizvodi dejstvo prema korisniku.
- * Lažnu verifikaciju utvrđuje UO (čl. 18).
+ * Lažnu verifikaciju utvrđuje Fondacija (čl. 32 st. 2).
  */
 import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";
@@ -179,7 +179,7 @@ export async function GET(req: NextRequest) {
           izvor: null,
           korak: null,
           uveo: null,
-          // Samo roditelj — dete se u predmetu ne prikazuje (deca čl. 6 st. 3).
+          // Samo roditelj — dete se u predmetu ne prikazuje (deca čl. 13 st. 2).
           verifikator: osoba(d.potvrdio),
           verifikovani: osoba(d.roditelj)!,
           vremenskiZig: (d.potvrdjenoAt ?? d.createdAt).toISOString(),

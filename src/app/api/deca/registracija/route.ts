@@ -17,10 +17,10 @@ function generisiMemberHash(): string {
 }
 
 /**
- * POST /api/deca/registracija — dete otvara nalog samo (Modul Deca, čl. 4a).
+ * POST /api/deca/registracija — dete otvara nalog samo (Pravilnik o učešću dece, čl. 8).
  *
  * Traži se pseudonim, lozinka i **imejl roditelja**. Datum rođenja se NE traži —
- * upisuje ga roditelj pri preuzimanju (čl. 7), jer je roditeljska izjava jedina
+ * upisuje ga roditelj pri preuzimanju (čl. 4 st. 2, 12 st. 1), jer je roditeljska izjava jedina
  * provera godina kojom sistem raspolaže.
  *
  * 🔴 Nalog nema sopstveni imejl. Adresa koja se unosi je adresa TREĆEG LICA i služi

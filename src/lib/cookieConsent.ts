@@ -3,7 +3,7 @@
  *
  * Neophodni kolačići (sesija, prijava, bezbednost) NE prolaze kroz ovaj mehanizam
  * — oni su nužni za rad platforme i nisu podložni pristanku (Politika privatnosti
- * čl. 7). Ovde se uslovljava SAMO učitavanje analitike trećih lica
+ * čl. 10 st. 1). Ovde se uslovljava SAMO učitavanje analitike trećih lica
  * (Google Analytics) — vidi `Analitika.tsx`.
  *
  * ─── Zašto kolačić, a ne `localStorage` (R-06, 14.09.2026) ──────────────────
@@ -27,8 +27,8 @@
  *
  * Za NEPRIJAVLJENOG posetioca ne pravi se nikakav identifikator i ne vodi se
  * serverski zapis po licu. To bi značilo prikupljanje novog podatka o njemu radi
- * dokazivanja pristanka na obradu — kružno, i suprotno čl. 3 Politike, gde
- * minimizacija stoji kao „strukturni princip koji se ne može ukinuti nijednom
+ * dokazivanja pristanka na obradu — kružno, i suprotno čl. 5 st. 3 Politike, gde
+ * minimizacija stoji kao „granica zajedničkog dobra" koja „ne može se ukinuti nijednom
  * upravljačkom odlukom". Za njega dokaz nosi sam mehanizam: ništa se ne učitava
  * pre odluke, odbijanje je jednako lako kao prihvatanje, a verzija teksta je
  * zabeležena u kodu.
@@ -112,7 +112,7 @@ export function sacuvajPristanak(p: Pristanak): void {
 /**
  * Otvara banner i kad je odluka već doneta.
  *
- * 🔴 Politika čl. 7 obećava da se pristanak „može povući u svakom trenutku kroz
+ * 🔴 Politika čl. 10 st. 2 obećava da se pristanak „može povući u svakom trenutku kroz
  * podešavanja kolačića", a ZZPL čl. 15 st. 3 traži da povlačenje bude jednako
  * lako kao davanje. Do 26.09.2026 banner se posle prve odluke više nije
  * pojavljivao, pa povlačenja faktički nije bilo. Link u oba futera ga vraća.

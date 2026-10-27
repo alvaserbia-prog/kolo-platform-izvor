@@ -338,7 +338,8 @@ async function racunaj(trazeno: Set<SifraPokazatelja>, sada: Date): Promise<Map<
   // ── K10: poslednje zatvoreno glasanje ──────────────────────────────────────
   if (trazeno.has("K10")) {
     const predlog = await prisma.glasanjePredlog.findFirst({
-      where: { status: "CLOSED" },
+      // Predlog o kome se nije glasalo (Gornje Kolo čl. 10 st. 4) nije glasanje.
+      where: { status: "CLOSED", neglasanjeRazlog: null },
       orderBy: { deadline: "desc" },
       select: { glasovi: { select: { glasackaGlasova: true } } },
     });

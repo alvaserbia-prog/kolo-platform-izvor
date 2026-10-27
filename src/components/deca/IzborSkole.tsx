@@ -7,7 +7,7 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
- * Izbor škole maloletnog korisnika (Pravilnik o učešću dece, čl. 7).
+ * Izbor škole maloletnog korisnika (Pravilnik o učešću dece, čl. 26).
  *
  * 🔴 Nema slobodnog unosa. Za razliku od `LokacijaSearch`, koji zatečeni otkucani
  * tekst tolerantno tumači, ovde se šalje ŠIFRA izabrane stavke — ranglista bez

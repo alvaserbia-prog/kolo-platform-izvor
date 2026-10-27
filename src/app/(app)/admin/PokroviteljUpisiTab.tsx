@@ -12,12 +12,12 @@ import PraznoStanje from "@/components/ui/PraznoStanje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
 /**
- * Admin → Pokrovitelji → Upisi (Pravilnik o pokroviteljstvu i donacijama čl. 6a).
+ * Admin → Pokrovitelji → Upisi (Pravilnik o pokroviteljstvu i donacijama čl. 16–18).
  *
  * Fondacija naziv, matični broj i zastupnika upoređuje sa registrom privrednih
  * subjekata (dugme „Otvori u APR-u" + MB za kopiranje + 🔴 OBAVEZNA potvrda za
  * pravno lice i preduzetnika), beleži da je poređenje izvršeno i upis odobrava ili
- * odbija uz obrazloženje. Isto za izmenu naziva odnosno MB (čl. 6a st. 5). Gazdinstvo
+ * odbija uz obrazloženje. Isto za izmenu naziva odnosno MB (čl. 18 st. 2). Gazdinstvo
  * se ne poredi sa APR-om. Iz odobrenog upisa korisnik podnosi prijave; prijava
  * dobrima i uslugama se posle toga proverava samo na cenovnik.
  */

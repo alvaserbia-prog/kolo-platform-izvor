@@ -49,6 +49,8 @@ export async function GET() {
     preporukaPrimljeno,
     zahtevZaRazgovor,
     kutijaZelja,
+    praceneKategorije,
+    zahteviZaPrepis,
   ] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
@@ -155,8 +157,8 @@ export async function GET() {
       select: {
         type: true,
         status: true,
-        // Osnov po kome je pravo ostvareno (čl. 12). Ne prikazuje se nijednom
-        // DRUGOM korisniku (čl. 4 st. 5), ali je podatak o samom podnosiocu i
+        // Osnov po kome je pravo ostvareno (programi čl. 14). Ne prikazuje se nijednom
+        // DRUGOM korisniku (programi čl. 20 st. 3), ali je podatak o samom podnosiocu i
         // izvozu po pravu na pristup pripada — isti razlog zbog kog tu stoji i
         // tekst pristanka.
         osnov: true,
@@ -182,7 +184,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     }),
     // Prijave pokroviteljstva — od seta 4.7.5 nose ime i funkciju zastupnika
-    // (Pravilnik o pokroviteljstvu i donacijama čl. 7), pa ulaze u izvoz.
+    // (Pravilnik o pokroviteljstvu i donacijama čl. 19), pa ulaze u izvoz.
     prisma.pokroviteljPrijava.findMany({
       where: { podnosilacId: userId },
       select: {
@@ -230,7 +232,7 @@ export async function GET() {
       },
       orderBy: { pozvanAt: "desc" },
     }),
-    // Pokroviteljstvo dobrima i uslugama (donacije Glava IVa) — prijava nosi ime
+    // Pokroviteljstvo dobrima i uslugama (donacije Glava IV) — prijava nosi ime
     // podnosioca, odnos prema davaocu i kontakt davaoca (odnosno ime nosioca
     // gazdinstva i BPG), izjave i potvrdu o evidentiranju (sa snimljenim tekstom),
     // snimljen tekst ugovora, vreme zaključenja i kontrolni broj. Zatečene prijave
@@ -268,7 +270,7 @@ export async function GET() {
       select: { izjavaNepovezanAt: true, ishod: true, createdAt: true, ugovor: { select: { opis: true, naziv: true } } },
       orderBy: { createdAt: "desc" },
     }),
-    // Zaposleni davaoca (donacije čl. 13g st. 6): koga je korisnik kao podnosilac
+    // Zaposleni davaoca (donacije čl. 32 st. 3): koga je korisnik kao podnosilac
     // odredio i ko je njega odredio — samo pseudonim druge strane i datumi.
     prisma.davalacZaposleni.findMany({
       where: { davalacUserId: userId },
@@ -287,7 +289,7 @@ export async function GET() {
       select: { iskoriscenAt: true, ugovor: { select: { opis: true, naziv: true } } },
       orderBy: { iskoriscenAt: "desc" },
     }),
-    // Upis pokrovitelja u evidenciju (donacije čl. 6a, Politika 4.5): ime i prezime,
+    // Upis pokrovitelja u evidenciju (donacije čl. 16, Politika čl. 22): ime i prezime,
     // odnos, kontakt, mesto i adresa za mapu, izjave (potvrda sa snimljenim tekstom) i
     // status. Ne izvozi se ko je od administratora odlučivao.
     prisma.upisPokrovitelja.findMany({
@@ -302,7 +304,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     }),
     // Registar radnji obrade br. 23 — preporuke: koga je korisnik preporučio i
-    // koliko je preporuka primio. Ko je njega preporučio ne ulazi ni ovde (Politika 4.16).
+    // koliko je preporuka primio. Ko je njega preporučio ne ulazi ni ovde (Politika čl. 18).
     prisma.preporuka.findMany({
       where: { odId: userId },
       select: { createdAt: true, za: { select: { pseudonim: true } } },
@@ -311,8 +313,8 @@ export async function GET() {
     prisma.preporuka.count({ where: { zaId: userId } }),
     // Spisak za poziv (radnja br. 24, set 4.8.2), dok je korisnik na njemu: osnov,
     // podaci iz zahteva, broj i snimljen pristanak. 🔴 Zapis o tome ko je podatke
-    // otvorio (`ZapisOtvaranjaPoziva`) se kroz Platformu NE izvozi (Uslovi čl. 16b
-    // st. 3) — daje se na zahtev upućen na privatnost@ekolo.rs.
+    // otvorio (`ZapisOtvaranjaPoziva`) se kroz Platformu NE izvozi (dokaz stvarnosti čl. 10
+    // st. 4) — daje se na zahtev upućen na privatnost@ekolo.rs.
     prisma.zahtevZaRazgovor.findUnique({
       where: { userId },
       select: {
@@ -328,6 +330,27 @@ export async function GET() {
     // Kutija želja (dečji prostor): sopstveni predlozi sa stanjem i odgovorom i
     // podrške koje je dete dalo — bez autora tuđih predloga.
     izvozKutijeZelja(userId),
+    // Praćene kategorije oglasa (obaveštenja o novim oglasima).
+    prisma.followedCategory.findMany({
+      where: { userId },
+      select: { category: true, createdAt: true },
+      orderBy: { createdAt: "asc" },
+    }),
+    // Zahtevi roditelju za odobrenje prepisa iznad praga (deca: prepis deteta čeka
+    // roditelja) — kao dete, sa iznosom, opisom, stanjem i rokom.
+    prisma.prepisOdobrenje.findMany({
+      where: { deteId: userId },
+      select: {
+        iznos: true,
+        opis: true,
+        status: true,
+        rokDo: true,
+        odlucenoAt: true,
+        createdAt: true,
+        primalac: { select: { pseudonim: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
   ]);
 
   const eksport = {
@@ -343,6 +366,12 @@ export async function GET() {
       delegacija: zrnoDelegacija,
     },
     glasanje: glasovi,
+    // Podrške predlozima Gornjeg Kola (Pravilnik o Gornjem Kolu čl. 10)
+    glasanjePodrske: await prisma.glasanjePodrska.findMany({
+      where: { userId },
+      select: { predlogId: true, podnosenjem: true, createdAt: true },
+      orderBy: { createdAt: "desc" },
+    }),
     poruke,
     saglasnosti: {
       politikaPristanci,
@@ -387,6 +416,8 @@ export async function GET() {
     },
     zahtevZaRazgovor,
     kutijaZelja,
+    praceneKategorije,
+    zahteviZaPrepis: zahteviZaPrepis.map(({ primalac, ...z }) => ({ ...z, primalac: primalac.pseudonim })),
   };
 
   return new NextResponse(JSON.stringify(eksport, null, 2), {

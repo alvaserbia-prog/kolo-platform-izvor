@@ -14,7 +14,7 @@
  *   P9    — isti nadzornik dopunjava istog verifikatora ≥2 puta (samo brojač)
  *   P11   — čuvar Kola (ili osnivač) verifikuje >10 naloga za 7 dana
  *
- * Provera zatvorene grupe (dokaz stvarnosti čl. 11 poslednji stav) NE upisuje se
+ * Provera zatvorene grupe (dokaz stvarnosti čl. 26) NE upisuje se
  * ovde u `RizikNalaz`: računa se pri prikazu (`provera-grupe-pravila.ts`) i nema
  * nikakvo dejstvo.
  *   P12   — roj: ≥5 naloga napravljeno u istom satu, svi verifikovani u 72h
@@ -136,7 +136,7 @@ export async function pokreniNadzorIntegriteta(): Promise<NadzorRezultat> {
     }
 
     // Čuvar Kola = potvrđen nosilac ZRNA ili osnivač (set 4.8.2). Član bez potvrde
-    // koji drži ZRNO nije čuvar — on ide u nadzor po čl. 10 i P1/P2 ga hvataju.
+    // koji drži ZRNO nije čuvar — on ide u nadzor po čl. 22 i P1/P2 ga hvataju.
     const k = korisnikById.get(verifikatorId);
     if (k && !k.maloletan && jeCuvar(statusUcesnika(k)) && u7d > P11_PRAG) {
       dodaj(verifikatorId, { kod: "P11", nivo: "HITNO", opis: `Kao čuvar Kola verifikovao ${u7d} naloga za 7 dana (granica >${P11_PRAG})` });
@@ -174,7 +174,7 @@ export async function pokreniNadzorIntegriteta(): Promise<NadzorRezultat> {
     return razmene.some((r) => (r.fromWalletId === w || r.toWalletId === w) && r.createdAt >= od);
   };
   const stepenik = (od: Date) => [...DANI_BEZ_RAZMENE].reverse().find((d) => sada - od.getTime() >= d * MS.dan);
-  // Pokriva svakog ko je verifikovan verifikacijom koja podleže nadzoru (čl. 9, 10) —
+  // Pokriva svakog ko je verifikovan verifikacijom koja podleže nadzoru (čl. 22) —
   // ne više „samo REGULARNI": status se čita iz grafa, ne iz tipa naloga.
   const podNadzorom = new Set(veze.filter((v) => v.podlezeNadzoru).map((v) => v.verifikovaniId));
   for (const k of korisnici) {
@@ -309,4 +309,43 @@ export async function pokreniNadzorIntegriteta(): Promise<NadzorRezultat> {
   }
 
   return { ukupno: redovi.length, hitno, upozorenje, info, noviHitni };
+}
+
+/**
+ * Rok čuvanja nalaza (Politika čl. 19 st. 7; Registar, radnja br. 12): otvoren
+ * nalaz se čuva dok ga čovek ne pregleda; pregledan (`CISTO`) najduže 12 meseci od
+ * pregleda; prestankom statusa korisnika nalazi vezani za njega se brišu.
+ *
+ * Grupni nalaz (`GRUPA`) nosi članove u JSON-u, pa se po prestanku statusa jednog
+ * člana ne briše ovde: otvoren se ionako zamenjuje u svakom noćnom prolazu, a
+ * pregledan ide po roku od 12 meseci.
+ */
+export async function ocistiNalaze(sada: Date = new Date()): Promise<{ pregledani: number; prestali: number }> {
+  const granica = new Date(sada);
+  granica.setMonth(granica.getMonth() - 12);
+  const pregledani = await prisma.rizikNalaz.deleteMany({
+    where: {
+      status: { not: "OTVOREN" },
+      OR: [{ resenAt: { lte: granica } }, { resenAt: null, createdAt: { lte: granica } }],
+    },
+  });
+  // Subjekti preostalih nalaza, pa samo oni čiji je status prestao.
+  const subjekti = await prisma.rizikNalaz.findMany({
+    where: { tip: "NALOG", subjektId: { not: null } },
+    select: { subjektId: true },
+    distinct: ["subjektId"],
+  });
+  const ugaseni = subjekti.length
+    ? await prisma.user.findMany({
+        where: {
+          id: { in: subjekti.map((x) => x.subjektId!) },
+          OR: [{ status: "EXCLUDED" }, { deaktiviranAt: { not: null } }],
+        },
+        select: { id: true },
+      })
+    : [];
+  const prestali = ugaseni.length
+    ? await prisma.rizikNalaz.deleteMany({ where: { tip: "NALOG", subjektId: { in: ugaseni.map((u) => u.id) } } })
+    : { count: 0 };
+  return { pregledani: pregledani.count, prestali: prestali.count };
 }

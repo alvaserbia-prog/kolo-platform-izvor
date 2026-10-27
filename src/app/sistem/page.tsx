@@ -13,6 +13,7 @@ import { dnevniPregledPrograma, labelPrograma } from "@/lib/protokol/programi";
 import { uslovZapisaProtokola, opisZapisaProtokola, VEZA_PROGRAMA } from "@/lib/protokol/program-prikaz";
 import { USLOV_AKTIVNO_DETE } from "@/lib/protokol/skole";
 import { USLOV_RAZMENE } from "@/lib/razmena-brojac-pravila";
+import { dnevniLimit } from "@/lib/programi-iznosi-pravila";
 import { USLOV_CLANA_U_SPISKU } from "@/lib/clanovi-spisak";
 import { zadrugeZaPrikaz } from "@/lib/protokol/zadruga";
 import SistemKlijent from "./SistemKlijent";
@@ -46,7 +47,7 @@ export default async function SistemPage({
 }) {
   // Stranica je javna (odluka vlasnika, 24.10.2026). Gost vidi kartice i zbirove;
   // spiskove (zapisi, razmene, donacije, učesnici) server za njega NE čita —
-  // Politika privatnosti čl. 6: neprijavljenom samo agregat.
+  // Politika privatnosti čl. 11 st. 4: neprijavljenom samo agregat.
   const session = await getServerSession(authOptions);
   const gost = !session;
 
@@ -112,16 +113,16 @@ export default async function SistemPage({
     gost ? Promise.resolve([]) : prisma.transaction.findMany({
       where: {
         // 🔴 Zapis socijalnog programa ulazi u spisak samo verifikovanom
-        // posmatraču (Pravilnik o programima podrške čl. 4 st. 4, set 4.6.7),
+        // posmatraču (Pravilnik o programima podrške čl. 20 st. 1–2),
         // i uslov za to stoji na JEDNOM mestu — `uslovZapisaProtokola`. Isti
         // uslov koriste `/api/pocetna/liste` i `/api/javno/feed`; prepisan ovde,
         // razišao bi se pri prvoj sledećoj izmeni. Osnov po kome je pravo
-        // ostvareno se ne prikazuje nikome (čl. 4 st. 5) i upit ga ne dovlači.
+        // ostvareno se ne prikazuje nikome (programi čl. 20 st. 3) i upit ga ne dovlači.
         // Operativni doprinos je na sopstvenom tipu `EMISIJA_OPERATIVNI`.
         ...uslovZapisaProtokola(verified),
         // 🔴 Deca izlaze iz spiska, kao i u `/api/javno/feed`. Ovaj upit tu
         // proveru nije imao, pa je pseudonim deteta izlazio uz emisije iz dečjeg
-        // prostora — dok isti podatak feed izričito krije (Modul Deca, čl. 13).
+        // prostora — dok isti podatak feed izričito krije (Politika čl. 11 st. 5 t. 1).
         // Zapis Protokola i zapis Kruga nemaju korisnika i moraju da prođu.
         AND: [
           { OR: [{ fromWalletId: null }, { fromWallet: { is: BEZ_DECE } }] },
@@ -160,7 +161,7 @@ export default async function SistemPage({
     // ispod praga iz `razmena-brojac-pravila.ts`.
     prisma.transaction.count({ where: { ...USLOV_RAZMENE, ...ZIVE_STRANE } }),
     // 🔴 Spisak učesnika (pseudonim, stanje, donacije) čita se SAMO za verifikovanog
-    // posmatrača (Pravilnik čl. 67). Korisniku van Kola i detetu ide samo ono što
+    // posmatrača (Pravilnik čl. 56). Korisniku van Kola i detetu ide samo ono što
     // traži zbir po mestu — kao gostu na `/zadruge` — jer vidljivost sprovodi
     // server, ne ekran (ekran je i ranije krio spisak, ali je podatak stizao do
     // pregledača). Brana: `sistem-vidljivost-izvor.test.ts`.
@@ -219,8 +220,8 @@ export default async function SistemPage({
     // anonimnost prikazivao SA PSEUDONIMOM, iznosom i datumom, svakom redovnom
     // članu. Pseudonim vodi na profil, a kolona POEN mu je stajala na 0 (anonimna
     // donacija ne nosi POEN) — jedini takav red u tabeli, dakle i oznaka „ovaj je
-    // donirao anonimno". Donacije čl. 5a i Uslovi čl. 17 obećavaju suprotno.
-    // Lista donacija (set 4.8.2; donacije čl. 5a st. 1; Uslovi čl. 17 st. 3, 6):
+    // donirao anonimno". Donacije čl. 11 i Uslovi čl. 16 obećavaju suprotno.
+    // Lista donacija (set 4.8.2; donacije čl. 11 st. 1; Uslovi čl. 16 st. 3, 5):
     // ime i prezime donatora javne donacije, iznos i datum — isto korisniku i
     // verifikovanom. 🔴 Pseudonim i veza ka profilu se ne čitaju (ne stižu ni do
     // klijenta). Anonimna donacija ulazi samo iznosom. Isti uslov kao `/api/donacije`.
@@ -244,8 +245,8 @@ export default async function SistemPage({
             javno: true, confirmedAt: true, createdAt: true,
           },
         }),
-    // Ista rang-lista kao `/pokrovitelji` (čl. 13): naziv i logotip iz upisa, bez
-    // adrese; obrisan upis ostaje, osim na zahtev (donacije čl. 6a st. 6).
+    // Ista rang-lista kao `/pokrovitelji` (donacije čl. 25): naziv i logotip iz upisa, bez
+    // adrese; obrisan upis ostaje, osim na zahtev (donacije čl. 18 st. 4).
     javnaRangListaNovca(),
     prisma.verifikacionaVeza.count(),
     prisma.verifikacionaVeza.count({
@@ -255,7 +256,7 @@ export default async function SistemPage({
     // Maloletni nalozi u stanju AKTIVNO (bar jedan roditelj je redovan član).
     // Oni su punopravni korisnici — koriste dečji prostor, sklapaju prijateljstva
     // i primaju POEN — pa ulaze u broj članova na kartici, iako u lanac potvrda
-    // ne smeju da uđu (Pravilnik o učešću dece čl. 15), tj. `verified` im je
+    // ne smeju da uđu (Pravilnik o učešću dece čl. 29 st. 2), tj. `verified` im je
     // trajno `false`. Uslov je isti onaj po kome se broji ranglista škola —
     // jedna istina o tome šta je aktivno dete.
     prisma.user.count({ where: { ...USLOV_AKTIVNO_DETE, oauthPending: false } }),
@@ -342,7 +343,7 @@ export default async function SistemPage({
   const donacije = donacijeLista.map((d) => ({
     id: d.id,
     // Anonimna donacija: iznos ulazi u zbir, lice ne izlazi nigde. Povučeno ime
-    // (čl. 5a st. 4) ostavlja donaciju u listi bez imena.
+    // (donacije čl. 12) ostavlja donaciju u listi bez imena.
     ime: d.javno ? d.donatorIme : null,
     anonimno: !d.javno,
     amountRSD: Number(d.amountRSD),
@@ -359,13 +360,13 @@ export default async function SistemPage({
 
   const danasEmisija = emisije[0];
   const danasEmitovano = danasEmisija?.totalEmitted ?? 0;
-  const danasLimit = danasEmisija?.limit ?? Math.floor(opticaj * 0.1);
+  const danasLimit = danasEmisija?.limit ?? dnevniLimit(opticaj);
 
   const locale = await getLocale();
   // Union, jer isti mapper služi oba spiska: zapisi Protokola nose vezu do prijave
   // na program, prepisi (`TRANSFER`) je po prirodi ne mogu imati.
   // 🔴 Strane zapisa (pseudonim i id) dobija samo verifikovan posmatrač; korisniku
-  // van Kola i detetu idu `null` — iznos i vreme bez strana (Pravilnik čl. 67), isto
+  // van Kola i detetu idu `null` — iznos i vreme bez strana (Pravilnik čl. 56), isto
   // kao `/api/pocetna/liste`. Protokol nije osoba i njegovo ime ostaje.
   const strana = (w: { user: { id: string; pseudonim: string } | null } | null) =>
     !w?.user

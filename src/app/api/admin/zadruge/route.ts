@@ -5,14 +5,23 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { jeAdmin, jeZadruzniAdmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
-import { upisiZadrugu, ZadrugaGreska, PRAGOVI_RASTA, type PodaciZadruge } from "@/lib/protokol/zadruga";
+import {
+  upisiZadrugu,
+  ZadrugaGreska,
+  PRAGOVI_RASTA,
+  JEDINICE_ZADRUZNOG_DOPRINOSA,
+  brojZadrugaraUcesnika,
+  najveciDnevniIznos,
+  type PodaciZadruge,
+} from "@/lib/protokol/zadruga";
+import { PARAMETAR_IZNOS_JEDINICE, vazeciParametar } from "@/lib/protokol/operativni-postupak";
 
 /**
  * GET  /api/admin/zadruge — sve zadruge sa zadrugarima, zapisom i pragovima
- * POST /api/admin/zadruge — upis zadruge u sistem (Pravilnik o zadrugama čl. 5)
+ * POST /api/admin/zadruge — upis zadruge u sistem (Pravilnik o zadrugama čl. 4)
  *
  * 🔴 Ime i prezime i broj telefona zadrugara izlaze SAMO ovde: administratorskom
- * timu i zadružnom adminu za njegovu zadrugu (čl. 16, 19, Registar radnji obrade
+ * timu i zadružnom adminu za njegovu zadrugu (čl. 15, 21, Registar radnji obrade
  * br. 19) — nijedna korisnička ruta ih ne vraća.
  */
 export async function GET() {
@@ -23,7 +32,7 @@ export async function GET() {
   const samoSvoja = jeZadruzniAdmin(me);
   if (!jeAdmin(me) && !(samoSvoja && me?.adminZadrugaId)) return await greska("Nemate ovlašćenje.", 403);
 
-  const [zadruge, krugovi] = await Promise.all([
+  const [zadruge, iznosJedinice] = await Promise.all([
     prisma.krug.findMany({
       where: samoSvoja ? { zadruga: true, id: me!.adminZadrugaId! } : { zadruga: true },
       orderBy: { createdAt: "asc" },
@@ -36,20 +45,37 @@ export async function GET() {
           select: {
             id: true,
             imePrezime: true,
+            user: { select: { id: true, pseudonim: true, telefon: true, verified: true, identitet: { select: { imePrezime: true } } } },
             joinedAt: true,
-            user: { select: { id: true, pseudonim: true, telefon: true, identitet: { select: { imePrezime: true } } } },
+          },
+        },
+        // Zadružni doprinos (operativni 5.0 čl. 23): celine zadruge i njihovi izvršioci.
+        doprinosOglasi: {
+          where: { zadruzni: true },
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            positions: true,
+            predlozeniPoen: true,
+            brojCelina: true,
+            prijave: { where: { aktivanKljuc: { not: null } }, select: { status: true, user: { select: { pseudonim: true } } } },
           },
         },
       },
     }),
-    // Krug koji se može upisati kao zadruga (čl. 11 st. 3) — upis vrši samo admin.
-    samoSvoja ? Promise.resolve([]) : prisma.krug.findMany({ where: { zadruga: false }, select: { id: true, name: true, location: true } }),
+    // Iznos jedinice utvrđuje UO odlukom (operativni čl. 23 st. 4); bez odluke nema iznosa.
+    vazeciParametar(PARAMETAR_IZNOS_JEDINICE),
   ]);
+  // Zadrugari koji su učesnici (čl. 6 st. 1 — ostali miruju i ne broje se).
+  const ucesnika = new Map(await Promise.all(zadruge.map(async (z) => [z.id, await brojZadrugaraUcesnika(z.id)] as const)));
 
   return NextResponse.json({
     samoSvoja,
     pragovi: PRAGOVI_RASTA,
-    krugovi,
+    jedinice: JEDINICE_ZADRUZNOG_DOPRINOSA,
+    iznosJedinice,
     zadruge: zadruge.map((z) => ({
       id: z.id,
       naziv: z.name,
@@ -59,6 +85,19 @@ export async function GET() {
       adresa: z.adresa,
       ugovorAt: z.ugovorAt?.toISOString() ?? null,
       prestanakAt: z.prestanakAt?.toISOString() ?? null,
+      zamrznutoAt: z.zamrznutoAt?.toISOString() ?? null,
+      zamrznutoOsnov: z.zamrznutoOsnov,
+      zadrugaraUcesnika: ucesnika.get(z.id) ?? 0,
+      najveciDnevniIznos: najveciDnevniIznos(ucesnika.get(z.id) ?? 0, iznosJedinice),
+      zadaci: z.doprinosOglasi.map((o) => ({
+        id: o.id,
+        naziv: o.title,
+        status: o.status,
+        mesta: o.positions,
+        predlozeniPoen: o.predlozeniPoen,
+        brojCelina: o.brojCelina,
+        izvrsioci: o.prijave.map((p) => ({ pseudonim: p.user.pseudonim, prihvatio: p.status === "APPROVED" })),
+      })),
       zapis: z.wallet?.balance ?? 0,
       pragovi: z.bonusLogs.map((b) => ({ clanovi: b.threshold, poen: b.amount, at: b.createdAt.toISOString() })),
       zadrugari: z.memberships.map((m) => ({
@@ -69,6 +108,8 @@ export async function GET() {
         imePrezime: m.user.identitet?.imePrezime ?? m.imePrezime,
         // Broj sa profila — zadruzi treba za rad sa zadrugarima (odluka vlasnika, U2).
         telefon: m.user.telefon,
+        // Čl. 6 st. 1 — dok nije učesnik, svojstvo zadrugara miruje.
+        miruje: !m.user.verified,
         od: m.joinedAt.toISOString(),
       })),
     })),

@@ -16,15 +16,15 @@ type Dete = {
   pseudonim: string;
   godine: number | null;
   dozvolaOdrasli: boolean;
-  /** `null` dok je veza zaustavljena po prijavi (čl. 4e st. 2) — tada nema uvida. */
+  /** `null` dok je veza zaustavljena po prijavi (čl. 17 st. 2) — tada nema uvida. */
   balans: number | null;
-  /** Tri stanja naloga (čl. 4c). Roditelj mora da vidi u kom je njegovo dete. */
+  /** Tri stanja naloga (čl. 5). Roditelj mora da vidi u kom je njegovo dete. */
   stanje: "NA_CEKANJU" | "POVEZANO" | "AKTIVNO";
-  /** Veza ovog roditelja je zaustavljena po prijavi lažnog roditeljstva (čl. 4e). */
+  /** Veza ovog roditelja je zaustavljena po prijavi lažnog roditeljstva (čl. 17). */
   zaustavljeno: boolean;
-  /** Potvrda postojanja deteta ZA OVOG roditelja (čl. 6). */
+  /** Potvrda postojanja deteta ZA OVOG roditelja (čl. 13). */
   postojanje: "NIJE_TRAZENO" | "TRAZENO" | "POTVRDJENO";
-  /** Šestocifreni kod kojim ulazi DRUGI roditelj (čl. 4b st. 6). */
+  /** Šestocifreni kod kojim ulazi DRUGI roditelj (čl. 11). */
   kod: string | null;
   roditelji: string[];
 };
@@ -34,7 +34,7 @@ type Poziv = { token: string; deteId: string; pseudonim: string; brisanjeDo: str
 type Korak = "spisak" | "obavestenje" | "obrazac" | "preuzmi";
 
 /**
- * Odeljak „Moja deca" u profilu roditelja (Pravilnik o Modulu Deca, čl. 4).
+ * Odeljak „Moja deca" u profilu roditelja (Pravilnik o učešću dece čl. 7).
  *
  * 🔴 Klik na „Dodaj dete" NE otvara obrazac nego EKRAN OBAVEŠTENJA. Redosled je
  * pravno obavezan: obaveštenje o obradi mora prethoditi prikupljanju podataka o
@@ -54,7 +54,7 @@ export default function MojaDeca() {
       if (res.status === 410) return setDeca([]); // modul nije u radu
       if (!res.ok) throw new Error();
       setDeca((await res.json()).deca);
-      // Primarni put iz čl. 4b st. 6: roditelj koji se registrovao istim imejlom
+      // Primarni put iz čl. 11: roditelj koji se registrovao istim imejlom
       // koji je dete unelo ne mora ništa da traži — veza mu se sama predloži.
       const resP = await fetch("/api/deca/preuzmi", { cache: "no-store" });
       if (resP.ok) setPozivi((await resP.json()).pozivi ?? []);
@@ -105,7 +105,7 @@ export default function MojaDeca() {
               {deca.map((d) => (
                 <li key={d.id}>
                   {d.zaustavljeno ? (
-                    /* Dok je veza zaustavljena, roditelj nema uvid (čl. 4e st. 2) — samo
+                    /* Dok je veza zaustavljena, roditelj nema uvid (čl. 17 st. 2) — samo
                        saznaje da je tako, bez linka na podešavanja deteta. */
                     <div className="rounded-kontrola bg-kolo-bg px-4 py-3">
                       <span className="block truncate font-medium text-kolo-text">{d.pseudonim}</span>
@@ -149,7 +149,7 @@ export default function MojaDeca() {
             </button>
             {/* Isti obrazac služi PRVOG roditelja kome poruka nije stigla i DRUGOG
                 roditelja (uvek). Nema zasebnog puta za „drugog roditelja": obojica
-                rade istu radnju i dobijaju ista ovlašćenja (čl. 4b st. 6). */}
+                rade istu radnju i dobijaju ista ovlašćenja (čl. 11; čl. 2 st. 4). */}
             <button
               type="button"
               onClick={() => setKorak("preuzmi")}
@@ -300,7 +300,7 @@ function Obrazac({ onGotovo, onOdustani }: { onGotovo: () => void; onOdustani: (
           max={najkasnije.toISOString().slice(0, 10)}
           porukaGreske={t("polje_datum_raspon")}
         />
-        {/* Datum se posle otvaranja naloga ne menja (čl. 7) — to mora da piše ovde,
+        {/* Datum se posle otvaranja naloga ne menja (čl. 4 st. 2) — to mora da piše ovde,
             a ne posle, jer je roditeljska izjava jedina provera godina u sistemu. */}
         <span className="mt-1 block text-xs text-kolo-danger">{t("polje_datum_upozorenje")}</span>
       </label>
@@ -353,10 +353,10 @@ function Obrazac({ onGotovo, onOdustani }: { onGotovo: () => void; onOdustani: (
 }
 
 /**
- * Preuzimanje naloga deteta pseudonimom i šestocifrenim kodom (čl. 4b st. 6).
+ * Preuzimanje naloga deteta pseudonimom i šestocifrenim kodom (čl. 11).
  *
  * Datum rođenja se traži samo pri PRVOM preuzimanju; drugi roditelj ga ostavlja
- * praznim, jer se posle upisa ne menja (čl. 7). Server odbija prazan datum samo kad
+ * praznim, jer se posle upisa ne menja (čl. 4 st. 2). Server odbija prazan datum samo kad
  * ga nalog još nema, pa polje ovde nije obavezno.
  */
 function PreuzmiObrazac({ onGotovo, onOdustani }: { onGotovo: () => void; onOdustani: () => void }) {

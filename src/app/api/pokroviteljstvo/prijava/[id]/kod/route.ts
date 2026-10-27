@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { posaljiKodZaPotpisNovca, PotpisGreska } from "@/lib/protokol/pokroviteljstvo-potpis";
 
-/** POST /api/pokroviteljstvo/prijava/[id]/kod — jednokratni kod za potpis na mejl podnosioca (čl. 13g st. 4). */
+/** POST /api/pokroviteljstvo/prijava/[id]/kod — jednokratni kod za potpis na mejl podnosioca (čl. 32 st. 1). */
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);

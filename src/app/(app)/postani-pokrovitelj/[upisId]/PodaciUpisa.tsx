@@ -21,7 +21,7 @@ import { useDijalog } from "@/components/ui/Dijalog";
 const MapaGazdinstava = dynamic(() => import("@/components/MapaGazdinstava"), { ssr: false });
 
 /**
- * Podaci pokrovitelja (donacije čl. 6a st. 5 i 6).
+ * Podaci pokrovitelja (donacije čl. 18 st. 2 i 4).
  *
  * Kontakt, sedište i podaci za mapu menjaju se odmah; naziv, matični broj i
  * logotip idu na ponovnu proveru Fondacije — do odluke važe ranije odobreni. PIB i
@@ -227,7 +227,7 @@ export default function PodaciUpisa({ upis }: { upis: UpisZaProfil }) {
         </Dugme>
       </Kartica>
 
-      {/* Brisanje upisa (čl. 6a st. 6). */}
+      {/* Brisanje upisa (čl. 18 st. 4). */}
       <section className="bg-kolo-surface border border-kolo-danger/30 rounded-kartica shadow-kartica p-5 space-y-3">
         <h3 className="text-sm font-semibold text-kolo-danger">{t("brisanje_naslov")}</h3>
         <p className="text-xs text-kolo-muted">{t("brisanje_opis")}</p>

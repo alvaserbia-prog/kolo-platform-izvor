@@ -112,12 +112,12 @@ export default function DecjaPocetna({
   mojihOglasa: number;
   oglasi: Oglas[];
   chatInicijalno: Poruka[];
-  /** Kartica škole (čl. 7). `null` dok dete nije izabralo školu. */
+  /** Kartica škole (deca čl. 26). `null` dok dete nije izabralo školu. */
   skola: KarticaSkole | null;
   /** Status deteta (set 4.8.2) i na šta se čeka — crta ih `OznakaStatusa`. */
   status?: StatusUcesnika | null;
   naStaSeCeka?: NaStaSeCeka | null;
-  /** Lica upisana kao roditelji (veza nije zaustavljena) — prijava po čl. 4e. */
+  /** Lica upisana kao roditelji (veza nije zaustavljena) — prijava po deca čl. 17. */
   roditelji?: { id: string; pseudonim: string }[];
 }) {
   const t = useTranslations("decjaPocetna");
@@ -126,7 +126,7 @@ export default function DecjaPocetna({
   const [pretraga, setPretraga] = useState("");
   const cekaRoditelja = stanje === "NA_CEKANJU";
   // Dete sa roditeljem ne objavljuje i ne prepisuje — ni sa roditeljem (deca
-  // čl. 4c t. 2, 13 st. 4, 14 poslednji stav). To može tek dete Kola.
+  // čl. 5 st. 1 t. 2, 30). To može tek dete Kola.
   const deteKola = stanje === "AKTIVNO";
 
   const vidljivi = pretraga.trim()
@@ -136,7 +136,7 @@ export default function DecjaPocetna({
     : oglasi;
 
   /**
-   * Ekran deteta koje čeka roditelja (čl. 4c).
+   * Ekran deteta koje čeka roditelja (deca čl. 5).
    *
    * 🔴 Poruka mora da bude KONKRETNA. POEN je apstraktan sedmogodišnjaku; ne moći
    * odgovoriti drugu koji ti je upravo skenirao kod — to je konkretno. Zato se broj
@@ -172,7 +172,7 @@ export default function DecjaPocetna({
     <div className="mx-auto max-w-4xl space-y-5">
       <SareniNaslov tekst={t("pozdrav", { pseudonim })} />
 
-      {/* Dete sa roditeljem: status i na šta se čeka (deca čl. 4c poslednji stav). */}
+      {/* Dete sa roditeljem: status i na šta se čeka (deca čl. 5 st. 4). */}
       {!deteKola && status && (
         <OznakaStatusa varijanta="kartica" status={status} naStaSeCeka={naStaSeCeka} />
       )}
@@ -193,7 +193,7 @@ export default function DecjaPocetna({
         </p>
         <p className="text-base font-bold text-deca-nebo-600">POEN</p>
         {/* „500 na čekanju" stoji uz sam broj: dete tako vidi koliko mu prijatelja
-            još nema roditelja koji je redovan član (čl. 14b st. 2).
+            još nema roditelja koji je redovan član (deca čl. 33 st. 2).
 
             🔴 Ovo je najvažnija rečenica na ekranu i bila je ispisana bojom sa
             odnosom 1,98 : 1, dakle praktično nevidljiva. Sada je u žutoj kartici
@@ -204,8 +204,8 @@ export default function DecjaPocetna({
           </p>
         )}
         {/* Prepis stoji uz sam broj, jer dete traži POEN tu — ne u meniju. Uslov
-            je da je roditelj preuzeo nalog (čl. 4c); potvrda roditelja se čeka
-            samo za UPIS iz prijateljstava, ne i za prepis (čl. 14). */}
+            je da je roditelj preuzeo nalog (deca čl. 5); potvrda roditelja se čeka
+            samo za UPIS iz prijateljstava, ne i za prepis (deca čl. 30). */}
         {deteKola && (
           <div>
             <Link
@@ -299,8 +299,8 @@ export default function DecjaPocetna({
 
       <DecjaPricaonica mojId={mojId} inicijalno={chatInicijalno} uvidTekst={tDeca("uvid_obavestenje")} />
 
-      {/* „Ovo nije moj roditelj" (deca čl. 4e st. 1). Na dnu, ne u sredini igre:
-          dete mu se vraća kad mu stigne obaveštenje o preuzimanju naloga (čl. 4b). */}
+      {/* „Ovo nije moj roditelj" (deca čl. 17 st. 1). Na dnu, ne u sredini igre:
+          dete mu se vraća kad mu stigne obaveštenje o preuzimanju naloga (deca čl. 11). */}
       <PrijavaRoditeljstva deteId={mojId} roditelji={roditelji} varijanta="dete" />
     </div>
   );
@@ -337,7 +337,7 @@ function Dugme({
  * u nju, bez obzira šta pošalje.
  *
  * Jedna soba za svu decu, ali **svako vidi samo poruke svojih prijatelja**
- * (čl. 18 st. 3). Posledica koja se dobija besplatno: kad su svi učesnici međusobno
+ * (deca čl. 27 st. 3). Posledica koja se dobija besplatno: kad su svi učesnici međusobno
  * prijatelji, sam od sebe nastaje grupni razgovor.
  *
  * 🔴 NEMA odgovora sa citatom. Citat bi pokazao tekst osobe koju čitalac ne poznaje
@@ -350,7 +350,7 @@ function DecjaPricaonica({
 }: {
   mojId: string;
   inicijalno: Poruka[];
-  /** Rečenica o tome ko čita razgovore (čl. 9) — stoji u zaglavlju sobe. */
+  /** Rečenica o tome ko čita razgovore (deca čl. 19) — stoji u zaglavlju sobe. */
   uvidTekst: string;
 }) {
   const t = useTranslations("decjaPocetna");
@@ -420,7 +420,7 @@ function DecjaPricaonica({
     <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-4 shadow-kartica">
       <h2 className="text-lg font-semibold text-kolo-text">{t("pricaonica_naslov")}</h2>
       <p className="mt-0.5 text-sm text-kolo-muted">{t("pricaonica_opis")}</p>
-      {/* Rečenica o roditeljskom uvidu (čl. 9) stoji OVDE, a ne u sredini početne
+      {/* Rečenica o roditeljskom uvidu (deca čl. 19) stoji OVDE, a ne u sredini početne
           strane između kartice škole i oglasa. Tamo je bila najsitniji tekst na
           ekranu i van svakog konteksta; dete je treba tačno kad piše poruku. */}
       <p className="mt-2 rounded-xl bg-kolo-bg px-3 py-2 text-sm text-kolo-muted">{uvidTekst}</p>

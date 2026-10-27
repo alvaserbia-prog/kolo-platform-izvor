@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { izracunajDnevniIznos, labelPrograma } from "@/lib/protokol/programi";
+import { dnevniLimit as dnevniLimitZa } from "@/lib/programi-iznosi-pravila";
 import { dohvatiPotvrdioceUslova } from "@/lib/protokol/program-potvrda";
 import { ucitajStatus, sme } from "@/lib/protokol/status";
 import { ProgramType } from "@/generated/prisma/client";
@@ -37,9 +38,9 @@ export default async function ProgramiPage() {
   ]);
 
   // Koliko ljudi će biti zamoljeno da potvrdi — stoji u samom tekstu pristanka
-  // (čl. 4 st. 3): pristanak mora da kaže KOLIKO lica saznaje za koji se program
+  // (programi čl. 6): pristanak mora da kaže KOLIKO lica saznaje za koji se program
   // korisnik prijavio, jer taj podatak otkriva posebnu kategoriju.
-  // Set 4.8.2: to su članovi Kola koji podnosioca lično znaju (čl. 4 st. 2); kad ih
+  // Set 4.8.2: to su članovi Kola koji podnosioca lično znaju (programi čl. 5); kad ih
   // nema, potvrđuje Fondacija i pristanak to kaže drugim tekstom.
   const brojVerifikatora = (await dohvatiPotvrdioceUslova(prisma, session.user.id)).length;
 
@@ -71,7 +72,9 @@ export default async function ProgramiPage() {
   });
 
   const opticaj = protokol ? Math.abs(protokol.balance) : 0;
-  const dnevniLimit = Math.floor(opticaj * 0.1);
+  // Limit iz obračuna ovog dana kad postoji (računat nad opticajem na početku
+  // perioda, operativni čl. 20); inače procena nad tekućim stanjem.
+  const dnevniLimit = emisijaDanas?.limit ?? dnevniLimitZa(opticaj);
 
   // Operativni doprinos (PED) nema enrollment — kartica vodi na zadatke (/doprinos-oglasi).
   const pedAktivan = aktivniTipovi.has("PED");
@@ -83,9 +86,9 @@ export default async function ProgramiPage() {
       pedAktivan={pedAktivan}
       brojAktivnih={brojAktivnih}
       isVerified={session.user.verified}
-      // Pravo ostvaruje verifikovan učesnik, i član bez potvrde (čl. 4 st. 1; set
-      // 4.8.2). Dete se ne prijavljuje samo — prijavu podnosi roditelj (čl. 13 st. 4).
-      imaPristupProgramima={status != null && sme("PRIJAVA_NA_PROGRAM", status) && status !== "DETE_KOLA"}
+      // Pravo ostvaruje verifikovan učesnik, i član bez potvrde (programi čl. 4).
+      // Maloletni korisnik nema pravo na programe podrške (deca čl. 29 st. 4).
+      imaPristupProgramima={status != null && sme("PRIJAVA_NA_PROGRAM", status)}
       brojVerifikatora={brojVerifikatora}
       emisioniKontekst={{
         opticaj,

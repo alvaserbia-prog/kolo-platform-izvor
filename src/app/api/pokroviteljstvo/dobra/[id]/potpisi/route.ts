@@ -6,8 +6,8 @@ import { potpisiUgovorDobra, odgovorNaGresku } from "@/lib/protokol/pokroviteljs
 
 /**
  * POST /api/pokroviteljstvo/dobra/[id]/potpisi — podnosilac potpisuje ugovor na
- * platformi (donacije čl. 13g st. 4): tri potvrde i jednokratni kod sa mejla.
- * Potpisom se izdaju vaučeri i evidentira POEN (čl. 13g st. 5, čl. 13h).
+ * platformi (donacije čl. 32 st. 1): tri potvrde i jednokratni kod sa mejla.
+ * Potpisom se izdaju vaučeri i evidentira POEN (čl. 32 st. 2, čl. 33).
  * Telo: { kod, procitao, ovlascen, saglasan }.
  *
  * 🔴 Ruta ne čita IP adresu ni zaglavlja uređaja — dokaz zaključenja su vreme i

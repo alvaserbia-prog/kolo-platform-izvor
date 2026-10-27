@@ -17,9 +17,9 @@ import {
  * GET  /api/pokroviteljstvo/dobra?upisId= — ugovori o pokroviteljstvu dobrima i
  *      uslugama upisa koji vodi prijavljeni korisnik (stranica pokrovitelja), uz
  *      iskorišćene vaučere sa pseudonimom imaoca i pseudonimom onoga ko je potvrdio
- *      (nabavke čl. 30g st. 1).
- * POST /api/pokroviteljstvo/dobra — prijava (donacije čl. 13e) iz ODOBRENOG upisa
- *      (čl. 6a), multipart: `upisId`, opis, broj vaučera, cena, mesto i adresa
+ *      (nabavke čl. 34 st. 1–2).
+ * POST /api/pokroviteljstvo/dobra — prijava (donacije čl. 28) iz ODOBRENOG upisa
+ *      (čl. 18 st. 3), multipart: `upisId`, opis, broj vaučera, cena, mesto i adresa
  *      predaje, izjava o propisima + `cenovnik` (jedna ili više fotografija
  *      cenovnika). Podaci o davaocu se ovde NE primaju — snimak su upisa.
  *
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
   const upis = upisId
     ? await prisma.upisPokrovitelja.findUnique({ where: { id: upisId }, select: { vlasnikUserId: true } })
     : null;
-  // Ugovore vidi samo korisnik koji vodi upis — zaposleni ih ne vidi (čl. 13g st. 6).
+  // Ugovore vidi samo korisnik koji vodi upis — zaposleni ih ne vidi (čl. 32 st. 3).
   if (!upis || upis.vlasnikUserId !== session.user.id) return await greska("Upis nije pronađen.", 404);
 
   const ugovori = await prisma.ugovorDobra.findMany({
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
         stanja.find((x) => x.ugovorId === u.id && x.status === s)?._count._all ?? 0;
       return {
         ...u,
-        // Potpisuje samo podnosilac prijave (čl. 13g st. 4).
+        // Potpisuje samo podnosilac prijave (čl. 32 st. 1).
         mojPotpis: podnosilacId === session.user.id,
         vrednostRsd: Number(u.vrednostRsd),
         potpisanoAt: u.potpisanoAt?.toISOString() ?? null,
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
   const mesto = razresiNaselje(fd.get("mesto"));
   if (!mesto) return await greska(PORUKA_MESTO_IZ_SPISKA, 400);
 
-  // Dokaz cene je SAMO fotografija cenovnika (čl. 13e st. 2), za firmu i gazdinstvo.
+  // Dokaz cene je SAMO fotografija cenovnika (čl. 28 st. 2 t. 4), za firmu i gazdinstvo.
   const fajlovi: File[] = [];
   for (const f of fd.getAll("cenovnik")) if (f instanceof File && f.size > 0) fajlovi.push(f);
   const dokaz = proveriDokaze(fajlovi.map((f) => ({ vrsta: "CENOVNIK" as const, tip: f.type, velicina: f.size })));

@@ -3,15 +3,15 @@ import { TransactionType } from "@/generated/prisma/client";
 import { obavesti } from "@/lib/notifikacije";
 
 /**
- * Izvršenje prepisa POEN-a između dva korisnička zapisa (Pravilnik čl. 14, 16).
+ * Izvršenje prepisa POEN-a između dva korisnička zapisa (Pravilnik čl. 17, 20).
  *
  * Izdvojeno iz `POST /api/transfer` kad je uveden prepis koji čeka odobrenje
- * roditelja (Pravilnik o učešću dece, čl. 14): isti posao tada kreće sa dva mesta
+ * roditelja (Pravilnik o učešću dece, čl. 30): isti posao tada kreće sa dva mesta
  * — iz rute, i iz odluke roditelja danima kasnije. Dve kopije bi se razišle, a
  * razlaz ovde znači pokvaren zero-sum ili izgubljen okidač kanala.
  *
- * 🔴 Ovde se NE proveravaju dozvole. Ko sme da prepiše kome (čl. 28 st. 2, čl. 12,
- * čl. 14), da li ima pokriće i da li je u nadoknadi — odlučuje pozivalac. Funkcija
+ * 🔴 Ovde se NE proveravaju dozvole. Ko sme da prepiše kome (Uslovi čl. 14; deca čl. 22,
+ * čl. 30), da li ima pokriće i da li je u nadoknadi — odlučuje pozivalac. Funkcija
  * radi samo ono što joj ime kaže i ATOMSKI: skidanje ide `updateMany` sa uslovom
  * `balance >= iznos`, pa dva paralelna prepisa ne mogu oba da prođu.
  */

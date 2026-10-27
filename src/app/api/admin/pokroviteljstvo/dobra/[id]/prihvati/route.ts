@@ -6,8 +6,8 @@ import { jeAdmin } from "@/lib/dozvole";
 import { prihvatiPrijavu, odgovorNaGresku } from "@/lib/protokol/pokroviteljstvo-dobrima";
 
 // POST /api/admin/pokroviteljstvo/dobra/[id]/prihvati — Fondacija je proverila da je
-// fotografija cenovnika priložena (donacije čl. 13f st. 2); cenu ne upoređuje.
-// Podatke o davaocu je uporedila sa registrom pri odobrenju upisa (čl. 6a st. 4).
+// fotografija cenovnika priložena (donacije čl. 29 st. 2); cenu ne upoređuje.
+// Podatke o davaocu je uporedila sa registrom pri odobrenju upisa (čl. 18 st. 1).
 // Generiše se ugovor.
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

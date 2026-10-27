@@ -12,7 +12,7 @@
  *
  * 🔴 Ovo je DRUGI prag od `MIN_IZNOS_TRANSAKCIJE` (1.000 POEN) u
  * `doprinos-razmeni-pravila.ts` i ne spajaju se: tamo se odlučuje da li se
- * čoveku upisuje POEN po lestvici čl. 40b, ovde se samo broji šta se prikazuje.
+ * čoveku upisuje POEN po lestvici nekadašnjeg čl. 40b (putanja ukinuta setom 4.8.0), ovde se samo broji šta se prikazuje.
  * Lestvica nagrađuje, brojač meri — pragovi im se mogu i razići.
  *
  * 🟡 Prepis ispod praga se ne poništava, ne skriva i ne gubi: stoji u istoriji

@@ -6,7 +6,7 @@ import { upisiImeClana, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
  * POST — član gazdinstva upisuje sopstveno ime i prezime u evidenciju identiteta
- * (Pravilnik o gazdinstvima čl. 7 st. 2, set 4.7.3). Za članove koji su pristupili
+ * (Pravilnik o gazdinstvima čl. 9 st. 3, set 4.7.3). Za članove koji su pristupili
  * pre nego što je ime postalo deo prijave.
  */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {

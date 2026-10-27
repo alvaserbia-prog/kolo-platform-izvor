@@ -6,10 +6,10 @@ import { DecaGreska, ukloniOglasDeteta } from "@/lib/protokol/deca";
 
 /**
  * DELETE /api/deca/[id]/oglas/[oglasId] — roditelj uklanja oglas svog deteta
- * (Pravilnik o Modulu Deca, čl. 10 st. 1).
+ * (Pravilnik o učešću dece, čl. 20 st. 1).
  *
  * Uklanjanje oglasa je JEDINO ovlašćenje uklanjanja koje roditelj ima. Poruke
- * deteta ne vidi (čl. 9 st. 3), pa ih ni ne uklanja — za to postoji moderacija
+ * deteta ne vidi (čl. 19 st. 2), pa ih ni ne uklanja — za to postoji moderacija
  * Fondacije, kao i za svaki drugi sadržaj na Platformi.
  */
 export async function DELETE(

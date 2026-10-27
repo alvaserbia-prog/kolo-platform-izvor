@@ -3,8 +3,8 @@
 /**
  * Moderacija Pijace — pregled prijavljenih oglasa i uklanjanje spornih.
  *
- * Pravni osnov: Uslovi korišćenja čl. 20, 21, 22, 24 i 25. Fondacija nije
- * obavezna da unapred pregleda sadržaj (čl. 25 st. 1), pa je podrazumevan
+ * Pravni osnov: Uslovi korišćenja čl. 22, 23, 24, 28 i 29. Fondacija nije
+ * obavezna da unapred pregleda sadržaj (čl. 29 st. 2), pa je podrazumevan
  * prikaz „prijavljeni" — red čekanja koji su napravili sami korisnici.
  *
  * Namerno NEMA izmene tuđeg oglasa: akti daju pravo uklanjanja, ne prepravke.
@@ -105,7 +105,7 @@ export default function PijacaTab() {
 
   async function ukloni(id: string) {
     if (!razlog.trim()) {
-      setGreska("Razlog uklanjanja je obavezan — šalje se korisniku (Uslovi čl. 25 st. 2).");
+      setGreska("Razlog uklanjanja je obavezan — šalje se korisniku (Uslovi čl. 29 st. 2).");
       return;
     }
     setRadiId(id);
@@ -160,9 +160,9 @@ export default function PijacaTab() {
     <div className="space-y-4">
       {dijalog}
       <Obavestenje vrsta="info">
-        Fondacija nije obavezna da unapred pregleda sadržaj (Uslovi čl. 25 st. 1), ali može ukloniti
+        Fondacija nije obavezna da unapred pregleda sadržaj (Uslovi čl. 29 st. 2), ali može ukloniti
         oglas koji krši Uslove, Pravilnik ili zakon — uz obavezno obaveštenje korisniku sa razlogom
-        (čl. 21 st. 2, čl. 25 st. 2). Oglas se ne prepravlja: vlasnik dobija razlog i sam ispravlja.
+        (čl. 23 st. 5, čl. 29 st. 2). Oglas se ne prepravlja: vlasnik dobija razlog i sam ispravlja.
       </Obavestenje>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -282,7 +282,7 @@ export default function PijacaTab() {
                     rows={2}
                     maxLength={500}
                     autoFocus
-                    placeholder={'Razlog uklanjanja — vidi ga korisnik (npr. „Oglas nudi dobro čiji je promet zabranjen, Uslovi čl. 21").'} aria-label={'Razlog uklanjanja — vidi ga korisnik (npr. „Oglas nudi dobro čiji je promet zabranjen, Uslovi čl. 21").'}
+                    placeholder={'Razlog uklanjanja — vidi ga korisnik (npr. „Oglas nudi dobro čiji je promet zabranjen, Uslovi čl. 23").'} aria-label={'Razlog uklanjanja — vidi ga korisnik (npr. „Oglas nudi dobro čiji je promet zabranjen, Uslovi čl. 23").'}
                     className={KLASE_UNOSA}
                   />
                   <div className="flex gap-2">

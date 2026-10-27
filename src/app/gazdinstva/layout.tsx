@@ -6,7 +6,7 @@ import { jeAdmin, jeZadruzniAdmin, mozeNadzor } from "@/lib/dozvole";
 
 /**
  * Gazdinstva imaju sopstveni raspored, kao i Pijaca i škole: mapa domaćih
- * proizvođača je javna (Pravilnik o gazdinstvima čl. 11) i vidi je i neprijavljen
+ * proizvođača je javna (Pravilnik o gazdinstvima čl. 19) i vidi je i neprijavljen
  * posetilac, a prijavljen član je gleda unutar rasporeda sa bočnim menijem.
  */
 export default async function GazdinstvaLayout({ children }: { children: React.ReactNode }) {

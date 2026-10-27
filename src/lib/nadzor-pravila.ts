@@ -5,13 +5,13 @@
  * su pravila doprinosa sadržaju razdvojena od servisa). Servisni deo je u
  * `src/lib/protokol/nadzor-service.ts`, koji ovo re-eksportuje.
  *
- * Osnov: Pravilnik o dokazu stvarnosti 4.2.0, čl. 11.
+ * Osnov: Pravilnik o dokazu stvarnosti čl. 24.
  */
 
 export type Ishod = "UREDNO" | "ZA_PROVERU" | "SPORNO";
 export type Subjekt = "VERIFIKATOR" | "VERIFIKOVANI" | "OBA" | "DEO_MREZE";
 
-/** Šifre razloga iz čl. 11 st. 4 — zatvorena lista, ne slobodan tekst. */
+/** Šifre razloga iz čl. 24 st. 4 — zatvorena lista, ne slobodan tekst. */
 export const RAZLOZI = [
   "ne_poznaju_se",
   "nalog_bez_znakova",
@@ -38,7 +38,7 @@ export type ValidacijaGreska =
   | { ok: false; poruka: string };
 
 /**
- * Provera obaveznih polja uz ishod (čl. 11 st. 3).
+ * Provera obaveznih polja uz ishod (čl. 24 st. 3).
  * Uz „za proveru" i „sporno" subjekt sumnje i šifra razloga su OBAVEZNI —
  * bez njih predmet ne bi imao šta da kaže Upravnom odboru. Uz „uredno" se
  * ne traži obrazloženje i eventualno poslata polja se ignorišu.

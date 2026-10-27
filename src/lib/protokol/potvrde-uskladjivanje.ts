@@ -1,13 +1,13 @@
 /**
- * Jednokratno usklađivanje zatečenih potvrda sa pravilom iz dokaza stvarnosti čl. 7.
+ * Jednokratno usklađivanje zatečenih potvrda sa pravilom iz dokaza stvarnosti čl. 19.
  *
  * Do seta 4.6.4 se POEN po potvrdi upisivao ODMAH, bez ijednog traga da je potvrđeni
  * išta doprineo. Ova radnja zatečene potvrde dovodi na isto pravilo koje od tog seta
  * važi za nove: ko nije ostvario nijedan doprinos, POEN mu se vraća u „zabeleženo" i
  * upisaće se kad uslov nastupi.
  *
- * Osnov: čl. 22a Pravilnika o dokazu stvarnosti; izuzetak od zabrane negativnog zapisa
- * je čl. 14 stav 3 tačka 6 Pravilnika o KOLO sistemu.
+ * Osnov: čl. 39 Pravilnika o dokazu stvarnosti; izuzetak od zabrane negativnog zapisa
+ * je čl. 17 stav 2 tačka 5 Pravilnika o KOLO sistemu.
  *
  * 🔴 PRELAZNA RADNJA, NE TRAJAN INSTITUT. Sprovodi se jednom, dok sistem još nije
  * zvanično u radu — posle puštanja u rad ovakva ispravka bila bi znatno skuplja i
@@ -23,11 +23,11 @@
  *
  * 🟢 Minus se sam popunjava baš ponašanjem koje se traži: zabeleženi doprinos od
  * 1.000 ostaje, pa kad čovek objavi oglas i Fondacija ga odobri, upisuje mu se 1.000
- * po čl. 40a i 1.000 po potvrdi — dakle 2.000, čime se minus od 1.000 gasi i čovek
+ * po čl. 38 Pravilnika i 1.000 po potvrdi — dakle 2.000, čime se minus od 1.000 gasi i čovek
  * završava tamo gde bi i bio. Zato ovo nije sankcija nego pomeren trenutak upisa.
  *
  * 🔴 TERET SE NE PRENOSI NI NA KOGA. Svako vraća isključivo ono što je povodom te
- * potvrde njemu bilo evidentirano; nadoknada iz čl. 20b se ne primenjuje (tamo
+ * potvrde njemu bilo evidentirano; nadoknada iz čl. 36 se ne primenjuje (tamo
  * nepokriveni deo prelazi na verifikatora, ovde ne prelazi nikome).
  *
  * 🔴 NADZORNIKOVIH 500 SE POVLAČE ISTO (odluka vlasnika, 16.09.2026). Od seta 4.6.5 i
@@ -36,7 +36,7 @@
  * ume da ima upisan POEN po potvrdi a nadzor koji čeka, i obrnuto.
  *
  * 🔴 USLOV SE MERI BLAGO, i to je namerno: računa se SVAKI evidentiran doprinos po
- * čl. 40a, bez obzira kojim je okidačem nastao. Zatečeni oglasi potvrđenih članova
+ * čl. 38 Pravilnika, bez obzira kojim je okidačem nastao. Zatečeni oglasi potvrđenih članova
  * nikad nisu prolazili kroz odobrenje, jer se ono tada nije tražilo — traženje
  * odobrenja unazad bilo bi kažnjavanje po pravilu koje u tom trenutku nije postojalo.
  * `dohvatiTragUcesca` upravo to i radi: gleda postojanje emisije, ne način nastanka.
@@ -76,7 +76,7 @@ export type UskladjivanjeIshod = {
   /** Zbir koji se poništava — pun iznos, bez kapiranja. */
   poenPonisten: number;
   pogodjenihLjudi: number;
-  /** Koliko ljudi time prelazi u negativan zapis (čl. 14 st. 3 t. 6). */
+  /** Koliko ljudi time prelazi u negativan zapis (Pravilnik čl. 17 st. 2 t. 5). */
   ljudiUMinusu: number;
   /** Zbir negativnih stanja posle radnje, kao pozitivan broj. */
   ukupanMinus: number;
@@ -277,7 +277,7 @@ export async function uskladiZatecenePotvrde(opcije: {
         if (iznos <= 0) continue;
         const w = await tx.wallet.findUnique({ where: { userId }, select: { id: true } });
         if (!w) continue;
-        // 🔴 Pun iznos, bez kapiranja — zapis sme u minus (čl. 14 st. 3 t. 6).
+        // 🔴 Pun iznos, bez kapiranja — zapis sme u minus (Pravilnik čl. 17 st. 2 t. 5).
         await tx.wallet.update({ where: { id: w.id }, data: { balance: { decrement: iznos } } });
         await tx.wallet.update({
           where: { id: PROTOKOL_WALLET_ID },
@@ -289,7 +289,7 @@ export async function uskladiZatecenePotvrde(opcije: {
             toWalletId: PROTOKOL_WALLET_ID,
             amount: iznos,
             type: TransactionType.USKLADJIVANJE_POTVRDE,
-            description: "Usklađivanje zatečene potvrde sa čl. 7 — POEN se vraća u zabeleženo",
+            description: "Usklađivanje zatečene potvrde sa čl. 19 dokaza stvarnosti — POEN se vraća u zabeleženo",
             opisKljuc: "transakcije.uskladjivanje_potvrde",
           },
         });

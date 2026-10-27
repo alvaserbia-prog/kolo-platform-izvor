@@ -3,7 +3,7 @@
 /**
  * Kartica zapisa koji čeka nadzor: verifikacija (potvrda ili uvođenje u Kolo),
  * potvrda člana bez potvrde (i automatska potvrda lanca) ili potvrda postojanja
- * deteta (dokaz stvarnosti čl. 10, set 4.8.2).
+ * deteta (dokaz stvarnosti čl. 22, set 4.8.2).
  *
  * Do 4.2.0 je imala jedno dugme — „Potvrdi nadzor". Nadzornik koji nešto posumnja
  * nije imao gde to da upiše, pa ni traga o tome nije bilo, a podsticaj (500 POEN
@@ -43,7 +43,7 @@ type Props = {
   verifikovani: { id: string; pseudonim: string };
   datum: string;
   ranijiZapisi?: RanijiZapis[];
-  /** Signali (dokaz stvarnosti čl. 11): gde da nadzornik pogleda prvo. Nisu ishod. */
+  /** Signali (dokaz stvarnosti čl. 25): gde da nadzornik pogleda prvo. Nisu ishod. */
   signali?: SignalNadzora[];
 };
 
@@ -64,7 +64,7 @@ export default function VerifikacijaCard({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Otvorena forma za ishod koji traži obrazloženje (čl. 11 st. 3).
+  // Otvorena forma za ishod koji traži obrazloženje (čl. 24 st. 3).
   const [formaZa, setFormaZa] = useState<Ishod | null>(null);
   const [subjekt, setSubjekt] = useState<Subjekt>("VERIFIKOVANI");
   const [razlog, setRazlog] = useState<Razlog>("ne_poznaju_se");

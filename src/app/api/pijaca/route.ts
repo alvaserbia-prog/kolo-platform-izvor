@@ -32,7 +32,7 @@ const MAX_SIZE = MAX_PO_SLICI;
 // GET /api/pijaca — lista aktivnih oglasa
 //
 // Ruta je otvorena i neprijavljenom posetiocu, pa je vidljivost dečjih oglasa
-// (Pravilnik o Modulu Deca, čl. 13) morala da uđe upravo ovde: gost nikada ne vidi
+// (Pravilnik o učešću dece, čl. 24) morala da uđe upravo ovde: gost nikada ne vidi
 // oglas maloletnog korisnika, punoletni ga vidi uz saglasnost roditelja, a dete
 // vidi oglase druge dece uvek.
 export async function GET(req: NextRequest) {
@@ -82,11 +82,11 @@ export async function GET(req: NextRequest) {
   });
 
   // Dete sa roditeljem oglase vidi BEZ pseudonima oglašivača, osim oglasa svojih
-  // prijatelja (Pravilnik o učešću dece čl. 4c t. 2, 13 st. 4).
+  // prijatelja (Pravilnik o učešću dece čl. 5 st. 1 t. 2).
   const prijatelji =
     posmatrac?.maloletan && posmatrac.stanje === "POVEZANO" ? await idPrijatelja(posmatrac.id) : [];
 
-  // Oznaka DOMAĆE se izvodi (Pravilnik o gazdinstvima čl. 10); članstvo se ne šalje.
+  // Oznaka DOMAĆE se izvodi (Pravilnik o gazdinstvima čl. 18); članstvo se ne šalje.
   return NextResponse.json({
     listings: listings.map(({ gazdinstvo, ...l }) => ({
       ...l,
@@ -102,7 +102,7 @@ export async function GET(req: NextRequest) {
 //
 // Otvoreno i neverifikovanom korisniku (Pravilnik 4.1.1 čl. 16 st. 5, čl. 28 st. 2),
 // ali samo za PONUDU, uz sadržinski minimum i najviše tri aktivna oglasa. Prvi takav
-// oglas mu beleži doprinos sadržaju platforme (čl. 40a) — doprinos se BELEŽI ovde, a
+// oglas mu beleži doprinos sadržaju platforme (Pravilnik čl. 38) — doprinos se BELEŽI ovde, a
 // evidentira tek kad ga neko verifikuje ili mu upiše POEN.
 export async function POST(req: NextRequest) {
   try {
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
   const category = (formData.get("category") as string)?.trim();
   const location = (formData.get("location") as string)?.trim() ?? "";
   const phone = (formData.get("phone") as string)?.trim() ?? "";
-  // Oglas u ime gazdinstva (Pravilnik o gazdinstvima čl. 10) — samo član, samo ponuda.
+  // Oglas u ime gazdinstva (Pravilnik o gazdinstvima čl. 18) — samo član, samo ponuda.
   const gazdinstvoIdRaw = ((formData.get("gazdinstvoId") as string) ?? "").trim();
 
   if (!title || title.length < 3)
@@ -182,13 +182,13 @@ export async function POST(req: NextRequest) {
   if (!korisnik) return await greska("Nalog ne postoji.", 401);
 
   // 🔴 Za oglas maloletnog korisnika važe ISTI uslovi objave kao za svaki drugi
-  // oglas — razlikuje se samo vidljivost (Modul Deca, čl. 13 st. 1). Ograničenja
+  // oglas — razlikuje se samo vidljivost (Pravilnik o učešću dece, čl. 24 st. 1). Ograničenja
   // za nepotvrđen nalog (samo ponuda, najviše tri, sadržinski minimum) postoje
   // zbog naloga iza kog niko ne stoji; iza deteta stoje roditelj i svi koji su
   // roditelja potvrdili, pa se na njega ne primenjuju.
   //
   // Ovim se ništa ne zaobilazi: oglas objavljuje samo dete Kola, iza koga stoji
-  // roditelj član Kola kome je član Kola potvrdio postojanje deteta (čl. 4c t. 3).
+  // roditelj član Kola kome je član Kola potvrdio postojanje deteta (čl. 5 st. 1 t. 3).
   // R-01, mera M-9: isto važi i za člana čiji je identitet utvrđen na
   // donatorskom putu — iza njegovog naloga stoji identitet koji je banka već
   // identifikovala, pa ograničenja pisana za nalog iza kog ne stoji niko
@@ -198,7 +198,7 @@ export async function POST(req: NextRequest) {
     korisnik.maloletan;
 
   // Oglas maloletnog učesnika objavljuje samo dete Kola (Pravilnik o učešću dece
-  // čl. 13 st. 4, 4c). Dete na čekanju i dete sa roditeljem ne objavljuju.
+  // čl. 24 st. 1, 5). Dete na čekanju i dete sa roditeljem ne objavljuju.
   const stanje = await stanjeNaloga(session.user.id);
   if (stanje === "NA_CEKANJU") return await greska(PORUKA_CEKA_RODITELJA, 403);
   if (!smeObjavitiOglas(stanje)) return await greska(PORUKA_NIJE_DETE_KOLA, 403);
@@ -223,7 +223,7 @@ export async function POST(req: NextRequest) {
   let gazdinstvoId: string | null = null;
   if (gazdinstvoIdRaw) {
     // Oglas u ime gazdinstva postavlja samo član koji gazdinstvom upravlja
-    // (Pravilnik o gazdinstvima čl. 9 st. 1, 9a).
+    // (Pravilnik o gazdinstvima čl. 11, 14).
     const clanstvo = await upravljackoClanstvo(session.user.id);
     if (!clanstvo || clanstvo.gazdinstvo.id !== gazdinstvoIdRaw)
       return await greska("Oglas u ime gazdinstva postavlja samo njegov član.", 403);
@@ -281,16 +281,16 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // Doprinos sadržaju platforme (čl. 40a) — 1.000 POEN za PRVU ponudu koja ispunjava
+  // Doprinos sadržaju platforme (Pravilnik čl. 38) — 1.000 POEN za PRVU ponudu koja ispunjava
   // sadržinski minimum. Od 2026-08-11 se evidentira ODMAH, i korisniku čija stvarnost
   // još nije potvrđena; ranije je njemu samo beležen i čekao je okidač.
   await zabeleziDoprinos(session.user.id, { id: listing.id, ...oglasZaProveru, images: imagePaths });
 
-  // Doprinos gazdinstva (čl. 40c st. 4) se evidentira kad član ima objavljen oglas
+  // Doprinos gazdinstva (Pravilnik o gazdinstvima čl. 16) se evidentira kad član ima objavljen oglas
   // kojim nešto nudi — bilo koji, ne samo u ime gazdinstva. Ne baca.
   await probajEvidentiratiGazdinstvo(session.user.id);
 
-  // 🔴 Oglas maloletnog naloga: javi roditelju (Modul Deca, čl. 10 st. 6; R-07 M-5″).
+  // 🔴 Oglas maloletnog naloga: javi roditelju (Pravilnik o učešću dece, čl. 20 st. 4; R-07 M-5″).
   // Roditelj odgovara za sadržaj koji je dete objavilo DO TRENUTKA UKLANJANJA, a taj
   // oglas vide pretežno ili isključivo druga deca — on je jedini odrastao koji ga
   // uopšte vidi. Bez obaveštenja je odredba neizvodljiva. Ne baca.

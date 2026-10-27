@@ -11,9 +11,9 @@ import { objaviNabavku, NabavkaGreska } from "@/lib/protokol/nabavka";
  * POST /api/admin/nabavke/[id]/objavi
  *   { ponudaId, jedinicaMere, mestoPreuzimanja, preuzimanjeOd }
  *
- * Objava kalkulacije i otvaranje prijava (čl. 20).
+ * Objava kalkulacije i otvaranje prijava (čl. 18).
  *
- * 🔴 Svi brojevi se SNIMAJU na zapis: po čl. 20 st. 2 kalkulacija se posle objave
+ * 🔴 Svi brojevi se SNIMAJU na zapis: po čl. 18 st. 3 kalkulacija se posle objave
  * ne menja, a bez snimka bi se prikazani iznosi menjali sa saldom Fondacije i sa
  * tržišnom cenom — čovek koji se prijavljuje video bi druge brojeve nego onaj koji
  * je odlučivao.

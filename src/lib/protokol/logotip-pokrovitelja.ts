@@ -15,7 +15,7 @@ export * from "@/lib/logotip-pokrovitelja-pravila";
 
 /**
  * Logotip pokrovitelja — servisni sloj (Pravilnik o pokroviteljstvu i donacijama
- * čl. 13 st. 4). Čista pravila su u `logotip-pokrovitelja-pravila.ts`.
+ * čl. 26 st. 2). Čista pravila su u `logotip-pokrovitelja-pravila.ts`.
  *
  * Tok: prijava (novcem ili dobrima i uslugama) šalje fajl na `/api/pokroviteljstvo/
  * logotip`, dobija javni URL i nosi ga u prijavi. Novčana prijava ga pri potvrdi
@@ -88,7 +88,7 @@ export async function ukloniLogotip(izvor: IzvorLogotipa, id: string, razlog: st
     prisma.pokroviteljPrijava.updateMany({ where: { logoUrl: url }, data: { logoUrl: null } }),
     prisma.pokrovitelj.updateMany({ where: { logoUrl: url }, data: { logoUrl: null } }),
     prisma.ugovorDobra.updateMany({ where: { logoUrl: url }, data: { logoUrl: null } }),
-    // Upis (čl. 6a): odobren logotip i logotip na ponovnoj proveri.
+    // Upis (čl. 16, 18): odobren logotip i logotip na ponovnoj proveri.
     prisma.upisPokrovitelja.updateMany({ where: { logoUrl: url }, data: { logoUrl: null } }),
     prisma.upisPokrovitelja.updateMany({ where: { izmenaLogoUrl: url }, data: { izmenaLogoUrl: null } }),
   ]);

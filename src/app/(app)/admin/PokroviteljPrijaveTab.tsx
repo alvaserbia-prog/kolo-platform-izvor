@@ -129,7 +129,7 @@ export default function PokroviteljPrijaveTab({ onDone }: { onDone: () => void }
                 </span>
                 {p.status === "ODBIJENA" && p.odbijenoRazlog && <span className="text-kolo-muted"> — {p.odbijenoRazlog}</span>}
               </p>
-              {/* Upis (donacije čl. 6a): poređenje sa registrom je izvršeno pri odobrenju upisa. */}
+              {/* Upis (donacije čl. 16 i 18): poređenje sa registrom je izvršeno pri odobrenju upisa. */}
               {p.upisId && p.status === "POTPISANA" && (
                 <p className="text-xs text-kolo-muted mt-0.5">{p.upisOdobren ? t("pokr_prijave_upis_odobren") : t("pokr_prijave_upis_nije_odobren")}</p>
               )}
@@ -162,7 +162,7 @@ export default function PokroviteljPrijaveTab({ onDone }: { onDone: () => void }
           <div className="bg-kolo-surface rounded-kartica shadow-kartica max-w-lg w-full max-h-[85vh] overflow-auto p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <h3 className="font-semibold text-kolo-text">{t("pokr_prijave_ugovor_naslov")}</h3>
             <pre className="text-xs text-kolo-text whitespace-pre-wrap font-sans bg-kolo-bg rounded-kontrola p-4">{detalji.ugovorTekst}</pre>
-            {/* Poređenje sa APR-om (Pravilnik čl. 31a st. 4): bez njega se nova prijava
+            {/* Poređenje sa APR-om (Pravilnik čl. 31 st. 4): bez njega se nova prijava
                 ne potvrđuje, a ime zastupnika ne ide u evidenciju identiteta. */}
             {detalji.status === "POTPISANA" && !detalji.upisId && (detalji.zastupnikImePrezime ? (
               <div className="space-y-3">

@@ -10,8 +10,8 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
- * Prijava novčanog pokroviteljstva (Pravilnik o pokroviteljstvu i donacijama čl. 7)
- * iz odobrenog upisa: samo iznos. Ugovor se generiše iz podataka upisa (čl. 7 st.
+ * Prijava novčanog pokroviteljstva (Pravilnik o pokroviteljstvu i donacijama čl. 19)
+ * iz odobrenog upisa: samo iznos. Ugovor se generiše iz podataka upisa (čl. 19 st.
  * 4) i potpisuje u tabu Ugovori.
  */
 export default function NovcanaPrijava({ upisId, onPoslato }: { upisId: string; onPoslato: () => void }) {
@@ -48,7 +48,7 @@ export default function NovcanaPrijava({ upisId, onPoslato }: { upisId: string; 
         <input type="number" value={vrednost} onChange={(e) => setVrednost(e.target.value)}
           className={KLASE_UNOSA} />
       </Polje>
-      {/* Ime iz upisa ide u evidenciju identiteta pri potvrdi prijema (čl. 7 st. 3). */}
+      {/* Ime iz upisa ide u evidenciju identiteta pri potvrdi prijema (čl. 19 st. 3). */}
       <p className="text-xs text-kolo-muted">{t("forma_zastupnik_napomena")}</p>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
       <Dugme onClick={posalji} disabled={radi || !vrednost || Number(vrednost) <= 0}>

@@ -14,7 +14,7 @@ const IZVORI: IzvorLogotipa[] = ["PRIJAVA", "POKROVITELJ", "UGOVOR_DOBRA", "UPIS
 
 /**
  * POST /api/admin/pokroviteljstvo/logotip/ukloni — moderacija logotipa pokrovitelja
- * (donacije čl. 13 st. 4). Telo: `{ izvor, id, razlog }`.
+ * (donacije čl. 26 st. 2). Telo: `{ izvor, id, razlog }`.
  *
  * 🔴 Samo uklanjanje, nikad prepravka ni postavljanje logotipa umesto pokrovitelja;
  * razlog je obavezan i ide u audit log i obaveštenje podnosiocu.

@@ -7,21 +7,21 @@
  *
  * Šta ovo jeste, a šta nije:
  *
- *  - Prepis POEN-a je ažuriranje evidencije između dva zapisa (Pravilnik čl. 14,
- *    16), a za samu razmenu dobara i usluga odgovaraju korisnici po opštim
+ *  - Prepis POEN-a je ažuriranje evidencije između dva zapisa (Pravilnik čl. 17,
+ *    20), a za samu razmenu dobara i usluga odgovaraju korisnici po opštim
  *    pravilima obligacionog prava; Fondacija i Protokol nisu strana u tom
- *    odnosu (Uslovi čl. 22). Zato prijava NIJE zahtev za povraćaj i ne obara
+ *    odnosu (Uslovi čl. 24). Zato prijava NIJE zahtev za povraćaj i ne obara
  *    prepis sama od sebe — ona je evidencija o kojoj Fondacija odlučuje.
  *  - Poništenje ide PROTIVZAPISOM, ne brisanjem: istorija se ne prepravlja, kao
- *    ni pri prestanku statusa (čl. 34).
+ *    ni pri prestanku statusa (Pravilnik čl. 33).
  *
  * 🔴 POVRAĆAJ JE UVEK PUN — zapis primaoca sme u minus (odluka vlasnika,
  * 2026-08-15). Ranija verzija je vraćala najviše ono što na zapisu zatekne, pa
  * je onaj ko brže potroši tuđi POEN prolazio jeftinije od onog ko ga sačuva —
  * to je nagrađivalo upravo ponašanje zbog kog se prijava i podnosi. Minus radi
- * isto što i nadoknada iz čl. 20b: nije dug i ne naplaćuje se, POEN-i koji
+ * isto što i nadoknada iz dokaza stvarnosti čl. 36: nije dug i ne naplaćuje se, POEN-i koji
  * pristignu prvo ga popunjavaju, a prepis drugome je moguć tek kad zapis pređe
- * nulu. Time izuzetaka od zabrane negativnog zapisa (Pravilnik čl. 14 st. 3)
+ * nulu. Time izuzetaka od zabrane negativnog zapisa (Pravilnik čl. 17 st. 2)
  * ima DVA — vidi napomenu o aktima u CLAUDE.md.
  */
 
@@ -38,8 +38,14 @@ export type UlazPrijave = {
   posiljaocId: string | null;
   /** Ko prijavljuje. */
   prijaviocId: string;
-  /** Je li prijavilac maloletan — za njega poništenje prepisa ne važi (čl. 14 st. 5). */
+  /** Je li prijavilac maloletan — za njega poništenje prepisa ne važi (deca čl. 23 st. 3). */
   prijaviocMaloletan: boolean;
+  /**
+   * Je li PRIMALAC prepisa maloletan. Platforma ne obara ažuriranje evidencije POEN-a
+   * kada je strana u razmeni maloletni korisnik — ni kad prijavljuje punoletni
+   * pošiljalac (Pravilnik o učešću dece čl. 23 st. 3): poništenje posla ostvaruje se između strana, uz roditelja.
+   */
+  primalacMaloletan: boolean;
   /** Postoji li već prijava nad ovim prepisom. */
   vecPrijavljena: boolean;
   /** Koliko prijava ovog korisnika još čeka odluku. */
@@ -64,7 +70,7 @@ export function smePrijaviti(u: UlazPrijave): IshodProvere {
     return { ok: false, razlog: "Prepis može da prijavi samo onaj ko je POEN prepisao." };
 
   // 🔴 Za maloletnog korisnika poništenje prepisa NE važi (Pravilnik o učešću dece,
-  // čl. 14 st. 5). Odredba postoji od prve verzije akta, a kod je do 4.5.3 nije
+  // čl. 23 st. 3). Odredba postoji od prve verzije akta, a kod je do 4.5.3 nije
   // sprovodio — dete je moglo da podnese prijavu i tuđem detetu obori prepis u minus.
   // Roditelj namerno NIJE ovlašćen umesto njega: pravo da se posao maloletnika obori
   // daje Porodični zakon i ostvaruje se između strana, ne dugmetom u Platformi.
@@ -73,6 +79,18 @@ export function smePrijaviti(u: UlazPrijave): IshodProvere {
       ok: false,
       razlog:
         "Prepis maloletnog korisnika se ne poništava kroz Platformu. Ako razmena nije ispala kako je dogovoreno, dogovorite se sa drugom stranom.",
+    };
+
+  // 🔴 Isto važi kad je maloletan PRIMALAC: prepis punoletnog detetu (od 15 godina)
+  // ne sme se poništiti kroz Platformu — inače bi dete otišlo u minus van osnova
+  // iz Pravilnika čl. 17 st. 2, a posao maloletnika obara se po Porodičnom zakonu,
+  // između strana. Punoletni pošiljalac ide sporazumnim rešavanjem (Uslovi čl. 39),
+  // u kome za dete učestvuje roditelj.
+  if (u.primalacMaloletan)
+    return {
+      ok: false,
+      razlog:
+        "Prepis maloletnom korisniku se ne poništava kroz Platformu. Ako razmena nije ispala kako je dogovoreno, dogovorite se sa drugom stranom i njegovim roditeljem.",
     };
 
   if (u.vecPrijavljena)

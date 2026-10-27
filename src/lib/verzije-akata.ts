@@ -66,8 +66,10 @@ export const AKT_USLOVI: Akt = {
   // 4.8.5 — registar 2026-10, oblasti U–S (objava posle seta 4.8.4): čl. 1 (ciljna
   // teritorija), 16b (poziv obavlja član Kola), 20 (propisi), 28 (lažna izjava o
   // gazdinstvu — samo ko je lagao ili znao).
-  verzija: "4.8.5",
-  fajl: "uslovi_koriscenja_4_8_5.md",
+  // 5.0.0 — ceo set prenumerisan bez podčlanova; sporovi preko zadruge, prijava smrti,
+  // rokovi prigovora brojem, zaštita iz ZOO čl. 265 za svako ograničenje odgovornosti.
+  verzija: "5.0.0",
+  fajl: "uslovi_koriscenja_5_0_0.md",
 };
 
 export const AKT_POLITIKA: Akt = {
@@ -99,8 +101,25 @@ export const AKT_POLITIKA: Akt = {
   // ime, mesto i broj ostaju uz nalog i porede se; utvrđenje višestrukog naloga.
   // 4.8.5 — registar 2026-10, oblasti U–B: čl. 2 (ciljna teritorija), čl. 8 (Google
   // prijava, push, OpenStreetMap, rezervne kopije), zadružni admin, DPIA kod direktora.
-  verzija: "4.8.5",
-  fajl: "politika_4_8_5.md",
+  // 5.0.0 — uređena po svrsi (jedan član po obradi, rok uz obradu); Kutija želja,
+  // podrška u Gornjem Kolu, spor u zadruzi, prijava smrti, revizijski dnevnik 12 meseci.
+  verzija: "5.0.0",
+  fajl: "politika_5_0_0.md",
+};
+
+/**
+ * Izjava o prihvatanju rizika (rizici čl. 2 st. 1: prihvata se registracijom,
+ * zajedno sa Uslovima korišćenja).
+ *
+ * 🔴 Odluka vlasnika 12 (set 5.0): veza na Izjavu stoji uz ISTU kvačicu za Uslove,
+ * bez nove kvačice i bez nove vrste zapisa. Verzija Izjave zato ulazi u snimljen
+ * tekst reda `USLOVI_KORISCENJA` (`tekstPristankaNaAkt` u `pristanak.ts`), a ne u
+ * zaseban red. Pri bumpu Izjave menja se i ovo (brana `pristanak-izvor.test.ts`).
+ */
+export const AKT_RIZICI: Akt = {
+  // 5.0.0 — prvi put uz kvačicu za Uslove pri registraciji i u gejtu.
+  verzija: "5.0.0",
+  fajl: "rizici_5_0_0.md",
 };
 
 /**

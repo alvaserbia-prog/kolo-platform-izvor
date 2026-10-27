@@ -33,15 +33,15 @@ export default async function ProfilPage() {
   const prikaz = await prikazStatusa(user.id);
 
   // Odeljak „Moja deca": nalog detetu otvara i preuzima SVAKI punoletni učesnik,
-  // i korisnik (Pravilnik o učešću dece čl. 4, 4b st. 6, 5 st. 1; set 4.8.2). Da li
+  // i korisnik (Pravilnik o učešću dece čl. 7, 11; set 4.8.2). Da li
   // dete postaje dete Kola zavisi od statusa roditelja, ne od prava da otvori nalog.
   const prikaziDecu = !user.maloletan && !!prikaz && sme("OTVARA_NALOG_DETETU", prikaz.status);
 
   // Izbor škole vidi SAMO maloletni nalog: školu bira sámo dete (Pravilnik o
-  // učešću dece, čl. 7), pa ni roditelj ovaj odeljak nema.
+  // učešću dece, čl. 26), pa ni roditelj ovaj odeljak nema.
   const skola = user.maloletan ? razresiSkolu(user.skolaSifra) : null;
 
-  // Stanje naloga deteta (čl. 4c) — za kod roditelju dok nalog čeka preuzimanje.
+  // Stanje naloga deteta (deca čl. 5) — za kod roditelju dok nalog čeka preuzimanje.
   const stanjeDeteta = user.maloletan ? await stanjeNaloga(user.id) : null;
 
   /**
@@ -113,7 +113,7 @@ export default async function ProfilPage() {
 }
 
 /**
- * Kartica sa kodom koji roditelj unosi uz pseudonim deteta (čl. 4b, rezervni put).
+ * Kartica sa kodom koji roditelj unosi uz pseudonim deteta (deca čl. 11, rezervni put).
  * Serverska je i namerno bez ijedne radnje: broj se čita naglas, ne kopira.
  */
 async function KodZaRoditelja({ kod }: { kod: string }) {

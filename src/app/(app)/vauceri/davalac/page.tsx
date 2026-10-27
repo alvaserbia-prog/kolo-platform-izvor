@@ -16,10 +16,10 @@ export async function generateMetadata() {
 }
 
 /**
- * Ulaz za proveru vaučera (nabavke čl. 30g). Ugovori, potpis, zaposleni i podaci
+ * Ulaz za proveru vaučera (nabavke čl. 34). Ugovori, potpis, zaposleni i podaci
  * pokrovitelja su od seta 4.7.8 na stranici pokrovitelja (`/postani-pokrovitelj/[id]`);
  * ova adresa ostaje zbog starih linkova iz obaveštenja i mejlova i kao ulaz za
- * zaposlenog (donacije čl. 13g st. 6), koji vidi samo proveru i potvrdu koda.
+ * zaposlenog (donacije čl. 32 st. 3), koji vidi samo proveru i potvrdu koda.
  */
 export default async function DavalacPage() {
   const session = await getServerSession(authOptions);

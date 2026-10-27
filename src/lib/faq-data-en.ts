@@ -380,7 +380,7 @@ There are five founders and the circle is closed. They were determined in advanc
 
 The pace is not arbitrary. One step of 24,000 POEN is recorded only once the total amount of POEN in the system grows by another 100,000 — and the founding record itself counts towards that threshold. It means that while the channel lasts, the founding contribution makes up 24% of every newly recorded POEN. By the time the channel is exhausted at 2,400,000, the system has grown by 10,000,000 POEN and the channel closes permanently and irrevocably. From then on the founders' share only falls, because the system keeps growing while the channel no longer works.
 
-A larger balance does not give proportionally more power. Voting in the Upper Kolo is quadratic: the number of votes is the square root of the number of active ZRNO. Someone with a hundred times more ZRNO has ten times more votes, not a hundred — so even the largest POEN balance gives no control over decisions.
+A larger balance does not give proportionally more power. The Upper Kolo uses square-root voting: the number of votes is the square root of the number of active ZRNO. Someone with a hundred times more ZRNO has ten times more votes, not a hundred — so even the largest POEN balance gives no control over decisions.
 
 What you can check. The total amount recorded, the number of steps carried out and how much is left to the ceiling are available on the Founding Contribution page. The register of founders with pseudonyms and shares, including who has been credited how much, is available to participants.`,
       },
@@ -582,11 +582,11 @@ The POEN in the records of cooperative members and all other users remains untou
         pitanje: `What are social programmes and which ones exist?`,
         odgovor: `Some forms of participation cannot be recorded as individual exchanges, so social programmes exist for them.
 
-The social programmes cover groups whose participation in the community is constant and diffuse: Support for Mothers (and other primary carers), Support for the Elderly, Special Support (users in difficult circumstances) and Schooling. Once your application is confirmed, the Protocol records POEN for you automatically on a daily basis, without reporting individual activities. This is not social assistance or a benefit — it is a way for that kind of participation to have an equal place in the system as well.
+The social programmes cover groups whose participation in the community is constant and diffuse: Support for Mothers (and other primary carers), Support for the Elderly, Special Support (participants in difficult circumstances) and Support for Students. Once your application is confirmed, the Protocol records POEN for you automatically on a daily basis, without reporting individual activities. This is not social assistance or a benefit — it is a way for that kind of participation to have an equal place in the system as well.
 
 Alongside them, the Programmes also include contributions: the platform content contribution (the first listing and the farm), operational contribution (work for the common good through published tasks) and the children's contribution (children's participation in the children's space, described in the section “Children and parents”). Each is explained in its own question.
 
-Applying for the social programmes is open to participants, including a member without confirmation. Before approval, that the conditions are met is confirmed by a Kolo member who knows you personally, or otherwise by the Foundation.`,
+Applying for the social programmes is open to participants, including a member without confirmation. A minor user is not entitled to support programmes. Before approval, that the conditions are met is confirmed by a Kolo member who knows you personally, or otherwise by the Foundation.`,
       },
       {
         id: 17,
@@ -595,14 +595,14 @@ Applying for the social programmes is open to participants, including a member w
 
 The amount depends on the number and the age of the children: the base per child falls as the child grows, while the multiplier rises with each further child, so larger families receive proportionally more support. The exact amounts and examples are given in the separate question on the amounts of Support for Mothers.
 
-The application goes through the platform — you enter the details about the children into a form, without attaching documents.`,
+The application goes through the platform: for each child you enter only the date of birth, without attaching documents.`,
       },
       {
         id: 79,
         pitanje: `How much POEN per day per child does Support for Mothers bring, and how do the number and the age of the children affect the amount?`,
         odgovor: `For every child the starting daily base is 2,000 POEN, reduced by 100 POEN for each year of the child's age — the support gradually falls as the child grows and ends when the child turns 20.
 
-The number of children raises the total amount, but not by simple addition: each further child carries a higher multiplier. The first child ×1.00, the second ×1.20, the third ×1.50, the fourth ×2.00, the fifth ×3.00, the sixth ×4.50, the seventh ×6.00, the eighth ×8.00, the ninth ×10.00. That way larger families receive proportionally more support.
+The number of children raises the total amount, but not by simple addition: each further child carries a higher multiplier. A child's place in the order is determined by birth, starting from the eldest, not by the order in which the dates were entered. The first child ×1.00, the second ×1.20, the third ×1.50, the fourth ×2.00, the fifth ×3.00, the sixth ×4.50, the seventh ×6.00, the eighth ×8.00, the ninth ×10.00. That way larger families receive proportionally more support.
 
 An example: one child aged 3 — (2,000 − 300) × 1.00 = 1,700 POEN per day. The same child as the third in order — (2,000 − 300) × 1.50 = 2,550 POEN per day.
 
@@ -610,7 +610,7 @@ The support is recorded automatically on a daily basis while the status lasts, w
       },
       {
         id: 61,
-        pitanje: `What is “Support for the Elderly” — who is entitled and how do I apply?`,
+        pitanje: `What is “Support for the Elderly”, who is entitled to it and how do I apply?`,
         odgovor: `Support for the Elderly is a social programme for participants aged 50 and over.
 
 The daily amount rises with age: 1,000 POEN at the age of 50, increased by 100 POEN for every further year — a participant of 65 has 2,500 POEN per day, and a participant of 80 has 4,000 POEN per day.
@@ -619,8 +619,8 @@ The application goes through the platform and is open to participants; POEN is t
       },
       {
         id: 18,
-        pitanje: `What is Special Support and how does one apply?`,
-        odgovor: `Special Support is a programme for users in difficult circumstances. There are two grounds.
+        pitanje: `What is Special Support and how do I apply?`,
+        odgovor: `Special Support is a programme for participants in difficult circumstances. There are two grounds.
 
 The first is reduced capacity: you hold a decision of the competent authority establishing a degree of disability — including a decision of the work-capacity assessment commission — or, because of an acute or chronic illness, you are unable or substantially limited in taking part. If the person with reduced capacity is an adult participant, the entitlement is theirs; if they are not a participant, it belongs to whoever directly cares for them; if they are a minor, it belongs to the parent, until that person comes of age. One such situation gives one amount — the ground only decides in whose record it goes.
 
@@ -634,28 +634,28 @@ Participants see that you receive Special Support and how much, because the comm
       },
       {
         id: 96,
-        pitanje: `What is the Schooling programme and whom does it cover?`,
-        odgovor: `Schooling is a social programme for those in education — primary and secondary school pupils and students.
+        pitanje: `What is the Support for Students programme and whom does it cover?`,
+        odgovor: `Support for Students is a social programme for participants who are enrolled full-time in a higher education institution. Primary and secondary school pupils are not covered, and a minor user is not entitled to support programmes.
 
-The daily amount is fixed at 2,000 POEN, for as long as the status lasts. The status is checked once a year; if it is not confirmed at the review, the recording stops.
+The daily amount is fixed at 2,000 POEN, for as long as the application is valid. The entitlement is checked every six months from approval: when that period expires the application ceases to be valid, and if you are still studying, you submit a new application with a new statement.
 
-The application follows the same rules as the other social programmes: through the platform, by entering data into a form — for this programme, the grade or the year of study you are enrolled in — without attaching documents. For a child the application is submitted by a parent, and the entitlement lasts while the child's account is a Kolo child.`,
+The application follows the same rules as the other social programmes: through the platform, without attaching documents. The proof is your statement made under full responsibility, in which you state the institution and the year of study; no certificate of enrolment or other certificates are required. A false statement leads to measures under the Terms of Use and to the end of recording under this programme.`,
       },
       {
         id: 62,
         pitanje: `What is “proof of status” for a social programme — do I have to attach a birth certificate or a document of the child?`,
         odgovor: `You attach no document at all — nothing is scanned or sent.
 
-You enter the data into a form on the platform: for Support for Mothers, for example, the child's name and date of birth. The amount recorded for you depends on the number and the age of the children.
+You enter the data into a form on the platform: for Support for Mothers, for example, only the date of birth of each child. The amount recorded for you depends on the number and the age of the children.
 
-That the conditions are met is then confirmed, without sight of the data you entered, by a Kolo member who knows you personally: the person who confirmed you or another Kolo member who knows you. A Kolo member who only introduced you into the Kolo after a phone conversation, and a member without confirmation, cannot do this; if there is no such Kolo member, the Foundation establishes whether the conditions are met. The application is then approved by the Foundation. The data you entered is not public: only the person processing the application sees it. This is sensitive data, so it is processed only with your explicit consent, and you can withdraw that consent at any moment — the automatic recording of POEN then stops as well.
+That the conditions are met is then confirmed, without sight of the data you entered, by a Kolo member who knows you personally: the person who confirmed you or another Kolo member who knows you. A Kolo member who brought you into the Kolo or confirmed you after a phone conversation, and a member without confirmation, cannot do this; if there is no such Kolo member, the Foundation establishes whether the conditions are met. The application is then approved by the Foundation. The data you entered is not public: only the person processing the application sees it. This is sensitive data, so it is processed only with your explicit consent, and you can withdraw that consent at any moment — the automatic recording of POEN then stops as well.
 
 The closer conditions by which the status is confirmed for each group are set by the Rules on support programmes, published on the site.`,
       },
       {
         id: 20,
         pitanje: `Can I be in more than one programme at the same time?`,
-        odgovor: `Yes, if you meet the conditions for more than one — a mother who is in education can be in both Support for Mothers and Schooling. Each programme is applied for separately.
+        odgovor: `Yes, if you meet the conditions for more than one — a mother who is a student can be in both Support for Mothers and Support for Students. Each programme is applied for separately.
 
 The social programmes and the operational contribution share a common daily frame of 10% of the total amount of POEN in the system, so that too much POEN is not recorded at once — when there are more contributions than the frame takes, the daily amounts are reduced proportionally. The platform content contribution and the children's contribution do not enter that frame.`,
       },
@@ -666,7 +666,7 @@ The social programmes and the operational contribution share a common daily fram
 
 First listing: when you post your first proper listing offering a good or a service, 1,000 POEN is recorded for you, once the Foundation approves the listing. This contribution is recorded once per account, regardless of how many listings you post later.
 
-Farm: when your farm is approved, or when you join one, a farm contribution is noted for you (the amount per member is set by the Rulebook on the KOLO System, Art. 40c). It is recorded once you post a listing offering something and you enter the Kolo, by confirmation or introduction.
+Farm: when your farm is approved, or when you join one, a farm contribution is noted for you (the amount per member is set by the Rulebook on Farms, Art. 15). It is recorded once you post a listing offering something and you enter the Kolo, by confirmation or introduction.
 
 An exchange by itself does not record new POEN: when you re-register POEN to someone, it simply moves from your record to theirs. You report nothing.`,
       },
@@ -951,7 +951,7 @@ The Foundation does not provide tax advice and is not a party to your exchange: 
         pitanje: `Does taking part in the KOLO system and POEN affect my pension or social benefits?`,
         odgovor: `From the system's side — no. POEN is not money, not earnings and not income: it is an internal record of what you have given the community, and it cannot be turned into anything with value outside the system. The Foundation pays you no money on any basis: the recording brings you neither money nor goods, nothing passes from its assets into yours, and the record cannot be turned into money, assigned or collected. There is therefore no amount expressed in money on that basis.
 
-If POEN is recorded for you through one of the social programmes (as a primary carer, as an elderly person or through Schooling, for example), that too is not remuneration — it pays for no work or service and nothing is asked of you in return. It is an automatic update of the record that gives such participation an equal place in the system, and the programme is carried out in pursuit of the Foundation's objectives under its statute.
+If POEN is recorded for you through one of the social programmes (as a primary carer, as an elderly person or as a student, for example), that too is not remuneration — it pays for no work or service and nothing is asked of you in return. It is an automatic update of the record that gives such participation an equal place in the system, and the programme is carried out in pursuit of the Foundation's objectives under its statute.
 
 You should, however, distinguish POEN from what you do outside the system. Everything you charge for in money is your own activity, governed by the general regulations — and that may have consequences for your status, depending on what you do and on what scale.
 
@@ -977,9 +977,9 @@ The Foundation keeps the data on donations in accordance with financial reportin
         pitanje: `Who controls KOLO?`,
         odgovor: `At present (Phase 1) all decisions are made by the KOLO Foundation through its Board of Directors.
 
-Once the total amount of POEN recorded reaches 1,000,000, the Upper Kolo is activated — a body made up of the Kolo keepers who have activated ZRNO, which decides key system questions by quadratic voting.
+Once the total amount of POEN recorded reaches 1,000,000, the Upper Kolo is activated — a body made up of the Kolo keepers who have activated ZRNO, which decides key system questions by square-root voting.
 
-From that moment the Foundation has a service role: it does not decide on the rules of the Protocol at its own discretion; instead, the Board of Directors carries out the decisions of the Upper Kolo without assessing their expediency. It may refuse a decision only on the grounds the Rulebook expressly lists (conflict with the law or the Statute, a matter outside the competence of the Upper Kolo, a protective veto while it lasts), with a statement of reasons that is published. On funds in dinars, the Upper Kolo issues recommendations, to which the Board of Directors responds with reasons.`,
+From that moment the Foundation has a service role: it does not decide on the rules of the Protocol at its own discretion; instead, the Board of Directors carries out the decisions of the Upper Kolo without assessing their expediency. It may refuse a decision only on the grounds the Rulebook expressly lists (conflict with the law or the Statute, a matter outside the competence of the Upper Kolo), with a statement of reasons that is published. On funds in dinars, the Upper Kolo issues recommendations, to which the Board of Directors responds with reasons.`,
       },
       {
         id: 27,
@@ -1005,39 +1005,23 @@ Because the number of active ZRNO changes all the time, the composition of the U
 
 It is activated automatically once the total amount of POEN recorded reaches 1,000,000 — in the Protocol's ledger that is a balance of −1,000,000 — which signals that the system is active enough and that the participants carry significant collective responsibility.
 
-Before that, all decisions are made by the Foundation; after it, key system decisions (amendments to the Rulebook, new programmes, suspension of a programme) are made by the Upper Kolo through quadratic voting. The Upper Kolo is not a body of the Foundation: it refers its decision to the Board of Directors, which carries it out.`,
+Before that, all decisions are made by the Foundation; after it, key system decisions (amendments to the Rulebook, new programmes, suspension of a programme) are made by the Upper Kolo through square-root voting. The Upper Kolo is not a body of the Foundation: it refers its decision to the Board of Directors, which carries it out.
+
+A proposal can be submitted by any participant (a member without confirmation, a Kolo member, a Kolo keeper), one at a time: while the procedure on their proposal is under way, they do not submit a new one. The procedure lasts three days, from midnight to midnight. On the first day the proposal is submitted, and from then on all users can see it. On the second day Kolo keepers in the Upper Kolo can support it; support is not a vote, does not oblige anyone to vote “for” and is not delegated, and a proposal by a Kolo keeper in the Upper Kolo is considered supported by the very act of submitting it. On the third day the Upper Kolo votes on the supported proposal. A proposal that no one supports is closed without a vote and entered in the register of decisions. The Foundation does not decide whether a proposal will be voted on.
+
+A proposal of the same content that was not adopted or not supported can be submitted again only after 30 days. The pseudonyms of the proposer and of those who supported the proposal are seen only by participants, while the number of supports is seen by every user.`,
       },
       {
         id: 29,
-        pitanje: `What is quadratic voting?`,
-        odgovor: `It is a way of voting in which voting power grows as the square root of the number of ZRNO: 1 ZRNO — 1 vote, 100 ZRNO — 10 votes, 10,000 ZRNO — 100 votes.
+        pitanje: `What is square-root voting?`,
+        odgovor: `It is a way of voting in which a Kolo keeper's voting power is the square root of the number of their active ZRNO, rounded down: 1 ZRNO gives 1 vote, 100 ZRNO 10 votes, 10,000 ZRNO 100 votes.
 
 The aim is that no one can tip a decision by sheer quantity of ZRNO — influence grows far more slowly than the number of ZRNO, so a decision is carried by the breadth of participation rather than by a concentration of power.`,
-      },
-      {
-        id: 30,
-        pitanje: `What is the Foundation's protective veto?`,
-        odgovor: `While the Foundation is not financially self-sustaining, it may refuse to carry out a decision of the Upper Kolo that would endanger its operational and financial sustainability — above all decisions on spending funds (including collective procurement) that would undermine the Foundation's ability to cover basic costs and maintain the system.
-
-The veto is not discretionary: it must be reasoned by pointing to a concrete threat to sustainability, and a veto without reasons is in itself an abuse. This is not political control but protection of the system's continuity.
-
-The veto is extinguished permanently and in one direction once the Foundation's funds reach the threshold of financial independence — three times the operating cost of the previous month, set by the Rules on the Upper Kolo.`,
       },
       {
         id: 120,
         pitanje: `What is review of confirmations?`,
         odgovor: `Review is a subsequent check of confirmations and introductions. It is carried out by every Kolo keeper, never in a case they took part in themselves. It covers confirmations and introductions given by members without confirmation and by Kolo members who are not keepers, every confirmation after a phone conversation, and the confirmation of the person who brought the confirmer in. An introduction from the call list always goes to review, except when given by a founder. Not reviewed are confirmations and introductions by founders, other confirmations and introductions by keepers, and a confirmation the Foundation gives by its own decision. Review does not change the effect of a confirmation and is not paid.`,
-      },
-      {
-        id: 72,
-        pitanje: `What exactly do Kolo keepers change under “full self-governance”, and when does it begin?`,
-        odgovor: `There are two separate thresholds, and they are easy to confuse.
-
-The first threshold — activation of the Upper Kolo. Once the total amount of POEN recorded in the system reaches 1,000,000 (which in the Protocol's ledger corresponds to a balance of −1,000,000), the recording of ZRNO opens automatically and the Upper Kolo comes into being — a body made up of the Kolo keepers who have activated ZRNO. From that moment Kolo keepers decide the rules of the system by quadratic voting: amendments to the Rulebook, programmes and other questions affecting the common good. The Foundation moves from a sovereign to an executive and service body — it carries out decisions, it does not make them itself.
-
-The second threshold — the extinction of the protective veto. While the Foundation is not financially self-sustaining, it holds a protective veto: it may refuse to carry out a decision of the Upper Kolo that would endanger its operational sustainability — above all decisions on spending funds, such as collective procurement, before sustainability is secured. The veto must be reasoned; it is not arbitrary. It is extinguished permanently and in one direction only once the Foundation's funds reach the threshold of financial independence — three times the operating cost of the previous month, set by the Rules on the Upper Kolo.
-
-Until the Upper Kolo is activated (Phase 1), all decisions are made by the Foundation through its Board of Directors.`,
       },
     ],
   },

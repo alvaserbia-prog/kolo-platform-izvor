@@ -1,13 +1,13 @@
 /**
- * Izlaz naloga iz sistema — prestanak statusa učesnika (Pravilnik čl. 33, 34;
- * Uslovi čl. 26, 28, 29; dokaz stvarnosti čl. 16, 18, 20).
+ * Izlaz naloga iz sistema — prestanak statusa učesnika (Pravilnik čl. 32, 33;
+ * Uslovi čl. 30, 32, 33; dokaz stvarnosti čl. 30, 32, 34).
  *
  * Tri izlaza menjaju status naloga i SVA TRI zovu ovaj modul:
- *  - isključenje (`iskljucenje.ts` → `iskljuciKorisnika`, Uslovi čl. 28; zove ga i
+ *  - isključenje (`iskljucenje.ts` → `iskljuciKorisnika`, Uslovi čl. 32; zove ga i
  *    poništenje gazdinstva zbog lažne izjave i prijava lažnog roditeljstva);
- *  - gašenje naloga (`DELETE /api/profil`, istupanje, Uslovi čl. 26);
+ *  - gašenje naloga (`DELETE /api/profil`, istupanje, Uslovi čl. 30);
  *  - utvrđenje da iza naloga ne stoji stvarna osoba (`lazna-verifikacija.ts` →
- *    `ponistiNepostojeciNalog`, dokaz stvarnosti čl. 18, 20).
+ *    `ponistiNepostojeciNalog`, dokaz stvarnosti čl. 32, 34).
  *
  * 🔴 Uzrok koji se ovim zatvara: izlazi su menjali `status` naloga, a keš statusa i
  * druge žive oznake ostajali su — ugašen nalog „obrisani-korisnik-…" je i dalje nosio
@@ -17,11 +17,11 @@
  * `__tests__/izlaz-naloga-izvor.test.ts`.
  *
  * 🔴 Šta se NE dira (CLAUDE.md pravila 1, 6): transakcije i zapisi POEN-a, veze u
- * grafu koje je nalog DAO (dokaz stvarnosti čl. 16), potvrde člana bez potvrde i
+ * grafu koje je nalog DAO (dokaz stvarnosti čl. 30), potvrde člana bez potvrde i
  * potvrde postojanja deteta koje je DAO, nadzorni zapisi i predmeti, zapis otvaranja
- * poziva (čuva se dok postoji nalog pozvanog, Uslovi čl. 16b st. 3). Negativan zapis
+ * poziva (čuva se dok postoji nalog pozvanog, dokaz stvarnosti čl. 10 st. 4). Negativan zapis
  * ovde ne nastaje — otpis pri istupanju iz gazdinstva ide kroz `prestanakGazdinstva`
- * (šesti osnov, Pravilnik čl. 14 st. 3).
+ * (šesti osnov, Pravilnik čl. 17 st. 2 t. 6).
  */
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/generated/prisma/client";
@@ -30,6 +30,7 @@ import { obrisiIdentitet } from "./identitet";
 import { obrisiPreporuke } from "./preporuka";
 import { KLJUC_ZAHTEV_POTVRDA } from "./program-potvrda";
 import { obrisiKutijuZelja } from "./kutija-zelja";
+import { obrisiSadrzajPriPrestanku } from "./prestanak-sadrzaja";
 
 type Tx = Prisma.TransactionClient;
 
@@ -39,6 +40,8 @@ export type IzlazNaloga = {
   delegatori: string[];
   /** Prepisi deteta ka ovom nalogu koji su čekali roditelja i sada su zatvoreni. */
   prepisiDece: { deteId: string; iznos: number }[];
+  /** Fotografije dokaza operativnog doprinosa koje posledice brišu sa R2 (Politika čl. 30 st. 5). */
+  slikeDokaza: string[];
 };
 
 /**
@@ -47,34 +50,39 @@ export type IzlazNaloga = {
  * (baca ako nije — redosled je deo ugovora).
  *
  * Svaka oznaka i član akta po kome se gasi:
- *  1. keš statusa — `preracunajStatusNaloga` (Pravilnik čl. 33; nalog bez statusa,
- *     i osnivač); veze se ne brišu (dokaz stvarnosti čl. 16);
+ *  1. keš statusa — `preracunajStatusNaloga` (Pravilnik čl. 32; nalog bez statusa,
+ *     i osnivač); veze se ne brišu (dokaz stvarnosti čl. 30);
  *  2. administratorski nivo ADMIN → NONE (admin panel je alat operative, a nalog više
  *     ne učestvuje; superadmin se ne isključuje i ne dira se) i `slotoviPotroseni` → 0
  *     (ukinut brojač, ne sme da preživi kao trag);
  *  3. spisak za poziv — upis i broj telefona se brišu, a poziv koji je ovaj nalog
- *     držao otvoren se oslobađa (Uslovi čl. 16b st. 6, Politika 4.17);
- *  4. preporuke koje je dao i primio (Uslovi čl. 17a st. 5);
- *  5. evidencija identiteta (Pravilnik čl. 31a, 34 st. 5);
- *  6. ime uz javnu donaciju (donacije čl. 5a st. 4) — `uplatilac` i ugovor se ne diraju;
+ *     držao otvoren se oslobađa (dokaz stvarnosti čl. 12 st. 3, Politika čl. 16);
+ *  4. preporuke koje je dao i primio (dokaz stvarnosti čl. 20 st. 5);
+ *  5. evidencija identiteta (Pravilnik čl. 31 st. 7, 33 st. 4);
+ *  6. ime uz javnu donaciju (donacije čl. 12) — `uplatilac` i ugovor se ne diraju;
  *  7. predlog za nabavku (nabavke: „predlog se briše i prestankom statusa");
  *  8. zadruga — svojstvo zadrugara prestaje, ime i pristanak se brišu, pristupnice se
- *     odbijaju (Pravilnik o zadrugama čl. 9);
+ *     odbijaju (Pravilnik o zadrugama čl. 8);
  *  9. ZRNO — zahtevi na čekanju (upis, otpis, promena stanja) se otkazuju, jer lice
- *     bez statusa ne upisuje ni ne otpisuje (Pravilnik čl. 34 st. 1: otpis pri
+ *     bez statusa ne upisuje ni ne otpisuje (Pravilnik čl. 33 st. 1: otpis pri
  *     prestanku ne evidentira POEN); delegiranje OD naloga prestaje, a delegiranje
- *     KA nalogu se gasi pa delegator glasa sam (Gornje Kolo čl. 14: delegat je čuvar);
+ *     KA nalogu se gasi pa delegator glasa sam (Gornje Kolo čl. 14 st. 3: delegat je čuvar);
  *     zatečeno aktivno ZRNO ide u otključavanje kroz `posledicePromeneStatusa`;
  * 10. socijalni programi — prijava na čekanju i aktivna prijava se obustavljaju, uneti
- *     podaci se brišu (programi čl. 4), nedovršene potvrde se zatvaraju; nedovršene
- *     potvrde koje se od OVOG naloga traže za tuđe prijave se brišu (programi čl. 4 st. 2);
- * 11. zahtevi za potvrdu postojanja deteta na čekanju (deca čl. 6) u kojima je nalog
+ *     podaci se brišu (programi čl. 7, 21 st. 4), nedovršene potvrde se zatvaraju; nedovršene
+ *     potvrde koje se od OVOG naloga traže za tuđe prijave se brišu (programi čl. 5);
+ * 11. zahtevi za potvrdu postojanja deteta na čekanju (deca čl. 13) u kojima je nalog
  *     roditelj ili dete — date potvrde ostaju;
- * 12. prepisi deteta koji čekaju roditelja (deca čl. 14), u kojima je nalog dete ili
+ * 12. prepisi deteta koji čekaju roditelja (deca čl. 30), u kojima je nalog dete ili
  *     primalac — zatvaraju se (`ISTEKAO`); ništa nije skinuto, pa se ništa ne vraća;
  * 13. push pretplate — nalog bez statusa ne prima obaveštenja na uređaj;
  * 14. Kutija želja — predlozi naloga (sa podrškama i odgovorima) i podrške koje je
- *     dao se brišu (odluka vlasnika 25.10.2026).
+ *     dao se brišu (odluka vlasnika 25.10.2026);
+ * 15. slobodan tekst, dokazi i opisi (`obrisiSadrzajPriPrestanku`): plan, opis i dokaz
+ *     operativnog doprinosa, tekst prigovora i prijava, prijave grešaka, tekst uz prepis
+ *     deteta, opis zapisa sa podatkom o ličnosti — pri SVAKOM prestanku statusa
+ *     (istupanje, isključenje, nepostojeći nalog; Politika čl. 42 st. 1–2, Pravilnik
+ *     čl. 55 st. 2). Fotografije sa R2 briše `poslediceIzlaskaNaloga`.
  */
 export async function ugasiOznakeNaloga(tx: Tx, userId: string): Promise<IzlazNaloga> {
   const u = await tx.user.findUnique({
@@ -201,22 +209,27 @@ export async function ugasiOznakeNaloga(tx: Tx, userId: string): Promise<IzlazNa
   // 14. Kutija želja.
   await obrisiKutijuZelja(tx, userId);
 
-  return { promena, delegatori, prepisiDece };
+  // 15. Slobodan tekst, dokazi i opisi (Politika čl. 42 st. 2).
+  const novcanik = await tx.wallet.findUnique({ where: { userId }, select: { id: true } });
+  const { slike: slikeDokaza } = await obrisiSadrzajPriPrestanku(tx, userId, novcanik?.id ?? null);
+
+  return { promena, delegatori, prepisiDece, slikeDokaza };
 }
 
 /**
  * Posledice izlaska — VAN transakcije, ne baca (pravilo 8; svaki korak zasebno):
  *
  *  - `posledicePromeneStatusa` za sam nalog, BEZ obaveštenja njemu o statusu: aktivno
- *    ZRNO ide u otključavanje (Pravilnik čl. 34 st. 1), deca roditelja prelaze u
- *    stanje bez živog roditelja (deca čl. 4c), prava u gazdinstvu se osvežavaju;
- *  - gazdinstvo: nalog istupa (član gazdinstva je samo učesnik, gazdinstva čl. 7 st. 1;
+ *    ZRNO ide u otključavanje (Pravilnik čl. 33 st. 1), deca roditelja prelaze u
+ *    stanje bez živog roditelja (deca čl. 5, 6), prava u gazdinstvu se osvežavaju;
+ *  - gazdinstvo: nalog istupa (član gazdinstva je samo učesnik, gazdinstva čl. 9 st. 1;
  *    pri lažnoj izjavi je gazdinstvo već prestalo, pa ovo ne nalazi ništa);
- *  - vaučeri: uzeti a neiskorišćeni se oslobađaju (nabavke čl. 30f), ovlašćenja
- *    zaposlenih kod davaoca prestaju (donacije čl. 13g st. 6), upis pokrovitelja bez
- *    neiskorišćenih vaučera se briše (donacije čl. 6a st. 6);
+ *  - vaučeri: uzeti a neiskorišćeni se oslobađaju (nabavke čl. 33), ovlašćenja
+ *    zaposlenih kod davaoca prestaju (donacije čl. 32 st. 3), upis pokrovitelja bez
+ *    neiskorišćenih vaučera se briše (donacije čl. 18 st. 4);
  *  - obaveštenja DRUGIMA: delegatorima čije je delegiranje prestalo i deci čiji je
- *    prepis ka ovom nalogu zatvoren.
+ *    prepis ka ovom nalogu zatvoren;
+ *  - fotografije dokaza operativnog doprinosa se brišu sa R2.
  */
 export async function poslediceIzlaskaNaloga(userId: string, izlaz: IzlazNaloga): Promise<void> {
   try {
@@ -233,6 +246,15 @@ export async function poslediceIzlaskaNaloga(userId: string, izlaz: IzlazNaloga)
   await oslobodiPriGasenjuNaloga(userId);
   await opozoviZaposlenePriGasenjuNaloga(userId);
   await obrisiUpisePriGasenjuNaloga(userId);
+
+  // Fotografije dokaza operativnog doprinosa sa R2 (Politika čl. 30 st. 5) —
+  // best-effort, ne sme da obori izlaz.
+  if (izlaz.slikeDokaza.length > 0) {
+    const { obrisiSaR2 } = await import("@/lib/skladiste");
+    for (const slika of izlaz.slikeDokaza) {
+      await obrisiSaR2(slika).catch((e) => console.error("[izlaz] brisanje dokaza sa R2", userId, e));
+    }
+  }
 
   if (izlaz.delegatori.length === 0 && izlaz.prepisiDece.length === 0) return;
   try {

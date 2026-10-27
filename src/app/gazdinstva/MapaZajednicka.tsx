@@ -10,7 +10,7 @@ import Segmenti from "@/components/ui/Segmenti";
 const MapaDomacih = dynamic(() => import("@/components/MapaDomacih"), { ssr: false });
 
 /**
- * Jedna javna mapa gazdinstava i pokrovitelja (Pravilnik o gazdinstvima čl. 11) sa
+ * Jedna javna mapa gazdinstava i pokrovitelja (Pravilnik o gazdinstvima čl. 19) sa
  * filterom Sve / Gazdinstva / Firme. Tekst kartice se prevodi u pretraživaču.
  */
 export default function MapaZajednicka({ tacke, prijavljen }: { tacke: TackaMape[]; prijavljen: boolean }) {

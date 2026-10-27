@@ -18,11 +18,11 @@ import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
  * Prijava pokroviteljstva dobrima i uslugama (Pravilnik o pokroviteljstvu i
- * donacijama čl. 13e) iz ODOBRENOG upisa (čl. 6a): samo opis dobra odnosno usluge,
+ * donacijama čl. 28) iz ODOBRENOG upisa (čl. 16): samo opis dobra odnosno usluge,
  * broj vaučera, cena, fotografija cenovnika, mesto i adresa predaje i izjava o
  * propisima. Podaci o davaocu, odnos, kontakt, logotip i izjave su u upisu.
- * Dokaz cene je samo fotografija cenovnika; Fondacija cenu ne upoređuje (čl. 13f
- * st. 2). Rok važenja je fiksno godinu dana (čl. 13f st. 5) i ne bira se.
+ * Dokaz cene je samo fotografija cenovnika; Fondacija cenu ne upoređuje (čl. 29
+ * st. 2). Rok važenja je fiksno godinu dana (čl. 29 st. 5) i ne bira se.
  *
  * 🔴 Na ovom obrascu se ne pominje POEN: vrednost je dinarska (cena koju davalac
  * primenjuje u prometu), a broj POEN-a nije cena i ne izvodi se iz nje pred
@@ -76,7 +76,7 @@ export default function PrijavaDobra({ upisId, onPoslato }: { upisId: string; on
             <option value="USLUGA">{t("dobra_vrsta_usluga")}</option>
           </select>
         </Polje>
-        {/* P2 (registar 2026-10): šta ne može biti predmet vaučera — donacije čl. 13f. */}
+        {/* P2 (registar 2026-10): šta ne može biti predmet vaučera — donacije čl. 30. */}
         <Polje className="md:col-span-2" oznaka={t("dobra_opis_label")} pomoc={t("dobra_iskljuceno")}>
           <textarea value={f.opis} onChange={postavi("opis")} rows={2} placeholder={t("dobra_opis_primer")} className={polje} />
         </Polje>
@@ -103,7 +103,7 @@ export default function PrijavaDobra({ upisId, onPoslato }: { upisId: string; on
       </Polje>
       <p className="text-xs text-kolo-muted">{t("dobra_dokaz_napomena")}</p>
 
-      {/* Izjava o propisima (čl. 13e st. 3). */}
+      {/* Izjava o propisima (čl. 28 st. 3). */}
       <label className="flex items-start gap-2 text-sm text-kolo-text">
         <input type="checkbox" checked={izjavaPropisi} onChange={(e) => setIzjavaPropisi(e.target.checked)} className="mt-0.5" />
         {t("dobra_izjava_propisi")}

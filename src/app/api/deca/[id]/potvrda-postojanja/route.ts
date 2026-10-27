@@ -6,7 +6,7 @@ import { DecaGreska, mojeDeteIliBaci, zatraziPotvrduPostojanja } from "@/lib/pro
 
 /**
  * POST /api/deca/[id]/potvrda-postojanja — roditelj koji je član Kola ili osnivač
- * traži potvrdu da ima ovo dete (Pravilnik o učešću dece čl. 6 st. 2, 8; set 4.8.2).
+ * traži potvrdu da ima ovo dete (Pravilnik o učešću dece čl. 13 st. 1; set 4.8.2).
  *
  * Za svako dete posebno, bez roka. Ponovljen zahtev vraća postojeći.
  */

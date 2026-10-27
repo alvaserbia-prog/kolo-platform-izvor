@@ -16,7 +16,7 @@ import {
  * POST /api/vauceri/zaposleni — korisnik koji vodi upis određuje zaposlenog po
  *      pseudonimu: `{ upisId, pseudonim }`.
  *
- * Donacije čl. 6a i 13g st. 6, nabavke čl. 30g st. 1. Zaposleni se vezuju za UPIS.
+ * Donacije čl. 16 i 32 st. 3, nabavke čl. 34 st. 1. Zaposleni se vezuju za UPIS.
  * 🔴 Zaposleni ne dobija ništa o ugovoru: ni opis, ni POEN, ni dokaz, ni spisak
  * drugih zaposlenih.
  */

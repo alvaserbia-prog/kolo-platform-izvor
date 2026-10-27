@@ -21,7 +21,7 @@ function imaPunPristup(verified: boolean, indeksStvarnosti: number): boolean {
 /**
  * Set 4.8.2: `session.user.verified` znači VERIFIKOVAN (član bez potvrde, član
  * Kola, čuvar Kola, osnivač). `potvrdjen` je uži skup — član Kola, čuvar Kola,
- * osnivač (Pravilnik čl. 28a, 29). Jedno pravilo: `potvrdjenIzPolja`.
+ * osnivač (Pravilnik čl. 28). Jedno pravilo: `potvrdjenIzPolja`.
  */
 const jePotvrdjenNalog = potvrdjenIzPolja;
 
@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
         // `validanPseudonim` ne dopušta „@" u pseudonimu, pa se ta dva skupa ne seku.
         //
         // Maloletni korisnik imejl NEMA — nalog mu otvara roditelj i predaje mu
-        // lozinku (Modul Deca, čl. 4), pa je ovo za njega jedini put do prijave.
+        // lozinku (Modul Deca, čl. 7), pa je ovo za njega jedini put do prijave.
         const unos = credentials.email.trim();
         const jeImejl = unos.includes("@");
         const kljuc = jeImejl ? normalizujEmail(unos) : unos.toLowerCase();
@@ -263,7 +263,7 @@ export const authOptions: NextAuthOptions = {
               select: { verified: true, indeksStvarnosti: true, potvrdjenAt: true, jeOsnivac: true, oauthPending: true, tipKorisnika: true, admin: true, pseudonim: true, status: true, maloletan: true },
             });
             if (dbUser && dbUser.status !== "ACTIVE") {
-              // Suspenzija/isključenje (Uslovi čl. 27, 28) ranije je blokiralo samo
+              // Suspenzija/isključenje (Uslovi čl. 31, 32) ranije je blokiralo samo
               // NOVO prijavljivanje (`authorize`), pa je već prijavljen korisnik
               // nastavljao da radi — i da postavlja oglase — dok mu JWT ne istekne.
               // Poništenje `id` ovde vraća null sesiju → čista odjava.

@@ -8,7 +8,7 @@ import { uskladiZatecenePotvrde } from "@/lib/protokol/potvrde-uskladjivanje";
 /**
  * POST /api/admin/potvrde-uskladjivanje
  *
- * Jednokratno usklađivanje zatečenih potvrda sa dokazom stvarnosti čl. 7.
+ * Jednokratno usklađivanje zatečenih potvrda sa dokazom stvarnosti čl. 19 (prelazna odredba čl. 39).
  *
  * Dva koraka, i oba idu kroz ISTU funkciju (`suviHod: true/false`) — dve odvojene
  * računice bi se razišle, pa bi čovek pritiskao dugme po brojevima koji ne važe:

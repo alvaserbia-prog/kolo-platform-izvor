@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * Prvi oglasi — odobravanje doprinosa iz čl. 40a za naloge BEZ POTVRDE.
+ * Prvi oglasi — odobravanje doprinosa iz Pravilnika čl. 38 za naloge BEZ POTVRDE.
  *
  * Oglas je već objavljen i vidi se na Pijaci; ovde se odlučuje samo o 1.000 POEN.
  * Zato tab nudi „Odobri" i „Odbij", ali NE i uklanjanje oglasa — uklanjanje je
- * moderacija (Uslovi čl. 21, 25) i živi u tabu Pijaca. Dve različite odluke.
+ * moderacija (Uslovi čl. 23, 29) i živi u tabu Pijaca. Dve različite odluke.
  *
  * Odbijanje traži razlog (ide korisniku) i oslobađa kanal: kad čovek dopuni oglas
  * ili objavi bolji, doprinos se ponovo beleži i vraća ovde.
@@ -140,11 +140,11 @@ export default function PrviOglasiTab({ onDone }: { onDone?: () => void }) {
   return (
     <div className="space-y-4">
       {dijalog}
-      {/* Registar 2026-10, P3-M1: odobrenje proverava i zabranjena dobra (Pravilnik čl. 40a). */}
+      {/* Registar 2026-10, P3-M1: odobrenje proverava i zabranjena dobra (Uslovi čl. 19 st. 2). */}
       <p className="text-xs text-kolo-muted">{ta("zabranjeno_dobro_podsetnik")}</p>
       <Obavestenje vrsta="info">
         Prvi oglas članova <strong>bez potvrde</strong>. Oglas je već na Pijaci — ovde se odlučuje
-        samo o doprinosu od 1.000 POEN (Pravilnik čl. 40a). Odobrenjem POEN ulazi u opticaj, a
+        samo o doprinosu od 1.000 POEN (Pravilnik čl. 38). Odobrenjem POEN ulazi u opticaj, a
         opticaj okida osnivački korak, pa se odobrava oglas koji je stvarna ponuda. Odbijanje ne
         uklanja oglas; korisnik dobija razlog i može da objavi bolji oglas. Potvrđenim članovima
         doprinos se evidentira sam, pri objavi, i ovde se ne pojavljuje.

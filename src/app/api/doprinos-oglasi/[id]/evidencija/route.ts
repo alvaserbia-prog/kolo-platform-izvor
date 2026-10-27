@@ -8,11 +8,12 @@ import { posaljiAdminAlert } from "@/lib/adminAlert";
 import { imaFunkcionalniPristup } from "@/lib/protokol/pristup";
 import { sacuvajNaR2, r2Konfigurisan } from "@/lib/skladiste";
 import { proveriIzvrsenjeCelina } from "@/lib/operativni-celine-pravila";
+import { zivaPrijava } from "@/lib/protokol/operativni-postupak";
 
 const DOKAZ_MAX_SIZE = 5 * 1024 * 1024; // 5MB, isto kao slike na Pijaci
 const DOKAZ_TIPOVI = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-// POST /api/doprinos-oglasi/[id]/evidencija — unos izvršenja (po celinama, čl. 18).
+// POST /api/doprinos-oglasi/[id]/evidencija — unos izvršenja (po celinama, čl. 15).
 // Prima multipart/form-data (dokaz = screenshot koji ide na R2) ili JSON
 // (legacy, dokaz kao tekstualni link).
 export async function POST(
@@ -67,18 +68,19 @@ export async function POST(
   const oglas = await prisma.doprinosOglas.findUnique({ where: { id: oglasId } });
   if (!oglas || oglas.status !== "ACTIVE") return await greska("Zadatak nije aktivan.", 400);
 
-  const prijava = await prisma.oglasPrijava.findUnique({
-    where: { oglasId_userId: { oglasId, userId: session.user.id } },
-  });
+  // Živa primljena prijava (čl. 11): ne posle odustanka (čl. 17) ni posle prijave
+  // završetka (čl. 16) — tada se o ostatku izjašnjava završnom potvrdom.
+  const prijava = await zivaPrijava(oglasId, session.user.id);
   if (!prijava || prijava.status !== "APPROVED") return await greska("Vaša prijava za ovaj zadatak nije primljena.", 403);
+  if (prijava.zavrsetakAt) return await greska("Završetak je prijavljen; o ostatku se odlučuje završnom potvrdom (čl. 16).", 400);
 
-  // Provera duplikata za isti dan
+  // Dokaz se podnosi jednom za obračunski period (čl. 15 st. 1).
   const postoji = await prisma.oglasEvidencija.findUnique({
-    where: { userId_oglasId_date: { userId: session.user.id, oglasId, date: datumEv } },
+    where: { userId_oglasId_date_zavrsna: { userId: session.user.id, oglasId, date: datumEv, zavrsna: false } },
   });
   if (postoji) return await greska("Evidencija za taj dan je već uneta.", 400);
 
-  // Predloženi POEN zapisa (čl. 18; S1). Zadatak sa celinama: izvršilac navodi samo
+  // Predloženi POEN zapisa (čl. 15 st. 1; S1). Zadatak sa celinama: izvršilac navodi samo
   // broj izvršenih celina, a iznos je broj celina × POEN po celini utvrđen uz
   // zadatak — izvršilac ga ne određuje. Zatečen zadatak bez celina (brojCelina =
   // NULL) radi po starom pravilu dok se ne zatvori: izvršilac predlaže iznos, uz

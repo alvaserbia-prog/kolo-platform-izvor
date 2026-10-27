@@ -11,7 +11,7 @@ import { authOptions } from "@/lib/auth";
  * Identitet donatora je transparentan (ime i prezime donatora javne donacije /
  * naziv pokrovitelja).
  *
- * 🔴 Set 4.8.2 (donacije čl. 5a st. 1; Uslovi čl. 17 st. 3, 6): uz javnu donaciju
+ * 🔴 Set 4.8.2 (donacije čl. 11 st. 1; Uslovi čl. 16 st. 5): uz javnu donaciju
  * korisnik i verifikovan učesnik vide IME I PREZIME donatora; pseudonim i veza ka
  * profilu se ne prikazuju nikome (pseudonim se vidi samo u pregledu transakcija
  * POEN-a). Anonimna donacija ostaje samo iznos i datum. Neprijavljeno lice i dete

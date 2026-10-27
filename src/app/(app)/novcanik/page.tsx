@@ -45,25 +45,25 @@ export default async function NovcanikPage({
       where: { id: session.user.id },
       select: { memberHash: true, tipKorisnika: true, maloletan: true },
     }),
-    // Zabeležen doprinos vidi SAMO vlasnik naloga (Pravilnik čl. 67) i nikad se
-    // ne sabira sa stanjem — do evidentiranja to nije zapis POEN-a (čl. 40a st. 3).
+    // Zabeležen doprinos vidi SAMO vlasnik naloga (Pravilnik čl. 56) i nikad se
+    // ne sabira sa stanjem — do evidentiranja to nije zapis POEN-a (čl. 38 st. 2).
     dohvatiZabelezen(session.user.id),
-    // Rezervisano za kolektivnu nabavku (čl. 23 st. 2). Zaseban red, nikad sabran
-    // sa stanjem: do preuzimanja POEN nije poništen (čl. 27 st. 3).
+    // Rezervisano za kolektivnu nabavku (nabavke čl. 21 st. 3). Zaseban red, nikad sabran
+    // sa stanjem: do preuzimanja POEN nije poništen (nabavke čl. 25 st. 2).
     rezervisanoZaNabavku(session.user.id),
-    // POEN po potvrdama koji čeka prvi doprinos (dokaz stvarnosti čl. 7). Dva
+    // POEN po potvrdama koji čeka prvi doprinos (dokaz stvarnosti čl. 19). Dva
     // broja, jer čekaju različite stvari: tvoj prvi doprinos i tuđi.
     dohvatiZabelezenePotvrde(session.user.id),
-    // Doprinos gazdinstva (čl. 40c st. 4) čeka sopstveni potez člana — objavljen
+    // Doprinos gazdinstva (gazdinstva čl. 16) čeka sopstveni potez člana — objavljen
     // oglas i potvrdu — pa ide u red „čeka tebe", ne „čeka Fondaciju".
     dohvatiZabelezenGazdinstva(session.user.id),
     // 🔴 Za vaučere nema reda „rezervisano": POEN se poništava pri dodeli (nabavke
-    // čl. 30f), pa je već van stanja.
+    // čl. 33), pa je već van stanja.
   ]);
   const zabelezenDoprinos = zabelezenOglas;
   const maloletan = dbUser?.maloletan ?? false;
 
-  // Detetu se stanje naloga čita iz veze sa roditeljem (čl. 4c), a ne iz tipa
+  // Detetu se stanje naloga čita iz veze sa roditeljem (deca čl. 5), a ne iz tipa
   // korisnika — vidi napomenu uz `smeDaSalje` ispod.
   const stanjeDeteta = dbUser?.maloletan ? (await ucitajUcesnika(session.user.id))?.stanje : null;
   // 🔴 Pravilo se NE prepisuje u ekran — čita se iz `smeDaSalje` (`doprinos-pravila`),
@@ -79,7 +79,7 @@ export default async function NovcanikPage({
       {/* Naslov stranice za čitač ekrana i za onoga ko stigne iz obaveštenja —
           vizuelno ga nosi kartica POEN, pa se ne crta dvaput. */}
       <h1 className="sr-only">{tNav("novcanik")}</h1>
-      {/* Maloletni nalog ne ulazi u lanac potvrda (čl. 15 Pravilnika o učešću dece),
+      {/* Maloletni nalog ne ulazi u lanac potvrda (čl. 29 st. 2 Pravilnika o učešću dece),
           pa po toj osnovi nema šta da čeka. */}
       <NovcanikKartice
         balance={wallet?.balance ?? 0}
@@ -96,18 +96,17 @@ export default async function NovcanikPage({
         // vlasnik naloga može da uradi (POEN otključava TUĐI potez, pa je jedina
         // radnja podsetiti baš tog čoveka).
         cekamPotvrdjene={maloletan ? [] : zabelezenePotvrde.cekamPotvrdjene}
-        // Maloletni nalog ne učestvuje u nabavci (čl. 4), pa reda ni nema.
+        // Maloletni nalog ne učestvuje u nabavci (nabavke čl. 4), pa reda ni nema.
         rezervisanoNabavka={maloletan ? 0 : rezervisano}
         maloletan={maloletan}
-        // Nov član u ažuriranju evidencije učestvuje samo kao primalac (čl. 28
-        // st. 2) — dugme za upis mu se ne prikazuje, uz objašnjenje zašto. Član čiji
-        // je identitet utvrđen povodom javne donacije prepis SME (čl. 28 st. 6).
+        // Korisnik koji nije u Kolu prepisuje i prima prepis (Uslovi čl. 14 st. 3);
+        // da li dugme stoji, odlučuje samo `smeDaSalje`.
         //
         // 🔴 Maloletni korisnik je IZUZETAK i mora se rešavati posebno. On je
         // `NEVERIFIKOVAN` u smislu šeme i to ostaje do punoletstva, jer dete
-        // nikoga ne potvrđuje i niko ne potvrđuje njega (čl. 15) — pa bi ga opšte
+        // nikoga ne potvrđuje i niko ne potvrđuje njega (deca čl. 29 st. 2) — pa bi ga opšte
         // pravilo trajno ostavilo bez prepisa. U dečjem prostoru prepis uređuje
-        // čl. 14 i traži samo da nalog radi, tj. da ga je roditelj preuzeo
+        // deca čl. 30 i traži samo da nalog radi, tj. da ga je roditelj preuzeo
         // (stanje „povezano"); to isto radi i `/api/transfer`, koji za svaki par
         // sa detetom odlučuje po `smeDaPrepise`. Ekran je do sada bio stroži od
         // rute: dugmeta nije bilo ni detetu u stanju „aktivno".

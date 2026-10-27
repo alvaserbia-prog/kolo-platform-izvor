@@ -16,7 +16,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
   const korisnik = await prisma.user.findUnique({ where: { id }, select: { status: true, pseudonim: true } });
   if (!korisnik) return await greska("Korisnik nije pronađen.", 404);
 
-  // Vraćanje isključenog naloga (npr. po prigovoru, Uslovi čl. 28 st. 2) vraća i
+  // Vraćanje isključenog naloga (npr. po prigovoru, Uslovi čl. 32 st. 3) vraća i
   // status iz grafa: isključenje je ugasilo keš statusa (`prestaoStatus`), a veze su
   // ostale. Ugašen nalog (`deaktiviranAt`) ostaje bez statusa i posle ovoga.
   const promena = await prisma.$transaction(async (tx) => {

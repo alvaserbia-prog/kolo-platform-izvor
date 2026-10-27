@@ -1,8 +1,8 @@
 /**
  * Upis pokrovitelja u evidenciju — servisni sloj (Prisma).
  *
- * Osnov: Pravilnik o pokroviteljstvu i donacijama čl. 6a (upis), čl. 7 i 13e
- * (prijave iz odobrenog upisa), čl. 13 st. 4 (javni prikaz), čl. 13j st. 2 (lista
+ * Osnov: Pravilnik o pokroviteljstvu i donacijama čl. 16–18 (upis), čl. 19 i 28
+ * (prijave iz odobrenog upisa), čl. 26 st. 2 (javni prikaz), čl. 35 st. 5 (lista
  * zabrane uz upis); Politika privatnosti 4.5.
  *
  * Tok: punoletni verifikovani korisnik upisuje pravno lice, preduzetnika ili
@@ -13,7 +13,7 @@
  * vrednosti); kontakt, sedište i mapa se menjaju odmah.
  *
  * 🔴 Ime i prezime iz upisa NE ide ovde u evidenciju identiteta — tek pri potvrdi
- * prijema donacije (čl. 7 st. 3, čl. 13e st. 4).
+ * prijema donacije (čl. 19 st. 3, čl. 28 st. 4).
  * 🔴 Adresa na mapi: izjava je obavezna i ne povlači se; izlaz je samo brisanje
  * upisa, kad nema neiskorišćenih vaučera. Doprinosi dati do brisanja ostaju na
  * rang-listi; sa nje se pokrovitelj uklanja samo na zahtev korisnika koji je vodio upis.
@@ -55,7 +55,7 @@ export async function odgovorNaGreskuUpisa(e: unknown) {
 const ZIV = { obrisanAt: null, status: { not: "ODBIJEN" as const } };
 
 /**
- * Isti pokrovitelj se upisuje jednom (čl. 6a st. 5): pravno lice i preduzetnik po
+ * Isti pokrovitelj se upisuje jednom (čl. 18 st. 2): pravno lice i preduzetnik po
  * matičnom broju i PIB-u, gazdinstvo po BPG-u. Bazu drži i delimičan jedinstveni
  * indeks (MB, BPG); ova provera daje razumljivu poruku.
  */
@@ -79,7 +79,7 @@ function jeDvostrukiKljuc(e: unknown): boolean {
 
 const PORUKA_VEC_UPISAN = "Ovaj pokrovitelj je već upisan u evidenciju. Upis vodi korisnik koji ga je izvršio.";
 
-/** Lista zabrane (čl. 13j st. 2) — vezuje se za upis. */
+/** Lista zabrane (čl. 35 st. 5) — vezuje se za upis. */
 export async function upisNaListiZabrane(upisId: string): Promise<boolean> {
   const z = await prisma.zabranaDavaoca.findFirst({ where: { upisId, skinutoAt: null }, select: { id: true } });
   return !!z;
@@ -107,7 +107,7 @@ export async function predlogIzGazdinstva(userId: string) {
 }
 
 /**
- * Upis (čl. 6a st. 1–3). `potvrdaTekst` je tekst potvrde o evidentiranju koji je
+ * Upis (čl. 16–17). `potvrdaTekst` je tekst potvrde o evidentiranju koji je
  * korisniku bio prikazan — ruta ga sklapa na serveru iz istog ključa i on se SNIMA.
  */
 export async function upisiPokrovitelja(
@@ -120,17 +120,17 @@ export async function upisiPokrovitelja(
     select: { verified: true, maloletan: true, deaktiviranAt: true },
   });
   if (!korisnik || korisnik.deaktiviranAt) throw new UpisGreska("Korisnik nije pronađen.", 404);
-  // Maloletni korisnik upis ne vrši (čl. 6a st. 1); potvrđeno dete ima `verified`.
+  // Maloletni korisnik upis ne vrši (čl. 16 st. 1); potvrđeno dete ima `verified`.
   if (korisnik.maloletan) throw new UpisGreska("Upis pokrovitelja ne vrši maloletni korisnik.", 403);
   // 🔴 Potvrda stvarnosti NIJE uslov za upis (set 4.8.0): novčano pokroviteljstvo je
-  // jedan od dva puta kojim nov član postaje potvrđen (dokaz stvarnosti čl. 4a).
+  // jedan od dva puta kojim nov član postaje potvrđen (dokaz stvarnosti čl. 8 st. 1 t. 3).
   // Pokroviteljstvo dobrima i uslugama i dalje traži potvrdu (ruta `dobra`).
 
   const r = procitajUpis(body);
   if (!r.ok) throw new UpisGreska(r.razlog);
   const d = r.podaci;
   if (!p.mesto) throw new UpisGreska("Izaberi mesto iz spiska.");
-  // Logotip nije obavezan (donacije čl. 6a, odluka vlasnika 24.10.2026): bez njega se prikazuje samo naziv.
+  // Logotip nije obavezan (donacije čl. 16 st. 5, odluka vlasnika 24.10.2026): bez njega se prikazuje samo naziv.
   if (!p.potvrdaTekst.trim()) throw new UpisGreska("Potrebna je potvrda da si upoznat sa načinom evidentiranja doprinosa.");
   if (await vecUpisan(d)) throw new UpisGreska(PORUKA_VEC_UPISAN, 409);
 
@@ -206,7 +206,7 @@ export async function upisVlasnika(id: string, userId: string) {
 }
 
 /**
- * Izmena upisa (čl. 6a st. 5). Kontakt, sedište i mapa važe odmah. Naziv, MB i
+ * Izmena upisa (čl. 18 st. 2). Kontakt, sedište i mapa važe odmah. Naziv, MB i
  * logotip: dok upis nije odobren — menjaju se odmah (upis je ionako na proveri;
  * odbijen upis se time ponovo šalje na proveru); kod odobrenog upisa idu na
  * ponovnu proveru, a do odluke važe ranije odobrene vrednosti.
@@ -247,7 +247,7 @@ export async function izmeniUpis(id: string, userId: string, body: Record<string
         data: {
           ...odmahSaIzjavom,
           ...naProveru,
-          // Odbijen upis se ispravkom ponovo šalje na proveru (čl. 6a st. 4).
+          // Odbijen upis se ispravkom ponovo šalje na proveru (čl. 18 st. 1).
           ...(u.status === "ODBIJEN" ? { status: "NA_PROVERI" as const, odbijenoRazlog: null } : {}),
         },
       });
@@ -259,7 +259,7 @@ export async function izmeniUpis(id: string, userId: string, body: Record<string
 }
 
 /**
- * Brisanje upisa (čl. 6a st. 6) — samo korisnik koji vodi upis, i samo kad
+ * Brisanje upisa (čl. 18 st. 4) — samo korisnik koji vodi upis, i samo kad
  * pokrovitelj nema ugovor sa neiskorišćenim vaučerima. Prestaju prikaz na mapi i
  * ponuda vaučera; ugovori i registar ostaju. Prijave koje još nisu potpisane se
  * povlače, a ovlašćenja zaposlenih prestaju. Doprinosi ostaju na rang-listi, osim
@@ -304,7 +304,7 @@ export async function obrisiUpis(id: string, userId: string, ukloniSaRangListe: 
   });
 }
 
-/** Na zahtev korisnika koji je vodio upis — pokrovitelj se uklanja i sa rang-liste (čl. 6a st. 6). */
+/** Na zahtev korisnika koji je vodio upis — pokrovitelj se uklanja i sa rang-liste (čl. 18 st. 4). */
 export async function ukloniUpisSaRangListe(id: string, userId: string) {
   const u = await upisVlasnika(id, userId);
   if (!u.obrisanAt) throw new UpisGreska("Sa rang-liste se uklanja obrisan upis — prvo obriši upis.", 409);
@@ -333,7 +333,7 @@ export async function obrisiUpisePriGasenjuNaloga(userId: string) {
   }
 }
 
-// ─── Fondacija (čl. 6a st. 4 i 5) ────────────────────────────────────────────
+// ─── Fondacija (čl. 18 st. 1 i 2) ────────────────────────────────────────────
 
 /** Upisi za administratorski tim. Ovde (i samo ovde) idu MB, PIB, BPG, ime i kontakt. */
 export async function listaUpisaZaAdmina() {
@@ -381,7 +381,7 @@ export async function listaUpisaZaAdmina() {
 }
 
 /**
- * Odobrenje upisa (čl. 6a st. 4). 🔴 Za pravno lice i preduzetnika obavezna je
+ * Odobrenje upisa (čl. 18 st. 1). 🔴 Za pravno lice i preduzetnika obavezna je
  * izričita potvrda da su naziv, MB i zastupnik upoređeni sa registrom privrednih
  * subjekata; beleži se samo DA je poređenje izvršeno. Gazdinstvo se ne poredi sa
  * APR-om (Fondacija može zatražiti potvrdu o upisu u registar kad za to postoji razlog).
@@ -435,7 +435,7 @@ export async function odbijUpis(id: string, adminId: string, razlog: string) {
   });
 }
 
-/** Odobrenje izmene naziva, MB odnosno logotipa (čl. 6a st. 5) — uz poređenje sa registrom kad se menja naziv ili MB firme. */
+/** Odobrenje izmene naziva, MB odnosno logotipa (čl. 18 st. 2) — uz poređenje sa registrom kad se menja naziv ili MB firme. */
 export async function odobriIzmenuUpisa(id: string, adminId: string, potvrde: { aprUporedjeno: boolean }) {
   const u = await prisma.upisPokrovitelja.findUnique({ where: { id } });
   if (!u || !u.izmenaPodnetaAt) throw new UpisGreska("Izmena nije pronađena.", 404);
@@ -486,7 +486,7 @@ export async function odbijIzmenuUpisa(id: string, adminId: string, razlog: stri
   });
 }
 
-// ─── Mapa (čl. 13 st. 4; gazdinstva čl. 11) ─────────────────────────────────
+// ─── Mapa (čl. 26 st. 2; gazdinstva čl. 19) ─────────────────────────────────
 
 export type TackaPokroviteljaSaVaucerima = TackaPokrovitelja & {
   /** Broj slobodnih vaučera važećih ugovora — 🔴 nikad POEN ni dinari. */
@@ -500,7 +500,7 @@ export type TackaPokroviteljaSaVaucerima = TackaPokrovitelja & {
 /**
  * Pokrovitelji za javnu mapu: odobreni, neobrisani upisi sa tačkom i izjavom o
  * adresi. Uz svaku tačku samo naziv, logotip, mesto, adresa i broj slobodnih
- * vaučera (čl. 13 st. 4: „uz ponudu vaučera"). 🔴 Bez MB, PIB, BPG, imena i kontakta.
+ * vaučera (čl. 26 st. 2: „uz ponudu vaučera"). 🔴 Bez MB, PIB, BPG, imena i kontakta.
  */
 export async function pokroviteljiZaMapu(): Promise<TackaPokroviteljaSaVaucerima[]> {
   const sada = new Date();

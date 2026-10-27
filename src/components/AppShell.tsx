@@ -37,7 +37,7 @@ export default function AppShell({ verified, isAdmin, jeNadzornik, children }: A
   const dnevniBrojevi = me?.dnevniBrojevi ?? null;
   const brojZaNadzor = me?.nadzorBroj ?? 0;
 
-  // Gejt za pristanak na nove akte (Uslovi čl. 40, Politika čl. 16).
+  // Gejt za pristanak na nove akte (Uslovi čl. 43, Politika čl. 47).
   //
   // 🔴 Prekrivač, NE preusmeravanje (izmena 11.08.2026). Ranije je gejt na svaku
   // promenu rute radio `router.replace("/politika-prihvati")`. Dve posledice, obe
@@ -126,7 +126,7 @@ export default function AppShell({ verified, isAdmin, jeNadzornik, children }: A
       </div>
       </div>
       {prikaziPristanak && <PolitikaPristanak />}
-      {/* Član bez potvrde: „Želim da me neko nazove radi potvrde" (dokaz čl. 4a, 5c). */}
+      {/* Član bez potvrde: „Želim da me neko nazove radi potvrde" (dokaz čl. 8, 16). */}
       {!prikaziPristanak && <PlutajucaPotvrda />}
     </div>
   );

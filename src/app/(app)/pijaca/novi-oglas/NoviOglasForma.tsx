@@ -44,12 +44,12 @@ export default function NoviOglasForma({
   verifikovan?: boolean;
   /**
    * 🔴 Maloletnom nalogu se iznad izbora kategorije prikazuje šta ne sme da nudi
-   * (Uslovi čl. 21, R-07 mera M-5″). Njegov oglas vide pretežno ili isključivo
+   * (Uslovi čl. 23 st. 3, R-07 mera M-5″). Njegov oglas vide pretežno ili isključivo
    * druga deca, pa je to jedino mesto na kome ta zabrana stiže do publike koju
-   * štiti. Deklarativno — filtera reči nema i ne uvodi se (Uslovi čl. 25 st. 1).
+   * štiti. Deklarativno — filtera reči nema i ne uvodi se (Uslovi čl. 29 st. 2).
    */
   maloletan?: boolean;
-  /** Gazdinstvo čiji je korisnik član — nudi se izbor „u ime gazdinstva" (čl. 10). */
+  /** Gazdinstvo čiji je korisnik član — nudi se izbor „u ime gazdinstva" (gazdinstva čl. 18 st. 1). */
   gazdinstvo?: { id: string; naziv: string } | null;
   /** Početni izbor (dolazak sa profila gazdinstva, `?gazdinstvo=`). */
   uImeGazdinstva?: boolean;
@@ -248,7 +248,7 @@ export default function NoviOglasForma({
       </div>
 
       {/* Nepotvrđenom se kaže jedino šta dobija i kada — objava mu je otvorena
-          (Pravilnik čl. 16 st. 5), pa nema šta da se pravda. Šta oglasu fali po
+          (Uslovi čl. 14 st. 2), pa nema šta da se pravda. Šta oglasu fali po
           sadržinskom minimumu javlja se uz samo dugme (`minimum.razlog` ispod),
           tamo gde čovek i zapne, a ne unapred. */}
       {!verifikovan && (
@@ -263,7 +263,7 @@ export default function NoviOglasForma({
       )}
 
       <form onSubmit={handleSubmit} noValidate className="space-y-5">
-        {/* Nudim / Tražim — od seta 4.8.1 i za novog člana (Uslovi čl. 16 st. 5) */}
+        {/* Nudim / Tražim — od seta 4.8.1 i za novog člana (Uslovi čl. 14 st. 2) */}
         {(
         <div>
           <p className="block text-sm font-semibold text-kolo-muted mb-2">{t("tip_oglasa_label")}</p>
@@ -280,7 +280,7 @@ export default function NoviOglasForma({
         </div>
         )}
 
-        {/* U ime gazdinstva ili lični oglas (Pravilnik o gazdinstvima čl. 10) */}
+        {/* U ime gazdinstva ili lični oglas (Pravilnik o gazdinstvima čl. 18 st. 1) */}
         {gazdinstvo && !jePotraznja && (
           <div>
             <p className="block text-sm font-semibold text-kolo-muted mb-2">{t("gazdinstvo_izbor_label")}</p>
@@ -367,7 +367,7 @@ export default function NoviOglasForma({
             ))}
           </select>
           {/* Registar rizika 2026-10, P1-M3: odgovornost za propise o hrani i piću je na
-              onome ko nudi; Fondacija ih ne proverava (Uslovi čl. 16 st. 7, 16a). */}
+              onome ko nudi; Fondacija ih ne proverava (Uslovi čl. 22 st. 3, 20 st. 2). */}
           {category === "hrana-i-pice" && !jePotraznja && (
             <p className="mt-2 text-xs text-kolo-muted">{t("hrana_propisi_napomena")}</p>
           )}

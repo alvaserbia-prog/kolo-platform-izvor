@@ -7,14 +7,14 @@ import { prikazKoda } from "@/lib/protokol/pokroviteljstvo-dobrima";
 
 /**
  * GET /api/vauceri — dostupni vaučeri po ugovoru i „Moji vaučeri" za prijavljenog
- * člana (nabavke čl. 30e): za svaki ugovor opis, naziv davaoca, mesto i adresa,
+ * člana (nabavke čl. 32): za svaki ugovor opis, naziv davaoca, mesto i adresa,
  * broj preostalih vaučera, broj POEN-a po vaučeru i rok važenja.
  *
  * 🔴 Uz broj POEN-a se NIKAD ne vraća dinarska vrednost (cena, vrednost ugovora) —
- * nabavke čl. 30d st. 3, R-01. Vrednost ugovora se objavljuje samo u izveštaju.
+ * nabavke čl. 31 st. 2, R-01. Vrednost ugovora se objavljuje samo u izveštaju.
  * Brana: `vaucer-izvor.test.ts`.
  *
- * 🔴 Podnosilac ne vidi vaučere svog davaoca kao dostupne (donacije čl. 13k).
+ * 🔴 Podnosilac ne vidi vaučere svog davaoca kao dostupne (donacije čl. 36).
  */
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -29,8 +29,8 @@ export async function GET() {
         podnosilacId: { not: ja },
         vaziDo: { gt: sada },
         vauceri: { some: { status: "SLOBODAN" } },
-        // Obrisan upis: prestaje ponuda vaučera (donacije čl. 6a st. 6). Korisnik koji
-        // vodi upis ne vidi vaučere svog pokrovitelja kao dostupne (čl. 13k).
+        // Obrisan upis: prestaje ponuda vaučera (donacije čl. 18 st. 4). Korisnik koji
+        // vodi upis ne vidi vaučere svog pokrovitelja kao dostupne (čl. 36).
         OR: [{ upisId: null }, { upis: { obrisanAt: null, vlasnikUserId: { not: ja } } }],
       },
       orderBy: { potpisanoAt: "desc" },
@@ -46,7 +46,7 @@ export async function GET() {
       orderBy: { dodeljenAt: "desc" },
       take: 50,
       select: {
-        id: true, kod: true, status: true, ponisteno: true,
+        id: true, kod: true, status: true, ponisteno: true, pristanakPrikazAt: true, pristanakPovucenAt: true,
         ugovor: {
           select: {
             opis: true, naziv: true, logoUrl: true, mesto: true, adresaPredaje: true, vaziDo: true, poenaPoVauceru: true,
@@ -62,14 +62,14 @@ export async function GET() {
       id: o.id,
       upisId: o.upisId,
       opis: o.opis,
-      // Naziv i logotip iz upisa pokrovitelja (donacije čl. 13 st. 4) — logotip nikad link.
+      // Naziv i logotip iz upisa pokrovitelja (donacije čl. 26 st. 2) — logotip nikad link.
       davalac: o.upis?.naziv ?? o.naziv,
       logoUrl: o.upis ? o.upis.logoUrl : o.logoUrl,
       vrsta: o.vrsta,
       mesto: o.mesto,
       adresaPredaje: o.adresaPredaje,
       vaziDo: o.vaziDo?.toISOString() ?? null,
-      // Broj POEN-a po vaučeru (čl. 30d) snima se pri potpisu ugovora.
+      // Broj POEN-a po vaučeru (nabavke čl. 31) snima se pri potpisu ugovora.
       poen: o.poenaPoVauceru ?? 0,
       preostalo: o._count.vauceri,
     })),
@@ -83,8 +83,11 @@ export async function GET() {
       mesto: v.ugovor.mesto,
       adresaPredaje: v.ugovor.adresaPredaje,
       vaziDo: v.ugovor.vaziDo?.toISOString() ?? null,
-      // Broj POEN-a poništen pri uzimanju (nabavke čl. 30f) — snimak sa vaučera.
+      // Broj POEN-a poništen pri uzimanju (nabavke čl. 33 st. 4) — snimak sa vaučera.
       poen: v.ponisteno || (v.ugovor.poenaPoVauceru ?? 0),
+      // Pristanak na prikaz opisa uz pseudonim i njegovo povlačenje (nabavke čl. 33 st. 1–2).
+      pristanakDat: v.pristanakPrikazAt !== null,
+      pristanakPovucenAt: v.pristanakPovucenAt?.toISOString() ?? null,
     })),
   });
 }

@@ -2,11 +2,17 @@
  * GET /api/verifikacija/lanac/[korisnikId]
  *
  * Vraća verifikatora i listu verifikovanih (mini-stablo) za datog korisnika sa
- * pseudonimima. Graf verifikacija je deo podataka koji se NIKADA ne izlažu javno
- * (Politika privatnosti čl. 6) — dostupan je isključivo verifikovanim učesnicima
- * (Pravilnik čl. 67; član bez potvrde vidi graf kao i član Kola).
+ * pseudonimima.
  *
- * Uz svaki čvor ide vrsta verifikacije (potvrda / uvođenje u Kolo, dokaz čl. 5a, 6)
+ * 🔴 Evidencija lanca potvrda, uključujući vrstu verifikacije i podatke o nadzoru,
+ * NIJE dostupna drugim korisnicima (Politika čl. 15 st. 7; Pravilnik čl. 30 st. 5 i
+ * čl. 56 st. 3 — dostupnost evidencije doprinosa ne obuhvata lanac potvrda). Ruta
+ * zato vraća lanac samo onome na koga se odnosi i administratorskom timu. Spisak
+ * povezanih (dokaz stvarnosti čl. 17) ima sopstveni put i nije ovaj izuzetak.
+ * Podaci o nadzoru ne prikazuju se ni verifikatoru ni verifikovanom (čl. 15 st. 7),
+ * pa ih dobija samo administratorski tim.
+ *
+ * Uz svaki čvor ide vrsta verifikacije (potvrda / uvođenje u Kolo, dokaz čl. 4, 18)
  * i da li je uvedeni u međuvremenu potvrđen.
  */
 import { NextRequest, NextResponse } from "next/server";
@@ -14,6 +20,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { jeAdmin } from "@/lib/dozvole";
 
 export async function GET(
   _req: NextRequest,
@@ -21,9 +28,13 @@ export async function GET(
 ) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  if (!session.user.verified) return await greska("Verifikacija potrebna.", 403);
 
   const { korisnikId } = await ctx.params;
+  const admin = jeAdmin(session.user);
+  // Samo sopstveni lanac (i administratorski tim) — Politika čl. 15 st. 7.
+  if (korisnikId !== session.user.id && !admin) {
+    return await greska("Evidencija lanca potvrda nije dostupna drugim korisnicima.", 403);
+  }
 
   const user = await prisma.user.findUnique({
     where: { id: korisnikId },
@@ -62,14 +73,14 @@ export async function GET(
     return await greska("Korisnik ne postoji.", 404);
   }
 
-
   const verifikatori = user.verifikacijeKojeSuMeVerifikovale.map((v) => ({
     id: v.verifikator.id,
     pseudonim: v.verifikator.pseudonim,
     datum: v.vremenskiZig.toISOString(),
     vrsta: v.vrsta,
     potvrdjen: v.vrsta === "POTVRDA" || v.potvrdeClana.length > 0,
-    statusNadzora: !v.podlezeNadzoru
+    // Podaci o nadzoru samo administratorskom timu (čl. 15 st. 7).
+    statusNadzora: !admin || !v.podlezeNadzoru
       ? "ne-podleze"
       : v.nadzornikId
         ? "nadzirano"
@@ -82,7 +93,8 @@ export async function GET(
     datum: v.vremenskiZig.toISOString(),
     vrsta: v.vrsta,
     potvrdjen: v.vrsta === "POTVRDA" || v.potvrdeClana.length > 0,
-    statusNadzora: !v.podlezeNadzoru
+    // Podaci o nadzoru samo administratorskom timu (čl. 15 st. 7).
+    statusNadzora: !admin || !v.podlezeNadzoru
       ? "ne-podleze"
       : v.nadzornikId
         ? "nadzirano"

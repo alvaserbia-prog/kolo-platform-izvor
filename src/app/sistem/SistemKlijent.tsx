@@ -24,6 +24,7 @@ import { SEKCIJE, type Sekcija } from "./sekcije";
 import { pocetnoIzAdrese } from "@/hooks/useStanjeUAdresi";
 import { profilHref } from "@/lib/profil-link";
 import { PRAG_PRVE_ZADRUGE } from "@/lib/zadruga-pravila";
+import DinarskaStranaProjekata from "./DinarskaStranaProjekata";
 import LokacijeSekcija, { normalizujLokaciju, type ZadrugaNaLokaciji } from "@/components/LokacijeSekcija";
 
 interface FondTx {
@@ -53,9 +54,9 @@ interface ProgramPregled {
 interface DonacijaItem {
   id: string;
   /**
-   * Ime i prezime donatora javne donacije (donacije čl. 5a st. 1). 🔴 Pseudonim i
+   * Ime i prezime donatora javne donacije (donacije čl. 11 st. 1). 🔴 Pseudonim i
    * veza ka profilu se u listi ne prikazuju nikome; kod anonimne donacije i kod
-   * povučenog imena `null` (R-03, M-3c; čl. 5a st. 4).
+   * povučenog imena `null` (R-03, M-3c; donacije čl. 12).
    */
   ime: string | null;
   anonimno: boolean;
@@ -224,9 +225,9 @@ export default function SistemKlijent({
 
       {/* Kartica statusa (set 4.8.2) korisniku i članu bez potvrde. Korisniku je
           put u Kolo poznanik ili „Želim da me neko nazove" (dokaz stvarnosti čl.
-          4a; Uslovi čl. 16b) — uplata više ne potvrđuje stvarnost, pa prag
-          donacije ovde ne stoji. Prvi oglas ostaje kao drugi potez (čl. 40a).
-          Članu bez potvrde kartica nosi obavezne rečenice (Pravilnik čl. 28a). */}
+          8) — uplata više ne potvrđuje stvarnost, pa prag
+          donacije ovde ne stoji. Prvi oglas ostaje kao drugi potez (Pravilnik čl. 38).
+          Članu bez potvrde kartica nosi obavezne rečenice (Pravilnik čl. 28; dokaz stvarnosti čl. 6). */}
       {(status === "KORISNIK" || status === "CLAN_BEZ_POTVRDE") && (
         // Na Sistemu kratko: puna kartica (sa sledećim korakom i obaveznim
         // rečenicama) stoji na Početnoj, Profilu i Potvrdama — ovde je samo
@@ -357,7 +358,7 @@ export default function SistemKlijent({
       <div className="border-t border-kolo-border" />
 
       {/* Sekcija sadržaj */}
-      {/* Gost: spiskovi su zatvoreni (Politika privatnosti čl. 6) — server ih za njega
+      {/* Gost: spiskovi su zatvoreni (Politika privatnosti čl. 11 st. 4) — server ih za njega
           ni ne čita, a ovde stoji jedna rečenica i put unutra. */}
       {gost && (sekcija === "clanovi" || sekcija === "transakcije" || sekcija === "iznos" || sekcija === "donacije") && (
         <ZatvorenoGostu />
@@ -394,7 +395,13 @@ export default function SistemKlijent({
         />
       )}
       {sekcija === "faza" && <FazaSekcija opticaj={opticaj} />}
-      {sekcija === "fondacija" && <FondacijaSekcija />}
+      {sekcija === "fondacija" && (
+        <>
+          <FondacijaSekcija />
+          {/* Dinarska strana projekata, odvojeno od kalkulacije nabavke (nabavke čl. 37 st. 2). */}
+          <DinarskaStranaProjekata />
+        </>
+      )}
 
       {/* Zdravlje sistema (odluka vlasnika 25.10.2026): svi pokazatelji zdravlja i
           koncentracije sa lampicama žive na zasebnoj stranici; veza stoji na dnu
@@ -908,7 +915,7 @@ function DonacijeSekcija({
   const locale = useLocale();
   const t = useTranslations("sistem");
 
-  // Lista donacija je ista korisniku i verifikovanom (set 4.8.2; donacije čl. 5a
+  // Lista donacija je ista korisniku i verifikovanom (set 4.8.2; donacije čl. 11
   // st. 1); zaključana je samo detetu (`verified` ovde znači „nije dete").
   if (!verified) {
     return (

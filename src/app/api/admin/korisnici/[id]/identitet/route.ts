@@ -9,7 +9,7 @@ import { ispraviIdentitet, procitajImePrezime } from "@/lib/protokol/identitet";
 
 /**
  * POST — ispravka imena u evidenciji identiteta po prigovoru vrste „Ispravka
- * podatka" (Pravilnik čl. 31a st. 3, Uslovi čl. 37a). Samo superadmin.
+ * podatka" (Pravilnik čl. 31 st. 3, Uslovi čl. 40 st. 2 t. 11). Samo superadmin.
  * 🔴 U audit log ide samo činjenica ispravke — ime ne (konvencija `audit.ts`).
  */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

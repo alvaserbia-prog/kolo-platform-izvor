@@ -49,43 +49,43 @@ import {
 export * from "@/lib/gazdinstvo-pravila";
 
 /**
- * Servis gazdinstava — Pravilnik o KOLO sistemu čl. 40c i Pravilnik o
+ * Servis gazdinstava — Pravilnik o KOLO sistemu čl. 39 i Pravilnik o
  * gazdinstvima (set 4.8.2).
  *
  * 🔴 Gazdinstvo nema zapis u Protokolu. Doprinos se BELEŽI pri odobrenju
  * gazdinstva (odnosno kasnijeg pristupanja), a EVIDENTIRA se tek kad član ima
  * objavljen oglas kojim nešto nudi i kad je VERIFIKOVAN u lancu potvrda — za sve
- * članove isto (čl. 40c st. 4). Zabeležen doprinos ne ulazi ni u jedno stanje ni u
+ * članove isto (Pravilnik čl. 39 st. 2; gazd. čl. 16). Zabeležen doprinos ne ulazi ni u jedno stanje ni u
  * opticaj.
  *
- * 🔴 Prestanak gazdinstva (gazd. čl. 12a): po SVAKOM osnovu (bez članova,
+ * 🔴 Prestanak gazdinstva (gazd. čl. 22–23): po SVAKOM osnovu (bez članova,
  * brisanje, lažna izjava) zabeležen doprinos se poništava, a evidentiran otpisuje
  * članovima u trenutku prestanka — kod lažne izjave i ranije istupelima — i SME u
- * minus (šesti osnov, Pravilnik čl. 14 st. 3 t. 6). Otpis ide sopstvenim tipom
+ * minus (šesti osnov, Pravilnik čl. 17 st. 2 t. 6). Otpis ide sopstvenim tipom
  * `OTPIS_GAZDINSTVO` — nikad `TRANSFER` ni `EMISIJA_*`. Jedini put je
  * `prestanakGazdinstva`.
  *
- * 🔴 Ponovno sticanje (Pravilnik čl. 40c st. 3; gazd. čl. 7 st. 3, 12a st. 6):
+ * 🔴 Ponovno sticanje (gazd. čl. 17 i 24):
  * živ doprinos je najviše jedan po licu — drži ga `aktivanKljuc @unique`. Pri
  * poništenju i otpisu `aktivanKljuc` ide na null; istupanje ga ne dira.
  *
- * 🔴 Prava po statusu (čl. 4a, 7, 7a, 9, 9a) se izvode, ne čuvaju; jedino
+ * 🔴 Prava po statusu (čl. 4, 9, 10, 11, 14) se izvode, ne čuvaju; jedino
  * `smeClanoveOd` je monoton zapis (gazdinstvo radi dalje i kad podnosiocu padne
  * potvrđenost). `upravljaId` od seta 4.8.2 znači „lice koje odgovara za izjavu o
- * tačnosti" (čl. 9 st. 2) — ime kolone ostaje (CLAUDE.md pravilo 12).
+ * tačnosti" (čl. 12) — ime kolone ostaje (CLAUDE.md pravilo 12).
  *
- * 🔴 Izvod iz Registra (čl. 4b) prilaže samo korisnik ili član bez potvrde kao
+ * 🔴 Izvod iz Registra (zatečeni postupak; po gazd. čl. 3 st. 3 izvod se ne prilaže) prilagao je samo korisnik ili član bez potvrde kao
  * nosilac upisanog gazdinstva; čuva se u bazi, čita ga samo admin, BRIŠE SE pri
- * svakoj odluci o prijavi. Izvod i odobrenje NE potvrđuju stvarnost (čl. 4a
- * poslednji stav, 4b st. 5) — nosilac-korisnik dolazi samo na spisak za poziv.
+ * svakoj odluci o prijavi. Izvod i odobrenje NE potvrđuju stvarnost (čl. 4
+ * st. 3) — nosilac-korisnik dolazi samo na spisak za poziv.
  *
- * 🔴 Razgovor (čl. 6a) Fondacija vodi samo sa nosiocem; broj
+ * 🔴 Razgovor (čl. 8) Fondacija vodi samo sa nosiocem; broj
  * (`Gazdinstvo.telefonZaRazgovor`) vidi samo admin i briše se odlukom.
  *
  * Okidači evidentiranja (`probajEvidentiratiGazdinstvo`) se zovu VAN
  * `prisma.$transaction()` i ne bacaju.
  *
- * 🔴 Evidencija identiteta (set 4.7.3, čl. 4 t. 8 i čl. 7 st. 2): svaki član upisuje
+ * 🔴 Evidencija identiteta (set 4.7.3; čl. 5 st. 1 t. 8 i čl. 9 st. 3): svaki član upisuje
  * SOPSTVENO ime i prezime — podnosilac pri prijavi, pozvani pri prihvatanju poziva.
  * Ime ide u `IdentitetNaloga`, nikad na gazdinstvo, oglas ni zapis POEN-a.
  */
@@ -131,7 +131,7 @@ async function ucitajKandidata(userId: string) {
   return u;
 }
 
-/** Aktivno članstvo korisnika u živom gazdinstvu — najviše jedno (čl. 7 st. 3). */
+/** Aktivno članstvo korisnika u živom gazdinstvu — najviše jedno (čl. 9 st. 5). */
 export async function aktivnoClanstvo(userId: string) {
   return prisma.clanGazdinstva.findFirst({
     where: {
@@ -149,7 +149,7 @@ export async function aktivnoClanstvo(userId: string) {
 }
 
 /**
- * Podnosilac — prvi član po redu pristupanja (čl. 2, čl. 8 st. 3). Računa se i
+ * Podnosilac — prvi član po redu pristupanja (čl. 2, čl. 15 st. 2). Računa se i
  * kad je u međuvremenu istupio, da red ostane isti.
  */
 async function podnosilacGazdinstva(gazdinstvoId: string, db: Prisma.TransactionClient | typeof prisma = prisma) {
@@ -166,7 +166,7 @@ async function podnosilacGazdinstva(gazdinstvoId: string, db: Prisma.Transaction
 }
 
 /**
- * Prava člana u gazdinstvu, izvedena iz statusa (čl. 7, 9, 9a). Vraća null kad
+ * Prava člana u gazdinstvu, izvedena iz statusa (čl. 9, 11, 14). Vraća null kad
  * korisnik nije aktivan član ovog gazdinstva.
  */
 export async function pravaUGazdinstvu(userId: string, gazdinstvoId: string) {
@@ -192,7 +192,7 @@ export async function pravaUGazdinstvu(userId: string, gazdinstvoId: string) {
 }
 
 /**
- * Članstvo kojim korisnik SME da postavi oglas u ime gazdinstva (čl. 9 st. 1, 9a):
+ * Članstvo kojim korisnik SME da postavi oglas u ime gazdinstva (čl. 11, 14):
  * aktivno članstvo i pravo upravljanja. Pijaca ga koristi umesto golog
  * `aktivnoClanstvo` kad oglas ide u ime gazdinstva.
  */
@@ -222,17 +222,17 @@ export type PodaciPrijave = {
   lat: unknown;
   lng: unknown;
   uloga: unknown;
-  /** Ime i prezime podnosioca (čl. 4 t. 8) — traži se samo kad nalog još nema upisano ime. */
+  /** Ime i prezime podnosioca (čl. 5 st. 1 t. 8) — traži se samo kad nalog još nema upisano ime. */
   imePrezime?: unknown;
   /**
-   * Izjava da je podnosilac saglasan da se adresa prikazuje uz tačku na mapi (čl. 4
-   * t. 3) — OBAVEZNA za novu prijavu. 🔴 Nije pristanak koji se povlači: izlaz je
-   * samo brisanje gazdinstva (čl. 11).
+   * Izjava da je podnosilac saglasan da se adresa prikazuje uz tačku na mapi (čl. 5
+   * st. 1 t. 3) — OBAVEZNA za novu prijavu. 🔴 Nije pristanak koji se povlači: izlaz je
+   * samo brisanje gazdinstva (čl. 21).
    */
   izjavaAdresa?: unknown;
   /**
-   * Broj telefona NOSIOCA, odnosno podnosioca kad nosilac nema nalog (čl. 4 t. 9),
-   * za razgovor iz čl. 6a. Ide na `Gazdinstvo.telefonZaRazgovor`.
+   * Broj telefona NOSIOCA, odnosno podnosioca kad nosilac nema nalog (čl. 5 st. 1 t. 9),
+   * za razgovor iz čl. 8. Ide na `Gazdinstvo.telefonZaRazgovor`.
    */
   telefon?: unknown;
 };
@@ -245,7 +245,7 @@ function procitajTelefon(unos: unknown): string {
 }
 
 /**
- * Čl. 6a — admin beleži da je razgovor sa nosiocem obavljen. Sa ostalim članovima
+ * Čl. 8 — admin beleži da je razgovor sa nosiocem obavljen. Sa ostalim članovima
  * Fondacija po ovom članu ne razgovara. Broj ostaje do odluke o prijavi.
  */
 export async function oznaciRazgovor(adminId: string, gazdinstvoId: string) {
@@ -296,11 +296,11 @@ function procitajPrijavu(p: PodaciPrijave) {
 }
 
 /**
- * Čl. 4 i 4a — prijava se otvara kao NACRT: podnosilac je prvi član (uz izjavu),
+ * Čl. 4 i 5 — prijava se otvara kao NACRT: podnosilac je prvi član (uz izjavu),
  * pa postavlja oglase u ime gazdinstva i, kad gazdinstvo sme imati članove, poziva
  * članove; na pregled šalje kad ima najmanje tri oglasa (`posaljiNaPregled`).
  *
- * Ko sme da prijavi zavisi od statusa (čl. 4a, `smePrijaviti`). Gazdinstvo sme
+ * Ko sme da prijavi zavisi od statusa (čl. 4, `smePrijaviti`). Gazdinstvo sme
  * imati članove od prijave samo kad je podnosilac član Kola ili osnivač
  * (`smeClanoveOd`).
  */
@@ -329,7 +329,7 @@ export async function prijaviGazdinstvo(userId: string, p: PodaciPrijave) {
         lat: u.lat,
         lng: u.lng,
         izjavaAdresaAt: sada,
-        // Za izjavu o tačnosti odgovara podnosilac (čl. 9 st. 2).
+        // Za izjavu o tačnosti odgovara podnosilac (čl. 12).
         upravljaId: userId,
         telefonZaRazgovor: telefon,
         smeClanoveOd: potvrdjen ? sada : null,
@@ -354,9 +354,9 @@ export async function prijaviGazdinstvo(userId: string, p: PodaciPrijave) {
 }
 
 /**
- * Izmena prijave dok nije odobrena. Podatke iz čl. 4 t. 1–3 (BPG, naziv, mesto,
- * adresa, lokacija) menja SAMO lice koje odgovara za izjavu (čl. 9 st. 2).
- * Uloga mora i dalje ispunjavati čl. 4a. Promena podataka poništava zabeleženo
+ * Izmena prijave dok nije odobrena. Podatke iz čl. 5 st. 1 t. 1–3 (BPG, naziv, mesto,
+ * adresa, lokacija) menja SAMO lice koje odgovara za izjavu (čl. 12 st. 3).
+ * Uloga mora i dalje ispunjavati čl. 4. Promena podataka poništava zabeleženo
  * poređenje sa izvodom.
  */
 export async function izmeniGazdinstvo(userId: string, gazdinstvoId: string, p: PodaciPrijave) {
@@ -367,14 +367,14 @@ export async function izmeniGazdinstvo(userId: string, gazdinstvoId: string, p: 
   if (!g) throw new GazdinstvoGreska("Gazdinstvo ne postoji.", 404);
   if (g.upravljaId !== userId)
     throw new GazdinstvoGreska("Ove podatke menja samo član koji odgovara za izjavu o tačnosti podataka.", 403);
-  // Zatečena prijava bez izjave o adresi daje je pri izmeni (čl. 4 t. 3).
+  // Zatečena prijava bez izjave o adresi daje je pri izmeni (čl. 5 st. 1 t. 3).
   if (!g.izjavaAdresaAt && p.izjavaAdresa !== true)
     throw new GazdinstvoGreska("Potrebna je izjava da si saglasan da se adresa prikazuje uz tačku na mapi.");
   if (!U_PRIPREMI.includes(g.status)) {
     throw new GazdinstvoGreska("Podaci se menjaju samo dok prijava nije poslata ili kad je vraćena na dopunu.");
   }
   const u = procitajPrijavu(p);
-  // Gazdinstvo koje već sme imati članove prijavio je član Kola (čl. 4a t. 1).
+  // Gazdinstvo koje već sme imati članove prijavio je član Kola (čl. 4 st. 1 t. 1).
   if (!smeImatiClanove(g)) {
     proveri(smePrijaviti({ status: await statusNaloga(userId), registrovano: !u.neregistrovano, uloga: u.uloga }));
   }
@@ -399,7 +399,7 @@ export async function izmeniGazdinstvo(userId: string, gazdinstvoId: string, p: 
       ...(g.izjavaAdresaAt ? {} : { izjavaAdresaAt: new Date() }),
     },
   });
-  // Uloga podnosioca je deo prijave (čl. 4 t. 4).
+  // Uloga podnosioca je deo prijave (čl. 5 st. 1 t. 4).
   await prisma.clanGazdinstva.updateMany({
     where: { gazdinstvoId, userId },
     data: { uloga: u.uloga as UlogaUGazdinstvu },
@@ -407,7 +407,7 @@ export async function izmeniGazdinstvo(userId: string, gazdinstvoId: string, p: 
 }
 
 /**
- * Opis gazdinstva (profil, čl. 9 st. 1) menja svaki član koji upravlja
+ * Opis gazdinstva (profil, čl. 11) menja svaki član koji upravlja
  * gazdinstvom (`smeUpravljati`), dok gazdinstvo postoji.
  */
 export async function izmeniOpis(userId: string, gazdinstvoId: string, opisUnos: unknown) {
@@ -424,7 +424,7 @@ export async function izmeniOpis(userId: string, gazdinstvoId: string, opisUnos:
 
 /**
  * Gazdinstvo nosioca sa spiska za poziv za koje razgovor radi odobrenja još nije
- * obavljen (čl. 6a st. 2; set 4.8.3). `null` kad takvog nema.
+ * obavljen (čl. 8 st. 2; set 4.8.3). `null` kad takvog nema.
  */
 export async function gazdinstvoZaRazgovorSaSpiska(nosilacId: string): Promise<{ id: string; naziv: string } | null> {
   const c = await prisma.clanGazdinstva.findFirst({
@@ -443,7 +443,7 @@ export async function gazdinstvoZaRazgovorSaSpiska(nosilacId: string): Promise<{
 }
 
 /**
- * Jedan razgovor (čl. 6a st. 2; set 4.8.3): član Kola koji je nosioca pozvao sa spiska
+ * Jedan razgovor (čl. 8 st. 2; set 4.8.3): član Kola koji je nosioca pozvao sa spiska
  * za poziv beleži i da je razgovor radi odobrenja gazdinstva obavljen, i da li posle
  * njega postoji osnov za sumnju (st. 4). O odobrenju i dalje odlučuje Fondacija.
  * Član gazdinstva ne beleži razgovor za sopstveno gazdinstvo (sukob interesa).
@@ -467,7 +467,7 @@ export async function zabeleziRazgovorSaSpiska(clanKolaId: string, nosilacId: st
   await logAdminAkcija(clanKolaId, "GAZDINSTVO_RAZGOVOR_SA_SPISKA", g.id, sumnja ? "osnov za sumnju" : "bez sumnje");
 }
 
-// ─── Izvod iz Registra (čl. 4b) ──────────────────────────────────────────────
+// ─── Izvod iz Registra (zatečeni postupak; gazd. čl. 3 st. 3: izvod se ne prilaže) ──────────────────────────────────────────────
 
 /** Da li prijava traži izvod: podnosilac je korisnik ili član bez potvrde, gazdinstvo je u Registru. */
 async function prijavaTraziIzvod(gazdinstvoId: string, neregistrovano: boolean): Promise<boolean> {
@@ -478,7 +478,7 @@ async function prijavaTraziIzvod(gazdinstvoId: string, neregistrovano: boolean):
 }
 
 /**
- * Otpremanje izvoda (čl. 4b st. 1–2). Prilaže ga lice koje odgovara za izjavu,
+ * Otpremanje izvoda (zatečeni postupak). Prilaže ga lice koje odgovara za izjavu,
  * dok je prijava u pripremi, i samo kad se izvod traži. Pre otpremanja ekran
  * obaveštava šta se iz izvoda koristi i šta treba prekriti. Novi izvod poništava
  * zabeleženo poređenje.
@@ -521,7 +521,7 @@ export async function procitajIzvod(adminId: string, gazdinstvoId: string) {
 
 /**
  * Fondacija je podatke iz prijave (ime nosioca, adresa, BPG) uporedila sa izvodom
- * (čl. 4b st. 3). Beleži se samo da je poređenje izvršeno; kad se podaci ne
+ * (zatečeni postupak). Beleži se samo da je poređenje izvršeno; kad se podaci ne
  * slažu, prijava se vraća na dopunu (`vratiGazdinstvo`).
  */
 export async function oznaciPoredjenje(adminId: string, gazdinstvoId: string) {
@@ -541,7 +541,7 @@ export async function oznaciPoredjenje(adminId: string, gazdinstvoId: string) {
 }
 
 /**
- * Oglasi koji ispunjavaju uslov čl. 4 t. 7 i čl. 5: ponuda u ime gazdinstva,
+ * Oglasi koji ispunjavaju uslov čl. 5 st. 1 t. 7 i čl. 6: ponuda u ime gazdinstva,
  * sadržinski minimum, nije uklonjen, oglašivač je član.
  */
 export async function brojOglasaUzPrijavu(gazdinstvoId: string): Promise<number> {
@@ -576,11 +576,11 @@ async function najaviAdminima(naslov: string, tekst: string, link: string, kljuc
 }
 
 /**
- * Čl. 6 — slanje na pregled; traži najmanje tri oglasa uz prijavu, izvod kad se
- * traži (čl. 4b) i broj za razgovor dok razgovor nije obavljen (čl. 6a).
+ * Čl. 7 — slanje na pregled; traži najmanje tri oglasa uz prijavu, izvod kad se
+ * traži (zatečeni postupak) i broj za razgovor dok razgovor nije obavljen (čl. 8).
  *
  * Korisnik koji je nosilac gazdinstva upisanog u Registar podnošenjem prijave
- * dolazi na spisak za poziv (čl. 4a t. 3; dokaz čl. 4a st. 2 t. 4): dobija ponudu
+ * dolazi na spisak za poziv (čl. 4 st. 1 t. 3; dokaz čl. 8): dobija ponudu
  * „Želim da me neko nazove". 🔴 To NE potvrđuje stvarnost.
  */
 export async function posaljiNaPregled(userId: string, gazdinstvoId: string) {
@@ -627,7 +627,7 @@ export async function posaljiNaPregled(userId: string, gazdinstvoId: string) {
     { naziv: g.naziv },
   );
 
-  // Spisak za poziv (gazd. čl. 4a t. 3; dokaz čl. 4a t. 4): korisnik, nosilac — i za
+  // Spisak za poziv (gazd. čl. 4 st. 1 t. 3; dokaz čl. 8): korisnik, nosilac — i za
   // gazdinstvo van Registra (set 4.8.3).
   try {
     const clan = await prisma.clanGazdinstva.findFirst({
@@ -646,9 +646,9 @@ export async function posaljiNaPregled(userId: string, gazdinstvoId: string) {
 // ─── Članovi ─────────────────────────────────────────────────────────────────
 
 /**
- * Čl. 7 st. 2 — poziva član gazdinstva koji je član Kola, i samo kad gazdinstvo
- * sme imati članove (čl. 4a). Pozvani može biti svaki punoletan aktivan učesnik;
- * uslov iz čl. 7a se proverava pri odobrenju pristupanja.
+ * Čl. 9 st. 2 — poziva član gazdinstva koji je član Kola, i samo kad gazdinstvo
+ * sme imati članove (čl. 4). Pozvani može biti svaki punoletan aktivan učesnik;
+ * uslov iz čl. 10 se proverava pri odobrenju pristupanja.
  */
 export async function pozoviClana(userId: string, gazdinstvoId: string, pseudonim: unknown) {
   if (typeof pseudonim !== "string" || !pseudonim.trim()) throw new GazdinstvoGreska("Upiši pseudonim.");
@@ -717,8 +717,8 @@ export async function pozoviClana(userId: string, gazdinstvoId: string, pseudoni
 }
 
 /**
- * Nosilac upisanog gazdinstva pri pristupanju daje izjavu iz čl. 4 t. 6 i od tada
- * za nju odgovara on (čl. 9 st. 2). Red pristupanja i evidentiran doprinos se time
+ * Nosilac upisanog gazdinstva pri pristupanju daje izjavu iz čl. 5 st. 1 t. 6 i od tada
+ * za nju odgovara on (čl. 12 st. 2). Red pristupanja i evidentiran doprinos se time
  * ne menjaju.
  */
 async function nosilacPreuzimaIzjavu(gazdinstvoId: string, userId: string) {
@@ -733,9 +733,9 @@ async function nosilacPreuzimaIzjavu(gazdinstvoId: string, userId: string) {
 }
 
 /**
- * Prihvatanje poziva uz izjavu o tačnosti (čl. 7 st. 2). Pristupanje posle
- * odobrenja gazdinstva čeka pregled Fondacije (čl. 8 st. 1); odbijanje briše poziv.
- * Razgovora sa članom nema (čl. 6a — samo sa nosiocem), pa se broj ne traži.
+ * Prihvatanje poziva uz izjavu o tačnosti (čl. 9 st. 3). Pristupanje posle
+ * odobrenja gazdinstva čeka pregled Fondacije (čl. 9 st. 4); odbijanje briše poziv.
+ * Razgovora sa članom nema (čl. 8 — samo sa nosiocem), pa se broj ne traži.
  */
 export async function odgovoriNaPoziv(
   userId: string,
@@ -801,7 +801,7 @@ export async function odgovoriNaPoziv(
       { naziv: clan.gazdinstvo.naziv },
     );
   } else if (ulogaClana === UlogaUGazdinstvu.NOSILAC) {
-    // Pre odobrenja gazdinstva pristupanje dejstvuje prihvatanjem (čl. 8 st. 1).
+    // Pre odobrenja gazdinstva pristupanje dejstvuje prihvatanjem (čl. 9 st. 3–4).
     await nosilacPreuzimaIzjavu(clan.gazdinstvoId, userId);
   }
   return { pristupio: true };
@@ -809,7 +809,7 @@ export async function odgovoriNaPoziv(
 
 /**
  * Član koji je pristupio pre seta 4.7.3 nema upisano ime; upisuje ga ovde, jer
- * odobrenje gazdinstva i pristupanja traži ime svakog člana (čl. 6, čl. 8 st. 1).
+ * odobrenje gazdinstva i pristupanja traži ime svakog člana (čl. 7 st. 3, čl. 9 st. 3).
  */
 export async function upisiImeClana(userId: string, gazdinstvoId: string, imePrezime: unknown) {
   const clan = await prisma.clanGazdinstva.findFirst({
@@ -831,7 +831,7 @@ async function bezImena(clanIds: string[]): Promise<string[]> {
 }
 
 /**
- * Čl. 9 st. 2 — nosilac upisanog gazdinstva koji je član preuzima izjavu o
+ * Čl. 12 st. 2 — nosilac upisanog gazdinstva koji je član preuzima izjavu o
  * tačnosti i od tada za nju odgovara. (Ruta `[id]/upravljanje` ostaje zbog starih
  * linkova; upravljanje se od seta 4.8.2 ne čuva nego izvodi.)
  */
@@ -849,12 +849,12 @@ export async function preuzmiUpravljanje(userId: string, gazdinstvoId: string) {
   await nosilacPreuzimaIzjavu(gazdinstvoId, userId);
 }
 
-// ─── Upit o preuzimanju izjave (čl. 9 st. 3, 11 st. 6) ──────────────────────
+// ─── Upit o preuzimanju izjave (čl. 13, 21 st. 3) ──────────────────────
 
 /**
  * Upućuje upit sledećem članu po redu pristupanja. Preskaču se članovi koji su u
  * tekućem krugu već odbili ili se nisu izjasnili (krug počinje posle poslednjeg
- * preuzimanja). Kad nema kome — gazdinstvo prestaje (čl. 12a st. 1 t. 1).
+ * preuzimanja). Kad nema kome — gazdinstvo prestaje (čl. 22 st. 1 t. 1).
  */
 async function uputiUpit(gazdinstvoId: string): Promise<void> {
   const g = await prisma.gazdinstvo.findUnique({
@@ -905,7 +905,7 @@ async function uputiUpit(gazdinstvoId: string): Promise<void> {
   }).catch((e) => console.error("[gazdinstvo] javljanje upita", e));
 }
 
-/** Odgovor na upit (čl. 9 st. 3): preuzimanje izjave ili odbijanje. */
+/** Odgovor na upit (čl. 13 st. 2–3): preuzimanje izjave ili odbijanje. */
 export async function odgovoriNaUpit(userId: string, upitId: string, preuzima: boolean) {
   const upit = await prisma.upitIzjaveGazdinstva.findUnique({
     where: { id: upitId },
@@ -959,10 +959,10 @@ export async function obradiUpite(sada = new Date()) {
   return { istekli: istekli.length, obradjeno };
 }
 
-// ─── Istupanje i brisanje (čl. 9 st. 3, 11 st. 5–6) ─────────────────────────
+// ─── Istupanje i brisanje (čl. 13, 21) ─────────────────────────
 
 /**
- * Posledica istupanja odnosno brisanja za ekran upozorenja (čl. 11 st. 5;
+ * Posledica istupanja odnosno brisanja za ekran upozorenja (čl. 21 st. 2;
  * otvoreno pitanje 6): da li je član poslednji i koliko će mu biti otpisano,
  * odnosno poništeno.
  */
@@ -985,11 +985,11 @@ export async function posledicaIzlaska(userId: string, gazdinstvoId: string) {
 }
 
 /**
- * Čl. 9 st. 3 — istupanje. POEN ostaje članu; zabeležen doprinos se i dalje
- * evidentira pod uslovima čl. 8 i ne dira se kad gazdinstvo kasnije prestane,
+ * Čl. 13 st. 1 — istupanje. POEN ostaje članu; zabeležen doprinos se i dalje
+ * evidentira pod uslovima čl. 16 i ne dira se kad gazdinstvo kasnije prestane,
  * osim zbog lažne izjave.
  *
- *  - Ako istupa POSLEDNJI član, gazdinstvo prestaje (čl. 12a st. 1 t. 1) i on je
+ *  - Ako istupa POSLEDNJI član, gazdinstvo prestaje (čl. 22 st. 1 t. 1) i on je
  *    „član u trenutku prestanka" — otpis ga pogađa (otvoreno pitanje 6; ekran ga
  *    pre toga upozorava sa iznosom, `posledicaIzlaska`).
  *  - Ako istupa lice koje odgovara za izjavu, sledeći član po redu dobija upit.
@@ -1040,11 +1040,11 @@ export async function istupiPriGasenjuNaloga(userId: string) {
   }
 }
 
-// ─── Adresa na mapi i brisanje gazdinstva (čl. 4 t. 3, čl. 11) ──────────────
+// ─── Adresa na mapi i brisanje gazdinstva (čl. 5 st. 1 t. 3, čl. 19 i 21) ──────────────
 
 /**
- * Izjava o prikazu adrese za gazdinstvo odobreno pre dopune od 20.10.2026 (čl. 11
- * st. 1): daje je lice koje odgovara za izjavu, JEDNOM. 🔴 Nema suprotne radnje —
+ * Izjava o prikazu adrese za gazdinstvo odobreno pre dopune od 20.10.2026 (ranije čl. 11
+ * st. 1; prelazna rečenica brisana u setu 5.0): daje je lice koje odgovara za izjavu, JEDNOM. 🔴 Nema suprotne radnje —
  * izjava se ne povlači; izlaz je samo brisanje gazdinstva (`obrisiGazdinstvo`).
  */
 export async function dajIzjavuOAdresi(userId: string, gazdinstvoId: string) {
@@ -1064,14 +1064,14 @@ export async function dajIzjavuOAdresi(userId: string, gazdinstvoId: string) {
 }
 
 /**
- * Brisanje gazdinstva sa platforme (čl. 11 st. 5–6) — samo lice koje odgovara za
+ * Brisanje gazdinstva sa platforme (čl. 21) — samo lice koje odgovara za
  * izjavu, i samo kad gazdinstvo nema ugovor o pokroviteljstvu dobrima i uslugama
  * sa neiskorišćenim vaučerima.
  *
  *  - Ima li gazdinstvo i druge članove, zahtev ima dejstvo ISTUPANJA tog lica:
- *    ostali dobijaju upit da preuzmu izjavu (čl. 11 st. 6).
+ *    ostali dobijaju upit da preuzmu izjavu (čl. 21 st. 3).
  *  - Inače gazdinstvo prestaje (`prestanakGazdinstva(…, "BRISANJE")`): zabeležen
- *    doprinos se poništava, evidentiran otpisuje (čl. 12a). Pre toga ekran
+ *    doprinos se poništava, evidentiran otpisuje (čl. 23). Pre toga ekran
  *    obaveštava o iznosu otpisa (`posledicaIzlaska`).
  */
 export async function obrisiGazdinstvo(userId: string, gazdinstvoId: string) {
@@ -1114,7 +1114,7 @@ export async function obrisiGazdinstvo(userId: string, gazdinstvoId: string) {
   return { ishod: "OBRISANO" as const };
 }
 
-// ─── Prestanak gazdinstva (čl. 12a) ──────────────────────────────────────────
+// ─── Prestanak gazdinstva (čl. 22–23) ──────────────────────────────────────────
 
 const OPIS_OTPISA: Record<OsnovPrestanka, string> = {
   BEZ_CLANOVA: "Otpis doprinosa gazdinstva (gazdinstvo prestalo — bez članova)",
@@ -1135,9 +1135,9 @@ const RAZLOG_PRESTANKA: Record<OsnovPrestanka, string> = {
 };
 
 /**
- * Otpis evidentiranog doprinosa (Pravilnik čl. 14 st. 3 t. 6). Zapis SME u minus;
+ * Otpis evidentiranog doprinosa (Pravilnik čl. 17 st. 2 t. 6). Zapis SME u minus;
  * teret se ne prenosi. Par −X/+X ide u istoj transakciji, sopstvenim tipom.
- * `aktivanKljuc` ide na null — lice doprinos može ponovo steći (čl. 12a st. 6).
+ * `aktivanKljuc` ide na null — lice doprinos može ponovo steći (čl. 24).
  */
 async function otpisiDoprinos(doprinosId: string, osnov: OsnovPrestanka): Promise<{ userId: string; iznos: number } | null> {
   return prisma.$transaction(async (tx) => {
@@ -1171,7 +1171,7 @@ async function otpisiDoprinos(doprinosId: string, osnov: OsnovPrestanka): Promis
 }
 
 /**
- * Prestanak gazdinstva (gazd. čl. 12a; Pravilnik čl. 40c st. 6) — JEDINI put:
+ * Prestanak gazdinstva (gazd. čl. 22–23; Pravilnik čl. 39 st. 3) — JEDINI put:
  *
  *  - status UGASENO (bez članova, brisanje), odnosno PONISTENO (lažna izjava);
  *  - brišu se naziv, opis, adresa, lokacija i BPG, tačka nestaje sa mape, oglasi
@@ -1179,7 +1179,7 @@ async function otpisiDoprinos(doprinosId: string, osnov: OsnovPrestanka): Promis
  *  - licima iz `clanoviZaOtpis` zabeležen doprinos se poništava, a evidentiran
  *    OTPISUJE (i u minus, šesti osnov). Doprinos ranije istupelih se kod t. 1–2 ne
  *    dira; kod lažne izjave dira se i njihov;
- *  - doprinos za prvi oglas (čl. 40a) se ne dira;
+ *  - doprinos za prvi oglas (Pravilnik čl. 38; gazd. čl. 23 st. 3) se ne dira;
  *  - svako pogođeno lice dobija obaveštenje sa iznosom (CLAUDE.md pravilo 3).
  *
  * Neodobreno gazdinstvo nema doprinosa — samo se zatvara. Vraća pogođena lica
@@ -1217,7 +1217,7 @@ export async function prestanakGazdinstva(
               razlogPonistenja: opcije.razlog ?? null,
             }
           : { status: GazdinstvoStatus.UGASENO, ugasenoAt: sada, ...(osnov === "BRISANJE" ? { obrisanoAt: sada } : {}) }),
-        // Politika 4.13; gazd. čl. 12a st. 2.
+        // Politika čl. 25; gazd. čl. 22 st. 2.
         naziv: "",
         adresa: null,
         opis: "",
@@ -1265,7 +1265,7 @@ export async function prestanakGazdinstva(
   }
   const ponisteni = new Map(zabelezeni.map((z) => [z.userId, z.iznos]));
 
-  // Svako pogođeno lice: prestanak, poništenje i iznos otpisa (gazd. čl. 12a st. 5).
+  // Svako pogođeno lice: prestanak, poništenje i iznos otpisa (gazd. čl. 23 st. 5).
   if (bioOdobreno) {
     for (const userId of pogodjeni) {
       const otpis = otpisi.get(userId) ?? 0;
@@ -1280,7 +1280,7 @@ export async function prestanakGazdinstva(
         tekst:
           `Gazdinstvo „${g.naziv}“ je prestalo: ${RAZLOG_PRESTANKA[osnov]}. ` +
           `Poništen ti je zabeležen doprinos gazdinstva od ${iznosPonisten} POEN, a otpisano ti je ${iznos} POEN; ` +
-          `zapis može biti negativan (Pravilnik čl. 14 st. 3 t. 6). Doprinos za prvi oglas ostaje.`,
+          `zapis može biti negativan (Pravilnik čl. 17 st. 2 t. 6). Doprinos za prvi oglas ostaje.`,
         link: "/novcanik",
       }).catch((err) => console.error("[gazdinstvo] javljanje otpisa", err));
     }
@@ -1302,11 +1302,11 @@ export async function prestanakGazdinstva(
 // ─── Odluke Fondacije ────────────────────────────────────────────────────────
 
 /**
- * Beleži doprinos članu (čl. 40c st. 3). Red je broj već zabeleženih doprinosa u
- * ovom gazdinstvu + 1 — broje se i PONISTEN redovi, pa se mesto ne oslobađa (čl. 8
- * st. 3); posle šestog se ne beleži. Živ doprinos je jedan po licu: `aktivanKljuc
+ * Beleži doprinos članu (gazd. čl. 15). Red je broj već zabeleženih doprinosa u
+ * ovom gazdinstvu + 1 — broje se i PONISTEN redovi, pa se mesto ne oslobađa (čl. 15
+ * st. 4); posle šestog se ne beleži. Živ doprinos je jedan po licu: `aktivanKljuc
  * @unique` drži „najviše jedan" i pod istovremenim odlukama, a posle poništenja ili
- * otpisa lice ga može ponovo steći (čl. 7 st. 3, 12a st. 6). Istupio član zadržava
+ * otpisa lice ga može ponovo steći (čl. 17, 24). Istupio član zadržava
  * živ doprinos i drugde ga ne stiče.
  */
 async function zabeleziDoprinos(clanId: string): Promise<boolean> {
@@ -1350,7 +1350,7 @@ async function javiZabelezen(userId: string, gazdinstvoId: string, naziv: string
     where: { aktivanKljuc: userId, gazdinstvoId },
     select: { iznos: true, status: true },
   });
-  // Lice koje živ doprinos ima u drugom gazdinstvu ovde ga ne dobija (čl. 7 st. 3).
+  // Lice koje živ doprinos ima u drugom gazdinstvu ovde ga ne dobija (čl. 17 st. 1).
   if (!d || d.status !== DoprinosStatus.ZABELEZEN) return;
   const iznos = d.iznos.toLocaleString("sr-RS");
   await obavesti(userId, {
@@ -1384,7 +1384,7 @@ async function zabraniSukobInteresa(adminId: string, gazdinstvoId: string) {
   }
 }
 
-/** Pseudonimi pozvanih članova koji u trenutku odluke nisu član Kola ni osnivač (čl. 7a). */
+/** Pseudonimi pozvanih članova koji u trenutku odluke nisu član Kola ni osnivač (čl. 10). */
 async function nisuUKolu(clanovi: { userId: string; pseudonim: string }[]): Promise<string[]> {
   const ne: string[] = [];
   for (const c of clanovi) {
@@ -1394,16 +1394,16 @@ async function nisuUKolu(clanovi: { userId: string; pseudonim: string }[]): Prom
 }
 
 /**
- * Čl. 6 — Fondacija odobrava gazdinstvo; članovima se beleži doprinos po redu.
+ * Čl. 7 — Fondacija odobrava gazdinstvo; članovima se beleži doprinos po redu.
  *
- * Gazdinstvo se ne odobrava pre nego što (čl. 6 st. 5): svaki član koji je
+ * Gazdinstvo se ne odobrava pre nego što (čl. 7 st. 3): svaki član koji je
  * pristupio ima upisano ime; izvod, kad se traži, priložen i poređenje izvršeno;
- * Fondacija obavila razgovor sa nosiocem (čl. 6a). Svaki član osim podnosioca
- * mora u tom trenutku biti član Kola ili osnivač (čl. 7a).
+ * Fondacija obavila razgovor sa nosiocem (čl. 8). Svaki član osim podnosioca
+ * mora u tom trenutku biti član Kola ili osnivač (čl. 10).
  *
- * Odlukom se brišu izvod i broj za razgovor (čl. 4b st. 4, 6a st. 2); ostaje samo
- * zapis da je poređenje izvršeno. 🔴 Odobrenje NE potvrđuje stvarnost (čl. 4a
- * poslednji stav).
+ * Odlukom se brišu izvod i broj za razgovor (čl. 8 st. 3; izvod: zatečeni postupak); ostaje samo
+ * zapis da je poređenje izvršeno. 🔴 Odobrenje NE potvrđuje stvarnost (čl. 4
+ * st. 3).
  */
 export async function odobriGazdinstvo(adminId: string, gazdinstvoId: string) {
   const g = await prisma.gazdinstvo.findUnique({
@@ -1434,11 +1434,11 @@ export async function odobriGazdinstvo(adminId: string, gazdinstvoId: string) {
     throw new GazdinstvoGreska(`Ime i prezime nije upisano za: ${bez.join(", ")}. Vrati prijavu na dopunu.`);
   }
   if (!g.razgovorObavljenAt) {
-    throw new GazdinstvoGreska("Pre odobrenja Fondacija razgovara sa nosiocem (čl. 6a). Označi da je razgovor obavljen.");
+    throw new GazdinstvoGreska("Pre odobrenja Fondacija razgovara sa nosiocem (čl. 8). Označi da je razgovor obavljen.");
   }
   if (await prijavaTraziIzvod(gazdinstvoId, g.neregistrovano)) {
-    if (!g.izvodRpg && !g.rpgUporedjenAt) throw new GazdinstvoGreska("Izvod iz Registra nije priložen (čl. 4b).");
-    if (!g.rpgUporedjenAt) throw new GazdinstvoGreska("Podaci iz prijave nisu upoređeni sa izvodom (čl. 4b st. 3).");
+    if (!g.izvodRpg && !g.rpgUporedjenAt) throw new GazdinstvoGreska("Izvod iz Registra nije priložen.");
+    if (!g.rpgUporedjenAt) throw new GazdinstvoGreska("Podaci iz prijave nisu upoređeni sa izvodom.");
   }
   const podnosilac = await podnosilacGazdinstva(gazdinstvoId);
   const neUKolu = await nisuUKolu(
@@ -1446,7 +1446,7 @@ export async function odobriGazdinstvo(adminId: string, gazdinstvoId: string) {
   );
   if (neUKolu.length > 0) {
     throw new GazdinstvoGreska(
-      `Pristupa samo član Kola (čl. 7a). Nisu članovi Kola: ${neUKolu.join(", ")}. Sačekaj potvrdu ili vrati prijavu na dopunu.`,
+      `Pristupa samo član Kola (čl. 10). Nisu članovi Kola: ${neUKolu.join(", ")}. Sačekaj potvrdu ili vrati prijavu na dopunu.`,
     );
   }
 
@@ -1459,12 +1459,12 @@ export async function odobriGazdinstvo(adminId: string, gazdinstvoId: string) {
         odobrenoAt: sada,
         odobrioId: adminId,
         razlogVracanja: null,
-        // Broj za razgovor se briše odlukom (čl. 6a st. 2).
+        // Broj za razgovor se briše odlukom (čl. 8 st. 3).
         telefonZaRazgovor: null,
       },
     });
     if (promena.count !== 1) throw new GazdinstvoGreska("Prijava je u međuvremenu promenjena.");
-    // Izvod se čuva samo do odluke o prijavi (čl. 4b st. 4).
+    // Izvod se čuva samo do odluke o prijavi (zatečeni postupak).
     await tx.izvodRpg.deleteMany({ where: { gazdinstvoId } });
     const clanovi = await tx.clanGazdinstva.findMany({
       where: { gazdinstvoId, status: ClanGazdinstvaStatus.PRISTUPIO },
@@ -1477,7 +1477,7 @@ export async function odobriGazdinstvo(adminId: string, gazdinstvoId: string) {
     });
     return clanovi;
   });
-  // Red pristupanja (čl. 8 st. 3) — sekvencijalno, da redni broj ne zavisi od trke.
+  // Red pristupanja (čl. 15 st. 2) — sekvencijalno, da redni broj ne zavisi od trke.
   for (const c of clanovi) await zabeleziDoprinos(c.id);
 
   await logAdminAkcija(adminId, "GAZDINSTVO_ODOBRENO", gazdinstvoId, g.naziv);
@@ -1489,8 +1489,8 @@ export async function odobriGazdinstvo(adminId: string, gazdinstvoId: string) {
 }
 
 /**
- * Čl. 6 st. 2, 4b st. 3, 6a st. 3 — vraćanje na dopunu, uz razlog. Vraćanje je
- * odluka o prijavi: izvod i broj za razgovor se brišu (čl. 4b st. 4, 6a st. 2).
+ * Čl. 7 st. 2, čl. 8 st. 4 — vraćanje na dopunu, uz razlog. Vraćanje je
+ * odluka o prijavi: izvod i broj za razgovor se brišu (čl. 8 st. 3).
  */
 export async function vratiGazdinstvo(adminId: string, gazdinstvoId: string, razlog: unknown) {
   const r = typeof razlog === "string" ? razlog.trim() : "";
@@ -1522,9 +1522,9 @@ export async function vratiGazdinstvo(adminId: string, gazdinstvoId: string, raz
 }
 
 /**
- * Čl. 8 st. 1 — Fondacija pregleda pristupanje posle odobrenja gazdinstva, bez
- * razgovora iz čl. 6a i bez izvoda. Pozvani mora u trenutku odobrenja biti član
- * Kola ili osnivač (čl. 7a).
+ * Čl. 9 st. 4 — Fondacija pregleda pristupanje posle odobrenja gazdinstva, bez
+ * razgovora iz čl. 8 i bez izvoda. Pozvani mora u trenutku odobrenja biti član
+ * Kola ili osnivač (čl. 10).
  */
 export async function odlukaOPristupanju(adminId: string, clanId: string, odobri: boolean, razlog?: unknown) {
   const clan = await prisma.clanGazdinstva.findUnique({
@@ -1548,7 +1548,7 @@ export async function odlukaOPristupanju(adminId: string, clanId: string, odobri
   }
   if (odobri && !pristupanjeSmeOdobriti(await statusNaloga(clan.userId))) {
     throw new GazdinstvoGreska(
-      "Pristupa samo član Kola (čl. 7a). Pozvanog prvo treba da potvrdi član Kola koji ga lično zna.",
+      "Pristupa samo član Kola (čl. 10). Pozvanog prvo treba da potvrdi član Kola koji ga lično zna.",
     );
   }
   if (!odobri) {
@@ -1584,10 +1584,10 @@ export async function odlukaOPristupanju(adminId: string, clanId: string, odobri
 // ─── Evidentiranje ───────────────────────────────────────────────────────────
 
 /**
- * Čl. 40c st. 4 i Pravilnik o gazdinstvima čl. 8 t. 1 — uslov oglasa.
+ * Pravilnik čl. 39 st. 2 i Pravilnik o gazdinstvima čl. 16 st. 1 t. 1 — uslov oglasa.
  *
  * Odluka vlasnika (19.10.2026): doprinos se evidentira kada član postavi prvi oglas
- * kojim nudi, a ODMAH ako mu je doprinos za prvi oglas (čl. 40a) već evidentiran —
+ * kojim nudi, a ODMAH ako mu je doprinos za prvi oglas (Pravilnik čl. 38; gazd. čl. 16 st. 2) već evidentiran —
  * i kada tog oglasa više nema. Zato se pored postojećih oglasa (i isteklih, i
  * razmenjenih) priznaje i evidentiran `DoprinosSadrzaju`: on ostaje i posle brisanja
  * oglasa (`oglasId` SetNull), a činjenica prvog oglasa se time ne gubi.
@@ -1605,8 +1605,8 @@ async function imaObjavljenOglas(userId: string): Promise<boolean> {
 
 /**
  * Pretvara zabeležen doprinos gazdinstva u zapis POEN-a kad su oba uslova
- * ispunjena: oglas i VERIFIKACIJA u lancu potvrda (Pravilnik čl. 40c st. 4; gazd.
- * čl. 8 st. 2 t. 2). Zove se pri odobrenju, pri objavi i izmeni oglasa, pri
+ * ispunjena: oglas i VERIFIKACIJA u lancu potvrda (Pravilnik čl. 39 st. 2; gazd.
+ * čl. 16 st. 1 t. 2). Zove se pri odobrenju, pri objavi i izmeni oglasa, pri
  * verifikaciji (posledice promene statusa) i iz crona `potvrde-uslov`.
  *
  * MORA se zvati VAN `prisma.$transaction()` — `emitujPoen()` otvara sopstvenu.
@@ -1619,7 +1619,7 @@ export async function probajEvidentiratiGazdinstvo(userId: string): Promise<bool
       select: { id: true, iznos: true, gazdinstvo: { select: { status: true, naziv: true } } },
     });
     // 🔴 Ne „samo ODOBRENO": član koji istupi zadržava zabeležen doprinos i kad
-    // gazdinstvo kasnije prestane (čl. 9 st. 3). Doprinos koji prestanak pogađa je
+    // gazdinstvo kasnije prestane (čl. 13 st. 1). Doprinos koji prestanak pogađa je
     // već PONISTEN; poništeno gazdinstvo je dodatna brana.
     if (!d || d.gazdinstvo.status === GazdinstvoStatus.PONISTENO) return false;
 
@@ -1677,7 +1677,7 @@ export async function probajEvidentiratiGazdinstvo(userId: string): Promise<bool
         kljuc: "notifikacije.gazdinstvo_evidentiran",
         parametri: { iznos },
         naslov: `Evidentiran ti je doprinos gazdinstva od ${iznos} POEN`,
-        tekst: `Doprinos gazdinstva — ${iznos} POEN — evidentiran je u tvom zapisu (Pravilnik čl. 40c).`,
+        tekst: `Doprinos gazdinstva — ${iznos} POEN — evidentiran je u tvom zapisu (Pravilnik čl. 39).`,
         link: "/novcanik",
       });
       await prisma.doprinosGazdinstva.update({ where: { id: d.id }, data: { obavestenAt: new Date() } });
@@ -1702,14 +1702,14 @@ export async function dohvatiZabelezenGazdinstva(userId: string) {
 // ─── Lažna izjava ────────────────────────────────────────────────────────────
 
 /**
- * Čl. 12 — poništenje odobrenja zbog lažne izjave: prestanak po t. 3 čl. 12a
+ * Čl. 20 — poništenje odobrenja zbog lažne izjave: prestanak po čl. 22 st. 1 t. 3
  * (`prestanakGazdinstva(…, "LAZNA_IZJAVA")`) — poništenje i otpis pogađaju sve
- * članove iz perioda izjave, i ranije istupele (čl. 12 st. 2).
+ * članove iz perioda izjave, i ranije istupele (čl. 20 st. 2).
  *
- * 🔴 Isključenje NIJE kolektivno (set 4.8.4, registar 2026-10 U5; čl. 12 st. 3):
+ * 🔴 Isključenje NIJE kolektivno (set 4.8.4, registar 2026-10 U5; čl. 20 st. 3):
  * izriče se samo licima koja superadmin označi — onome ko je dao lažnu izjavu, članu
  * čija je izjava o pristupanju lažna i onome ko je za laž znao. Ostalima se samo
- * otpisuje doprinos gazdinstva, bez isključenja, i mogu ga ponovo steći (čl. 12a).
+ * otpisuje doprinos gazdinstva, bez isključenja, i mogu ga ponovo steći (čl. 24).
  * Samo superadmin (isključenje je superadminska odluka).
  */
 export async function ponistiZbogLazneIzjave(adminId: string, gazdinstvoId: string, razlog: unknown, iskljuci: unknown = []) {
@@ -1735,7 +1735,7 @@ export async function ponistiZbogLazneIzjave(adminId: string, gazdinstvoId: stri
   const { otpisano } = await prestanakGazdinstva(gazdinstvoId, "LAZNA_IZJAVA", { izvrsilacId: adminId, razlog: r });
 
   for (const userId of oznaceni) {
-    await iskljuciKorisnika(adminId, userId, `Lažna izjava o gazdinstvu (Pravilnik o gazdinstvima čl. 12): ${r}`);
+    await iskljuciKorisnika(adminId, userId, `Lažna izjava o gazdinstvu (Pravilnik o gazdinstvima čl. 20): ${r}`);
   }
   await logAdminAkcija(adminId, "GAZDINSTVO_PONISTENO", gazdinstvoId, `${g.naziv}: ${r}`);
   return { otpisano, iskljuceno: oznaceni.length };
@@ -1756,8 +1756,8 @@ export const GAZDINSTVO_ZA_OZNAKU = {
 } as const;
 
 /**
- * Tačke za javnu mapu (čl. 11) — samo odobrena gazdinstva, bez BPG-a. 🔴 Adresa ide
- * SAMO uz datu izjavu (čl. 4 t. 3); gazdinstvu odobrenom ranije bez izjave adresa
+ * Tačke za javnu mapu (čl. 19) — samo odobrena gazdinstva, bez BPG-a. 🔴 Adresa ide
+ * SAMO uz datu izjavu (čl. 5 st. 1 t. 3); gazdinstvu odobrenom ranije bez izjave adresa
  * se ne ispisuje. Oglasi odobrenog gazdinstva nose oznaku DOMAĆE (`jeDomace`).
  */
 export async function gazdinstvaZaMapu() {
@@ -1788,7 +1788,7 @@ export async function gazdinstvaZaMapu() {
   }));
 }
 
-/** Adresa uz tačku samo uz izjavu (gazdinstva čl. 4 t. 3 i čl. 11). */
+/** Adresa uz tačku samo uz izjavu (gazdinstva čl. 5 st. 1 t. 3 i čl. 19). */
 export function adresaZaMapu(adresa: string | null, izjavaAdresaAt: Date | null): string | null {
   return izjavaAdresaAt && adresa ? adresa : null;
 }

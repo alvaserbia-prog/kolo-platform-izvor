@@ -13,7 +13,7 @@
  * Posledice tog promašaja nisu simetrične — nalog gubi zaštite a dobija
  * ovlašćenja: profil mu je otvoren svakom potvrđenom članu (`smeDaVidiProfilDeteta`
  * gleda `maloletan`), izlazi u pretrazi korisnika, i može ući u lanac potvrda,
- * koji je maloletnom korisniku zabranjen (čl. 15 Pravilnika o učešću dece). Jedini
+ * koji je maloletnom korisniku zabranjen (čl. 29 st. 2 Pravilnika o učešću dece). Jedini
  * lek do sada bio je da se nalog ugasi i otvori ponovo.
  *
  * ─── Šta ovo radi, i zašto baš to ───────────────────────────────────────────
@@ -24,51 +24,52 @@
  *  1. **Nalog izlazi iz lanca potvrda** — padaju sve potvrde koje dodiruje, u oba
  *     smera, sa vraćanjem POEN-a Protokolu i preračunom tuđih indeksa i zona
  *     (`oboriVerifikacijeNaloga`). 🔴 Ovo NIJE utvrđenje lažne potvrde: niko nije
- *     slagao, nego je pogrešno upisan uzrast. Zato ne ide kroz Glavu VIII dokaza
+ *     slagao, nego je pogrešno upisan uzrast. Zato ne ide kroz Glavu IX dokaza
  *     stvarnosti i nema postupka pred UO — ali poništenje POEN-a jeste puno, i na
  *     tuđoj strani (vidi ispod).
  *  2. **Poništava se sve što je Protokol upisao nalogu** — vidi odeljak ispod.
- *  3. **ZRNO se otpisuje** — maloletni korisnik ga ne drži i ne glasa (Glava VIII,
- *     čl. 58). ZRNA se vraćaju u raspoloživa u Protokolu, kao pri prestanku
- *     statusa (čl. 34 st. 1).
- *  4. **Zabeleženi doprinosi se brišu** — kanali iz čl. 40a i 40b se na maloletne
- *     korisnike ne primenjuju (čl. 14 st. 1). `probajEvidentirati` NEMA proveru
+ *  3. **ZRNO se otpisuje** — maloletni korisnik ga ne drži i ne glasa (Pravilnik čl. 52 st. 2;
+ *     deca čl. 29 st. 1). ZRNA se vraćaju u raspoloživa u Protokolu, kao pri prestanku
+ *     statusa (Pravilnik čl. 33 st. 1).
+ *  4. **Zabeleženi doprinosi se brišu** — kanali iz Pravilnika čl. 38 i ukinutog čl. 40b se na maloletne
+ *     korisnike ne primenjuju (deca čl. 33 st. 1). `probajEvidentirati` NEMA proveru
  *     uzrasta (nju nosi beleženje), pa bi zabeležen red bez ovoga kasnije emitovao
  *     1.000 POEN detetu — na prvi primljen POEN.
- *  5. **Programi se gase** — socijalni programi i operativni doprinos traže indeks
- *     ≥ 10%, koji je upravo pao na nulu. Bez ovoga bi prijava stajala ACTIVE do
+ *  5. **Programi se gase** — prijave na programe podrške i na operativni doprinos
+ *     prestaju (deca čl. 16 st. 1). Uneti podaci programa se brišu i postupak potvrda
+ *     se zatvara (Politika čl. 27 st. 10). Bez ovoga bi prijava stajala ACTIVE do
  *     noćne revizije i dotle isplaćivala.
  *  6. **Veza sa roditeljem i poziv za drugog roditelja** — nalog je „dete sa
- *     roditeljem" (čl. 4d st. 1); roditelj izjavu daje po prijemu odluke, bez roka.
- *  7. **Gazdinstvo** (čl. 4d st. 7) — nalog prestaje da bude član gazdinstva;
+ *     roditeljem" (deca čl. 15 st. 1); roditelj izjavu daje po prijemu odluke, bez roka.
+ *  7. **Gazdinstvo** (deca čl. 16 st. 4) — nalog prestaje da bude član gazdinstva;
  *     zabeležen doprinos gazdinstva se poništava, a evidentiran otpisuje „po stavu
- *     4". Vidi odeljak ispod.
+ *     2". Vidi odeljak ispod.
  *
  * 🔴 **Doprinos gazdinstva se NE otpisuje dvaput.** Evidentiran doprinos
  * gazdinstva je emisija Protokola (`EMISIJA_GAZDINSTVO`), pa je već u neto emisiji
- * iz koraka 2 — „otpisuje se po stavu 4" znači upravo to. Zato ovde nema zasebnog
+ * iz koraka 2 — „otpisuje se po stavu 2" znači upravo to. Zato ovde nema zasebnog
  * `OTPIS_GAZDINSTVO`: red doprinosa se samo zatvara (`otpisanAt`, `aktivanKljuc =
  * null`) u ISTOJ transakciji sa protivzapisom `OTPIS_PREVOD_U_MALOLETNI`, na koji
  * pokazuje `otpisTransakcijaId`. Zatvaranje ide PRE istupanja: istupanje
- * poslednjeg člana pokreće prestanak gazdinstva (gazd. čl. 12a), koji bi inače
+ * poslednjeg člana pokreće prestanak gazdinstva (gazd. čl. 22–23), koji bi inače
  * otpisao isti doprinos još jednom. Istupanje ide kroz `istupi()` iz
- * `gazdinstvo.ts`, pa upit sledećem članu (gazd. čl. 9) i prestanak (čl. 12a)
+ * `gazdinstvo.ts`, pa upit sledećem članu (gazd. čl. 13) i prestanak (čl. 22)
  * ostaju tamo gde jesu.
  *
  * 🔴 **Poništava se SVE što je Protokol upisao tom nalogu** — potvrde, doprinos
  * sadržaju i razmeni, donacije, programi, pokroviteljstvo, osnivački. To su
- * kanali iz čl. 15 Pravilnika o KOLO sistemu, a maloletni korisnik ih ne koristi
- * (Pravilnik o učešću dece čl. 14 st. 1, čl. 15): POEN je upisan pod pretpostavkom
+ * kanali iz čl. 19 Pravilnika o KOLO sistemu, a maloletni korisnik ih ne koristi
+ * (Pravilnik o učešću dece čl. 33 st. 1, čl. 29): POEN je upisan pod pretpostavkom
  * da je nalog punoletan, i ta pretpostavka pada zajedno sa uzrastom.
  *
  * 🔴 **POEN koji su mu ljudi PREPISALI ostaje.** Prepis nije emisija — ničim ne
- * menja ukupan broj POEN-a nego seli zapis sa čoveka na čoveka (čl. 14, 16), i
- * dete ga sme imati (roditelj mu prepisuje bezuslovno, čl. 14). Zato se poništava
+ * menja ukupan broj POEN-a nego seli zapis sa čoveka na čoveka (Pravilnik čl. 17, 20), i
+ * dete ga sme imati (roditelj mu prepisuje bezuslovno, deca čl. 30 st. 1). Zato se poništava
  * NETO emisija: sve što je stiglo od Protokola, umanjeno za sve što je Protokolu
  * vraćeno (upis ZRNA, raniji otpisi). Ko je taj POEN već potrošio, tome zapis ide
  * u MINUS — inače bi onaj ko brže potroši prošao jeftinije od onoga ko sačuva, što
- * je isto pravilo koje već važi za otpis prijateljstva (čl. 14c) i za poništen
- * prepis po prijavi razmene. Minus JESTE nadoknada (čl. 20b): nije dug, ne
+ * je isto pravilo koje već važi za otpis prijateljstva (deca čl. 34) i za poništen
+ * prepis po prijavi razmene. Minus JESTE nadoknada (dokaz stvarnosti čl. 36): nije dug, ne
  * naplaćuje se, POEN-i koji pristignu prvo ga popunjavaju.
  *
  * 🔴 **Isto važi i za DRUGE ljude** kojima je POEN upisan povodom palih potvrda —
@@ -80,13 +81,13 @@
  * 🟡 Vraćanje naloga na dan registracije (`reset-korisnika.ts`) i dalje staje na
  * nuli: tamo je reč o probi korisničkog puta, ne o poništenju emisije.
  *
- * Otpis pri punoletstvu (čl. 19 st. 2) meri se po `Prijateljstvo.poenEvidentiran`, a
+ * Otpis pri punoletstvu (deca čl. 35 st. 2) meri se po `Prijateljstvo.poenEvidentiran`, a
  * ovaj nalog nijedno prijateljstvo nema — pa mu se na 18. rođendan neće poništiti
  * ništa što ovde nije nastalo.
  *
  * 🔴 **Oglasi, poruke i istorija OSTAJU.** Dete sme da ima oglase i razgovore.
  * Posledica koju treba znati: postojeći razgovori sa punoletnim licima od sada
- * potpadaju pod čl. 9 — roditelj ih čita, a sagovorniku se prikazuje natpis o
+ * potpadaju pod deca čl. 19 — roditelj ih čita, a sagovorniku se prikazuje natpis o
  * tome. Sagovornik to nije mogao da zna dok je pisao.
  *
  * ─── Ograničenja ────────────────────────────────────────────────────────────
@@ -103,9 +104,12 @@ import {
   ClanGazdinstvaStatus,
   DoprinosStatus,
   EnrollmentStatus,
+  OglasPrijavaStatus,
+  Prisma,
   TransactionType,
   UserStatus,
 } from "@/generated/prisma/client";
+import { KLJUC_ZAHTEV_POTVRDA } from "./program-potvrda";
 import { obavesti } from "@/lib/notifikacije";
 import { oboriVerifikacijeNaloga } from "@/lib/protokol/verifikacije-naloga";
 import { beogradskiDan } from "@/lib/protokol/obracunski-dan";
@@ -145,7 +149,7 @@ export type NalogZaPrevod = {
    * prelasku — ali cena greške je takva da se ne oslanja na „ne bi trebalo".
    */
   imaRoditelja: boolean;
-  /** Vlasnik pokrovitelja (pravno lice / preduzetnik) — čl. 40 traži punoletnog. */
+  /** Vlasnik pokrovitelja (pravno lice / preduzetnik) — donacije čl. 16 st. 1 traži punoletnog. */
   vlasnikPokrovitelja: boolean;
 };
 
@@ -175,7 +179,7 @@ export function proveriPrevodUMaloletni(
       status: 400,
     };
   }
-  // Početni korisnik je ishodište lanca potvrda (dokaz stvarnosti čl. 14) — indeks
+  // Početni korisnik je ishodište lanca potvrda (dokaz stvarnosti čl. 29) — indeks
   // mu je fiksno 100% i ne može biti verifikovan. Maloletni nalog je suprotnost
   // toga u svakoj tački, pa se ta dva svojstva ne mogu naći na istom nalogu.
   if (nalog.jeOsnivac) {
@@ -204,7 +208,7 @@ export function proveriPrevodUMaloletni(
   if (!roditelj.aktivan) return { ok: false, razlog: "Nalog roditelja nije aktivan.", status: 403 };
 
   // 🔴 Indeks stvarnosti roditelja se NAMERNO ne traži. Otvaranje naloga iz
-  // roditeljskog profila ga traži (čl. 5) jer tamo roditelj svojom potvrđenošću
+  // roditeljskog profila ga traži (deca čl. 7) jer tamo roditelj svojom potvrđenošću
   // stoji iza novog naloga; ovde nalog već postoji i samo dobija roditelja — isto
   // što radi preuzimanje kod deteta koje se registrovalo samo, koje indeks takođe
   // ne traži. Ako roditelj nije redovan član, dete prosto stoji u stanju
@@ -221,7 +225,7 @@ const PROTOKOL_WALLET_ID = "banka-singleton";
  *
  * 🔴 Meri se iz ISTORIJE, ne iz stanja. Stanje ne razlikuje POEN koji je nastao
  * emisijom od POEN-a koji je čovek dobio prepisom, a upravo ta razlika odlučuje
- * šta se poništava (čl. 15 — kanali) a šta ostaje (čl. 14, 16 — prepis).
+ * šta se poništava (Pravilnik čl. 19 — kanali) a šta ostaje (čl. 17, 20 — prepis).
  *
  * Oduzimanje vraćenog je bitno u oba smera: ko je POEN dao Protokolu (upis ZRNA)
  * više ga nema, pa mu se ne sme skinuti dvaput; a ranije otpise (raskid, poništenje)
@@ -248,7 +252,7 @@ async function netoEmisijaNaloga(userId: string): Promise<number> {
 
 /**
  * Poništi emisiju sa zapisa naloga, uz protivzapis Protokola, i u istoj
- * transakciji zatvori evidentiran doprinos gazdinstva (čl. 4d st. 7).
+ * transakciji zatvori evidentiran doprinos gazdinstva (deca čl. 16 st. 4).
  *
  * 🔴 Zapis SME u minus — vidi zaglavlje. Isti obrazac kao otpis prijateljstva
  * (`prijateljstva.ts`): opticaj opada, zero-sum ostaje očuvan.
@@ -256,7 +260,7 @@ async function netoEmisijaNaloga(userId: string): Promise<number> {
  * 🔴 Evidentiran doprinos gazdinstva je već u `iznos` (neto emisija), pa se red
  * samo zatvara — bez sopstvenog `OTPIS_GAZDINSTVO`, koji bi ga skinuo dvaput. Kad
  * neto emisije nema (sve je već vraćeno Protokolu), red se zatvara bez
- * protivzapisa: po stavu 4 tada nema šta da se otpiše.
+ * protivzapisa: po stavu 2 tada nema šta da se otpiše.
  *
  * @returns broj zatvorenih evidentiranih doprinosa gazdinstva
  */
@@ -293,9 +297,9 @@ async function otpisiEmisijuNalogu(userId: string, iznos: number): Promise<numbe
 }
 
 /**
- * Čl. 4d st. 7 — nalog prestaje da bude član gazdinstva. Poziv koji nije
- * prihvaćen se briše; iz svakog članstva se istupa kroz `istupi()` (gazd. čl. 9
- * st. 3), pa upit sledećem članu i prestanak gazdinstva bez članova (čl. 12a)
+ * Deca čl. 16 st. 4 — nalog prestaje da bude član gazdinstva. Poziv koji nije
+ * prihvaćen se briše; iz svakog članstva se istupa kroz `istupi()` (gazd. čl. 13
+ * st. 1), pa upit sledećem članu i prestanak gazdinstva bez članova (čl. 22)
  * idu svojim putem. Doprinos je pre toga već poništen odnosno zatvoren, pa ga
  * eventualni prestanak ne dira.
  *
@@ -339,9 +343,9 @@ export type PrevodRezultat = {
   zrnaOtpisana: number;
   obrisanoZabelezenih: number;
   ugasenoProgramaPrijava: number;
-  /** Čl. 4d st. 7 — poništeni zabeleženi doprinosi gazdinstva. */
+  /** Deca čl. 16 st. 4 — poništeni zabeleženi doprinosi gazdinstva. */
   ponistenoDoprinosaGazdinstva: number;
-  /** Čl. 4d st. 7 — evidentirani doprinosi gazdinstva zatvoreni otpisom po st. 4. */
+  /** Deca čl. 16 st. 4 — evidentirani doprinosi gazdinstva zatvoreni otpisom po st. 2. */
   otpisanoDoprinosaGazdinstva: number;
   /** Gazdinstva iz kojih je nalog istupio. */
   istupioIzGazdinstava: number;
@@ -356,7 +360,7 @@ export type PrevodRezultat = {
  *
  * @param userId nalog koji se prevodi
  * @param roditeljId nalog koji postaje roditelj
- * @param datumRodjenja upisuje se odmah (čl. 7) — posle se ne menja
+ * @param datumRodjenja upisuje se odmah (deca čl. 15 st. 1) — posle se ne menja
  */
 export async function prevediUMaloletni(
   userId: string,
@@ -422,7 +426,7 @@ export async function prevediUMaloletni(
   );
   if (!provera.ok) throw new PrevodGreska(provera.razlog, provera.status);
 
-  // ── 0. Zabeležen doprinos gazdinstva (čl. 4d st. 7) ──────────────────────
+  // ── 0. Zabeležen doprinos gazdinstva (deca čl. 16 st. 4) ──────────────────────
   //
   // Poništava se PRE čitanja neto emisije: inače bi okidač evidentiranja
   // (`probajEvidentiratiGazdinstvo`) mogao da ga emituje između čitanja i otpisa,
@@ -457,10 +461,10 @@ export async function prevediUMaloletni(
   // ── 2. Poništenje svega što je Protokol upisao ovom nalogu ────────────────
   // Zapis SME u minus — vidi obrazloženje u zaglavlju. Prepisi od drugih ljudi
   // nisu emisija i u zbir ne ulaze, pa ostaju detetu. Evidentiran doprinos
-  // gazdinstva je deo te emisije i zatvara se u istoj transakciji (čl. 4d st. 7).
+  // gazdinstva je deo te emisije i zatvara se u istoj transakciji (deca čl. 16 st. 4).
   const otpisanoGazd = await otpisiEmisijuNalogu(userId, Math.max(netoEmisija, 0));
 
-  // ── 2a. Istupanje iz gazdinstva (čl. 4d st. 7) ─────────────────────────────
+  // ── 2a. Istupanje iz gazdinstva (deca čl. 16 st. 4) ─────────────────────────────
   // Posle zatvaranja doprinosa — prestanak gazdinstva bez članova ga više ne nalazi.
   const gazdIstupanje = await istupiIzGazdinstava(userId);
 
@@ -480,30 +484,64 @@ export async function prevediUMaloletni(
   await prisma.zrnoStatusZahtev.deleteMany({ where: { userId } });
   await prisma.zrnoStanje.deleteMany({ where: { userId } });
 
-  // ── 4. Zabeleženi doprinosi (čl. 40a i 40b) ────────────────────────────────
+  // ── 4. Zabeleženi doprinosi (Pravilnik čl. 38 i ukinuti čl. 40b) ────────────────────────────────
   const [sadrzaj, razmena] = await Promise.all([
     prisma.doprinosSadrzaju.deleteMany({ where: { userId, status: DoprinosStatus.ZABELEZEN } }),
     prisma.doprinosRazmeni.deleteMany({ where: { userId, status: DoprinosStatus.ZABELEZEN } }),
   ]);
   const obrisanoZabelezenih = sadrzaj.count + razmena.count;
 
-  // ── 5. Programi ────────────────────────────────────────────────────────────
-  const ugaseno = await prisma.programEnrollment.updateMany({
-    where: { userId, status: { in: [EnrollmentStatus.PENDING, EnrollmentStatus.ACTIVE] } },
-    data: { status: EnrollmentStatus.INACTIVE },
+  // ── 5. Programi i operativni doprinos ─────────────────────────────────────
+  // Prevođenjem prestaju prijave na programe podrške i na operativni doprinos
+  // (deca čl. 16 st. 1). 🔴 Prestanak prijave BRIŠE unete podatke programa
+  // (`metadata` — zdravlje, deca; Politika čl. 27 st. 10) i zatvara postupak
+  // potvrda (isto što `zatvoriPostupakPotvrda`, ovde u jednoj transakciji) — do
+  // 5.0 se samo menjao status, pa su podaci ostajali posle prestanka prijave.
+  const ugaseno = await prisma.$transaction(async (tx) => {
+    const prijave = await tx.programEnrollment.findMany({
+      where: { userId, status: { in: [EnrollmentStatus.PENDING, EnrollmentStatus.ACTIVE] } },
+      select: { id: true },
+    });
+    const ids = prijave.map((p) => p.id);
+    if (ids.length > 0) {
+      await tx.programEnrollment.updateMany({
+        where: { id: { in: ids } },
+        data: {
+          status: EnrollmentStatus.INACTIVE,
+          rejectionReason: "Nalog je preveden u nalog maloletnog korisnika.",
+          metadata: Prisma.DbNull,
+        },
+      });
+      await tx.programPotvrda.deleteMany({ where: { enrollmentId: { in: ids }, status: "CEKA" } });
+      for (const id of ids) {
+        await tx.notifikacija.deleteMany({
+          where: { kljuc: KLJUC_ZAHTEV_POTVRDA, parametri: { path: ["enrollmentId"], equals: id } },
+        });
+      }
+    }
+    // Maloletni korisnik ne potvrđuje ispunjenost uslova tuđe prijave (programi čl. 5):
+    // zahtevi upućeni ovom nalogu se zatvaraju.
+    await tx.programPotvrda.deleteMany({ where: { verifikatorId: userId, status: "CEKA" } });
+    await tx.notifikacija.deleteMany({ where: { userId, kljuc: KLJUC_ZAHTEV_POTVRDA } });
+    // Prijave na operativni doprinos prestaju (deca čl. 16 st. 1); evidentirano ostaje.
+    await tx.oglasPrijava.updateMany({
+      where: { userId, status: { in: [OglasPrijavaStatus.PENDING, OglasPrijavaStatus.APPROVED] } },
+      data: { status: OglasPrijavaStatus.REJECTED, rejectionReason: "Nalog je preveden u nalog maloletnog korisnika." },
+    });
+    return { count: ids.length };
   });
 
   // ── 6. Nalog, roditelj i poziv za drugog roditelja ───────────────────────
   //
-  // Prevedeni nalog je „dete sa roditeljem" (čl. 4d st. 1). Roditelj izjavu iz
-  // čl. 6 st. 1 daje po prijemu odluke, sa profila deteta — 🔴 bez roka i bez
+  // Prevedeni nalog je „dete sa roditeljem" (deca čl. 15 st. 1). Roditelj izjavu iz
+  // čl. 12 st. 1 daje po prijemu odluke, sa profila deteta — 🔴 bez roka i bez
   // posledice po treća lica (set 4.8.2). Postupak potvrde od šezdeset dana je
   // ukinut: u „dete Kola" nalog prelazi kad je roditelj član Kola i kad mu član
-  // Kola potvrdi postojanje deteta (čl. 4c t. 3, 6).
+  // Kola potvrdi postojanje deteta (čl. 5 st. 1 t. 3, čl. 13).
   const sada = new Date();
 
   await prisma.$transaction(async (tx) => {
-    // Maloletni korisnik ne daje i ne prima preporuke (Uslovi čl. 17a st. 1).
+    // Maloletni korisnik ne daje i ne prima preporuke (dokaz stvarnosti čl. 20 st. 1).
     await obrisiPreporuke(userId, tx);
     await tx.user.update({
       where: { id: userId },
@@ -511,7 +549,7 @@ export async function prevediUMaloletni(
         maloletan: true,
         datumRodjenja,
         slotoviPotroseni: 0,
-        // Prekidač iz čl. 10 st. 2 kreće ugašen — odnos sa punoletnim licima
+        // Prekidač iz deca čl. 20 st. 2 kreće ugašen — odnos sa punoletnim licima
         // otvara roditelj, a ne zatečeno stanje naloga.
         dozvolaOdrasli: false,
         // Punoletstvo se računa iznova iz upisanog datuma; oba stuba moraju biti
@@ -522,14 +560,14 @@ export async function prevediUMaloletni(
     });
     // 🔴 Status (`verified`, indeks, `potvrdjenAt`, `tipKorisnika`) se ne upisuje
     // ručno — piše ga samo `preracunajStatusNaloga` (set 4.8.2). Za maloletni nalog
-    // daje NEVERIFIKOVAN, bez indeksa i bez potvrđenosti (čl. 15).
+    // daje NEVERIFIKOVAN, bez indeksa i bez potvrđenosti (deca čl. 29 st. 2).
     await preracunajStatusNaloga(tx, userId);
 
     await tx.roditeljstvo.create({
       data: { deteId: userId, roditeljId: roditelj.id },
     });
 
-    // Kod kojim ulazi DRUGI roditelj (čl. 4b st. 6). Nastaje i ovde, iako poziva
+    // Kod kojim ulazi DRUGI roditelj (deca čl. 11 st. 1). Nastaje i ovde, iako poziva
     // nema — inače bi drugi roditelj mogao da uđe samo kod dece koja su se
     // registrovala sama, što je razlika bez razloga.
     await tx.roditeljPoziv.deleteMany({ where: { deteId: userId } });

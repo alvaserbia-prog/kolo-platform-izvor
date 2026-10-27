@@ -1,5 +1,5 @@
 /**
- * Izjava roditelja o postojanju deteta (Pravilnik o učešću dece, čl. 6 st. 1).
+ * Izjava roditelja o postojanju deteta (Pravilnik o učešću dece, čl. 12 st. 1).
  * ČISTA funkcija — bez Prisme, jer tekst prikazuje i obrazac u pretraživaču.
  *
  * ─── Zašto ovaj dokument postoji ────────────────────────────────────────────
@@ -12,8 +12,8 @@
  *
  * Sada potvrda opstaje samo ako su se izjasnile obe strane veze: potvrđivač
  * odgovorom, roditelj ovom izjavom. Roditelj je po pravilu daje u trenutku u kome
- * preuzima odgovornost za nalog — pri otvaranju naloga (čl. 4) ili pri njegovom
- * preuzimanju (čl. 4b) — pa mu rok ne teče.
+ * preuzima odgovornost za nalog — pri otvaranju naloga (čl. 7) ili pri njegovom
+ * preuzimanju (čl. 11) — pa mu rok ne teče.
  *
  * 🔴 Tekst se SNIMA na vezu roditelj–dete (`Roditeljstvo.izjavaTekst`) i posle
  * toga se ne menja — isti razlog kao kod ugovora o donaciji i izjave izvršioca:
@@ -29,7 +29,7 @@
  * podataka". Time su dve izjave različitog dejstva stajale u jednom tekstu:
  *
  *  - izjava o postojanju deteta je tvrdnja o ČINJENICI i daje se pod punom
- *    odgovornošću (čl. 6 st. 1);
+ *    odgovornošću (čl. 12 st. 1);
  *  - saglasnost na obradu podataka deteta (ZZPL čl. 16) povlači se u svakom
  *    trenutku, bez razloga i bez posledica po bilo koga drugog (čl. 15 st. 3).
  *
@@ -59,13 +59,13 @@ export function generisiIzjavuRoditelja(p: UlazIzjaveRoditelja): string {
       "postaje dete Kola tek kada sam član Kola i kada član Kola koji me lično zna " +
       "potvrdi da imam to dete.",
     "",
-    // Posledica je samo isključenje (čl. 4e, Uslovi čl. 28); rečenica o poništenju
+    // Posledica je samo isključenje (deca čl. 18 st. 4, Uslovi čl. 32); rečenica o poništenju
     // zapisa nije imala osnov u aktu i skinuta je 24.10.2026 (paket F, F7-3).
     // Snimljene izjave ostaju kakve su (pravilo 11).
     "Znam da je lažna izjava o roditeljstvu teža povreda pravila sistema, za " +
       "koju se obavezno izriče isključenje.",
     "",
-    "Izjavu dajem u skladu sa članom 6 Pravilnika o učešću dece.",
+    "Izjavu dajem u skladu sa članom 12 Pravilnika o učešću dece.",
   ].join("\n");
 }
 
@@ -75,7 +75,7 @@ export type UlazSaglasnostiRoditelja = {
 };
 
 /**
- * Saglasnost roditelja na obradu podataka deteta (ZZPL čl. 16; Politika 4.7).
+ * Saglasnost roditelja na obradu podataka deteta (ZZPL čl. 16; Politika čl. 33).
  *
  * 🔴 Za razliku od izjave iznad, ovaj tekst ide na JEZIKU RODITELJA. Izjava je
  * pravni dokument po srpskom pravu i merodavan joj je srpski original; saglasnost

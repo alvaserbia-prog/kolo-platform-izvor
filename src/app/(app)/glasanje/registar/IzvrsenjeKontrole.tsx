@@ -8,13 +8,13 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
- * Kontrole Upravnog odbora nad usvojenom odlukom koja čeka sprovođenje (čl. 51
+ * Kontrole Upravnog odbora nad usvojenom odlukom koja čeka sprovođenje (čl. 46
  * Pravilnika, čl. 17 Gornjeg Kola).
  *
  * 🔴 Dve različite radnje, namerno razdvojene:
  *  - „sproveo" traži OZNAKU AKTA UO — Gornje Kolo nije organ Fondacije, pa se
  *    odluka sprovodi aktom UO i taj akt mora ostati u registru;
- *  - „ne sprovodi" traži razlog sa ZATVORENE liste iz čl. 51 (zakon, Statut,
+ *  - „ne sprovodi" traži razlog sa ZATVORENE liste iz čl. 46 st. 3 Pravilnika (zakon, Statut,
  *    van nadležnosti) uz obrazloženje.
  * Zaštitni veto je uklonjen (odluka vlasnika 25.10.2026) i ne vraća se.
  */

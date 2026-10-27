@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Bez ovog javljanja zapis bi čekao u admin tabu a niko ne bi znao da čeka —
-  // ista greška koja je jednom već napravljena kod prvih oglasa (čl. 40a).
+  // ista greška koja je jednom već napravljena kod prvih oglasa (Pravilnik čl. 38).
   void posaljiAdminAlert(
     "Kartična donacija naplaćena — čeka potvrdu",
     `Iznos: ${ocekivaniIznos.toLocaleString("sr-RS")} RSD\nZapis: ${zapis.id}\n` +

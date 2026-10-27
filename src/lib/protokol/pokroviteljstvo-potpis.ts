@@ -18,13 +18,13 @@ import {
 
 /**
  * Potpis ugovora o NOVČANOM pokroviteljstvu (Pravilnik o pokroviteljstvu i
- * donacijama čl. 8 st. 1, koji upućuje na postupak iz čl. 13g st. 4; registar
+ * donacijama čl. 20 st. 1, koji upućuje na postupak iz čl. 32 st. 1; registar
  * 2026-10, F5-M1). Isti postupak kao za ugovor o dobrima: tri potvrde (pročitao,
  * ovlašćen, saglasan sa zaključenjem na platformi), jednokratni šestocifreni kod
  * sa mejla, kontrolni broj snimljenog teksta i primerak davaocu i podnosiocu.
  *
  * 🔴 Potpis NE upisuje POEN — kod novca se POEN upisuje tek pri potvrdi prijema
- * uplate (`potvrdiPrijavu`, čl. 8 st. 2). Potpis je dokaz volje i ovlašćenja, ne
+ * uplate (`potvrdiPrijavu`, čl. 20 st. 3). Potpis je dokaz volje i ovlašćenja, ne
  * okidač kanala. 🔴 Ne beleže se IP adresa ni podaci o uređaju.
  */
 export class PotpisGreska extends Error {

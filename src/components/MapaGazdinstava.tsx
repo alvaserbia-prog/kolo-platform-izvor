@@ -18,7 +18,7 @@ export type TackaGazdinstva = {
 const SRBIJA: [number, number] = [44.2, 20.9];
 
 /**
- * Mapa domaćih proizvođača (Pravilnik o gazdinstvima čl. 11).
+ * Mapa domaćih proizvođača (Pravilnik o gazdinstvima čl. 19).
  *
  * Dva režima:
  *  - prikaz: tačke odobrenih gazdinstava, klik vodi na profil;

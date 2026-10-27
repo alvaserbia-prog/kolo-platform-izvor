@@ -7,9 +7,9 @@ import { procitajLogoUrl } from "@/lib/protokol/logotip-pokrovitelja";
 import { izmeniUpis, obrisiUpis, odgovorNaGreskuUpisa } from "@/lib/protokol/upis-pokrovitelja";
 
 /**
- * PATCH  /api/pokroviteljstvo/upis/[id] — izmena upisa (donacije čl. 6a st. 5):
+ * PATCH  /api/pokroviteljstvo/upis/[id] — izmena upisa (donacije čl. 18 st. 2):
  *        kontakt, sedište i mapa odmah; naziv, MB i logotip na ponovnu proveru.
- * DELETE /api/pokroviteljstvo/upis/[id] — brisanje upisa (čl. 6a st. 6), samo kad
+ * DELETE /api/pokroviteljstvo/upis/[id] — brisanje upisa (čl. 18 st. 4), samo kad
  *        pokrovitelj nema ugovor sa neiskorišćenim vaučerima. Telo
  *        `{ ukloniSaRangListe: true }` — na zahtev korisnika pokrovitelj se uklanja i
  *        sa rang-liste; bez toga doprinosi ostaju na rang-listi.

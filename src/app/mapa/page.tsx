@@ -15,8 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Mapa — jedna mapa gazdinstava i pokrovitelja (Pravilnik o gazdinstvima čl. 11;
- * donacije čl. 13 st. 4), sa sopstvenim mestom u meniju odmah ispod Pijace i
+ * Mapa — jedna mapa gazdinstava i pokrovitelja (Pravilnik o gazdinstvima čl. 19;
+ * donacije čl. 26 st. 2), sa sopstvenim mestom u meniju odmah ispod Pijace i
  * Vaučera (odluka vlasnika 20.10.2026). Spisak gazdinstava i prijava ostaju na
  * `/gazdinstva`, koja mapu više ne ponavlja.
  *

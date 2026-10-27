@@ -22,11 +22,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * „Želim da me neko nazove" — ulazak na spisak za poziv (dokaz stvarnosti čl. 4a;
- * Uslovi čl. 16b; set 4.8.3). Ruta ostaje `/kontaktiraj-nas` (CLAUDE.md pravilo 12).
+ * „Želim da me neko nazove" — ulazak na spisak za poziv (dokaz stvarnosti čl. 8
+ * i 9; set 4.8.3). Ruta ostaje `/kontaktiraj-nas` (CLAUDE.md pravilo 12).
  *
  * KORISNIK dolazi na spisak radi upoznavanja. ČLAN BEZ POTVRDE koji ispunjava uslove
- * iz čl. 5c st. 2 dolazi na spisak radi potvrde (osnov POTVRDA; zove čuvar Kola); ako
+ * iz dokaza stvarnosti čl. 16 st. 1 dolazi na spisak radi potvrde (osnov POTVRDA; zove čuvar Kola); ako
  * ih ne ispunjava, vraća se na Potvrde, gde piše koji uslov nedostaje. Član Kola,
  * čuvar i osnivač idu na Potvrde; dete na svoju stranicu.
  * `?osnov=` bira osnov van zahteva (donacija, pokroviteljstvo, gazdinstvo iz RPG) —

@@ -12,7 +12,7 @@ import { utvrdiIzborNabavke, pripremiNabavku, NabavkaGreska } from "@/lib/protok
  *
  * Iz zatvorenog izbornog glasanja utvrđuje izabran naziv i otvara nabavku (NACRT).
  *
- * Zbir glasačke moći se čita iz zapamćene moći svakog glasa (Gornje Kolo čl. 6), pa
+ * Zbir glasačke moći se čita iz zapamćene moći svakog glasa (Gornje Kolo čl. 12 st. 2), pa
  * kašnjenje zatvaranja ne može da pomeri ishod.
  */
 export async function POST(req: Request) {
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
   if (p.nabavka) return await greska("Nabavka po ovom glasanju je već otvorena.", 409);
 
   const izbor = await utvrdiIzborNabavke(predlogId);
-  if (!izbor) return await greska("Nijedan glas nije dat — izbor se ne vrši (čl. 9 st. 2).", 409);
+  if (!izbor) return await greska("Nijedan glas nije dat — izbor se ne vrši (čl. 8 st. 2 Pravilnika o Gornjem Kolu).", 409);
 
   try {
     const n = await pripremiNabavku(izbor.kljuc, predlogId);

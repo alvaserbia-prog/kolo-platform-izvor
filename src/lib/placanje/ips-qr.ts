@@ -10,7 +10,7 @@
  *  - USAGLAŠAVANJE (MVP): admin nađe priliv u bankovnom izvodu po pozivu na
  *    broj i potvrdi PENDING zapis u admin panelu → tek tada se emituje POEN.
  *    🔴 Zapis potvrđuje ČOVEK i to se ne menja (R-01, mera M-4a): potvrda traži
- *    poređenje uplatioca iz izvoda sa nalogom (čl. 3 Pravilnika o pokroviteljstvu
+ *    poređenje uplatioca iz izvoda sa nalogom (čl. 6 Pravilnika o pokroviteljstvu
  *    i donacijama). Automatsko evidentiranje po bankarskom callback-u je upravo
  *    ono što je kod kartice ukinuto — ne uvoditi ga ovde.
  *

@@ -6,7 +6,7 @@ import { jeAdmin } from "@/lib/dozvole";
 import { odbijUpis, odgovorNaGreskuUpisa } from "@/lib/protokol/upis-pokrovitelja";
 
 // POST /api/admin/pokroviteljstvo/upisi/[id]/odbij — odbijanje upisa uz obrazloženje
-// (donacije čl. 6a st. 4).
+// (donacije čl. 18 st. 1).
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeAdmin(session.user)) return await greska("Pristup odbijen.", 403);

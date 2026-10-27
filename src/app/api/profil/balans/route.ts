@@ -20,14 +20,14 @@ export async function GET() {
       select: { avatar: true },
     }),
     dohvatiZabelezen(session.user.id),
-    // Doprinos gazdinstva (čl. 40c) čeka sopstveni potez — oglas i potvrdu.
+    // Doprinos gazdinstva (Pravilnik o gazdinstvima čl. 15, 16) čeka sopstveni potez — oglas i potvrdu.
     dohvatiZabelezenGazdinstva(session.user.id),
   ]);
   const zabelezenDoprinos = zabelezenOglas + (zabelezenGazdinstva?.iznos ?? 0);
 
   // `zabelezenDoprinos` ide kao ODVOJENO polje i nikad se ne sabira sa stanjem
-  // računa: do evidentiranja to nije zapis POEN-a (čl. 40a st. 3), pa bi zbir
-  // pokazivao POEN koji u Protokolu ne postoji. Vidi ga samo vlasnik naloga (čl. 67).
+  // računa: do evidentiranja to nije zapis POEN-a (Pravilnik čl. 2 st. 4 t. 3), pa bi zbir
+  // pokazivao POEN koji u Protokolu ne postoji. Vidi ga samo vlasnik naloga (Pravilnik čl. 56 st. 4).
   return NextResponse.json({
     balance: wallet?.balance ?? 0,
     avatar: user?.avatar ?? null,

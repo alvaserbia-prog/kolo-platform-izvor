@@ -9,7 +9,7 @@ import { probajUpisatiPotvrdu } from "@/lib/protokol/potvrda-poen";
 /**
  * POST /api/admin/potvrde-na-cekanju/[id]/upisi
  *
- * VENTIL uz dokaz stvarnosti čl. 7: Fondacija upisuje POEN po potvrdi i kad
+ * VENTIL uz dokaz stvarnosti čl. 19 st. 7: Fondacija upisuje POEN po potvrdi i kad
  * uslov nije ispunjen, za slučajeve koje četiri uslova ne pokrivaju — čovek koji samo
  * kupuje, stariji član na programu podrške, neko ko doprinosi na način koji sistem ne
  * meri. Bez ventila bi takva potvrda ostala zabeležena zauvek, i to ne samo njemu

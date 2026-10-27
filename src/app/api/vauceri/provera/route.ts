@@ -8,13 +8,13 @@ import { proveriKodZaDavaoca } from "@/lib/protokol/pokroviteljstvo-dobrima";
  * POST /api/vauceri/provera — davalac unosi ili skenira kod vaučera.
  *
  * Kod proverava podnosilac prijave ugovora ILI njegov aktivan zaposleni
- * (donacije čl. 13g st. 6) — niko drugi; za ostale je kod nepoznat. Ovlašćenje
+ * (donacije čl. 32 st. 3) — niko drugi; za ostale je kod nepoznat. Ovlašćenje
  * se utvrđuje u `proveriKodZaDavaoca` (`ovlascenjeKorisnika`). Zaposleni dobija
  * isti odgovor kao podnosilac.
  *
  * Odgovor nosi opis dobra odnosno usluge, stanje vaučera (važi / iskorišćen /
  * istekao / ne važi / nepoznat kod), rok važenja i PSEUDONIM imaoca (nabavke
- * čl. 30g st. 1, Politika 4.15). 🔴 Ništa drugo o imaocu: ni id, ni ime, ni mejl.
+ * čl. 34 st. 1, Politika čl. 29). 🔴 Ništa drugo o imaocu: ni id, ni ime, ni mejl.
  * Brana: `vaucer-izvor.test.ts`.
  */
 export async function POST(req: NextRequest) {

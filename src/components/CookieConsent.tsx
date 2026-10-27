@@ -11,7 +11,7 @@ import {
 } from "@/lib/cookieConsent";
 
 /**
- * Banner za pristanak na analitičke kolačiće (Politika privatnosti čl. 7).
+ * Banner za pristanak na analitičke kolačiće (Politika privatnosti čl. 10).
  *
  * Prikazuje se samo dok korisnik nije odlučio po VAŽEĆOJ verziji teksta. Odluka
  * „Prihvati" omogućava učitavanje analitike (Google Analytics) preko `Analitika`
@@ -91,7 +91,7 @@ export function CookieConsent() {
 
 /**
  * Link koji ponovo otvara banner — mesto na kome se pristanak povlači
- * (Politika čl. 7). Stoji u oba futera.
+ * (Politika čl. 10). Stoji u oba futera.
  */
 export function KolaciciPodesavanja({ className }: { className?: string }) {
   const t = useTranslations("kolacici");

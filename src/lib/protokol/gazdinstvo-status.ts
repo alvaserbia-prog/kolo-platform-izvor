@@ -1,14 +1,14 @@
 /**
- * Prava gazdinstva po statusu podnosioca (Pravilnik o gazdinstvima čl. 4a, 9a;
+ * Prava gazdinstva po statusu podnosioca (Pravilnik o gazdinstvima čl. 4, 14;
  * set 4.8.2).
  *
- * Gazdinstvo koje je prijavio korisnik ili član bez potvrde (čl. 4a t. 2–3) radi
+ * Gazdinstvo koje je prijavio korisnik ili član bez potvrde (čl. 4 st. 1 t. 2–3) radi
  * bez članova. Kad podnosilac — prvi član po redu pristupanja — postane član
  * Kola, čuvar ili osnivač, gazdinstvo od tada sme imati članove: postavlja se
  * `Gazdinstvo.smeClanoveOd` ako je null.
  *
  * 🔴 Monotono: pri padu potvrđenosti ništa se ne upisuje i ništa se ne briše
- * (čl. 9a — gazdinstvo nastavlja da radi; prava člana se izvode iz njegovog
+ * (čl. 14 — gazdinstvo nastavlja da radi; prava člana se izvode iz njegovog
  * statusa, `smeUpravljati`/`smePozvati`).
  *
  * Zove ga `posledicePromeneStatusa()` VAN transakcije; ne baca.
@@ -31,7 +31,7 @@ export async function osveziPravaGazdinstvaPoStatusu(userId: string): Promise<vo
       select: { gazdinstvoId: true },
     });
     for (const c of clanstva) {
-      // Podnosilac = prvi član po redu pristupanja (čl. 2, čl. 8 st. 3).
+      // Podnosilac = prvi član po redu pristupanja (čl. 2, čl. 15 st. 2).
       const prvi = await prisma.clanGazdinstva.findFirst({
         where: {
           gazdinstvoId: c.gazdinstvoId,

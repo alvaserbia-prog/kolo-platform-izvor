@@ -11,12 +11,12 @@ import { IZBOR_STATUSA, statusUcesnika } from "@/lib/protokol/status";
  * GET /api/admin/gazdinstva — red za pregled (prijave i kasnija pristupanja) i
  * odobrena gazdinstva. BPG, izjava o tačnosti, ime i prezime članova (evidencija
  * identiteta, Registar radnji obrade br. 20 i 21) i broj telefona nosioca za
- * razgovor (čl. 6a) izlaze SAMO ovde — nijedna korisnička ruta ih ne vraća drugim
+ * razgovor (čl. 8) izlaze SAMO ovde — nijedna korisnička ruta ih ne vraća drugim
  * korisnicima. Izvod iz Registra se ovde NE vraća — samo da li je priložen; čita
- * se kroz `[id]/izvod` (čl. 4b).
+ * se kroz `[id]/izvod` (zatečeni izvodi; čl. 3 st. 3).
  *
- * Status svakog člana se izvodi (set 4.8.2): uslov pristupanja (čl. 7a) i izvod
- * (čl. 4b) zavise od njega.
+ * Status svakog člana se izvodi (set 4.8.2): uslov pristupanja (čl. 10) i izvod
+ * (čl. 3 st. 3) zavise od njega.
  */
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -42,10 +42,10 @@ export async function GET() {
         razlogVracanja: true,
         podnetoAt: true,
         odobrenoAt: true,
-        // Razgovor sa nosiocem (čl. 6a) — broj vidi samo admin i briše se odlukom.
+        // Razgovor sa nosiocem (čl. 8) — broj vidi samo admin i briše se odlukom.
         telefonZaRazgovor: true,
         razgovorObavljenAt: true,
-        // Jedan razgovor (čl. 6a st. 2; set 4.8.3): ko je beležio i da li je sumnja.
+        // Jedan razgovor (čl. 8 st. 2; set 4.8.3): ko je beležio i da li je sumnja.
         razgovorBeleziId: true,
         razgovorSumnja: true,
         rpgUporedjenAt: true,
@@ -86,7 +86,7 @@ export async function GET() {
     }),
   ]);
 
-  // Članovi su punoletni (gazd. čl. 7 st. 1), pa je status izveden iz samog naloga.
+  // Članovi su punoletni (gazd. čl. 9 st. 1), pa je status izveden iz samog naloga.
   const prikazClana = (u: {
     pseudonim: string;
     maloletan: boolean;
@@ -104,11 +104,11 @@ export async function GET() {
   const gazdinstva = await Promise.all(
     lista.map(async (g) => {
       const clanovi = g.clanovi.map((c) => ({ ...c, user: prikazClana(c.user), pristupioAt: c.pristupioAt?.toISOString() ?? null }));
-      // Podnosilac — prvi po redu pristupanja (čl. 2); od njegovog statusa zavisi izvod (čl. 4b).
+      // Podnosilac — prvi po redu pristupanja (čl. 2); od njegovog statusa zavisi izvod (čl. 3 st. 3).
       const podnosilac = clanovi[0] ?? null;
       const { izvodRpg, upravljaId, ...ostalo } = g;
-      // Istupili članovi — i njih pogađa poništenje zbog lažne izjave (čl. 12 st. 2),
-      // pa ih superadmin vidi pri odluci kome se izriče isključenje (st. 3; U5).
+      // Istupili članovi — i njih pogađa poništenje zbog lažne izjave (čl. 20 st. 2, 23 st. 2),
+      // pa ih superadmin vidi pri odluci kome se izriče isključenje (čl. 20 st. 3; U5).
       const istupili = g.status === "ODOBRENO"
         ? await prisma.clanGazdinstva.findMany({
             where: { gazdinstvoId: g.id, status: "ISTUPIO" },

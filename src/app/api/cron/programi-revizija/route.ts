@@ -11,14 +11,14 @@ import { ProgramType } from "@/generated/prisma/client";
  * POST /api/cron/programi-revizija
  *
  * Godišnja/periodična revizija socijalnih programa (Pravilnik o programima
- * podrške čl. 12) + zaštita integriteta (anti-malverzacija). Deaktivira ACTIVE
+ * podrške čl. 18, 19) + zaštita integriteta (anti-malverzacija). Deaktivira ACTIVE
  * prijavu kada:
  *   (a) prođe rok reverifikacije (`nextReverifikacija <= now`) a status nije
  *       ponovo potvrđen — „ako se status pri reviziji ne potvrdi, automatsko
- *       evidentiranje prestaje" (čl. 12); ili
+ *       evidentiranje prestaje" (čl. 8 st. 1 t. 2, 18); ili
  *   (b) učesnik prestane da bude verifikovan (set 4.8.2: i čuvar Kola — imunitet
- *       NOSILAC_ZRNA je ukinut; Pravilnik čl. 30 st. 3) — osnov na kojem je
- *       program odobren više ne važi (programi čl. 4 st. 1).
+ *       NOSILAC_ZRNA je ukinut; Pravilnik čl. 29) — osnov na kojem je
+ *       program odobren više ne važi (programi čl. 8 st. 1 t. 1).
  *
  * Deaktivirana prijava (INACTIVE) prestaje da ulazi u noćnu emisiju. Korisnik može
  * ponovo da se prijavi, čime ponovo prolazi kroz potvrdu verifikatora.
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
     if (razlogObustave == null) continue;
     const istekla = razlogObustave === "revizija";
 
-    // 🔴 „revizija" pokriva dva ishoda iz čl. 12, jer su mehanički isti (prošao
+    // 🔴 „revizija" pokriva dva ishoda iz čl. 18, jer su mehanički isti (prošao
     // `nextReverifikacija`), ali se korisniku ne smeju objasniti istim rečima:
     // pravo po osnovu gubitka doma NE podleže reviziji — ono traje dvanaest
     // meseci i prosto istekne. Poruka se zato grana po osnovu.
@@ -71,8 +71,8 @@ export async function GET(req: NextRequest) {
       status: "INACTIVE",
       razlog: istekla
         ? bezRevizije
-          ? "Istekao rok od dvanaest meseci po osnovu iz čl. 12; pravo prestaje istekom roka, bez revizije."
-          : "Istekao rok reverifikacije statusa (čl. 12); status nije ponovo potvrđen."
+          ? "Istekao rok od dvanaest meseci po osnovu iz čl. 18 st. 3; pravo prestaje istekom roka, bez revizije."
+          : "Istekao rok reverifikacije statusa (čl. 18, 19); status nije ponovo potvrđen."
         : "Verifikacija je prestala — osnov za program više ne važi.",
     });
 

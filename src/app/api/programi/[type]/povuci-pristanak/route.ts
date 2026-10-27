@@ -15,9 +15,9 @@ const DOZVOLJENI_TIPOVI: ProgramType[] = [
 /**
  * POST /api/programi/[type]/povuci-pristanak
  *
- * 🔴 Sprovodi čl. 4 st. 3 Pravilnika o programima podrške: „Pristanak se može
- * povući u svakom trenutku, sa posledicom prestanka postupka odnosno automatskog
- * evidentiranja POEN-a." Do ovog seta je to pravo stajalo u pravilniku, dvaput u
+ * 🔴 Sprovodi čl. 7 Pravilnika o programima podrške: „Pristanak se može povući
+ * u svakom trenutku… Povlačenjem se postupak prekida, automatsko evidentiranje
+ * POEN-a prestaje, a podaci uneti u prijavu se brišu." Do ovog seta je to pravo stajalo u pravilniku, dvaput u
  * Politici privatnosti i kao MERA u DPIA — a u kodu nije postojao nijedan način
  * da se iz programa izađe osim gašenja celog naloga. Pristanak je pravni osnov
  * obrade posebnih kategorija podataka; osnov koji se ne može opozvati nije
@@ -47,7 +47,7 @@ export async function POST(
 
   await okoncajPrijavu(enrollment.id, {
     status: "INACTIVE",
-    razlog: "Pristanak povučen na zahtev korisnika (čl. 4 st. 3).",
+    razlog: "Pristanak povučen na zahtev korisnika (čl. 7).",
     povucenPristanak: true,
   });
 

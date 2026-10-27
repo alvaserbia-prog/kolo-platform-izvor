@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Prijave lažnog roditeljstva (Pravilnik o učešću dece čl. 4e; set 4.8.2) — za
+ * Prijave lažnog roditeljstva (Pravilnik o učešću dece čl. 17; set 4.8.2) — za
  * Admin → Odluke. Bez propova; ugrađuje ga `OdlukeTab`.
  *
  * Po prijemu prijave veza je već zaustavljena (st. 2). Ovlašćeno lice ispituje

@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { posaljiNaPregled, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
-/** POST — slanje prijave na pregled Fondacije (čl. 6); traži tri oglasa u ime gazdinstva. */
+/** POST — slanje prijave na pregled Fondacije (čl. 7); traži tri oglasa u ime gazdinstva. */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);

@@ -6,7 +6,7 @@ import { opozoviZaposlenog, odgovorNaGresku } from "@/lib/protokol/pokroviteljst
 
 /**
  * DELETE /api/vauceri/zaposleni/[id] — podnosilac opoziva ovlašćenje zaposlenog,
- * u svakom trenutku (donacije čl. 13g st. 6). Opozvan red ostaje kao istorija.
+ * u svakom trenutku (donacije čl. 32 st. 3). Opozvan red ostaje kao istorija.
  */
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);

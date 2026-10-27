@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { preuzmiUpravljanje, GazdinstvoGreska } from "@/lib/protokol/gazdinstvo";
 
 /**
- * POST — nosilac upisanog gazdinstva preuzima izjavu o tačnosti podataka (čl. 9
+ * POST — nosilac upisanog gazdinstva preuzima izjavu o tačnosti podataka (čl. 12
  * st. 2). Putanja ostaje zbog starih linkova; upravljanje se ne čuva nego izvodi.
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {

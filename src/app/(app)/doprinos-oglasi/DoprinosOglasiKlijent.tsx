@@ -20,7 +20,9 @@ interface OglasItem {
   saOdobravanjem: boolean;
   positions: number;
   deadline: string | null;
-  createdByPseudonim: string;
+  rokIzvrsenja: string | null;
+  statusZadatka: string;
+  zadruzni: boolean;
   krugName: string | null;
   odobreniClanovi: number;
   createdAt: string;
@@ -42,7 +44,7 @@ const sourceCls: Record<string, string> = {
   PROJEKAT: "bg-purple-50 text-purple-700",
 };
 
-export default function DoprinosOglasiKlijent({ oglasi, isVerified }: { oglasi: OglasItem[]; isVerified: boolean }) {
+export default function DoprinosOglasiKlijent({ oglasi, isVerified, ulazZaPotvrde = false }: { oglasi: OglasItem[]; isVerified: boolean; ulazZaPotvrde?: boolean }) {
   const t = useTranslations("doprinosOglasi");
 
   const prijavaStatusBadge: Record<string, { label: string; cls: string }> = {
@@ -63,6 +65,14 @@ export default function DoprinosOglasiKlijent({ oglasi, isVerified }: { oglasi: 
 
       {!isVerified && (
         <Obavestenje vrsta="upozorenje">{t("neVerifikovanInfo")}</Obavestenje>
+      )}
+
+      {/* Ulaz za čuvare Kola i lice koje UO ovlasti (operativni 5.0 čl. 13; #51). */}
+      {ulazZaPotvrde && (
+        <Kartica padding="sm" className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-kolo-text">{t("potvrde_ulaz_opis")}</p>
+          <Link href="/doprinos-oglasi/potvrde" className={klaseDugmeta({ velicina: "sm" })}>{t("potvrde_ulaz")}</Link>
+        </Kartica>
       )}
 
       <Kartica padding="sm" className="text-center text-sm">
@@ -100,9 +110,9 @@ function OglasKartica({ oglas, isVerified, prijavaStatusBadge, sourceLabel }: {
 
   const badge = oglas.mojaPrijava ? prijavaStatusBadge[oglas.mojaPrijava] : null;
   // 🔴 Brze prijave sa kartice VIŠE NEMA. Od seta 4.4.4 svaka prijava traži plan
-  // izvršenja (čl. 10, 11) i potvrđenu izjavu o pravnoj prirodi (čl. 10 al. 3), pa
+  // izvršenja (operativni čl. 10) i potvrđenu izjavu o pravnoj prirodi (čl. 10 st. 1 t. 3), pa
   // se prijava podnosi isključivo sa stranice zadatka, gde se oboje vidi i unosi.
-  const mozePrijaviti = isVerified && !oglas.mojaPrijava;
+  const mozePrijaviti = isVerified && !oglas.mojaPrijava && !oglas.zadruzni;
 
   return (
     <Kartica padding="nema" className="overflow-hidden">
@@ -114,6 +124,8 @@ function OglasKartica({ oglas, isVerified, prijavaStatusBadge, sourceLabel }: {
                 {sourceLabel[oglas.source] ?? oglas.source}
               </span>
               {oglas.krugName && <span className="text-xs text-kolo-muted">{oglas.krugName}</span>}
+              <span className="text-xs px-2 py-0.5 rounded-lg bg-kolo-bg text-kolo-muted">{t(`status_zadatka_${oglas.statusZadatka}`)}</span>
+              {oglas.zadruzni && <span className="text-xs px-2 py-0.5 rounded-lg bg-kolo-info-light text-kolo-info">{t("zadruzni_oznaka")}</span>}
               {oglas.saOdobravanjem && (
                 <span className="text-xs px-2 py-0.5 rounded-lg bg-kolo-info-light text-kolo-info">{t("sa_odobravanjem")}</span>
               )}

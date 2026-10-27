@@ -9,7 +9,7 @@ type Povezan = { id: string; pseudonim: string; smer: "NANIZE" | "NAVISE" };
 
 /**
  * Spisak povezanih — na stranici Potvrde, sidro `#povezani` (Pravilnik o dokazu
- * stvarnosti čl. 5d; set 4.8.3).
+ * stvarnosti čl. 17; set 4.8.3).
  *
  * Bez propova. Član Kola vidi one koje je uveo u Kolo dok je bio član bez potvrde i
  * onoga ko je njega uveo, dok su još članovi bez potvrde. Prazan spisak se ne crta.

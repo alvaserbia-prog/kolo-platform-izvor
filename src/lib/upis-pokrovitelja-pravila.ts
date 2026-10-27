@@ -1,9 +1,9 @@
 /**
  * Upis pokrovitelja u evidenciju — ČISTA pravila (bez Prisme).
  *
- * Osnov: Pravilnik o pokroviteljstvu i donacijama čl. 6a (upis), čl. 7 i čl. 13e
- * (prijave iz odobrenog upisa), čl. 13 st. 4 (šta se javno prikazuje), čl. 13j st.
- * 2 (lista zabrane se vezuje za upis).
+ * Osnov: Pravilnik o pokroviteljstvu i donacijama čl. 16–18 (upis), čl. 19 i čl. 28
+ * (prijave iz odobrenog upisa), čl. 26 st. 2 (šta se javno prikazuje), čl. 18 st.
+ * 3 (lista zabrane se vezuje za upis).
  *
  * Zaseban fajl jer ova pravila čita i obrazac u pretraživaču. Servisni sloj
  * (`protokol/upis-pokrovitelja.ts`) ih re-eksportuje, pa server ima jedan ulaz.
@@ -68,7 +68,7 @@ export function ocistiNaziv(v: unknown): string | null {
 export type PodaciUpisa = {
   vrsta: VrstaDavaoca;
   naziv: string;
-  /** Samo FIRMA (čl. 6a st. 2). */
+  /** Samo FIRMA (čl. 16 st. 2). */
   pravniOblik: PravniOblik | null;
   adresaSedista: string | null;
   maticniBroj: string | null;
@@ -82,11 +82,11 @@ export type PodaciUpisa = {
   mapaAdresa: string;
   mapaLat: number;
   mapaLng: number;
-  /** Izjava o ovlašćenju (čl. 6a st. 3) — data samo kad je potrebna. */
+  /** Izjava o ovlašćenju (čl. 17 st. 1) — data samo kad je potrebna. */
   izjavaOvlascenja: boolean;
 };
 
-/** Tačka i adresa za mapu (čl. 6a st. 2) — zajednička provera za upis i izmenu. */
+/** Tačka i adresa za mapu (čl. 16 st. 2 t. 3) — zajednička provera za upis i izmenu. */
 export function procitajMapu(
   b: Record<string, unknown>,
 ): { ok: true; mapaAdresa: string; mapaLat: number; mapaLng: number } | { ok: false; razlog: string } {
@@ -101,7 +101,7 @@ export function procitajMapu(
 }
 
 /**
- * Provera upisa (čl. 6a st. 2 i 3). Za pravno lice i preduzetnika: naziv, sedište,
+ * Provera upisa (čl. 16 st. 2 i 4, čl. 17). Za pravno lice i preduzetnika: naziv, sedište,
  * MB, PIB, odnos prema pokrovitelju, ime i prezime korisnika; za gazdinstvo: ime i
  * prezime nosioca, naziv i BPG. Za oba: kontakt, mesto i adresa za mapu uz OBAVEZNU
  * izjavu o prikazu adrese, potvrda o evidentiranju i, kad treba, izjava o ovlašćenju.
@@ -159,7 +159,7 @@ export function procitajUpis(
 
   const mapa = procitajMapu(b);
   if (!mapa.ok) return mapa;
-  // 🔴 Izjava o prikazu adrese je OBAVEZNA (čl. 6a st. 2) — nije pristanak koji se povlači.
+  // 🔴 Izjava o prikazu adrese je OBAVEZNA (čl. 16 st. 2 t. 3) — nije pristanak koji se povlači.
   if (!daJe(b.izjavaAdresa))
     return { ok: false, razlog: "Potrebna je izjava da je pokrovitelj saglasan da se adresa prikazuje na mapi." };
 
@@ -198,7 +198,7 @@ export function procitajUpis(
 }
 
 /**
- * Ključevi teksta izjave o ovlašćenju i potvrde o evidentiranju (čl. 6a st. 3) —
+ * Ključevi teksta izjave o ovlašćenju i potvrde o evidentiranju (čl. 17) —
  * isti za ekran i za tekst koji server snima: kod oblika bez vlasnika podnosilac
  * obaveštava organe i članove, kod članskih oblika ovlašćuje ga organ.
  */
@@ -232,13 +232,13 @@ export type UpisZaPrijavu = {
 };
 
 /**
- * Sme li korisnik da podnese prijavu iz upisa (čl. 6a st. 6, čl. 7 st. 1, čl. 13e
+ * Sme li korisnik da podnese prijavu iz upisa (čl. 18 st. 3–4, čl. 19 st. 1, čl. 28
  * st. 1): upis vodi on, odobren je i nije obrisan; podaci za ugovor su potpuni
  * (zatečeni upisi iz ranijih prijava ih ponekad nemaju — dopunjuju se u „Podaci").
  *
  * Novčano pokroviteljstvo daje pravno lice, preduzetnik ili nosilac registrovanog
- * poljoprivrednog gazdinstva (čl. 6, set 4.7.9 — odluka vlasnika 20.10.2026), pa
- * iz svakog odobrenog upisa idu obe vrste prijave. Lista zabrane (čl. 13j st. 2)
+ * poljoprivrednog gazdinstva (čl. 15 st. 1, set 4.7.9 — odluka vlasnika 20.10.2026), pa
+ * iz svakog odobrenog upisa idu obe vrste prijave. Lista zabrane (čl. 35 st. 5)
  * zatvara samo nov ugovor o pokroviteljstvu dobrima i uslugama.
  */
 export function upisSpremanZaPrijavu(
@@ -264,12 +264,12 @@ export function upisSpremanZaPrijavu(
 
 /**
  * Ključ novčanog pokrovitelja — reda `Pokrovitelj` koji nosi kumulativni novčani
- * doprinos i nivo (donacije čl. 9 i 10): pravno lice i preduzetnik po PIB-u,
+ * doprinos i nivo (donacije čl. 21 i 22): pravno lice i preduzetnik po PIB-u,
  * registrovano poljoprivredno gazdinstvo po BPG-u.
  *
- * 🔴 Gazdinstvo ima SOPSTVENI kumulativ (čl. 10 st. 3, set 4.7.9) — ne sabira se ni
+ * 🔴 Gazdinstvo ima SOPSTVENI kumulativ (čl. 22 st. 3, set 4.7.9) — ne sabira se ni
  * sa ličnim donacijama nosioca ni sa firmom sa kojom je nosilac povezan. Isti ključ
- * čita i koeficijent za pokroviteljstvo dobrima i uslugama (čl. 13h st. 2), pa
+ * čita i koeficijent za pokroviteljstvo dobrima i uslugama (čl. 33 st. 2), pa
  * gazdinstvo koje je doniralo novac dobija koeficijent svog novčanog nivoa, a bez
  * novca 1,00. `null` = nema ključa (nepotpun zatečeni zapis) → nema kumulativa.
  */
@@ -281,8 +281,8 @@ export function kljucNovcanogPokrovitelja(
 }
 
 /**
- * Da li je upis odobren tako da se novčana prijava iz njega sme potvrditi (čl. 6a
- * st. 4, čl. 7 st. 3): pravno lice i preduzetnik — odobren uz poređenje sa
+ * Da li je upis odobren tako da se novčana prijava iz njega sme potvrditi (čl. 18
+ * st. 1, čl. 19 st. 3): pravno lice i preduzetnik — odobren uz poređenje sa
  * registrom; registrovano gazdinstvo — odobren (sa APR-om se ne poredi).
  */
 export function upisOdobrenZaPotvrdu(u: {
@@ -295,7 +295,7 @@ export function upisOdobrenZaPotvrdu(u: {
   return u.vrsta === "GAZDINSTVO" ? !!u.odlukaAt : !!u.aprProveraAt;
 }
 
-// ─── Izmena upisa (čl. 6a st. 5) ─────────────────────────────────────────────
+// ─── Izmena upisa (čl. 18 st. 2) ─────────────────────────────────────────────
 
 export type IzmenaUpisa = {
   /** Menja se odmah, bez provere: kontakt, sedište i podaci za mapu. */
@@ -391,7 +391,7 @@ export function razvrstajIzmenu(
   return { ok: true, izmena };
 }
 
-// ─── Brisanje upisa (čl. 6a st. 6) i gazdinstva (gazdinstva čl. 11 st. 5) ───
+// ─── Brisanje upisa (čl. 18 st. 4) i gazdinstva (gazdinstva čl. 21) ───
 
 export type VaucerZaBrisanje = {
   status: string;
@@ -399,7 +399,7 @@ export type VaucerZaBrisanje = {
 };
 
 /**
- * Neiskorišćen vaučer (čl. 6a st. 6): vaučer potpisanog ugovora koji nije
+ * Neiskorišćen vaučer (čl. 18 st. 4): vaučer potpisanog ugovora koji nije
  * iskorišćen, nije istekao i nije prestao — slobodan ili uzet, dok važi.
  */
 export function jeNeiskoriscenVaucer(v: VaucerZaBrisanje, sada: Date): boolean {
@@ -421,7 +421,7 @@ export function smeObrisatiUpis(vauceri: VaucerZaBrisanje[], sada: Date): IshodP
   return { ok: true };
 }
 
-// ─── Javni prikaz (čl. 13 st. 4) ─────────────────────────────────────────────
+// ─── Javni prikaz (čl. 26 st. 2) ─────────────────────────────────────────────
 
 export type TackaPokrovitelja = {
   id: string;
@@ -434,8 +434,8 @@ export type TackaPokrovitelja = {
 };
 
 /**
- * Šta o upisu ide na mapu: naziv, logotip, mesto i adresa — 🔴 ništa drugo (čl. 13
- * st. 4). Adresa samo uz datu izjavu (zatečeni upis bez izjave nema ni tačku).
+ * Šta o upisu ide na mapu: naziv, logotip, mesto i adresa — 🔴 ništa drugo (čl. 26
+ * st. 2). Adresa samo uz datu izjavu (zatečeni upis bez izjave nema ni tačku).
  * Upis koji nije odobren ili je obrisan ne ide na mapu.
  */
 export function javniPrikazUpisa(u: {
@@ -464,7 +464,7 @@ export function javniPrikazUpisa(u: {
 }
 
 /**
- * Da li se pokrovitelj prikazuje na rang-listi (čl. 6a st. 6): doprinosi dati do
+ * Da li se pokrovitelj prikazuje na rang-listi (čl. 18 st. 4): doprinosi dati do
  * brisanja upisa OSTAJU na rang-listi, sa nazivom i logotipom; uklanja se samo na
  * zahtev korisnika koji je vodio upis.
  */

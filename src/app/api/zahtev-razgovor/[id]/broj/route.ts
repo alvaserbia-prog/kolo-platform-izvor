@@ -1,13 +1,13 @@
 /**
- * „Otvori ime i broj" — poziv korisnika sa spiska za poziv (dokaz stvarnosti čl. 4a
- * st. 5; Uslovi čl. 16b st. 3; set 4.8.2). Putanja ostaje (CLAUDE.md pravilo 12).
+ * „Otvori ime i broj" — poziv korisnika sa spiska za poziv (dokaz stvarnosti čl. 10
+ * st. 2–4; set 4.8.2). Putanja ostaje (CLAUDE.md pravilo 12).
  *
  * POST   — član Kola otvara poziv: dobija ime i prezime (kad je upisano) i broj
  *          telefona, a poziv se zaključava za ostale na `BROJ_OTVOREN_MINUTA`
  *          (jedan član Kola drži najviše jedan otvoren poziv). Fondacija beleži ko
  *          je podatke otvorio (`ZapisOtvaranjaPoziva`, u istoj transakciji).
  *          Pre prvog otvaranja telo nosi `{ poverljivost: true }` — izjavu o
- *          poverljivosti (čl. 4a; S2-M1); bez nje odgovor je 428.
+ *          poverljivosti (čl. 10 st. 3; S2-M1); bez nje odgovor je 428.
  * DELETE — zatvara poziv pre isteka. Zapis otvaranja ostaje.
  *
  * 🔴 Ime i broj ne idu u audit log ni obaveštenje — samo u ovaj odgovor.

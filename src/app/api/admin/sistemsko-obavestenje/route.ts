@@ -82,9 +82,9 @@ export async function POST(req: NextRequest) {
     return await greska("Tekst najviše 5.000 znakova.", 400);
   }
   // Osnov je obavezan jer ova pošta preskače opt-out — bez odredbe iz akata to
-  // je bilten, a bilten traži zaseban pristanak i dopunu Politike (čl. 8).
+  // je bilten, a bilten traži zaseban pristanak i dopunu Politike (čl. 39).
   if (!pravniOsnov) {
-    return await greska("Pravni osnov je obavezan (npr. „Uslovi čl. 40“).", 400);
+    return await greska("Pravni osnov je obavezan (npr. „Uslovi čl. 43“).", 400);
   }
   if (pravniOsnov.length > 200) {
     return await greska("Pravni osnov najviše 200 znakova.", 400);

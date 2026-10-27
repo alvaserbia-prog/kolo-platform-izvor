@@ -1,9 +1,9 @@
 /**
- * Logotip pokrovitelja uz naziv (Pravilnik o pokroviteljstvu i donacijama čl. 13
+ * Logotip pokrovitelja uz naziv (Pravilnik o pokroviteljstvu i donacijama čl. 26
  * st. 4): na rang-listi, na vaučerima i uz ponudu vaučera.
  *
  * 🔴 Samo slika — nikad link (`<a>`, `href`, `onClick`). Pokrovitelj ne stiče pravo
- * na upućivanje na svoju internet stranicu (čl. 13 st. 5). Uz logotip ide samo
+ * na upućivanje na svoju internet stranicu (čl. 26 st. 3). Uz logotip ide samo
  * naziv; slogan, opis ni bilo šta drugo se ne prikazuju. Brana:
  * `__tests__/logotip-pokrovitelja-izvor.test.ts`.
  *

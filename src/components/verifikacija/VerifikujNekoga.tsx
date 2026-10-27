@@ -20,16 +20,16 @@ type Nacin = "LICNO" | "TELEFONOM";
 type Rezim = "POTVRDA" | "UVODJENJE";
 
 /**
- * Forma za izvršavanje verifikacije (dokaz stvarnosti čl. 5, 5a; set 4.8.2).
+ * Forma za izvršavanje verifikacije (dokaz stvarnosti čl. 4, 15; set 4.8.2).
  * Korisnik bira između skeniranja kamerom ili ručnog unosa 6-cifrenog broja.
  *
  * Dva režima (vrstu na kraju ipak određuje server po statusu obe strane):
  *  - `POTVRDA` — član Kola, čuvar ili osnivač: „Potvrdi". Uz to bira „Znam ga
  *    lično" ili „Upoznali smo se telefonom" (osoba sa spiska za poziv → uvođenje).
  *    Istim kodom potvrđuje i člana bez potvrde koga lično zna.
- *  - `UVODJENJE` — član bez potvrde: „Uvedi u Kolo" poznanika (čl. 5a st. 2).
+ *  - `UVODJENJE` — član bez potvrde: „Uvedi u Kolo" poznanika (čl. 4 st. 2).
  *
- * 🔴 Upozorenje iz dokaza stvarnosti čl. 8 („PRE treće i pre četvrte potvrde u
+ * 🔴 Upozorenje iz dokaza stvarnosti čl. 21 („PRE treće i pre četvrte potvrde u
  * danu") stoji IZNAD forme, pre unosa koda — ne tek u odgovoru posle upisa.
  * `potvrdaDanas` dolazi sa servera; posle svake potvrde `router.refresh()` ga osveži.
  */
@@ -40,7 +40,7 @@ export default function VerifikujNekoga({
 }: {
   mozeDaVerifikuje: boolean;
   potvrdaDanas: number;
-  /** `UVODJENJE` za člana bez potvrde (čl. 5a st. 2); podrazumevano `POTVRDA`. */
+  /** `UVODJENJE` za člana bez potvrde (čl. 4 st. 2); podrazumevano `POTVRDA`. */
   rezim?: Rezim;
 }) {
   const t = useTranslations("verifikacija");

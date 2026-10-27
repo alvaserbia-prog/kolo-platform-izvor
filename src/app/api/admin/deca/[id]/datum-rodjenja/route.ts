@@ -16,7 +16,7 @@ import { parsirajDatumRodjenja } from "@/lib/protokol/deca-poziv";
  * Ispravka pogrešno unetog datuma rođenja maloletnog naloga.
  *
  * 🔴 Namerno BEZ ulazne tačke u interfejsu (odluka vlasnika 2026-08-18:
- * „mogućnost ostaviti, ali je ne promovisati"). Datum rođenja po čl. 7
+ * „mogućnost ostaviti, ali je ne promovisati"). Datum rođenja po čl. 4 st. 2
  * Pravilnika o učešću dece upisuje roditelj i posle upisa se ne menja — ovo
  * nije redovan tok nego ispravka omaške, koju sprovodi Fondacija na zahtev
  * roditelja. Dugme na ekranu bi je pretvorilo u redovan tok i otvorilo put da

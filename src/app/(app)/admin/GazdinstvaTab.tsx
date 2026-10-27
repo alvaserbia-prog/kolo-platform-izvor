@@ -7,7 +7,7 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
-/** Član u prikazu: status se izvodi na serveru (set 4.8.2); `uKolu` = uslov iz čl. 7a. */
+/** Član u prikazu: status se izvodi na serveru (set 4.8.2); `uKolu` = uslov iz čl. 10. */
 type KorisnikClan = { pseudonim: string; status: string; uKolu: boolean; identitet: { imePrezime: string } | null };
 type Clan = {
   id: string;
@@ -33,12 +33,12 @@ type Gazdinstvo = {
   razlogVracanja: string | null;
   podnetoAt: string | null;
   odobrenoAt: string | null;
-  /** Broj nosioca za razgovor (čl. 6a) — samo admin; briše se odlukom. */
+  /** Broj nosioca za razgovor (čl. 8) — samo admin; briše se odlukom. */
   telefonZaRazgovor: string | null;
   razgovorObavljenAt: string | null;
-  /** Ko je razgovor zabeležio (admin ili član Kola sa spiska, čl. 6a st. 2). */
+  /** Ko je razgovor zabeležio (admin ili član Kola sa spiska, čl. 8 st. 2). */
   razgovorBeleziId: string | null;
-  /** Član Kola posle razgovora sa spiska: postoji osnov za sumnju (čl. 6a st. 4). */
+  /** Član Kola posle razgovora sa spiska: postoji osnov za sumnju (čl. 8 st. 2 i 4). */
   razgovorSumnja: boolean | null;
   rpgUporedjenAt: string | null;
   smeClanoveOd: string | null;
@@ -47,7 +47,7 @@ type Gazdinstvo = {
   podnosilacUserId: string | null;
   odgovaraZaIzjavu: string | null;
   clanovi: Clan[];
-  /** Istupili članovi — i njih pogađa poništenje zbog lažne izjave (čl. 12 st. 2). */
+  /** Istupili članovi — i njih pogađa poništenje zbog lažne izjave (čl. 20 st. 2). */
   istupili?: { userId: string; pseudonim: string }[];
   oglasi: { id: string; title: string; category: string; tip: string; seller: { pseudonim: string } }[];
   vazecihOglasa: number;
@@ -67,13 +67,13 @@ const poen = (n: number) => `${n.toLocaleString("sr-RS")} POEN`;
  * Admin tab „Gazdinstva" — Pravilnik o gazdinstvima (set 4.8.2).
  *
  * Odobrenjem Fondacija UTVRĐUJE da su uslovi ispunjeni (potpuna prijava, data
- * izjava, tri oglasa koji su stvarna ponuda) — ne odlučuje o doprinosu (čl. 40c
- * st. 5). Podatke u državnom registru ne proverava; kad podnosilac koji je
+ * izjava, tri oglasa koji su stvarna ponuda) — ne odlučuje o doprinosu (Pravilnik
+ * čl. 39 st. 2). Podatke u državnom registru ne proverava; kad podnosilac koji je
  * korisnik ili član bez potvrde priloži izvod iz Registra, podatke iz prijave
- * poredi sa njim (čl. 4b). Pre odobrenja razgovara SAMO sa nosiocem (čl. 6a);
- * svaki član osim podnosioca mora biti član Kola (čl. 7a).
+ * poredi sa njim (čl. 3 st. 3). Pre odobrenja razgovara SAMO sa nosiocem (čl. 8);
+ * svaki član osim podnosioca mora biti član Kola (čl. 10).
  *
- * 🔴 Odobrenje i izvod NE potvrđuju stvarnost (čl. 4a poslednji stav, 4b st. 5).
+ * 🔴 Odobrenje i izvod NE potvrđuju stvarnost (čl. 4 st. 3).
  * 🔴 BPG, izjava o tačnosti, ime i prezime članova, broj za razgovor i izvod se
  * vide SAMO ovde (Registar radnji obrade br. 20 i 21). Izvod i broj se brišu
  * odlukom o prijavi.
@@ -86,7 +86,7 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
   const [pristupanja, setPristupanja] = useState<Pristupanje[]>([]);
   const [minOglasa, setMinOglasa] = useState(3);
   const [ucitava, setUcitava] = useState(true);
-  // Ko se isključuje pri poništenju zbog lažne izjave, po gazdinstvu (čl. 12 st. 3; U5).
+  // Ko se isključuje pri poništenju zbog lažne izjave, po gazdinstvu (čl. 20 st. 3; U5).
   const [iskljuciOznaceni, setIskljuciOznaceni] = useState<Record<string, string[]>>({});
   const [radi, setRadi] = useState(false);
   const [greska, setGreska] = useState<string | null>(null);
@@ -144,7 +144,7 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
   const postaviRazlog = (k: string, v: string) => setRazlozi((r) => ({ ...r, [k]: v }));
 
   /**
-   * Razgovor sa NOSIOCEM pre odobrenja (čl. 6a): broj telefona i oznaka da je
+   * Razgovor sa NOSIOCEM pre odobrenja (čl. 8): broj telefona i oznaka da je
    * razgovor obavljen. Bez oznake nema odobrenja; broj se briše odlukom.
    */
   function Razgovor({ g }: { g: Gazdinstvo }) {
@@ -179,7 +179,7 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
   }
 
   /**
-   * Izvod iz Registra (čl. 4b): otvara se samo ovde, pa se beleži da je poređenje
+   * Izvod iz Registra (čl. 3 st. 3): otvara se samo ovde, pa se beleži da je poređenje
    * izvršeno. Kad se podaci ne slažu, prijava se vraća na dopunu.
    */
   function Izvod({ g }: { g: Gazdinstvo }) {
@@ -215,7 +215,7 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
     );
   }
 
-  /** Uslovi odobrenja (čl. 6 st. 5, 7a) — dugme je zaključano dok nisu ispunjeni; server proverava isto. */
+  /** Uslovi odobrenja (čl. 7 st. 3, 10) — dugme je zaključano dok nisu ispunjeni; server proverava isto. */
   function smeOdobriti(g: Gazdinstvo): boolean {
     if (g.vazecihOglasa < minOglasa) return false;
     if (g.clanovi.some((c) => !c.user.identitet)) return false;
@@ -292,9 +292,9 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
       <p className="text-sm text-kolo-muted">{t("gaz_uvod")}</p>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
 
-      {/* ── Prijave na pregledu (čl. 6) ──────────────────────────────────────── */}
+      {/* ── Prijave na pregledu (čl. 7) ──────────────────────────────────────── */}
       <section className="space-y-3">
-        {/* P3-M1: pregled proverava i zabranjena dobra (gazdinstva čl. 6). */}
+        {/* P3-M1: pregled proverava i zabranjena dobra (gazdinstva čl. 7 st. 1). */}
         <p className="text-xs text-kolo-muted">{t("zabranjeno_dobro_podsetnik")}</p>
         <h3 className="font-semibold">{t("gaz_na_pregledu", { n: naPregledu.length })}</h3>
         {naPregledu.length === 0 && <p className="text-sm text-kolo-muted">{t("gaz_nema")}</p>}
@@ -334,7 +334,7 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
         ))}
       </section>
 
-      {/* ── Kasnija pristupanja (čl. 8 st. 1) ────────────────────────────────── */}
+      {/* ── Kasnija pristupanja (čl. 9 st. 4) ────────────────────────────────── */}
       <section className="space-y-3">
         <h3 className="font-semibold">{t("gaz_pristupanja", { n: pristupanja.length })}</h3>
         {pristupanja.length === 0 && <p className="text-sm text-kolo-muted">{t("gaz_nema")}</p>}
@@ -376,7 +376,7 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
         ))}
       </section>
 
-      {/* ── Odobrena gazdinstva; poništenje zbog lažne izjave (čl. 12) ───────── */}
+      {/* ── Odobrena gazdinstva; poništenje zbog lažne izjave (čl. 20) ───────── */}
       <section className="space-y-3">
         <h3 className="font-semibold">{t("gaz_odobrena", { n: odobrena.length })}</h3>
         {odobrena.map((g) => (
@@ -394,7 +394,7 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
                   value={razlog(`x-${g.id}`)}
                   onChange={(e) => postaviRazlog(`x-${g.id}`, e.target.value)}
                 />
-                {/* Isključenje nije kolektivno (čl. 12 st. 3; U5): označava se samo ko je lagao ili znao. */}
+                {/* Isključenje nije kolektivno (čl. 20 st. 3; U5): označava se samo ko je lagao ili znao. */}
                 <fieldset className="space-y-1 text-sm">
                   <legend className="text-xs text-kolo-muted">{t("gaz_iskljuci_koga")}</legend>
                   {[

@@ -1,5 +1,5 @@
 /**
- * Dnevni tempo potvrđivanja — Pravilnik o dokazu stvarnosti čl. 8 (set 4.7.5).
+ * Dnevni tempo potvrđivanja — Pravilnik o dokazu stvarnosti čl. 21 (set 4.7.5).
  *
  * Bez Prisme: uvozi ga i pretraživač (ekran `/verifikacija` pokazuje upozorenje
  * PRE nego što čovek unese kod, ne tek posle).

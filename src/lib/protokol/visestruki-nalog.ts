@@ -1,6 +1,6 @@
 /**
- * Višestruki nalog istog lica (Pravilnik o dokazu stvarnosti čl. 4a i 4b; Pravilnik
- * o KOLO sistemu čl. 14 st. 3 t. 8; Uslovi korišćenja čl. 8 i 28; set 4.8.4;
+ * Višestruki nalog istog lica (Pravilnik o dokazu stvarnosti čl. 13 i 14; Pravilnik
+ * o KOLO sistemu čl. 17 st. 2 t. 8; Uslovi korišćenja čl. 8 i 32; set 4.8.4;
  * registar 2026-10, N4-M2 i N4-M3).
  *
  * Tri dela:
@@ -147,9 +147,9 @@ async function otpisiUProtokol(tx: Tx, walletId: string, iznos: number, opis: st
 }
 
 /**
- * Utvrđenje višestrukog naloga (dokaz stvarnosti čl. 4b). Poziva ga samo superadmin.
+ * Utvrđenje višestrukog naloga (dokaz stvarnosti čl. 14). Poziva ga samo superadmin.
  * `zadrzaniId` je nalog koji lice zadržava, `ugaseniId` nalog koji prestaje.
- * `iskljuci` — lice se isključuje (Uslovi čl. 28) kad je drugi nalog korišćen za
+ * `iskljuci` — lice se isključuje (Uslovi čl. 32) kad je drugi nalog korišćen za
  * sticanje POEN-a ili glasa.
  */
 export async function utvrdiVisestrukiNalog(
@@ -175,8 +175,8 @@ export async function utvrdiVisestrukiNalog(
   if (await prisma.utvrdjenjeVisestrukogNaloga.findUnique({ where: { ugaseniId: ugaseni.id }, select: { id: true } }))
     throw new VisestrukiGreska("Za ovaj nalog je višestruki nalog već utvrđen.", 409);
 
-  // Nalog koji prestaje (Uslovi čl. 28) — isti put kao svako isključenje.
-  await iskljuciKorisnika(adminId, ugaseni.id, `Utvrđen višestruki nalog (dokaz stvarnosti čl. 4b): ${obrazlozenje}`);
+  // Nalog koji prestaje (Uslovi čl. 32) — isti put kao svako isključenje.
+  await iskljuciKorisnika(adminId, ugaseni.id, `Utvrđen višestruki nalog (dokaz stvarnosti čl. 14): ${obrazlozenje}`);
 
   const zW = zadrzani.wallet?.id ?? null;
   const uW = ugaseni.wallet?.id ?? null;
@@ -196,7 +196,7 @@ export async function utvrdiVisestrukiNalog(
           "transakcije.visestruki_nalog_otpis",
         );
     }
-    // Zapis ugašenog naloga se poništava (Pravilnik čl. 34) — sopstvenim tipom, nikad TRANSFER.
+    // Zapis ugašenog naloga se poništava (Pravilnik čl. 33) — sopstvenim tipom, nikad TRANSFER.
     if (uW) {
       const w = await tx.wallet.findUniqueOrThrow({ where: { id: uW }, select: { balance: true } });
       if (w.balance > 0)

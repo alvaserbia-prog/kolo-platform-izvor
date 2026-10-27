@@ -12,9 +12,9 @@ import { smeAktiviratiZrno } from "@/lib/gornje-kolo-pravila";
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  // Aktivira samo čuvar Kola (Pravilnik čl. 20 st. 2, 29 st. 3): član bez potvrde
-  // upisano ZRNO ne aktivira dok ne bude potvrđen (čl. 28a), a korisniku je ZRNO
-  // zamrznuto (čl. 30 st. 3). Provera se ponavlja i pri izvršenju u ponoć.
+  // Aktivira samo čuvar Kola (Pravilnik čl. 23 st. 2, 28 st. 3): član bez potvrde
+  // upisano ZRNO ne aktivira dok ne bude potvrđen (čl. 22 st. 3), a korisniku je ZRNO
+  // zamrznuto (čl. 29 st. 1). Provera se ponavlja i pri izvršenju u ponoć.
   const status = await ucitajStatus(session.user.id);
   if (!status || !smeAktiviratiZrno(status))
     return await greska("ZRNO aktivira samo čuvar Kola.", 403);

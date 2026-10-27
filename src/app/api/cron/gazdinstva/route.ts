@@ -5,10 +5,10 @@ import { obradiUpite } from "@/lib/protokol/gazdinstvo";
 /**
  * GET /api/cron/gazdinstva
  *
- * Upiti o preuzimanju izjave o tačnosti podataka (Pravilnik o gazdinstvima čl. 9
- * st. 3, 11 st. 6): upit na koji član nije odgovorio u roku od trideset dana ide
+ * Upiti o preuzimanju izjave o tačnosti podataka (Pravilnik o gazdinstvima čl. 13
+ * st. 2–3, 21 st. 3): upit na koji član nije odgovorio u roku od trideset dana ide
  * sledećem članu po redu pristupanja; kad ga niko ne preuzme, gazdinstvo prestaje
- * (čl. 12a st. 1 t. 1) i doprinos gazdinstva se poništava, odnosno otpisuje.
+ * (čl. 22 st. 1 t. 1) i doprinos gazdinstva se poništava, odnosno otpisuje.
  *
  * 🔴 Bez ovog posla upit bi čekao zauvek: rok ne pokreće ničiji klik.
  */

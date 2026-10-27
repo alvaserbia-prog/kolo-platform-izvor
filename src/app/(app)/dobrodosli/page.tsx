@@ -41,7 +41,7 @@ const EKRANI_ODRASLI: { key: string; pasusi: string[]; akcije?: Akcija[] }[] = [
   // šta je KOLO i šta je POEN — jedini ekran bez radnje
   { key: "ekran1", pasusi: ["ekran1_p1", "ekran1_p2"] },
   // prvi potez: objava ponude. Ide PRE potvrde, jer je to danas glavni put
-  // (čl. 16 st. 5 i čl. 40a) i jer isti redosled obećava Početna.
+  // (Uslovi čl. 14 st. 2, Pravilnik čl. 38) i jer isti redosled obećava Početna.
   {
     key: "ekran2",
     pasusi: ["ekran2_p1", "ekran2_p2", "ekran2_p3"],

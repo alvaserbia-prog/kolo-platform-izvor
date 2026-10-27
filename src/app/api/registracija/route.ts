@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     // živele samo u pretraživaču (`canSubmit`), pa je nalog nastajao i bez ijedne
     // — dovoljno je bilo zaobići obrazac. Time nije nedostajao samo dokaz
     // pristanka (ZZPL čl. 15 st. 1) nego i dokaz da je ugovor zaključen, a
-    // „izvršenje ugovornog odnosa" je osnov za većinu obrada iz Politike čl. 4.
+    // „izvršenje ugovornog odnosa" je osnov za većinu obrada iz Politike.
     if (!oba(body.prihvatamUslove, body.prihvatamPolitiku)) {
       return await greska(PORUKA_PRISTANAK_OBAVEZAN, 400);
     }

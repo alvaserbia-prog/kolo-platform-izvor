@@ -8,7 +8,7 @@ import { jeAdmin, jeZadruzniAdmin, mozeNadzor } from "@/lib/dozvole";
  * Sistem ima sopstveni raspored, kao Zadruge i Škole (odluka vlasnika, 24.10.2026):
  * kartice i zbirovi su javni i vidi ih neprijavljen posetilac, a prijavljen ih gleda
  * unutar rasporeda sa bočnim menijem. Spiskove (učesnici, razmene, zapisi, donacije)
- * gostu server ni ne čita — Politika privatnosti čl. 6, gost vidi samo agregat.
+ * gostu server ni ne čita — Politika privatnosti čl. 11 st. 4, gost vidi samo agregat.
  */
 export default async function SistemLayout({ children }: { children: React.ReactNode }) {
   const session = await sesija();

@@ -11,8 +11,8 @@ import { jeAdmin } from "@/lib/dozvole";
  * takođe administratorsku rutu) i vaučerima.
  *
  * Podnosioca, kontakt davaoca i fotografiju cenovnika vidi samo administratorski
- * tim — radi provere da je cenovnik priložen (donacije čl. 13f st. 2); podaci o
- * davaocu su upoređeni sa registrom pri odobrenju upisa (čl. 6a st. 4). 🔴 Cena se ne upoređuje, pa ni izvora cene ni „najniže
+ * tim — radi provere da je cenovnik priložen (donacije čl. 29 st. 2); podaci o
+ * davaocu su upoređeni sa registrom pri odobrenju upisa (čl. 18 st. 1). 🔴 Cena se ne upoređuje, pa ni izvora cene ni „najniže
  * cene" ovde nema.
  */
 export async function GET() {
@@ -58,7 +58,7 @@ export async function GET() {
       kontaktTelefon: u.kontaktTelefon,
       izjavaOvlascenjeAt: u.izjavaOvlascenjeAt?.toISOString() ?? null,
       potvrdaEvidentiranjaAt: u.potvrdaEvidentiranjaAt?.toISOString() ?? null,
-      // Poređenje sa registrom je izvršeno pri odobrenju upisa (čl. 6a st. 4).
+      // Poređenje sa registrom je izvršeno pri odobrenju upisa (čl. 18 st. 1).
       upisOdobren: u.upis?.status === "ODOBREN" && !u.upis.obrisanAt,
       vrsta: u.vrsta,
       opis: u.opis,
@@ -86,7 +86,7 @@ export async function GET() {
         kod: v.kod,
         status: v.status,
         imalacPseudonim: v.imalac?.pseudonim ?? null,
-        // Ko je potvrdio realizaciju — podnosilac ili zaposleni davaoca (čl. 30g st. 1).
+        // Ko je potvrdio realizaciju — podnosilac ili zaposleni davaoca (nabavke čl. 34 st. 1; donacije čl. 32 st. 3).
         potvrdioPseudonim: v.potvrdio?.pseudonim ?? null,
         prigovor: prigovori.find((p) => p.predmetId === v.id)?.status ?? null,
       })),

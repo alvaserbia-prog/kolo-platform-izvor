@@ -31,13 +31,13 @@ export default async function NoviOglasPage({
     select: { location: true, telefon: true, verified: true, maloletan: true },
   });
   // Za oglas maloletnog korisnika važe isti uslovi objave kao za svaki drugi —
-  // razlikuje se samo vidljivost (Modul Deca, čl. 13 st. 1). Ograničenja za
+  // razlikuje se samo vidljivost (Pravilnik o učešću dece čl. 24 st. 1). Ograničenja za
   // nepotvrđen nalog postoje zbog naloga iza kog niko ne stoji; iza deteta stoje
   // roditelj i svi koji su roditelja potvrdili.
   const verifikovan = (korisnik?.verified ?? false) || (korisnik?.maloletan ?? false);
 
-  // Član gazdinstva bira da li oglas postavlja u ime gazdinstva ili kao lični (čl. 10).
-  // Samo član koji upravlja gazdinstvom (čl. 9 st. 1, 9a).
+  // Član gazdinstva bira da li oglas postavlja u ime gazdinstva ili kao lični (gazdinstva čl. 18 st. 1).
+  // Samo član koji upravlja gazdinstvom (gazdinstva čl. 11, 14).
   const clanstvo = await upravljackoClanstvo(session.user.id);
   const gazdinstvo = clanstvo ? { id: clanstvo.gazdinstvo.id, naziv: clanstvo.gazdinstvo.naziv } : null;
 
@@ -49,7 +49,7 @@ export default async function NoviOglasPage({
       defaultPhone={korisnik?.telefon ?? ""}
       initialTip={tip?.toUpperCase() === "POTRAZNJA" ? "POTRAZNJA" : "PONUDA"}
       verifikovan={verifikovan}
-      // R-07 M-5″: napomena o dobrima koja dete ne sme da nudi (Uslovi čl. 21).
+      // R-07 M-5″: napomena o dobrima koja dete ne sme da nudi (Uslovi čl. 23 st. 3).
       maloletan={korisnik?.maloletan ?? false}
     />
   );

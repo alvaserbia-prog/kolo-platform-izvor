@@ -22,7 +22,7 @@ import Prekidac from "@/components/ui/Prekidac";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
-/** Stanje naloga (čl. 4c) kao status za `OznakaStatusa`. */
+/** Stanje naloga (deca čl. 5) kao status za `OznakaStatusa`. */
 function statusIzStanja(stanje: StanjeDeteta): StatusUcesnika {
   return stanje === "AKTIVNO" ? "DETE_KOLA" : stanje === "POVEZANO" ? "DETE_SA_RODITELJEM" : "DETE_NA_CEKANJU";
 }
@@ -35,22 +35,22 @@ type Dete = {
   clanOd: string;
   balans: number;
   dozvolaOdrasli: boolean;
-  /** Izjava iz čl. 6 st. 1 još nije data (samo posle prevođenja naloga, čl. 4d). */
+  /** Izjava iz čl. 12 još nije data (samo posle prevođenja naloga, čl. 15). */
   izjavaNedostaje: boolean;
-  /** Stanje naloga (čl. 4c) i na šta se čeka (poslednji stav). */
+  /** Stanje naloga (čl. 5 st. 1) i na šta se čeka (čl. 5 st. 4). */
   stanje: StanjeDeteta;
   naStaSeCeka: NaStaSeCeka | null;
-  /** Roditelj je član Kola ili osnivač — traži potvrdu postojanja (čl. 6 st. 2). */
+  /** Roditelj je član Kola ili osnivač — traži potvrdu postojanja (čl. 13 st. 1). */
   smeTrazitiPotvrdu: boolean;
   /** Potvrda postojanja deteta ZA OVOG roditelja. */
   postojanje: "NIJE_TRAZENO" | "TRAZENO" | "POTVRDJENO";
-  /** Drugi roditelj, ako postoji — za prijavu lažnog roditeljstva (čl. 4e st. 1). */
+  /** Drugi roditelj, ako postoji — za prijavu lažnog roditeljstva (čl. 17 st. 1). */
   drugiRoditelji: { id: string; pseudonim: string }[];
-  /** Ima li dete sopstvenu potvrđenu adresu (čl. 7a) — tada roditelj ne menja lozinku. */
+  /** Ima li dete sopstvenu potvrđenu adresu (čl. 14; čl. 21 st. 2) — tada roditelj ne menja lozinku. */
   imaSvojuAdresu: boolean;
 };
 
-/** Prepis iz dečjeg zapisa koji čeka odluku roditelja (čl. 14). */
+/** Prepis iz dečjeg zapisa koji čeka odluku roditelja (čl. 30). */
 type Prepis = {
   id: string;
   iznos: number;
@@ -84,7 +84,7 @@ export default function DeteProfil({
   const [greska, setGreska] = useState<string | null>(null);
   const [skinuti, setSkinuti] = useState<Set<string>>(new Set());
   // Do 15. godine odnos sa punoletnima je zatvoren i saglasnost ga ne otvara
-  // (čl. 12 st. 4), pa prekidač nema šta da uključi — ostaje samo objašnjenje.
+  // (čl. 22 st. 4), pa prekidač nema šta da uključi — ostaje samo objašnjenje.
   const smeSaOdraslima = (dete.godine ?? 0) >= UZRAST_SA_ODRASLIMA;
 
   async function prebaciDozvolu() {
@@ -169,7 +169,7 @@ export default function DeteProfil({
 
       <Pregled deteId={dete.id} />
 
-      {/* Prekidač iz čl. 10 st. 2 — jedina saglasnost koju roditelj daje posle
+      {/* Prekidač iz čl. 20 st. 2 — jedina saglasnost koju roditelj daje posle
           otvaranja naloga. Stoji iznad razgovora sa odraslima, koje otvara. */}
       <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
         <div className="flex items-start justify-between gap-4">
@@ -192,7 +192,7 @@ export default function DeteProfil({
 
       <Razgovori deteId={dete.id} />
 
-      {/* Oglasi — jedino što roditelj može da ukloni (čl. 10 st. 1). */}
+      {/* Oglasi — jedino što roditelj može da ukloni (čl. 20 st. 1). */}
       <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
         <h2 className="font-semibold text-kolo-text">{t("oglasi_naslov")}</h2>
         {oglasi.length === 0 ? (
@@ -244,14 +244,14 @@ type Razgovor = {
 };
 
 /**
- * Razgovori deteta SA PUNOLETNIM LICIMA (čl. 9 st. 3) — roditelj ih ČITA.
+ * Razgovori deteta SA PUNOLETNIM LICIMA (čl. 19 st. 3) — roditelj ih ČITA.
  *
  * 🔴 Razgovore između dece roditelj VIŠE NE ČITA. Nadzor nad dečjim razgovorom
  * dodiruje i tuđe dete, kome njegov roditelj ovaj uvid nije dao; kad roditelj ne
  * čita, taj problem nestaje ceo. Umesto sadržaja stoji „ko i koliko" (v. `Pregled`).
  *
  * 🔴 Nema polja za pisanje. Sa druge strane je odrastao čovek, a taj odnos otvara
- * isključivo prekidač iz čl. 10 — pa bi ubacivanje roditelja u razgovor bilo
+ * isključivo prekidač iz čl. 20 st. 2 — pa bi ubacivanje roditelja u razgovor bilo
  * obraćanje trećem licu iz tuđeg naloga. Punoletnom sagovorniku u razgovoru stoji
  * vidljiv natpis da razgovor čita roditelj.
  */
@@ -325,7 +325,7 @@ function Razgovori({ deteId }: { deteId: string }) {
 }
 
 /**
- * Brisanje naloga deteta (čl. 17). Traži da roditelj OTKUCA pseudonim — klik ne sme
+ * Brisanje naloga deteta (čl. 36). Traži da roditelj OTKUCA pseudonim — klik ne sme
  * da promaši red u spisku, a radnja poništava sav POEN i uklanja sve oglase.
  * Posledica piše na samoj potvrdi, ne sitnim slovima ispod.
  */
@@ -418,7 +418,7 @@ type Pregledi = {
 };
 
 /**
- * „Ko i koliko" (čl. 9 st. 2) — ono što roditelj dobija UMESTO sadržaja razgovora
+ * „Ko i koliko" (čl. 19 st. 2) — ono što roditelj dobija UMESTO sadržaja razgovora
  * među decom: spisak prijatelja sa datumima i spisak razgovora bez ijedne poruke.
  *
  * 🔴 Sadržaja ovde nema i nema rute koja bi ga vratila. To nije propust nego mera:
@@ -507,7 +507,7 @@ function Pregled({ deteId }: { deteId: string }) {
 
 
 /**
- * Nova lozinka detetu (čl. 10 st. 1).
+ * Nova lozinka detetu (čl. 21 st. 1).
  *
  * 🔴 Stara lozinka se ne traži — roditelj je ne zna, i baš zato ovo postoji.
  * Nalog maloletnog korisnika po pravilu nema imejl, pa mu tok „zaboravljena
@@ -592,7 +592,7 @@ function NovaLozinka({
 
 /**
  * Na šta nalog deteta čeka i „Zatraži potvrdu da imaš dete" (Pravilnik o učešću
- * dece čl. 4c poslednji stav, 6 st. 2; set 4.8.2).
+ * dece čl. 5 st. 4, 13 st. 1; set 4.8.2).
  *
  * Dugme vidi samo roditelj koji je član Kola ili osnivač — potvrdu traži on, za
  * svako dete posebno, bez roka. Roditelju koji nije član Kola kaže se šta se čeka;
@@ -668,7 +668,7 @@ function PotvrdaPostojanja({ dete }: { dete: Dete }) {
 }
 
 /**
- * „Prijavi da ovo nije roditelj" (Pravilnik o učešću dece čl. 4e st. 1). Roditelj
+ * „Prijavi da ovo nije roditelj" (Pravilnik o učešću dece čl. 17 st. 1). Roditelj
  * ovde prijavljuje DRUGOG roditelja istog deteta. Po prijemu Fondacija vezu odmah
  * zaustavlja; prijavljenom licu se ne otkriva ko je prijavu podneo (st. 2–3).
  */
@@ -767,10 +767,10 @@ function PrijavaRoditeljstva({
 }
 
 /**
- * Izjava roditelja o postojanju deteta (čl. 6 st. 1), kad još nije data.
+ * Izjava roditelja o postojanju deteta (čl. 12), kad još nije data.
  *
  * Vidi se samo u jednom slučaju — kad je nalog u maloletni preveo administrator
- * (čl. 4d), pa roditelj izjavu daje po prijemu odluke. Svuda drugde izjava nastaje
+ * (čl. 15), pa roditelj izjavu daje po prijemu odluke. Svuda drugde izjava nastaje
  * pri otvaranju odnosno preuzimanju naloga i ovaj blok se ne crta. Od seta 4.8.2
  * izjava nema rok ni posledicu po treća lica.
  *
@@ -828,7 +828,7 @@ function IzjavaRoditelja({ dete }: { dete: Dete }) {
 }
 
 /**
- * Prepisi iz dečjeg zapisa koji čekaju odluku roditelja (čl. 14).
+ * Prepisi iz dečjeg zapisa koji čekaju odluku roditelja (čl. 30).
  *
  * 🔴 Prikazuje se samo kad ih ima. Prazan odeljak „nema ničega na čekanju" bio bi
  * na profilu svakog deteta svaki dan, a ovo je po prirodi redak događaj.

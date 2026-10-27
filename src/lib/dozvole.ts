@@ -39,9 +39,9 @@ function potvrdjenKorisnik(u?: KorisnikDozvole | null): boolean {
 
 /**
  * Prošireni krug funkcija — prava VERIFIKOVANOG učesnika (set 4.8.2: član bez
- * potvrde, član Kola, čuvar Kola, osnivač; Pravilnik čl. 28a, 29).
+ * potvrde, član Kola, čuvar Kola, osnivač; Pravilnik čl. 28; Uslovi čl. 15).
  *
- * 🔴 Potvrda uplatom i registrom je ukinuta setom 4.8.2 (dokaz stvarnosti čl. 4a
+ * 🔴 Potvrda uplatom i registrom je ukinuta setom 4.8.2 (dokaz stvarnosti čl. 8
  * sada vodi samo na spisak za poziv), pa `identitetUtvrdjen` više ne postoji.
  * Radnje koje traže POTVRĐENOG (potvrđivanje drugih, spisak za poziv) čitaju
  * `potvrdjen`; statusni preduslovi su u `DOZVOLE` (`status-ucesnika-pravila.ts`).
@@ -57,7 +57,7 @@ export function smeProsireno(u?: KorisnikProsireni | null): boolean {
 }
 
 /**
- * Potvrđivanje drugih (dokaz stvarnosti čl. 5a st. 1; Pravilnik čl. 29 st. 2):
+ * Potvrđivanje drugih (dokaz stvarnosti čl. 4 st. 1; Uslovi čl. 15 st. 1):
  * član Kola, čuvar Kola ili osnivač, punoletan.
  */
 export function smePotvrdjivati(u?: (KorisnikProsireni & KorisnikDozvole) | null): boolean {
@@ -81,7 +81,7 @@ export function jeAdmin(u?: KorisnikDozvole | null): boolean {
 const ZADRUGA = "ZADRUGA";
 
 /**
- * Zadružni admin — lice koje predloži zadruga (Pravilnik o zadrugama čl. 16;
+ * Zadružni admin — lice koje predloži zadruga (Pravilnik o zadrugama čl. 15;
  * registar 2026-10, U2). 🔴 NIJE admin: `jeAdmin` ga ne pušta nigde, pa van
  * zadruge ne vidi ništa. Radi samo u zadruzi iz `adminZadrugaId`.
  */
@@ -90,7 +90,7 @@ export function jeZadruzniAdmin(u?: KorisnikDozvole | null): boolean {
 }
 
 /**
- * Radnje u zapisu zadruge i nad njenim zadrugarima (zadruge čl. 7, 9, 16): admin u
+ * Radnje u zapisu zadruge i nad njenim zadrugarima (zadruge čl. 6, 8, 15): admin u
  * svakoj zadruzi, zadružni admin samo u svojoj.
  */
 export function smeRaditiZaZadrugu(
@@ -102,8 +102,8 @@ export function smeRaditiZaZadrugu(
 }
 
 /**
- * Upis ishoda nadzora — čuvar Kola (dokaz stvarnosti čl. 10 st. 2: nadzornik je
- * svaki čuvar Kola; Pravilnik čl. 30 st. 2). Čuvar je potvrđen i `NOSILAC_ZRNA`;
+ * Upis ishoda nadzora — čuvar Kola (dokaz stvarnosti čl. 23 st. 1: nadzornik je
+ * svaki čuvar Kola; Uslovi čl. 15 st. 3). Čuvar je potvrđen i `NOSILAC_ZRNA`;
  * član bez potvrde sa ZRNOM ostaje REGULARNI, pa ovde ne prolazi.
  *
  * Admin bez statusa čuvara NE upisuje ishod (set 4.8.2) — za čitanje vidi
@@ -119,7 +119,7 @@ export function mozeCitatiNadzor(u?: KorisnikDozvole | null): boolean {
 }
 
 /**
- * Glas u Gornjem Kolu (Pravilnik čl. 45, 46; Gornje Kolo čl. 4).
+ * Glas u Gornjem Kolu (Pravilnik čl. 43, 44; Gornje Kolo čl. 4, 12).
  *
  * Traži aktivirano ZRNO i status čuvara Kola u trenutku glasanja: potvrđen i
  * `NOSILAC_ZRNA`. Glas gubi i onaj kome potvrda bude poništena.

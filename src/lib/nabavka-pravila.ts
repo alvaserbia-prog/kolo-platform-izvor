@@ -9,43 +9,43 @@
  *
  * `src/lib/protokol/nabavka.ts` sve ovo re-eksportuje, pa server ima jedan ulaz.
  *
- * Osnov: Pravilnik o projektima i kolektivnim nabavkama (set 4.4.3), čl. 5, 8,
- * 15, 17, 18, 19, 21, 22, 23 i 26; Pravilnik o KOLO sistemu čl. 14a i 51a.
+ * Osnov: Pravilnik o projektima i kolektivnim nabavkama čl. 5, 7, 13,
+ * 14, 16, 17, 19, 20, 21 i 24; Pravilnik o KOLO sistemu čl. 18 i 47.
  *
  * 🔴 Brojevi iz ovog fajla stoje DOSLOVNO u aktu i zaključani su testom
  * `pravni-dokumenti.test.ts`. Izmena konstante ovde bez izmene akta razilazi normu
- * i primenu — isto pravilo kao kapa i prag iz čl. 40b.
+ * i primenu — isto pravilo kao kapa i prag nekadašnje putanje doprinosa razmeni.
  */
 
 // ─── Konstante iz akta ────────────────────────────────────────────────────────
 
-/** Čl. 8 st. 2 — koeficijent trošenja. 1,00 = „potroši sve iznad rezerve". */
+/** Čl. 7 st. 2 — koeficijent trošenja. 1,00 = „potroši sve iznad rezerve". */
 export const KOEFICIJENT_TROSENJA = 1.0;
 
 /** Čl. 5 st. 3 — operativna rezerva = tri operativna troška prethodnog meseca. */
 export const MESECI_REZERVE = 3;
 
-/** Čl. 15 st. 1 — najmanje toliko ponuda pre izbora najpovoljnije. */
+/** Čl. 14 st. 1 — najmanje toliko ponuda pre izbora najpovoljnije. */
 export const NAJMANJE_PONUDA = 3;
 
 /*
- * Čl. 21 st. 2 — prijava NE zavisi od broja POEN-a u zapisu (set 4.7.8, odluka
+ * Čl. 19 st. 2 — prijava NE zavisi od broja POEN-a u zapisu (set 4.7.8, odluka
  * vlasnika). Prag od 20.000 POEN-a je ukinut: broj POEN-a određuje samo mesto u
- * redu (čl. 22), a ko u trenutku potvrde nema dovoljno POEN-a ne može potvrditi
- * učešće (čl. 23). 🔴 Najmanji broj POEN-a za prijavu se ne vraća — ni pri prijavi
+ * redu (čl. 20), a ko u trenutku potvrde nema dovoljno POEN-a ne može potvrditi
+ * učešće (čl. 21 st. 2). 🔴 Najmanji broj POEN-a za prijavu se ne vraća — ni pri prijavi
  * ni pri utvrđivanju reda. Brana: `nabavka-bez-praga-izvor.test.ts`.
  */
 
-/** Čl. 21 st. 2 — rok za prijavu, u danima od objave kalkulacije. */
+/** Čl. 19 st. 3 — rok za prijavu, u danima od objave kalkulacije. */
 export const ROK_PRIJAVE_DANA = 3;
 
-/** Čl. 23 st. 3 — rok za odgovor na poziv, u danima od upućivanja poziva. */
+/** Čl. 21 st. 4 — rok za odgovor na poziv, u danima od upućivanja poziva. */
 export const ROK_POTVRDE_DANA = 3;
 
-/** Čl. 26 st. 2 — period preuzimanja, u danima. */
+/** Čl. 24 st. 2 — period preuzimanja, u danima. */
 export const PERIOD_PREUZIMANJA_DANA = 3;
 
-/** Čl. 32 — predlog se briše najkasnije po isteku toliko meseci od upisa. */
+/** Čl. 10 st. 3 — predlog se briše najkasnije po isteku toliko meseci od upisa. */
 export const ROK_PREDLOGA_MESECI = 12;
 
 /** Najveća dužina naziva dobra. Predlog je jedna reč ili kratak izraz, ne opis. */
@@ -79,7 +79,7 @@ export function validanNaziv(naziv: string): boolean {
   return /^[\p{L}\p{N}][\p{L}\p{N} .,%\-/]*$/u.test(n);
 }
 
-// ─── Sredstva (čl. 5 i 8) ─────────────────────────────────────────────────────
+// ─── Sredstva (čl. 5 i 7) ─────────────────────────────────────────────────────
 
 /**
  * Čl. 5 — sredstva raspoloživa za projekte.
@@ -94,7 +94,7 @@ export function raspolozivoZaProjekte(saldoRSD: number, trosakPrethodnogMesecaRS
 }
 
 /**
- * Čl. 8 — gornja granica trošenja za jednu nabavku.
+ * Čl. 7 — gornja granica trošenja za jednu nabavku.
  *
  * 🔴 Od 4.4.3 ovo NIJE iznos koji se troši nego granica koja se ne sme preći.
  * Ranije je novac određivao količinu (količina = iznos ÷ cena); sada količinu
@@ -106,14 +106,14 @@ export function gornjaGranicaTrosenja(raspolozivoRSD: number): number {
   return raspolozivoRSD * KOEFICIJENT_TROSENJA;
 }
 
-// ─── Parametri odluke i kalkulacija (čl. 17, 18) ──────────────────────────────
+// ─── Parametri odluke i kalkulacija (čl. 13, 16) ──────────────────────────────
 
 /**
- * Čl. 17 — parametre nabavke utvrđuje ODLUKA kojom se nabavka pokreće: ukupnu
+ * Čl. 13 — parametre nabavke utvrđuje ODLUKA kojom se nabavka pokreće: ukupnu
  * količinu, veličinu jednog dela i broj POEN-a koji se poništava po delu.
  *
  * 🔴 Utvrđuju se PRE prikupljanja ponuda, pa se ne mogu izvesti iz dinarske cene —
- * ona u tom trenutku ne postoji. To je jedina brana koja tvrdnju iz čl. 19 („broj
+ * ona u tom trenutku ne postoji. To je jedina brana koja tvrdnju iz čl. 17 („broj
  * POEN-a po delu nije cena dobra") čini proverljivom po samoj konstrukciji
  * postupka. `dodajPonudu` zato odbija ponudu dok parametri nisu utvrđeni.
  *
@@ -132,17 +132,17 @@ export function validniParametri(p: ParametriOdluke): boolean {
   if (!Number.isInteger(p.kolicina) || p.kolicina <= 0) return false;
   if (!Number.isInteger(p.velicinaDela) || p.velicinaDela <= 0) return false;
   if (!Number.isInteger(p.poenPoDelu) || p.poenPoDelu <= 0) return false;
-  // Čl. 17 st. 2 — broj delova je količnik, pa količina mora biti deljiva bez
+  // Čl. 13 st. 3 — broj delova je količnik, pa količina mora biti deljiva bez
   // ostatka: ostatak bi značio deo manji od objavljenog, a delovi su jednaki.
   return p.kolicina % p.velicinaDela === 0;
 }
 
-/** Čl. 17 st. 2 — broj delova jednak je količniku količine i veličine dela. */
+/** Čl. 13 st. 3 — broj delova jednak je količniku količine i veličine dela. */
 export function brojDelova(kolicina: number, velicinaDela: number): number {
   return Math.floor(kolicina / velicinaDela);
 }
 
-/** Čl. 18 st. 1 — ukupan dinarski trošak = ukupna količina × nabavna cena. */
+/** Čl. 16 st. 1 — ukupan dinarski trošak = ukupna količina × nabavna cena. */
 export function ukupanTrosak(kolicina: number, nabavnaCenaPoJedinici: number): number {
   return kolicina * nabavnaCenaPoJedinici;
 }
@@ -150,9 +150,9 @@ export function ukupanTrosak(kolicina: number, nabavnaCenaPoJedinici: number): n
 export interface UlazKalkulacije {
   saldoRSD: number;
   trosakPrethodnogMesecaRSD: number;
-  /** Čl. 17 — odlučeni parametri, poznati pre tendera. */
+  /** Čl. 13 — odlučeni parametri, poznati pre tendera. */
   parametri: ParametriOdluke;
-  /** Čl. 18 — nabavna cena po jedinici iz izabrane ponude. */
+  /** Čl. 16 — nabavna cena po jedinici iz izabrane ponude. */
   nabavnaCena: number;
 }
 
@@ -169,10 +169,10 @@ export interface Kalkulacija {
 }
 
 /**
- * Čl. 5 → 18 u jednom pozivu. Vraća `null` kad nabavka nije moguća: nema sredstava
+ * Čl. 5 → 16 u jednom pozivu. Vraća `null` kad nabavka nije moguća: nema sredstava
  * iznad rezerve, parametri nisu ispravni, ili ukupan trošak prelazi gornju granicu.
  *
- * 🔴 Prekoračenje granice NIJE greška u unosu nego ishod tendera (čl. 18 st. 2):
+ * 🔴 Prekoračenje granice NIJE greška u unosu nego ishod tendera (čl. 16 st. 2):
  * nabavka se tada ne sprovodi, sredstva ostaju za narednu, a nova odluka može
  * utvrditi manju količinu. Ne „skraćivati" količinu automatski — time bi novac
  * ponovo određivao raspodelu.
@@ -203,7 +203,7 @@ export function izracunajKalkulaciju(ulaz: UlazKalkulacije): Kalkulacija | null 
   };
 }
 
-// ─── Red (čl. 22) ─────────────────────────────────────────────────────────────
+// ─── Red (čl. 20) ─────────────────────────────────────────────────────────────
 
 export interface StavkaReda {
   userId: string;
@@ -216,7 +216,7 @@ export interface StavkaReda {
 }
 
 /**
- * Čl. 22 — red po broju POEN-a, od većeg ka manjem.
+ * Čl. 20 — red po broju POEN-a, od većeg ka manjem.
  *
  * 🔴 Nije „rang" u smislu statusa nego prosto količina: mesto u redu ne proizvodi
  * dejstvo izvan te nabavke (st. 4). Izjednačenost se razrešava do kraja — ranija
@@ -232,51 +232,116 @@ export function poredjajRed<T extends StavkaReda>(stavke: T[]): T[] {
   });
 }
 
-// ─── Rokovi (čl. 21, 23, 26) ──────────────────────────────────────────────────
+// ─── Rokovi (čl. 19, 21, 24) ──────────────────────────────────────────────────
+
+/*
+ * 🔴 Dan je OBRAČUNSKI dan sistema — ponoć do ponoći po srpskom vremenu
+ * (Europe/Belgrade), ne dan po satu servera. Serveri (Vercel) rade u UTC: do
+ * seta 5.0 su `krajDana` i `danJeUPeriodu` radili sa `setHours`, pa je rok
+ * isticao u 01:00, odnosno 02:00 po našem vremenu, a dan upisan posle 22 h leti
+ * pripadao je pogrešnom datumu. Ovaj fajl namerno nema uvoza (čita ga i
+ * pretraživač), pa zona ovde ima sopstveni mali račun; isti je kao u
+ * `protokol/obracunski-dan.ts`. Brana: `nabavka-pravila.test.ts` („obračunski dan").
+ */
+const ZONA_OBRACUNA = "Europe/Belgrade";
+
+/** Kalendarski datum (godina, mesec 1–12, dan) u kome je trenutak po srpskom vremenu. */
+function datumUSrbiji(t: Date): { g: number; m: number; d: number } {
+  const [g, m, d] = new Intl.DateTimeFormat("en-CA", {
+    timeZone: ZONA_OBRACUNA,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+    .format(t)
+    .split("-")
+    .map(Number);
+  return { g, m, d };
+}
 
 /**
- * Kraj dana koji pada `plusDana` posle datog trenutka, u ponoć.
+ * Stvaran trenutak ponoći po srpskom vremenu kojom počinje dati kalendarski dan
+ * (dan sme biti „prelivajući", npr. 32. avgust = 1. septembar). Letnje računanje
+ * se menja u 02:00/03:00, pa je pomak u ponoć isti kao sat ranije.
+ */
+function ponocUSrbiji(g: number, m: number, d: number): Date {
+  const utcPonoc = Date.UTC(g, m - 1, d);
+  const proba = new Date(utcPonoc - 60 * 60 * 1000);
+  const delovi = new Intl.DateTimeFormat("en-GB", {
+    timeZone: ZONA_OBRACUNA,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(proba);
+  const v = (tip: string) => Number(delovi.find((x) => x.type === tip)?.value);
+  const zidno = Date.UTC(v("year"), v("month") - 1, v("day"), v("hour"), v("minute"));
+  return new Date(utcPonoc - (zidno - proba.getTime()));
+}
+
+/** Početak obračunskog dana (ponoć po srpskom vremenu) u kome je dati trenutak. */
+export function pocetakObracunskogDana(t: Date): Date {
+  const { g, m, d } = datumUSrbiji(t);
+  return ponocUSrbiji(g, m, d);
+}
+
+/**
+ * Kraj obračunskog dana koji pada `plusDana` posle datog trenutka — ponoć po
+ * srpskom vremenu.
  *
  * Rokovi se mere do kraja dana, ne na sat tačno: nabavka objavljena u 14 časova
  * daje svakome pune tri dana, a ne dva i po. Isti obračunski ritam kao ostatak
- * sistema (ponoć do ponoći).
+ * sistema (ponoć do ponoći, Pravilnik o KOLO sistemu).
  */
 export function krajDana(od: Date, plusDana: number): Date {
-  const d = new Date(od);
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + plusDana + 1);
-  return d;
+  const { g, m, d } = datumUSrbiji(od);
+  return ponocUSrbiji(g, m, d + plusDana + 1);
 }
 
-/** Čl. 21 st. 2 — rok za prijavu ističe krajem trećeg dana od objave. */
+/** Čl. 19 st. 3 — rok za prijavu ističe krajem trećeg dana od objave. */
 export function rokPrijave(objavljenoAt: Date): Date {
   return krajDana(objavljenoAt, ROK_PRIJAVE_DANA);
 }
 
-/** Čl. 23 st. 3 — rok za odgovor na poziv ističe krajem trećeg dana od poziva. */
+/** Čl. 21 st. 4 — rok za odgovor na poziv ističe krajem trećeg dana od poziva. */
 export function rokPotvrde(pozvanAt: Date): Date {
   return krajDana(pozvanAt, ROK_POTVRDE_DANA);
 }
 
-/** Čl. 26 st. 2 — period preuzimanja traje tri dana od prvog dana preuzimanja. */
+/** Čl. 24 st. 2 — period preuzimanja traje tri dana od prvog dana preuzimanja. */
 export function krajPeriodaPreuzimanja(preuzimanjeOd: Date): Date {
   return krajDana(preuzimanjeOd, PERIOD_PREUZIMANJA_DANA - 1);
 }
 
 /**
- * Čl. 23 st. 2 — upisan dan preuzimanja mora pasti unutar objavljenog perioda.
+ * Čl. 21 st. 2 — upisan dan preuzimanja mora pasti unutar objavljenog perioda.
  * Bez te granice lanac poziva ne bi imao kraj: neko bi upisao datum za pola godine
- * i time zauvek zauzeo deo.
+ * i time zauvek zauzeo deo. Dan se meri po obračunskom danu, ne po satu servera.
  */
 export function danJeUPeriodu(dan: Date, od: Date, doDatuma: Date): boolean {
-  const d = new Date(dan);
-  d.setHours(0, 0, 0, 0);
-  const o = new Date(od);
-  o.setHours(0, 0, 0, 0);
-  return d.getTime() >= o.getTime() && d.getTime() < doDatuma.getTime();
+  const d = pocetakObracunskogDana(dan).getTime();
+  const o = pocetakObracunskogDana(od).getTime();
+  return d >= o && d < doDatuma.getTime();
 }
 
-/** Čl. 32 — najkasniji trenutak brisanja predloga koji niko nije osvežio. */
+/**
+ * Dani objavljenog perioda preuzimanja kao „GGGG-MM-DD" po srpskom vremenu — za
+ * birač dana na ekranu (čl. 21 st. 2). Ekran ne računa sam: `toISOString()` bi
+ * ponoć po našem vremenu (22:00 UTC) pretvorio u prethodni datum.
+ */
+export function daniPeriodaPreuzimanja(od: Date, doDatuma: Date): string[] {
+  const { g, m, d } = datumUSrbiji(od);
+  const izlaz: string[] = [];
+  for (let i = 0; izlaz.length < 31; i++) {
+    if (ponocUSrbiji(g, m, d + i).getTime() >= doDatuma.getTime()) break;
+    izlaz.push(new Date(Date.UTC(g, m - 1, d + i)).toISOString().slice(0, 10));
+  }
+  return izlaz;
+}
+
+/** Čl. 10 st. 3 — najkasniji trenutak brisanja predloga koji niko nije osvežio. */
 export function predlogIstice(upisanAt: Date): Date {
   const d = new Date(upisanAt);
   d.setMonth(d.getMonth() + ROK_PREDLOGA_MESECI);
@@ -286,7 +351,7 @@ export function predlogIstice(upisanAt: Date): Date {
 // ─── Ko učestvuje (čl. 4) ─────────────────────────────────────────────────────
 
 /**
- * Funkcionalni prag indeksa (čl. 4 Pravilnika o dokazu stvarnosti). Prepisan
+ * Funkcionalni prag indeksa (interni zapis verifikovanosti; Pravilnik o dokazu stvarnosti čl. 2–3). Prepisan
  * ovde umesto uvezen, jer ovaj modul namerno nema uvoza — čitaju ga i ekrani.
  */
 export const FUNKCIONALNI_PRAG_INDEKSA_NABAVKA = 10;
@@ -323,7 +388,7 @@ export function smeUcestvovati(u: UcesnikProvera): boolean {
   return u.status === "ACTIVE";
 }
 
-// ─── Izborno glasanje (Gornje Kolo čl. 8 st. 4, čl. 9 st. 2) ──────────────────
+// ─── Izborno glasanje (Gornje Kolo čl. 8) ──────────────────
 
 export interface MogucnostIzbora {
   /** Id naziva dobra. */
@@ -339,7 +404,7 @@ export interface MogucnostIzbora {
 /**
  * Utvrđuje izabranu mogućnost pri izbornom glasanju.
  *
- * Pobeđuje najveći zbir glasačke moći. Izjednačenost razrešava merilo iz čl. 13
+ * Pobeđuje najveći zbir glasačke moći. Izjednačenost razrešava merilo iz čl. 12
  * st. 2 posebnog pravilnika: veći broj različitih predlagača, pa raniji upis u
  * registar. Bez tog razrešenja izbor bi ostao neodređen, a glasanje bi se
  * ponavljalo bez ijednog razloga.

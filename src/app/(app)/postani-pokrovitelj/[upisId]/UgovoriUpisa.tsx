@@ -13,11 +13,11 @@ import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
 /**
- * Ugovori pokrovitelja (tab „Ugovori"): novčane prijave (donacije čl. 7–8) i ugovori
- * o pokroviteljstvu dobrima i uslugama (čl. 13g), sa potpisom.
+ * Ugovori pokrovitelja (tab „Ugovori"): novčane prijave (donacije čl. 19–20) i ugovori
+ * o pokroviteljstvu dobrima i uslugama (čl. 31–32), sa potpisom.
  *
  * Novčani ugovor se potpisuje potvrdom; ugovor o dobrima i uslugama — ceo snimljen
- * tekst, tri potvrde i jednokratni kod na mejl (čl. 13g st. 4); posle potpisa
+ * tekst, tri potvrde i jednokratni kod na mejl (čl. 32 st. 1); posle potpisa
  * primerak za štampu (`/vauceri/davalac/ugovor/[id]`).
  * 🔴 Uz vrednost ugovora (dinari) se ne prikazuje broj POEN-a.
  */
@@ -85,8 +85,8 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
   const postaviPotpis = (id: string, izmena: Partial<Potpis>) =>
     setPotpis((s) => ({ ...s, [id]: { ...(s[id] ?? prazanPotpis), ...izmena } }));
 
-  // Čl. 13g st. 4 — jednokratni kod na adresu elektronske pošte podnosioca. Isti
-  // postupak važi i za novčano pokroviteljstvo (čl. 8 st. 1; F5-M1).
+  // Čl. 32 st. 1 — jednokratni kod na adresu elektronske pošte podnosioca. Isti
+  // postupak važi i za novčano pokroviteljstvo (čl. 20 st. 1; F5-M1).
   async function posaljiKod(id: string, vrsta: "dobra" | "prijava" = "dobra") {
     setPoruka(null);
     setRadi(`kod-${id}`);
@@ -118,7 +118,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
     await ucitaj();
   }
 
-  // Isti potpis za ugovor o dobrima i o novčanom pokroviteljstvu (čl. 13g st. 4; F5-M1).
+  // Isti potpis za ugovor o dobrima i o novčanom pokroviteljstvu (čl. 32 st. 1; F5-M1).
   const potpisBlok = (id: string, tekst: string, vrsta: "dobra" | "prijava") => (
                 <div className="space-y-3 border-t border-kolo-border pt-3">
                   <pre className="text-xs text-kolo-text whitespace-pre-wrap font-sans bg-kolo-bg rounded-kontrola p-4 max-h-96 overflow-auto">{tekst}</pre>
@@ -269,7 +269,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
 
 /**
  * Iskorišćeni vaučeri pokrovitelja — beleže se kod davaoca uz PSEUDONIM imaoca i
- * pseudonim onoga ko je potvrdio (nabavke čl. 30g st. 1, Politika 4.15). 🔴 Ništa
+ * pseudonim onoga ko je potvrdio (nabavke čl. 34 st. 2, Politika čl. 29). 🔴 Ništa
  * drugo o imaocu.
  */
 export function IskorisceniVauceri({ upisId }: { upisId: string }) {

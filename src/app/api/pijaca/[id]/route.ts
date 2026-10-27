@@ -29,7 +29,7 @@ const MAX_IMAGES = MAX_SLIKA;
 const MAX_SIZE = MAX_PO_SLICI;
 
 // GET /api/pijaca/[id] — jedan oglas
-// Pregled oglasa je javan (Pravilnik čl. 16), ali kontakt oglašivača (telefon)
+// Pregled oglasa je javan (Uslovi čl. 17 st. 2), ali kontakt oglašivača (telefon)
 // vidi samo verifikovani korisnik.
 export async function GET(
   _req: NextRequest,
@@ -45,7 +45,7 @@ export async function GET(
   });
   if (!listing) return await greska("Oglas nije pronađen.", 404);
 
-  // Vidljivost oglasa maloletnog korisnika (Modul Deca, čl. 13).
+  // Vidljivost oglasa maloletnog korisnika (Pravilnik o učešću dece, čl. 24).
   //
   // 🔴 404, ne 403: status 403 bi potvrdio da oglas postoji, a time i da postoji
   // dete koje ga je objavilo — što je upravo ono što se skriva.
@@ -57,13 +57,13 @@ export async function GET(
   if (!smem) return await greska("Oglas nije pronađen.", 404);
 
   // Dete sa roditeljem oglas vidi BEZ pseudonima oglašivača, osim oglasa svojih
-  // prijatelja (Pravilnik o učešću dece čl. 4c t. 2, 13 st. 4).
+  // prijatelja (Pravilnik o učešću dece čl. 5 st. 1 t. 2).
   const prijatelji =
     posmatrac?.maloletan && posmatrac.stanje === "POVEZANO" ? await idPrijatelja(posmatrac.id) : [];
   const vidiPseudonim = smeVidetiPseudonimOglasivaca(posmatrac, listing.sellerId, prijatelji);
 
   // Trag uklanjanja se ne prosipa u javni odgovor: razlog je saopštenje vlasniku
-  // (Uslovi čl. 25 st. 2), a ne podatak o kom se obaveštava svet. `uklonioId`
+  // (Uslovi čl. 29 st. 2), a ne podatak o kom se obaveštava svet. `uklonioId`
   // ne izlazi nikome — ko je odlučio je stvar audit loga, ne javnog API-ja.
   const { uklonjenRazlog, uklonioId: _uklonioId, seller: _seller, ...javno } = listing;
   const jeVlasnik = listing.sellerId === session?.user?.id;
@@ -72,7 +72,7 @@ export async function GET(
     listing: {
       ...javno,
       // Prodavac se sastavlja izričito: `...listing` bi prosuo roditelje i stanje
-      // prekidača iz čl. 10, koji nikoga sa strane ne zanimaju i ne smeju napolje.
+      // prekidača iz čl. 20 st. 2 Pravilnika o učešću dece, koji nikoga sa strane ne zanimaju i ne smeju napolje.
       seller: {
         pseudonim: vidiPseudonim ? listing.seller.pseudonim : null,
         verified: listing.seller.verified,
@@ -112,14 +112,14 @@ export async function PATCH(
     }
     if (body.akcija === "aktiviraj") {
       // 🔴 Oglas koji je uklonila Fondacija (UKLONJEN) se ne vraća — uklanjanje je
-      // njena odluka (Uslovi čl. 25 st. 2), ne oglašivačeva arhiva.
+      // njena odluka (Uslovi čl. 29 st. 2), ne oglašivačeva arhiva.
       if (listing.status !== "EXPIRED" && listing.status !== "RAZMENJEN")
         return await greska("Ovaj oglas ne može da se vrati iz arhive.", 400);
       // Vraćen oglas ponovo stoji na Pijaci, pa prolazi ISTE uslove objave kao
       // nov (POST /api/pijaca): nalog koji čeka roditelja ne objavljuje, a nov
       // član ima najviše tri aktivna oglasa i samo ponudu — inače bi se arhiva
       // koristila da se zaobiđe kapa.
-      // Oglas objavljuje samo dete Kola (Pravilnik o učešću dece čl. 13 st. 4).
+      // Oglas objavljuje samo dete Kola (Pravilnik o učešću dece čl. 24 st. 1).
       const stanje = await stanjeNaloga(session.user.id);
       if (stanje === "NA_CEKANJU") return await greska(PORUKA_CEKA_RODITELJA, 403);
       if (!smeObjavitiOglas(stanje)) return await greska(PORUKA_NIJE_DETE_KOLA, 403);
@@ -208,7 +208,7 @@ export async function PATCH(
     });
     // Sadržinski minimum se pri IZMENI proverava iz istog razloga iz kog i pri
     // objavi — inače se zaobilazi u dva poteza. Maloletni korisnik je iz njega
-    // izuzet kao i potvrđeni (Modul Deca, čl. 13 st. 1: isti uslovi objave,
+    // izuzet kao i potvrđeni (Pravilnik o učešću dece, čl. 24 st. 1: isti uslovi objave,
     // razlikuje se samo vidljivost).
     if (!vlasnik?.verified && !vlasnik?.maloletan) {
       const minimum = oglasIspunjavaMinimum({
@@ -274,7 +274,7 @@ export async function PATCH(
       },
     });
 
-    // Doprinos sadržaju platforme (čl. 40a) i pri IZMENI, ne samo pri objavi.
+    // Doprinos sadržaju platforme (Pravilnik čl. 38) i pri IZMENI, ne samo pri objavi.
     //
     // 🔴 Bez ovoga oglas koji u trenutku objave nije ispunjavao sadržinski minimum
     // (potvrđenom članu se minimum pri objavi ne proverava, pa mu oglas bez
@@ -297,7 +297,7 @@ export async function PATCH(
       location: mesto,
       images: [...zadrzaneSlike, ...noveSlike],
     });
-    // Dopunjen oglas može da ispuni i uslov doprinosa gazdinstva (čl. 40c st. 4). Ne baca.
+    // Dopunjen oglas može da ispuni i uslov doprinosa gazdinstva (Pravilnik o gazdinstvima čl. 16). Ne baca.
     await probajEvidentiratiGazdinstvo(session.user.id);
 
     return NextResponse.json({ ok: true });

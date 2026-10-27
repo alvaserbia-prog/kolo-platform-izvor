@@ -7,7 +7,7 @@ import { jeAdmin } from "@/lib/dozvole";
 import { logAdminAkcija } from "@/lib/audit";
 
 // POST /api/admin/glasanje/[id]/odgovor — obrazložen odgovor UO na usvojenu
-// dinarsku preporuku (čl. 20). Telo: { odgovor: "PRIHVACENO"|"ODBIJENO", obrazlozenje }.
+// dinarsku preporuku (Gornje Kolo čl. 18). Telo: { odgovor: "PRIHVACENO"|"ODBIJENO", obrazlozenje }.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeAdmin(session.user))

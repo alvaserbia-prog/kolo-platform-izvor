@@ -94,8 +94,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // čl. 2, 31 (jedinstvenost se ne jemči verifikacijom), čl. 31a (peti slučaj: spisak
   // za poziv), čl. 71 (raspodela vaučera nije posredna konverzija).
   "kolo-sistem": {
-    fajl: "Pravilnik_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "Pravilnik_5_0_0.md",
+    verzija: "5.0.0",
   },
   // 4.4.6 — čl. 12 st. 4 više ne prenosi nadležnost za opšte akte na Gornje Kolo
   // (akt nižeg ranga to ne može po sopstvenom čl. 8 st. 2); nov st. 6.
@@ -105,8 +105,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // oblicima; st. 5 više ne nabraja akte koji su doneti (zadruge, deca).
   // 4.7.2 — čl. 7 st. 2: Pravilnik o gazdinstvima.
   "hijerarhija": {
-    fajl: "hijerarhija_4_8_3.md",
-    verzija: "4.8.3",
+    fajl: "hijerarhija_5_0_0.md",
+    verzija: "5.0.0",
   },
   // 4.6.5 — čl. 7: POEN po potvrdi se beleži, a upisuje kad potvrđeni korisnik
   // ostvari prvi potvrđen doprinos (odobren oglas, javna donacija, pokroviteljstvo,
@@ -126,8 +126,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 4.8.4 — čl. 4a (ime, mesto i broj uslov za spisak, poređenje i oznaka), nov čl. 4b
   // (utvrđivanje višestrukog naloga), čl. 5 i 18 (verifikator ne jemči jedinstvenost).
   "dokaz-stvarnosti": {
-    fajl: "dokaz_stvarnosti_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "dokaz_stvarnosti_5_0_0.md",
+    verzija: "5.0.0",
   },
   // 4.4.3 — obrazloženje koeficijenta evidencije (čl. 4) i definicija koeficijenta
   // bez jedinične formulacije „po jednom dinaru" (čl. 2).
@@ -157,8 +157,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 4.8.4 — čl. 5b i 13b: bez praga i izjave o poreklu (radi banka), primenu glave
   // prati direktor; čl. 13a (opis strukture), čl. 13f st. 4 (naredni ugovor).
   "pokroviteljstvo-donacije": {
-    fajl: "donacije_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "donacije_5_0_0.md",
+    verzija: "5.0.0",
   },
   // 4.4.4 — pravna priroda operativnog doprinosa (čl. 27): nema naručioca, nema
   // naknade, rezultat ide u zajedničko dobro pod licencama iz Glave II. Brisan
@@ -167,8 +167,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   "operativni": {
   // 4.5.9 — čl. 27 st. 6 (R-02): odbrana više ne pobija samo pojam „naknade" nego
   // nabraja elemente pojma prihoda koji nedostaju.
-    fajl: "operativni_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "operativni_5_0_0.md",
+    verzija: "5.0.0",
   },
   // 4.4.5 — osnov gornje granice (čl. 5): utrošena sopstvena sredstva i vreme, uz
   // aritmetički razlog zašto taj rad operativni kanal ne može da evidentira (limit
@@ -178,16 +178,16 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   "osnivacki": {
   // 4.5.9 — čl. 4 (R-02): osnivački rad nije naručen posao ni ugovor o delu.
   // Jedini kanal koji sam sebe u aktu naziva radom, pa mu je odbrana bila nužna.
-    fajl: "osnivacki_4_8_3.md",
-    verzija: "4.8.3",
+    fajl: "osnivacki_5_0_0.md",
+    verzija: "5.0.0",
   },
   // 4.4.6 — statutarni osnov (čl. 2), dinamičan sastav bez imenovanja (čl. 4),
   // sprovođenje odluke aktom UO (čl. 17), izmenu pravilnika donosi UO (čl. 23).
   // 4.8.4 — U1-M1/M2: Gornje Kolo utvrđuje predlog koji UO usvaja svojim aktom, ne
   // upravlja Fondacijom; akt UO navodi koji su članovi UO glasali (čl. 4, 5, 17).
   "gornje-kolo": {
-    fajl: "gornje_kolo_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "gornje_kolo_5_0_0.md",
+    verzija: "5.0.0",
   },
   "programi-podrske": {
   // 4.5.9 — R-02: čl. 2 briše „nije socijalna pomoć"; nov čl. 6a (priroda
@@ -196,8 +196,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 4.6.1 — R-03 (mera M-1): čl. 4 — pojedinačno evidentiranje po programu se ne
   // objavljuje nego dnevni zbir; izostavlja se i iznos, jer se izvodi iz godine
   // rođenja odnosno broja i uzrasta dece i sam bi ih odao.
-    fajl: "programi_podrske_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "programi_podrske_5_0_0.md",
+    verzija: "5.0.0",
   },
   // Usvojen 4.3.0 — do tada je stajao kao nacrt u `docs/pravilnik-modul-deca.md`.
   // 4.5.2 — postupak potvrde postojanja deteta (R-15, čl. 6 prepisan): izjašnjavaju
@@ -226,8 +226,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
     // primenjuje se na maloletne učesnike.
     // 4.8.4 — D2–D4: obrazloženje zašto se uzrast ne proverava (čl. 3), veza
     // roditelj–dete dostupna učesnicima (čl. 15b), ponovljena prijava ne zaustavlja vezu (čl. 4e).
-    fajl: "ucesce_dece_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "ucesce_dece_5_0_0.md",
+    verzija: "5.0.0",
   },
   // Nov akt uz set 4.4.1 — osnov u čl. 14a i 51a Pravilnika o KOLO sistemu.
   // 4.4.3 — broj POEN-a po delu je parametar odluke o nabavci (čl. 17), a ne izvod
@@ -243,8 +243,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // dinarske vrednosti preuzetih dobara po korisniku.
   // 4.7.8 — nova Glava VIIIa: raspodela vaučera iz pokroviteljstva; čl. 21a brisan.
   // 4.8.4 — U2: zadruga upisana u sistem nije dobavljač (čl. 3).
-    fajl: "projekti_nabavke_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "projekti_nabavke_5_0_0.md",
+    verzija: "5.0.0",
   },
   // Nov akt uz set 4.7.0 — osnov u čl. 56 Pravilnika o KOLO sistemu. Krug i
   // zadruga su isti kolektivni oblik; zapis, pragovi rasta (svaki jednom), osnovi
@@ -257,8 +257,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 4.8.4 — U2: lice koje predloži zadruga radi samo u svojoj zadruzi i vidi ime i
   // broj telefona njenih zadrugara (čl. 16, 19); zadruga nije ponuđač u nabavci (čl. 18).
   "zadruge": {
-    fajl: "zadruge_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "zadruge_5_0_0.md",
+    verzija: "5.0.0",
   },
   // Nov akt uz set 4.7.2 — osnov u čl. 40c Pravilnika o KOLO sistemu. Gazdinstvo
   // nije korisnik ni kolektivni oblik; prijava, članovi (samo punoletni), oglasi u
@@ -277,8 +277,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // Fondacije sa svakim članom pre odobrenja.
   "gazdinstva": {
     // 4.8.4 — U5: isključenje zbog lažne izjave samo za onog ko je lagao ili znao (čl. 12 st. 3).
-    fajl: "gazdinstva_4_8_5.md",
-    verzija: "4.8.5",
+    fajl: "gazdinstva_5_0_0.md",
+    verzija: "5.0.0",
   },
 };
 

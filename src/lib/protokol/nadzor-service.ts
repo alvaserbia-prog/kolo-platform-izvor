@@ -1,23 +1,23 @@
 /**
- * Servis za nadzor (Pravilnik o dokazu stvarnosti čl. 9, 10, 11, 11a; set 4.8.2).
+ * Servis za nadzor (Pravilnik o dokazu stvarnosti čl. 22–27; set 4.8.2).
  *
- * Predmet nadzora je jedno od tri (čl. 10 st. 1, 5):
+ * Predmet nadzora je jedno od tri (čl. 22, 23 st. 4):
  *  - VERIFIKACIJA — potvrda ili uvođenje u Kolo (`VerifikacionaVeza`);
  *  - POTVRDA_CLANA — potvrda člana bez potvrde, uključujući automatsku potvrdu lanca
  *    (`PotvrdaClana`);
  *  - POTVRDA_POSTOJANJA — potvrda postojanja deteta (`PotvrdaPostojanjaDeteta`).
  *
- * Nadzornik je svaki čuvar Kola (čl. 10 st. 2; `mozeNadzor`). On evidentira ISHOD:
- * uredno / za proveru / sporno (čl. 11).
+ * Nadzornik je svaki čuvar Kola (čl. 23 st. 1; `mozeNadzor`). On evidentira ISHOD:
+ * uredno / za proveru / sporno (čl. 24).
  *
  * Stvari koje se lako slučajno vrate:
  *  1. Nadzor ima glas — ishod se upisuje i uz sumnju (4.2.0).
  *  2. Nadzor se ne plaća (set 4.7.5): POEN nadzorniku ne nastaje ni za jednu vrstu.
  *  3. Ishod ne dira mogućnost verifikatora da potvrđuje; roka za nadzor nema.
- *  4. Ne nadzire onaj ko je u predmetu učestvovao (čl. 10 st. 4): verifikator i
+ *  4. Ne nadzire onaj ko je u predmetu učestvovao (čl. 23 st. 3): verifikator i
  *     verifikovani; davalac potvrde, potvrđeni i onaj ko ga je uveo; potvrdilac,
  *     roditelj i dete.
- *  5. Verifikacije koje je obavio član bez potvrde idu PRVE u redu (čl. 11 st. 7).
+ *  5. Verifikacije koje je obavio član bez potvrde idu PRVE u redu (čl. 25 st. 1).
  *
  * Pattern: DB promene u prisma.$transaction.
  */
@@ -27,6 +27,7 @@ import { mozeNadzor } from "@/lib/dozvole";
 import {
   signaliPotvrde,
   signaliPotvrdeClana,
+  sortirajPoSignalima,
   type SignalNadzora,
 } from "@/lib/nadzor-signali-pravila";
 import { USLOV_RAZMENE } from "@/lib/razmena-brojac-pravila";
@@ -58,7 +59,7 @@ export class NadzorGreska extends Error {
   }
 }
 
-/** Vrsta predmeta nadzora (čl. 10 st. 1 i 5). */
+/** Vrsta predmeta nadzora (čl. 22, 23 st. 4). */
 export type VrstaPredmeta = "VERIFIKACIJA" | "POTVRDA_CLANA" | "POTVRDA_POSTOJANJA";
 export const VRSTE_PREDMETA: VrstaPredmeta[] = ["VERIFIKACIJA", "POTVRDA_CLANA", "POTVRDA_POSTOJANJA"];
 
@@ -86,7 +87,7 @@ export type StavkaNadzora = {
   /** POTVRDA_CLANA: izvor i korak lanca. */
   izvor: "CLAN_KOLA" | "FONDACIJA" | "LANAC" | null;
   korak: number | null;
-  /** POTVRDA_CLANA: potvrda uvodioca sa spiska povezanih (dokaz čl. 5d st. 3). */
+  /** POTVRDA_CLANA: potvrda uvodioca sa spiska povezanih (dokaz čl. 17 st. 3). */
   premaUvodiocu: boolean;
   /** POTVRDA_CLANA: ko je potvrđenog uveo u Kolo (za njega i dalje odgovara). */
   uveo: Osoba | null;
@@ -105,7 +106,7 @@ export type ObaviNadzorRezultat = {
   nadzornikPseudonim: string;
   /** Da li je ovaj nadzornik prvi po ovom predmetu. */
   prviIshod: boolean;
-  /** Da li je ovim ishodom otvoren ili ažuriran nadzorni predmet (čl. 11a). */
+  /** Da li je ovim ishodom otvoren ili ažuriran nadzorni predmet (čl. 27). */
   predmetOtvoren: boolean;
 };
 
@@ -213,12 +214,12 @@ export async function obaviNadzor(input: {
     }
 
     if (!podleze) {
-      throw new NadzorGreska("Ova potvrda ne podleže nadzoru (čl. 10 Pravilnika).", 400);
+      throw new NadzorGreska("Ova potvrda ne podleže nadzoru (čl. 22 Pravilnika o dokazu stvarnosti).", 400);
     }
     if (poslednjiIshod === "UREDNO") {
       throw new NadzorGreska("Nadzor nad ovom potvrdom je okončan.", 409);
     }
-    // Čl. 10 st. 4: nadzor ne obavlja onaj ko je u predmetu učestvovao.
+    // Čl. 23 st. 3: nadzor ne obavlja onaj ko je u predmetu učestvovao.
     if (ucesnici.includes(nadzornikId)) {
       throw new NadzorGreska("Ne možeš da nadziraš potvrdu u kojoj i ti učestvuješ.", 400);
     }
@@ -229,10 +230,10 @@ export async function obaviNadzor(input: {
     });
     if (!nadzornik) throw new NadzorGreska("Nadzornik ne postoji.", 404);
     if (!mozeNadzor(nadzornik)) {
-      throw new NadzorGreska("Nemaš ovlašćenje za nadzor (samo čuvari Kola, čl. 10).", 403);
+      throw new NadzorGreska("Nemaš ovlašćenje za nadzor (samo čuvari Kola, čl. 23).", 403);
     }
 
-    // ── Zapis ishoda: jedan po nadzorniku po predmetu (čl. 10 st. 4) ─────────
+    // ── Zapis ishoda: jedan po nadzorniku po predmetu (čl. 23 st. 3) ─────────
     const fk =
       vrstaPredmeta === "VERIFIKACIJA"
         ? { verifikacijaId: id }
@@ -264,7 +265,7 @@ export async function obaviNadzor(input: {
     }
 
     if (sumnja) {
-      // Jedan predmet po zapisu (čl. 11a st. 1): drugi nadzornik koji doda ishod
+      // Jedan predmet po zapisu (čl. 27 st. 1): drugi nadzornik koji doda ishod
       // ažurira postojeći. Predmet koji je UO već rešio se NE vraća u OTVOREN.
       const kljuc =
         vrstaPredmeta === "VERIFIKACIJA"
@@ -287,7 +288,7 @@ export async function obaviNadzor(input: {
     };
   });
 
-  // 🔴 Nadzor se ne plaća (dokaz stvarnosti čl. 7 i 10): POEN nadzorniku ne nastaje.
+  // 🔴 Nadzor se ne plaća (dokaz stvarnosti čl. 19 st. 8 i 23 st. 2): POEN nadzorniku ne nastaje.
 
   return {
     vrstaPredmeta,
@@ -301,16 +302,31 @@ export async function obaviNadzor(input: {
 }
 
 /**
- * Sve što čeka nadzor ovog nadzornika, iz tri tabele (čl. 10 st. 1 i 5).
+ * Sve što čeka nadzor ovog nadzornika, iz tri tabele (čl. 22, 23 st. 4).
  *
  * Zapis izlazi sa spiska tek kad neko evidentira „uredno" — dok stoji „za proveru"
- * ostaje vidljiv OSTALIM nadzornicima (čl. 11). Ne prikazuju se predmeti u kojima je
- * nadzornik učestvovao (čl. 10 st. 4), ni oni nad kojima je već upisao ishod.
+ * ostaje vidljiv OSTALIM nadzornicima (čl. 24 st. 2). Ne prikazuju se predmeti u kojima je
+ * nadzornik učestvovao (čl. 23 st. 3), ni oni nad kojima je već upisao ishod.
  *
- * Redosled (čl. 11 st. 7): prvo verifikacije koje je obavio član bez potvrde, zatim
- * sve ostalo po vremenu.
+ * Redosled (čl. 25): prvo verifikacije koje je obavio član bez potvrde, zatim stavke
+ * sa više signala, a među jednakima najstarija (`sortirajPoSignalima`). Signali samo
+ * određuju redosled; ko traži i signale za prikaz, zove `listajZaNadzorSaSignalima`
+ * da se ne računaju dvaput.
  */
 export async function listajZaNadzor(nadzornikId: string): Promise<StavkaNadzora[]> {
+  return (await listajZaNadzorSaSignalima(nadzornikId)).lista;
+}
+
+/** Spisak za nadzor, poređan po čl. 25, zajedno sa signalima uz svaku stavku. */
+export async function listajZaNadzorSaSignalima(
+  nadzornikId: string,
+): Promise<{ lista: StavkaNadzora[]; signali: Map<string, SignalNadzora[]> }> {
+  const sve = await stavkeZaNadzor(nadzornikId);
+  const signali = await signaliZaNadzor(sve);
+  return { lista: sortirajPoSignalima(sve, signali), signali };
+}
+
+async function stavkeZaNadzor(nadzornikId: string): Promise<StavkaNadzora[]> {
   const [veze, potvrde, postojanja] = await Promise.all([
     prisma.verifikacionaVeza.findMany({
       where: {
@@ -357,7 +373,7 @@ export async function listajZaNadzor(nadzornikId: string): Promise<StavkaNadzora
       orderBy: { potvrdjenoAt: "asc" },
       include: {
         potvrdio: { select: { id: true, pseudonim: true } },
-        // Samo pseudonim roditelja — dete se nadzorniku ne prikazuje (deca čl. 6 st. 3).
+        // Samo pseudonim roditelja — dete se nadzorniku ne prikazuje (deca čl. 13 st. 2).
         roditelj: { select: { id: true, pseudonim: true } },
         nadzorZapisi: { select: { id: true, ishod: true, razlog: true, createdAt: true }, orderBy: { createdAt: "asc" } },
       },
@@ -387,7 +403,7 @@ export async function listajZaNadzor(nadzornikId: string): Promise<StavkaNadzora
       davalac: p.potvrdio,
       primalac: p.potvrdjeni,
       vrstaVerifikacije: null,
-      // Potvrda čuvara posle razgovora telefonom (dokaz čl. 5c) nosi signal „sa spiska".
+      // Potvrda čuvara posle razgovora telefonom (dokaz čl. 16) nosi signal „sa spiska".
       poPozivu: p.nacin === "TELEFONOM",
       verifikatorBezPotvrde: false,
       izvor: p.izvor,
@@ -412,15 +428,7 @@ export async function listajZaNadzor(nadzornikId: string): Promise<StavkaNadzora
       ranijiZapisi: p.nadzorZapisi,
     })),
   ];
-  return sortirajZaNadzor(stavke);
-}
-
-/** Čl. 11 st. 7: verifikacije člana bez potvrde prve, ostalo po vremenu. */
-export function sortirajZaNadzor<T extends { verifikatorBezPotvrde: boolean; datum: Date }>(stavke: T[]): T[] {
-  return [...stavke].sort((a, b) => {
-    if (a.verifikatorBezPotvrde !== b.verifikatorBezPotvrde) return a.verifikatorBezPotvrde ? -1 : 1;
-    return a.datum.getTime() - b.datum.getTime();
-  });
+  return stavke;
 }
 
 /**
@@ -430,7 +438,7 @@ export function sortirajZaNadzor<T extends { verifikatorBezPotvrde: boolean; dat
 export const listajVerifikacijeZaNadzor = listajZaNadzor;
 
 /**
- * Signali uz stavke koje čekaju nadzor (dokaz stvarnosti čl. 11 st. 8). Računaju se
+ * Signali uz stavke koje čekaju nadzor (dokaz stvarnosti čl. 25 st. 2). Računaju se
  * pri prikazu iz postojećih podataka i ne čuvaju se. Vraća mapu id stavke → signali;
  * stavka bez signala ima prazan niz.
  */
@@ -462,7 +470,7 @@ export async function signaliZaNadzor(stavke: StavkaNadzora[]): Promise<Map<stri
   ]);
   const korisnik = new Map(korisnici.map((k) => [k.id, k]));
 
-  /** Koja je ovo po redu verifikacija ili potvrda davaoca u istom danu (čl. 8 st. 1). */
+  /** Koja je ovo po redu verifikacija ili potvrda davaoca u istom danu (čl. 21 st. 1). */
   const redniUDanu = (davalacId: string, trenutak: Date, saPostojanjem: boolean) => {
     const dan = beogradskiDan(trenutak).getTime();
     const isti = (t: Date) => beogradskiDan(t).getTime() === dan && t <= trenutak;

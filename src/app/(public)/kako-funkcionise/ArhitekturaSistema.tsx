@@ -11,15 +11,15 @@ import { getTranslations } from "next-intl/server";
  * 🔴 Crtež NE crta međusobne odnose ni tokove (odluka vlasnika, 23.10.2026):
  * svaki deo nosi tri kratke stavke o tome šta je, bez linija i strelica. Jedina
  * rečenica o odnosima je napomena ispod crteža — „Novac ulazi samo u Fondaciju,
- * a POEN postoji samo u evidenciji Protokola." (Pravilnik čl. 38 i 12–13) — i
+ * a POEN postoji samo u evidenciji Protokola." (Pravilnik čl. 36 i 16) — i
  * ona je obavezna. Ne dodavati veze, tokove ni nove delove bez naloga vlasnika.
  *
  * Krugovi su KOLO Zajednica — „opisni pojam za sveukupnost učesnika sistema"
  * (Pravilnik čl. 2): u centru čuvari Kola (sa aktiviranim ZRNOM čine Gornje
  * Kolo, od javnog otvaranja), oko njih članovi Kola, pa članovi bez potvrde — to
  * je Kolo, krug u lancu potvrda; spolja korisnici i deca (deca su zaseban luk,
- * jer nisu korisnici, Pravilnik čl. 2 i deca čl. 4c). Delovi oko krugova NISU
- * učesnici: gazdinstvo nema zapis u Protokolu (čl. 40c), a firma i udruženje su
+ * jer nisu korisnici, Pravilnik čl. 2 i deca čl. 2 st. 2). Delovi oko krugova NISU
+ * učesnici: gazdinstvo nema zapis u Protokolu (čl. 39 st. 1), a firma i udruženje su
  * pokrovitelji čiji POEN ide učesniku koji je podneo prijavu.
  */
 

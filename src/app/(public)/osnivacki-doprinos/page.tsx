@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { intlTag } from "@/lib/format";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { dohvatiStatusKanala, GORNJA_GRANICA, ITERATION_LIMIT } from "@/lib/protokol/osnivacki";
+import { dohvatiStatusKanala, ITERATION_LIMIT, vidljivostUdela } from "@/lib/protokol/osnivacki";
 import { pageMetadata } from "@/lib/seo";
 import Pseudonim from "@/components/Pseudonim";
 import { getTranslations, getLocale } from "next-intl/server";
@@ -26,11 +26,12 @@ export default async function OsnivackiDoprinosPage() {
 
   const fmt = (n: number) => n.toLocaleString(intlTag(locale));
 
-  // Pseudonimi osnivača vidljivi su isključivo verifikovanim članovima (Pravilnik o
-  // osnivačkom doprinosu čl. 12 — „javnost udela" znači prema zajednici verifikovanih,
-  // ne prema eksternoj javnosti). Neverifikovani/gosti vide samo agregat kanala.
+  // Javnost udela (Pravilnik o osnivačkom doprinosu čl. 11): zbirni podaci kanala
+  // svima, udeli svim korisnicima (svako sa nalogom), pseudonim i napomena uz udeo
+  // samo učesnicima. Pravilo je u `osnivacki-pravila.ts` (`vidljivostUdela`).
   const session = await getServerSession(authOptions);
-  const verifikovan = !!session?.user?.verified;
+  const vidljivost = vidljivostUdela({ prijavljen: !!session?.user, ucesnik: !!session?.user?.verified });
+  const saPseudonimom = vidljivost === "UDELI_I_PSEUDONIM";
 
   let status: Awaited<ReturnType<typeof dohvatiStatusKanala>> | null = null;
   try {
@@ -40,18 +41,19 @@ export default async function OsnivackiDoprinosPage() {
   }
 
   const [osnivaci, koraci] = await Promise.all([
-    verifikovan
-      ? prisma.osnivac.findMany({
+    vidljivost === "NISTA"
+      ? Promise.resolve([])
+      : prisma.osnivac.findMany({
           select: {
             redniBroj: true,
             udeoBrojilac: true,
             udeoImenilac: true,
-            napomena: true,
-            user: { select: { pseudonim: true } },
+            // Pseudonim i napomena se korisniku koji nije u Kolu ni ne čitaju.
+            napomena: saPseudonimom,
+            user: saPseudonimom ? { select: { pseudonim: true } } : false,
           },
           orderBy: { redniBroj: "asc" },
-        })
-      : Promise.resolve([] as const),
+        }),
     prisma.osnivackiKorakLog.findMany({
       select: { brojKoraka: true, prag: true, iznosKoraka: true, createdAt: true },
       orderBy: { brojKoraka: "desc" },
@@ -103,7 +105,7 @@ export default async function OsnivackiDoprinosPage() {
       )}
 
       <h2 className="font-semibold text-kolo-text mb-3">{t("osnivaci_naslov")}</h2>
-      {!verifikovan ? (
+      {vidljivost === "NISTA" ? (
         <Kartica padding="nema" className="mb-8">
           <PraznoStanje naslov={t("registar_blokiran")} />
         </Kartica>
@@ -116,7 +118,11 @@ export default async function OsnivackiDoprinosPage() {
           {osnivaci.map((o) => (
             <div key={o.redniBroj} className="bg-kolo-surface border border-kolo-border rounded-kartica shadow-kartica px-5 py-4 flex items-center justify-between gap-4">
               <div className="min-w-0">
-                <div className="font-semibold text-kolo-text"><Pseudonim>{o.user.pseudonim}</Pseudonim></div>
+                <div className="font-semibold text-kolo-text">
+                  {saPseudonimom && o.user
+                    ? <Pseudonim>{o.user.pseudonim}</Pseudonim>
+                    : t("osnivac_redni", { broj: o.redniBroj })}
+                </div>
                 {o.napomena && <div className="text-sm text-kolo-muted mt-0.5">{o.napomena}</div>}
               </div>
               <div className="shrink-0 text-right">
@@ -127,6 +133,9 @@ export default async function OsnivackiDoprinosPage() {
               </div>
             </div>
           ))}
+          {!saPseudonimom && (
+            <p className="text-xs text-kolo-muted">{t("pseudonim_samo_ucesnicima")}</p>
+          )}
         </div>
       )}
 

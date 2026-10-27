@@ -2,7 +2,7 @@
  * Uklanjanje parova „emisija po potvrdi → usklađivanje" iz istorije.
  *
  * Do seta 4.6.4 se POEN po potvrdi upisivao odmah. Usklađivanje (dokaz stvarnosti
- * čl. 22a) ga je povuklo i vratilo potvrdu u `ZABELEZEN`, pa po nastupanju uslova
+ * čl. 39) ga je povuklo i vratilo potvrdu u `ZABELEZEN`, pa po nastupanju uslova
  * sledi NOVA emisija. Za isti POEN tako u istoriji stoje TRI reda:
  *
  *   1. EMISIJA_VERIFIKACIJA  +X   upisano po starom pravilu

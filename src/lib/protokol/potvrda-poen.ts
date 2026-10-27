@@ -1,6 +1,6 @@
 /**
  * Upis POEN-a po potvrdi u lancu potvrda — servisni sloj.
- * Osnov: Pravilnik o dokazu stvarnosti čl. 7, Pravilnik o KOLO sistemu čl. 15 t. 2.
+ * Osnov: Pravilnik o dokazu stvarnosti čl. 19, Pravilnik o KOLO sistemu čl. 19 st. 1 t. 2.
  *
  * Čista pravila (koji uslovi postoje i šta namerno NIJE uslov) žive u
  * `@/lib/potvrda-uslov` — bez Prisme, da ih prikaz može uvesti u pretraživaču.
@@ -11,7 +11,7 @@
  * `probajEvidentiratiPotvrde` (objava oglasa je jedan od okidača). Da funkcija živi u
  * servisu potvrda, nastao bi ciklus uvoza.
  *
- * Obrazac poziva (obavezan, isti kao kod čl. 40a):
+ * Obrazac poziva (obavezan, isti kao kod čl. 38):
  *   - DB promene u jednoj `prisma.$transaction()`
  *   - `probajEvidentiratiPotvrde()` SEKVENCIJALNO POSLE nje — `emitujPoen()` otvara
  *     sopstvenu transakciju i ne sme da se pozove unutar druge.
@@ -49,7 +49,7 @@ export const TIP_PO_USLOVU: Record<UslovPotvrde, TransactionType> = {
 
 /**
  * Dodatni tipovi koji se računaju u isti uslov. Pokroviteljstvo dobrima i uslugama
- * (donacije Glava IVa) je pokroviteljstvo u smislu čl. 6 st. 1 i ima sopstveni tip
+ * (donacije Glava IV) je pokroviteljstvo u smislu čl. 15 i ima sopstveni tip
  * emisije, da se brojači ne mešaju sa novcem — ali je isti trag učešća.
  */
 export const DODATNI_TIPOVI_PO_USLOVU: Partial<Record<UslovPotvrde, TransactionType[]>> = {
@@ -107,7 +107,7 @@ async function podaciZaUpis(vezaId: string) {
  * Pokušava da upiše POEN za JEDNU potvrdu.
  *
  * `bezUslova` se koristi ISKLJUČIVO za potvrde koje roditelji daju detetu na 18.
- * rođendan (Pravilnik o učešću dece čl. 19 st. 3). Razlog je konkretan: istog dana se
+ * rođendan (Pravilnik o učešću dece čl. 35 st. 4). Razlog je konkretan: istog dana se
  * detetu poništava POEN evidentiran po prijateljstvima, često u minus — ako bi i te
  * potvrde čekale prvi oglas, rođendan bi se sveo na čist minus bez ijedne protivteže.
  * Ne otvarati ga ničemu drugom.
@@ -146,7 +146,7 @@ export async function probajUpisatiPotvrdu(
     });
     if (rezervisano.count !== 1) return { upisano: false, uslov: null };
 
-    // 🔴 Verifikator je u međuvremenu ugasio nalog (dokaz stvarnosti čl. 16 st. 4, set
+    // 🔴 Verifikator je u međuvremenu ugasio nalog (dokaz stvarnosti čl. 30 st. 3, set
     // 4.7.5): potvrda je ostala na snazi i potvrđeni dobija svojih 1.000, ali licu čiji
     // je status prestao zapis se ne upisuje — inače bi POEN završio u zapisu koga nema.
     const verifikatorUgasen = veza.verifikator.deaktiviranAt !== null;
@@ -216,7 +216,7 @@ export async function probajUpisatiPotvrdu(
 }
 
 // 🔴 Nadzor se više NE PLAĆA (odluka vlasnika 18.10.2026, dokaz stvarnosti 4.7.5,
-// čl. 7 i 10). `probajUpisatiNadzor` i `EMISIJA_NADZOR` su uklonjeni iz toka; zatečeni
+// čl. 19 st. 8 i 23 st. 2). `probajUpisatiNadzor` i `EMISIJA_NADZOR` su uklonjeni iz toka; zatečeni
 // upisi su obrisani iz evidencije zajedno sa svojim protivzapisom, a zabeleženi
 // ugašeni (`nadzorPoenStatus = PONISTEN`). Ne vraćati 500 nadzorniku.
 
@@ -273,7 +273,7 @@ function razlicitiLjudi(veze: { verifikovani: CekaDoprinos }[]): CekaDoprinos[] 
 }
 
 /**
- * Zabeležen a neupisan POEN po potvrdama — prikazuje se u POEN ekranu (čl. 67).
+ * Zabeležen a neupisan POEN po potvrdama — prikazuje se u POEN ekranu (Pravilnik čl. 56).
  *
  * Uz iznose vraća i SPISAK ljudi čiji se prvi doprinos čeka. Iznos bez imena ne kaže
  * vlasniku naloga šta može da uradi: taj POEN otključava TUĐI potez, pa je jedina
@@ -281,7 +281,7 @@ function razlicitiLjudi(veze: { verifikovani: CekaDoprinos }[]): CekaDoprinos[] 
  * stoji na ekranu kao nešto što se samo čeka, a čeka se nešto na šta se može uticati.
  *
  * 🔴 Ne otvara nijedan nov podatak: pseudonim onoga koga si potvrdio već stoji u tvom
- * lancu (stranica Potvrde). Vidi ga isključivo vlasnik naloga (čl. 67), kao i sam iznos.
+ * lancu (stranica Potvrde). Vidi ga isključivo vlasnik naloga (Pravilnik čl. 56), kao i sam iznos.
  *
  * 🔴 Za sopstvene potvrde (`kaoPotvrdjeni`) spiska NEMA i ne treba mu: tu se čeka
  * doprinos samog vlasnika naloga, pa je odgovor na „ko" uvek on.

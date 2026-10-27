@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * Potvrde — POEN po potvrdi koji čeka trag stvarnog učešća (dokaz stvarnosti čl. 7),
- * i potvrda člana bez potvrde odlukom Fondacije (čl. 5a st. 3, set 4.8.2).
+ * Potvrde — POEN po potvrdi koji čeka trag stvarnog učešća (dokaz stvarnosti čl. 19),
+ * i potvrda člana bez potvrde odlukom Fondacije (čl. 5 st. 1 t. 4, set 4.8.2).
  *
  * 🔴 Postupak Fondacije za potvrdu postojanja deteta (`PotvrdeDetetaFondacija`) je
- * ukinut setom 4.8.2 — postojanje deteta potvrđuje član Kola (deca čl. 6).
+ * ukinut setom 4.8.2 — postojanje deteta potvrđuje član Kola (deca čl. 13).
  *
  * Dva odvojena odeljka, namerno razdvojena jer su to dve različite odluke:
  *  1. VENTIL — ručni upis za pojedinačnu potvrdu, uz obavezan razlog. Postoji zbog
@@ -82,8 +82,8 @@ type NadzorPregled = {
 };
 
 /**
- * Potvrda člana bez potvrde odlukom Fondacije (dokaz stvarnosti čl. 5a st. 3;
- * Pravilnik čl. 28a st. 4). Samo superadmin, uz obavezno obrazloženje sa pozivom na
+ * Potvrda člana bez potvrde odlukom Fondacije (dokaz stvarnosti čl. 5 st. 1 t. 4;
+ * Pravilnik čl. 28 st. 3). Samo superadmin, uz obavezno obrazloženje sa pozivom na
  * odluku o merilima. Ne nosi POEN, ne podleže nadzoru; trag ide u audit.
  */
 function PotvrdaOdlukomFondacije({ onDone }: { onDone?: () => void }) {
@@ -373,10 +373,10 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
     <div className="space-y-8">
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
 
-      {/* ── Potvrda člana bez potvrde odlukom Fondacije (čl. 5a st. 3) ────── */}
+      {/* ── Potvrda člana bez potvrde odlukom Fondacije (čl. 5 st. 1 t. 4) ────── */}
       {jeSuperadmin && <PotvrdaOdlukomFondacije onDone={onDone} />}
 
-      {/* ── Mogući višestruki nalozi (dokaz stvarnosti čl. 4a, 4b; set 4.8.4) ── */}
+      {/* ── Mogući višestruki nalozi (dokaz stvarnosti čl. 13, 14; set 4.8.4) ── */}
       {jeSuperadmin && <VisestrukiNalozi />}
 
       {/* ── Ventil ─────────────────────────────────────────────────────────── */}

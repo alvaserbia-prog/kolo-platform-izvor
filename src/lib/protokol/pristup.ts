@@ -9,7 +9,7 @@ import { ucitajStatus, jeVerifikovan } from "./status";
  * 🔴 Imunitet nosioca ZRNA je ukinut setom 4.8.2: status se izvodi iz grafa
  * (`preracunajStatusNaloga`), pa ko nije verifikovan, korisnik je — i bez ovog
  * pristupa, bez obzira na ZRNO. Dete ovde ne prolazi (za maloletnog važi dete
- * Kola preko roditelja, programi čl. 13, i to proverava sama ruta).
+ * Kola preko roditelja, raniji programi čl. 13, i to proverava sama ruta; programi 5.0 čl. 2 st. 3: maloletni nema pravo na programe).
  */
 export async function imaFunkcionalniPristup(userId: string): Promise<boolean> {
   const s = await ucitajStatus(userId);

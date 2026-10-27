@@ -2,8 +2,8 @@
  * POST /api/nadzor/[verifikacijaId]
  *
  * Nadzornik (čuvar Kola) evidentira ISHOD nadzora: `UREDNO` | `ZA_PROVERU` |
- * `SPORNO` (dokaz stvarnosti čl. 11). Predmet može biti verifikacija, potvrda člana
- * bez potvrde ili potvrda postojanja deteta (čl. 10, set 4.8.2) — id iz putanje je
+ * `SPORNO` (dokaz stvarnosti čl. 24). Predmet može biti verifikacija, potvrda člana
+ * bez potvrde ili potvrda postojanja deteta (čl. 22, set 4.8.2) — id iz putanje je
  * id tog zapisa, a vrsta ide u telu. Ime parametra putanje ostaje (pravilo 12).
  *
  * Do 4.2.0 je ruta imala jedan jedini efekat — potvrdi. Ko posumnja nije imao gde
@@ -11,7 +11,7 @@
  *
  * Telo: { vrstaPredmeta?: "VERIFIKACIJA" | "POTVRDA_CLANA" | "POTVRDA_POSTOJANJA",
  *         ishod, subjekt?, razlog?, opis? } (podrazumevano VERIFIKACIJA). Subjekt i razlog su obavezni uz
- * „za proveru" i „sporno" (čl. 11 st. 3).
+ * „za proveru" i „sporno" (čl. 24 st. 3).
  */
 import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";

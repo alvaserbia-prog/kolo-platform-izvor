@@ -11,7 +11,7 @@
  *    kod trećeg lica je ključ od tuđeg naloga;
  *  - PSEUDONIMI (`/profil/<pseudonim>`, `?plati=<pseudonim>`) — podatak ko je
  *    čiji profil gledao, a pseudonim u evidenciji sme da vidi samo potvrđen član
- *    (Pravilnik čl. 67), ne Google.
+ *    (Pravilnik čl. 56), ne Google.
  *
  * Zato se dinamički deo putanje svodi na šablon, a upit (`?…`) se odbacuje ceo,
  * osim `utm_*` oznaka kampanje — bez njih se ne vidi odakle je ko došao.
@@ -32,7 +32,7 @@ export const RUTE_BEZ_MERENJA = [
   "/prijatelji",
   "/kutija-zelja",
   // Potvrda tuđe prijave na program podrške — sam ulazak otkriva da neko iz
-  // lanca traži podršku (posebna kategorija, Politika čl. 6).
+  // lanca traži podršku (posebna kategorija, Politika čl. 27).
   "/programi/potvrde",
 ] as const;
 

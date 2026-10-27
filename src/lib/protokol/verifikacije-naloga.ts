@@ -2,13 +2,13 @@
  * Vađenje jednog naloga iz lanca potvrda — sa svim posledicama po druge ljude.
  *
  * Padaju SVE veze koje nalog dodiruje, i primljene i obavljene, i sve potvrde člana
- * bez potvrde koje je taj nalog dao ili primio (deca čl. 4d st. 3). POEN evidentiran
- * povodom veza vraća se Protokolu (nikad ispod nule — čl. 14 st. 3), a status druge
+ * bez potvrde koje je taj nalog dao ili primio (deca čl. 16 st. 1). POEN evidentiran
+ * povodom veza vraća se Protokolu (nikad ispod nule — Pravilnik čl. 17 st. 2), a status druge
  * strane se preračunava iz grafa (`preracunajStatusNaloga`, set 4.8.2). Isti
- * postupak kao pri prestanku statusa (čl. 34).
+ * postupak kao pri prestanku statusa (Pravilnik čl. 33).
  *
  * 🔴 Ovo NIJE utvrđenje lažne potvrde. Tamo se ceni po čoveku i vodi postupak iz
- * Glave VIII dokaza stvarnosti (`lazna-verifikacija.ts`); ovde se nalog samo
+ * Glave IX dokaza stvarnosti (`lazna-verifikacija.ts`); ovde se nalog samo
  * uklanja iz grafa, bez ijednog utvrđenja o bilo čijem ponašanju. Zato ovu
  * funkciju zovu samo administrativne radnje nad celim nalogom — vraćanje naloga
  * na dan registracije i prevođenje naloga u maloletni.
@@ -46,7 +46,7 @@ export type OpcijeObaranja = {
    * korisničkog puta i nema razloga da neko treći završi sa negativnim zapisom.
    *
    * `true` — skida se pun iznos i zapis ide u minus. Minus se ponaša isto kao
-   * nadoknada (čl. 20b): nije dug, ne naplaćuje se, POEN-i koji pristignu prvo ga
+   * nadoknada (dokaz stvarnosti čl. 36): nije dug, ne naplaćuje se, POEN-i koji pristignu prvo ga
    * popunjavaju, prepis drugome je moguć tek preko nule, razmena nije ograničena.
    * Bez toga bi onaj ko primljeni POEN brže potroši prošao jeftinije od onoga ko
    * ga sačuva — isto pravilo koje već važi za otpis prijateljstva i za poništen
@@ -76,7 +76,7 @@ export async function oboriVerifikacijeNaloga(
   const vezeKaoVerifikovani = await prisma.verifikacionaVeza.findMany({
     where: { verifikovaniId: userId },
   });
-  // Potvrde člana bez potvrde koje je nalog dao ili primio (deca čl. 4d st. 3).
+  // Potvrde člana bez potvrde koje je nalog dao ili primio (deca čl. 16 st. 1).
   const potvrdeClana = await prisma.potvrdaClana.findMany({
     where: { OR: [{ potvrdioId: userId }, { potvrdjeniId: userId }] },
     select: { id: true, potvrdjeniId: true },
@@ -100,7 +100,7 @@ export async function oboriVerifikacijeNaloga(
        * POEN-om i ne sme da se pojavi bez ijednog traga o tome odakle je došao.
        */
       // 🔴 Zove se ISKLJUČIVO za veze u stanju EVIDENTIRAN. Od seta 4.6.4 POEN po
-      // potvrdi čeka trag stvarnog učešća (dokaz stvarnosti čl. 7), pa veza u stanju
+      // potvrdi čeka trag stvarnog učešća (dokaz stvarnosti čl. 19), pa veza u stanju
       // ZABELEZEN nema šta da vrati — Protokol po njoj nije emitovao ništa.
       async function vratiPoenProtokolu(targetUserId: string, iznos: number) {
         if (iznos <= 0) return;
@@ -150,8 +150,8 @@ export async function oboriVerifikacijeNaloga(
 
       // 2) Veze u kojima je ovaj nalog VERIFIKOVANI — pada verifikator.
       for (const v of vezeKaoVerifikovani) {
-        // 🔴 Verifikator koji je ugasio nalog (dokaz stvarnosti čl. 16, set 4.7.5):
-        // veza je ostala, ali je njegov zapis pri gašenju već poništen u celini (čl. 34),
+        // 🔴 Verifikator koji je ugasio nalog (dokaz stvarnosti čl. 30, set 4.7.5):
+        // veza je ostala, ali je njegov zapis pri gašenju već poništen u celini (Pravilnik čl. 33),
         // pa ovih 1.000 tamo više ne postoji. Skidati ih ponovo značilo bi skinuti dvaput
         // — uz `dozvoliMinus` i u minus na zapisu koga više nema.
         const verifikatorUgasen = await tx.user.findUnique({

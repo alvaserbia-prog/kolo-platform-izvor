@@ -14,7 +14,7 @@ export async function generateMetadata() {
 }
 
 /**
- * Upis pokrovitelja u evidenciju (donacije čl. 6a): izbor — pravno lice odnosno
+ * Upis pokrovitelja u evidenciju (donacije čl. 16): izbor — pravno lice odnosno
  * preduzetnik ili registrovano poljoprivredno gazdinstvo — pa obrazac na jednoj
  * strani. Upis vrši punoletni verifikovani korisnik sa sopstvenog naloga.
  *

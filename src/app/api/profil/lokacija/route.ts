@@ -26,7 +26,7 @@ export async function PATCH(req: NextRequest) {
   });
 
   // Posle ulaska na spisak za poziv mesto i broj se menjaju, ali ne brišu (set 4.8.4,
-  // N4-M2; dokaz stvarnosti čl. 4a): porede se sa drugim nalozima radi sprečavanja
+  // N4-M2; dokaz stvarnosti čl. 9 st. 2, 13): porede se sa drugim nalozima radi sprečavanja
   // višestrukih naloga, a brišu se gašenjem naloga.
   if (trenutni?.telefonZaPozivAt && (telefon === "" || location === "")) {
     return await greska("Mesto i broj telefona su uz nalog od ulaska na spisak za poziv. Možeš da ih izmeniš, ali ne i da ih obrišeš.", 409);

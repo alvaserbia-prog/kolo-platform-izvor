@@ -7,7 +7,7 @@ import { logAdminAkcija } from "@/lib/audit";
 import { obavesti } from "@/lib/notifikacije";
 import { jeAdmin } from "@/lib/dozvole";
 
-// POST /api/admin/pokroviteljstvo/prijave/[id]/odbij — Fondacija odbija prijem (čl. 8)
+// POST /api/admin/pokroviteljstvo/prijave/[id]/odbij — Fondacija odbija prijem (čl. 20 st. 5)
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session || !jeAdmin(session.user))

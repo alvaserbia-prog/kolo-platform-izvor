@@ -3,18 +3,18 @@
  *
  * Upravni odbor utvrđuje lažnu verifikaciju, lažnu potvrdu člana bez potvrde ili
  * lažnu potvrdu postojanja deteta po nadzornom predmetu (Pravilnik o dokazu
- * stvarnosti čl. 18 st. 4, 19; set 4.8.2). Grana po meti predmeta:
- *  — verifikacija → `ponistiVerifikaciju` (verifikovani postaje korisnik, čl. 17);
- *  — potvrda člana → `ponistiPotvrduClana` (ostaje član bez potvrde, čl. 17 st. 3);
- *  — potvrda postojanja deteta → `ponistiPotvrduPostojanja` (deca čl. 6 st. 6).
+ * stvarnosti čl. 32 st. 4, 33; set 4.8.2). Grana po meti predmeta:
+ *  — verifikacija → `ponistiVerifikaciju` (verifikovani postaje korisnik, čl. 31);
+ *  — potvrda člana → `ponistiPotvrduClana` (ostaje član bez potvrde, čl. 31 st. 3);
+ *  — potvrda postojanja deteta → `ponistiPotvrduPostojanja` (deca čl. 13 st. 5).
  *
  * Telo: { nepostojeciNalog: boolean, beleska?: string }
  *
  * `nepostojeciNalog` je odluka o ČOVEKU, ne o verifikaciji, i zato je razdvojena:
- *  — `false` → poništava se samo taj zapis (čl. 19). Verifikovani je stvarna
+ *  — `false` → poništava se samo taj zapis (čl. 33). Verifikovani je stvarna
  *    osoba: gubi POEN-e iz te verifikacije i postaje korisnik, ali zadržava nalog i
  *    sve verifikacije koje je sam obavio, i može ponovo biti verifikovan.
- *  — `true` → utvrđuje se da iza naloga ne stoji stvarna osoba (čl. 20): padaju sve
+ *  — `true` → utvrđuje se da iza naloga ne stoji stvarna osoba (čl. 34): padaju sve
  *    verifikacije koje taj nalog dodiruje, i primljene i obavljene. Kaskada staje na
  *    prvom stvarnom čoveku.
  *
@@ -103,8 +103,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (!predmet.verifikacija && !predmet.potvrdaClana && !predmet.potvrdaPostojanja) {
     return await greska("Predmet se ne odnosi ni na jedan zapis.", 400);
   }
-  // Utvrđenje nepostojećeg naloga je odluka o čoveku (čl. 20); kod potvrde postojanja
-  // deteta za to postoji poseban institut — prijava lažnog roditeljstva (deca čl. 4e).
+  // Utvrđenje nepostojećeg naloga je odluka o čoveku (čl. 34); kod potvrde postojanja
+  // deteta za to postoji poseban institut — prijava lažnog roditeljstva (deca čl. 17).
   if (nepostojeciNalog && predmet.potvrdaPostojanja) {
     return await greska("Kod potvrde postojanja deteta nalog se ne utvrđuje nepostojećim ovim putem.", 400);
   }

@@ -22,7 +22,7 @@
  */
 
 /**
- * Ekran „Sistem je unapređen — novi akti" pri prijavi (Uslovi čl. 40, Politika čl. 16).
+ * Ekran „Sistem je unapređen — novi akti" pri prijavi (Uslovi čl. 43, Politika čl. 47).
  *
  * `false` = od korisnika se NE traži pristanak; prekrivač se nikad ne prikazuje,
  * a `/politika-prihvati` propušta dalje. Odluka vlasnika 11.08.2026: akti su doneti
@@ -34,7 +34,7 @@
  * je do sada upisano — postojeći pristanci su dokaz i ne smeju da se izgube.
  *
  * 🔴 **ROK OD 15 DANA JE UKINUT setom 4.3.0** (odluka vlasnika 17.08.2026). Uslovi
- * čl. 40 i Politika čl. 16 sada glase: izmene stupaju na snagu danom donošenja, a
+ * čl. 43 i Politika čl. 47 sada glase: izmene stupaju na snagu danom donošenja, a
  * obaveštenje se šalje bez odlaganja. Nema više roka koji bi trebalo odbrojavati —
  * `true` znači samo „prikaži ekran i upiši pristanak", uz nov red `PolitikaVerzija`.
  * Ne vraćati rok u komentare ni u copy: akti ga više ne poznaju.
@@ -48,7 +48,7 @@
  *
  * 🔴 **Prekidač se NE gasi dok gejt radi svoj posao.** Gašenje bi zatečene naloge
  * vratilo u stanje bez dokaza pristanka, a ekran im se više nikad ne bi pojavio.
- * Uz to: svaka naredna izmena akata traži nov red `PolitikaVerzija` (Uslovi čl. 40,
- * Politika čl. 16) — bez njega ekran ćuti jer je zatečena verzija već prihvaćena.
+ * Uz to: svaka naredna izmena akata traži nov red `PolitikaVerzija` (Uslovi čl. 43,
+ * Politika čl. 47) — bez njega ekran ćuti jer je zatečena verzija već prihvaćena.
  */
 export const PRISTANAK_NA_AKTE_TRAZI_SE = true;
