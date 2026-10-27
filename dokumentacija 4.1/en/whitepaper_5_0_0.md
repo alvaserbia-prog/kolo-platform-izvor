@@ -272,7 +272,7 @@ Reality is established by one person, once. Whoever confirms or introduces into 
 
 Whoever knows no Kolo member can get onto the call list: when they ask for a conversation themselves, or when the Foundation offers it to them after a public donation, sponsorship or a farm application. The name and number they enter are seen only by the Kolo member who calls them, after a statement of confidentiality, and the Foundation records who opened them; misuse is a breach of the rules. A Kolo member who calls never asks for money, a password or a code from the phone; whoever asks for that is not calling on behalf of the system. The Foundation ensures that everyone on the list is called.
 
-Neither a payment, nor sponsorship, nor a farm application, nor getting onto the list confirms reality. The conversation in itself is not an introduction into the Kolo; a Kolo member who calls a user introduces them into the Kolo only if, after the conversation, they judge that they know them well enough to answer for it. A donation, sponsorship and the contribution recorded on their basis do not depend on the call.
+Neither a payment, nor sponsorship, nor a farm application, nor getting onto the list confirms reality. The conversation in itself is not an introduction into the Kolo; a Kolo member who calls a user introduces them into the Kolo when, after the conversation, they are satisfied that the user is a real person and understands the rules of the system. A donation, sponsorship and the contribution recorded on their basis do not depend on the call.
 
 ## Member without confirmation and confirmation
 

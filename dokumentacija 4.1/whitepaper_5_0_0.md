@@ -270,7 +270,7 @@ Stvarnost utvrđuje jedno lice, jednom. Ko potvrđuje ili uvodi u Kolo, potvrđu
 
 Ko ne poznaje nijednog člana Kola, može dospeti na spisak za poziv: kad sam zatraži razgovor, ili kad mu ga Fondacija ponudi posle javne donacije, pokroviteljstva ili prijave gazdinstva. Ime i broj koje upiše vidi samo član Kola koji ga pozove, posle izjave o poverljivosti, a Fondacija beleži ko ih je otvorio; zloupotreba je povreda pravila. Član Kola koji zove nikad ne traži novac, lozinku ni kod sa telefona; ko to traži, ne zove u ime sistema. Fondacija obezbeđuje da svako sa spiska bude pozvan.
 
-Ni uplata, ni pokroviteljstvo, ni prijava gazdinstva, ni dospeće na spisak ne potvrđuju stvarnost. Razgovor sam po sebi nije uvođenje u Kolo; član Kola koji pozove korisnika uvodi ga u Kolo samo ako posle razgovora proceni da ga poznaje dovoljno da za to odgovara. Donacija, pokroviteljstvo i doprinos evidentiran po njima ne zavise od poziva.
+Ni uplata, ni pokroviteljstvo, ni prijava gazdinstva, ni dospeće na spisak ne potvrđuju stvarnost. Razgovor sam po sebi nije uvođenje u Kolo; član Kola koji pozove korisnika uvodi ga u Kolo kada se posle razgovora uveri da je korisnik stvarna osoba i da razume pravila sistema. Donacija, pokroviteljstvo i doprinos evidentiran po njima ne zavise od poziva.
 
 ## Član bez potvrde i potvrda
 

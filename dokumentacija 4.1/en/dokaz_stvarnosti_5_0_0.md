@@ -140,7 +140,7 @@
 
 (1) Coming onto the call list does not confirm reality. Neither the donation or sponsorship, nor the contribution recorded on account of them, depends on it; that contribution is recorded under the general rules of the Rulebook on Sponsorship and Donations.
 
-(2) A Kolo member who calls a user and, after the conversation, assesses that they know them well enough to answer for the verification may introduce them into the Kolo; a verification after such a conversation is an introduction into the Kolo (Article 15 paragraph 3). The conversation is not in itself a verification and does not oblige the Kolo member to introduce the user into the Kolo. A member without confirmation from the list may be confirmed by a Kolo keeper after a conversation under the conditions of Article 16.
+(2) A Kolo member who calls a user introduces them into the Kolo when, after the conversation, they are satisfied that the user is a real person and understands the rules of the system; a verification after such a conversation is an introduction into the Kolo (Article 15 paragraph 3). The conversation is not in itself a verification. A member without confirmation from the list may be confirmed by a Kolo keeper after a conversation under the conditions of Article 16.
 
 (3) The request and the data on the list are deleted when the user enters the Kolo, or when the member without confirmation is confirmed, when they withdraw the request or when their status as a user terminates. The record of which Kolo member opened the data is kept under Article 10 paragraph 4, and the first and last name, place and telephone number under Article 9 paragraph 2.
 
@@ -174,7 +174,7 @@
 
 (2) Verification is an act of personal acquaintance, not of document verification. The verifier does not collect or submit the personal documents of the verified person.
 
-(3) Verification is based on direct personal acquaintance sufficient for the verifier to confirm, on their own responsibility, the reality and continuity of the verified person. This Rulebook does not prescribe the manner of acquiring such acquaintance nor require physical presence at the moment of verification; the verifier alone assesses whether they know the verified person well enough.
+(3) Verification is based on direct personal acquaintance sufficient for the verifier to confirm, on their own responsibility, the reality and continuity of the verified person. This Rulebook does not prescribe the manner of acquiring such acquaintance nor require physical presence at the moment of verification; the verifier alone assesses whether they know the verified person well enough. In an introduction into the Kolo after a conversation with a user from the call list (Article 12 paragraph 2), the acquaintance is acquired through that conversation.
 
 (4) The user seeking verification generates a one-time code by which they consent to the verification and bind their account to that act, and a verifier who knows them carries out the verification using that code. That mechanism does not collect the personal data of the verified person and does not constitute proof of presence, but rather confirmation of the verified person's consent and of the identity of the account.
 

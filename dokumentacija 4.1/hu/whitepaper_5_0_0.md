@@ -272,7 +272,7 @@ A valódiságot egy személy állapítja meg, egyszer. Aki megerősít vagy beve
 
 Aki egyetlen Kolo-tagot sem ismer, felkerülhet a hívási listára: amikor maga kér beszélgetést, vagy amikor az Alapítvány nyilvános adomány, pártfogás vagy gazdaságbejelentés után felajánlja neki. Az általa megadott nevet és számot csak az a Kolo-tag látja, aki felhívja, titoktartási nyilatkozat után, az Alapítvány pedig feljegyzi, ki nyitotta meg őket; a visszaélés a szabályok megsértése. A hívó Kolo-tag soha nem kér pénzt, jelszót vagy a telefonra érkezett kódot; aki ilyet kér, nem a rendszer nevében hív. Az Alapítvány biztosítja, hogy a listán szereplő mindenkit felhívjanak.
 
-Sem a befizetés, sem a pártfogás, sem a gazdaságbejelentés, sem a listára kerülés nem erősíti meg a valódiságot. A beszélgetés önmagában nem bevezetés a Kolóba; a Kolo-tag, aki felhívja a felhasználót, csak akkor vezeti be a Kolóba, ha a beszélgetés után úgy ítéli meg, hogy eléggé ismeri ahhoz, hogy ezért felelősséget vállaljon. Az adomány, a pártfogás és az ezek alapján nyilvántartásba vett hozzájárulás nem függ a hívástól.
+Sem a befizetés, sem a pártfogás, sem a gazdaságbejelentés, sem a listára kerülés nem erősíti meg a valódiságot. A beszélgetés önmagában nem bevezetés a Kolóba; a Kolo-tag, aki felhívja a felhasználót, akkor vezeti be a Kolóba, ha a beszélgetés után meggyőződik arról, hogy a felhasználó valós személy, és érti a rendszer szabályait. Az adomány, a pártfogás és az ezek alapján nyilvántartásba vett hozzájárulás nem függ a hívástól.
 
 ## Megerősítés nélküli tag és megerősítés
 

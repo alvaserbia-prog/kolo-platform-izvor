@@ -34,6 +34,7 @@
 
 import { nivoZaKumulativ } from "@/lib/donacija-pravila";
 import { smeUcestvovati, type UcesnikProvera } from "@/lib/nabavka-pravila";
+import { FONDACIJA } from "@/lib/donacija-ugovor";
 
 // ─── Konstante iz akta ────────────────────────────────────────────────────────
 
@@ -613,7 +614,7 @@ export function generisiUgovorDobraTekst(p: {
         `broj gazdinstva ${p.bpg ?? ""} (u daljem tekstu: Davalac), i`
       : `1) ${p.naziv}, sa sedištem na adresi ${p.adresaSedista ?? ""}, matični broj ${p.maticniBroj ?? ""}, PIB ${p.pib ?? ""}, ` +
         `koga zastupa ${podnosilac} (u daljem tekstu: Davalac), i`,
-    "2) KOLO Fondacije (u daljem tekstu: Fondacija).",
+    `2) ${FONDACIJA} (u daljem tekstu: Fondacija).`,
     "",
     `Kontakt Davaoca: adresa elektronske pošte ${p.kontaktEmail}, telefon ${p.kontaktTelefon}.`,
     gazdinstvo
@@ -621,7 +622,7 @@ export function generisiUgovorDobraTekst(p: {
       : `Ugovor u ime Davaoca zaključuje ${p.zastupnikImePrezime}; odnos prema Davaocu: ${odnos}.`,
     "",
     `Član 1. Davalac se obavezuje da bez naknade ${predaja} licima koja uzmu vaučer u raspodeli Fondacije, i to: ${p.opis}.`,
-    `Član 2. Davalac izdaje ${p.brojVaucera} vaučera; svaki vaučer glasi na jedno tačno određeno ${predmet} iz člana 1, a ne na novčani iznos. ` +
+    `Član 2. Davalac izdaje ${p.brojVaucera} vaučera; svaki vaučer glasi na ${p.vrsta === "DOBRO" ? "jedno tačno određeno dobro" : "jednu tačno određenu uslugu"} iz člana 1, a ne na novčani iznos. ` +
       `Vrednost donacije iznosi ${rsd(p.vrednostRsd)} dinara (${p.brojVaucera} × ${rsd(p.cenaPoJedinici)} dinara, prema ceni koju Davalac primenjuje u prometu).`,
     `Član 3. Vaučeri važe jednu godinu od izdavanja. Mesto i adresa predaje, odnosno pružanja: ${mestoTekst}.`,
     "Član 4. Donacija je dobrovoljna i bez naknade. Davalac njome ne stiče potraživanje prema Fondaciji niti bilo koju prednost u postupcima Fondacije.",
@@ -633,7 +634,7 @@ export function generisiUgovorDobraTekst(p: {
     "",
     gazdinstvo
       ? `Potvrdom na platformi ${p.zastupnikImePrezime} potvrđuje da je nosilac navedenog gazdinstva i da prihvata uslove ugovora.`
-      : `Potvrdom na platformi ${p.zastupnikImePrezime} potvrđuje da je ovlašćen da u ime Davaoca zaključi ovaj ugovor i da prihvata uslove ugovora.`,
+      : `Potvrdom na platformi ${p.zastupnikImePrezime} potvrđuje svoje ovlašćenje da u ime Davaoca zaključi ovaj ugovor i da prihvata uslove ugovora.`,
   ].join("\n");
 }
 

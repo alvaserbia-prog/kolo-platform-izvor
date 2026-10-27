@@ -7,6 +7,7 @@ import { VrstaDonacije } from "@/generated/prisma/client";
 import { nivoPokroviteljstvaZaKumulativ } from "@/lib/donacija-pravila";
 import { naRangListi, kljucNovcanogPokrovitelja, upisOdobrenZaPotvrdu } from "@/lib/upis-pokrovitelja-pravila";
 import type { VrstaDavaoca } from "@/lib/pokroviteljstvo-dobrima-pravila";
+import { FONDACIJA } from "@/lib/donacija-ugovor";
 
 // Koeficijentni model, pragovi i minimum prijave žive u `donacija-pravila.ts`
 // (bez Prisme, jer ih uvozi i ekran u pretraživaču). Ovde se re-eksportuju, pa
@@ -173,7 +174,7 @@ export function generisiUgovorTekst(p: {
         `broj gazdinstva ${p.bpg ?? ""} (u daljem tekstu: Donator), i`
       : `1) ${p.naziv}, sa sedištem na adresi ${p.adresaSedista ?? ""}, matični broj ${p.maticniBroj ?? ""}, PIB ${p.pib ?? ""}, ` +
         `koga zastupa ${p.zastupnikImePrezime}, ${p.zastupnikFunkcija} (u daljem tekstu: Donator), i`,
-    `2) KOLO Fondacije (u daljem tekstu: Primalac).`,
+    `2) ${FONDACIJA} (u daljem tekstu: Primalac).`,
     "",
     gazdinstvo
       ? `Član 1. Donator donira Primaocu novčani iznos od ${p.vrednostRsd.toLocaleString("sr-RS")} RSD, uplatom na račun Primaoca sa računa gazdinstva ili sa sopstvenog računa.`
@@ -189,7 +190,7 @@ export function generisiUgovorTekst(p: {
     "",
     gazdinstvo
       ? `Potpisom ${p.zastupnikImePrezime} potvrđuje da je nosilac gazdinstva i da prihvata uslove ugovora.`
-      : `Potpisom ${p.zastupnikImePrezime} potvrđuje da je ovlašćen da zastupa Donatora i da prihvata uslove ugovora.`,
+      : `Potpisom ${p.zastupnikImePrezime} potvrđuje svoje ovlašćenje da zastupa Donatora i da prihvata uslove ugovora.`,
   ].join("\n");
 }
 

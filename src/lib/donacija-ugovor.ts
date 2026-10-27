@@ -14,7 +14,8 @@
  * na kasnije izmene pravilnika.
  */
 
-const FONDACIJA = "KOLO Fondacija, matični broj 28836627, PIB 115840443";
+/** Oznaka Fondacije kao ugovorne strane — ista u svakom ugovoru koji platforma generiše. */
+export const FONDACIJA = "KOLO Fondacija, matični broj 28836627, PIB 115840443";
 
 export type UlazUgovoraODonaciji = {
   /** Ime i prezime donatora; null za anonimnu donaciju. */

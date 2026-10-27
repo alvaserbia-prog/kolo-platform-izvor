@@ -140,7 +140,7 @@
 
 (1) A hívási listára való felkerülés nem erősíti meg a valóságot. Nem függ tőle sem az adomány, illetve a pártfogás, sem az ezek alapján nyilvántartott hozzájárulás, amely a pártfogásról és adományokról szóló szabályzat általános szabályai szerint kerül nyilvántartásba.
 
-(2) Az a Kolo-tag, aki a felhasználót felhívja, és a beszélgetést követően úgy ítéli meg, hogy eléggé ismeri ahhoz, hogy a hitelesítésért feleljen, bevezetheti a Kolóba; az ilyen beszélgetést követő hitelesítés bevezetés a Kolóba (15. cikk (3) bekezdés). A beszélgetés önmagában nem hitelesítés, és nem kötelezi a Kolo-tagot arra, hogy a felhasználót bevezesse a Kolóba. A listán szereplő megerősítés nélküli tagot egy Kolo-őrző a beszélgetést követően a 16. cikkben foglalt feltételek mellett megerősítheti.
+(2) Az a Kolo-tag, aki a felhasználót felhívja, bevezeti a Kolóba, ha a beszélgetést követően meggyőződik arról, hogy a felhasználó valós személy, és érti a rendszer szabályait; az ilyen beszélgetést követő hitelesítés bevezetés a Kolóba (15. cikk (3) bekezdés). A beszélgetés önmagában nem hitelesítés. A listán szereplő megerősítés nélküli tagot egy Kolo-őrző a beszélgetést követően a 16. cikkben foglalt feltételek mellett megerősítheti.
 
 (3) A kérelem és a listán szereplő adatok törlésre kerülnek, amikor a felhasználó belép a Kolóba, illetve amikor a megerősítés nélküli tagot megerősítik, amikor a kérelmet visszavonja, vagy amikor felhasználói jogállása megszűnik. Az arról szóló bejegyzést, hogy melyik Kolo-tag nyitotta meg az adatokat, a 10. cikk (4) bekezdése szerint, a családi és utónevet, a helységet és a telefonszámot pedig a 9. cikk (2) bekezdése szerint őrzik.
 
@@ -174,7 +174,7 @@
 
 (2) A hitelesítés a személyes ismeretség aktusa, nem pedig okmányellenőrzés. A hitelesítő nem gyűjti és nem továbbítja a hitelesített személyes okmányait.
 
-(3) A hitelesítés olyan közvetlen személyes ismeretségen alapul, amely elegendő ahhoz, hogy a hitelesítő saját felelősségére megerősítse a hitelesített valóságát és folytonosságát. E szabályzat nem írja elő ezen ismeretség megszerzésének módját, és nem követeli meg a fizikai jelenlétet a hitelesítés pillanatában; a hitelesítő maga ítéli meg, hogy eléggé ismeri-e a hitelesítettet.
+(3) A hitelesítés olyan közvetlen személyes ismeretségen alapul, amely elegendő ahhoz, hogy a hitelesítő saját felelősségére megerősítse a hitelesített valóságát és folytonosságát. E szabályzat nem írja elő ezen ismeretség megszerzésének módját, és nem követeli meg a fizikai jelenlétet a hitelesítés pillanatában; a hitelesítő maga ítéli meg, hogy eléggé ismeri-e a hitelesítettet. A hívási listán szereplő felhasználóval folytatott beszélgetést követő bevezetésnél (12. cikk (2) bekezdés) az ismeretség e beszélgetés során jön létre.
 
 (4) A hitelesítést kérő felhasználó egyszeri kódot generál, amellyel hozzájárul a hitelesítéshez és fiókját ehhez az aktushoz köti, az őt ismerő hitelesítő pedig e kóddal folytatja le a hitelesítést. Ez a mechanizmus nem gyűjti a hitelesített személyes adatait, és nem a jelenlét bizonyítéka, hanem a hitelesített hozzájárulásának és a fiók azonosságának megerősítése.
 

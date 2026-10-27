@@ -140,7 +140,7 @@
 
 (1) Dospijeće na popis za poziv ne potvrđuje stvarnost. O njemu ne ovisi ni donacija, odnosno pokroviteljstvo, ni doprinos evidentiran po njima, koji se evidentira prema općim pravilima Pravilnika o pokroviteljstvu i donacijama.
 
-(2) Član Kola koji nazove korisnika i nakon razgovora procijeni da ga poznaje dovoljno da odgovara za verifikaciju može ga uvesti u Kolo; verifikacija nakon takvog razgovora jest uvođenje u Kolo (članak 15. stavak 3.). Razgovor sam po sebi nije verifikacija i ne obvezuje člana Kola da korisnika uvede u Kolo. Člana bez potvrde s popisa čuvar Kola nakon razgovora može potvrditi pod uvjetima iz članka 16.
+(2) Član Kola koji nazove korisnika uvodi ga u Kolo kada se nakon razgovora uvjeri da je korisnik stvarna osoba i da razumije pravila sustava; verifikacija nakon takvog razgovora jest uvođenje u Kolo (članak 15. stavak 3.). Razgovor sam po sebi nije verifikacija. Člana bez potvrde s popisa čuvar Kola nakon razgovora može potvrditi pod uvjetima iz članka 16.
 
 (3) Zahtjev i podatci s popisa brišu se kada korisnik uđe u Kolo, odnosno kada član bez potvrde bude potvrđen, kada zahtjev povuče ili kada mu prestane status korisnika. Zapis o tome koji je član Kola podatke otvorio čuva se prema članku 10. stavku 4., a ime i prezime, mjesto i broj telefona prema članku 9. stavku 2.
 
@@ -174,7 +174,7 @@
 
 (2) Verifikacija je čin osobnog poznanstva, a ne provjere dokumenata. Verifikator ne prikuplja niti dostavlja osobne dokumente verificiranoga.
 
-(3) Verifikacija se temelji na neposrednom osobnom poznanstvu dostatnom da verifikator svojom odgovornošću potvrdi stvarnost i kontinuitet verificiranoga. Ovaj pravilnik ne propisuje način stjecanja tog poznanstva niti zahtijeva fizičku prisutnost u trenutku verifikacije; verifikator sam procjenjuje poznaje li verificiranoga dovoljno.
+(3) Verifikacija se temelji na neposrednom osobnom poznanstvu dostatnom da verifikator svojom odgovornošću potvrdi stvarnost i kontinuitet verificiranoga. Ovaj pravilnik ne propisuje način stjecanja tog poznanstva niti zahtijeva fizičku prisutnost u trenutku verifikacije; verifikator sam procjenjuje poznaje li verificiranoga dovoljno. Kod uvođenja u Kolo nakon razgovora s korisnikom s popisa za poziv (članak 12. stavak 2.) poznanstvo se stječe tim razgovorom.
 
 (4) Korisnik koji traži verifikaciju generira jednokratni kod kojim pristaje na verifikaciju i veže svoj račun za taj čin, a verifikator koji ga poznaje tim kodom provodi verifikaciju. Taj mehanizam ne prikuplja osobne podatke verificiranoga i ne predstavlja dokaz prisutnosti, nego potvrdu suglasnosti verificiranoga i identiteta računa.
 
