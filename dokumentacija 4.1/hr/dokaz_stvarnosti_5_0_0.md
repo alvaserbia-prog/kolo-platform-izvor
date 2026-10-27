@@ -170,13 +170,13 @@
 
 ### Članak 15. — Mehanizam verifikacije
 
-(1) Verifikator (član Kola, osnivač ili član bez potvrde) utvrđuje stvarnost korisnika na temelju neposrednog poznanstva, potvrdom ili uvođenjem u Kolo. Verifikator potvrđuje dvije stvari: stvarnost (verificirani postoji kao fizička osoba) i kontinuitet (ista osoba pristupa sustavu), i izjavljuje da mu nije poznato da verificirani ima drugi račun u sustavu. Jedinstvenost verifikator ne jamči (članak 14.).
+(1) Verifikator (član Kola, osnivač ili član bez potvrde) utvrđuje stvarnost korisnika potvrdom ili uvođenjem u Kolo, na temelju neposrednog osobnog poznanstva ili, kod uvođenja nakon razgovora s korisnikom s popisa za poziv (članak 12. stavak 2.), na temelju tog razgovora. Verifikator potvrđuje dvije stvari: stvarnost (verificirani postoji kao fizička osoba) i kontinuitet (ista osoba pristupa sustavu), i izjavljuje da mu nije poznato da verificirani ima drugi račun u sustavu. Jedinstvenost verifikator ne jamči (članak 14.).
 
-(2) Verifikacija je čin osobnog poznanstva, a ne provjere dokumenata. Verifikator ne prikuplja niti dostavlja osobne dokumente verificiranoga.
+(2) Verifikacija se temelji na osobnom poznanstvu, odnosno na razgovoru iz članka 12. stavka 2., a ne na provjeri dokumenata. Verifikator ne prikuplja niti dostavlja osobne dokumente verificiranoga.
 
-(3) Verifikacija se temelji na neposrednom osobnom poznanstvu dostatnom da verifikator svojom odgovornošću potvrdi stvarnost i kontinuitet verificiranoga. Ovaj pravilnik ne propisuje način stjecanja tog poznanstva niti zahtijeva fizičku prisutnost u trenutku verifikacije; verifikator sam procjenjuje poznaje li verificiranoga dovoljno. Kod uvođenja u Kolo nakon razgovora s korisnikom s popisa za poziv (članak 12. stavak 2.) poznanstvo se stječe tim razgovorom.
+(3) Verifikacija se, osim uvođenja nakon razgovora iz članka 12. stavka 2., temelji na neposrednom osobnom poznanstvu dostatnom da verifikator svojom odgovornošću potvrdi stvarnost i kontinuitet verificiranoga. Ovaj pravilnik ne propisuje način stjecanja tog poznanstva niti zahtijeva fizičku prisutnost u trenutku verifikacije; verifikator sam procjenjuje poznaje li verificiranoga dovoljno. Uvođenje u Kolo nakon razgovora iz članka 12. stavka 2. ne temelji se na osobnom poznanstvu, nego na razgovoru kojim se verifikator uvjerio da je korisnik stvarna osoba i da razumije pravila sustava; i za tu verifikaciju verifikator odgovara prema Glavi IX.
 
-(4) Korisnik koji traži verifikaciju generira jednokratni kod kojim pristaje na verifikaciju i veže svoj račun za taj čin, a verifikator koji ga poznaje tim kodom provodi verifikaciju. Taj mehanizam ne prikuplja osobne podatke verificiranoga i ne predstavlja dokaz prisutnosti, nego potvrdu suglasnosti verificiranoga i identiteta računa.
+(4) Korisnik koji traži verifikaciju generira jednokratni kod kojim pristaje na verifikaciju i veže svoj račun za taj čin, a verifikator tim kodom provodi verifikaciju. Taj mehanizam ne prikuplja osobne podatke verificiranoga i ne predstavlja dokaz prisutnosti, nego potvrdu suglasnosti verificiranoga i identiteta računa.
 
 (5) Verificirani se obavještava o provedenoj verifikaciji i može je prijaviti ako ne poznaje verifikatora.
 
