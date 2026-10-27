@@ -7,8 +7,11 @@ import { prisma } from "@/lib/prisma";
 import { SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from "@/lib/seo";
 import OglasDetalj from "../../(app)/pijaca/[id]/OglasDetalj";
 import { pocetakDana } from "@/lib/potvrde-dnevno-pravila";
+import { smeDaSalje } from "@/lib/doprinos-pravila";
+import { jeNadoknada } from "@/lib/protokol/nadoknada";
 import {
   IZBOR_UCESNIKA,
+  smeDaPrepise,
   smeDaVidiOglas,
   smePokrenutiRazgovor,
   smeVidetiPseudonimOglasivaca,
@@ -135,6 +138,25 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
       )
     : ({ ok: false, razlog: "", status: 403 } as const);
 
+  /**
+   * Sme li posmatrač da prepiše POEN oglašivaču — ista pravila kojima odlučuje
+   * `/api/transfer` (dečji par → `smeDaPrepise`, inače `smeDaSalje`; nadoknada
+   * zatvara prepis). Dugme je samo prečica, odluku i dalje donosi ruta.
+   */
+  const smePrepisati = await (async () => {
+    if (!posmatrac || posmatrac.id === prodavac.id) return false;
+    if (posmatrac.maloletan || prodavac.maloletan) {
+      if (!smeDaPrepise(posmatrac, prodavac).ok) return false;
+    }
+    const ja = await prisma.user.findUnique({
+      where: { id: posmatrac.id },
+      select: { tipKorisnika: true, wallet: { select: { balance: true } } },
+    });
+    if (!ja?.wallet) return false;
+    if (!posmatrac.maloletan && !prodavac.maloletan && !smeDaSalje(ja.tipKorisnika)) return false;
+    return !jeNadoknada(ja.wallet.balance);
+  })();
+
   return (
     <OglasDetalj
       oglas={{
@@ -170,6 +192,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
       jePrijavljen={!!session?.user}
       posmatracMaloletan={posmatrac?.maloletan ?? false}
       smePisati={razgovor.ok}
+      smePrepisati={smePrepisati}
       razlogZabrane={
         posmatrac?.maloletan && !razgovor.ok
           ? posmatrac.stanje === "AKTIVNO"

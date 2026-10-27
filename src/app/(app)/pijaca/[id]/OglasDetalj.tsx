@@ -30,6 +30,7 @@ import { dogadjaj } from "@/lib/analitika";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
+import PrepisPovodomOglasa from "./PrepisPovodomOglasa";
 
 interface OglasProps {
   id: string;
@@ -90,6 +91,12 @@ interface Props {
   smePisati?: boolean;
   /** Zašto dete ne može da piše; `null` za punoletnog posmatrača. */
   razlogZabrane?: "ceka_odobrenje" | "odrasli_zabranjeni" | "samo_prijatelji" | null;
+  /**
+   * Sme li posmatrač da prepiše POEN oglašivaču — izračunato na serveru istim
+   * pravilima kao `/api/transfer` (`smeDaPrepise` za dečji par, `smeDaSalje`,
+   * nadoknada). Dugme je samo prečica; prepis i dalje odlučuje ruta.
+   */
+  smePrepisati?: boolean;
 }
 
 export default function OglasDetalj({
@@ -99,6 +106,7 @@ export default function OglasDetalj({
   posmatracMaloletan = false,
   smePisati = false,
   razlogZabrane = null,
+  smePrepisati = false,
 }: Props) {
   const locale = useLocale();
   const t = useTranslations("pijaca");
@@ -388,7 +396,17 @@ export default function OglasDetalj({
                         ? t("javi_se_narucilac")
                         : t("kontaktiraj_prodavca")}
                 </button>
-              ) : posmatracMaloletan ? (
+              ) : null}
+              {/* Prepis oglašivaču — samo uz ponudu (kod potražnje POEN ide u
+                  drugom smeru) i samo kad je pseudonim posmatraču vidljiv. */}
+              {smePrepisati && !jePotraznja && oglas.sellerPseudonim && (
+                <PrepisPovodomOglasa
+                  pseudonim={oglas.sellerPseudonim}
+                  naslov={oglas.title}
+                  iznos={oglas.cenaTip === "FIKSNA" && oglas.price != null ? oglas.price : null}
+                />
+              )}
+              {smePisati ? null : posmatracMaloletan ? (
                 /* Dete koje ne može da piše dobija ISTINIT razlog i kraj koji se
                    vidi — nikad poziv da postane redovan član, jer to za maloletni
                    nalog nije put (deca čl. 29 st. 2). */
