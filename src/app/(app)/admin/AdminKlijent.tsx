@@ -199,7 +199,6 @@ interface PokroviteljItem {
   vlasnikPseudonim: string;
   logoUrl: string | null;
   rsdKumulativ: number;
-  trenutniNivo: number;
   status: string;
   brDoprinosa: number;
   createdAt: string;
@@ -2646,9 +2645,7 @@ function AdminPokroviteljiTab({
                   <AdminLogotip izvor="POKROVITELJ" id={p.id} url={p.logoUrl} onUklonjen={onDone} />
                 </div>
                 <div className="shrink-0 text-right">
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${p.status === "ACTIVE" ? "bg-kolo-green-100 text-kolo-green-700" : "bg-kolo-gold-100 text-kolo-gold-700"}`}>
-                    {t("pokrovitelji_nivo", { nivo: p.trenutniNivo })}
-                  </span>
+                  {/* Bez nivoa: pokrovitelj ga nema (donacije čl. 22, set 5.0.0, izmena 28.10.2026). */}
                   <div className="text-xs text-kolo-muted mt-0.5">
                     {p.rsdKumulativ.toLocaleString(intlTag(locale))} RSD · {p.brDoprinosa !== 1 ? t("pokrovitelji_doprinos_count_pl", { count: p.brDoprinosa }) : t("pokrovitelji_doprinos_count_sing", { count: p.brDoprinosa })}
                   </div>

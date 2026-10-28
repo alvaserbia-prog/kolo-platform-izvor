@@ -1424,7 +1424,7 @@
       },
       "pokroviteljstvo-donacije": {
         "naziv": "Rulebook on Sponsorship and Donations",
-        "opis": "How the contribution of donors and patrons is recorded: a single coefficient table for natural and legal persons, a patronage threshold of RSD 10,000, and separate records of personal donations and company donations."
+        "opis": "How the contribution of donors and patrons is recorded: a table of tiers for donations by natural persons, a coefficient of 1.00 for sponsorship, a patronage threshold of RSD 10,000, and separate records of personal donations and company donations."
       },
       "operativni": {
         "naziv": "Rulebook on Operational Contribution",
@@ -1903,7 +1903,7 @@
     "n6_opis": "You donate money to the Foundation, and your contribution is recorded in POEN under a public rulebook, with a donation coefficient by which the community acknowledges the contribution, because a larger contribution matters more to it.\nThe record is one-way: POEN is not converted back into dinars, gives no ownership or claim against the Foundation and does not buy votes.",
     "n6_iznos": "donation coefficient from 1.00 upwards",
     "n5_naslov": "Patronage",
-    "n5_opis": "A company, association or registered farm signs a sponsorship agreement with the Foundation, in money or in goods and services. POEN is recorded for the user who submitted the application, using the same table as for donations.",
+    "n5_opis": "A company, association or registered farm signs a sponsorship agreement with the Foundation, in money or in goods and services. POEN is recorded for the user who submitted the application, without an increase: the table of tiers applies only to a personal donation.",
     "n4_naslov": "Social programmes",
     "n4_opis": "Programmes for mothers and guardians, the elderly, special support and students, in which POEN is entered for approved participants every day. This is not social assistance within the meaning of the regulations and does not affect the rights you have with the state.",
     "n4_iznos": "recorded daily",
@@ -2235,7 +2235,7 @@
     "verifikacija_potrebna": "Sponsorship with goods and services requires you to be in the Kolo",
     "verifikacija_opis": "Any adult user can enter a sponsor and give a monetary sponsorship. Once the Foundation confirms receipt of the monetary sponsorship, you can choose “I'd like someone to call me”, and a Kolo member will call you. For sponsorship with goods and services, someone needs to confirm you or introduce you into the Kolo.",
     "verifikacija_link": "How do I enter the Kolo →",
-    "nivoi_napomena": "Sponsorship follows the same table as a donation by a natural person. The tier is calculated from the total of the company's donations, separately from your personal donations, and the coefficient of the newly reached tier applies to the entire new donation. The highest is tier 11, with a coefficient of 2.00. The minimum application is RSD 10,000.",
+    "nivoi_napomena": "Sponsorship has no tiers: the coefficient is 1.00 for both money and goods and services, regardless of the amount. The table of tiers applies only to your personal donations, and the total of the company's donations is kept separately from them and does not raise your tier. The minimum application is RSD 10,000.",
     "forma_naslov": "Start sponsorship",
     "forma_opis": "The platform generates a donation agreement from the entry data; you sign the agreement in the Agreements tab. Once the Foundation confirms receipt of the payment, the contribution is recorded in your record.",
     "forma_naziv_label": "Name of legal entity or entrepreneur",
@@ -2378,7 +2378,7 @@
     "brisanje_potvrda": "Delete the sponsor entry? The display on the map and the voucher offer end, while contributions remain on the ranking list.",
     "brisanje_potvrda_rang": "Delete the sponsor entry and remove it from the ranking list? This cannot be undone.",
     "sta_dobija_naslov": "What a sponsor gets",
-    "sta_dobija_tekst": "POEN is recorded for the person who submits the application, using the same table as for donations. The sponsor's name, and logo if it has one, is shown on the map and on the sponsor ranking list, and for sponsorship with goods and services also on the vouchers. This is a record of contribution, not advertising: the sponsor gains neither promotion nor an advantage in procurement.",
+    "sta_dobija_tekst": "POEN is recorded for the person who submits the application, with a coefficient of 1.00, without the table of tiers. The sponsor's name, and logo if it has one, is shown on the map and on the sponsor ranking list, and for sponsorship with goods and services also on the vouchers. This is a record of contribution, not advertising: the sponsor gains neither promotion nor an advantage in procurement.",
     "mejl_kod_naslov": "Code for signing the donation agreement",
     "mejl_kod_telo": "Code for signing the monetary sponsorship agreement ({naziv}) on the KOLO platform:",
     "mejl_primerak_davalac": "The monetary sponsorship agreement has been concluded electronically on the KOLO platform. Below is a printable copy of the agreement."
@@ -4152,7 +4152,7 @@
     "licno_tekst": "You can donate to the Foundation. A donation is a separate act and buys nothing within the system.",
     "licno_dugme": "Donate",
     "firma_naslov": "As a company, association or registered farm",
-    "firma_tekst": "A company, an association and the holder of a registered agricultural holding can be sponsors, in money or in goods and services. POEN is recorded for the person who submits the application, using the same table as for donations, and a cash sponsor is listed on the ranking with its name and, if it has one, its logo. It gains neither promotion nor an advantage in procurement from this.",
+    "firma_tekst": "A company, an association and the holder of a registered agricultural holding can be sponsors, in money or in goods and services. POEN is recorded for the person who submits the application, with a coefficient of 1.00, without the table of tiers, and a cash sponsor is listed on the ranking with its name and, if it has one, its logo. It gains neither promotion nor an advantage in procurement from this.",
     "firma_dugme": "Register a sponsor",
     "firma_lista": "Sponsor ranking",
     "firma_firme": "Companies with vouchers",

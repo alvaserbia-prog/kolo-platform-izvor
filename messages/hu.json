@@ -1424,7 +1424,7 @@
       },
       "pokroviteljstvo-donacije": {
         "naziv": "Szabályzat a pártfogásról és adományokról",
-        "opis": "Hogyan kerül nyilvántartásba az adományozók és pártfogók hozzájárulása: egységes együtthatótáblázat természetes és jogi személyek számára, 10.000 RSD-s pártfogási küszöb, valamint a személyes és a cég nevében tett adományok külön nyilvántartása."
+        "opis": "Hogyan kerül nyilvántartásba az adományozók és pártfogók hozzájárulása: szinttáblázat a természetes személyek adományaira, 1,00-es együttható a pártfogásra, 10.000 RSD-s pártfogási küszöb, valamint a személyes és a cég nevében tett adományok külön nyilvántartása."
       },
       "operativni": {
         "naziv": "Szabályzat a működési hozzájárulásról",
@@ -1903,7 +1903,7 @@
     "n6_opis": "Pénzt adományozol az Alapítványnak, a hozzájárulásodat pedig nyilvános szabályzat szerint POEN-ben tartjuk nyilván, adományi együtthatóval, amellyel a közösség elismeri a hozzájárulást, mert a nagyobb hozzájárulás nagyobb jelentőségű számára.\nA nyilvántartás egyirányú: a POEN nem váltható vissza dinárra, nem ad tulajdont vagy követelést az Alapítvánnyal szemben, és nem vásárol szavazatot.",
     "n6_iznos": "adományi együttható 1,00-tól felfelé",
     "n5_naslov": "Pártfogás",
-    "n5_opis": "Egy cég, egyesület vagy bejegyzett gazdaság pártfogási szerződést köt az Alapítvánnyal, pénzben vagy javakban és szolgáltatásokban. A POEN-t a bejelentést benyújtó felhasználónak tartjuk nyilván, ugyanazon táblázat szerint, mint az adományoknál.",
+    "n5_opis": "Egy cég, egyesület vagy bejegyzett gazdaság pártfogási szerződést köt az Alapítvánnyal, pénzben vagy javakban és szolgáltatásokban. A POEN-t a bejelentést benyújtó felhasználónak tartjuk nyilván, növelés nélkül: a szinttáblázat csak a személyes adományra vonatkozik.",
     "n4_naslov": "Szociális programok",
     "n4_opis": "Programok anyáknak és gondviselőknek, időseknek, különleges támogatásra és hallgatóknak, amelyekben a jóváhagyott résztvevőknek naponta POEN kerül bejegyzésre. Ez nem jogszabályi értelemben vett szociális segély, és nem befolyásolja az államnál érvényesített jogaidat.",
     "n4_iznos": "napi feljegyzés",
@@ -2235,7 +2235,7 @@
     "verifikacija_potrebna": "A javakkal és szolgáltatásokkal nyújtott pártfogáshoz a Kolóban kell lenned",
     "verifikacija_opis": "A pártfogó bejegyzését és a pénzbeli pártfogást bármely nagykorú felhasználó elvégezheti. Amikor az Alapítvány megerősíti a pénzbeli pártfogás beérkezését, választhatod a „Szeretném, ha felhívna valaki” lehetőséget, és felhív egy Kolo-tag. A javakkal és szolgáltatásokkal nyújtott pártfogáshoz szükséges, hogy valaki megerősítsen vagy bevezessen a Kolóba.",
     "verifikacija_link": "Hogyan lépek be a Kolóba →",
-    "nivoi_napomena": "A pártfogás ugyanazon táblázat szerint történik, mint a természetes személy adománya. A szint a cég adományainak összegéből számítódik, a személyes adományaidtól elkülönítve, az újonnan elért szint együtthatója pedig a teljes új adományra vonatkozik. A legmagasabb a 11. szint, 2,00-es együtthatóval. A legkisebb kérelem 10.000 RSD.",
+    "nivoi_napomena": "A pártfogásnak nincsenek szintjei: az együttható 1,00 pénz, illetve javak és szolgáltatások esetén is, az összegtől függetlenül. A szinttáblázat csak a személyes adományaidra vonatkozik, a cég adományainak összegét pedig ezektől elkülönítve tartjuk nyilván, és nem emeli a szintedet. A legkisebb kérelem 10.000 RSD.",
     "forma_naslov": "Patronálás indítása",
     "forma_opis": "A platform a bejegyzés adataiból adományozási szerződést hoz létre; a szerződést a Szerződések fülön írod alá. Amint az Alapítvány megerősíti a befizetés beérkezését, a hozzájárulás a bejegyzésedben nyilvántartásba kerül.",
     "forma_naziv_label": "A jogi személy vagy vállalkozó neve",
@@ -2378,7 +2378,7 @@
     "brisanje_potvrda": "Törlöd a pártfogó bejegyzését? A térképes megjelenítés és az utalványkínálat megszűnik, a hozzájárulások a rangsorban maradnak.",
     "brisanje_potvrda_rang": "Törlöd a pártfogó bejegyzését, és eltávolítod a rangsorból? Ez nem vonható vissza.",
     "sta_dobija_naslov": "Mit kap a pártfogó",
-    "sta_dobija_tekst": "Annak, aki a bejelentést benyújtja, POEN-t tartunk nyilván, ugyanazon táblázat szerint, mint az adománynál. A pártfogó neve, és logója, ha van, megjelenik a térképen és a pártfogók rangsorában, a javakkal és szolgáltatásokkal való pártfogásnál pedig az utalványokon is. Ez a hozzájárulás nyilvántartása, nem reklám: a pártfogó sem reklámot, sem előnyt a beszerzésben nem szerez.",
+    "sta_dobija_tekst": "Annak, aki a bejelentést benyújtja, POEN-t tartunk nyilván 1,00-es együtthatóval, szinttáblázat nélkül. A pártfogó neve, és logója, ha van, megjelenik a térképen és a pártfogók rangsorában, a javakkal és szolgáltatásokkal való pártfogásnál pedig az utalványokon is. Ez a hozzájárulás nyilvántartása, nem reklám: a pártfogó sem reklámot, sem előnyt a beszerzésben nem szerez.",
     "mejl_kod_naslov": "Kód az adományozási szerződés aláírásához",
     "mejl_kod_telo": "Kód a pénzbeli pártfogásról szóló szerződés ({naziv}) aláírásához a KOLO platformon:",
     "mejl_primerak_davalac": "A pénzbeli pártfogásról szóló szerződést elektronikus úton kötötték meg a KOLO platformon. Alább a szerződés nyomtatható példánya található."
@@ -4152,7 +4152,7 @@
     "licno_tekst": "Adományozhatsz az Alapítványnak. Az adomány külön aktus, és nem vásárol semmit a rendszeren belül.",
     "licno_dugme": "Adományozás",
     "firma_naslov": "Cégként, egyesületként vagy bejegyzett gazdaságként",
-    "firma_tekst": "Cég, egyesület és bejegyzett mezőgazdasági gazdaság vezetője lehet pártfogó, pénzben vagy javakban és szolgáltatásokban. Annak, aki a bejelentést benyújtja, POEN-t tartunk nyilván, ugyanazon táblázat szerint, mint az adománynál, a pénzbeli pártfogó pedig névvel és, ha van, logóval szerepel a rangsorban. Ezzel sem reklámot, sem előnyt a beszerzésben nem szerez.",
+    "firma_tekst": "Cég, egyesület és bejegyzett mezőgazdasági gazdaság vezetője lehet pártfogó, pénzben vagy javakban és szolgáltatásokban. Annak, aki a bejelentést benyújtja, POEN-t tartunk nyilván 1,00-es együtthatóval, szinttáblázat nélkül, a pénzbeli pártfogó pedig névvel és, ha van, logóval szerepel a rangsorban. Ezzel sem reklámot, sem előnyt a beszerzésben nem szerez.",
     "firma_dugme": "Pártfogó bejegyzése",
     "firma_lista": "A pártfogók rangsora",
     "firma_firme": "Utalványos cégek",

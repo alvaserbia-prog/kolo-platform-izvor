@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     // uporedio sa APR-om (Pravilnik čl. 31 st. 4) — beleži se samo činjenica poređenja.
     const rez = await potvrdiPrijavu(id, session.user.id, body.aprUporedjeno === true);
     await logAdminAkcija(session.user.id, "POKROVITELJSTVO_POTVRDJENO", id,
-      `Bonus ${rez.bonus.toLocaleString("sr-RS")} POEN (${rez.noviNivoi.length} nivo(a))`);
+      `Bonus ${rez.bonus.toLocaleString("sr-RS")} POEN`);
     await obavesti(rez.vlasnikId, {
       tip: "pokroviteljstvo_potvrdjeno",
       kljuc: rez.bonus > 0

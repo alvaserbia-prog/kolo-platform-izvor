@@ -105,7 +105,7 @@ export const RANG_TABELA: { nivo: number; do: number; kurs: number }[] = [
 ];
 /**
  * 🔴 Tabela ima JEDANAEST nivoa i staje na koeficijentu 2,00 (odluka vlasnika
- * 25.10.2026, za donaciju i pokroviteljstvo podjednako). Svaki kumulativ od
+ * 25.10.2026). Od 28.10.2026 važi samo za donaciju fizičkog lica. Svaki kumulativ od
  * 5.000.000 RSD naviše ostaje na nivou 11. Do tada se tabela nastavljala bez
  * kraja (odluka 2026-09-08); zatečeni zapisi sa višim nivoom ostaju kakvi jesu.
  *
@@ -201,38 +201,21 @@ export function nivoZaKumulativ(kumulativRSD: number): { nivo: number; kurs: num
 }
 
 /**
- * 🔴 Pokroviteljstvo ide po ISTOJ tabeli kao donacija fizičkog lica (čl. 22, set
- * 4.6.8, odluka vlasnika 2026-10-17). Uvećanje od 20% je ukinuto: premija po
- * pravnom obliku davaoca nagrađivala je jeftiniji put (donacija firme vlasnika
- * lično košta manje od lične donacije, priznat rashod ili ne), ubrzavala je
- * osnivački kanal i prelazila u glas preko ZRNA. Obrazloženje „odricanjem" nije
- * izdržalo poređenje sa fizičkim licem, koje takođe daje iz oporezovanog novca.
+ * 🔴 Koeficijent evidencije pokroviteljstva je 1,00 — za novac i za dobra i usluge,
+ * bez obzira na iznos, kumulativ i pravni oblik (donacije čl. 22 i 33, set 5.0.0, izmena 28.10.2026;
+ * odluka vlasnika 27.10.2026). Tabela iz čl. 8 važi samo za donaciju fizičkog lica.
+ * Razlog u aktu: pokrovitelj nema zapis, a doprinos se evidentira u zapisu podnosioca
+ * prijave, koji nije pokrovitelj (čl. 22 st. 2) — ne poreski položaj davaoca i ne pravni oblik.
  *
- * Nivo se vodi POSEBNO po davaocu — firma po PIB-u (`Pokrovitelj.rsdKumulativ`),
- * čovek po svom nalogu — i dva zbira se ne sabiraju. Deljenje davanja na dva
- * zbira ne donosi više POEN-a nego jedan zbir (lestvica raste sa kumulativom).
- *
- * Numeracija nivoa je ista kao kod donacija (10.000 RSD = nivo 3). Zatečeni
- * `Pokrovitelj.trenutniNivo` iz pomerene numeracije prevodi migracija
- * `20261017120000_pokrovitelj_nivo_jedinstvena_tabela`.
+ * Istorija: ×1,20 za firme ukinut 17.10.2026 (set 4.6.8), pa ista tabela 1,00–2,00
+ * do 28.10.2026. Zatečeni zapisi i snimljeni koeficijenti ugovora se ne diraju.
  */
-export function nivoPokroviteljstvaZaKumulativ(kumulativRSD: number): {
-  nivo: number;
-  kurs: number;
-} {
-  return nivoZaKumulativ(kumulativRSD);
-}
+export const KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA = 1.0;
 
-/**
- * Redovi tabele iz čl. 8 za ekran pokroviteljstva — ISTI redovi kao za donaciju
- * fizičkog lica (čl. 22, set 4.6.8; odluka vlasnika 18.10.2026). Do tada je tabela
- * počinjala od nivoa 3 (najmanja prijava), pa je na ekranu izgledala kao zasebna
- * lestvica. Najmanja prijava (10.000 RSD) stoji u napomeni ispod tabele.
- */
-export function tabelaPokroviteljstvaZaPrikaz(
-  doNivoa = NAJVISI_NIVO
-): { nivo: number; do: number; kurs: number }[] {
-  return tabelaZaPrikaz(doNivoa);
+/** Čl. 22 — broj POEN-a za novčano pokroviteljstvo (ceo broj). */
+export function poenZaPokroviteljstvo(rsdIznos: number): number {
+  if (!Number.isFinite(rsdIznos) || rsdIznos <= 0) return 0;
+  return Math.round(rsdIznos * KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA);
 }
 
 /**

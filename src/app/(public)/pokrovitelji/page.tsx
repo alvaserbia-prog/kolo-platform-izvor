@@ -57,13 +57,9 @@ export default async function PokroviteljiPage() {
                 <LogotipPokrovitelja url={p.logoUrl} />
                 <div className="font-semibold text-kolo-text">{p.naziv}</div>
               </div>
-              <div className="shrink-0 text-right">
-                <div className="text-sm font-semibold text-kolo-green-700">
-                  {t("nivo")} {p.trenutniNivo}
-                </div>
-                <div className="text-xs text-kolo-muted mt-0.5">
-                  {rsd(Number(p.rsdKumulativ))}
-                </div>
+              {/* Bez nivoa: pokrovitelj ga nema (donacije čl. 22, set 5.0.0, izmena 28.10.2026). */}
+              <div className="shrink-0 text-right text-sm font-semibold text-kolo-green-700">
+                {rsd(Number(p.rsdKumulativ))}
               </div>
             </div>
           ))}

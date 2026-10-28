@@ -15,10 +15,12 @@
  *
  * ─── Brane koje se mogu izgubiti bez vidljivog kvara ─────────────────────────
  *
- * 🔴 O-6: koeficijent je onaj NIVO KOJI JE POKROVITELJ DOSTIGAO NOVČANIM
- * doprinosom. Vrednost dobara i usluga NIKAD ne ulazi u kumulativ, ne podiže nivo
- * i ne utiče na novčani deo rang-liste — inače bi roba bila jeftiniji put do istog
- * nivoa (razlog ukidanja ×1,20). `koeficijentIzNovca` zato prima SAMO novčani kumulativ.
+ * 🔴 Koeficijent evidencije pokroviteljstva dobrima i uslugama je 1,00 (donacije
+ * čl. 22 i 33 st. 2, set 5.0.0, izmena 28.10.2026). Do tada je bio nivo koji je pokrovitelj dostigao
+ * novčanim doprinosom (O-6), pa je vrednost iz sopstvenog cenovnika davaoca rasla
+ * do dvostruke. Snimljeni `UgovorDobra.koeficijent` zatečenih ugovora se ne dira, a
+ * otpis po raskidu ide po njemu (čl. 35 st. 2). Vrednost dobara i usluga i dalje
+ * NIKAD ne ulazi u novčani kumulativ ni u novčani deo rang-liste (čl. 33 st. 3).
  *
  * 🔴 O-8: broj POEN-a po vaučeru je deo upisa BEZ uvećanja po koeficijentu,
  * podeljen brojem vaučera. Obrazloženje je NEUTRALNOST OPTICAJA, ne cena. Uz broj
@@ -32,7 +34,7 @@
  * pravila o „najnižoj ceni iz javnih izvora" više nema.
  */
 
-import { nivoZaKumulativ } from "@/lib/donacija-pravila";
+import { KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA } from "@/lib/donacija-pravila";
 import { smeUcestvovati, type UcesnikProvera } from "@/lib/nabavka-pravila";
 import { FONDACIJA } from "@/lib/donacija-ugovor";
 
@@ -250,16 +252,10 @@ export function otpisPriRaskidu(poenEvidentirano: number, brojVaucera: number, u
 // ─── Koeficijent i broj POEN-a (čl. 33, nabavke čl. 31) ─────────────────────
 
 /**
- * Čl. 33 st. 2 — koeficijent evidencije iz nivoa koji je pokrovitelj dostigao
- * KUMULATIVNIM NOVČANIM DOPRINOSOM. Bez novčanog doprinosa: 1,00.
- *
- * 🔴 Ulaz je isključivo novčani kumulativ (`Pokrovitelj.rsdKumulativ`). Vrednost
- * ugovora o dobrima se ovde ne dodaje — ni tekućeg ni ranijih (čl. 33 st. 3).
+ * Čl. 33 st. 2 — koeficijent evidencije pokroviteljstva (čl. 22): uvek 1,00. Ne
+ * zavisi od novčanog kumulativa pokrovitelja ni od pravnog oblika davaoca.
  */
-export function koeficijentIzNovca(novcaniKumulativRsd: number | null): number {
-  if (novcaniKumulativRsd == null || !Number.isFinite(novcaniKumulativRsd) || novcaniKumulativRsd <= 0) return 1.0;
-  return nivoZaKumulativ(novcaniKumulativRsd).kurs;
-}
+export const KOEFICIJENT_DOBARA = KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA;
 
 /** Čl. 33 st. 2 — broj evidentiranih POEN-a = vrednost × koeficijent (ceo broj). */
 export function poenZaUgovor(vrednostRsd: number, koeficijent: number): number {

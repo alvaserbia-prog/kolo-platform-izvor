@@ -14,9 +14,9 @@
 
 U ovom se pravilniku koriste i sljedeći izrazi:
 
-1) **koeficijent evidencije donacija**: broj kojim se uvećava evidentirani doprinos donatora, fizičke osobe ili pokrovitelja, pri utvrđivanju broja POEN-a; određen je razinom donacija; nije cijena, nije tečaj i nije obračunski koeficijent u smislu Pravilnika o KOLO sustavu;
+1) **koeficijent evidencije donacija**: broj kojim se uvećava evidentirani doprinos pri utvrđivanju broja POEN-a; za donaciju fizičke osobe određen je razinom donacija, a za pokroviteljstvo iznosi 1,00 (članak 22.); nije cijena, nije tečaj i nije obračunski koeficijent u smislu Pravilnika o KOLO sustavu;
 
-2) **razina donacija**: stupanj kumulativne donacije, odnosno kumulativnog doprinosa pokrovitelja, koji određuje koeficijent evidencije donacija;
+2) **razina donacija**: stupanj kumulativne donacije koji određuje koeficijent evidencije donacija fizičke osobe;
 
 3) **kumulativna donacija**: zbroj svih javnih donacija korisnika čiji je primitak Zaklada utvrdila;
 
@@ -222,11 +222,11 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 ### Članak 22. — Koeficijent evidencije pokroviteljstva
 
-(1) Doprinos pokrovitelja evidentira se po tablici iz članka 8., s istim razinama i istim koeficijentima evidencije kao donacija fizičke osobe. Pravni oblik davatelja ne utječe na koeficijent evidencije.
+(1) Doprinos pokrovitelja evidentira se s koeficijentom evidencije 1,00, bez obzira na visinu pojedinačnog i kumulativnog doprinosa i na pravni oblik pokrovitelja. Tablica razina iz članka 8. ne primjenjuje se na pokroviteljstvo, i pokrovitelj nema razinu donacija.
 
-(2) Razina se utvrđuje na temelju kumulativnog doprinosa pokrovitelja i nove donacije; na koeficijent, broj POEN-a i trajnost razine na odgovarajući se način primjenjuje članak 8. stavci 1., 4. i 5.
+(2) Pokrovitelj nema zapis u evidenciji, a njegov se doprinos evidentira u zapisu korisnika koji je podnio prijavu (članak 23.), pa se ne uvećava. Broj POEN-a zaokružuje se na najbliži cijeli broj.
 
-(3) Kumulativni doprinos pokrovitelja i kumulativna donacija korisnika vode se odvojeno i ne zbrajaju se, i kada se doprinos pokrovitelja evidentira u zapisu korisnika koji donira i osobno. Kumulativni doprinos registriranog poljoprivrednog gospodarstva vodi se za gospodarstvo, odvojeno od osobne donacije njegova nositelja i od kumulativnog doprinosa pravne osobe ili obrtnika s kojim je nositelj povezan.
+(3) Kumulativni doprinos pokrovitelja i kumulativna donacija korisnika vode se odvojeno i ne zbrajaju se, i kada se doprinos pokrovitelja evidentira u zapisu korisnika koji donira i osobno; doprinos pokrovitelja ne utječe na razinu donacija tog korisnika. Kumulativni doprinos registriranog poljoprivrednog gospodarstva vodi se za gospodarstvo, odvojeno od osobne donacije njegova nositelja i od kumulativnog doprinosa pravne osobe ili obrtnika s kojim je nositelj povezan.
 
 ### Članak 23. — Pravna kvalifikacija evidencije pokroviteljstva
 
@@ -342,9 +342,9 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 (1) Kada je ugovor potpisan i vaučeri izdani, Zaklada utvrđuje da je pokroviteljstvo dobrima i uslugama ostvareno (članak 37. stavak 1. Pravilnika o KOLO sustavu), a Protokol evidentira POEN u zapisu podnositelja prijave. Ako davatelj obvezu ne izvrši, evidencija se ispravlja po članku 35.
 
-(2) Broj evidentiranih POEN-a jednak je vrijednosti iz članka 29. stavka 1. pomnoženoj koeficijentom evidencije koji odgovara razini koju je pokrovitelj dosegnuo kumulativnim novčanim doprinosom (članak 22.) i zaokruženoj na najbliži cijeli broj. Pokrovitelj bez novčanog doprinosa evidentira se s koeficijentom 1,00.
+(2) Broj evidentiranih POEN-a jednak je vrijednosti iz članka 29. stavka 1. pomnoženoj koeficijentom evidencije pokroviteljstva (članak 22.) i zaokruženoj na najbliži cijeli broj.
 
-(3) Vrijednost pokroviteljstva dobrima i uslugama ne ulazi u kumulativni doprinos pokrovitelja i ne utječe na razinu.
+(3) Vrijednost pokroviteljstva dobrima i uslugama ne ulazi u kumulativni doprinos pokrovitelja.
 
 (4) Evidentiranje je automatski akt Protokola i ne ulazi u zajednički dnevni limit.
 
@@ -358,7 +358,7 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 (1) Kada Zaklada, po prigovoru imatelja vaučera (članak 40. Uvjeta korištenja), utvrdi da davatelj dobro nije predao, odnosno uslugu nije pružio, a to nije otklonio u roku od 15 dana od poziva Zaklade, ugovor se raskida.
 
-(2) Podnositelju prijave otpisuje se broj POEN-a evidentiran po ugovoru podijeljen brojem vaučera, za svaki vaučer po tom ugovoru koji do raskida nije iskorišten, bez obzira na to je li izdan korisniku. Otpisani iznos obuhvaća i uvećanje po koeficijentu evidencije. Vaučeri po raskinutom ugovoru prestaju, a imateljima izdanih neiskorištenih vaučera poništenje se ispravlja po Pravilniku o projektima i kolektivnim nabavama.
+(2) Podnositelju prijave otpisuje se broj POEN-a evidentiran po ugovoru podijeljen brojem vaučera, za svaki vaučer po tom ugovoru koji do raskida nije iskorišten, bez obzira na to je li izdan korisniku. Otpisani iznos obuhvaća i uvećanje po koeficijentu evidencije s kojim je ugovor evidentiran. Vaučeri po raskinutom ugovoru prestaju, a imateljima izdanih neiskorištenih vaučera poništenje se ispravlja po Pravilniku o projektima i kolektivnim nabavama.
 
 (3) Otpis se izvršava i kada zapis time postane negativan (članak 17. stavak 2. točka 7. Pravilnika o KOLO sustavu). Teret se ne prenosi na drugu osobu. Podnositelj prijave o otpisu dobiva vlastitu obavijest.
 

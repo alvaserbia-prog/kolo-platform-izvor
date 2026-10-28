@@ -71,7 +71,6 @@ interface PokroviteljItem {
   naziv: string;
   logoUrl: string | null;
   rsdKumulativ: number;
-  trenutniNivo: number;
 }
 
 interface Props {

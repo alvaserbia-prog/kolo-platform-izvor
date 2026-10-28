@@ -14,9 +14,9 @@
 
 The following terms are also used in this Rulebook:
 
-1) **donation recording coefficient**: the number by which the recorded contribution of a donor, whether a natural person or a sponsor, is increased when determining the number of POEN; it is determined by the donation tier; it is not a price, not an exchange rate, and not an accounting coefficient within the meaning of the Rulebook on the KOLO System;
+1) **donation recording coefficient**: the number by which the recorded contribution is increased when determining the number of POEN; for a donation by a natural person it is determined by the donation tier, and for sponsorship it is 1.00 (Article 22); it is not a price, not an exchange rate, and not an accounting coefficient within the meaning of the Rulebook on the KOLO System;
 
-2) **donation tier**: the level of the cumulative donation, or of the sponsor's cumulative contribution, that determines the donation recording coefficient;
+2) **donation tier**: the level of the cumulative donation that determines the donation recording coefficient of a natural person;
 
 3) **cumulative donation**: the sum of all public donations of a user whose receipt the Foundation has established;
 
@@ -222,11 +222,11 @@ The following terms are also used in this Rulebook:
 
 ### Article 22 — Sponsorship recording coefficient
 
-(1) A sponsor's contribution is recorded under the table in Article 8, with the same tiers and the same recording coefficients as a donation by a natural person. The legal form of the giver does not affect the recording coefficient.
+(1) A sponsor's contribution is recorded with a recording coefficient of 1.00, regardless of the amount of the individual and the cumulative contribution and of the sponsor's legal form. The table of tiers in Article 8 does not apply to sponsorship, and a sponsor has no donation tier.
 
-(2) The tier is determined on the basis of the sponsor's cumulative contribution and the new donation; Article 8 paragraphs 1, 4 and 5 apply mutatis mutandis to the coefficient, the number of POEN and the permanence of the tier.
+(2) A sponsor has no record in the ledger, and its contribution is recorded in the record of the user who submitted the application (Article 23), so it is not increased. The number of POEN is rounded to the nearest whole number.
 
-(3) The sponsor's cumulative contribution and the user's cumulative donation are kept separately and are not added together, including where the sponsor's contribution is recorded in the record of a user who also donates personally. The cumulative contribution of a registered agricultural holding is kept for the holding, separately from the personal donation of its holder and from the cumulative contribution of a legal entity or entrepreneur with which the holder is connected.
+(3) The sponsor's cumulative contribution and the user's cumulative donation are kept separately and are not added together, including where the sponsor's contribution is recorded in the record of a user who also donates personally; the sponsor's contribution does not affect that user's donation tier. The cumulative contribution of a registered agricultural holding is kept for the holding, separately from the personal donation of its holder and from the cumulative contribution of a legal entity or entrepreneur with which the holder is connected.
 
 ### Article 23 — Legal qualification of sponsorship recording
 
@@ -342,9 +342,9 @@ The following terms are also used in this Rulebook:
 
 (1) When the agreement has been signed and the vouchers issued, the Foundation establishes that the sponsorship in goods and services has been realised (Article 37 paragraph 1 of the Rulebook on the KOLO System), and the Protocol records POEN in the applicant's record. If the giver does not perform the obligation, the ledger is corrected under Article 35.
 
-(2) The number of POEN recorded equals the value under Article 29 paragraph 1 multiplied by the recording coefficient corresponding to the tier the sponsor has reached through its cumulative contribution in money (Article 22), rounded to the nearest whole number. A sponsor without a contribution in money is recorded with a coefficient of 1.00.
+(2) The number of POEN recorded equals the value under Article 29 paragraph 1 multiplied by the sponsorship recording coefficient (Article 22), rounded to the nearest whole number.
 
-(3) The value of sponsorship in goods and services does not enter the sponsor's cumulative contribution and does not affect the tier.
+(3) The value of sponsorship in goods and services does not enter the sponsor's cumulative contribution.
 
 (4) The recording is an automatic act of the Protocol and does not count towards the common daily limit.
 
@@ -358,7 +358,7 @@ The following terms are also used in this Rulebook:
 
 (1) Where the Foundation, upon a complaint by the voucher holder (Article 40 of the Terms of Use), establishes that the giver did not hand over the good or did not provide the service, and did not remedy this within 15 days of the Foundation's request, the agreement is terminated.
 
-(2) The applicant has written off the number of POEN recorded under the agreement divided by the number of vouchers, for each voucher under that agreement that has not been used by the termination, regardless of whether it has been issued to a user. The amount written off also includes the increase by the recording coefficient. Vouchers under a terminated agreement lapse, and for the holders of issued unused vouchers the annulment is corrected under the Rulebook on Projects and Collective Procurement.
+(2) The applicant has written off the number of POEN recorded under the agreement divided by the number of vouchers, for each voucher under that agreement that has not been used by the termination, regardless of whether it has been issued to a user. The amount written off also includes the increase by the recording coefficient with which the agreement was recorded. Vouchers under a terminated agreement lapse, and for the holders of issued unused vouchers the annulment is corrected under the Rulebook on Projects and Collective Procurement.
 
 (3) The write-off is executed even where the record thereby becomes negative (Article 17 paragraph 2 point 7 of the Rulebook on the KOLO System). The burden is not transferred to another person. The applicant receives their own notification of the write-off.
 

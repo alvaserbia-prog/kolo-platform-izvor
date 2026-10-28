@@ -156,6 +156,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // i novčano pokroviteljstvo potvrđuju stvarnost (dokaz stvarnosti čl. 4a).
   // 4.8.4 — čl. 5b i 13b: bez praga i izjave o poreklu (radi banka), primenu glave
   // prati direktor; čl. 13a (opis strukture), čl. 13f st. 4 (naredni ugovor).
+  // 5.0.0, izmena 28.10.2026 (odluka vlasnika, bez nove šifre) — čl. 2, 22, 33 i 35: pokroviteljstvo (novac i dobra i usluge) uvek sa
+  // koeficijentom 1,00; tabela nivoa važi samo za donaciju fizičkog lica.
   "pokroviteljstvo-donacije": {
     fajl: "donacije_5_0_0.md",
     verzija: "5.0.0",

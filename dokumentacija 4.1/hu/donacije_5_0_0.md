@@ -14,9 +14,9 @@
 
 E szabályzatban a következő kifejezések is használatosak:
 
-1) **az adományok nyilvántartási együtthatója**: az a szám, amellyel az adományozó, természetes személy vagy pártfogó nyilvántartásba vett hozzájárulása a POEN-ek számának megállapításakor növekszik; az adományok szintje határozza meg; nem ár, nem árfolyam és nem elszámolási együttható a KOLO rendszerről szóló szabályzat értelmében;
+1) **az adományok nyilvántartási együtthatója**: az a szám, amellyel a nyilvántartásba vett hozzájárulás a POEN-ek számának megállapításakor növekszik; természetes személy adománya esetén az adományok szintje határozza meg, pártfogás esetén értéke 1,00 (22. cikk); nem ár, nem árfolyam és nem elszámolási együttható a KOLO rendszerről szóló szabályzat értelmében;
 
-2) **az adományok szintje**: a halmozott adomány, illetve a pártfogó halmozott hozzájárulásának foka, amely meghatározza az adományok nyilvántartási együtthatóját;
+2) **az adományok szintje**: a halmozott adomány foka, amely meghatározza a természetes személy adományainak nyilvántartási együtthatóját;
 
 3) **halmozott adomány**: a felhasználó valamennyi olyan nyilvános adományának összege, amelynek beérkezését az Alapítvány megállapította;
 
@@ -222,11 +222,11 @@ E szabályzatban a következő kifejezések is használatosak:
 
 ### 22. cikk — A pártfogás nyilvántartási együtthatója
 
-(1) A pártfogó hozzájárulása a 8. cikk szerinti táblázat alapján kerül nyilvántartásba, ugyanazokkal a szintekkel és ugyanazokkal a nyilvántartási együtthatókkal, mint a természetes személy adománya. A juttató jogi formája nem befolyásolja a nyilvántartási együtthatót.
+(1) A pártfogó hozzájárulása 1,00 nyilvántartási együtthatóval kerül nyilvántartásba, az egyedi és a halmozott hozzájárulás összegétől és a pártfogó jogi formájától függetlenül. A 8. cikk szerinti szinttáblázat a pártfogásra nem alkalmazandó, és a pártfogónak nincs adományszintje.
 
-(2) A szint a pártfogó halmozott hozzájárulása és az új adomány alapján kerül megállapításra; az együtthatóra, a POEN-ek számára és a szint tartósságára a 8. cikk (1), (4) és (5) bekezdését megfelelően alkalmazni kell.
+(2) A pártfogónak nincs bejegyzése a nyilvántartásban, hozzájárulása a kérelmet benyújtó felhasználó bejegyzésében kerül nyilvántartásba (23. cikk), ezért nem növekszik. A POEN-ek számát a legközelebbi egész számra kell kerekíteni.
 
-(3) A pártfogó halmozott hozzájárulását és a felhasználó halmozott adományát elkülönítve vezetik, és azok nem adódnak össze, akkor sem, ha a pártfogó hozzájárulása olyan felhasználó bejegyzésében kerül nyilvántartásba, aki személyesen is adományoz. A bejegyzett mezőgazdasági termelő gazdaság halmozott hozzájárulását a gazdaságra vezetik, elkülönítve a vezető személyes adományától, valamint annak a jogi személynek vagy egyéni vállalkozónak a halmozott hozzájárulásától, amellyel a vezető kapcsolatban áll.
+(3) A pártfogó halmozott hozzájárulását és a felhasználó halmozott adományát elkülönítve vezetik, és azok nem adódnak össze, akkor sem, ha a pártfogó hozzájárulása olyan felhasználó bejegyzésében kerül nyilvántartásba, aki személyesen is adományoz; a pártfogó hozzájárulása nem befolyásolja e felhasználó adományszintjét. A bejegyzett mezőgazdasági termelő gazdaság halmozott hozzájárulását a gazdaságra vezetik, elkülönítve a vezető személyes adományától, valamint annak a jogi személynek vagy egyéni vállalkozónak a halmozott hozzájárulásától, amellyel a vezető kapcsolatban áll.
 
 ### 23. cikk — A pártfogás nyilvántartásának jogi minősítése
 
@@ -342,9 +342,9 @@ E szabályzatban a következő kifejezések is használatosak:
 
 (1) Amikor a szerződést aláírták és az utalványokat kiállították, az Alapítvány megállapítja, hogy az áruval és szolgáltatással nyújtott pártfogás megvalósult (a KOLO rendszerről szóló szabályzat 37. cikkének (1) bekezdése), a Protokoll pedig a kérelmet benyújtó bejegyzésében nyilvántartásba veszi a POEN-t. Ha a juttató a kötelezettségét nem teljesíti, a nyilvántartás a 35. cikk szerint kerül helyesbítésre.
 
-(2) A nyilvántartásba vett POEN-ek száma megegyezik a 29. cikk (1) bekezdése szerinti értéknek és annak a nyilvántartási együtthatónak a szorzatával, amely annak a szintnek felel meg, amelyet a pártfogó halmozott pénzbeli hozzájárulásával elért (22. cikk), a legközelebbi egész számra kerekítve. A pénzbeli hozzájárulással nem rendelkező pártfogó 1,00 együtthatóval kerül nyilvántartásba.
+(2) A nyilvántartásba vett POEN-ek száma megegyezik a 29. cikk (1) bekezdése szerinti értéknek és a pártfogás nyilvántartási együtthatójának (22. cikk) szorzatával, a legközelebbi egész számra kerekítve.
 
-(3) Az áruval és szolgáltatással nyújtott pártfogás értéke nem számít bele a pártfogó halmozott hozzájárulásába, és nem befolyásolja a szintet.
+(3) Az áruval és szolgáltatással nyújtott pártfogás értéke nem számít bele a pártfogó halmozott hozzájárulásába.
 
 (4) A nyilvántartásba vétel a Protokoll automatikus aktusa, és nem számít bele a közös napi korlátba.
 
@@ -358,7 +358,7 @@ E szabályzatban a következő kifejezések is használatosak:
 
 (1) Ha az Alapítvány az utalvány birtokosának kifogása alapján (a Felhasználási feltételek 40. cikke) megállapítja, hogy a juttató az árut nem adta át, illetve a szolgáltatást nem nyújtotta, és ezt az Alapítvány felhívásától számított 15 napon belül nem orvosolta, a szerződés felbontásra kerül.
 
-(2) A kérelmet benyújtótól a szerződés alapján nyilvántartásba vett POEN-ek számának és az utalványok számának hányadosa kerül leírásra minden olyan, e szerződés szerinti utalvány után, amelyet a felbontásig nem használtak fel, függetlenül attól, hogy felhasználó részére kiállították-e. A leírt összeg a nyilvántartási együttható szerinti növelést is magában foglalja. A felbontott szerződés szerinti utalványok megszűnnek, a kiállított, fel nem használt utalványok birtokosainál pedig az érvénytelenítés a projektekről és a kollektív beszerzésekről szóló szabályzat szerint kerül helyesbítésre.
+(2) A kérelmet benyújtótól a szerződés alapján nyilvántartásba vett POEN-ek számának és az utalványok számának hányadosa kerül leírásra minden olyan, e szerződés szerinti utalvány után, amelyet a felbontásig nem használtak fel, függetlenül attól, hogy felhasználó részére kiállították-e. A leírt összeg magában foglalja a növelést is azon nyilvántartási együttható szerint, amellyel a szerződést nyilvántartásba vették. A felbontott szerződés szerinti utalványok megszűnnek, a kiállított, fel nem használt utalványok birtokosainál pedig az érvénytelenítés a projektekről és a kollektív beszerzésekről szóló szabályzat szerint kerül helyesbítésre.
 
 (3) A leírás akkor is végrehajtásra kerül, ha a bejegyzés ezáltal negatívvá válik (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 7. pontja). A teher nem száll át más személyre. A kérelmet benyújtó a leírásról saját értesítést kap.
 

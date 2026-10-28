@@ -4,7 +4,7 @@ import { probajEvidentiratiPotvrde } from "./potvrda-poen";
 import { imeNaloga, ishodUpisa, upisiIdentitet, PORUKA_DRUGO_IME } from "./identitet";
 import { ponudiSpisak, pokroviteljstvoVodiNaSpisak } from "./zahtev-razgovor";
 import { VrstaDonacije } from "@/generated/prisma/client";
-import { nivoPokroviteljstvaZaKumulativ } from "@/lib/donacija-pravila";
+import { KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA, poenZaPokroviteljstvo } from "@/lib/donacija-pravila";
 import { naRangListi, kljucNovcanogPokrovitelja, upisOdobrenZaPotvrdu } from "@/lib/upis-pokrovitelja-pravila";
 import type { VrstaDavaoca } from "@/lib/pokroviteljstvo-dobrima-pravila";
 import { FONDACIJA } from "@/lib/donacija-ugovor";
@@ -15,23 +15,26 @@ import { FONDACIJA } from "@/lib/donacija-ugovor";
 export {
   MINIMUM_PRIJAVE_POKROVITELJSTVA,
   procitajPrijavuPokroviteljstva,
-  nivoPokroviteljstvaZaKumulativ,
-  tabelaPokroviteljstvaZaPrikaz,
+  KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA,
+  poenZaPokroviteljstvo,
 } from "@/lib/donacija-pravila";
 
 /**
- * Evidentira doprinos pokrovitelja i emituje POEN po ISTOJ tabeli kao donacija
- * fizičkog lica (čl. 22, set 4.6.8). Nivo se računa iz kumulativa pokrovitelja —
- * firme po PIB-u, registrovanog gazdinstva po BPG-u (set 4.7.9) — odvojeno od ličnih
- * donacija onoga ko POEN prima. 🔴 Gazdinstvo nema poseban koeficijent: ista tabela.
+ * Evidentira doprinos pokrovitelja i emituje POEN sa koeficijentom 1,00 (donacije
+ * čl. 22, set 5.0.0, izmena 28.10.2026; odluka vlasnika 27.10.2026). 🔴 Tabela nivoa iz čl. 8 važi samo
+ * za donaciju fizičkog lica: pokrovitelj nema zapis, a doprinos se evidentira u zapisu
+ * podnosioca prijave, koji nije pokrovitelj (čl. 22 st. 2), pa se ne uvećava — ni po iznosu, ni po
+ * pravnom obliku, ni za gazdinstvo. Kumulativ pokrovitelja (firma po PIB-u, gazdinstvo
+ * po BPG-u) vodi se i dalje, ali samo za rang-listu (čl. 21 st. 2, čl. 25); nivo se ne
+ * računa, a zatečeni `Pokrovitelj.trenutniNivo` ostaje kao istorija.
  *
  * 🔴 POEN dobija JEDNO lice — ono koje je podnelo prijavu (donacije čl. 20 st. 3, čl. 23
  * st. 2), ne `Pokrovitelj.vlasnik` upisan pri prvoj prijavi. Doprinos se ne raspoređuje
  * na više vlasnika. `primalacId` je zato OBAVEZAN; ručni upis iz admin panela bez
  * prijave ukinut je setom 5.0 (ruta `admin/pokrovitelji/[id]/doprinos` vraća 410).
  *
- * 🔴 Već evidentiran POEN po ranijoj tabeli (fiksni bonusi do 2026-09-08, pa
- * uvećanje od 20% do 4.6.8) se NE poništava (raniji prelazni stav čl. 10 st. 4, brisan u setu 5.0).
+ * 🔴 Već evidentiran POEN po ranijoj tabeli (fiksni bonusi do 2026-09-08, uvećanje od
+ * 20% do 4.6.8, tabela 1,00–2,00 do 28.10.2026) se NE poništava i ne ispravlja (čl. 55).
  */
 export async function evidentirajDoprinos(params: {
   pokroviteljId: string;
@@ -43,13 +46,14 @@ export async function evidentirajDoprinos(params: {
   primalacId: string;
 }) {
   const { pokroviteljId, rsdIznos, tip, evidentiraoId, napomena } = params;
-  // 🔴 Kumulativ je NOVČANI (čl. 22; čl. 33 st. 3, O-6). Vrednost dobara i usluga
-  // se ne dodaje — inače bi roba bila jeftiniji put do višeg nivoa. Dobra i usluge
-  // idu kroz `protokol/pokroviteljstvo-dobrima.ts`, koji kumulativ samo čita.
+  // 🔴 Kumulativ je NOVČANI (čl. 21 st. 2; čl. 33 st. 3). Vrednost dobara i usluga
+  // se ne dodaje. Dobra i usluge idu kroz `protokol/pokroviteljstvo-dobrima.ts`.
   if (tip !== "NOVAC") throw new Error("U kumulativ pokrovitelja ulazi samo novčani doprinos.");
 
+  const poen = poenZaPokroviteljstvo(rsdIznos);
+
   // Korak 1: DB transakcija
-  const { noviNivoi, vlasnikWalletId, vlasnikId } = await prisma.$transaction(async (tx) => {
+  const { bonusId, vlasnikWalletId, vlasnikId } = await prisma.$transaction(async (tx) => {
     const pokrovitelj = await tx.pokrovitelj.findUniqueOrThrow({
       where: { id: pokroviteljId },
       select: { rsdKumulativ: true },
@@ -59,14 +63,6 @@ export async function evidentirajDoprinos(params: {
       where: { id: params.primalacId },
       include: { wallet: true },
     });
-
-    const stariKumulativ = Number(pokrovitelj.rsdKumulativ);
-    const noviKumulativ = stariKumulativ + rsdIznos;
-
-    // Nivo se od sada IZVODI iz kumulativa (ne pamti se kao dostignuće koje ne
-    // sme da opadne) — kumulativ ionako samo raste, pa je izvod jednoznačan.
-    const { nivo: noviNivo, kurs } = nivoPokroviteljstvaZaKumulativ(noviKumulativ);
-    const bonusPoen = Math.round(rsdIznos * kurs);
 
     await tx.pokroviteljDoprinos.create({
       data: {
@@ -78,49 +74,36 @@ export async function evidentirajDoprinos(params: {
       },
     });
 
+    // Kumulativ samo za rang-listu; `trenutniNivo` se više ne upisuje (čl. 22 st. 1).
     await tx.pokrovitelj.update({
       where: { id: pokroviteljId },
-      data: {
-        rsdKumulativ: noviKumulativ,
-        trenutniNivo: noviNivo,
-      },
+      data: { rsdKumulativ: Number(pokrovitelj.rsdKumulativ) + rsdIznos },
     });
 
-    // Jedan zapis po doprinosu, ne po nivou — koeficijentni model nema „naplatu
-    // preskočenih nivoa"; ceo iznos je već pomnožen koeficijentom.
-    const noviNivoi: { nivo: number; bonusPoen: number; bonusId: string }[] = [];
-    if (bonusPoen > 0) {
-      const bonus = await tx.pokroviteljBonusEmisija.create({
-        data: {
-          pokroviteljId,
-          vlasnikId: primalac.id,
-          nivo: noviNivo,
-          bonusPoen,
-        },
-      });
-      noviNivoi.push({ nivo: noviNivo, bonusPoen, bonusId: bonus.id });
-    }
+    // Kolona `nivo` je iz vremena tabele; pokrovitelj nivo nema, pa se upisuje 0.
+    const bonus = poen > 0
+      ? await tx.pokroviteljBonusEmisija.create({
+          data: { pokroviteljId, vlasnikId: primalac.id, nivo: 0, bonusPoen: poen },
+        })
+      : null;
 
     return {
-      noviNivoi,
+      bonusId: bonus?.id ?? null,
       vlasnikWalletId: primalac.wallet!.id,
       vlasnikId: primalac.id,
     };
   });
 
-  // Korak 2: Emituj bonus POEN za dostignute nivoe
-  const bonusiZbir = noviNivoi.reduce((s, n) => s + n.bonusPoen, 0);
-
-  if (bonusiZbir > 0) {
+  // Korak 2: emisija van transakcije (pravilo 8)
+  if (poen > 0) {
     const { transaction } = await emitujPoen(
       vlasnikWalletId,
-      bonusiZbir,
+      poen,
       "EMISIJA_POKROVITELJ",
-      `Bonus za pokroviteljstvo iznos ${bonusiZbir.toLocaleString("sr-RS")}`, { kljuc: "transakcije.pokroviteljstvo", parametri: { iznos: bonusiZbir } }
+      `Bonus za pokroviteljstvo iznos ${poen.toLocaleString("sr-RS")}`, { kljuc: "transakcije.pokroviteljstvo", parametri: { iznos: poen } }
     );
 
-    // Poveži sve bonus zapise sa istom transakcijom
-    for (const { bonusId } of noviNivoi) {
+    if (bonusId) {
       await prisma.pokroviteljBonusEmisija.update({
         where: { id: bonusId },
         data: { transactionId: transaction.id },
@@ -134,7 +117,7 @@ export async function evidentirajDoprinos(params: {
     await probajEvidentiratiPotvrde(vlasnikId);
   }
 
-  return { noviNivoi, primalacId: vlasnikId };
+  return { poen, koeficijent: KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA, primalacId: vlasnikId };
 }
 
 /**
@@ -302,7 +285,7 @@ export async function potvrdiPrijavu(prijavaId: string, adminId: string, aprUpor
     });
     throw e;
   }
-  const { noviNivoi, primalacId } = evidentirano;
+  const { poen, primalacId } = evidentirano;
 
   await prisma.pokroviteljPrijava.update({
     where: { id: prijavaId },
@@ -339,8 +322,7 @@ export async function potvrdiPrijavu(prijavaId: string, adminId: string, aprUpor
     await ponudiSpisak(prijava.podnosilacId, "POKROVITELJSTVO");
   }
 
-  const bonus = noviNivoi.reduce((s, n) => s + n.bonusPoen, 0);
-  return { noviNivoi, bonus, vlasnikId: primalacId, pokroviteljId: pokrovitelj.id };
+  return { bonus: poen, vlasnikId: primalacId, pokroviteljId: pokrovitelj.id };
 }
 
 /**
@@ -364,7 +346,8 @@ export async function odbijPrijavu(prijavaId: string, adminId: string, razlog: s
  * Javna rang-lista, deo „novčani doprinos" (čl. 25 st. 1). Naziv i logotip iz upisa
  * pokrovitelja (čl. 26 st. 2), kad je povezan. 🔴 Obrisan upis OSTAJE na rang-listi,
  * sa nazivom i logotipom; uklanja se samo na zahtev korisnika koji je vodio upis
- * (čl. 18 st. 4). 🔴 Samo naziv, logotip, nivo i iznos u dinarima — bez POEN-a,
+ * (čl. 18 st. 4). 🔴 Samo naziv, logotip i iznos u dinarima — bez nivoa (pokrovitelj
+ * ga nema, čl. 22 st. 1, set 5.0.0, izmena 28.10.2026), POEN-a,
  * PIB-a, MB-a, sedišta i podnosioca.
  */
 export async function javnaRangListaNovca() {
@@ -375,7 +358,6 @@ export async function javnaRangListaNovca() {
       naziv: true,
       logoUrl: true,
       rsdKumulativ: true,
-      trenutniNivo: true,
       createdAt: true,
       upis: { select: { naziv: true, logoUrl: true, uklonjenSaRangListeAt: true } },
     },

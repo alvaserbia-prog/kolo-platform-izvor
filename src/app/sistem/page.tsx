@@ -355,7 +355,6 @@ export default async function SistemPage({
     naziv: p.naziv,
     logoUrl: p.logoUrl,
     rsdKumulativ: p.rsdKumulativ,
-    trenutniNivo: p.trenutniNivo,
   }));
 
   const danasEmisija = emisije[0];

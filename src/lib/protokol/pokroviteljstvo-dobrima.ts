@@ -41,7 +41,7 @@ import { bazniUrl, emailLayout, esc, posaljiEmailRaw } from "@/lib/email";
 import { prevedi } from "@/lib/prevod-servera";
 import {
   generisiUgovorDobraTekst,
-  koeficijentIzNovca,
+  KOEFICIJENT_DOBARA,
   poenZaUgovor,
   poenaPoVauceru,
   otpisPoVauceru,
@@ -69,7 +69,7 @@ import {
   FUNKCIJA_NOSIOCA_GAZDINSTVA,
   rangListaDobara,
 } from "@/lib/pokroviteljstvo-dobrima-pravila";
-import { upisSpremanZaPrijavu, funkcijaZaUgovor, naRangListi, kljucNovcanogPokrovitelja } from "@/lib/upis-pokrovitelja-pravila";
+import { upisSpremanZaPrijavu, funkcijaZaUgovor, naRangListi } from "@/lib/upis-pokrovitelja-pravila";
 
 export * from "@/lib/pokroviteljstvo-dobrima-pravila";
 
@@ -509,15 +509,10 @@ export async function potpisiUgovorDobra(
   if (ishodUpisa(await imeNaloga(userId), u.zastupnikImePrezime) === "RAZLIKUJE_SE")
     throw new VaucerGreska(PORUKA_DRUGO_IME, 409);
 
-  // Koeficijent iz novčanog kumulativa (čl. 33 st. 2). Bez novčanog doprinosa 1,00.
-  // Novčani pokrovitelj se vodi po PIB-u, a registrovano gazdinstvo po BPG-u (set
-  // 4.7.9: gazdinstvo daje i novac) — `kljucNovcanogPokrovitelja`, isti ključ kojim
-  // novčana prijava vodi kumulativ. Gazdinstvo bez novčanog doprinosa: 1,00.
-  const kljucNovca = kljucNovcanogPokrovitelja({ vrsta: u.vrstaDavaoca, pib: u.pib, bpg: u.bpg });
-  const novcano = kljucNovca
-    ? await prisma.pokrovitelj.findUnique({ where: kljucNovca, select: { rsdKumulativ: true } })
-    : null;
-  const koeficijent = koeficijentIzNovca(novcano ? Number(novcano.rsdKumulativ) : null);
+  // Koeficijent evidencije pokroviteljstva je 1,00 (čl. 22 i 33 st. 2, set 5.0.0, izmena 28.10.2026) —
+  // ne čita se novčani kumulativ. Snima se uz ugovor, jer otpis po raskidu ide po
+  // koeficijentu sa kojim je ugovor evidentiran (čl. 35 st. 2).
+  const koeficijent = KOEFICIJENT_DOBARA;
   const vrednost = Number(u.vrednostRsd);
   const poen = poenZaUgovor(vrednost, koeficijent);
   const poPoVauceru = poenaPoVauceru(vrednost, u.brojVaucera);

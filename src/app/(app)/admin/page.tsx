@@ -243,7 +243,6 @@ export default async function AdminPage({
         vlasnikPseudonim: p.vlasnik.pseudonim,
         logoUrl: p.logoUrl,
         rsdKumulativ: Number(p.rsdKumulativ),
-        trenutniNivo: p.trenutniNivo,
         status: p.status,
         brDoprinosa: p._count.doprinosi,
         createdAt: p.createdAt.toISOString(),

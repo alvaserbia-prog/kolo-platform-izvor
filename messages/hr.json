@@ -1424,7 +1424,7 @@
       },
       "pokroviteljstvo-donacije": {
         "naziv": "Pravilnik o pokroviteljstvu i donacijama",
-        "opis": "Kako se evidentira doprinos donatora i pokrovitelja: jedinstvena tablica koeficijenata za fizičke i pravne osobe, prag pokroviteljstva od 10.000 RSD i odvojena evidencija osobnih donacija i donacija tvrtke."
+        "opis": "Kako se evidentira doprinos donatora i pokrovitelja: tablica razina za donacije fizičkih osoba, koeficijent 1,00 za pokroviteljstvo, prag pokroviteljstva od 10.000 RSD i odvojena evidencija osobnih donacija i donacija tvrtke."
       },
       "operativni": {
         "naziv": "Pravilnik o operativnom doprinosu",
@@ -1903,7 +1903,7 @@
     "n6_opis": "Doniraš novac Zakladi, a tvoj se doprinos po javnom pravilniku evidentira u POENIMA, uz koeficijent donacije kojim zajednica uvažava doprinos, jer veći doprinos za nju ima veće značenje.\nEvidencija je jednosmjerna: POEN se ne vraća u dinare, ne daje vlasništvo ni potraživanje prema Zakladi i ne kupuje glasove.",
     "n6_iznos": "koeficijent donacije od 1,00 naviše",
     "n5_naslov": "Pokroviteljstvo",
-    "n5_opis": "Tvrtka, udruga ili registrirano gospodarstvo potpisuje sa Zakladom ugovor o pokroviteljstvu, u novcu ili u dobrima i uslugama. POEN se evidentira korisniku koji je podnio prijavu, po istoj tablici kao kod donacija.",
+    "n5_opis": "Tvrtka, udruga ili registrirano gospodarstvo potpisuje sa Zakladom ugovor o pokroviteljstvu, u novcu ili u dobrima i uslugama. POEN se evidentira korisniku koji je podnio prijavu, bez uvećanja: tablica razina vrijedi samo za osobnu donaciju.",
     "n4_naslov": "Socijalni programi",
     "n4_opis": "Programi za majke i skrbnike, starije, posebnu potporu i studente, u kojima se odobrenim sudionicima POEN upisuje svakoga dana. Ovo nije socijalna pomoć u smislu propisa i ne utječe na prava koja ostvaruješ kod države.",
     "n4_iznos": "dnevna evidencija",
@@ -2235,7 +2235,7 @@
     "verifikacija_potrebna": "Pokroviteljstvo dobrima i uslugama traži da budeš u Kolu",
     "verifikacija_opis": "Upis pokrovitelja i novčano pokroviteljstvo može izvršiti svaki punoljetni korisnik. Kad Zaklada potvrdi primitak novčanog pokroviteljstva, možeš odabrati „Želim da me netko nazove”, pa će te nazvati član Kola. Za pokroviteljstvo dobrima i uslugama potrebno je da te netko potvrdi ili uvede u Kolo.",
     "verifikacija_link": "Kako da uđem u Kolo →",
-    "nivoi_napomena": "Pokroviteljstvo ide po istoj tablici kao donacija fizičke osobe. Razina se računa iz zbroja donacija tvrtke, odvojeno od tvojih osobnih donacija, a koeficijent novodostignute razine primjenjuje se na cijelu novu donaciju. Najviša je razina 11, s koeficijentom 2,00. Najmanja prijava je 10.000 RSD.",
+    "nivoi_napomena": "Pokroviteljstvo nema razine: koeficijent je 1,00 i za novac i za dobra i usluge, bez obzira na iznos. Tablica razina vrijedi samo za tvoje osobne donacije, a zbroj donacija tvrtke vodi se odvojeno od njih i ne podiže tvoju razinu. Najmanja prijava je 10.000 RSD.",
     "forma_naslov": "Pokreni pokroviteljstvo",
     "forma_opis": "Platforma generira ugovor o donaciji iz podataka upisa; ugovor potpisuješ u kartici Ugovori. Kad Zaklada potvrdi primitak uplate, doprinos se evidentira u tvom zapisu.",
     "forma_naziv_label": "Naziv pravne osobe ili poduzetnika",
@@ -2378,7 +2378,7 @@
     "brisanje_potvrda": "Obrisati upis pokrovitelja? Prikaz na karti i ponuda vaučera prestaju, a doprinosi ostaju na rang-listi.",
     "brisanje_potvrda_rang": "Obrisati upis pokrovitelja i ukloniti ga s rang-liste? Ovo se ne može poništiti.",
     "sta_dobija_naslov": "Što pokrovitelj dobiva",
-    "sta_dobija_tekst": "Onome tko podnese prijavu evidentira se POEN, po istoj tablici kao za donaciju. Naziv pokrovitelja, i logotip ako ga ima, stoji na karti i na rang-listi pokrovitelja, a kod pokroviteljstva dobrima i uslugama i na vaučerima. To je evidencija doprinosa, ne reklama: promociju ni prednost u nabavi pokrovitelj ne stječe.",
+    "sta_dobija_tekst": "Onome tko podnese prijavu evidentira se POEN, s koeficijentom 1,00, bez tablice razina. Naziv pokrovitelja, i logotip ako ga ima, stoji na karti i na rang-listi pokrovitelja, a kod pokroviteljstva dobrima i uslugama i na vaučerima. To je evidencija doprinosa, ne reklama: promociju ni prednost u nabavi pokrovitelj ne stječe.",
     "mejl_kod_naslov": "Kod za potpis ugovora o donaciji",
     "mejl_kod_telo": "Kod za potpis ugovora o novčanom pokroviteljstvu ({naziv}) na platformi KOLO:",
     "mejl_primerak_davalac": "Ugovor o novčanom pokroviteljstvu sklopljen je elektroničkim putem na platformi KOLO. U nastavku je primjerak ugovora za ispis."
@@ -4152,7 +4152,7 @@
     "licno_tekst": "Možeš donirati Zakladi. Donacija je zaseban čin i njome se ne kupuje ništa unutar sustava.",
     "licno_dugme": "Doniraj",
     "firma_naslov": "Kao tvrtka, udruga ili registrirano gospodarstvo",
-    "firma_tekst": "Tvrtka, udruga i nositelj registriranog poljoprivrednog gospodarstva mogu biti pokrovitelji, u novcu ili u dobrima i uslugama. Onome tko podnese prijavu evidentira se POEN, po istoj tablici kao za donaciju, a pokrovitelj u novcu navodi se na rang-listi nazivom i, ako ga ima, logotipom. Promociju ni prednost u nabavi time ne stječe.",
+    "firma_tekst": "Tvrtka, udruga i nositelj registriranog poljoprivrednog gospodarstva mogu biti pokrovitelji, u novcu ili u dobrima i uslugama. Onome tko podnese prijavu evidentira se POEN, s koeficijentom 1,00, bez tablice razina, a pokrovitelj u novcu navodi se na rang-listi nazivom i, ako ga ima, logotipom. Promociju ni prednost u nabavi time ne stječe.",
     "firma_dugme": "Upiši pokrovitelja",
     "firma_lista": "Rang-lista pokrovitelja",
     "firma_firme": "Tvrtke s vaučerima",

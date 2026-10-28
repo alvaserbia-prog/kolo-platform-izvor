@@ -32,7 +32,6 @@ export async function GET() {
       vlasnikId: p.vlasnikId,
       vlasnikPseudonim: p.vlasnik.pseudonim,
       rsdKumulativ: Number(p.rsdKumulativ),
-      trenutniNivo: p.trenutniNivo,
       status: p.status,
       brDoprinosa: p._count.doprinosi,
       createdAt: p.createdAt.toISOString(),
