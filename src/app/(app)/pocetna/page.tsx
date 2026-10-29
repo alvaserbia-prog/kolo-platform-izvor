@@ -124,6 +124,7 @@ export default async function PocetnaPage() {
             avatar: p.user.avatar,
             content: p.content,
             createdAt: p.createdAt.toISOString(),
+            izmenjeno: p.izmenjenoAt !== null,
           }))
           .reverse()}
       />
@@ -205,6 +206,7 @@ export default async function PocetnaPage() {
       avatar: p.user.avatar,
       content: p.content,
       createdAt: p.createdAt.toISOString(),
+      izmenjeno: p.izmenjenoAt !== null,
     }))
     .reverse();
 

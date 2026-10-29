@@ -8,6 +8,8 @@ import OznakaStatusa from "@/components/OznakaStatusa";
 import PrijavaRoditeljstva from "@/components/deca/PrijavaRoditeljstva";
 import type { StatusUcesnika } from "@/lib/status-ucesnika-pravila";
 import type { NaStaSeCeka } from "@/lib/deca-pravila";
+import { useDijalog } from "@/components/ui/Dijalog";
+import { izmeniPorukuPricaonice, obrisiPorukuPricaonice } from "@/lib/pricaonica-klijent";
 
 type Oglas = {
   id: string;
@@ -26,6 +28,8 @@ type Poruka = {
   avatar: string | null;
   content: string;
   createdAt: string;
+  /** Autor je izmenio tekst — uz poruku stoji „izmenjeno". */
+  izmenjeno: boolean;
 };
 
 /**
@@ -354,7 +358,11 @@ function DecjaPricaonica({
   uvidTekst: string;
 }) {
   const t = useTranslations("decjaPocetna");
+  const { dijalog, potvrdi } = useDijalog();
   const [poruke, setPoruke] = useState<Poruka[]>(inicijalno);
+  // Sopstvena poruka koja se upravo menja i njen tekst u polju.
+  const [menjaId, setMenjaId] = useState<string | null>(null);
+  const [menjaTekst, setMenjaTekst] = useState("");
   const [tekst, setTekst] = useState("");
   const [salje, setSalje] = useState(false);
   const [greska, setGreska] = useState<string | null>(null);
@@ -406,7 +414,7 @@ function DecjaPricaonica({
         const data = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(data?.error ?? t("greska_slanje"));
         setTekst("");
-        setPoruke((p) => [...p, data]);
+        setPoruke((p) => [...p, data.poruka]);
       } catch (err) {
         setGreska(err instanceof Error ? err.message : t("greska_slanje"));
       } finally {
@@ -416,8 +424,30 @@ function DecjaPricaonica({
     [tekst, t],
   );
 
+  async function sacuvajIzmenu(id: string) {
+    const sadrzaj = menjaTekst.trim();
+    if (!sadrzaj) return;
+    setGreska(null);
+    const g = await izmeniPorukuPricaonice(id, sadrzaj, t("greska_izmena"));
+    if (g) {
+      setGreska(g);
+      return;
+    }
+    setPoruke((prev) => prev.map((p) => (p.id === id ? { ...p, content: sadrzaj, izmenjeno: true } : p)));
+    setMenjaId(null);
+  }
+
+  async function obrisiSvoju(id: string) {
+    if (!(await potvrdi({ poruka: t("obrisi_potvrda"), opasno: true, dugme: t("obrisi") }))) return;
+    setGreska(null);
+    const g = await obrisiPorukuPricaonice(id, t("greska_brisanje"));
+    if (g) setGreska(g);
+    else setPoruke((prev) => prev.filter((p) => p.id !== id));
+  }
+
   return (
     <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-4 shadow-kartica">
+      {dijalog}
       <h2 className="text-lg font-semibold text-kolo-text">{t("pricaonica_naslov")}</h2>
       <p className="mt-0.5 text-sm text-kolo-muted">{t("pricaonica_opis")}</p>
       {/* Rečenica o roditeljskom uvidu (deca čl. 19) stoji OVDE, a ne u sredini početne
@@ -445,15 +475,64 @@ function DecjaPricaonica({
                       koji poslednju poruku lepi uz polje za kucanje. Ime tuđe poruke
                       ostaje — ono jeste podatak, jer u sobi piše više prijatelja. */}
                   {!moja && <span className="text-sm text-kolo-muted">{p.pseudonim}</span>}
-                  <p
-                    className={`inline-block max-w-[80%] rounded-2xl px-3 py-2 text-base ${
-                      moja
-                        ? "bg-deca-slezova-600 text-white"
-                        : "border border-kolo-border bg-white text-kolo-text"
-                    }`}
-                  >
-                    {p.content}
-                  </p>
+                  {menjaId === p.id ? (
+                    <div className="flex flex-col items-end gap-2">
+                      <label htmlFor={`izmena-${p.id}`} className="sr-only">
+                        {t("izmeni")}
+                      </label>
+                      <input
+                        id={`izmena-${p.id}`}
+                        value={menjaTekst}
+                        onChange={(e) => setMenjaTekst(e.target.value)}
+                        maxLength={1000}
+                        autoFocus
+                        className="w-full max-w-[80%] rounded-xl border border-kolo-border px-4 py-3 text-base outline-none focus:border-deca-more-600"
+                      />
+                      <div className="flex gap-4 text-base">
+                        <button type="button" onClick={() => setMenjaId(null)} className="text-kolo-muted underline">
+                          {t("odustani")}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => sacuvajIzmenu(p.id)}
+                          disabled={!menjaTekst.trim()}
+                          className="font-bold text-deca-more-600 underline disabled:opacity-50"
+                        >
+                          {t("sacuvaj")}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p
+                      className={`inline-block max-w-[80%] rounded-2xl px-3 py-2 text-base ${
+                        moja
+                          ? "bg-deca-slezova-600 text-white"
+                          : "border border-kolo-border bg-white text-kolo-text"
+                      }`}
+                    >
+                      {p.content}
+                    </p>
+                  )}
+                  {p.izmenjeno && menjaId !== p.id && (
+                    <span className="block text-sm italic text-kolo-muted">{t("izmenjeno")}</span>
+                  )}
+                  {moja && menjaId !== p.id && (
+                    <div className="mt-1 flex justify-end gap-4 text-sm text-kolo-muted">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMenjaId(p.id);
+                          setMenjaTekst(p.content);
+                        }}
+                        className="underline"
+                      >
+                        {t("izmeni")}
+                      </button>
+                      <button type="button" onClick={() => obrisiSvoju(p.id)} className="underline">
+                        {t("obrisi")}
+                      </button>
+                    </div>
+                  )}
                   {/* Prijava poruke je UKLONJENA iz dečje sobe (odluka vlasnika,
                       04.09.2026). Dugme je stajalo ovde od 17.08. i vodilo je u
                       admin tab „Prijave"; taj red čekanja nema ko da rešava, pa je

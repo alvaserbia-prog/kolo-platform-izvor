@@ -2976,6 +2976,9 @@ model ChatMessage {
   user           User      @relation("ChatPoruke", fields: [userId], references: [id])
   content        String
   createdAt      DateTime  @default(now())
+  // Autor je sam izmenio tekst (bez roka, odluka vlasnika 28.10.2026). Čuva se
+  // samo trenutak poslednje izmene; ranije verzije teksta se ne čuvaju.
+  izmenjenoAt    DateTime?
   // Uklanjanje od strane Fondacije (Uslovi čl. 29 st. 2 — obuhvata „svu drugu
   // komunikaciju putem Platforme"). Meko brisanje: poruka nestaje iz sobe, ali
   // ostaje trag ko je i zašto uklonio dok je noćni cron ne pobriše sa ostalima.

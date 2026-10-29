@@ -18,6 +18,7 @@ import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
 import { useDijalog } from "@/components/ui/Dijalog";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
+import { izmeniPorukuPricaonice, obrisiPorukuPricaonice } from "@/lib/pricaonica-klijent";
 
 interface BlogObjava {
   id: string;
@@ -35,6 +36,8 @@ interface ChatPoruka {
   avatar: string | null;
   content: string;
   createdAt: string;
+  /** Autor je izmenio tekst — uz poruku stoji „izmenjeno". */
+  izmenjeno: boolean;
 }
 
 /**
@@ -72,11 +75,15 @@ export default function PocetnaKlijent({
   const locale = useLocale();
   const t = useTranslations("pocetna");
   const tc = useTranslations("common");
-  const { dijalog, unesi } = useDijalog();
+  const { dijalog, potvrdi, unesi } = useDijalog();
   const [poruke, setPoruke] = useState<ChatPoruka[]>(chatInicijalno);
   const [input, setInput] = useState("");
   const [salje, setSalje] = useState(false);
   const [greska, setGreska] = useState<string | null>(null);
+  // Sopstvena poruka koja se upravo menja i njen tekst u polju.
+  const [menjaId, setMenjaId] = useState<string | null>(null);
+  const [menjaTekst, setMenjaTekst] = useState("");
+  const [cuva, setCuva] = useState(false);
   const [otvorenaObjava, setOtvorenaObjava] = useState<string | null>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
@@ -154,6 +161,31 @@ export default function PocetnaKlijent({
     }
   }
 
+  /** Autor menja svoju poruku; uz nju posle stoji „izmenjeno". */
+  async function sacuvajIzmenu(id: string) {
+    const tekst = menjaTekst.trim();
+    if (!tekst || cuva) return;
+    setCuva(true);
+    setGreska(null);
+    const g = await izmeniPorukuPricaonice(id, tekst, t("greska_izmena"));
+    setCuva(false);
+    if (g) {
+      setGreska(g);
+      return;
+    }
+    setPoruke((prev) => prev.map((p) => (p.id === id ? { ...p, content: tekst, izmenjeno: true } : p)));
+    setMenjaId(null);
+  }
+
+  /** Autor briše svoju poruku — stvarno, ne samo iz prikaza. */
+  async function obrisiSvoju(id: string) {
+    if (!(await potvrdi({ poruka: t("chat_obrisi_potvrda"), opasno: true, dugme: t("chat_obrisi") }))) return;
+    setGreska(null);
+    const g = await obrisiPorukuPricaonice(id, t("greska_brisanje"));
+    if (g) setGreska(g);
+    else setPoruke((prev) => prev.filter((p) => p.id !== id));
+  }
+
   // Skroluj na dno chata pri inicijalizaciji i pri svakoj novoj poruci
   useEffect(() => {
     if (chatScrollRef.current) {
@@ -161,30 +193,21 @@ export default function PocetnaKlijent({
     }
   }, [poruke.length]);
 
-  // Polling za nove poruke u pričaonici (10s — globalna soba, ne treba realtime)
+  // Osvežavanje pričaonice (10s — globalna soba, ne treba realtime). Soba se
+  // povlači CELA, ne samo „od poslednje": tako do svih stižu i izmene i brisanja
+  // starijih poruka, ne samo nove.
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
-        const last = poruke[poruke.length - 1];
-        const url = last
-          ? `/api/chat?since=${encodeURIComponent(last.createdAt)}`
-          : `/api/chat`;
-        const res = await fetch(url);
+        const res = await fetch("/api/chat");
         if (!res.ok) return;
-        const noveData: ChatPoruka[] = await res.json();
-        if (noveData.length > 0) {
-          setPoruke((prev) => {
-            const postojeci = new Set(prev.map((p) => p.id));
-            const dodaj = noveData.filter((p) => !postojeci.has(p.id));
-            return [...prev, ...dodaj];
-          });
-        }
+        setPoruke(await res.json());
       } catch {
         // ignoriši
       }
     }, 10000);
     return () => clearInterval(interval);
-  }, [poruke]);
+  }, []);
 
   async function posaljiPoruku(e: React.FormEvent) {
     e.preventDefault();
@@ -426,6 +449,9 @@ export default function PocetnaKlijent({
                             minute: "2-digit",
                           })}
                         </span>
+                        {p.izmenjeno && (
+                          <span className="text-[11px] text-kolo-muted italic">{t("chat_izmenjeno")}</span>
+                        )}
                         {jeAdminViewer && (
                           <button
                             onClick={() => ukloniPoruku(p.id)}
@@ -437,15 +463,68 @@ export default function PocetnaKlijent({
                           </button>
                         )}
                       </div>
-                      <div
-                        className={`px-3 py-2 rounded-2xl text-sm whitespace-pre-wrap break-words ${
-                          moja
-                            ? "bg-kolo-green-700 text-white rounded-tr-sm"
-                            : "bg-kolo-bg text-kolo-text rounded-tl-sm"
-                        }`}
-                      >
-                        {p.content}
-                      </div>
+                      {menjaId === p.id ? (
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            sacuvajIzmenu(p.id);
+                          }}
+                          className="flex w-full flex-col items-end gap-1"
+                        >
+                          <textarea
+                            value={menjaTekst}
+                            onChange={(e) => setMenjaTekst(e.target.value)}
+                            aria-label={t("chat_izmeni")}
+                            maxLength={1000}
+                            rows={2}
+                            autoFocus
+                            className={KLASE_UNOSA + " w-72 max-w-full"}
+                          />
+                          <div className="flex gap-3 text-xs">
+                            <button type="button" onClick={() => setMenjaId(null)} className="text-kolo-muted hover:underline">
+                              {t("chat_odustani")}
+                            </button>
+                            <button
+                              type="submit"
+                              disabled={!menjaTekst.trim() || cuva}
+                              className="font-medium text-kolo-green-700 hover:underline disabled:opacity-50"
+                            >
+                              {cuva ? "..." : t("chat_sacuvaj")}
+                            </button>
+                          </div>
+                        </form>
+                      ) : (
+                        <div
+                          className={`px-3 py-2 rounded-2xl text-sm whitespace-pre-wrap break-words ${
+                            moja
+                              ? "bg-kolo-green-700 text-white rounded-tr-sm"
+                              : "bg-kolo-bg text-kolo-text rounded-tl-sm"
+                          }`}
+                        >
+                          {p.content}
+                        </div>
+                      )}
+                      {moja && menjaId !== p.id && (
+                        <div className="mt-0.5 flex gap-3 text-[11px] text-kolo-muted">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMenjaId(p.id);
+                              setMenjaTekst(p.content);
+                            }}
+                            className="hover:text-kolo-green-700 hover:underline"
+                          >
+                            {t("chat_izmeni")}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => obrisiSvoju(p.id)}
+                            className="hover:text-kolo-danger hover:underline"
+                          >
+                            {t("chat_obrisi")}
+                          </button>
+                        </div>
+                      )}
                     </div>
                     {moja && <ChatAvatar avatar={p.avatar} pseudonim={p.pseudonim} userId={p.userId} />}
                   </div>

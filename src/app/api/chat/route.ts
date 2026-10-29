@@ -46,6 +46,7 @@ export async function GET(req: NextRequest) {
         avatar: p.user.avatar,
         content: p.content,
         createdAt: p.createdAt.toISOString(),
+        izmenjeno: p.izmenjenoAt !== null,
       }))
       .reverse()
   );
@@ -101,6 +102,7 @@ export async function POST(req: NextRequest) {
       avatar: poruka.user.avatar,
       content: poruka.content,
       createdAt: poruka.createdAt.toISOString(),
+      izmenjeno: false,
     },
   });
 }
