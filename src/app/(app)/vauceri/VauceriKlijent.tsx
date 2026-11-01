@@ -172,31 +172,28 @@ export default function VauceriKlijent() {
                   </p>
                 </div>
               </div>
-              <p className="text-sm text-kolo-text">
-                {t("poen_po_vauceru", { poen: r.poen.toLocaleString(intlTag(locale)) })}
-                {" · "}
-                {t("preostalo", { broj: r.preostalo })}
-              </p>
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-base font-semibold text-kolo-text">
+                  {t("poen_po_vauceru", { poen: r.poen.toLocaleString(intlTag(locale)) })}
+                </p>
+                <p className="text-sm text-kolo-muted">{t("preostalo", { broj: r.preostalo })}</p>
+              </div>
               <p className="text-xs text-kolo-muted">{t("vazi_do", { datum: datum(r.vaziDo) })}</p>
               <div className="space-y-2">
-                <label className="flex items-start gap-2 text-sm text-kolo-text">
-                  <input
-                    type="checkbox"
-                    className="mt-0.5"
-                    checked={izjave[r.id] === true}
-                    onChange={(e) => setIzjave((s) => ({ ...s, [r.id]: e.target.checked }))}
-                  />
-                  {t("izjava_nepovezan")}
-                </label>
-                <label className="flex items-start gap-2 text-sm text-kolo-text">
-                  <input
-                    type="checkbox"
-                    className="mt-0.5"
-                    checked={pristanci[r.id] === true}
-                    onChange={(e) => setPristanci((s) => ({ ...s, [r.id]: e.target.checked }))}
-                  />
-                  {t("pristanak_prikaz")}
-                </label>
+                <SklopivaIzjava
+                  naslov={t("izjava_nepovezan_naslov")}
+                  tekst={t("izjava_nepovezan")}
+                  oznaceno={izjave[r.id] === true}
+                  onOznaci={(v) => setIzjave((s) => ({ ...s, [r.id]: v }))}
+                  otvoriLabela={t("prikazi_tekst")}
+                />
+                <SklopivaIzjava
+                  naslov={t("pristanak_prikaz_naslov")}
+                  tekst={t("pristanak_prikaz")}
+                  oznaceno={pristanci[r.id] === true}
+                  onOznaci={(v) => setPristanci((s) => ({ ...s, [r.id]: v }))}
+                  otvoriLabela={t("prikazi_tekst")}
+                />
                 <Dugme
                   onClick={() => uzmi(r.id)}
                   disabled={radi === r.id || izjave[r.id] !== true || pristanci[r.id] !== true}
@@ -269,6 +266,52 @@ export default function VauceriKlijent() {
       <p className="text-xs text-kolo-muted">
         <Link href="/postani-pokrovitelj" className="underline">{t("davalac_link")}</Link>
       </p>
+    </div>
+  );
+}
+
+/**
+ * Izjava, odnosno pristanak sklopljen u jedan red: kućica se štiklira odmah, a pun
+ * tekst se otvara strelicom. Tekst je isti onaj koji server snima uz pristanak
+ * (`vauceri.pristanak_prikaz`) — ovde se samo sklapa, ne skraćuje.
+ */
+function SklopivaIzjava({
+  naslov,
+  tekst,
+  oznaceno,
+  onOznaci,
+  otvoriLabela,
+}: {
+  naslov: string;
+  tekst: string;
+  oznaceno: boolean;
+  onOznaci: (v: boolean) => void;
+  otvoriLabela: string;
+}) {
+  const [otvoreno, setOtvoreno] = useState(false);
+  return (
+    <div className="text-sm text-kolo-text">
+      <div className="flex items-start gap-2">
+        <label className="flex flex-1 items-start gap-2">
+          <input
+            type="checkbox"
+            className="mt-0.5"
+            checked={oznaceno}
+            onChange={(e) => onOznaci(e.target.checked)}
+          />
+          <span>{naslov}</span>
+        </label>
+        <button
+          type="button"
+          onClick={() => setOtvoreno((o) => !o)}
+          aria-expanded={otvoreno}
+          aria-label={otvoriLabela}
+          className="shrink-0 px-1 text-kolo-muted"
+        >
+          <span aria-hidden className={`inline-block transition-transform ${otvoreno ? "rotate-180" : ""}`}>▾</span>
+        </button>
+      </div>
+      {otvoreno && <p className="mt-1 ml-6 text-xs text-kolo-muted">{tekst}</p>}
     </div>
   );
 }
