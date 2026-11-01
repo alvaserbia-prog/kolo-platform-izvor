@@ -31,6 +31,13 @@ export const ODLUKE = [
     doneta: "01.11.2026.",
     objavljena: "02.11.2026.",
   },
+  {
+    slug: "donosenje-akata-5-0-0",
+    broj: 6,
+    fajl: "06_odluka-6_donosenje-akata-5-0-0.md",
+    doneta: "01.11.2026.",
+    objavljena: "02.11.2026.",
+  },
 ] as const;
 
 export type Odluka = (typeof ODLUKE)[number];

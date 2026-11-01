@@ -4288,6 +4288,10 @@
       "merila-lice-za-zastitu-podataka": {
         "naziv": "Odluka o mjerilima za imenovanje službenika za zaštitu osobnih podataka",
         "opis": "Kada Zaklada imenuje službenika za zaštitu osobnih podataka i tko do tada odgovara za zaštitu podataka."
+      },
+      "donosenje-akata-5-0-0": {
+        "naziv": "Odluka o donošenju akata seta 5.0.0",
+        "opis": "Upravni odbor donosi pravilnike, Uvjete korištenja, Politiku privatnosti i ostale akte platforme KOLO u posljednjem tekstu oznake 5.0.0."
       }
     }
   }

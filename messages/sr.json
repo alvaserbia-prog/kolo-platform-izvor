@@ -5263,6 +5263,10 @@
       "merila-lice-za-zastitu-podataka": {
         "naziv": "Odluka o merilima za određivanje lica za zaštitu podataka o ličnosti",
         "opis": "Kada Fondacija određuje lice za zaštitu podataka o ličnosti i ko do tada odgovara za zaštitu podataka."
+      },
+      "donosenje-akata-5-0-0": {
+        "naziv": "Odluka o donošenju akata seta 5.0.0",
+        "opis": "Upravni odbor donosi pravilnike, Uslove korišćenja, Politiku privatnosti i ostale akte KOLO platforme u poslednjem tekstu oznake 5.0.0."
       }
     }
   }

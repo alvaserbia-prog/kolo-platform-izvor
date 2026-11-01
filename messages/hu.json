@@ -4288,6 +4288,10 @@
       "merila-lice-za-zastitu-podataka": {
         "naziv": "Határozat az adatvédelmi tisztviselő kijelölésének feltételeiről",
         "opis": "Mikor jelöl ki az Alapítvány adatvédelmi tisztviselőt, és addig ki felel az adatvédelemért."
+      },
+      "donosenje-akata-5-0-0": {
+        "naziv": "Határozat az 5.0.0 jogiaktus-csomag elfogadásáról",
+        "opis": "Az Igazgatótanács elfogadja a KOLO platform szabályzatait, Felhasználási feltételeit, Adatvédelmi szabályzatát és egyéb jogi aktusait az 5.0.0 jelölésű utolsó szövegben."
       }
     }
   }
