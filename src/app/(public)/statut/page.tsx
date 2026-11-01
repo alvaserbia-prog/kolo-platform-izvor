@@ -32,6 +32,7 @@ export default async function StatutPage() {
         <div className="mt-4 flex gap-3 text-sm flex-wrap">
           <span className="text-kolo-muted">{t("viditeI")}</span>
           <Link href="/pravilnik" className="text-kolo-green-700 hover:underline">{t("link.pravilnikJed")}</Link>
+          <Link href="/odluke" className="text-kolo-green-700 hover:underline">{t("link.odluke")}</Link>
           <Link href="/privatnost" className="text-kolo-green-700 hover:underline">{t("link.privatnost")}</Link>
           <Link href="/uslovi" className="text-kolo-green-700 hover:underline">{t("link.uslovi")}</Link>
         </div>

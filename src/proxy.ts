@@ -31,7 +31,7 @@ export const JAVNE_RUTE = [
   ...JAVNE_TOKEN_RUTE,
   "/", "/pijaca", "/kako-funkcionise", "/kako-sistem-radi", "/pravna-pozicija", "/vesti", "/uslovi",
   "/privatnost", "/m", "/politika-prihvati", "/pokrovitelji", "/o-nama", "/o-sistemu",
-  "/cesto-postavljena-pitanja", "/pravilnik", "/statut", "/uskoro", "/odrzavanje",
+  "/cesto-postavljena-pitanja", "/pravilnik", "/statut", "/odluke", "/uskoro", "/odrzavanje",
   "/whitepaper", "/dpia", "/radnje-obrade", "/rizici", "/osnivacki-doprinos", "/zajednicko-dobro",
   // Jedan javni ulaz za podršku (donacija i pokroviteljstvo); radni ekrani traže prijavu.
   "/podrzi-kolo",
@@ -81,7 +81,7 @@ export const POZNATI_SEGMENTI = [
   "dobrodosli", "donacije", "doniraj", "doprinos-oglasi", "dpia", "firme", "gazdinstva",
   "glasanje", "kako-funkcionise", "kako-sistem-radi", "kontaktiraj-nas", "kutija-zelja", "login", "m",
   "mapa", "nabavke", "nadzor", "novcanik", "o-nama", "o-sistemu", "oauth",
-  "odjava-obavestenja", "odrzavanje", "osnivacki-doprinos", "pijaca", "pocetna",
+  "odjava-obavestenja", "odluke", "odrzavanje", "osnivacki-doprinos", "pijaca", "pocetna",
   "podrzi-kolo", "pokrovitelji", "politika-prihvati", "pomoc", "poruke", "postani-pokrovitelj", "potvrdi-email",
   "pravilnik", "pravilnik-prihvati", "pravna-pozicija", "prijatelji", "privatnost",
   "profil", "programi", "radnje-obrade", "registracija", "reset-lozinka", "rizici",

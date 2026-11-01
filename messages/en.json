@@ -1392,7 +1392,8 @@
       "rizici": "Risk Statement",
       "zajednickoDobro": "Common good",
       "oSistemu": "How KOLO works",
-      "pravilnikKoloSistem": "Rulebook on the KOLO System"
+      "pravilnikKoloSistem": "Rulebook on the KOLO System",
+      "odluke": "Foundation decisions"
     },
     "meta_uslovi_title": "Terms of Use · KOLO",
     "meta_uslovi_desc": "Terms of Use of the KOLO Platform, version 5.0.2",
@@ -4269,5 +4270,25 @@
     "razlog": "Why: {razlog}",
     "povuci": "Take it out of the box",
     "povuci_potvrda": "Take this wish out of the box? It will be deleted, together with its support."
+  },
+  "odluke": {
+    "meta_title": "Foundation decisions · KOLO",
+    "meta_desc": "Decisions of the Management Board of the KOLO Foundation published under the Statute.",
+    "naslov": "Foundation decisions",
+    "uvod": "This page publishes the decisions of the Management Board of the KOLO Foundation that are relevant to users and the public (Statute, Article 21). A general act of the Foundation enters into force no earlier than the day it is published on this page (Statute, Article 22).",
+    "broj_datum": "Decision No. {broj} · adopted {datum}",
+    "objavljena": "Published on the Foundation's website on {datum}",
+    "samo_srpski": "Decisions are published in Serbian.",
+    "nazad": "← All decisions",
+    "stavke": {
+      "poslovnik-upravnog-odbora": {
+        "naziv": "Rules of Procedure of the Management Board",
+        "opis": "Convening and conduct of sessions, sessions by video link and electronic decision-making of the Management Board."
+      },
+      "merila-lice-za-zastitu-podataka": {
+        "naziv": "Decision on the criteria for appointing a data protection officer",
+        "opis": "When the Foundation appoints a data protection officer and who is responsible for data protection until then."
+      }
+    }
   }
 }

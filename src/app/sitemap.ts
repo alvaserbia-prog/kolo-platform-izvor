@@ -36,6 +36,7 @@ const JAVNE_PUTANJE: { path: string; priority: number; changeFrequency: Metadata
   { path: "/whitepaper", priority: 0.5, changeFrequency: "yearly" },
   { path: "/pravilnik", priority: 0.5, changeFrequency: "monthly" },
   { path: "/statut", priority: 0.4, changeFrequency: "yearly" },
+  { path: "/odluke", priority: 0.4, changeFrequency: "monthly" },
   { path: "/uslovi", priority: 0.4, changeFrequency: "yearly" },
   { path: "/privatnost", priority: 0.4, changeFrequency: "yearly" },
   { path: "/dpia", priority: 0.3, changeFrequency: "yearly" },

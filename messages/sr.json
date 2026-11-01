@@ -1392,7 +1392,8 @@
       "rizici": "Rizici",
       "zajednickoDobro": "Zajedničko dobro",
       "oSistemu": "Kako funkcioniše KOLO",
-      "pravilnikKoloSistem": "Pravilnik o KOLO sistemu"
+      "pravilnikKoloSistem": "Pravilnik o KOLO sistemu",
+      "odluke": "Odluke Fondacije"
     },
     "meta_uslovi_title": "Uslovi korišćenja · KOLO",
     "meta_uslovi_desc": "Uslovi korišćenja KOLO platforme, verzija 5.0.2",
@@ -5244,5 +5245,25 @@
     "razlog": "Zašto: {razlog}",
     "povuci": "Izvadi iz kutije",
     "povuci_potvrda": "Da izvadiš ovu želju iz kutije? Biće obrisana, zajedno sa podrškama."
+  },
+  "odluke": {
+    "meta_title": "Odluke Fondacije · KOLO",
+    "meta_desc": "Odluke Upravnog odbora KOLO Fondacije objavljene po Statutu.",
+    "naslov": "Odluke Fondacije",
+    "uvod": "Ovde se objavljuju odluke Upravnog odbora KOLO Fondacije koje su od značaja za korisnike i javnost (Statut, član 21). Opšti akt Fondacije stupa na snagu najranije danom objave na ovoj stranici (Statut, član 22).",
+    "broj_datum": "Odluka br. {broj} · doneta {datum}",
+    "objavljena": "Objavljena na internet stranici Fondacije {datum}",
+    "samo_srpski": "Odluke se objavljuju na srpskom jeziku.",
+    "nazad": "← Sve odluke",
+    "stavke": {
+      "poslovnik-upravnog-odbora": {
+        "naziv": "Poslovnik o radu Upravnog odbora",
+        "opis": "Sazivanje i rad sednica, sednica video vezom i elektronsko odlučivanje Upravnog odbora."
+      },
+      "merila-lice-za-zastitu-podataka": {
+        "naziv": "Odluka o merilima za određivanje lica za zaštitu podataka o ličnosti",
+        "opis": "Kada Fondacija određuje lice za zaštitu podataka o ličnosti i ko do tada odgovara za zaštitu podataka."
+      }
+    }
   }
 }

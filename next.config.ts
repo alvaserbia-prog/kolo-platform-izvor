@@ -70,6 +70,8 @@ const nextConfig: NextConfig = {
   // serverless bundle.
   outputFileTracingIncludes: {
     "/pijaca/**": ["./src/app/_fonts/*.woff"],
+    // Tekstovi objavljenih odluka (`src/lib/odluke-fondacije.ts`) čitaju se sa diska.
+    "/odluke/**": ["./odluke-fondacije/*.md"],
   },
   images: {
     // AVIF/WebP za manju isporuku slika (Next image optimizacija).

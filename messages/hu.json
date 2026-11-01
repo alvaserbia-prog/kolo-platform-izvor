@@ -1392,7 +1392,8 @@
       "rizici": "Kockázati nyilatkozat",
       "zajednickoDobro": "Közös jó",
       "oSistemu": "Hogyan működik a KOLO",
-      "pravilnikKoloSistem": "KOLO rendszer szabályzata"
+      "pravilnikKoloSistem": "KOLO rendszer szabályzata",
+      "odluke": "Az Alapítvány határozatai"
     },
     "meta_uslovi_title": "Felhasználási feltételek · KOLO",
     "meta_uslovi_desc": "A KOLO platform felhasználási feltételei, 5.0.2-es verzió",
@@ -4269,5 +4270,25 @@
     "razlog": "Miért: {razlog}",
     "povuci": "Kiveszem a dobozból",
     "povuci_potvrda": "Kiveszed ezt a kívánságot a dobozból? Törlődik, a támogatásokkal együtt."
+  },
+  "odluke": {
+    "meta_title": "Az Alapítvány határozatai · KOLO",
+    "meta_desc": "A KOLO Alapítvány Igazgatótanácsának az Alapszabály szerint közzétett határozatai.",
+    "naslov": "Az Alapítvány határozatai",
+    "uvod": "Itt jelennek meg a KOLO Alapítvány Igazgatótanácsának a felhasználók és a nyilvánosság számára jelentős határozatai (Alapszabály, 21. szakasz). Az Alapítvány általános jogi aktusa legkorábban az ezen az oldalon történő közzététel napján lép hatályba (Alapszabály, 22. szakasz).",
+    "broj_datum": "{broj}. számú határozat · elfogadva {datum}",
+    "objavljena": "Az Alapítvány honlapján közzétéve: {datum}",
+    "samo_srpski": "A határozatok szerb nyelven jelennek meg.",
+    "nazad": "← Összes határozat",
+    "stavke": {
+      "poslovnik-upravnog-odbora": {
+        "naziv": "Az Igazgatótanács ügyrendje",
+        "opis": "Az ülések összehívása és lefolytatása, videókapcsolaton tartott ülés és az Igazgatótanács elektronikus döntéshozatala."
+      },
+      "merila-lice-za-zastitu-podataka": {
+        "naziv": "Határozat az adatvédelmi tisztviselő kijelölésének feltételeiről",
+        "opis": "Mikor jelöl ki az Alapítvány adatvédelmi tisztviselőt, és addig ki felel az adatvédelemért."
+      }
+    }
   }
 }

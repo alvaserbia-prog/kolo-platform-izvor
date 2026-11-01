@@ -1392,7 +1392,8 @@
       "rizici": "Rizici",
       "zajednickoDobro": "Zajedničko dobro",
       "oSistemu": "Kako funkcionira KOLO",
-      "pravilnikKoloSistem": "Pravilnik o KOLO sustavu"
+      "pravilnikKoloSistem": "Pravilnik o KOLO sustavu",
+      "odluke": "Odluke Zaklade"
     },
     "meta_uslovi_title": "Uvjeti korištenja · KOLO",
     "meta_uslovi_desc": "Uvjeti korištenja KOLO platforme, verzija 5.0.2",
@@ -4269,5 +4270,25 @@
     "razlog": "Zašto: {razlog}",
     "povuci": "Izvadi iz kutije",
     "povuci_potvrda": "Izvaditi ovu želju iz kutije? Bit će obrisana, zajedno s podrškama."
+  },
+  "odluke": {
+    "meta_title": "Odluke Zaklade · KOLO",
+    "meta_desc": "Odluke Upravnog odbora KOLO Zaklade objavljene prema Statutu.",
+    "naslov": "Odluke Zaklade",
+    "uvod": "Ovdje se objavljuju odluke Upravnog odbora KOLO Zaklade koje su od značaja za korisnike i javnost (Statut, članak 21.). Opći akt Zaklade stupa na snagu najranije danom objave na ovoj stranici (Statut, članak 22.).",
+    "broj_datum": "Odluka br. {broj} · donesena {datum}",
+    "objavljena": "Objavljena na internetskoj stranici Zaklade {datum}",
+    "samo_srpski": "Odluke se objavljuju na srpskom jeziku.",
+    "nazad": "← Sve odluke",
+    "stavke": {
+      "poslovnik-upravnog-odbora": {
+        "naziv": "Poslovnik o radu Upravnog odbora",
+        "opis": "Sazivanje i rad sjednica, sjednica video vezom i elektroničko odlučivanje Upravnog odbora."
+      },
+      "merila-lice-za-zastitu-podataka": {
+        "naziv": "Odluka o mjerilima za imenovanje službenika za zaštitu osobnih podataka",
+        "opis": "Kada Zaklada imenuje službenika za zaštitu osobnih podataka i tko do tada odgovara za zaštitu podataka."
+      }
+    }
   }
 }
