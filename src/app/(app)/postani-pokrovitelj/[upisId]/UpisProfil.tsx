@@ -129,7 +129,7 @@ export default function UpisProfil({
       )}
 
       {panel === "novac" && !novac && <NovcanaPrijava upisId={upis.id} onPoslato={posle} />}
-      {panel === "dobra" && !dobra && <PrijavaDobra upisId={upis.id} onPoslato={posle} />}
+      {panel === "dobra" && !dobra && <PrijavaDobra upisId={upis.id} mesto={upis.mapaMesto} adresa={upis.mapaAdresa} onPoslato={posle} />}
 
       <nav className="overflow-x-auto">
         <Segmenti

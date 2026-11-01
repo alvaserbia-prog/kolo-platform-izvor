@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { imeNaloga } from "@/lib/protokol/identitet";
+import { prisma } from "@/lib/prisma";
 import { predlogIzGazdinstva } from "@/lib/protokol/upis-pokrovitelja";
 import UpisForma from "./UpisForma";
 import NaslovStranice from "@/components/ui/NaslovStranice";
@@ -19,7 +20,8 @@ export async function generateMetadata() {
  * strani. Upis vrši punoletni verifikovani korisnik sa sopstvenog naloga.
  *
  * Za gazdinstvo: ako je korisnik nosilac odobrenog gazdinstva sa BPG-om u modulu
- * gazdinstava, nudi se popuna naziva, BPG-a, mesta, adrese i tačke iz njega.
+ * gazdinstava, naziv, BPG, mesto, adresa i tačka se preuzimaju iz njega (mogu se izmeniti).
+ * Kontakt telefon se predlaže sa profila, a mejl se uzima sa naloga.
  */
 export default async function UpisPage({ searchParams }: { searchParams: Promise<{ vrsta?: string }> }) {
   const session = await getServerSession(authOptions);
@@ -50,9 +52,10 @@ export default async function UpisPage({ searchParams }: { searchParams: Promise
     );
   }
 
-  const [upisanoIme, predlog] = await Promise.all([
+  const [upisanoIme, predlog, korisnik] = await Promise.all([
     imeNaloga(session.user.id),
     vrsta === "GAZDINSTVO" ? predlogIzGazdinstva(session.user.id) : Promise.resolve(null),
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { telefon: true } }),
   ]);
 
   return (
@@ -61,7 +64,7 @@ export default async function UpisPage({ searchParams }: { searchParams: Promise
         nazad={{ href: "/postani-pokrovitelj/upis", oznaka: t("upis_naslov") }}
         naslov={vrsta === "GAZDINSTVO" ? t("upis_vrsta_gazdinstvo") : t("upis_vrsta_firma")}
       />
-      <UpisForma vrsta={vrsta} upisanoIme={upisanoIme} predlog={predlog} />
+      <UpisForma vrsta={vrsta} upisanoIme={upisanoIme} predlog={predlog} telefon={korisnik?.telefon ?? null} />
     </div>
   );
 }

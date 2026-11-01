@@ -74,11 +74,13 @@ export function sledeciPrag(brojZadrugara: number): { clanovi: number; poen: num
  *               iz Protokola kao oblik operativnog doprinosa (čl. 17). Na ekranu je
  *               ovaj osnov „zadatak zadruge".
  * - `USLUGA_PRIMLJENA` zadruga → korisnik: usluga koju zadruga prima (čl. 11 st. 1 t. 5)
+ * - `USTUPANJE` zadruga → ustupilac: zemljište, oprema ili mehanizacija ustupljeni zadruzi
+ *               na korišćenje (čl. 11 st. 1 t. 6, set 5.0.5); svojina se ne prenosi
  * - `IZDAVANJE` zadrugar ili druga zadruga → zadruga: dobro izdato iz raspodele (čl. 12 st. 2)
  * - `OPREMA`    zadrugar → zadruga: korišćenje opreme, mehanizacije, zemljišta (čl. 11 st. 1 t. 4)
  * - `USLUGA_PRUZENA` zadrugar → zadruga: usluga koju zadruga pruža (čl. 11 st. 1 t. 5)
  */
-export const OSNOVI_IZ_ZAPISA = ["PRIJEM", "DOPRINOS", "USLUGA_PRIMLJENA"] as const;
+export const OSNOVI_IZ_ZAPISA = ["PRIJEM", "DOPRINOS", "USLUGA_PRIMLJENA", "USTUPANJE"] as const;
 export const OSNOVI_U_ZAPIS = ["IZDAVANJE", "OPREMA", "USLUGA_PRUZENA"] as const;
 
 export type OsnovIzZapisa = (typeof OSNOVI_IZ_ZAPISA)[number];
@@ -97,6 +99,7 @@ export const TIP_PO_OSNOVU = {
   PRIJEM: "ZADRUGA_PRIJEM",
   DOPRINOS: "ZADRUGA_DOPRINOS",
   USLUGA_PRIMLJENA: "ZADRUGA_USLUGA",
+  USTUPANJE: "ZADRUGA_USTUPANJE",
   IZDAVANJE: "ZADRUGA_IZDAVANJE",
   OPREMA: "ZADRUGA_OPREMA",
   USLUGA_PRUZENA: "ZADRUGA_USLUGA",
@@ -107,6 +110,7 @@ export const OPIS_PO_OSNOVU: Record<OsnovZapisa, string> = {
   PRIJEM: "transakcije.zadruga_prijem",
   DOPRINOS: "transakcije.zadruga_doprinos",
   USLUGA_PRIMLJENA: "transakcije.zadruga_usluga",
+  USTUPANJE: "transakcije.zadruga_ustupanje",
   IZDAVANJE: "transakcije.zadruga_izdavanje",
   OPREMA: "transakcije.zadruga_oprema",
   USLUGA_PRUZENA: "transakcije.zadruga_usluga",
@@ -117,6 +121,7 @@ export const OPIS_SR: Record<OsnovZapisa, string> = {
   PRIJEM: "Zadruga — dobro primljeno na raspodelu",
   DOPRINOS: "Zadruga — zadatak zadruge",
   USLUGA_PRIMLJENA: "Zadruga — usluga",
+  USTUPANJE: "Zadruga — ustupanje na korišćenje",
   IZDAVANJE: "Zadruga — dobro izdato iz raspodele",
   OPREMA: "Zadruga — korišćenje opreme",
   USLUGA_PRUZENA: "Zadruga — usluga",

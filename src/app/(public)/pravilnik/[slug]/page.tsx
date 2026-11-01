@@ -93,9 +93,12 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // otpis po utvrđenju višestrukog naloga), čl. 16 st. 11 (ispravka, ne povraćaj),
   // čl. 2, 31 (jedinstvenost se ne jemči verifikacijom), čl. 31a (peti slučaj: spisak
   // za poziv), čl. 71 (raspodela vaučera nije posredna konverzija).
+  // 5.0.2 — čl. 16, 17 (deveti osnov), 18, 19, 37 st. 4, 39 st. 5, 47 st. 6: program raspodele hrane.
+  // 5.0.3 — čl. 22 st. 4 (prag za upis ZRNA 10.000) i nov st. 6 (u periodu upisa ZRNA
+  // primaocu podrške se dnevni iznos programa ne evidentira).
   "kolo-sistem": {
-    fajl: "Pravilnik_5_0_0.md",
-    verzija: "5.0.0",
+    fajl: "Pravilnik_5_0_3.md",
+    verzija: "5.0.3",
   },
   // 4.4.6 — čl. 12 st. 4 više ne prenosi nadležnost za opšte akte na Gornje Kolo
   // (akt nižeg ranga to ne može po sopstvenom čl. 8 st. 2); nov st. 6.
@@ -158,9 +161,13 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // prati direktor; čl. 13a (opis strukture), čl. 13f st. 4 (naredni ugovor).
   // 5.0.0, izmena 28.10.2026 (odluka vlasnika, bez nove šifre) — čl. 2, 22, 33 i 35: pokroviteljstvo (novac i dobra i usluge) uvek sa
   // koeficijentom 1,00; tabela nivoa važi samo za donaciju fizičkog lica.
+  // 5.0.2 — čl. 2, 22 st. 4–7 (koeficijent hrane po poreklu), 28: hrana u pokroviteljstvu dobrima.
+  // 5.0.4 — čl. 22 st. 5 i čl. 28: poreklo hrane utvrđuje Fondacija pri prihvatanju prijave; davalac ga ne bira.
+  // 5.0.6 — čl. 2 t. 9, čl. 28 st. 2 t. 5 i čl. 31 st. 2 t. 4: više mesta predaje, odnosno pružanja.
+  // 5.0.7 — čl. 22 st. 4–8 (koeficijent hrane: mera i lokalne sirovine), 28, 30 (alkohol), 31–33 (podnosilac potpisuje pri prijavi, ugovor zaključen prihvatanjem), 35 st. 6, 40.
   "pokroviteljstvo-donacije": {
-    fajl: "donacije_5_0_0.md",
-    verzija: "5.0.0",
+    fajl: "donacije_5_0_7.md",
+    verzija: "5.0.7",
   },
   // 4.4.4 — pravna priroda operativnog doprinosa (čl. 27): nema naručioca, nema
   // naknade, rezultat ide u zajedničko dobro pod licencama iz Glave II. Brisan
@@ -198,8 +205,9 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 4.6.1 — R-03 (mera M-1): čl. 4 — pojedinačno evidentiranje po programu se ne
   // objavljuje nego dnevni zbir; izostavlja se i iznos, jer se izvodi iz godine
   // rođenja odnosno broja i uzrasta dece i sam bi ih odao.
-    fajl: "programi_podrske_5_0_0.md",
-    verzija: "5.0.0",
+    // 5.0.3 — čl. 6 st. 2 t. 6 i čl. 9 st. 3: u periodu upisa ZRNA dnevni iznos se ne evidentira.
+    fajl: "programi_podrske_5_0_3.md",
+    verzija: "5.0.3",
   },
   // Usvojen 4.3.0 — do tada je stajao kao nacrt u `docs/pravilnik-modul-deca.md`.
   // 4.5.2 — postupak potvrde postojanja deteta (R-15, čl. 6 prepisan): izjašnjavaju
@@ -228,8 +236,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
     // primenjuje se na maloletne učesnike.
     // 4.8.4 — D2–D4: obrazloženje zašto se uzrast ne proverava (čl. 3), veza
     // roditelj–dete dostupna učesnicima (čl. 15b), ponovljena prijava ne zaustavlja vezu (čl. 4e).
-    fajl: "ucesce_dece_5_0_0.md",
-    verzija: "5.0.0",
+    fajl: "ucesce_dece_5_0_2.md",
+    verzija: "5.0.2",
   },
   // Nov akt uz set 4.4.1 — osnov u čl. 14a i 51a Pravilnika o KOLO sistemu.
   // 4.4.3 — broj POEN-a po delu je parametar odluke o nabavci (čl. 17), a ne izvod
@@ -244,9 +252,12 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // (inače se odnos POEN:RSD čita deljenjem); nov čl. 21a — godišnja granica
   // dinarske vrednosti preuzetih dobara po korisniku.
   // 4.7.8 — nova Glava VIIIa: raspodela vaučera iz pokroviteljstva; čl. 21a brisan.
+  // 5.0.4 — čl. 40 st. 1: poreklo u programu utvrđuje Fondacija na osnovu podataka gazdinstva.
   // 4.8.4 — U2: zadruga upisana u sistem nije dobavljač (čl. 3).
-    fajl: "projekti_nabavke_5_0_0.md",
-    verzija: "5.0.0",
+  // 5.0.7 — čl. 40 st. 1: podaci o hrani iz prijave (donacije čl. 28 st. 2 t. 6).
+    // 5.0.6 — čl. 32 st. 1 i 3: više mesta predaje; imalac bira mesto.
+    fajl: "projekti_nabavke_5_0_7.md",
+    verzija: "5.0.7",
   },
   // Nov akt uz set 4.7.0 — osnov u čl. 56 Pravilnika o KOLO sistemu. Krug i
   // zadruga su isti kolektivni oblik; zapis, pragovi rasta (svaki jednom), osnovi
@@ -258,9 +269,13 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // identiteta i ne briše se prestankom svojstva zadrugara.
   // 4.8.4 — U2: lice koje predloži zadruga radi samo u svojoj zadruzi i vidi ime i
   // broj telefona njenih zadrugara (čl. 16, 19); zadruga nije ponuđač u nabavci (čl. 18).
+  // 5.0.1 — čl. 20 st. 3–7: otvoren poziv za sredstva za rad zadruge (oprema, pogon);
+  // bira Gornje Kolo (preporuka UO), sredstvo je odmah imovina zadruge i ostaje joj.
+  // 5.0.2 — čl. 2 t. 5 (korisnik usluga), 11 st. 5, 12 st. 4: zadruga u programu raspodele hrane.
+  // 5.0.5 — čl. 11 st. 1 t. 6 i st. 6: ustupanje zemljišta, opreme ili mehanizacije zadruzi na korišćenje.
   "zadruge": {
-    fajl: "zadruge_5_0_0.md",
-    verzija: "5.0.0",
+    fajl: "zadruge_5_0_5.md",
+    verzija: "5.0.5",
   },
   // Nov akt uz set 4.7.2 — osnov u čl. 40c Pravilnika o KOLO sistemu. Gazdinstvo
   // nije korisnik ni kolektivni oblik; prijava, članovi (samo punoletni), oglasi u
@@ -278,9 +293,10 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 4.8.1 — čl. 4 t. 9, čl. 6, nov čl. 6a i čl. 7: broj telefona i razgovor
   // Fondacije sa svakim članom pre odobrenja.
   "gazdinstva": {
+  // 5.0.4 — čl. 17 st. 4 i čl. 20 st. 1: netačni podaci na osnovu kojih je utvrđeno poreklo.
     // 4.8.4 — U5: isključenje zbog lažne izjave samo za onog ko je lagao ili znao (čl. 12 st. 3).
-    fajl: "gazdinstva_5_0_0.md",
-    verzija: "5.0.0",
+    fajl: "gazdinstva_5_0_4.md",
+    verzija: "5.0.4",
   },
 };
 

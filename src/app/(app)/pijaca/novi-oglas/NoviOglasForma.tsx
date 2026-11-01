@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Segmenti from "@/components/ui/Segmenti";
 import LokacijaSearch from "@/components/LokacijaSearch";
+import DodatnaMestaPolje from "@/components/DodatnaMestaPolje";
+import { MAX_MESTA_OGLASA } from "@/lib/mesta-pravila";
 import CenaUnos from "@/components/CenaUnos";
 import { KATEGORIJE, kategorijaEmoji, kategorijaKljuc } from "@/lib/kategorije";
 import { parsirajCenu, type CenaTip } from "@/lib/cena-oglas";
@@ -65,6 +67,7 @@ export default function NoviOglasForma({
   const [cenaDo, setCenaDo] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState(defaultLocation);
+  const [dodatnaMesta, setDodatnaMesta] = useState<string[]>([]);
   const [phone, setPhone] = useState(defaultPhone);
   const [zaGazdinstvo, setZaGazdinstvo] = useState(uImeGazdinstva && !!gazdinstvo);
   const [slike, setSlike] = useState<IzabranaSlika[]>([]);
@@ -186,6 +189,7 @@ export default function NoviOglasForma({
       fd.append("cenaDo", jePotraznja ? "" : cenaDo);
       fd.append("category", category);
       fd.append("location", location.trim());
+      for (const m of dodatnaMesta) if (m.trim()) fd.append("dodatnoMesto", m.trim());
       fd.append("phone", phone.trim());
       if (gazdinstvo && zaGazdinstvo && !jePotraznja) fd.append("gazdinstvoId", gazdinstvo.id);
       slike.forEach((s, i) => fd.append(`slika_${i}`, s.file));
@@ -379,6 +383,11 @@ export default function NoviOglasForma({
             {t("lokacija_label")} <span className="text-kolo-muted font-normal">{t("lokacija_opciono")}</span>
           </label>
           <LokacijaSearch id="polje-novioglas-3" value={location} onChange={setLocation} placeholder={t("lokacija_placeholder")} />
+          {location.trim() && (
+            <div className="mt-2">
+              <DodatnaMestaPolje mesta={dodatnaMesta} onChange={setDodatnaMesta} max={MAX_MESTA_OGLASA} />
+            </div>
+          )}
         </div>
 
         {/* Kontakt telefon */}

@@ -14,7 +14,6 @@ import {
   ODNOSI_PO_OBLIKU,
   PRAVNI_OBLICI,
   trebaIzjavaOvlascenja,
-  ocistiKontaktEmail,
   ocistiKontaktTelefon,
   type OdnosPremaDavaocu,
   type PravniOblik,
@@ -54,25 +53,36 @@ export default function UpisForma({
   vrsta,
   upisanoIme,
   predlog,
+  telefon,
 }: {
   vrsta: "FIRMA" | "GAZDINSTVO";
   upisanoIme: string | null;
   predlog: Predlog;
+  /** Broj telefona sa profila naloga — predlog za kontakt telefon. */
+  telefon: string | null;
 }) {
   const t = useTranslations("postaniPokrovitelj");
   const tg = useTranslations("gazdinstva");
   const router = useRouter();
   const gazdinstvo = vrsta === "GAZDINSTVO";
 
+  // Podaci koji su već upisani ne traže se ponovo: telefon sa profila, a za gazdinstvo
+  // naziv, BPG, mesto, adresa i tačka iz odobrenog gazdinstva (sve se može izmeniti).
+  const izGazdinstva = gazdinstvo ? predlog : null;
+  const tackaGazdinstva =
+    izGazdinstva && izGazdinstva.lat != null && izGazdinstva.lng != null ? { lat: izGazdinstva.lat, lng: izGazdinstva.lng } : null;
   const [f, setF] = useState({
-    naziv: "", adresaSedista: "", maticniBroj: "", pib: "", bpg: "", zastupnikFunkcija: "",
-    imePrezime: upisanoIme ?? "", kontaktEmail: "", kontaktTelefon: "", mapaMesto: "", mapaAdresa: "",
+    naziv: izGazdinstva?.naziv ?? "", adresaSedista: "", maticniBroj: "", pib: "", bpg: izGazdinstva?.bpg ?? "", zastupnikFunkcija: "",
+    imePrezime: upisanoIme ?? "", kontaktTelefon: telefon ?? "",
+    mapaMesto: izGazdinstva?.naselje ?? "", mapaAdresa: izGazdinstva?.adresa ?? "",
   });
   const [oblik, setOblik] = useState<PravniOblik | "">("");
   const [odnos, setOdnos] = useState<OdnosPremaDavaocu | "">(gazdinstvo ? "NOSILAC_GAZDINSTVA" : "");
-  const [tacka, setTacka] = useState<{ lat: number; lng: number } | null>(null);
-  const [pronadjeno, setPronadjeno] = useState<[number, number] | null>(null);
-  const [gazdinstvoId, setGazdinstvoId] = useState<string | null>(null);
+  const [tacka, setTacka] = useState<{ lat: number; lng: number } | null>(tackaGazdinstva);
+  const [pronadjeno, setPronadjeno] = useState<[number, number] | null>(
+    tackaGazdinstva ? [tackaGazdinstva.lat, tackaGazdinstva.lng] : null,
+  );
+  const [gazdinstvoId] = useState<string | null>(izGazdinstva?.gazdinstvoId ?? null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [izjavaAdresa, setIzjavaAdresa] = useState(false);
   const [izjavaOvlascenja, setIzjavaOvlascenja] = useState(false);
@@ -91,16 +101,6 @@ export default function UpisForma({
     const k = koordinateZaMesto(f.mapaMesto);
     return k ? ([k[0], k[1]] as [number, number]) : null;
   }, [f.mapaMesto, tacka]);
-
-  function popuniIzGazdinstva() {
-    if (!predlog) return;
-    setF((s) => ({ ...s, naziv: predlog.naziv, bpg: predlog.bpg, mapaMesto: predlog.naselje, mapaAdresa: predlog.adresa ?? "" }));
-    if (predlog.lat != null && predlog.lng != null) {
-      setTacka({ lat: predlog.lat, lng: predlog.lng });
-      setPronadjeno([predlog.lat, predlog.lng]);
-    }
-    setGazdinstvoId(predlog.gazdinstvoId);
-  }
 
   async function pronadji() {
     if (!f.mapaAdresa.trim() || trazi) return;
@@ -124,7 +124,7 @@ export default function UpisForma({
   const spremno =
     !radi && f.naziv.trim() && f.imePrezime.trim() && odnos !== "" &&
     (gazdinstvo ? f.bpg.trim() : oblik !== "" && f.pib.trim() && f.maticniBroj.trim() && f.adresaSedista.trim() && (odnos !== "ZASTUPNIK" || f.zastupnikFunkcija.trim())) &&
-    !!ocistiKontaktEmail(f.kontaktEmail) && !!ocistiKontaktTelefon(f.kontaktTelefon) &&
+    !!ocistiKontaktTelefon(f.kontaktTelefon) &&
     f.mapaMesto.trim() && f.mapaAdresa.trim() && tacka && lokacijaUSrbiji(tacka.lat, tacka.lng) &&
     izjavaAdresa && potvrdaEvidentiranja && (!trebaOvlascenje || izjavaOvlascenja);
 
@@ -174,16 +174,9 @@ export default function UpisForma({
 
   return (
     <form onSubmit={posalji} noValidate className="space-y-4 bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica p-5">
-      {gazdinstvo && predlog && (
-        <Obavestenje
-          vrsta="info"
-          radnja={
-            <Dugme velicina="sm" onClick={popuniIzGazdinstva}>
-              {t("upis_predlog_popuni")}
-            </Dugme>
-          }
-        >
-          <p>{t("upis_predlog_gazdinstva", { naziv: predlog.naziv })}</p>
+      {izGazdinstva && (
+        <Obavestenje vrsta="info">
+          <p>{t("upis_predlog_gazdinstva", { naziv: izGazdinstva.naziv })}</p>
         </Obavestenje>
       )}
 
@@ -236,7 +229,6 @@ export default function UpisForma({
             <input value={f.imePrezime} onChange={postavi("imePrezime")} maxLength={MAX_IME_PREZIME} autoComplete="name" className={polje} />
           </Polje>
         )}
-        <Polje oznaka={t("upis_kontakt_email_label")}><input type="email" value={f.kontaktEmail} onChange={postavi("kontaktEmail")} autoComplete="email" className={polje} /></Polje>
         <Polje oznaka={t("upis_kontakt_telefon_label")}><input type="tel" value={f.kontaktTelefon} onChange={postavi("kontaktTelefon")} autoComplete="tel" className={polje} /></Polje>
       </div>
 

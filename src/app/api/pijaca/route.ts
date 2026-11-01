@@ -9,6 +9,7 @@ import { parsirajCenu } from "@/lib/cena-oglas";
 import { jeKategorija, parsirajKatParam } from "@/lib/kategorije";
 import { emitujNoviOglas } from "@/lib/oglas-dogadjaji";
 import { razresiNaselje, PORUKA_MESTO_IZ_SPISKA } from "@/lib/naselje";
+import { MAX_MESTA_OGLASA, procitajDodatnaMesta } from "@/lib/mesta-pravila";
 import { smeDaPostaviOglas, zabeleziDoprinos } from "@/lib/protokol/doprinos-sadrzaju";
 import { javiRoditeljimaZaOglas } from "@/lib/protokol/deca";
 import { upravljackoClanstvo, probajEvidentiratiGazdinstvo, GAZDINSTVO_ZA_OZNAKU, jeDomace } from "@/lib/protokol/gazdinstvo";
@@ -74,7 +75,7 @@ export async function GET(req: NextRequest) {
     select: {
       id: true, title: true, description: true, tip: true,
       cenaTip: true, price: true, cenaDo: true,
-      category: true, images: true, location: true, createdAt: true,
+      category: true, images: true, location: true, dodatnaMesta: true, createdAt: true,
       sellerId: true,
       seller: { select: { pseudonim: true, verified: true, maloletan: true } },
       gazdinstvo: GAZDINSTVO_ZA_OZNAKU,
@@ -136,6 +137,10 @@ export async function POST(req: NextRequest) {
   const mesto = location ? razresiNaselje(location) : null;
   if (location && !mesto)
     return await greska(PORUKA_MESTO_IZ_SPISKA, 400);
+  // Dodatna mesta (do ukupno MAX_MESTA_OGLASA) — svako iz šifarnika, bez ponavljanja.
+  const dodatnaMesta = procitajDodatnaMesta(formData.getAll("dodatnoMesto"), mesto, MAX_MESTA_OGLASA, razresiNaselje);
+  if (!dodatnaMesta) return await greska(PORUKA_MESTO_IZ_SPISKA, 400);
+  if (!mesto && dodatnaMesta.length > 0) return await greska("Prvo izaberi glavno mesto oglasa.", 400);
   if (phone.length > 40)
     return await greska("Telefon može imati najviše 40 znakova.", 400);
   // Kod potražnje budžet se uvek dogovara — cena se ne unosi (uvek DOGOVOR).
@@ -276,6 +281,7 @@ export async function POST(req: NextRequest) {
       category,
       images: imagePaths,
       location: mesto,
+      dodatnaMesta,
       phone: phone || null,
       gazdinstvoId,
     },

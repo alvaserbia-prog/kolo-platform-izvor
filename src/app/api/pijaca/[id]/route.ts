@@ -8,6 +8,7 @@ import { sacuvajNaR2, obrisiSaR2, r2Konfigurisan } from "@/lib/skladiste";
 import { MAX_PO_SLICI, MAX_SLIKA } from "@/lib/slika-upload";
 import { parsirajCenu } from "@/lib/cena-oglas";
 import { razresiNaselje, PORUKA_MESTO_IZ_SPISKA } from "@/lib/naselje";
+import { MAX_MESTA_OGLASA, procitajDodatnaMesta } from "@/lib/mesta-pravila";
 import { oglasIspunjavaMinimum, smeDaPostaviOglas, zabeleziDoprinos } from "@/lib/protokol/doprinos-sadrzaju";
 import {
   IZBOR_UCESNIKA,
@@ -178,6 +179,14 @@ export async function PATCH(
       mesto = location === listing.location ? location : razresiNaselje(location);
       if (!mesto) return await greska(PORUKA_MESTO_IZ_SPISKA, 400);
     }
+    // Dodatna mesta se menjaju samo kad ih obrazac šalje (oznaka „dodatnaMestaPoslato").
+    let dodatnaMesta: string[] | undefined;
+    if (fd.has("dodatnaMestaPoslato")) {
+      const d = procitajDodatnaMesta(fd.getAll("dodatnoMesto"), mesto, MAX_MESTA_OGLASA, razresiNaselje);
+      if (!d) return await greska(PORUKA_MESTO_IZ_SPISKA, 400);
+      if (!mesto && d.length > 0) return await greska("Prvo izaberi glavno mesto oglasa.", 400);
+      dodatnaMesta = d;
+    }
     const cena = parsirajCenu(cenaTipRaw, priceRaw, cenaDoRaw);
     if (!cena.ok)
       return await greska(cena.error, 400);
@@ -269,6 +278,7 @@ export async function PATCH(
         price: cena.price,
         cenaDo: cena.cenaDo,
         location: mesto,
+        ...(dodatnaMesta !== undefined && { dodatnaMesta }),
         phone: phone || null,
         images: [...zadrzaneSlike, ...noveSlike],
       },

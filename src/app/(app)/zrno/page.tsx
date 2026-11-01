@@ -56,6 +56,10 @@ export default async function ZrnoPage() {
       dohvatiPredlogeZaPrikaz(session.user.id, vidiPseudonimeGornjegKola(s), now),
     ),
   ]);
+  // Primalac podrške (Pravilnik čl. 22 st. 6, set 5.0.3): u periodu upisa ZRNA dnevni
+  // iznos programa se ne evidentira — ekran mu to kaže pre upisa. Ne imenuje program.
+  const jePrimalacPodrske =
+    (await prisma.programEnrollment.count({ where: { userId: session.user.id, status: "ACTIVE", type: { not: "PED" } } })) > 0;
 
   // U Fazi 1 Gornje Kolo ne postoji (Pravilnik čl. 41–42): predlog se ne nudi.
   const faza2 = (await dohvatiFazuStatus()).faza === "FAZA_2";
@@ -81,6 +85,7 @@ export default async function ZrnoPage() {
       smeAktivirati={smeAktiviratiZrno(st)}
       smeDelegirati={smeDelegirati(st, st)}
       minimumPoenZaUpis={MINIMUM_POEN_ZA_UPIS_ZRNA}
+      jePrimalacPodrske={jePrimalacPodrske}
       upisZahtev={upisZahtev ? { poenIznos: upisZahtev.poenIznos, status: upisZahtev.status } : null}
       otpisZahtev={otpisZahtev ? { kolicina: otpisZahtev.kolicina, status: otpisZahtev.status } : null}
       statusZahtevi={statusZahtevi.map((z) => ({ kolicina: z.kolicina, akcija: z.akcija }))}

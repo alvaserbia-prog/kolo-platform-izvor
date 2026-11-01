@@ -7,6 +7,7 @@ import {
   dnevniLimit, opticajNaPocetkuPerioda,
 } from "@/lib/programi-iznosi-pravila";
 import { probajEvidentiratiPotvrde } from "./potvrda-poen";
+import { izvrsiZrnoOperacije } from "./zrno";
 import { beogradskiDan, danObracuna, prethodniDan } from "./obracunski-dan";
 import { FUNKCIONALNI_PRAG_INDEKSA } from "./dokaz-stvarnosti";
 import { OsnovPodrske, ProgramType, TipKorisnika, TransactionType } from "@/generated/prisma/client";
@@ -299,6 +300,13 @@ export async function izvrsiNocnuEmisiju(datum: Date) {
   // Obračunski dan po srpskom vremenu (cron 22:00 UTC = ponoć po lokalnom leti)
   const danas = danObracuna(datum);
 
+  // 0. ZRNO operacije istog prolaza idu PRE emisije programa (Pravilnik čl. 22 st. 6,
+  // set 5.0.3): i kad emisiju pokrene ručni admin okidač, upisi perioda moraju biti
+  // izvršeni pre nego što se odluči ko dobija dnevni iznos. Poziv je idempotentan
+  // (brava dana na `zrnoDnevniKoeficijent`), pa posle noćnog crona ne radi ništa.
+  // Pre brave programa: ako ZRNO obrada padne, emisija programa ostaje otvorena za ponovni pokušaj.
+  await izvrsiZrnoOperacije(datum);
+
   // 1. Opticaj na početku perioda i limit (operativni čl. 20)
   const opticaj = await opticajZaLimit(danas);
   const limit = dnevniLimit(opticaj);
@@ -327,11 +335,29 @@ export async function izvrsiNocnuEmisiju(datum: Date) {
     include: { user: { include: { wallet: true } } },
   });
 
+  // Pravilnik čl. 22 st. 6, programi čl. 9 st. 3 (set 5.0.3, odluka vlasnika 01.11.2026):
+  // u obračunskom periodu u kome je primaocu podrške izvršen upis ZRNA, dnevni iznos po
+  // programu se ne evidentira i ne prenosi. Period upisa je period zahteva — ovaj prolaz
+  // zatvara `prethodniDan(danas)`, isti dan čije zahteve izvršava `izvrsiZrnoOperacije`.
+  // 🔴 Zato noćni obračun mora da izvrši ZRNO operacije PRE emisije programa
+  // (`/api/cron/nocna-emisija`), a ovde se broje samo IZVRŠENI upisi: otkazan zahtev
+  // (ispod praga, van Faze 2) ne oduzima dnevni iznos. Ovo nije obeležavanje porekla
+  // POEN-a ni granica po primaocu: primalac bira, dan po dan, dnevni iznos ili upis.
+  const upisaliZrno = new Set(
+    (
+      await prisma.zrnoUpisZahtev.findMany({
+        where: { date: prethodniDan(danas), status: "EXECUTED" },
+        select: { userId: true },
+      })
+    ).map((z) => z.userId),
+  );
+
   const items: EmisijaItem[] = [];
 
   for (const en of enrollments) {
     if (!aktivniTipovi.has(en.type)) continue;
     if (!en.user.wallet) continue;
+    if (upisaliZrno.has(en.user.id)) continue;
 
     const amount = izracunajDnevniIznos(en.type, en.metadata, en.dailyAmount, danas);
     if (amount > 0) {

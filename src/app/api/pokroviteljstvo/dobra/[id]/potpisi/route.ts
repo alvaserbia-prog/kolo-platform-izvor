@@ -25,6 +25,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       { kod: body.kod, procitao: body.procitao, ovlascen: body.ovlascen, saglasan: body.saglasan },
       req.nextUrl.origin,
     );
+    // Set 5.0.5 — posle potpisa podnosioca prijava čeka prihvatanje Fondacije.
+    if ("cekaFondaciju" in r) return NextResponse.json({ ok: true, cekaFondaciju: true });
     return NextResponse.json({ ok: true, brojVaucera: r.brojVaucera, kontrolniBroj: r.kontrolniBroj });
   } catch (e) {
     return await odgovorNaGresku(e);

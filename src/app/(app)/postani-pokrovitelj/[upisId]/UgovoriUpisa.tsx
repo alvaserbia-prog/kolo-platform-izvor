@@ -38,6 +38,7 @@ type UgovorDobra = {
   vrednostRsd: number;
   mesto: string;
   adresaPredaje: string | null;
+  mestaPrikaz: string[];
   status: "NA_PREGLEDU" | "CEKA_POTPIS" | "POTPISAN" | "ODBIJEN" | "RASKINUT";
   odbijenoRazlog: string | null;
   ugovorTekst: string | null;
@@ -114,7 +115,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
       setPotpisOtvoren(null);
       setPotpis((s) => ({ ...s, [id]: prazanPotpis }));
     }
-    setPoruka(r.ok ? { tekst: t("potpisano"), ok: true } : { tekst: d.error ?? t("greska"), ok: false });
+    setPoruka(r.ok ? { tekst: d.cekaFondaciju ? t("potpisano_ceka_fondaciju") : t("potpisano"), ok: true } : { tekst: d.error ?? t("greska"), ok: false });
     await ucitaj();
   }
 
@@ -224,7 +225,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold text-kolo-text">{u.opis}</p>
-                  <p className="text-sm text-kolo-muted">{u.mesto}{u.adresaPredaje ? `, ${u.adresaPredaje}` : ""}</p>
+                  <p className="text-sm text-kolo-muted">{u.mestaPrikaz.join("; ")}</p>
                   <p className="text-sm text-kolo-muted">{t("ugovor_vrednost", { broj: u.brojVaucera, vrednost: rsd(u.vrednostRsd) })}</p>
                   {u.status === "POTPISAN" && (
                     <p className="text-xs text-kolo-muted">

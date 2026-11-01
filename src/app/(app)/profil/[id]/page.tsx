@@ -148,6 +148,7 @@ export default function JavniProfilPage() {
     ZADRUGA_DOPRINOS: t("trx_zadruga_doprinos"),
     ZADRUGA_OPREMA: t("trx_zadruga"),
     ZADRUGA_USLUGA: t("trx_zadruga"),
+    ZADRUGA_USTUPANJE: t("trx_zadruga"),
     EMISIJA_GAZDINSTVO: t("trx_gazdinstvo"),
     OTPIS_GAZDINSTVO: t("trx_otpis_gazdinstva"),
     EMISIJA_POKROVITELJ_DOBRA: t("trx_pokroviteljstvo_dobra"),

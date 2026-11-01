@@ -42,6 +42,8 @@ type Dostupan = {
   vrsta: "DOBRO" | "USLUGA";
   mesto: string;
   adresaPredaje: string | null;
+  /** Sva mesta predaje, odnosno pružanja (set 5.0.6). */
+  mestaPrikaz: string[];
   vaziDo: string | null;
   poen: number;
   preostalo: number;
@@ -56,6 +58,8 @@ type MojVaucer = {
   logoUrl: string | null;
   mesto: string;
   adresaPredaje: string | null;
+  /** Sva mesta predaje, odnosno pružanja (set 5.0.6). */
+  mestaPrikaz: string[];
   vaziDo: string | null;
   poen: number;
   /** Pristanak na prikaz opisa uz pseudonim (nabavke čl. 33 st. 1) i njegovo povlačenje (st. 2). */
@@ -164,7 +168,7 @@ export default function VauceriKlijent() {
                 <div className="min-w-0">
                   <p className="font-semibold text-kolo-text">{r.opis}</p>
                   <p className="text-sm text-kolo-muted">
-                    {t("davalac_mesto", { davalac: r.davalac, mesto: r.adresaPredaje ? `${r.mesto}, ${r.adresaPredaje}` : r.mesto })}
+                    {t("davalac_mesto", { davalac: r.davalac, mesto: r.mestaPrikaz.join("; ") })}
                   </p>
                 </div>
               </div>
@@ -219,7 +223,7 @@ export default function VauceriKlijent() {
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-kolo-text">{v.opis}</p>
                 <p className="text-sm text-kolo-muted">
-                  {t("davalac_mesto", { davalac: v.davalac, mesto: v.adresaPredaje ? `${v.mesto}, ${v.adresaPredaje}` : v.mesto })}
+                  {t("davalac_mesto", { davalac: v.davalac, mesto: v.mestaPrikaz.join("; ") })}
                 </p>
                 <p className="text-xs text-kolo-muted">{t("vazi_do", { datum: datum(v.vaziDo) })}</p>
                 <p className="text-sm text-kolo-text">{t("poen_vaucera", { poen: v.poen.toLocaleString(intlTag(locale)) })}</p>

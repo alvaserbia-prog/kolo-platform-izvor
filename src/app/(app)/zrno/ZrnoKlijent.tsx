@@ -42,6 +42,8 @@ interface Props {
   /** Delegiranje: čuvar Kola (čl. 44 st. 2; Gornje Kolo čl. 14). */
   smeDelegirati: boolean;
   minimumPoenZaUpis: number;
+  /** Primalac podrške: u periodu upisa ZRNA dnevni iznos programa se ne evidentira (Pravilnik čl. 22 st. 6). */
+  jePrimalacPodrske: boolean;
   upisZahtev: { poenIznos: number; status: string } | null;
   otpisZahtev: { kolicina: number; status: string } | null;
   statusZahtevi: { kolicina: number; akcija: string }[];
@@ -155,6 +157,7 @@ function UpisOtpisSekcija({
   koeficijent,
   kanalAktivan,
   minimumPoenZaUpis,
+  jePrimalacPodrske,
   upisZahtev,
   otpisZahtev,
   statusZahtevi,
@@ -220,6 +223,9 @@ function UpisOtpisSekcija({
 
           {jeBezPotvrde ? (
             <Obavestenje vrsta="upozorenje">{t("upis_bez_potvrde_napomena")}</Obavestenje>
+          ) : null}
+          {smeUpis && jePrimalacPodrske ? (
+            <Obavestenje vrsta="upozorenje">{t("upis_primalac_podrske_napomena")}</Obavestenje>
           ) : null}
           {!smeUpis ? (
             <p className={napomenaCls}>{t("upis_samo_verifikovan")}</p>

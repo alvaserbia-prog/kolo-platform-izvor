@@ -3,6 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { mestaPredaje, prikazMestaPredaje } from "@/lib/mesta-pravila";
 import { razresiNaselje, PORUKA_MESTO_IZ_SPISKA } from "@/lib/naselje";
 import {
   procitajPredmetDobra,
@@ -42,7 +43,7 @@ export async function GET(req: NextRequest) {
     orderBy: { createdAt: "desc" },
     select: {
       id: true, naziv: true, vrsta: true, opis: true, brojVaucera: true, vrednostRsd: true, podnosilacId: true,
-      mesto: true, adresaPredaje: true, logoUrl: true, status: true, odbijenoRazlog: true, ugovorTekst: true, potpisanoAt: true,
+      mesto: true, adresaPredaje: true, dodatnaMestaPredaje: true, dodatneAdresePredaje: true, logoUrl: true, status: true, odbijenoRazlog: true, ugovorTekst: true, potpisanoAt: true,
       kontrolniBroj: true, vaziDo: true, createdAt: true, potpisKodIstice: true,
     },
   });
@@ -57,11 +58,12 @@ export async function GET(req: NextRequest) {
   ]);
 
   return NextResponse.json({
-    ugovori: ugovori.map(({ podnosilacId, ...u }) => {
+    ugovori: ugovori.map(({ podnosilacId, dodatnaMestaPredaje, dodatneAdresePredaje, ...u }) => {
       const broj = (s: string) =>
         stanja.find((x) => x.ugovorId === u.id && x.status === s)?._count._all ?? 0;
       return {
         ...u,
+        mestaPrikaz: mestaPredaje({ ...u, dodatnaMestaPredaje, dodatneAdresePredaje }).map(prikazMestaPredaje),
         // Potpisuje samo podnosilac prijave (čl. 32 st. 1).
         mojPotpis: podnosilacId === session.user.id,
         vrednostRsd: Number(u.vrednostRsd),
@@ -91,17 +93,31 @@ export async function POST(req: NextRequest) {
   if (!fd) return await greska("Neispravan zahtev.", 400);
 
   const polja: Record<string, unknown> = {};
-  for (const k of ["vrsta", "opis", "brojVaucera", "cenaPoJedinici", "adresaPredaje", "izjavaPropisi"]) {
+  for (const k of ["vrsta", "opis", "brojVaucera", "cenaPoJedinici", "adresaPredaje", "izjavaPropisi", "jeHrana", "vrstaHrane", "opisProizvodnje", "stalnihRadnika", "vrstaGrla", "brojGrla", "povrsinaHa", "plastenikHa", "udeoHrane", "ishranaKrava", "kavezi", "organskiSertifikat", "djubrenje", "zastita", "izjavaPodataka"]) {
     const v = fd.get(k);
     if (typeof v === "string") polja[k] = v;
   }
   const upisId = fd.get("upisId");
   if (typeof upisId !== "string" || !upisId) return await greska("Prijava se podnosi iz upisa pokrovitelja u evidenciju.", 400);
-  const provera = procitajPredmetDobra(polja);
-  if (!provera.ok) return await greska(provera.razlog, 400);
 
   const mesto = razresiNaselje(fd.get("mesto"));
   if (!mesto) return await greska(PORUKA_MESTO_IZ_SPISKA, 400);
+  polja.mesto = mesto;
+
+  // Set 5.0.6 — dodatna mesta predaje, odnosno pružanja (čl. 28 st. 2 t. 5): parovi
+  // „dodatnoMesto" / „dodatnaAdresa" istim redom; svako mesto iz šifarnika naselja.
+  const dodatnaMesta = fd.getAll("dodatnoMesto");
+  const dodatneAdrese = fd.getAll("dodatnaAdresa");
+  const dodatna: { mesto: string; adresa: unknown }[] = [];
+  for (let i = 0; i < dodatnaMesta.length; i++) {
+    const m = razresiNaselje(dodatnaMesta[i]);
+    if (!m) return await greska(PORUKA_MESTO_IZ_SPISKA, 400);
+    dodatna.push({ mesto: m, adresa: dodatneAdrese[i] });
+  }
+  polja.dodatnaMestaPredaje = dodatna;
+
+  const provera = procitajPredmetDobra(polja);
+  if (!provera.ok) return await greska(provera.razlog, 400);
 
   // Dokaz cene je SAMO fotografija cenovnika (čl. 28 st. 2 t. 4), za firmu i gazdinstvo.
   const fajlovi: File[] = [];

@@ -25,8 +25,11 @@ export * from "@/lib/zrno-upis-pravila";
 export const UKUPNO_ZRNA = 1_000_000;
 export const PROTOKOL_WALLET_ID = "banka-singleton";
 
-// Pravilnik čl. 22 st. 4: upis ZRNA pretpostavlja minimum od 20.000 evidentiranih POEN-a
-export const MINIMUM_POEN_ZA_UPIS_ZRNA = 20_000;
+// Pravilnik čl. 22 st. 4: upis ZRNA pretpostavlja minimum od 10.000 evidentiranih POEN-a
+// (set 5.0.3, odluka vlasnika 01.11.2026; do tada 20.000). Prag ne pogađa primaoca
+// podrške — on ga prelazi za nekoliko dana — nego onoga ko do POEN-a dolazi razmenom;
+// primaoca podrške uređuje čl. 22 st. 6 (`izvrsiNocnuEmisiju`, `protokol/programi.ts`).
+export const MINIMUM_POEN_ZA_UPIS_ZRNA = 10_000;
 
 // ── Računanje ─────────────────────────────────────────────────────────────────
 // `glasackaMoc` i `razresiGlasackuMoc` žive u `gornje-kolo-pravila.ts`.

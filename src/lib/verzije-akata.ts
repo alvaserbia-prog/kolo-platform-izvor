@@ -68,8 +68,9 @@ export const AKT_USLOVI: Akt = {
   // gazdinstvu — samo ko je lagao ili znao).
   // 5.0.0 — ceo set prenumerisan bez podčlanova; sporovi preko zadruge, prijava smrti,
   // rokovi prigovora brojem, zaštita iz ZOO čl. 265 za svako ograničenje odgovornosti.
-  verzija: "5.0.0",
-  fajl: "uslovi_koriscenja_5_0_0.md",
+  // 5.0.2 — čl. 14 st. 4: korisnik koji nije u Kolu uzima vaučere programa raspodele hrane.
+  verzija: "5.0.2",
+  fajl: "uslovi_koriscenja_5_0_2.md",
 };
 
 export const AKT_POLITIKA: Akt = {

@@ -117,7 +117,7 @@ export async function upisiPokrovitelja(
 ) {
   const korisnik = await prisma.user.findUnique({
     where: { id: userId },
-    select: { verified: true, maloletan: true, deaktiviranAt: true },
+    select: { verified: true, maloletan: true, deaktiviranAt: true, email: true },
   });
   if (!korisnik || korisnik.deaktiviranAt) throw new UpisGreska("Korisnik nije pronađen.", 404);
   // Maloletni korisnik upis ne vrši (čl. 16 st. 1); potvrđeno dete ima `verified`.
@@ -126,7 +126,10 @@ export async function upisiPokrovitelja(
   // jedan od dva puta kojim nov član postaje potvrđen (dokaz stvarnosti čl. 8 st. 1 t. 3).
   // Pokroviteljstvo dobrima i uslugama i dalje traži potvrdu (ruta `dobra`).
 
-  const r = procitajUpis(body);
+  // Adresa elektronske pošte za kontakt (donacije čl. 16 st. 2 t. 2) se ne traži u formi:
+  // uzima se adresa naloga, upisana pri registraciji; kasnije se menja u „Podaci" upisa.
+  if (!korisnik.email) throw new UpisGreska("Nalog nema adresu elektronske pošte — dodaj je u podešavanjima profila.");
+  const r = procitajUpis({ ...body, kontaktEmail: korisnik.email });
   if (!r.ok) throw new UpisGreska(r.razlog);
   const d = r.podaci;
   if (!p.mesto) throw new UpisGreska("Izaberi mesto iz spiska.");

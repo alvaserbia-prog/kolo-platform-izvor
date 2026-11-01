@@ -170,6 +170,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
         category: listing.category,
         images: listing.images,
         location: listing.location ?? null,
+        dodatnaMesta: listing.dodatnaMesta ?? [],
         // Kontakt (telefon) se ne šalje klijentu osim verifikovanima (Politika čl. 12 st. 2) —
         // ne sme „procuriti" kroz props ni za neverifikovane, čak i da se ne renderuje.
         phone: session?.user?.verified ? (listing.phone ?? null) : null,

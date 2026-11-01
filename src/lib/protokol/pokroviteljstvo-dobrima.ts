@@ -41,7 +41,7 @@ import { bazniUrl, emailLayout, esc, posaljiEmailRaw } from "@/lib/email";
 import { prevedi } from "@/lib/prevod-servera";
 import {
   generisiUgovorDobraTekst,
-  KOEFICIJENT_DOBARA,
+  koeficijentZaUgovor,
   poenZaUgovor,
   poenaPoVauceru,
   otpisPoVauceru,
@@ -257,6 +257,8 @@ export async function podnesiPrijavu(
   });
   if (!kvota.ok) throw new VaucerGreska(kvota.razlog, 409);
 
+  if (!upis.odnosPremaDavaocu || !upis.kontaktEmail || !upis.kontaktTelefon)
+    throw new VaucerGreska("Upis nema odnos prema davaocu ili kontakt davaoca — dopuni upis.", 409);
   const sada = new Date();
   const ugovor = await prisma.ugovorDobra.create({
     data: {
@@ -281,8 +283,44 @@ export async function podnesiPrijavu(
       rokVazenjaMeseci: ROK_VAZENJA_MESECI,
       mesto,
       adresaPredaje: podaci.adresaPredaje,
+      dodatnaMestaPredaje: podaci.dodatnaMestaPredaje.map((m) => m.mesto),
+      dodatneAdresePredaje: podaci.dodatnaMestaPredaje.map((m) => m.adresa),
       logoUrl: upis.logoUrl,
       izjavaPropisiAt: sada,
+      // Set 5.0.5 — hrana: odgovori davaoca (snimak), kategorija i koeficijent koje sistem
+      // izvodi iz odgovora (čl. 22 st. 4–8), i izjava o tačnosti podataka (čl. 28 st. 3).
+      // 🔴 Davalac ih ne bira i ne vidi; Fondacija ih utvrđuje prihvatanjem prijave (čl. 22 st. 5).
+      hranaOdgovori: podaci.hrana ? (podaci.hrana.odgovori as unknown as Prisma.InputJsonValue) : undefined,
+      hranaKategorija: podaci.hrana?.kategorija ?? null,
+      hranaKoeficijent: podaci.hrana?.koeficijent ?? null,
+      izjavaPoreklaAt: podaci.hrana ? sada : null,
+      // Set 5.0.5 (čl. 31 st. 1) — ugovor se generiše pri podnošenju i podnosilac ga odmah
+      // potpisuje; zaključen je kad ga Fondacija potpiše prihvatanjem prijave.
+      status: "CEKA_POTPIS",
+      ugovorTekst: generisiUgovorDobraTekst({
+        vrstaDavaoca: upis.vrsta,
+        bpg: upis.vrsta === "GAZDINSTVO" ? upis.bpg : null,
+        naziv: upis.naziv,
+        pib: upis.vrsta === "FIRMA" ? upis.pib : null,
+        maticniBroj: upis.vrsta === "FIRMA" ? upis.maticniBroj : null,
+        adresaSedista: upis.vrsta === "FIRMA" ? upis.adresaSedista : null,
+        zastupnikImePrezime: imePrezime,
+        zastupnikFunkcija: upis.vrsta === "GAZDINSTVO" ? FUNKCIJA_NOSIOCA_GAZDINSTVA : funkcijaZaUgovor(upis),
+        odnosPremaDavaocu: upis.odnosPremaDavaocu!,
+        kontaktEmail: upis.kontaktEmail!,
+        kontaktTelefon: upis.kontaktTelefon!,
+        vrsta: podaci.vrsta,
+        opis: podaci.opis,
+        brojVaucera: podaci.brojVaucera,
+        cenaPoJedinici: podaci.cenaPoJedinici,
+        vrednostRsd: podaci.vrednostRsd,
+        mesto,
+        adresaPredaje: podaci.adresaPredaje,
+        dodatnaMestaPredaje: podaci.dodatnaMestaPredaje.map((m) => m.mesto),
+        dodatneAdresePredaje: podaci.dodatnaMestaPredaje.map((m) => m.adresa),
+        datum: sada,
+        hrana: podaci.hrana ? { vrsta: podaci.hrana.odgovori.vrsta, kategorija: podaci.hrana.kategorija } : null,
+      }),
       // Snimak izjava iz upisa (čl. 17).
       izjavaOvlascenjeAt: upis.izjavaOvlascenjaAt,
       potvrdaEvidentiranjaAt: upis.potvrdaEvidentiranjaAt,
@@ -300,20 +338,20 @@ export async function podnesiPrijavu(
     select: { id: true },
   });
 
-  void posaljiAdminAlert("Nova prijava pokroviteljstva dobrima i uslugama", `Davalac: ${upis.naziv}`);
+  // Admin dobija obaveštenje tek kad podnosilac potpiše (potpisiUgovorDobra).
   return ugovor;
 }
 
 // ─── Pregled Fondacije (čl. 29 st. 2) ───────────────────────────────────────
 
 /**
- * Prihvatanje prijave. Fondacija proverava SAMO da je fotografija cenovnika
- * priložena — podatke o davaocu je uporedila sa registrom pri odobrenju upisa
- * (čl. 18 st. 1), pa prijava prolazi samo iz odobrenog upisa.
- * 🔴 Cenu ne procenjuje, ne upoređuje i ne određuje (čl. 29 st. 2). Generiše se i
- * SNIMA tekst ugovora (čl. 31 st. 1).
+ * Prihvatanje prijave (čl. 29 st. 2, čl. 32; set 5.0.5). Fondacija proverava da je
+ * fotografija cenovnika priložena i, za hranu, da odgovori odgovaraju opisu proizvodnje;
+ * cenu ne procenjuje. Prijavu je podnosilac već potpisao, pa se prihvatanjem ugovor
+ * zaključuje: izdaju se vaučeri i Protokol evidentira POEN (čl. 33).
+ * Zatečene prijave bez potpisa podnosioca idu starim tokom: generiše se ugovor i čeka potpis.
  */
-export async function prihvatiPrijavu(id: string, adminId: string) {
+export async function prihvatiPrijavu(id: string, adminId: string, requestOrigin?: string) {
   const u = await prisma.ugovorDobra.findUnique({
     where: { id },
     include: {
@@ -333,6 +371,20 @@ export async function prihvatiPrijavu(id: string, adminId: string) {
     throw new VaucerGreska(PORUKA_DRUGO_IME, 409);
 
   const sada = new Date();
+  // Za firmu se beleži samo DA je poređenje sa registrom izvršeno — pri odobrenju
+  // upisa (čl. 18 st. 1); gazdinstvo se ne poredi sa APR-om.
+  const aprUporedjenAt = gazdinstvo ? null : u.upis.aprProveraAt;
+
+  if (u.podnosilacPotpisaoAt && u.ugovorTekst) {
+    const ishod = await realizujUgovorDobra(
+      id, u.podnosilacId, sada, "NA_PREGLEDU", { podnosilacPotpisaoAt: { not: null } }, requestOrigin,
+      { adminId, aprUporedjenAt },
+    );
+    await logAdminAkcija(adminId, "POKROVITELJSTVO_DOBRA_PRIHVACENO", id, `vaučera ${u.brojVaucera}, ugovor zaključen`);
+    return ishod;
+  }
+
+  // Zatečena prijava (pre seta 5.0.5): generiše se ugovor i čeka potpis podnosioca.
   const ugovorTekst = generisiUgovorDobraTekst({
     vrstaDavaoca: u.vrstaDavaoca,
     bpg: u.bpg,
@@ -352,20 +404,13 @@ export async function prihvatiPrijavu(id: string, adminId: string) {
     vrednostRsd: Number(u.vrednostRsd),
     mesto: u.mesto,
     adresaPredaje: u.adresaPredaje,
+    dodatnaMestaPredaje: u.dodatnaMestaPredaje,
+    dodatneAdresePredaje: u.dodatneAdresePredaje,
     datum: sada,
   });
-
   const r = await prisma.ugovorDobra.updateMany({
     where: { id, status: "NA_PREGLEDU" },
-    data: {
-      status: "CEKA_POTPIS",
-      ugovorTekst,
-      pregledaoId: adminId,
-      pregledanoAt: sada,
-      // Za firmu se beleži samo DA je poređenje sa registrom izvršeno — pri odobrenju
-      // upisa (čl. 18 st. 1); gazdinstvo se ne poredi sa APR-om.
-      aprUporedjenAt: gazdinstvo ? null : u.upis.aprProveraAt,
-    },
+    data: { status: "CEKA_POTPIS", ugovorTekst, pregledaoId: adminId, pregledanoAt: sada, aprUporedjenAt },
   });
   if (r.count === 0) throw new VaucerGreska("Prijava je već obrađena.", 409);
 
@@ -377,6 +422,7 @@ export async function prihvatiPrijavu(id: string, adminId: string) {
     tekst: "Fondacija je prihvatila prijavu pokroviteljstva dobrima i uslugama. Ugovor čeka tvoj potpis.",
     link: "/vauceri/davalac",
   });
+  return null;
 }
 
 export async function odbijPrijavuDobra(id: string, adminId: string, razlog: string) {
@@ -500,6 +546,46 @@ export async function potpisiUgovorDobra(
     throw new VaucerGreska("Kod nije tačan.", 400);
   }
 
+  const podnosilacProvera = await prisma.user.findUnique({ where: { id: userId }, select: { maloletan: true } });
+  if (!podnosilacProvera || podnosilacProvera.maloletan) throw new VaucerGreska("Ugovor ne može potpisati ovaj nalog.", 403);
+  if (ishodUpisa(await imeNaloga(userId), u.zastupnikImePrezime) === "RAZLIKUJE_SE")
+    throw new VaucerGreska(PORUKA_DRUGO_IME, 409);
+
+  // Set 5.0.5 (donacije čl. 31–32): podnosilac potpisuje ugovor pri podnošenju prijave,
+  // a ugovor je zaključen kad ga Fondacija potpiše prihvatanjem prijave. Zatečeni ugovori
+  // koje je Fondacija prihvatila pre potpisa podnosioca (`pregledanoAt`) zaključuju se
+  // ovim potpisom, kao do sada.
+  if (!u.pregledanoAt) {
+    const r = await prisma.ugovorDobra.updateMany({
+      where: { id, status: "CEKA_POTPIS", potpisKodHash: u.potpisKodHash },
+      data: {
+        status: "NA_PREGLEDU", podnosilacPotpisaoAt: sada, kontrolniBroj: kontrolniBrojTeksta(u.ugovorTekst),
+        potpisKodHash: null, potpisKodIstice: null,
+      },
+    });
+    if (r.count === 0) throw new VaucerGreska("Ugovor je već potpisan.", 409);
+    void posaljiAdminAlert("Nova prijava pokroviteljstva dobrima i uslugama (potpisana)", `Davalac: ${u.naziv}`);
+    return { cekaFondaciju: true as const };
+  }
+  return realizujUgovorDobra(id, userId, sada, "CEKA_POTPIS", { potpisKodHash: u.potpisKodHash }, requestOrigin);
+}
+
+/**
+ * Zaključenje ugovora (čl. 32–33): ugovor prelazi u POTPISAN, izdaju se vaučeri, snimaju
+ * koeficijent i broj POEN-a, a VAN transakcije `emitujPoen()` evidentira POEN podnosiocu.
+ * Poziva se iz prihvatanja prijave (set 5.0.5) ili iz potpisa zatečenog ugovora.
+ */
+async function realizujUgovorDobra(
+  id: string,
+  userId: string,
+  sada: Date,
+  statusPre: "CEKA_POTPIS" | "NA_PREGLEDU",
+  dodatniUslov: Prisma.UgovorDobraWhereInput,
+  requestOrigin?: string,
+  pregled?: { adminId: string; aprUporedjenAt: Date | null },
+) {
+  const u = await prisma.ugovorDobra.findUnique({ where: { id } });
+  if (!u || !u.ugovorTekst) throw new VaucerGreska("Ugovor nije pronađen.", 404);
   const podnosilac = await prisma.user.findUnique({
     where: { id: userId },
     select: { maloletan: true, email: true, jezik: true, pseudonim: true, wallet: { select: { id: true } } },
@@ -510,22 +596,28 @@ export async function potpisiUgovorDobra(
     throw new VaucerGreska(PORUKA_DRUGO_IME, 409);
 
   // Koeficijent evidencije pokroviteljstva je 1,00 (čl. 22 i 33 st. 2, set 5.0.0, izmena 28.10.2026) —
-  // ne čita se novčani kumulativ. Snima se uz ugovor, jer otpis po raskidu ide po
-  // koeficijentu sa kojim je ugovor evidentiran (čl. 35 st. 2).
-  const koeficijent = KOEFICIJENT_DOBARA;
+  // ne čita se novčani kumulativ — osim za hranu, gde se čita iz tabele po poreklu
+  // (čl. 22 st. 4, set 5.0.2) i ulazi i u broj POEN-a po vaučeru (nabavke čl. 31 st. 1).
+  // Snima se uz ugovor, jer otpis po raskidu ide po koeficijentu sa kojim je ugovor
+  // evidentiran (čl. 35 st. 2).
+  // Set 5.0.5 — koeficijent hrane je izveden iz odgovora pri podnošenju (`hranaKoeficijent`),
+  // a Fondacija ga je utvrdila prihvatanjem prijave (čl. 22 st. 5).
+  const jeHrana = u.hranaKoeficijent != null;
+  const koeficijent = koeficijentZaUgovor(jeHrana ? Number(u.hranaKoeficijent) : null);
   const vrednost = Number(u.vrednostRsd);
   const poen = poenZaUgovor(vrednost, koeficijent);
-  const poPoVauceru = poenaPoVauceru(vrednost, u.brojVaucera);
+  const poPoVauceru = poenaPoVauceru(vrednost, u.brojVaucera, jeHrana ? koeficijent : null);
   const vaziDo = vaziDoOd(sada, ROK_VAZENJA_MESECI);
   const kontrolniBroj = kontrolniBrojTeksta(u.ugovorTekst);
 
   await prisma.$transaction(async (tx) => {
     const r = await tx.ugovorDobra.updateMany({
-      where: { id, status: "CEKA_POTPIS", potpisKodHash: u.potpisKodHash },
+      where: { id, status: statusPre, ...dodatniUslov },
       data: {
         status: "POTPISAN", potpisanoAt: sada, kontrolniBroj, vaziDo, koeficijent, poenEvidentirano: poen,
         poenaPoVauceru: poPoVauceru, rokVazenjaMeseci: ROK_VAZENJA_MESECI,
         potpisKodHash: null, potpisKodIstice: null,
+        ...(pregled ? { pregledaoId: pregled.adminId, pregledanoAt: sada, aprUporedjenAt: pregled.aprUporedjenAt } : {}),
       },
     });
     if (r.count === 0) throw new VaucerGreska("Ugovor je već potpisan.", 409);
@@ -552,8 +644,9 @@ export async function potpisiUgovorDobra(
       await tx.ugovorDobra.update({
         where: { id },
         data: {
-          status: "CEKA_POTPIS", potpisanoAt: null, kontrolniBroj: null, vaziDo: null, koeficijent: null,
+          status: statusPre, potpisanoAt: null, vaziDo: null, koeficijent: null,
           poenEvidentirano: null, poenaPoVauceru: null,
+          ...(statusPre === "CEKA_POTPIS" ? { kontrolniBroj: null } : { pregledaoId: null, pregledanoAt: null }),
         },
       });
     });

@@ -132,6 +132,9 @@ enum TransactionType {
   ZADRUGA_OPREMA
   /// Usluga koju zadruga pruža ili prima (čl. 11 st. 1 t. 5); smer čita se iz zapisa.
   ZADRUGA_USLUGA
+  /// Zadruga → ustupilac: zemljište, oprema ili mehanizacija ustupljeni zadruzi na
+  /// korišćenje (čl. 11 st. 1 t. 6, set 5.0.5). Svojina se ne prenosi; iznos određuje zadruga.
+  ZADRUGA_USTUPANJE
   /// Prestanak učešća zadruge: POEN zapisa zadruge poništava se protivzapisom u
   /// korist Protokola (Pravilnik o KOLO sistemu čl. 50 st. 4). Opticaj opada.
   PONISTENJE_ZAPISA_ZADRUGE
@@ -309,6 +312,23 @@ enum VrstaDonacije {
 enum VrstaDobraPokrovitelja {
   DOBRO
   USLUGA
+}
+
+/// Vrsta hrane po poreklu (donacije čl. 22 st. 4, set 5.0.2): životinjsko (meso, mleko i
+/// mlečni proizvodi, jaja) ili biljno.
+enum VrstaHrane {
+  ZIVOTINJSKA
+  BILJNA
+}
+
+/// Poreklo hrane (donacije čl. 22 st. 4–5, set 5.0.2): proizvodnja gazdinstva, mala farma,
+/// industrijska proizvodnja, industrijski prerađena hrana. Koeficijent se čita iz
+/// `hrana-pravila.ts`, ne čuva se uz poreklo.
+enum PorekloHrane {
+  GAZDINSTVO
+  MALA_FARMA
+  INDUSTRIJA
+  PRERADJENO
 }
 
 /// Ko je davalac (donacije čl. 16 st. 1 i 4, čl. 28 st. 1): pravno lice ili preduzetnik, odnosno
@@ -1272,6 +1292,9 @@ model MarketplaceListing {
   category       String
   images         String[]
   location       String?
+  /// Dodatna mesta oglasa (do dva, uz `location` kao prvo), naselja iz šifarnika
+  /// (`razresiNaselje`). Prikaz i filter po mestu čitaju sva mesta (`mestaOglasa`).
+  dodatnaMesta   String[]      @default([])
   phone          String?
   status         ListingStatus @default(ACTIVE)
   razmenjenoAt   DateTime?
@@ -2276,6 +2299,11 @@ model UgovorDobra {
   mesto                     String
   /// Slobodan opis mesta predaje (ulica, radnja) — prikazuje se na vaučeru.
   adresaPredaje             String?
+  /// Dodatna mesta predaje, odnosno pružanja (donacije čl. 28 st. 2 t. 5, set 5.0.6):
+  /// paralelni nizovi naselja i adresa, uz `mesto`/`adresaPredaje` kao prvo mesto.
+  /// Imalac bira mesto među njima (nabavke čl. 32). Čita se kroz `mestaPredaje()`.
+  dodatnaMestaPredaje  String[] @default([])
+  dodatneAdresePredaje String[] @default([])
   /// Logotip davaoca (donacije čl. 26 st. 2): uz naziv na rang-listi „Dobra i
   /// usluge", na vaučerima i uz ponudu vaučera. Nije obavezan; javni URL na R2.
   /// 🔴 Bez veze ka internet stranici davaoca (čl. 26 st. 3).
@@ -2285,6 +2313,22 @@ model UgovorDobra {
   nedeljniKapacitet         Int?
   /// Izjava o propisima za promet (čl. 28 st. 3) — trenutak davanja izjave.
   izjavaPropisiAt           DateTime
+  /// Set 5.0.2 — kad je predmet hrana (donacije čl. 28 st. 2 t. 6): vrsta i poreklo hrane,
+  /// broj grla, odnosno obim proizvodnje, i trenutak izjave o tačnosti porekla (čl. 28 st. 3).
+  /// Svi `null` = predmet nije hrana, koeficijent 1,00. Zatečeni redovi ostaju `null`.
+  vrstaHrane                VrstaHrane?
+  porekloHrane              PorekloHrane?
+  obimProizvodnje           String?
+  izjavaPoreklaAt           DateTime?
+  /// Set 5.0.5 — odgovori davaoca na pitanja o hrani (snimak, donacije čl. 28 st. 2 t. 6),
+  /// kategorija i koeficijent koje sistem izvodi iz njih (čl. 22 st. 4–8); Fondacija ih
+  /// utvrđuje prihvatanjem. `vrstaHrane`/`porekloHrane`/`obimProizvodnje` su zapisi seta 5.0.4.
+  hranaOdgovori             Json?
+  hranaKategorija           String?
+  hranaKoeficijent          Decimal?               @db.Decimal(4, 2)
+  /// Set 5.0.5 (čl. 31–32) — trenutak kad je podnosilac potpisao ugovor pri podnošenju;
+  /// ugovor je zaključen prihvatanjem Fondacije (`potpisanoAt`).
+  podnosilacPotpisaoAt      DateTime?
   status                    UgovorDobraStatus      @default(NA_PREGLEDU)
   odbijenoRazlog            String?
   pregledaoId               String?

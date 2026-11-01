@@ -3,6 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { mestaPredaje, prikazMestaPredaje } from "@/lib/mesta-pravila";
 import { prikazKoda } from "@/lib/protokol/pokroviteljstvo-dobrima";
 
 /**
@@ -36,6 +37,7 @@ export async function GET() {
       orderBy: { potpisanoAt: "desc" },
       select: {
         id: true, opis: true, naziv: true, logoUrl: true, vrsta: true, mesto: true, adresaPredaje: true,
+        dodatnaMestaPredaje: true, dodatneAdresePredaje: true,
         vaziDo: true, poenaPoVauceru: true, upisId: true,
         upis: { select: { naziv: true, logoUrl: true } },
         _count: { select: { vauceri: { where: { status: "SLOBODAN" } } } },
@@ -50,6 +52,7 @@ export async function GET() {
         ugovor: {
           select: {
             opis: true, naziv: true, logoUrl: true, mesto: true, adresaPredaje: true, vaziDo: true, poenaPoVauceru: true,
+            dodatnaMestaPredaje: true, dodatneAdresePredaje: true,
             upis: { select: { naziv: true, logoUrl: true } },
           },
         },
@@ -68,6 +71,8 @@ export async function GET() {
       vrsta: o.vrsta,
       mesto: o.mesto,
       adresaPredaje: o.adresaPredaje,
+      // Sva mesta predaje, odnosno pružanja (set 5.0.6) — imalac bira među njima.
+      mestaPrikaz: mestaPredaje(o).map(prikazMestaPredaje),
       vaziDo: o.vaziDo?.toISOString() ?? null,
       // Broj POEN-a po vaučeru (nabavke čl. 31) snima se pri potpisu ugovora.
       poen: o.poenaPoVauceru ?? 0,
@@ -82,6 +87,7 @@ export async function GET() {
       logoUrl: v.ugovor.upis ? v.ugovor.upis.logoUrl : v.ugovor.logoUrl,
       mesto: v.ugovor.mesto,
       adresaPredaje: v.ugovor.adresaPredaje,
+      mestaPrikaz: mestaPredaje(v.ugovor).map(prikazMestaPredaje),
       vaziDo: v.ugovor.vaziDo?.toISOString() ?? null,
       // Broj POEN-a poništen pri uzimanju (nabavke čl. 33 st. 4) — snimak sa vaučera.
       poen: v.ponisteno || (v.ugovor.poenaPoVauceru ?? 0),

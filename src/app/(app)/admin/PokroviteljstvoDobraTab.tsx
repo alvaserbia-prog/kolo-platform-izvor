@@ -60,6 +60,7 @@ type Ugovor = {
   rokVazenjaMeseci: number;
   mesto: string;
   adresaPredaje: string | null;
+  mestaPrikaz: string[];
   status: "NA_PREGLEDU" | "CEKA_POTPIS" | "POTPISAN" | "ODBIJEN" | "RASKINUT";
   odbijenoRazlog: string | null;
   ugovorTekst: string | null;
@@ -69,6 +70,10 @@ type Ugovor = {
   koeficijent: number | null;
   poenEvidentirano: number | null;
   poenaPoVauceru: number | null;
+  hranaOdgovori: Record<string, unknown> | null;
+  hranaKategorija: string | null;
+  hranaKoeficijent: number | null;
+  podnosilacPotpisaoAt: string | null;
   naredniDozvoljenAt: string | null;
   naredniDozvolaRazlog: string | null;
   dokazi: { id: string; vrsta: string; nazivFajla: string; contentType: string; velicina: number; izvorRedni: number | null }[];
@@ -238,6 +243,18 @@ export default function PokroviteljstvoDobraTab() {
                 <p className="text-sm text-kolo-text mt-1">
                   {u.vrsta === "DOBRO" ? t("dobra_vrsta_dobro") : t("dobra_vrsta_usluga")}: {u.opis}
                 </p>
+                {u.hranaOdgovori && u.hranaKategorija && (
+                  <div className="text-sm text-kolo-muted space-y-1">
+                    <p>{t("dobra_hrana_prikaz", {
+                      vrsta: t(`dobra_hrana_vrsta_${String(u.hranaOdgovori.vrsta)}`),
+                      kategorija: t(`dobra_hrana_kat_${u.hranaKategorija}`),
+                      koef: (u.hranaKoeficijent ?? 1).toFixed(2),
+                    })}</p>
+                    <p className="text-xs">{t("dobra_hrana_odgovori", {
+                      odgovori: Object.entries(u.hranaOdgovori).filter(([k, v]) => k !== "vrsta" && v !== null && v !== "").map(([k, v]) => `${k}: ${String(v)}`).join(" · "),
+                    })}</p>
+                  </div>
+                )}
                 <p className="text-sm text-kolo-muted">
                   {t("dobra_obim", {
                     broj: u.brojVaucera,
@@ -246,7 +263,7 @@ export default function PokroviteljstvoDobraTab() {
                   })}
                 </p>
                 <p className="text-xs text-kolo-muted">
-                  {u.mesto}{u.adresaPredaje ? `, ${u.adresaPredaje}` : ""}
+                  {u.mestaPrikaz.join("; ")}
                 </p>
                 <p className="text-xs mt-1">
                   <span className="font-semibold text-kolo-gold-700">{STATUS[u.status]}</span>
@@ -289,6 +306,8 @@ export default function PokroviteljstvoDobraTab() {
                 {/* Podatke o davaocu Fondacija je uporedila sa registrom pri odobrenju
                     upisa (čl. 18 st. 1) — ovde se proverava samo cenovnik. */}
                 <p className="text-xs text-kolo-muted">{u.upisOdobren ? t("dobra_upis_odobren") : t("dobra_upis_nije_odobren")}</p>
+                {u.hranaOdgovori && <p className="text-xs text-kolo-muted">{t("dobra_hrana_proveri")}</p>}
+                {u.podnosilacPotpisaoAt && <p className="text-xs text-kolo-muted">{t("dobra_potpisao_podnosilac")}</p>}
                 <div className="flex gap-2">
                   <button
                     disabled={!u.upisOdobren || !imaCenovnik || radi === u.id}

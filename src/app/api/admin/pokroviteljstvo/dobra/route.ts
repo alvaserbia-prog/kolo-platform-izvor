@@ -3,6 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { mestaPredaje, prikazMestaPredaje } from "@/lib/mesta-pravila";
 import { jeAdmin } from "@/lib/dozvole";
 
 /**
@@ -62,12 +63,19 @@ export async function GET() {
       upisOdobren: u.upis?.status === "ODOBREN" && !u.upis.obrisanAt,
       vrsta: u.vrsta,
       opis: u.opis,
+      // Set 5.0.2 — hrana: vrsta, poreklo i obim (donacije čl. 22 st. 4–5, čl. 28 st. 2 t. 6).
+      // Set 5.0.5 — odgovori davaoca, kategorija i koeficijent koje je sistem izveo (donacije čl. 22 st. 4–8).
+      hranaOdgovori: u.hranaOdgovori ?? null,
+      hranaKategorija: u.hranaKategorija,
+      hranaKoeficijent: u.hranaKoeficijent == null ? null : Number(u.hranaKoeficijent),
+      podnosilacPotpisaoAt: u.podnosilacPotpisaoAt?.toISOString() ?? null,
       brojVaucera: u.brojVaucera,
       cenaPoJedinici: Number(u.cenaPoJedinici),
       vrednostRsd: Number(u.vrednostRsd),
       rokVazenjaMeseci: u.rokVazenjaMeseci,
       mesto: u.mesto,
       adresaPredaje: u.adresaPredaje,
+      mestaPrikaz: mestaPredaje(u).map(prikazMestaPredaje),
       status: u.status,
       odbijenoRazlog: u.odbijenoRazlog,
       ugovorTekst: u.ugovorTekst,

@@ -205,6 +205,7 @@ export default function ZadrugeTab() {
                     <option value="PRIJEM">{t("zad_osnov_prijem")}</option>
                     <option value="DOPRINOS">{t("zad_osnov_doprinos")}</option>
                     <option value="USLUGA_PRIMLJENA">{t("zad_osnov_usluga")}</option>
+                    <option value="USTUPANJE">{t("zad_osnov_ustupanje")}</option>
                     {!samoSvoja && <option value="IZDAVANJE">{t("zad_osnov_izdavanje_zadruzi")}</option>}
                   </select>
                   {zapis.osnov === "IZDAVANJE" ? (

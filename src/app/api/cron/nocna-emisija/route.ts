@@ -39,11 +39,12 @@ export async function POST(req: NextRequest) {
 
 async function nocniObracun(datum: Date, opcije: { osnivacki: boolean }) {
   try {
-    // 1. Emisije programa i ZRNO operacije (paralelno — nezavisne)
-    const [programi, zrno] = await Promise.all([
-      izvrsiNocnuEmisiju(datum),
-      izvrsiZrnoOperacije(datum),
-    ]);
+    // 1. ZRNO operacije, pa emisije programa — SEKVENCIJALNO (set 5.0.3).
+    // 🔴 Nisu nezavisne: u periodu u kome je primaocu podrške izvršen upis ZRNA dnevni
+    // iznos programa se ne evidentira (Pravilnik čl. 22 st. 6), pa emisija programa čita
+    // upise koje je ovaj prolaz upravo izvršio. Ne vraćati `Promise.all`.
+    const zrno = await izvrsiZrnoOperacije(datum);
+    const programi = await izvrsiNocnuEmisiju(datum);
 
     // 2. Osnivački doprinos (čl. 6 st. 3 Pravilnika o osnivačkom doprinosu). Sekvencijalno,
     // nakon emisija, pre Faze 2 — POEN osnivačkog doprinosa ulazi u kumulativni rast

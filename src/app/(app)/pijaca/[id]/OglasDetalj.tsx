@@ -1,5 +1,7 @@
 "use client";
 
+import DodatnaMestaPolje from "@/components/DodatnaMestaPolje";
+import { MAX_MESTA_OGLASA, mestaOglasa } from "@/lib/mesta-pravila";
 import { NOVIH_RAZGOVORA_DNEVNO } from "@/lib/nov-clan-pravila";
 import { useState, useRef, useEffect } from "react";
 import { intlTag } from "@/lib/format";
@@ -43,6 +45,8 @@ interface OglasProps {
   category: string;
   images: string[];
   location: string | null;
+  /** Dodatna mesta oglasa (uz `location`). */
+  dodatnaMesta: string[];
   phone: string | null;
   status: string;
   createdAt: string;
@@ -323,12 +327,17 @@ export default function OglasDetalj({
             {oglas.location && (
               <span>
                 {t("lokacija")}:{" "}
-                <Link
-                  href={`/pijaca?mesto=${encodeURIComponent(oglas.location.trim())}`}
-                  className="font-bold text-kolo-green-700 hover:underline"
-                >
-                  {oglas.location}
-                </Link>
+                {mestaOglasa(oglas).map((m, i) => (
+                  <span key={m}>
+                    {i > 0 && ", "}
+                    <Link
+                      href={`/pijaca?mesto=${encodeURIComponent(m)}`}
+                      className="font-bold text-kolo-green-700 hover:underline"
+                    >
+                      {m}
+                    </Link>
+                  </span>
+                ))}
               </span>
             )}
             <span>{t("objavljeno")}: {new Date(oglas.createdAt).toLocaleDateString(intlTag(locale))}</span>
@@ -614,6 +623,7 @@ function IzmeniOglas({
   const [price, setPrice] = useState(oglas.price != null ? String(oglas.price) : "");
   const [cenaDo, setCenaDo] = useState(oglas.cenaDo != null ? String(oglas.cenaDo) : "");
   const [location, setLocation] = useState(oglas.location ?? "");
+  const [dodatnaMesta, setDodatnaMesta] = useState<string[]>(oglas.dodatnaMesta ?? []);
   const [phone, setPhone] = useState(oglas.phone ?? "");
   // indeksi postojećih slika koje treba zadržati
   const [keepIndices, setKeepIndices] = useState<number[]>(
@@ -707,6 +717,8 @@ function IzmeniOglas({
       fd.append("price", price);
       fd.append("cenaDo", cenaDo);
       fd.append("location", location.trim());
+      fd.append("dodatnaMestaPoslato", "1");
+      for (const m of dodatnaMesta) if (m.trim()) fd.append("dodatnoMesto", m.trim());
       fd.append("phone", phone.trim());
       fd.append("keepImages", JSON.stringify(keepIndices));
       noveSlike.forEach((s, i) => fd.append(`nova_slika_${i}`, s.file));
@@ -767,6 +779,9 @@ function IzmeniOglas({
             placeholder={t("lokacija_placeholder")}
             className={KLASE_UNOSA} />
         </Polje>
+        {location.trim() && (
+          <DodatnaMestaPolje mesta={dodatnaMesta} onChange={setDodatnaMesta} max={MAX_MESTA_OGLASA} />
+        )}
 
         <Polje oznaka={<>{t("kontakt_telefon")} <span className="text-kolo-muted font-normal">{t("lokacija_opciono")}</span></>}>
           <input type="tel" maxLength={20} value={phone} onChange={(e) => setPhone(e.target.value)}

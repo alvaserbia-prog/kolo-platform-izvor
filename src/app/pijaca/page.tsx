@@ -83,7 +83,7 @@ export default async function PijacaPage({
     select: {
       id: true, title: true, description: true, tip: true,
       cenaTip: true, price: true, cenaDo: true,
-      category: true, images: true, location: true, createdAt: true,
+      category: true, images: true, location: true, dodatnaMesta: true, createdAt: true,
       sellerId: true,
       seller: { select: { pseudonim: true, verified: true, maloletan: true } },
       gazdinstvo: GAZDINSTVO_ZA_OZNAKU,
@@ -132,6 +132,7 @@ export default async function PijacaPage({
           category: l.category,
           slike: l.images.length,
           location: l.location ?? null,
+          dodatnaMesta: l.dodatnaMesta ?? [],
           createdAt: l.createdAt.toISOString(),
           sellerId: l.sellerId,
           sellerPseudonim: smeVidetiPseudonimOglasivaca(posmatrac, l.sellerId, prijatelji)

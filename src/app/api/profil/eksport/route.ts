@@ -248,7 +248,7 @@ export async function GET() {
         kontaktEmail: true, kontaktTelefon: true, izjavaPropisiAt: true, izjavaOvlascenjeAt: true,
         potvrdaEvidentiranjaAt: true, potvrdaEvidentiranjaTekst: true, kontrolniBroj: true,
         vrsta: true, opis: true,
-        brojVaucera: true, cenaPoJedinici: true, vrednostRsd: true, mesto: true, adresaPredaje: true,
+        brojVaucera: true, cenaPoJedinici: true, vrednostRsd: true, mesto: true, adresaPredaje: true, dodatnaMestaPredaje: true, dodatneAdresePredaje: true,
         status: true, ugovorTekst: true, potpisanoAt: true, vaziDo: true, poenEvidentirano: true, createdAt: true,
         raskinutoAt: true, raskidObrazlozenje: true, raskidOtpis: true,
       },

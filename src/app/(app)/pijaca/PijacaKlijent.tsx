@@ -12,6 +12,7 @@ import CategoryChips from "@/components/CategoryChips";
 import { formatCenaGlavni, prikaziJedinicuCene } from "@/lib/cena-oglas";
 import { KATEGORIJE, kategorijaKljuc, kategorijaEmoji } from "@/lib/kategorije";
 import { koordinateZaMesto, udaljenostKm, type Koordinate } from "@/lib/udaljenost";
+import { mestaOglasa } from "@/lib/mesta-pravila";
 import { dogadjaj } from "@/lib/analitika";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -28,6 +29,8 @@ interface Listing {
   category: string;
   slike: number;
   location: string | null;
+  /** Dodatna mesta oglasa (uz `location`); filter i prikaz čitaju sva kroz `mestaOglasa`. */
+  dodatnaMesta?: string[];
   createdAt: string;
   sellerId: string;
   /**
@@ -169,9 +172,7 @@ export default function PijacaKlijent({
     const brojaci = new Map<string, number>();
     for (const l of listings) {
       if (jePotraznja ? l.tip !== "POTRAZNJA" : l.tip === "POTRAZNJA") continue;
-      const lok = l.location?.trim();
-      if (!lok) continue;
-      brojaci.set(lok, (brojaci.get(lok) ?? 0) + 1);
+      for (const lok of mestaOglasa(l)) brojaci.set(lok, (brojaci.get(lok) ?? 0) + 1);
     }
     return [...brojaci.entries()].sort((a, b) => a[0].localeCompare(b[0], "sr"));
   }, [listings, jePotraznja]);
@@ -198,7 +199,7 @@ export default function PijacaKlijent({
         if (minCena && (l.price == null || l.price < Number(minCena))) return false;
         if (maxCena && (l.price == null || l.price > Number(maxCena))) return false;
         // Multi-select lokacije, OR logika: prazan izbor = sve lokacije.
-        if (lokacijeIzabrane.length > 0 && !lokacijeIzabrane.includes(l.location?.trim() ?? "")) return false;
+        if (lokacijeIzabrane.length > 0 && !mestaOglasa(l).some((m) => lokacijeIzabrane.includes(m))) return false;
         if (samoDomace && !l.domace) return false;
         return true;
       })
@@ -535,7 +536,7 @@ export default function PijacaKlijent({
               onKontakt={handleKontakt}
               t={t}
               prioritet={i < 2}
-              udaljenost={izracunajUdaljenost(refKoord, l.location)}
+              udaljenost={izracunajUdaljenost(refKoord, mestaOglasa(l))}
             />
           ))}
         </div>
@@ -567,13 +568,18 @@ export default function PijacaKlijent({
   );
 }
 
-// Zaokružena udaljenost (km) od referentnog mesta do lokacije oglasa;
-// null kad referenca nije zadata ili lokacija oglasa nije prepoznata.
-function izracunajUdaljenost(refKoord: Koordinate | null, lokacija: string | null): number | null {
+// Zaokružena udaljenost (km) od referentnog mesta do NAJBLIŽEG mesta oglasa;
+// null kad referenca nije zadata ili nijedno mesto oglasa nije prepoznato.
+function izracunajUdaljenost(refKoord: Koordinate | null, mesta: string[]): number | null {
   if (!refKoord) return null;
-  const koord = koordinateZaMesto(lokacija);
-  if (!koord) return null;
-  return Math.round(udaljenostKm(refKoord, koord));
+  let najbliza: number | null = null;
+  for (const m of mesta) {
+    const koord = koordinateZaMesto(m);
+    if (!koord) continue;
+    const d = udaljenostKm(refKoord, koord);
+    if (najbliza === null || d < najbliza) najbliza = d;
+  }
+  return najbliza === null ? null : Math.round(najbliza);
 }
 
 // ── Kartica oglasa ─────────────────────────────────────────────────────────────
@@ -707,7 +713,7 @@ const OglasKartica = memo(function OglasKartica({
             ) : (
               <span>{t("oglasivac_skriven")}</span>
             )}
-            {oglas.location && <span className="ml-1">· {oglas.location}</span>}
+            {oglas.location && <span className="ml-1">· {mestaOglasa(oglas).join(", ")}</span>}
             {udaljenost != null && (
               <span className="ml-1 text-kolo-green-700 font-medium">· ~{udaljenost} km</span>
             )}

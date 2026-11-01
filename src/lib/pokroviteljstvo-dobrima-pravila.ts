@@ -35,8 +35,13 @@
  */
 
 import { KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA } from "@/lib/donacija-pravila";
+import {
+  poenaPoVauceruHrane, procitajOdgovoreHrane, koeficijentIzOdgovora,
+  type OdgovoriHrane, type Kategorija, type VrstaHrane,
+} from "@/lib/hrana-pravila";
 import { smeUcestvovati, type UcesnikProvera } from "@/lib/nabavka-pravila";
 import { FONDACIJA } from "@/lib/donacija-ugovor";
+import { MAX_MESTA_PREDAJE, mestaPredaje, prikazMestaPredaje } from "@/lib/mesta-pravila";
 
 // ─── Konstante iz akta ────────────────────────────────────────────────────────
 
@@ -267,7 +272,28 @@ export function poenZaUgovor(vrednostRsd: number, koeficijent: number): number {
  * koeficijentu (koeficijent 1,00), podeljen brojem vaučera.
  */
 export const KOEFICIJENT_RASPODELE = 1.0;
-export function poenaPoVauceru(vrednostRsd: number, brojVaucera: number): number {
+/**
+ * Set 5.0.2 (nabavke čl. 31 st. 1) — kad je predmet hrana, broj POEN-a po vaučeru obuhvata
+ * koeficijent hrane po poreklu (`hrana-pravila.ts`); za ostala dobra i usluge ostaje bez
+ * uvećanja.
+ */
+/** Tekst porekla u ugovoru (čl. 22 st. 5: Fondacija ga utvrđuje i upisuje u ugovor). Bez koeficijenta. */
+export const HRANA_U_UGOVORU: { vrsta: Record<VrstaHrane, string>; kategorija: Record<Kategorija, string> } = {
+  vrsta: {
+    MESO: "meso", MLEKO: "mleko i mlečni proizvodi", JAJA: "jaja", VOCE: "voće", POVRCE: "povrće",
+    ZITARICE: "žitarice", MED: "med", PRERADJEVINE: "prerađevine", FABRICKA: "industrijski prerađena hrana",
+  },
+  kategorija: {
+    DOMACE: "domaća proizvodnja", PORODICNA_FARMA: "porodična farma",
+    INDUSTRIJSKO: "industrijska proizvodnja", FABRICKA: "industrijski prerađena hrana",
+  },
+};
+
+export function koeficijentZaUgovor(koeficijentHraneIliNull: number | null): number {
+  return koeficijentHraneIliNull ?? KOEFICIJENT_DOBARA;
+}
+export function poenaPoVauceru(vrednostRsd: number, brojVaucera: number, koeficijentHraneIliNull: number | null = null): number {
+  if (koeficijentHraneIliNull != null) return poenaPoVauceruHrane(vrednostRsd, koeficijentHraneIliNull, brojVaucera);
   if (!Number.isInteger(brojVaucera) || brojVaucera <= 0) return 0;
   return Math.round((vrednostRsd * KOEFICIJENT_RASPODELE) / brojVaucera);
 }
@@ -460,6 +486,17 @@ export type PredmetPrijaveDobra = {
   vrednostRsd: number;
   rokVazenjaMeseci: number;
   adresaPredaje: string;
+  /**
+   * Set 5.0.6 — dodatna mesta predaje, odnosno pružanja (čl. 28 st. 2 t. 5), posle prvog.
+   * Naselje je već razrešila ruta (`razresiNaselje`); ovde se proverava adresa i ponavljanje.
+   */
+  dodatnaMestaPredaje: { mesto: string; adresa: string }[];
+  /**
+   * Set 5.0.7 — kad je predmet hrana (čl. 28 st. 2 t. 6): odgovori davaoca i kategorija i
+   * koeficijent koje sistem iz njih izvodi (čl. 22 st. 4–8). 🔴 Davalac ih ne bira i ne vidi;
+   * Fondacija ih utvrđuje prihvatanjem prijave (čl. 22 st. 5). `null` = nije hrana.
+   */
+  hrana: { odgovori: OdgovoriHrane; kategorija: Kategorija; koeficijent: number } | null;
 };
 
 const MIN_OPIS = 10;
@@ -524,13 +561,43 @@ export function procitajPredmetDobra(
   if (adresa.length < MIN_ADRESA || adresa.length > MAX_ADRESA)
     return { ok: false, razlog: "Upiši adresu predaje, odnosno pružanja." };
 
+  // Set 5.0.6 — više mesta predaje, odnosno pružanja: svako sa adresom, bez ponavljanja.
+  const dodatnaMestaPredaje: { mesto: string; adresa: string }[] = [];
+  const unosMesta = Array.isArray(b.dodatnaMestaPredaje) ? b.dodatnaMestaPredaje : [];
+  if (unosMesta.length > MAX_MESTA_PREDAJE - 1)
+    return { ok: false, razlog: `Navedi najviše ${MAX_MESTA_PREDAJE} mesta predaje, odnosno pružanja.` };
+  const vidjeno = new Set([`${tekst(b.mesto)}|${adresa}`.toLowerCase()]);
+  for (const m of unosMesta as { mesto?: unknown; adresa?: unknown }[]) {
+    const mesto = tekst(m?.mesto);
+    const adr = tekst(m?.adresa);
+    if (!mesto) return { ok: false, razlog: "Izaberi mesto iz spiska za svako dodatno mesto." };
+    if (adr.length < MIN_ADRESA || adr.length > MAX_ADRESA)
+      return { ok: false, razlog: "Upiši adresu za svako dodatno mesto predaje, odnosno pružanja." };
+    const kljuc = `${mesto}|${adr}`.toLowerCase();
+    if (vidjeno.has(kljuc)) return { ok: false, razlog: "Isto mesto i adresa su navedeni dvaput." };
+    vidjeno.add(kljuc);
+    dodatnaMestaPredaje.push({ mesto, adresa: adr });
+  }
+
   // Čl. 28 st. 3 — izjava o propisima.
   if (!daJe(b.izjavaPropisi))
     return { ok: false, razlog: "Potrebna je izjava da davalac ispunjava propise za promet tog dobra, odnosno pružanje te usluge." };
 
+  // Set 5.0.2 — hrana: vrsta, poreklo, broj grla odnosno obim i izjava o poreklu
+  // (čl. 22 st. 4–5, čl. 28 st. 2 t. 6 i st. 3). Hrana je samo DOBRO.
+  let hrana: PredmetPrijaveDobra["hrana"] = null;
+  if (daJe(b.jeHrana)) {
+    if (vrsta !== "DOBRO") return { ok: false, razlog: "Hrana se prijavljuje kao dobro." };
+    const o = procitajOdgovoreHrane(b);
+    if (!o.ok) return o;
+    if (!daJe(b.izjavaPodataka)) return { ok: false, razlog: "Potrebna je izjava da su podaci o proizvodnji tačni." };
+    const { kategorija, koeficijent } = koeficijentIzOdgovora(o.odgovori);
+    hrana = { odgovori: o.odgovori, kategorija, koeficijent };
+  }
+
   return {
     ok: true,
-    podaci: { vrsta, opis, brojVaucera, cenaPoJedinici, vrednostRsd, rokVazenjaMeseci: ROK_VAZENJA_MESECI, adresaPredaje: adresa },
+    podaci: { vrsta, opis, brojVaucera, cenaPoJedinici, vrednostRsd, rokVazenjaMeseci: ROK_VAZENJA_MESECI, adresaPredaje: adresa, dodatnaMestaPredaje, hrana },
   };
 }
 
@@ -589,13 +656,23 @@ export function generisiUgovorDobraTekst(p: {
   vrednostRsd: number;
   mesto: string;
   adresaPredaje: string | null;
+  /** Set 5.0.6 — dodatna mesta predaje, odnosno pružanja (paralelni nizovi). */
+  dodatnaMestaPredaje?: string[];
+  dodatneAdresePredaje?: string[];
   datum: Date;
+  /** Set 5.0.5 — vrsta i poreklo hrane (čl. 22 st. 5); `null` = nije hrana. */
+  hrana?: { vrsta: VrstaHrane; kategorija: Kategorija } | null;
 }): string {
   const rsd = (n: number) => n.toLocaleString("sr-RS", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const gazdinstvo = p.vrstaDavaoca === "GAZDINSTVO";
   const predmet = p.vrsta === "DOBRO" ? "dobro" : "uslugu";
   const predaja = p.vrsta === "DOBRO" ? "preda dobro" : "pruži uslugu";
-  const mestoTekst = p.adresaPredaje ? `${p.mesto}, ${p.adresaPredaje}` : p.mesto;
+  const mesta = mestaPredaje(p);
+  // Jedno mesto: tekst kao pre seta 5.0.6. Više mesta: sva, uz izbor imaoca (nabavke čl. 32).
+  const mestoClan =
+    mesta.length > 1
+      ? `Mesta i adrese predaje, odnosno pružanja: ${mesta.map(prikazMestaPredaje).join("; ")}. Imalac vaučer koristi na mestu koje sam izabere među navedenima.`
+      : `Mesto i adresa predaje, odnosno pružanja: ${prikazMestaPredaje(mesta[0] ?? { mesto: p.mesto, adresa: p.adresaPredaje })}.`;
   const odnos = ODNOS_U_UGOVORU[p.odnosPremaDavaocu];
   const podnosilac = p.odnosPremaDavaocu === "ZASTUPNIK"
     ? `${p.zastupnikImePrezime}, ${odnos} (${p.zastupnikFunkcija})`
@@ -617,16 +694,19 @@ export function generisiUgovorDobraTekst(p: {
       ? `Ugovor u ime Davaoca zaključuje ${p.zastupnikImePrezime}, nosilac gazdinstva.`
       : `Ugovor u ime Davaoca zaključuje ${p.zastupnikImePrezime}; odnos prema Davaocu: ${odnos}.`,
     "",
-    `Član 1. Davalac se obavezuje da bez naknade ${predaja} licima koja uzmu vaučer u raspodeli Fondacije, i to: ${p.opis}.`,
+    `Član 1. Davalac se obavezuje da bez naknade ${predaja} licima koja uzmu vaučer u raspodeli Fondacije, i to: ${p.opis}.` +
+      (p.hrana
+        ? ` Predmet je hrana (${HRANA_U_UGOVORU.vrsta[p.hrana.vrsta]}); poreklo, koje Fondacija utvrđuje prihvatanjem prijave na osnovu podataka Davaoca: ${HRANA_U_UGOVORU.kategorija[p.hrana.kategorija]}.`
+        : ""),
     `Član 2. Davalac izdaje ${p.brojVaucera} vaučera; svaki vaučer glasi na ${p.vrsta === "DOBRO" ? "jedno tačno određeno dobro" : "jednu tačno određenu uslugu"} iz člana 1, a ne na novčani iznos. ` +
       `Vrednost donacije iznosi ${rsd(p.vrednostRsd)} dinara (${p.brojVaucera} × ${rsd(p.cenaPoJedinici)} dinara, prema ceni koju Davalac primenjuje u prometu).`,
-    `Član 3. Vaučeri važe jednu godinu od izdavanja. Mesto i adresa predaje, odnosno pružanja: ${mestoTekst}.`,
+    `Član 3. Vaučeri važe jednu godinu od izdavanja. ${mestoClan}`,
     "Član 4. Donacija je dobrovoljna i bez naknade. Davalac njome ne stiče potraživanje prema Fondaciji niti bilo koju prednost u postupcima Fondacije.",
     `Član 5. Davalac se obavezuje da do isteka roka važenja vaučera drži dobra raspoloživa, odnosno obezbedi termine, i da ${predmet} da u istom kvalitetu kao drugim licima.`,
     "Član 6. Lice kome je vaučer izdat stiče sopstveno pravo da od Davaoca zahteva predaju dobra, odnosno pružanje usluge. Fondacija ne stiče svojinu ni državinu dobara, ne pruža usluge i ne odgovara za ispunjenje obaveze Davaoca. Za kvalitet, nedostatke i bezbednost Davalac odgovara imaocu vaučera neposredno.",
     "Član 7. Davalac se obavezuje da pri predaji dobra, odnosno pružanju usluge izda račun propisan za taj promet, kada je propisan.",
     "Član 8. Poreske obaveze koje proizlaze iz ove donacije snosi Davalac u skladu sa propisima. Fondacija ne pruža poreski savet.",
-    "Član 9. Ugovor se zaključuje elektronskim putem na platformi KOLO, potvrdom podnosioca na platformi i unosom jednokratnog koda dostavljenog na njegovu adresu elektronske pošte. Tako zaključen ugovor punovažan je bez pečata i svojeručnog potpisa. Platforma beleži vreme zaključenja i kontrolni broj teksta i dostavlja Davaocu primerak ugovora za štampu.",
+    "Član 9. Ugovor se zaključuje elektronskim putem na platformi KOLO. Podnosilac ga potpisuje pri podnošenju prijave, potvrdom na platformi i unosom jednokratnog koda dostavljenog na njegovu adresu elektronske pošte, a Fondacija ga potpisuje prihvatanjem prijave; ugovor je zaključen trenutkom prihvatanja. Tako zaključen ugovor punovažan je bez pečata i svojeručnog potpisa. Platforma beleži vreme zaključenja i kontrolni broj teksta i dostavlja Davaocu primerak ugovora za štampu.",
     "",
     gazdinstvo
       ? `Potvrdom na platformi ${p.zastupnikImePrezime} potvrđuje da je nosilac navedenog gazdinstva i da prihvata uslove ugovora.`
