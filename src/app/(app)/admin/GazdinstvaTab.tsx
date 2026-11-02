@@ -80,7 +80,7 @@ const poen = (n: number) => `${n.toLocaleString("sr-RS")} POEN`;
  * Poništenje zbog lažne izjave otpisuje doprinos svim članovima, i ranije
  * istupelima (i u minus), i isključuje ih — zato je dugme samo za superadmina.
  */
-export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean }) {
+export default function GazdinstvaTab({ jeSuperadmin, onDone }: { jeSuperadmin: boolean; onDone?: () => void }) {
   const t = useTranslations("admin");
   const [gazdinstva, setGazdinstva] = useState<Gazdinstvo[]>([]);
   const [pristupanja, setPristupanja] = useState<Pristupanje[]>([]);
@@ -123,6 +123,7 @@ export default function GazdinstvaTab({ jeSuperadmin }: { jeSuperadmin: boolean 
         return false;
       }
       await ucitaj();
+      onDone?.(); // osvežava žuti krug sa brojem na tabu i u sidebaru
       return true;
     } finally {
       setRadi(false);

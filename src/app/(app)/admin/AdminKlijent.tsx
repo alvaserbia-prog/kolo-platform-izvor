@@ -25,6 +25,8 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import StatKartica from "@/components/ui/StatKartica";
+import Lampica from "@/components/ui/Lampica";
+import type { CekanjeAdmina, CekanjePokrovitelja } from "@/lib/admin-cekanje";
 
 // Teški tabovi iz zasebnih fajlova — lazy-load (smanjuje početni admin bundle).
 // Svi su `export default`, pa dynamic koristi default export direktno.
@@ -251,20 +253,15 @@ interface AdminKlijentProps {
   krugoviLista2: { id: string; name: string }[];
   blogObjave: BlogObjavaAdmin[];
   nadzorNalazi: NadzorNalaz[];
-  /** Otvoreni nadzorni predmeti — badge na tabu Odluke (dokaz stvarnosti čl. 27). */
-  otvorenihPredmeta: number;
+  /** Šta čeka radnju, po tabu i po pod-tabu Pokrovitelja — isti račun kao zbir u sidebaru. */
+  cekanje: CekanjeAdmina;
+  /** Pozivi sa spiska kojima je rok prošao — crveni krug na tabu Potvrde (isto što i u sidebaru). */
+  zakasnelihPoziva: number;
   pendingDonacije: DonacijaItem[];
   otvoreniPrigovori: PrigovorItem[];
   viewerJeSuperadmin: boolean;
   viewerId: string;
   pocetniTab: Tab;
-  /** Otvorene prijave oglasa — badge na tabu Pijaca (Uslovi čl. 29 st. 2). */
-  otvorenihPrijavaOglasa: number;
-  /** Prvi oglasi koji čekaju odobrenje doprinosa — badge na tabu Prvi oglasi (Pravilnik čl. 38). */
-  prvihOglasaNaCekanju: number;
-  otvorenihPrijavaRazmene: number;
-  /** Predlozi dece koji čekaju pregled — badge na tabu Kutija želja. */
-  zeljaNaPregledu?: number;
 }
 
 const adminNivoLabel = (t: ReturnType<typeof useTranslations<"admin">>): Record<string, string> => ({
@@ -288,7 +285,7 @@ const statusLabel = (t: (k: string) => string): Record<string, string> => ({
 });
 
 
-export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, adminPokrovitelji, dashboard, auditLogs, verifikovaniKorisnici, krugoviLista2, blogObjave, nadzorNalazi, otvorenihPredmeta, pendingDonacije, otvoreniPrigovori, viewerJeSuperadmin, viewerId, pocetniTab, otvorenihPrijavaOglasa, prvihOglasaNaCekanju, otvorenihPrijavaRazmene, zeljaNaPregledu = 0 }: AdminKlijentProps) {
+export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, adminPokrovitelji, dashboard, auditLogs, verifikovaniKorisnici, krugoviLista2, blogObjave, nadzorNalazi, cekanje, zakasnelihPoziva, pendingDonacije, otvoreniPrigovori, viewerJeSuperadmin, viewerId, pocetniTab }: AdminKlijentProps) {
   const router = useRouter();
   const t = useTranslations("admin");
   // Pri povratku (back) sa oglasa ili profila `pocetniTab` stiže iz stabla koje je
@@ -312,28 +309,30 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
     window.history.replaceState(null, "", novi === "dashboard" ? "/admin" : `/admin?tab=${novi}`);
   };
 
-  const ukupnoPendingProgrami = adminProgrami.pendingEnrollments.length;
-  const ukupnoPendingZaposl = adminPed.pendingPrijave.length + adminPed.pendingEvidencije.length;
-  const ukupnoPendingDonacije = pendingDonacije.length;
-  const ukupnoOtvoreniPrigovori = otvoreniPrigovori.length;
-
-  // Broj stvari na čekanju po tabu. 🔴 Potvrde namerno bez broja: zabeležena
-  // potvrda ne traži radnju administratora — sama se razrešava kad potvrđeni
-  // ostvari doprinos. Broj koji nikad ne padne na nulu uči ljude da ignorišu i
-  // one koji nešto znače. Iz istog razloga ne ulazi ni u sidebar.
+  // Broj stvari na čekanju po tabu — žuti krug sa brojem (`admin-cekanje.ts`). 🔴 Potvrde
+  // namerno bez broja: zabeležena potvrda ne traži radnju administratora — sama se
+  // razrešava kad potvrđeni ostvari doprinos. Broj koji nikad ne padne na nulu uči
+  // ljude da ignorišu i one koji nešto znače.
   const broj: Partial<Record<Tab, number>> = {
-    donacije: ukupnoPendingDonacije,
-    programi: ukupnoPendingProgrami,
-    ped: ukupnoPendingZaposl,
-    pokrovitelji: adminPokrovitelji.length,
-    prigovori: ukupnoOtvoreniPrigovori,
-    pijaca: otvorenihPrijavaOglasa,
-    "prvi-oglasi": prvihOglasaNaCekanju,
-    razmene: otvorenihPrijavaRazmene,
-    nadzor: nadzorNalazi.length,
-    odluke: otvorenihPredmeta,
-    "kutija-zelja": zeljaNaPregledu,
+    donacije: cekanje.donacije,
+    programi: cekanje.programi,
+    ped: cekanje.ped,
+    pokrovitelji: cekanje.pokrovitelji,
+    prigovori: cekanje.prigovori,
+    pijaca: cekanje.pijaca,
+    "prvi-oglasi": cekanje["prvi-oglasi"],
+    razmene: cekanje.razmene,
+    gazdinstva: cekanje.gazdinstva,
+    nabavke: cekanje.nabavke,
+    nadzor: cekanje.nadzor,
+    odluke: cekanje.odluke,
+    "kutija-zelja": cekanje["kutija-zelja"],
   };
+  // Crveni krug = rok je prošao (ne „novo"): zakasneli pozivi sa spiska. Sam spisak je
+  // na stranici Potvrde (`/verifikacija#zahtevi`); tab Potvrde do njega vodi.
+  const hitno: Partial<Record<Tab, number>> = { potvrde: zakasnelihPoziva };
+  // Pregled „Na čekanju": svaki tab sa žutim ili crvenim krugom.
+  const naCekanju = ADMIN_TABOVI.filter((k) => (broj[k] ?? 0) + (hitno[k] ?? 0) > 0);
   const naziv: Record<Tab, string> = {
     dashboard: t("tab_dashboard"),
     korisnici: t("tab_korisnici"),
@@ -385,7 +384,10 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
   const aktivniTab: Tab = tab === "emisija" ? "donacije" : tab;
   const aktivnaGrupa = GRUPE.find((g) => g.tabovi.includes(aktivniTab)) ?? GRUPE[0];
   const brojGrupe = (g: Grupa) => g.tabovi.reduce((z, k) => z + (broj[k] ?? 0), 0);
-  const sBrojem = (oznaka: string, n: number) => (n > 0 ? `${oznaka} (${n})` : oznaka);
+  const hitnoGrupe = (g: Grupa) => g.tabovi.reduce((z, k) => z + (hitno[k] ?? 0), 0);
+  // Padajući izbor na telefonu ne može da nacrta krug, pa tamo stoji „●" i broj.
+  const sBrojem = (oznaka: string, n: number, h = 0) =>
+    [oznaka, n > 0 ? `● ${n}` : "", h > 0 ? `❗ ${h}` : ""].filter(Boolean).join("  ");
 
   return (
     <div className="space-y-6">
@@ -402,9 +404,9 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
           className={KLASE_UNOSA + " font-medium"}
         >
           {GRUPE.map((g) => (
-            <optgroup key={g.kljuc} label={sBrojem(g.oznaka, brojGrupe(g))}>
+            <optgroup key={g.kljuc} label={sBrojem(g.oznaka, brojGrupe(g), hitnoGrupe(g))}>
               {g.tabovi.map((k) => (
-                <option key={k} value={k}>{sBrojem(naziv[k], broj[k] ?? 0)}</option>
+                <option key={k} value={k}>{sBrojem(naziv[k], broj[k] ?? 0, hitno[k] ?? 0)}</option>
               ))}
             </optgroup>
           ))}
@@ -427,9 +429,8 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
                 }`}
               >
                 {g.oznaka}
-                {n > 0 && (
-                  <span className={`ml-2 rounded-full px-1.5 py-0.5 text-xs ${aktivna ? "bg-white/20" : "bg-kolo-gold-100 text-kolo-gold-700"}`}>{n}</span>
-                )}
+                <Lampica broj={n} />
+                <Lampica broj={hitnoGrupe(g)} hitno />
               </button>
             );
           })}
@@ -446,7 +447,9 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
                   aktivniTab === k ? "border-kolo-green-700 text-kolo-green-700" : "border-transparent text-kolo-muted hover:text-kolo-text"
                 }`}
               >
-                {sBrojem(naziv[k], broj[k] ?? 0)}
+                {naziv[k]}
+                <Lampica broj={broj[k] ?? 0} />
+                <Lampica broj={hitno[k] ?? 0} hitno />
               </button>
             ))}
           </div>
@@ -458,12 +461,11 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
       {tab === "dashboard" && (
         <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
           <h2 className="text-base font-semibold text-kolo-text">{t("na_cekanju_naslov")}</h2>
-          {(Object.keys(broj) as Tab[]).filter((k) => vidljiv(k) && (broj[k] ?? 0) > 0).length === 0 ? (
+          {naCekanju.filter(vidljiv).length === 0 ? (
             <p className="mt-2 text-sm text-kolo-muted">{t("na_cekanju_nista")}</p>
           ) : (
             <ul className="mt-2 divide-y divide-kolo-border">
-              {(Object.keys(broj) as Tab[])
-                .filter((k) => vidljiv(k) && (broj[k] ?? 0) > 0)
+              {naCekanju.filter(vidljiv)
                 .map((k) => (
                   <li key={k}>
                     <button
@@ -473,7 +475,8 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
                     >
                       <span>{naziv[k]}</span>
                       <span className="flex items-center gap-2">
-                        <span className="rounded-full bg-kolo-gold-100 px-2 py-0.5 text-xs font-semibold text-kolo-gold-700">{broj[k]}</span>
+                        <Lampica broj={broj[k] ?? 0} />
+                        <Lampica broj={hitno[k] ?? 0} hitno />
                         <span aria-hidden="true">→</span>
                       </span>
                     </button>
@@ -495,6 +498,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
       {tab === "pokrovitelji" && (
         <AdminPokroviteljiTab
           pokrovitelji={adminPokrovitelji}
+          cekanje={cekanje.pokroviteljiPo}
           verifikovaniKorisnici={verifikovaniKorisnici}
           krugovi={krugoviLista2}
           onDone={() => router.refresh()}
@@ -518,6 +522,12 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
 
       {/* Potvrde — POEN po potvrdi koji čeka trag učešća (dokaz stvarnosti čl. 19):
           ručni upis kao ventil + jednokratno usklađivanje zatečenih. */}
+      {tab === "potvrde" && zakasnelihPoziva > 0 && (
+        <Obavestenje vrsta="greska" naslov={t("zakasneli_pozivi_naslov", { broj: zakasnelihPoziva })}>
+          <p>{t("zakasneli_pozivi_opis")}</p>
+          <a href="/verifikacija#zahtevi" className="mt-1 inline-block font-semibold underline">{t("zakasneli_pozivi_link")}</a>
+        </Obavestenje>
+      )}
       {tab === "potvrde" && (
         <PotvrdeTab jeSuperadmin={viewerJeSuperadmin} onDone={() => router.refresh()} />
       )}
@@ -528,7 +538,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
       {/* Nabavke — sprovođenje kolektivne nabavke (Pravilnik čl. 47). */}
       {tab === "nabavke" && <NabavkeTab onDone={() => router.refresh()} />}
       {tab === "zadruge" && <ZadrugeTab />}
-      {tab === "gazdinstva" && <GazdinstvaTab jeSuperadmin={viewerJeSuperadmin} />}
+      {tab === "gazdinstva" && <GazdinstvaTab jeSuperadmin={viewerJeSuperadmin} onDone={() => router.refresh()} />}
 
 
       {/* Finansije */}
@@ -2542,18 +2552,25 @@ function IzmeniKorisnikaForma({ korisnik, onClose, onDone }: {
 
 function AdminPokroviteljiTab({
   pokrovitelji,
+  cekanje,
   verifikovaniKorisnici,
   krugovi,
   onDone,
 }: {
   pokrovitelji: PokroviteljItem[];
+  /** Žuti krug po pod-tabu: upisi (i izmene), prijave, dobra — isti račun kao zbir na tabu. */
+  cekanje: CekanjePokrovitelja;
   verifikovaniKorisnici: { id: string; pseudonim: string }[];
   krugovi: { id: string; name: string }[];
   onDone: () => void;
 }) {
   const locale = useLocale();
   const t = useTranslations("admin");
-  const [subTab, setSubTab] = useState<"upisi" | "lista" | "prijave" | "dobra" | "novi">("upisi");
+  // Otvara se pod-tab u kome nešto čeka radnju — inače potvrda prijave ostaje skrivena
+  // iza podrazumevanih „Upisa" (prijava vlasnika, 01.11.2026).
+  const [subTab, setSubTab] = useState<"upisi" | "lista" | "prijave" | "dobra" | "novi">(() =>
+    cekanje.upisi + cekanje.izmene > 0 ? "upisi" : cekanje.prijave > 0 ? "prijave" : cekanje.dobra > 0 ? "dobra" : "upisi",
+  );
   const [loading, setLoading] = useState(false);
   const [poruka, setPoruka] = useState<{ text: string; ok: boolean } | null>(null);
 
@@ -2613,6 +2630,7 @@ function AdminPokroviteljiTab({
             }`}
           >
             {s === "upisi" ? t("pokrovitelji_tab_upisi") : s === "lista" ? t("pokrovitelji_tab_lista", { count: pokrovitelji.length }) : s === "prijave" ? t("pokrovitelji_tab_prijave") : s === "dobra" ? t("pokrovitelji_tab_dobra") : t("pokrovitelji_tab_novi")}
+            <Lampica broj={s === "upisi" ? cekanje.upisi + cekanje.izmene : s === "prijave" ? cekanje.prijave : s === "dobra" ? cekanje.dobra : 0} />
           </button>
         ))}
       </div>
@@ -2622,9 +2640,9 @@ function AdminPokroviteljiTab({
       )}
 
       {/* Upis u evidenciju pokrovitelja (donacije čl. 16 i 18) — poređenje sa registrom. */}
-      {subTab === "upisi" && <PokroviteljUpisiTab />}
+      {subTab === "upisi" && <PokroviteljUpisiTab onDone={onDone} />}
       {subTab === "prijave" && <PokroviteljPrijaveTab onDone={onDone} />}
-      {subTab === "dobra" && <PokroviteljstvoDobraTab />}
+      {subTab === "dobra" && <PokroviteljstvoDobraTab onDone={onDone} />}
 
       {subTab === "lista" && (
         <div className="space-y-2">

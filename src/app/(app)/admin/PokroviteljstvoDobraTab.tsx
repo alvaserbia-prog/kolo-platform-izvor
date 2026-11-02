@@ -92,7 +92,7 @@ type Zabrana = {
   skidanjeRazlog: string | null;
 };
 
-export default function PokroviteljstvoDobraTab() {
+export default function PokroviteljstvoDobraTab({ onDone }: { onDone?: () => void }) {
   const t = useTranslations("admin");
   const locale = useLocale();
   const { data: ugovori = [], isLoading, refetch } = useQuery({
@@ -129,6 +129,7 @@ export default function PokroviteljstvoDobraTab() {
     setRadi(null);
     if (!r.ok) await obavesti(d.error ?? t("greska_generalna"));
     await Promise.all([refetch(), refetchZabrane()]);
+    onDone?.(); // osvežava žuti krug sa brojem na tabu i u sidebaru
     return r.ok ? d : null;
   }
 

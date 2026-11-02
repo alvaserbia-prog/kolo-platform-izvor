@@ -9,7 +9,8 @@ import { ProgramType } from "@/generated/prisma/client";
 import { UKUPNO_ZRNA } from "@/lib/protokol/zrno";
 import { jeAdmin, jeSuperadmin, jeZadruzniAdmin } from "@/lib/dozvole";
 import { brojeviClanova, brojeviStatusa, USLOVI_STATUSA } from "@/lib/admin-clanovi";
-import { brojNaPregledu } from "@/lib/protokol/kutija-zelja";
+import { brojeviCekanjaAdmina } from "@/lib/admin-cekanje";
+import { brojZakasnelihPoziva } from "@/lib/protokol/zahtev-razgovor";
 import { IZBOR_STATUSA, statusUcesnika, ucitajStatus, type StatusUcesnika } from "@/lib/protokol/status";
 
 const SVI_PROGRAMI: ProgramType[] = ["PED", "PODRSKA_MAJKAMA", "PODRSKA_STARIJIMA", "POSEBNA_BRIGA", "SKOLOVANJE"];
@@ -38,8 +39,7 @@ export default async function AdminPage({
   const [
     allUsers, protokol,
     adminProgrami, dashboardData, auditLogs, pokroviteljiData, zaposljavanjeData,
-    blogObjave, pendingDonacije, otvoreniPrigovori, otvorenihPrijavaOglasa,
-    prvihOglasaNaCekanju, otvorenihPrijavaRazmene,
+    blogObjave, pendingDonacije, otvoreniPrigovori, cekanje, zakasnelihPoziva,
   ] = await Promise.all([
     prisma.user.findMany({
       select: { id: true, pseudonim: true, email: true, telefon: true, location: true, ...IZBOR_STATUSA, admin: true, status: true, suspendedReason: true, createdAt: true, wallet: { select: { balance: true } } },
@@ -124,13 +124,12 @@ export default async function AdminPage({
       include: { user: { select: { pseudonim: true } } },
       orderBy: { createdAt: "asc" },
     }),
-    // Badge na tabu Pijaca — sami oglasi se učitavaju lenjo, iz taba.
-    prisma.prijavaOglasa.count({ where: { status: "OTVORENA" } }),
-    // Badge na tabu Prvi oglasi — doprinosi naloga bez potvrde koji čekaju
-    // odobrenje (Pravilnik čl. 38 st. 2). Sam spisak se učitava lenjo, iz taba.
-    prisma.doprinosSadrzaju.count({ where: { status: "ZABELEZEN" } }),
-    // Badge na tabu Razmene — prijave neispunjene razmene koje čekaju odluku.
-    prisma.prijavaRazmene.count({ where: { status: "OTVORENA" } }),
+    // Žuti krug sa brojem na odeljcima, tabovima i pod-tabovima — isti račun kao
+    // zbir uz „Admin" u sidebaru (`admin-cekanje.ts`). Spiskovi se učitavaju lenjo, iz taba.
+    brojeviCekanjaAdmina(viewerJeSuperadmin),
+    // Crveni krug na tabu Potvrde — isti broj kao crveni krug uz „Admin" u sidebaru
+    // (`chrome-podaci.ts`, `hitnoAdmin`): pozivi sa spiska kojima je rok prošao.
+    brojZakasnelihPoziva(session.user.id, true),
   ]);
 
   const opticaj = protokol ? Math.abs(protokol.balance) : 0;
@@ -140,10 +139,6 @@ export default async function AdminPage({
   const nadzorRedovi = viewerJeSuperadmin
     ? await prisma.rizikNalaz.findMany({ where: { status: "OTVOREN" }, orderBy: { rizik: "desc" }, take: 200 })
     : [];
-  // Badge na tabu Odluke — sami predmeti se učitavaju lenjo, iz taba (dokaz stvarnosti čl. 27).
-  const otvorenihPredmeta = viewerJeSuperadmin
-    ? await prisma.nadzorniPredmet.count({ where: { status: "OTVOREN" } })
-    : 0;
   const nadzorNalazi = nadzorRedovi.map((r) => ({
     id: r.id,
     tip: r.tip,
@@ -170,13 +165,13 @@ export default async function AdminPage({
 
   // Učesnici po statusu za Pregled (deca u zasebnoj koloni).
   const statusiBrojevi = await brojeviStatusa();
-  const zeljaNaPregledu = await brojNaPregledu();
 
   return (
     <AdminKlijent
       opticaj={opticaj}
       nadzorNalazi={nadzorNalazi}
-      otvorenihPredmeta={otvorenihPredmeta}
+      cekanje={cekanje}
+      zakasnelihPoziva={zakasnelihPoziva}
       pendingDonacije={pendingDonacije.map((d) => ({
         id: d.id, pseudonim: d.user.pseudonim, amountRSD: Number(d.amountRSD),
         cumulativeRSD: Number(d.cumulativeRSD), level: d.level, poenEmitted: d.poenEmitted,
@@ -191,10 +186,6 @@ export default async function AdminPage({
       viewerJeSuperadmin={viewerJeSuperadmin}
       viewerId={session.user.id}
       pocetniTab={pocetniTab}
-      otvorenihPrijavaOglasa={otvorenihPrijavaOglasa}
-      prvihOglasaNaCekanju={prvihOglasaNaCekanju}
-      otvorenihPrijavaRazmene={otvorenihPrijavaRazmene}
-      zeljaNaPregledu={zeljaNaPregledu}
       users={allUsers.map((u) => ({
         id: u.id, pseudonim: u.pseudonim, email: u.email, telefon: u.telefon, location: u.location, tipKorisnika: u.tipKorisnika, admin: u.admin, verified: u.verified,
         statusUcesnika: statusiKorisnika.get(u.id) ?? statusUcesnika(u),

@@ -55,7 +55,7 @@ type Upis = {
   createdAt: string;
 };
 
-export default function PokroviteljUpisiTab() {
+export default function PokroviteljUpisiTab({ onDone }: { onDone?: () => void }) {
   const t = useTranslations("admin");
   const locale = useLocale();
   const { data, isLoading, refetch } = useQuery({
@@ -79,6 +79,7 @@ export default function PokroviteljUpisiTab() {
     setRadi(null);
     if (!r.ok) await obavesti(d.error ?? t("greska_generalna"));
     await refetch();
+    onDone?.(); // osvežava žuti krug sa brojem na tabu i u sidebaru
   }
 
   async function odbij(u: Upis, izmena: boolean) {

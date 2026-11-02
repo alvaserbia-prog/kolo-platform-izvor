@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { jeAdmin, mozeNadzor, type KorisnikDozvole } from "@/lib/dozvole";
+import { jeAdmin, jeSuperadmin, mozeNadzor, type KorisnikDozvole } from "@/lib/dozvole";
+import { brojeviCekanjaAdmina, zbirCekanja } from "@/lib/admin-cekanje";
 import { brojVerifikacijaZaNadzor } from "@/lib/protokol/nadzor-service";
 import { ChatSoba } from "@/generated/prisma/client";
 import { usloviSobe, usloviSobeOdraslih } from "@/lib/protokol/pricaonica";
@@ -96,38 +97,11 @@ export async function izracunajDnevniBrojeve(
     ? await prisma.transaction.count({ where: { toWalletId: wallet.id, createdAt: { gt: odNovcanik } } })
     : 0;
 
-  // Akcioni badge za admina: zbir stavki "na čekanju" koje traže admin radnju
-  let adminCekanje = 0;
-  if (jeAdmin(korisnik)) {
-    // Krugovi izbačeni iz admin panela → ne broje se ovde (nemaju tab gde bi se rešili).
-    const [
-      programi, oglasPrijave, oglasEvidencije,
-      pokrovitelji, donacije, prigovori, prijaveOglasa, prviOglasi, prijaveRazmene,
-      gazdinstvaPrijave, gazdinstvaPristupanja,
-    ] = await Promise.all([
-      prisma.programEnrollment.count({ where: { status: "PENDING" } }),
-      prisma.oglasPrijava.count({ where: { status: "PENDING" } }),
-      prisma.oglasEvidencija.count({ where: { status: "PENDING" } }),
-      prisma.pokroviteljPrijava.count({ where: { status: "POTPISANA" } }),
-      // NAPLACENO (kartica prošla, POEN čeka potvrdu) je isti red čekanja (M-4a).
-      prisma.donationRecord.count({ where: { status: { in: ["PENDING", "NAPLACENO"] } } }),
-      prisma.prigovorNaOdluku.count({ where: { status: { in: ["PENDING", "U_OBRADI"] } } }),
-      // Prijavljeni oglasi na Pijaci — red čekanja za moderaciju (Uslovi čl. 29).
-      prisma.prijavaOglasa.count({ where: { status: "OTVORENA" } }),
-      // Prvi oglasi naloga bez potvrde — čekaju odobrenje doprinosa (Uslovi čl. 19).
-      prisma.doprinosSadrzaju.count({ where: { status: "ZABELEZEN" } }),
-      // Prijave neispunjene razmene — čekaju odluku o poništenju prepisa.
-      prisma.prijavaRazmene.count({ where: { status: "OTVORENA" } }),
-      // Gazdinstva — prijave i kasnija pristupanja čekaju pregled Fondacije
-      // (Pravilnik o gazdinstvima čl. 7 i 9 st. 4).
-      prisma.gazdinstvo.count({ where: { status: "NA_PREGLEDU" } }),
-      prisma.clanGazdinstva.count({ where: { status: "PRISTUPIO", gazdinstvo: { status: "ODOBRENO" } } }),
-    ]);
-    adminCekanje =
-      programi + oglasPrijave + oglasEvidencije +
-      pokrovitelji + donacije + prigovori + prijaveOglasa + prviOglasi + prijaveRazmene +
-      gazdinstvaPrijave + gazdinstvaPristupanja;
-  }
+  // Akcioni badge za admina: zbir stavki "na čekanju" koje traže admin radnju —
+  // isti račun kao brojevi u samom panelu (`admin-cekanje.ts`), pa se slažu.
+  const adminCekanje = jeAdmin(korisnik)
+    ? zbirCekanja(await brojeviCekanjaAdmina(jeSuperadmin(korisnik)))
+    : 0;
 
   // Dete nikoga ne poziva i ne vidi spisak — upit se za njega ni ne pravi.
   const [hitnoPozivi, hitnoAdmin] = meUser?.maloletan
