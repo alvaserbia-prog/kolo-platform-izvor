@@ -423,7 +423,7 @@ A company cannot have an account and does not get POEN: an account is opened for
 
 All sponsors are shown publicly on the Sponsors page, for transparency and public recognition of their contribution.
 
-Sponsorship with goods and services is a donation without compensation. The Foundation does not issue invoices and does not give tax advice. No fiscal receipt or electronic invoice is issued for handing over goods or providing services under a voucher; the giver documents it with a handover confirmation downloaded from the platform. A giver who is registered for VAT must account for VAT on goods handed over and services provided free of charge in accordance with the regulations.`,
+Sponsorship with goods and services is a donation without compensation. The Foundation does not issue invoices and does not give tax advice. No fiscal receipt or electronic invoice is issued for handing over goods or providing services under a voucher; the sponsor documents it with a handover confirmation downloaded from the platform. A sponsor who is registered for VAT must account for VAT on goods handed over and services provided free of charge in accordance with the regulations.`,
       },
     ],
   },

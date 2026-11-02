@@ -38,7 +38,7 @@ export async function GET() {
       select: {
         id: true, opis: true, naziv: true, logoUrl: true, vrsta: true, mesto: true, adresaPredaje: true,
         dodatnaMestaPredaje: true, dodatneAdresePredaje: true,
-        vaziDo: true, poenaPoVauceru: true, upisId: true,
+        vaziDo: true, poenaPoVauceru: true, upisId: true, potpisanoAt: true,
         upis: { select: { naziv: true, logoUrl: true } },
         _count: { select: { vauceri: { where: { status: "SLOBODAN" } } } },
       },
@@ -51,7 +51,7 @@ export async function GET() {
         id: true, kod: true, status: true, ponisteno: true, pristanakPrikazAt: true, pristanakPovucenAt: true,
         ugovor: {
           select: {
-            opis: true, naziv: true, logoUrl: true, mesto: true, adresaPredaje: true, vaziDo: true, poenaPoVauceru: true,
+            opis: true, naziv: true, logoUrl: true, vrsta: true, mesto: true, adresaPredaje: true, vaziDo: true, poenaPoVauceru: true,
             dodatnaMestaPredaje: true, dodatneAdresePredaje: true,
             upis: { select: { naziv: true, logoUrl: true } },
           },
@@ -77,6 +77,8 @@ export async function GET() {
       // Broj POEN-a po vaučeru (nabavke čl. 31) snima se pri potpisu ugovora.
       poen: o.poenaPoVauceru ?? 0,
       preostalo: o._count.vauceri,
+      // Za oznaku NOVO (izdato posle poslednje posete) — samo vreme izdavanja.
+      izdatoAt: o.potpisanoAt?.toISOString() ?? null,
     })),
     vauceri: moji.map((v) => ({
       id: v.id,
@@ -85,6 +87,7 @@ export async function GET() {
       opis: v.ugovor.opis,
       davalac: v.ugovor.upis?.naziv ?? v.ugovor.naziv,
       logoUrl: v.ugovor.upis ? v.ugovor.upis.logoUrl : v.ugovor.logoUrl,
+      vrsta: v.ugovor.vrsta,
       mesto: v.ugovor.mesto,
       adresaPredaje: v.ugovor.adresaPredaje,
       mestaPrikaz: mestaPredaje(v.ugovor).map(prikazMestaPredaje),

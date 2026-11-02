@@ -423,7 +423,7 @@ Tvrtka ne može imati korisnički račun i ne dobiva POEN: račun se otvara na �
 
 Svi pokrovitelji javno su prikazani na stranici Pokrovitelji, radi transparentnosti i javnog priznanja doprinosa.
 
-Pokroviteljstvo dobrima i uslugama donacija je bez naknade. Fondacija ne izdaje račune i ne pruža porezni savjet. Za predaju dobara i pružanje usluga po vaučeru ne izdaje se fiskalni račun ni elektronički račun; davatelj realizaciju dokumentira potvrdom o predaji koju preuzima s platforme. Davatelj koji je obveznik PDV-a dužan je na predana dobra i pružene usluge bez naknade obračunati PDV u skladu s propisima.`,
+Pokroviteljstvo dobrima i uslugama donacija je bez naknade. Fondacija ne izdaje račune i ne pruža porezni savjet. Za predaju dobara i pružanje usluga po vaučeru ne izdaje se fiskalni račun ni elektronički račun; pokrovitelj realizaciju dokumentira potvrdom o predaji koju preuzima s platforme. Pokrovitelj koji je obveznik PDV-a dužan je na predana dobra i pružene usluge bez naknade obračunati PDV u skladu s propisima.`,
       },
     ],
   },

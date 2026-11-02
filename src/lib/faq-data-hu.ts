@@ -433,7 +433,7 @@ Cégnek nem lehet fiókja, és nem kap POEN-t: fiókot emberre nyitunk, egy embe
 
 Minden pártfogó nyilvánosan megjelenik a Pártfogók oldalon, az átláthatóság és a hozzájárulás nyilvános elismerése érdekében.
 
-A javakkal és szolgáltatásokkal való pártfogás ellenérték nélküli adomány. Az Alapítvány nem állít ki számlát, és nem nyújt adótanácsadást. Az utalvány alapján átadott javakról és nyújtott szolgáltatásokról nem állítanak ki nyugtát és elektronikus számlát; az adományozó a teljesítést a platformról letöltött átadási igazolással dokumentálja. Az áfaalany adományozó köteles az ellenérték nélkül átadott javak és nyújtott szolgáltatások után a jogszabályok szerint áfát felszámítani.`,
+A javakkal és szolgáltatásokkal való pártfogás ellenérték nélküli adomány. Az Alapítvány nem állít ki számlát, és nem nyújt adótanácsadást. Az utalvány alapján átadott javakról és nyújtott szolgáltatásokról nem állítanak ki nyugtát és elektronikus számlát; a pártfogó a teljesítést a platformról letöltött átadási igazolással dokumentálja. Az áfaalany pártfogó köteles az ellenérték nélkül átadott javak és nyújtott szolgáltatások után a jogszabályok szerint áfát felszámítani.`,
       },
     ],
   },

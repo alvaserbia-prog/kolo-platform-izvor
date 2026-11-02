@@ -438,7 +438,7 @@ Firma ne može da ima nalog i ne dobija POEN: nalog se otvara na čoveka, a stva
 
 Svi pokrovitelji javno su prikazani na stranici Pokrovitelji, radi transparentnosti i javnog priznanja doprinosa.
 
-Pokroviteljstvo dobrima i uslugama je donacija bez naknade. Fondacija ne izdaje račune i ne pruža poreski savet. Za predaju dobara i pružanje usluga po vaučeru ne izdaje se fiskalni račun ni elektronska faktura; davalac realizaciju dokumentuje potvrdom o predaji koju preuzima sa platforme. Davalac koji je obveznik PDV-a dužan je da na predata dobra i pružene usluge bez naknade obračuna PDV u skladu sa propisima.`,
+Pokroviteljstvo dobrima i uslugama je donacija bez naknade. Fondacija ne izdaje račune i ne pruža poreski savet. Za predaju dobara i pružanje usluga po vaučeru ne izdaje se fiskalni račun ni elektronska faktura; pokrovitelj realizaciju dokumentuje potvrdom o predaji koju preuzima sa platforme. Pokrovitelj koji je obveznik PDV-a dužan je da na predata dobra i pružene usluge bez naknade obračuna PDV u skladu sa propisima.`,
       },
     ],
   },
