@@ -13,6 +13,7 @@ import { ODNOSI_FIRME, type OdnosPremaDavaocu } from "@/lib/pokroviteljstvo-dobr
 import LogotipPolje from "../LogotipPolje";
 import type { UpisZaProfil } from "./UpisProfil";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -200,7 +201,7 @@ export default function PodaciUpisa({ upis }: { upis: UpisZaProfil }) {
           <Polje oznaka={t("upis_kontakt_telefon_label")}><input type="tel" value={f.kontaktTelefon} onChange={postavi("kontaktTelefon")} className={polje} /></Polje>
         </div>
 
-        <h3 className="text-sm font-semibold text-kolo-text pt-2">{t("upis_mapa_naslov")}</h3>
+        <div className="pt-2"><NaslovSekcije nivo={3}>{t("upis_mapa_naslov")}</NaslovSekcije></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Polje oznaka={t("upis_mapa_mesto_label")}>
             <LokacijaSearch value={f.mapaMesto} onChange={postaviMapu("mapaMesto")} />
@@ -228,11 +229,11 @@ export default function PodaciUpisa({ upis }: { upis: UpisZaProfil }) {
       </Kartica>
 
       {/* Brisanje upisa (čl. 18 st. 4). */}
-      <section className="bg-kolo-surface border border-kolo-danger/30 rounded-kartica shadow-kartica p-5 space-y-3">
-        <h3 className="text-sm font-semibold text-kolo-danger">{t("brisanje_naslov")}</h3>
+      <Kartica as="section" ton="opasnost" className="space-y-3">
+        <NaslovSekcije nivo={3}>{t("brisanje_naslov")}</NaslovSekcije>
         <p className="text-xs text-kolo-muted">{t("brisanje_opis")}</p>
         {!brisanje ? (
-          <Dugme varijanta="sekundarno" onClick={() => setBrisanje(true)}>
+          <Dugme varijanta="opasno" onClick={() => setBrisanje(true)}>
             {t("brisanje_dugme")}
           </Dugme>
         ) : (
@@ -251,7 +252,7 @@ export default function PodaciUpisa({ upis }: { upis: UpisZaProfil }) {
             </div>
           </div>
         )}
-      </section>
+      </Kartica>
     </div>
   );
 }

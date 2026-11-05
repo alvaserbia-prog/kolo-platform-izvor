@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AKT_USLOVI, AKT_POLITIKA } from "@/lib/verzije-akata";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
@@ -95,8 +97,8 @@ export default function PolitikaTab() {
   return (
     <div className="space-y-5">
       {dijalog}
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-        <h3 className="font-semibold">{t("pol_naslov")}</h3>
+      <section className={klaseKartice()}>
+        <NaslovSekcije nivo={3}>{t("pol_naslov")}</NaslovSekcije>
         <p className="mt-1 text-sm text-kolo-muted">{t("pol_uvod")}</p>
         <dl className="mt-3 grid grid-cols-2 gap-2 text-sm">
           <dt className="text-kolo-muted">{t("pol_akti_sada")}</dt>
@@ -118,8 +120,8 @@ export default function PolitikaTab() {
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
       {poruka && <Obavestenje vrsta="uspeh">{poruka}</Obavestenje>}
 
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-        <h3 className="font-semibold">{t("pol_nova_naslov")}</h3>
+      <section className={klaseKartice()}>
+        <NaslovSekcije nivo={3}>{t("pol_nova_naslov")}</NaslovSekcije>
         <p className="mt-1 text-xs text-kolo-muted">{t("pol_nova_opis")}</p>
         <div className="mt-3 grid gap-2 md:grid-cols-2">
           <label className="block text-sm font-medium text-kolo-text">
@@ -148,8 +150,8 @@ export default function PolitikaTab() {
         </button>
       </section>
 
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-        <h3 className="font-semibold">{t("pol_istorija")}</h3>
+      <section className={klaseKartice()}>
+        <NaslovSekcije nivo={3}>{t("pol_istorija")}</NaslovSekcije>
         {verzije.length === 0 ? (
           <p className="mt-2 text-sm text-kolo-muted">—</p>
         ) : (

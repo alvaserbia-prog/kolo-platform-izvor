@@ -1,6 +1,5 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { imeNaloga } from "@/lib/protokol/identitet";
@@ -8,6 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { predlogIzGazdinstva } from "@/lib/protokol/upis-pokrovitelja";
 import UpisForma from "./UpisForma";
 import NaslovStranice from "@/components/ui/NaslovStranice";
+import Kartica from "@/components/ui/Kartica";
+import Stranica from "@/components/ui/Stranica";
 
 export async function generateMetadata() {
   const t = await getTranslations("postaniPokrovitelj");
@@ -32,23 +33,23 @@ export default async function UpisPage({ searchParams }: { searchParams: Promise
 
   if (vrsta !== "FIRMA" && vrsta !== "GAZDINSTVO") {
     return (
-      <div className="mx-auto max-w-2xl space-y-4">
+      <Stranica>
         <NaslovStranice
           nazad={{ href: "/postani-pokrovitelj", oznaka: t("naslov") }}
           naslov={t("upis_naslov")}
           opis={t("upis_uvod")}
         />
         <div className="grid gap-3 sm:grid-cols-2">
-          <Link href="/postani-pokrovitelj/upis?vrsta=FIRMA" className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-5 hover:border-kolo-green-500 transition-colors">
+          <Kartica href="/postani-pokrovitelj/upis?vrsta=FIRMA">
             <p className="font-semibold text-kolo-text">{t("upis_vrsta_firma")}</p>
             <p className="mt-1 text-sm text-kolo-muted">{t("upis_vrsta_firma_opis")}</p>
-          </Link>
-          <Link href="/postani-pokrovitelj/upis?vrsta=GAZDINSTVO" className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-5 hover:border-kolo-green-500 transition-colors">
+          </Kartica>
+          <Kartica href="/postani-pokrovitelj/upis?vrsta=GAZDINSTVO">
             <p className="font-semibold text-kolo-text">{t("upis_vrsta_gazdinstvo")}</p>
             <p className="mt-1 text-sm text-kolo-muted">{t("upis_vrsta_gazdinstvo_opis")}</p>
-          </Link>
+          </Kartica>
         </div>
-      </div>
+      </Stranica>
     );
   }
 
@@ -59,12 +60,12 @@ export default async function UpisPage({ searchParams }: { searchParams: Promise
   ]);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <Stranica>
       <NaslovStranice
         nazad={{ href: "/postani-pokrovitelj/upis", oznaka: t("upis_naslov") }}
         naslov={vrsta === "GAZDINSTVO" ? t("upis_vrsta_gazdinstvo") : t("upis_vrsta_firma")}
       />
       <UpisForma vrsta={vrsta} upisanoIme={upisanoIme} predlog={predlog} telefon={korisnik?.telefon ?? null} />
-    </div>
+    </Stranica>
   );
 }

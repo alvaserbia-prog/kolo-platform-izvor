@@ -4,6 +4,7 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
 import Dugme from "@/components/ui/Dugme";
 import PraznoStanje from "@/components/ui/PraznoStanje";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useState, useCallback, memo } from "react";
 import { intlTag } from "@/lib/format";
@@ -40,7 +41,7 @@ export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc, smePredlozi
       {/* Glasanje je deo stranice ZRNO (grupa „Glas u Gornjem Kolu"), pa naslov nije
           naslov stranice nego podnaslov u toj grupi (C2, urednik, 24.10.2026). */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-kolo-muted">{t("naslov")}</h2>
+        <NaslovSekcije nivo={3}>{t("naslov")}</NaslovSekcije>
 
           <div className="flex flex-wrap items-center gap-3">
             <Link href="/glasanje/registar" className="inline-flex min-h-9 items-center text-sm text-kolo-green-700 hover:underline">
@@ -59,12 +60,9 @@ export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc, smePredlozi
           </div>
       </div>
 
-      {mojaGlasackaMoc === 0 && (
-        <Obavestenje vrsta="upozorenje">
-          {t("nema_zrna")}{" "}
-          <Link href="/zrno" className="underline font-medium">{t("idi_na_zrno")}</Link>
-        </Obavestenje>
-      )}
+      {/* Ko glasa — informacija, ne upozorenje, i bez linka na isti ekran (glasanje je
+          deo stranice ZRNO; odluka vlasnika 02.11.2026). */}
+      {mojaGlasackaMoc === 0 && <p className="text-sm text-kolo-muted">{t("nema_zrna")}</p>}
 
       {showNovi && (
         <NoviPredlogForma onSuccess={() => { setShowNovi(false); router.refresh(); }} onCancel={() => setShowNovi(false)} />
@@ -277,7 +275,7 @@ function NoviPredlogForma({ onSuccess, onCancel }: { onSuccess: () => void; onCa
 
   return (
     <Kartica className="space-y-3">
-      <p className="text-sm font-semibold text-kolo-muted">{t("novi_predlog_naslov")}</p>
+      <NaslovSekcije nivo={3}>{t("novi_predlog_naslov")}</NaslovSekcije>
       <input type="text" placeholder={t("naslov_placeholder")} aria-label={t("naslov_placeholder")} value={title} onChange={(e) => setTitle(e.target.value)}
         className={KLASE_UNOSA} />
       <textarea rows={3} placeholder={t("opis_placeholder")} aria-label={t("opis_placeholder")} value={description} onChange={(e) => setDescription(e.target.value)}

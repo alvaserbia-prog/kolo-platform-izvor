@@ -15,6 +15,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { profilHref } from "@/lib/profil-link";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -66,7 +68,7 @@ export default function PrijaveRoditeljstva() {
   return (
     <section className="space-y-3">
       {dijalog}
-      <h2 className="text-lg font-semibold text-kolo-text">{t("roditeljstvo_naslov")}</h2>
+      <NaslovSekcije>{t("roditeljstvo_naslov")}</NaslovSekcije>
       <p className="text-sm text-kolo-muted">{t("roditeljstvo_opis")}</p>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
       {prijave === null ? (
@@ -76,7 +78,7 @@ export default function PrijaveRoditeljstva() {
       ) : (
         <ul className="space-y-3">
           {prijave.map((p) => (
-            <li key={p.id} className="bg-kolo-surface border border-kolo-border rounded-kartica shadow-kartica p-4">
+            <li key={p.id} className={klaseKartice({ padding: "sm" })}>
               <p className="text-sm text-kolo-text">
                 {t("roditeljstvo_stavka_dete")}{" "}
                 <strong>{p.dete.pseudonim}</strong> · {t("roditeljstvo_stavka_lice")}{" "}

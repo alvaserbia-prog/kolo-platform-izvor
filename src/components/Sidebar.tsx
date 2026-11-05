@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/components/ui/Logo";
+import { klaseDugmeta } from "@/components/ui/Dugme";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -138,7 +139,7 @@ function NavLink({ href, label, broj, hitno = 0, aktivan, zakljucano, opisZaklju
         onClick={onClick}
         title={opisZakljucano}
         aria-label={`${label} — ${opisZakljucano}`}
-        className={`group relative flex items-center gap-2.5 ${uvlaka} pr-3 py-2 rounded-xl text-base font-medium text-white/40 hover:bg-white/5 hover:text-white/60 transition-all duration-150`}
+        className={`group relative flex items-center gap-2.5 ${uvlaka} pr-3 py-2 rounded-kontrola text-base font-medium text-white/40 hover:bg-white/5 hover:text-white/60 transition-all duration-150`}
       >
         <span className="shrink-0 opacity-60"><NavIkona href={href} mali={uvuceno} /></span>
         <span className="flex-1 truncate">{label}</span>
@@ -153,7 +154,7 @@ function NavLink({ href, label, broj, hitno = 0, aktivan, zakljucano, opisZaklju
     <Link
       href={href}
       onClick={onClick}
-      className={`group relative flex items-center gap-2.5 ${uvlaka} pr-3 py-2 rounded-xl text-base font-medium transition-all duration-150 ${
+      className={`group relative flex items-center gap-2.5 ${uvlaka} pr-3 py-2 rounded-kontrola text-base font-medium transition-all duration-150 ${
         aktivan ? "bg-white/12 text-white" : "text-white/75 hover:bg-white/10 hover:text-white"
       }`}
     >
@@ -205,7 +206,7 @@ function PadajucaGrupa({ label, vrsta, links, badge, pathname, opisZakljucano, o
         type="button"
         onClick={() => setOtvoreno((o) => !o)}
         aria-expanded={otvoreno}
-        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-base font-medium transition-all duration-150 ${
+        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-kontrola text-base font-medium transition-all duration-150 ${
           nekiAktivan ? "text-white" : "text-white/75 hover:bg-white/10 hover:text-white"
         }`}
       >
@@ -422,7 +423,8 @@ function SidebarContent({
           <Link
             href="/verifikacija"
             onClick={onLinkClick}
-            className="block w-full text-center px-3 py-2 bg-kolo-gold-400 text-kolo-green-900 text-sm font-semibold rounded-xl hover:bg-kolo-gold-200 transition-colors"
+            // Zlatno dugme je samo „Pridruži se" (dizajn sistem); ovo je ulaz na Potvrde.
+            className={klaseDugmeta({ varijanta: "sekundarno", punaSirina: true })}
           >
             {t("verifikuj_nalog")}
           </Link>
@@ -431,7 +433,7 @@ function SidebarContent({
         <Link
           href="/pomoc"
           onClick={onLinkClick}
-          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-base font-medium text-white/75 hover:bg-white/10 hover:text-white transition-all"
+          className="flex items-center gap-2.5 px-3 py-2 rounded-kontrola text-base font-medium text-white/75 hover:bg-white/10 hover:text-white transition-all"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
             <circle cx="12" cy="12" r="10" />

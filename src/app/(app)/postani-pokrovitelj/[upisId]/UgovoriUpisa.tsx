@@ -7,6 +7,7 @@ import { intlTag } from "@/lib/format";
 import { kljucMeseca } from "@/lib/pokroviteljstvo-dobrima-pravila";
 import Pseudonim from "@/components/Pseudonim";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -180,7 +181,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
       )}
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-kolo-text">{tp("ugovori_novac_naslov")}</h2>
+        <NaslovSekcije>{tp("ugovori_novac_naslov")}</NaslovSekcije>
         {novcane.length === 0 ? (
           <p className="text-sm text-kolo-muted bg-kolo-bg rounded-kontrola px-3 py-2">{tp("moje_prijave_prazno")}</p>
         ) : (
@@ -216,7 +217,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-kolo-text">{tp("ugovori_dobra_naslov")}</h2>
+        <NaslovSekcije>{tp("ugovori_dobra_naslov")}</NaslovSekcije>
         {dobra.length === 0 ? (
           <p className="text-sm text-kolo-muted bg-kolo-bg rounded-kontrola px-3 py-2">{t("ugovori_prazno")}</p>
         ) : (
@@ -292,7 +293,7 @@ export function IskorisceniVauceri({ upisId }: { upisId: string }) {
 
   return (
     <Kartica as="section" className="space-y-2">
-      <h2 className="text-lg font-semibold">{t("iskorisceni_naslov", { broj: redovi.length })}</h2>
+      <NaslovSekcije>{t("iskorisceni_naslov", { broj: redovi.length })}</NaslovSekcije>
       {redovi.length === 0 ? null : (
         <>
           {/* Potvrda o predaji bez naknade — zbirno po ugovoru za mesec ili po vaučeru

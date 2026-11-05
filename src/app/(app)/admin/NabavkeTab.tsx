@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -117,8 +119,8 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
     <div className="space-y-5">
       {dijalog}
       {/* ── Sredstva (čl. 5) ───────────────────────────────────────────────── */}
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-        <h3 className="font-semibold">{t("nab_sredstva_naslov")}</h3>
+      <section className={klaseKartice()}>
+        <NaslovSekcije nivo={3}>{t("nab_sredstva_naslov")}</NaslovSekcije>
         <dl className="mt-2 divide-y divide-kolo-border text-sm">
           {sredstva &&
             [
@@ -143,8 +145,8 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
 
       {/* ── Registar i otvaranje nabavke (čl. 10, 12) ──────────────────────────── */}
       {!uToku && (
-        <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-          <h3 className="font-semibold">{t("nab_registar_naslov")}</h3>
+        <section className={klaseKartice()}>
+          <NaslovSekcije nivo={3}>{t("nab_registar_naslov")}</NaslovSekcije>
           <p className="mt-1 text-sm text-kolo-muted">
             {t("nab_registar_opis")}
           </p>
@@ -173,16 +175,16 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
 
       {/* ── Nabavka u toku ─────────────────────────────────────────────────── */}
       {uToku && (
-        <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
+        <section className={klaseKartice()}>
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h3 className="font-semibold">{uToku.naziv}</h3>
+            <NaslovSekcije nivo={3}>{uToku.naziv}</NaslovSekcije>
             <span className="text-sm text-kolo-muted">{uToku.status}</span>
           </div>
           <p className="mt-1 text-sm text-kolo-muted">{t("nab_prijavljenih", { n: uToku.brojPrijava })}</p>
 
           {/* Ponude (čl. 14) */}
           <div className="mt-4">
-            <h4 className="text-sm font-semibold">{t("nab_ponude", { n: uToku.ponude.length })}</h4>
+            <NaslovSekcije nivo={3} varijanta="oznaka">{t("nab_ponude", { n: uToku.ponude.length })}</NaslovSekcije>
             <ul className="mt-2 space-y-1 text-sm">
               {uToku.ponude.map((p) => (
                 <li key={p.id} className="flex items-center justify-between gap-3 rounded-kontrola bg-kolo-bg px-3 py-1.5">
@@ -249,7 +251,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
           {/* Parametri odluke (čl. 13) — PRE prikupljanja ponuda */}
           {uToku.status === "NACRT" && uToku.poenPoDelu === null && (
             <div className="mt-4 rounded-kontrola bg-kolo-bg p-4">
-              <h4 className="text-sm font-semibold">{t("nab_parametri_naslov")}</h4>
+              <NaslovSekcije nivo={3} varijanta="oznaka">{t("nab_parametri_naslov")}</NaslovSekcije>
               <p className="mt-1 text-xs text-kolo-muted">
                 {t("nab_parametri_opis")}
               </p>
@@ -307,7 +309,7 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
           {/* Objava kalkulacije (čl. 14, 16, 18) */}
           {uToku.status === "NACRT" && uToku.poenPoDelu !== null && uToku.ponude.length >= 3 && (
             <div className="mt-4 rounded-kontrola bg-kolo-bg p-4">
-              <h4 className="text-sm font-semibold">{t("nab_objava_naslov")}</h4>
+              <NaslovSekcije nivo={3} varijanta="oznaka">{t("nab_objava_naslov")}</NaslovSekcije>
               <p className="mt-1 text-xs text-kolo-muted">
                 {t("nab_objava_opis")}
               </p>
@@ -451,8 +453,8 @@ export default function NabavkeTab({ onDone }: { onDone?: () => void }) {
 
       {/* ── Ranije nabavke ─────────────────────────────────────────────────── */}
       {nabavke.filter((n) => n.status === "ZAVRSENA" || n.status === "OBUSTAVLJENA").length > 0 && (
-        <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-          <h3 className="font-semibold">{t("nab_ranije")}</h3>
+        <section className={klaseKartice()}>
+          <NaslovSekcije nivo={3}>{t("nab_ranije")}</NaslovSekcije>
           <ul className="mt-2 space-y-1 text-sm">
             {nabavke
               .filter((n) => n.status === "ZAVRSENA" || n.status === "OBUSTAVLJENA")

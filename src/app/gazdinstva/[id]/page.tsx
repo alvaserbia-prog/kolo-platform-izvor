@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { sesija } from "@/lib/sesija";
@@ -21,6 +20,9 @@ import MapaJavna from "../MapaJavna";
 import UpravljanjeGazdinstvom from "./UpravljanjeGazdinstvom";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -121,7 +123,7 @@ export default async function GazdinstvoPage({ params }: Props) {
   const posledica = jeClan && session ? await posledicaIzlaska(session.user.id, g.id) : null;
 
   return (
-    <div className="max-w-[900px] mx-auto pb-16 space-y-6">
+    <Stranica>
       <NaslovStranice
         nazad={{ href: "/gazdinstva", oznaka: t("nazad") }}
         naslov={g.naziv || t("bez_naziva")}
@@ -147,7 +149,7 @@ export default async function GazdinstvoPage({ params }: Props) {
       )}
 
       <section>
-        <h2 className="text-sm font-semibold text-kolo-green-900 mb-2">{t("clanovi")}</h2>
+        <div className="mb-2"><NaslovSekcije>{t("clanovi")}</NaslovSekcije></div>
         <ul className="flex flex-wrap gap-2 text-sm">
           {javniClanovi.map((c) => (
             <li key={c.id} className="rounded-full border border-kolo-border bg-kolo-surface px-3 py-1">
@@ -159,17 +161,14 @@ export default async function GazdinstvoPage({ params }: Props) {
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold text-kolo-green-900 mb-2">{t("ponuda")}</h2>
+        <div className="mb-2"><NaslovSekcije>{t("ponuda")}</NaslovSekcije></div>
         {oglasi.length === 0 ? (
           <p className="text-sm text-kolo-muted">{t("nema_oglasa")}</p>
         ) : (
           <ul className="grid gap-3 sm:grid-cols-2">
             {oglasi.map((o) => (
               <li key={o.id}>
-                <Link
-                  href={`/pijaca/${o.id}`}
-                  className="flex items-center gap-3 rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-3 hover:border-kolo-green-500 transition-colors"
-                >
+                <Kartica href={`/pijaca/${o.id}`} padding="sm" className="flex items-center gap-3">
                   <span className="text-2xl">{kategorijaEmoji(o.category)}</span>
                   <span className="min-w-0">
                     <span className="block font-semibold text-sm text-kolo-text truncate">{o.title}</span>
@@ -178,7 +177,7 @@ export default async function GazdinstvoPage({ params }: Props) {
                       {o.location ? ` · ${o.location}` : ""}
                     </span>
                   </span>
-                </Link>
+                </Kartica>
               </li>
             ))}
           </ul>
@@ -213,6 +212,6 @@ export default async function GazdinstvoPage({ params }: Props) {
           imaIzjavuAdrese={!!g.izjavaAdresaAt}
         />
       )}
-    </div>
+    </Stranica>
   );
 }

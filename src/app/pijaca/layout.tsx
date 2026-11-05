@@ -23,7 +23,9 @@ export default async function PijacaLayout({ children }: { children: React.React
   return (
     <div className="min-h-screen bg-kolo-bg flex flex-col">
       <PublicHeader />
-      <main className="max-w-4xl mx-auto px-6 py-8 w-full flex-1">{children}</main>
+      {/* Isti razmaci kao u `AppShell`-u; širinu daje `Stranica` u samoj stranici
+          (`siroka` za Pijacu, `uska` za oglas), pa gost i član vide isti raspored. */}
+      <main className="w-full flex-1 px-4 py-5 md:px-8 md:py-6">{children}</main>
       <PublicFooter />
     </div>
   );

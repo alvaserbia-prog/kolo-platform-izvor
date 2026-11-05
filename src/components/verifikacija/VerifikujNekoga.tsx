@@ -11,6 +11,8 @@ import { dnevniTempo, PRAG_ZAUSTAVLJANJA } from "@/lib/potvrde-dnevno-pravila";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
 // Dinamički import — html5-qrcode koristi DOM i ne sme da se izvršava na serveru
 const QrSkener = dynamic(() => import("./QrSkener"), { ssr: false });
@@ -61,20 +63,20 @@ export default function VerifikujNekoga({
 
   if (!mozeDaVerifikuje) {
     return (
-      <div className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-        <div className="text-sm uppercase tracking-wide text-kolo-muted font-semibold mb-2">
-          {naslov}
+      <Kartica padding="lg">
+        <div className="mb-2">
+          <NaslovSekcije>{naslov}</NaslovSekcije>
         </div>
         <p className="text-sm text-kolo-muted">{t("vn_nema_prava")}</p>
-      </div>
+      </Kartica>
     );
   }
 
   if (!tempo.sme && !uspeh) {
     return (
-      <div className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-        <div className="text-sm uppercase tracking-wide text-kolo-muted font-semibold mb-3">
-          {naslov}
+      <Kartica padding="lg">
+        <div className="mb-3">
+          <NaslovSekcije>{naslov}</NaslovSekcije>
         </div>
         <Obavestenje vrsta="upozorenje">
           {t("vn_zaustavljeno_n", { danas: potvrdaDanas })}{" "}
@@ -82,7 +84,7 @@ export default function VerifikujNekoga({
             {t("vn_vise_ljudi")}
           </Link>
         </Obavestenje>
-      </div>
+      </Kartica>
     );
   }
 
@@ -160,9 +162,9 @@ export default function VerifikujNekoga({
   }
 
   return (
-    <div className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <div className="text-sm uppercase tracking-wide text-kolo-muted font-semibold mb-3">
-        {naslov}
+    <Kartica padding="lg">
+      <div className="mb-3">
+        <NaslovSekcije>{naslov}</NaslovSekcije>
       </div>
 
       {tempo.upozorenje && (
@@ -281,6 +283,6 @@ export default function VerifikujNekoga({
           {error && <Obavestenje vrsta="greska">{error}</Obavestenje>}
         </form>
       )}
-    </div>
+    </Kartica>
   );
 }

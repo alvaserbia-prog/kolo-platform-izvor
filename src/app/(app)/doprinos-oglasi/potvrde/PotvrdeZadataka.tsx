@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { intlTag } from "@/lib/format";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Kartica from "@/components/ui/Kartica";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -69,7 +70,7 @@ export default function PotvrdeZadataka({ prijave, izvrsenja, zavrsne, primedbe 
 
       {izvrsenja.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold">{t("potvrde_izvrsenja")}</h2>
+          <NaslovSekcije>{t("potvrde_izvrsenja")}</NaslovSekcije>
           {izvrsenja.map((e) => (
             <Kartica key={e.id} className="space-y-2">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -98,7 +99,7 @@ export default function PotvrdeZadataka({ prijave, izvrsenja, zavrsne, primedbe 
 
       {prijave.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold">{t("potvrde_prijave")}</h2>
+          <NaslovSekcije>{t("potvrde_prijave")}</NaslovSekcije>
           {prijave.map((p) => (
             <Kartica key={p.id} className="space-y-2">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -121,7 +122,7 @@ export default function PotvrdeZadataka({ prijave, izvrsenja, zavrsne, primedbe 
 
       {zavrsne.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold">{t("potvrde_zavrsne")}</h2>
+          <NaslovSekcije>{t("potvrde_zavrsne")}</NaslovSekcije>
           {zavrsne.map((z) => (
             <Kartica key={z.id} className="space-y-2">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -149,7 +150,7 @@ export default function PotvrdeZadataka({ prijave, izvrsenja, zavrsne, primedbe 
 
       {primedbe.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold">{t("uc_primedbe")}</h2>
+          <NaslovSekcije>{t("uc_primedbe")}</NaslovSekcije>
           {primedbe.map((r) => (
             <Kartica key={r.id} className="space-y-2">
               <div className="flex flex-wrap items-baseline justify-between gap-2">

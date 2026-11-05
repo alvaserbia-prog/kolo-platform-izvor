@@ -1,7 +1,7 @@
-import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import Kartica from "@/components/ui/Kartica";
+import Stranica from "@/components/ui/Stranica";
 
 export async function generateMetadata() {
   const t = await getTranslations("pomoc");
@@ -23,18 +23,16 @@ export default async function PomocPage() {
     { href: "/bagovi", naslov: t("bagovi_naslov"), opis: t("bagovi_opis") },
   ];
   return (
-    <div className="max-w-[800px] mx-auto pb-16 space-y-5">
+    <Stranica>
       <NaslovStranice naslov={t("naslov")} opis={t("opis")} />
       <div className="grid gap-3 sm:grid-cols-2">
         {stavke.map((s) => (
-          <Link key={s.href} href={s.href} className="block">
-            <Kartica className="h-full hover:border-kolo-green-500 transition-colors">
-              <p className="font-semibold text-kolo-text">{s.naslov} →</p>
-              <p className="mt-1 text-sm text-kolo-muted">{s.opis}</p>
-            </Kartica>
-          </Link>
+          <Kartica key={s.href} href={s.href} className="h-full">
+            <p className="font-semibold text-kolo-text">{s.naslov} →</p>
+            <p className="mt-1 text-sm text-kolo-muted">{s.opis}</p>
+          </Kartica>
         ))}
       </div>
-    </div>
+    </Stranica>
   );
 }

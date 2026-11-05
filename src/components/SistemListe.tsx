@@ -19,7 +19,7 @@ import KorisnikAvatar from "@/components/KorisnikAvatar";
 import { profilHref } from "@/lib/profil-link";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
-import Kartica from "@/components/ui/Kartica";
+import Kartica, { klaseKartice } from "@/components/ui/Kartica";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 
 export interface Transakcija {
@@ -121,7 +121,7 @@ export function ProtokolLista({
   const locale = useLocale();
   const t = useTranslations("sistem");
   return (
-    <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+    <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
       <div className="px-5 py-3 border-b border-kolo-border flex justify-between items-center">
         <p className="text-sm font-semibold text-kolo-text">{t("protokol_tx_naslov")}</p>
         <p className="text-xs text-kolo-muted">{protokolTx.length} {t("ukupno")}</p>
@@ -131,11 +131,11 @@ export function ProtokolLista({
       ) : (
         <>
           <div className="hidden sm:grid grid-cols-[9rem_1fr_1.5rem_1fr_7rem] gap-x-3 px-4 py-2 border-b border-kolo-border bg-kolo-bg">
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("vreme")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("posalje")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("vreme")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("posalje")}</span>
             <span />
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("primalac")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide text-right">{t("iznos")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("primalac")}</span>
+            <span className="text-xs font-semibold text-kolo-muted text-right">{t("iznos")}</span>
           </div>
           {protokolTx.map((tx, i) => (
             <div
@@ -229,7 +229,7 @@ const ClanRed = memo(function ClanRed({
               dece čl. 29 st. 2) — pa bi mu oznaka za novog člana saopštavala nešto što
               se nikad neće promeniti. Isti razlog kao pečat na Pijaci. */}
           {c.maloletan ? (
-            <span className="shrink-0 text-[11px] bg-kolo-green-100 text-kolo-green-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">{t("clan_dete")}</span>
+            <span className="shrink-0 text-xs bg-kolo-green-100 text-kolo-green-700 px-1.5 py-0.5 rounded font-semibold">{t("clan_dete")}</span>
           ) : c.verified ? (
             <span className="shrink-0 text-xs bg-kolo-green-100 text-kolo-green-700 px-1.5 py-0.5 rounded font-medium">✓</span>
           ) : (
@@ -261,7 +261,7 @@ const ClanRed = memo(function ClanRed({
               <Pseudonim>{c.pseudonim}</Pseudonim>
             </Link>
             {c.maloletan ? (
-              <span className="text-[11px] bg-kolo-green-100 text-kolo-green-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">{t("clan_dete")}</span>
+              <span className="text-xs bg-kolo-green-100 text-kolo-green-700 px-1.5 py-0.5 rounded font-semibold">{t("clan_dete")}</span>
             ) : c.verified ? (
               <span className="text-xs bg-kolo-green-100 text-kolo-green-700 px-1.5 py-0.5 rounded font-medium">✓</span>
             ) : (
@@ -305,7 +305,7 @@ export function ClanoviSekcija({
 
   if (!verified) {
     return (
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-8 text-center shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} p-8 text-center`}>
         <p className="text-sm text-kolo-muted mb-3">
           {t("clanovi_pregled_blokiran")}
         </p>
@@ -332,7 +332,7 @@ export function ClanoviSekcija({
       <div className="text-xs text-kolo-muted">
         {filtrirani.length} {filtrirani.length === 1 ? t("clan_count_1") : t("clan_count_vise")}
       </div>
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
         {/* Desktop header */}
         <div className="hidden sm:grid grid-cols-[1fr_1fr_90px_72px_100px] gap-4 px-5 py-2.5 bg-kolo-bg border-b border-kolo-border text-xs font-semibold text-kolo-muted">
           <span>{t("col_pseudonim")}</span>
@@ -393,14 +393,14 @@ export function TransakcijeSekcija({
           <PraznoStanje naslov={t("nema_tx")} />
         </Kartica>
       ) : (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
           {/* Zaglavlje */}
           <div className="hidden sm:grid grid-cols-[9rem_1fr_1.5rem_1fr_7rem] gap-x-3 px-4 py-2 border-b border-kolo-border bg-kolo-bg">
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("vreme")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("posalje")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("vreme")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("posalje")}</span>
             <span />
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("primalac")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide text-right">{t("iznos")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("primalac")}</span>
+            <span className="text-xs font-semibold text-kolo-muted text-right">{t("iznos")}</span>
           </div>
           {razmene.map((tx, i) => (
             <div

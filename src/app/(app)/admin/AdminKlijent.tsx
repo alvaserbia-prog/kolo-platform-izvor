@@ -9,6 +9,7 @@ import type { NadzorNalaz } from "./NadzorTab";
 import type { BrojeviClanova, BrojeviStatusa } from "@/lib/admin-clanovi";
 import { jeSuperadmin } from "@/lib/dozvole";
 import { ADMIN_TABOVI, type Tab } from "./tabovi";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { useDijalog } from "@/components/ui/Dijalog";
 import Segmenti from "@/components/ui/Segmenti";
 import Prekidac from "@/components/ui/Prekidac";
@@ -24,6 +25,9 @@ import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import NaslovStranice from "@/components/ui/NaslovStranice";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Fioka from "@/components/ui/Fioka";
+import { KLASE_TABELE, KLASE_ZAGLAVLJA, KLASE_REDA, klaseTh, klaseTd } from "./tabela";
 import StatKartica from "@/components/ui/StatKartica";
 import Lampica from "@/components/ui/Lampica";
 import type { CekanjeAdmina, CekanjePokrovitelja } from "@/lib/admin-cekanje";
@@ -459,8 +463,8 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
       {/* Dashboard — na vrhu ono što traži radnju (ranije samo u brojevima na
           tabovima, od kojih je pola bilo van vidnog dela trake). */}
       {tab === "dashboard" && (
-        <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-          <h2 className="text-base font-semibold text-kolo-text">{t("na_cekanju_naslov")}</h2>
+        <section className={klaseKartice()}>
+          <NaslovSekcije nivo={3}>{t("na_cekanju_naslov")}</NaslovSekcije>
           {naCekanju.filter(vidljiv).length === 0 ? (
             <p className="mt-2 text-sm text-kolo-muted">{t("na_cekanju_nista")}</p>
           ) : (
@@ -695,9 +699,9 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
       {view === "oglasi" && !izmenaOglas && (
         <div className="space-y-3">
           {data.oglasi.length === 0 ? (
-            <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica"><PraznoStanje naslov={t("ped_nema_oglasa")} /></div>
+            <div className={klaseKartice({ padding: "nema" })}><PraznoStanje naslov={t("ped_nema_oglasa")} /></div>
           ) : data.oglasi.map((o) => (
-            <div key={o.id} className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 shadow-kartica">
+            <div key={o.id} className={klaseKartice()}>
               <div className="flex justify-between items-start gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -737,11 +741,11 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
       {view === "prijave" && (
         <div className="space-y-3">
           {data.pendingPrijave.length === 0 ? (
-            <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica"><PraznoStanje naslov={t("ped_nema_prijava")} /></div>
+            <div className={klaseKartice({ padding: "nema" })}><PraznoStanje naslov={t("ped_nema_prijava")} /></div>
           ) : data.pendingPrijave.map((p) => {
             const poruka = poruke[p.id];
             return (
-              <div key={p.id} className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 space-y-3 shadow-kartica">
+              <div key={p.id} className={`${klaseKartice()} space-y-3`}>
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="font-semibold text-kolo-text text-sm"><Pseudonim>{p.pseudonim}</Pseudonim></p>
@@ -775,11 +779,11 @@ function AdminPedTab({ data, onDone }: { data: AdminPedData; onDone: () => void 
       {view === "evidencije" && (
         <div className="space-y-3">
           {data.pendingEvidencije.length === 0 ? (
-            <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica"><PraznoStanje naslov={t("ped_nema_evidencija")} /></div>
+            <div className={klaseKartice({ padding: "nema" })}><PraznoStanje naslov={t("ped_nema_evidencija")} /></div>
           ) : data.pendingEvidencije.map((e) => {
             const poruka = poruke[e.id];
             return (
-              <div key={e.id} className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 space-y-3 shadow-kartica">
+              <div key={e.id} className={`${klaseKartice()} space-y-3`}>
                 <div className="flex justify-between items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-kolo-text text-sm"><Pseudonim>{e.pseudonim}</Pseudonim></p>
@@ -905,8 +909,8 @@ function NoviOglasForma({ oglas, onSuccess, onCancel }: { oglas?: AdminOglasItem
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 space-y-4 shadow-kartica">
-      <p className="text-sm font-semibold text-kolo-muted">{oglas ? t("izmena_oglas_naslov_forme") : t("novi_oglas_naslov_forme")}</p>
+    <form onSubmit={handleSubmit} noValidate className={`${klaseKartice({ padding: "lg" })} space-y-4`}>
+      <NaslovSekcije nivo={3}>{oglas ? t("izmena_oglas_naslov_forme") : t("novi_oglas_naslov_forme")}</NaslovSekcije>
 
       <div>
         <label htmlFor="adm-novi-oglas-naziv-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("novi_oglas_naziv_label")}</label>
@@ -1112,9 +1116,9 @@ function AdminProgramiTab({ data, opticaj, sme, onDone }: { data: AdminProgramiD
       </div>
 
       {/* ZRNO tržište */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border px-5 py-4 flex justify-between items-center shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} px-5 py-4 flex justify-between items-center`}>
         <div>
-          <p className="text-sm font-semibold text-kolo-muted">{t("programi_zrno_kanal_naslov")}</p>
+          <NaslovSekcije nivo={3}>{t("programi_zrno_kanal_naslov")}</NaslovSekcije>
           <p className="text-xs text-kolo-muted mt-0.5">
             {data.zrnoKanalAktivan ? t("programi_zrno_aktivno") : t("programi_zrno_neaktivno")}
           </p>
@@ -1134,9 +1138,9 @@ function AdminProgramiTab({ data, opticaj, sme, onDone }: { data: AdminProgramiD
       </div>
 
       {/* Status programa */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
         <div className="px-5 py-3 border-b border-kolo-border flex justify-between items-center">
-          <h3 className="text-sm font-semibold text-kolo-muted">{t("programi_status_naslov")}</h3>
+          <NaslovSekcije nivo={3}>{t("programi_status_naslov")}</NaslovSekcije>
           <button onClick={pokreniNocnu} disabled={loadingNocna}
             className={klaseDugmeta({ varijanta: "primarno", velicina: "sm" })}>
             ▶ {loadingNocna ? "..." : t("programi_pokreni_emisiju")}
@@ -1168,7 +1172,7 @@ function AdminProgramiTab({ data, opticaj, sme, onDone }: { data: AdminProgramiD
       {/* Pending prijave na programe */}
       {data.pendingEnrollments.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-kolo-muted">{t("programi_prijave_naslov", { count: data.pendingEnrollments.length })}</h3>
+          <NaslovSekcije nivo={3}>{t("programi_prijave_naslov", { count: data.pendingEnrollments.length })}</NaslovSekcije>
           {data.pendingEnrollments.map((e) => (
             <EnrollmentKartica key={e.id} e={e} sme={sme} onOdobri={(amt) => odobriEnrollment(e.id, amt)} onOdbij={() => odbijEnrollment(e.id)} />
           ))}
@@ -1176,16 +1180,16 @@ function AdminProgramiTab({ data, opticaj, sme, onDone }: { data: AdminProgramiD
       )}
 
       {data.pendingEnrollments.length === 0 && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica">
+        <div className={klaseKartice({ padding: "nema" })}>
           <PraznoStanje naslov={t("programi_nema_zahteva")} />
         </div>
       )}
 
       {/* Istorija emisija */}
       {data.poslednjeEmisije.length > 0 && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
           <div className="px-5 py-3 border-b border-kolo-border">
-            <h3 className="text-sm font-semibold text-kolo-muted">{t("programi_istorija_emisija")}</h3>
+            <NaslovSekcije nivo={3}>{t("programi_istorija_emisija")}</NaslovSekcije>
           </div>
           {data.poslednjeEmisije.map((s, i) => (
             <div key={s.date} className={`px-5 py-3 flex justify-between items-center text-sm ${i < data.poslednjeEmisije.length - 1 ? "border-b border-kolo-border" : ""}`}>
@@ -1220,7 +1224,7 @@ function EnrollmentKartica({ e, sme, onOdobri, onOdbij }: {
   ].filter(Boolean).join(" · ");
 
   return (
-    <div className="bg-kolo-surface rounded-kartica border border-kolo-border px-5 py-4 space-y-3 shadow-kartica">
+    <div className={`${klaseKartice({ padding: "nema" })} px-5 py-4 space-y-3`}>
       <div className="flex justify-between items-start">
         <div>
           <p className="text-sm font-semibold text-kolo-text"><Pseudonim>{e.pseudonim}</Pseudonim></p>
@@ -1365,8 +1369,8 @@ function EmisijaTab({ onSuccess }: { onSuccess: () => void }) {
   return (
     <div className="space-y-5">
       {/* Forma za donaciju (na vrhu) */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 shadow-kartica">
-        <h3 className="text-sm font-semibold text-kolo-muted mb-4">{t("emisija_donacija_naslov")}</h3>
+      <div className={klaseKartice()}>
+        <div className="mb-4"><NaslovSekcije nivo={3}>{t("emisija_donacija_naslov")}</NaslovSekcije></div>
         <form onSubmit={handleDonacija} noValidate className="space-y-3">
           <div ref={wrapperRef} className="relative">
             <label htmlFor="adm-emisija-pseudonim-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("emisija_pseudonim_label")}</label>
@@ -1462,30 +1466,30 @@ function EmisijaTab({ onSuccess }: { onSuccess: () => void }) {
       </div>
 
       {/* Nivoi donacija i koeficijent — cita se iz RANG_TABELA, da se ne prepisuje rucno */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
         <div className="px-4 py-3 border-b border-kolo-border">
-          <h3 className="text-sm font-semibold text-kolo-muted">{t("emisija_pragovi_naslov")}</h3>
+          <NaslovSekcije nivo={3}>{t("emisija_pragovi_naslov")}</NaslovSekcije>
           <p className="text-xs text-kolo-muted mt-0.5">{t("emisija_pragovi_sub")}</p>
         </div>
         <div className="overflow-x-auto">
-        <table className="w-full text-xs min-w-[22rem]">
+        <table className={`${KLASE_TABELE} min-w-[22rem]`}>
           <thead>
-            <tr className="bg-kolo-bg">
-              <th className="px-4 py-2 text-center text-kolo-muted font-medium">{t("emisija_tbl_nivo")}</th>
-              <th className="px-4 py-2 text-left text-kolo-muted font-medium">{t("emisija_tbl_kumulativ")}</th>
-              <th className="px-4 py-2 text-right text-kolo-muted font-medium">{t("emisija_tbl_bonus")}</th>
+            <tr className={KLASE_ZAGLAVLJA}>
+              <th className={klaseTh("centar")}>{t("emisija_tbl_nivo")}</th>
+              <th className={klaseTh()}>{t("emisija_tbl_kumulativ")}</th>
+              <th className={klaseTh("desno")}>{t("emisija_tbl_bonus")}</th>
             </tr>
           </thead>
           <tbody>
             {RANG_TABELA.map((r) => (
-              <tr key={r.nivo} className="border-t border-kolo-border">
-                <td className="px-4 py-2 text-center font-medium text-kolo-text">{r.nivo}</td>
-                <td className="px-4 py-2 text-kolo-muted">
+              <tr key={r.nivo} className={KLASE_REDA}>
+                <td className={`${klaseTd("centar")} font-medium text-kolo-text`}>{r.nivo}</td>
+                <td className={`${klaseTd()} text-kolo-muted`}>
                   {r.do === 0
                     ? t("emisija_tbl_nivo1")
                     : `${r.do.toLocaleString(intlTag(locale))} RSD`}
                 </td>
-                <td className="px-4 py-2 text-right font-semibold text-kolo-green-700">
+                <td className={`${klaseTd("desno")} font-semibold text-kolo-green-700`}>
                   {r.kurs.toFixed(2).replace(".", ",")}×
                 </td>
               </tr>
@@ -1622,8 +1626,8 @@ function DonacijeTab({ donacije, onDone, pocetniNacin = "izvod" }: { donacije: D
         <EmisijaTab onSuccess={onDone} />
       ) : (
       /* Uplata iz izvoda — poziv na broj identifikuje člana */
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 shadow-kartica">
-        <h3 className="text-sm font-semibold text-kolo-muted mb-1">{t("donacije_izvod_naslov")}</h3>
+      <div className={klaseKartice()}>
+        <div className="mb-1"><NaslovSekcije nivo={3}>{t("donacije_izvod_naslov")}</NaslovSekcije></div>
         <p className="text-xs text-kolo-muted mb-3">{t("donacije_izvod_opis")}</p>
         <form onSubmit={evidentirajIzIzvoda} noValidate className="space-y-3">
           <div className="flex flex-col sm:flex-row gap-2">
@@ -1681,11 +1685,11 @@ function DonacijeTab({ donacije, onDone, pocetniNacin = "izvod" }: { donacije: D
       )}
 
       {donacije.length === 0 ? (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica"><PraznoStanje naslov={t("donacije_nema")} /></div>
+        <div className={klaseKartice({ padding: "nema" })}><PraznoStanje naslov={t("donacije_nema")} /></div>
       ) : donacije.map((d) => {
         const poruka = poruke[d.id];
         return (
-          <div key={d.id} className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 space-y-3 shadow-kartica">
+          <div key={d.id} className={`${klaseKartice()} space-y-3`}>
             <div className="flex justify-between items-start gap-3">
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-kolo-text text-sm">{d.pseudonim}</p>
@@ -1778,7 +1782,7 @@ const prigovorTipLabel = (t: ReturnType<typeof useTranslations<"admin">>): Recor
 function PrigovoriTab({ prigovori, onDone }: { prigovori: PrigovorItem[]; onDone: () => void }) {
   const t = useTranslations("admin");
   if (prigovori.length === 0) {
-    return <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica"><PraznoStanje naslov={t("prigovori_nema")} /></div>;
+    return <div className={klaseKartice({ padding: "nema" })}><PraznoStanje naslov={t("prigovori_nema")} /></div>;
   }
   return (
     <div className="space-y-3">
@@ -1815,7 +1819,7 @@ function PrigovorKartica({ p, onDone }: { p: PrigovorItem; onDone: () => void })
   }
 
   return (
-    <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 space-y-3 shadow-kartica">
+    <div className={`${klaseKartice()} space-y-3`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap mb-1">
           <span className="text-xs font-semibold px-2 py-0.5 rounded bg-kolo-info-light text-kolo-info">{prigovorTipLabel(t)[p.tipOdluke] ?? p.tipOdluke}</span>
@@ -1876,7 +1880,7 @@ function DashboardTab({ data, onRefresh }: { data: DashboardData; onRefresh: () 
     <div className="space-y-5">
       {/* Stanje sistema — samo punoletni nalozi. 🔴 Deca su u sopstvenom odeljku
           ispod i ne mešaju se sa pokazateljima sistema (dete nikad nije korisnik). */}
-      <p className="text-sm font-semibold text-kolo-muted">{t("dashboard_sistem_naslov")}</p>
+      <NaslovSekcije varijanta="oznaka">{t("dashboard_sistem_naslov")}</NaslovSekcije>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {([
           [t("dashboard_korisnici_ukupno"), data.korisnici.punoletni.ukupno],
@@ -1893,7 +1897,7 @@ function DashboardTab({ data, onRefresh }: { data: DashboardData; onRefresh: () 
           podnaslovu); u podacima ostaju dva zasebna statusa. */}
       {data.statusi && (
         <>
-          <p className="text-sm font-semibold text-kolo-muted">{t("dashboard_status_naslov")}</p>
+          <NaslovSekcije varijanta="oznaka">{t("dashboard_status_naslov")}</NaslovSekcije>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {([
               ["KORISNIK", data.statusi.korisnici],
@@ -1909,7 +1913,7 @@ function DashboardTab({ data, onRefresh }: { data: DashboardData; onRefresh: () 
             />
           </div>
           <section className="rounded-kartica border border-kolo-border bg-kolo-bg p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-kolo-muted">{t("dashboard_status_deca_naslov")}</h3>
+            <NaslovSekcije nivo={3} varijanta="oznaka">{t("dashboard_status_deca_naslov")}</NaslovSekcije>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <StatKartica oznaka={t("dashboard_deca_ukupno")} vrednost={data.korisnici.deca.toLocaleString(intlTag(locale))} />
               {([
@@ -1940,9 +1944,9 @@ function DashboardTab({ data, onRefresh }: { data: DashboardData; onRefresh: () 
       </div>
 
       {/* Zero-sum provjera */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border px-5 py-4 flex items-center justify-between gap-4 shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} px-5 py-4 flex items-center justify-between gap-4`}>
         <div>
-          <p className="text-sm font-semibold text-kolo-muted">{t("dashboard_zero_sum_naslov")}</p>
+          <NaslovSekcije nivo={3}>{t("dashboard_zero_sum_naslov")}</NaslovSekcije>
           {zeroSum && (
             <p className={`text-sm mt-0.5 ${zeroSum.ok ? "text-kolo-green-700" : "text-kolo-danger"}`}>
               {t("dashboard_zero_sum_zbir", { zbir: zeroSum.zbir.toLocaleString(intlTag(locale)), status: zeroSum.ok ? "✓ OK" : "✗ GREŠKA" })}
@@ -2138,7 +2142,7 @@ function KorisniciTab({ users, onDone, viewerJeSuperadmin, viewerId }: { users: 
         ))}
       </div>
 
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
         {filtered.length === 0 ? (
           <PraznoStanje naslov={t("korisnici_nema")} />
         ) : (
@@ -2234,7 +2238,7 @@ function KorisniciTab({ users, onDone, viewerJeSuperadmin, viewerId }: { users: 
                   )}
                   {!jeSuperadmin(u) && (
                     <div className="border-t border-kolo-border pt-3">
-                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-kolo-muted">{t("korisnici_opasne")}</p>
+                      <div className="mb-2"><NaslovSekcije nivo={3} varijanta="oznaka">{t("korisnici_opasne")}</NaslovSekcije></div>
                       <div className="flex flex-wrap gap-2">
                         {u.status === "ACTIVE" && (
                           <button onClick={() => akcija(u.id, "suspenduj")} disabled={loadingId === u.id} className={opasno}>
@@ -2368,13 +2372,9 @@ function PrevodUDeteForma({ korisnik, onClose, onDone }: {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 bg-black/40">
-      {dijalog}
-      <div className="bg-kolo-surface rounded-kartica shadow-xl w-full max-w-sm p-6 space-y-4 my-8">
-        <div>
-          <h3 className="text-base font-semibold text-kolo-text">{t("korisnici_u_dete_naslov")}</h3>
-          <p className="text-sm text-kolo-muted mt-0.5"><Pseudonim>{korisnik.pseudonim}</Pseudonim></p>
-        </div>
+    <>
+    <Fioka naslov={t("korisnici_u_dete_naslov")} onZatvori={onClose} sirina="sm">
+        <p className="text-sm text-kolo-muted -mt-2"><Pseudonim>{korisnik.pseudonim}</Pseudonim></p>
 
         <p className="text-xs text-kolo-muted bg-kolo-bg rounded-kontrola p-4 whitespace-pre-line">
           {t("korisnici_u_dete_posledice")}
@@ -2462,8 +2462,9 @@ function PrevodUDeteForma({ korisnik, onClose, onDone }: {
             {loading ? t("korisnici_u_dete_radim") : t("korisnici_u_dete_dugme")}
           </button>
         </div>
-      </div>
-    </div>
+    </Fioka>
+    {dijalog}
+    </>
   );
 }
 
@@ -2501,12 +2502,8 @@ function IzmeniKorisnikaForma({ korisnik, onClose, onDone }: {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-kolo-surface rounded-kartica shadow-xl w-full max-w-sm p-6 space-y-4">
-        <div>
-          <h3 className="text-base font-semibold text-kolo-text">{t("izmeni_korisnika_naslov")}</h3>
-          <p className="text-sm text-kolo-muted mt-0.5"><Pseudonim>{korisnik.pseudonim}</Pseudonim></p>
-        </div>
+    <Fioka naslov={t("izmeni_korisnika_naslov")} onZatvori={onClose} sirina="sm">
+        <p className="text-sm text-kolo-muted -mt-2"><Pseudonim>{korisnik.pseudonim}</Pseudonim></p>
 
         <div>
           <label htmlFor="adm-izmeni-email-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("izmeni_email_label")}</label>
@@ -2543,8 +2540,7 @@ function IzmeniKorisnikaForma({ korisnik, onClose, onDone }: {
             {loading ? t("izmeni_cuvam") : t("izmeni_sacuvaj")}
           </button>
         </div>
-      </div>
-    </div>
+    </Fioka>
   );
 }
 
@@ -2647,12 +2643,12 @@ function AdminPokroviteljiTab({
       {subTab === "lista" && (
         <div className="space-y-2">
           {pokrovitelji.length === 0 ? (
-            <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica">
+            <div className={klaseKartice({ padding: "nema" })}>
               <PraznoStanje naslov={t("pokrovitelji_nema")} />
             </div>
           ) : (
             pokrovitelji.map((p) => (
-              <div key={p.id} className="bg-kolo-surface rounded-kartica border border-kolo-border px-5 py-3 flex items-center justify-between gap-4 shadow-kartica">
+              <div key={p.id} className={`${klaseKartice({ padding: "nema" })} px-5 py-3 flex items-center justify-between gap-4`}>
                 <div className="min-w-0">
                   <div className="font-medium text-kolo-text truncate">{p.naziv}</div>
                   <div className="text-xs text-kolo-muted mt-0.5">
@@ -2675,8 +2671,8 @@ function AdminPokroviteljiTab({
       )}
 
       {subTab === "novi" && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 space-y-4 shadow-kartica">
-          <h3 className="font-semibold text-kolo-text">{t("pokrovitelji_novi_naslov")}</h3>
+        <div className={`${klaseKartice()} space-y-4`}>
+          <NaslovSekcije nivo={3}>{t("pokrovitelji_novi_naslov")}</NaslovSekcije>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label htmlFor="adm-pokrovitelji-naziv-label" className="block text-sm font-medium text-kolo-text mb-1.5">{t("pokrovitelji_naziv_label")}</label>
@@ -2760,7 +2756,7 @@ function AuditLogTab({ logs, onRefresh }: { logs: AuditLogEntry[]; onRefresh: ()
         </button>
       </div>
 
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
         {logs.length === 0 ? (
           <PraznoStanje naslov={t("audit_nema")} />
         ) : (
@@ -2771,7 +2767,7 @@ function AuditLogTab({ logs, onRefresh }: { logs: AuditLogEntry[]; onRefresh: ()
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs font-mono font-semibold text-kolo-green-700">{l.akcija}</span>
                     {l.targetId && (
-                      <span className="text-xs text-kolo-muted truncate max-w-[120px]">{l.targetId}</span>
+                      <span className="text-xs text-kolo-muted truncate max-w-32">{l.targetId}</span>
                     )}
                   </div>
                   <p className="text-xs text-kolo-muted mt-0.5">
@@ -2872,10 +2868,10 @@ function VestiTab({ objave, onDone }: { objave: BlogObjavaAdmin[]; onDone: () =>
     <div className="space-y-5">
       {dijalog}
       {/* Forma */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 shadow-kartica">
-        <h3 className="text-sm font-semibold text-kolo-text mb-3">
+      <div className={klaseKartice()}>
+        <div className="mb-3"><NaslovSekcije nivo={3}>
           {editId ? t("vesti_izmeni_objavu") : t("vesti_nova_objava")}
-        </h3>
+        </NaslovSekcije></div>
         <form onSubmit={sacuvaj} className="space-y-3">
           <input
             type="text"
@@ -2933,11 +2929,11 @@ function VestiTab({ objave, onDone }: { objave: BlogObjavaAdmin[]; onDone: () =>
 
       {/* Lista postojećih */}
       <div>
-        <h3 className="text-sm font-semibold text-kolo-text mb-3">
+        <div className="mb-3"><NaslovSekcije nivo={3}>
           {t("vesti_postojece_naslov", { count: objave.length })}
-        </h3>
+        </NaslovSekcije></div>
         {objave.length === 0 ? (
-          <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica">
+          <div className={klaseKartice({ padding: "nema" })}>
             <PraznoStanje naslov={t("vesti_nema")} />
           </div>
         ) : (
@@ -2945,7 +2941,7 @@ function VestiTab({ objave, onDone }: { objave: BlogObjavaAdmin[]; onDone: () =>
             {objave.map((o) => (
               <div
                 key={o.id}
-                className="bg-kolo-surface rounded-kartica border border-kolo-border p-4 flex items-start gap-4 shadow-kartica"
+                className={`${klaseKartice({ padding: "sm" })} flex items-start gap-4`}
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-kolo-text">{o.title}</p>

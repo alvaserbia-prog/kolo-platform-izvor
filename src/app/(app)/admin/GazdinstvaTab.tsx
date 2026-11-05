@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -189,7 +191,7 @@ export default function GazdinstvaTab({ jeSuperadmin, onDone }: { jeSuperadmin: 
     }
     return (
       <div className="space-y-1 text-sm">
-        <p className="font-semibold">{t("gaz_izvod_naslov")}</p>
+        <NaslovSekcije nivo={3} varijanta="oznaka">{t("gaz_izvod_naslov")}</NaslovSekcije>
         {g.izvod ? (
           <p className="flex flex-wrap items-center gap-2">
             <a className="underline" href={`/api/admin/gazdinstva/${g.id}/izvod`} target="_blank" rel="noreferrer">
@@ -251,7 +253,7 @@ export default function GazdinstvaTab({ jeSuperadmin, onDone }: { jeSuperadmin: 
         {g.odgovaraZaIzjavu && <p className="text-kolo-muted">{t("gaz_odgovara", { pseudonim: g.odgovaraZaIzjavu })}</p>}
         <p className="whitespace-pre-line">{g.opis}</p>
         <div>
-          <p className="font-semibold">{t("gaz_clanovi")}</p>
+          <NaslovSekcije nivo={3} varijanta="oznaka">{t("gaz_clanovi")}</NaslovSekcije>
           <ul className="list-disc pl-5">
             {g.clanovi.map((c) => (
               <li key={c.id}>
@@ -297,11 +299,11 @@ export default function GazdinstvaTab({ jeSuperadmin, onDone }: { jeSuperadmin: 
       <section className="space-y-3">
         {/* P3-M1: pregled proverava i zabranjena dobra (gazdinstva čl. 7 st. 1). */}
         <p className="text-xs text-kolo-muted">{t("zabranjeno_dobro_podsetnik")}</p>
-        <h3 className="font-semibold">{t("gaz_na_pregledu", { n: naPregledu.length })}</h3>
+        <NaslovSekcije nivo={3}>{t("gaz_na_pregledu", { n: naPregledu.length })}</NaslovSekcije>
         {naPregledu.length === 0 && <p className="text-sm text-kolo-muted">{t("gaz_nema")}</p>}
         {naPregledu.map((g) => (
-          <div key={g.id} className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-            <h4 className="font-semibold">{g.naziv}</h4>
+          <div key={g.id} className={klaseKartice()}>
+            <NaslovSekcije nivo={3}>{g.naziv}</NaslovSekcije>
             <Podaci g={g} />
             <div className="mt-3 space-y-2">
               <Razgovor g={g} />
@@ -337,10 +339,10 @@ export default function GazdinstvaTab({ jeSuperadmin, onDone }: { jeSuperadmin: 
 
       {/* ── Kasnija pristupanja (čl. 9 st. 4) ────────────────────────────────── */}
       <section className="space-y-3">
-        <h3 className="font-semibold">{t("gaz_pristupanja", { n: pristupanja.length })}</h3>
+        <NaslovSekcije nivo={3}>{t("gaz_pristupanja", { n: pristupanja.length })}</NaslovSekcije>
         {pristupanja.length === 0 && <p className="text-sm text-kolo-muted">{t("gaz_nema")}</p>}
         {pristupanja.map((p) => (
-          <div key={p.id} className="rounded-kartica border border-kolo-border bg-kolo-surface p-4 text-sm shadow-kartica">
+          <div key={p.id} className={`${klaseKartice({ padding: "sm" })} text-sm`}>
             <p>
               <strong>{p.user.pseudonim}</strong> ({p.user.identitet?.imePrezime ?? (
                 <span className="text-kolo-danger">{t("gaz_ime_nedostaje")}</span>
@@ -379,9 +381,9 @@ export default function GazdinstvaTab({ jeSuperadmin, onDone }: { jeSuperadmin: 
 
       {/* ── Odobrena gazdinstva; poništenje zbog lažne izjave (čl. 20) ───────── */}
       <section className="space-y-3">
-        <h3 className="font-semibold">{t("gaz_odobrena", { n: odobrena.length })}</h3>
+        <NaslovSekcije nivo={3}>{t("gaz_odobrena", { n: odobrena.length })}</NaslovSekcije>
         {odobrena.map((g) => (
-          <details key={g.id} className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
+          <details key={g.id} className={klaseKartice()}>
             <summary className="cursor-pointer font-semibold">
               {g.naziv} <span className="font-normal text-kolo-muted">· {g.naselje}</span>
             </summary>
@@ -437,7 +439,7 @@ export default function GazdinstvaTab({ jeSuperadmin, onDone }: { jeSuperadmin: 
 
       {uPripremi.length > 0 && (
         <section className="space-y-1 text-sm text-kolo-muted">
-          <h3 className="font-semibold text-kolo-text">{t("gaz_u_pripremi", { n: uPripremi.length })}</h3>
+          <NaslovSekcije nivo={3}>{t("gaz_u_pripremi", { n: uPripremi.length })}</NaslovSekcije>
           {uPripremi.map((g) => (
             <p key={g.id}>
               {g.naziv} · {g.naselje} · {g.status === "VRACENO" ? t("gaz_vraceno") : t("gaz_nacrt")} ·{" "}

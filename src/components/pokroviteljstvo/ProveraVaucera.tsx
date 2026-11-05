@@ -7,6 +7,9 @@ import { intlTag } from "@/lib/format";
 import Pseudonim from "@/components/Pseudonim";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
 const QrSkener = dynamic(() => import("@/components/verifikacija/QrSkener"), { ssr: false });
@@ -82,10 +85,9 @@ export default function ProveraVaucera({ onRealizovano }: { onRealizovano?: () =
   };
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica space-y-3">
+    <Kartica as="section" className="space-y-3">
       {dijalog}
-      <h2 className="text-lg font-semibold">{t("provera_naslov")}</h2>
-      <p className="text-sm text-kolo-muted">{t("provera_opis")}</p>
+      <NaslovSekcije opis={t("provera_opis")}>{t("provera_naslov")}</NaslovSekcije>
       {poruka && (
         <Obavestenje vrsta={poruka.ok ? "uspeh" : "greska"}>{poruka.tekst}</Obavestenje>
       )}
@@ -95,7 +97,7 @@ export default function ProveraVaucera({ onRealizovano }: { onRealizovano?: () =
           onChange={(e) => setKod(e.target.value.toUpperCase())}
           placeholder={t("kod_placeholder")}
           aria-label={t("kod_placeholder")}
-          className="min-w-0 flex-1 min-h-10 px-3 py-2 rounded-kontrola border border-kolo-border bg-kolo-surface text-sm font-mono outline-none focus:border-kolo-green-700"
+          className={`${KLASE_UNOSA} min-w-0 flex-1 sm:w-auto font-mono`}
         />
         <Dugme onClick={() => proveri()} disabled={radi === "provera" || !kod.trim()}>
           {t("proveri")}
@@ -133,6 +135,6 @@ export default function ProveraVaucera({ onRealizovano }: { onRealizovano?: () =
           )}
         </div>
       )}
-    </section>
+    </Kartica>
   );
 }

@@ -9,6 +9,8 @@ import PrikaziLozinkuDugme from "@/components/PrikaziLozinkuDugme";
 import DatumRodjenja from "@/components/DatumRodjenja";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import ObavestenjeUi from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 type Dete = {
@@ -70,8 +72,8 @@ export default function MojaDeca() {
   if (deca === null && !greska) return null;
 
   return (
-    <section id="moja-deca" className="scroll-mt-20 rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="text-lg font-semibold text-kolo-text">{t("naslov")}</h2>
+    <Kartica as="section" id="moja-deca" padding="lg" className="scroll-mt-20">
+      <NaslovSekcije>{t("naslov")}</NaslovSekcije>
       <p className="mt-1 text-sm text-kolo-muted">{t("podnaslov")}</p>
 
       {greska && <ObavestenjeUi vrsta="greska" className="mt-3">{greska}</ObavestenjeUi>}
@@ -182,7 +184,7 @@ export default function MojaDeca() {
           onOdustani={() => setKorak("spisak")}
         />
       )}
-    </section>
+    </Kartica>
   );
 }
 
@@ -197,7 +199,7 @@ function Obavestenje({ onDalje, onOdustani }: { onDalje: () => void; onOdustani:
   ];
   return (
     <div className="mt-4 rounded-kontrola bg-kolo-bg p-4">
-      <h3 className="font-semibold text-kolo-text">{t("obavestenje_naslov")}</h3>
+      <NaslovSekcije nivo={3}>{t("obavestenje_naslov")}</NaslovSekcije>
       <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-kolo-muted">
         {stavke.map((s, i) => (
           <li key={i}>{s}</li>

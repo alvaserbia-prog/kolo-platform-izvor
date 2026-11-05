@@ -14,6 +14,7 @@ import {
 } from "@/lib/protokol/zahtev-razgovor";
 import KontaktObrazac from "./KontaktObrazac";
 import NaslovStranice from "@/components/ui/NaslovStranice";
+import Stranica from "@/components/ui/Stranica";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
 export async function generateMetadata(): Promise<Metadata> {
@@ -66,7 +67,7 @@ export default async function KontaktirajNasPage({
         : "ZAHTEV";
 
   return (
-    <div className="max-w-xl mx-auto py-6 space-y-5">
+    <Stranica className="py-6">
       <div className="space-y-2">
         <NaslovStranice
           naslov={radiPotvrde ? t("naslov_potvrda") : t("naslov")}
@@ -97,6 +98,6 @@ export default async function KontaktirajNasPage({
         imeUpisano={profil.imeUpisano}
         poslat={!!moj}
       />
-    </div>
+    </Stranica>
   );
 }

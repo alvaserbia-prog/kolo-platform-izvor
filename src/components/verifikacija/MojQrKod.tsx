@@ -8,6 +8,8 @@ import dynamic from "next/dynamic";
 import UspehKartica from "@/components/UspehKartica";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
 // qrcode.react (deljen chunk sa html5-qrcode, ~361KB) — lenjo: QR se crta tek kad
 // korisnik generiše kod, pa ne ulazi u početni bundle verifikacije.
@@ -166,9 +168,9 @@ export default function MojQrKod({ zaClanaBezPotvrde = false }: { zaClanaBezPotv
   }
 
   return (
-    <div className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <div className="text-sm uppercase tracking-wide text-kolo-muted font-semibold mb-4">
-        {t("qr_naslov")}
+    <Kartica padding="lg">
+      <div className="mb-4">
+        <NaslovSekcije>{t("qr_naslov")}</NaslovSekcije>
       </div>
 
       {!token && (
@@ -191,7 +193,7 @@ export default function MojQrKod({ zaClanaBezPotvrde = false }: { zaClanaBezPotv
             <QRCodeSVG value={token.token} size={200} />
           </div>
           <div className="text-center">
-            <div className="text-xs uppercase tracking-wide text-kolo-muted">{t("qr_ili_broj")}</div>
+            <div className="text-xs text-kolo-muted">{t("qr_ili_broj")}</div>
             <div className="text-3xl font-mono font-bold tracking-wider mt-1">{formatBroj}</div>
           </div>
         </div>
@@ -199,7 +201,7 @@ export default function MojQrKod({ zaClanaBezPotvrde = false }: { zaClanaBezPotv
 
       {istekao && (
         <div className="space-y-3">
-          <Obavestenje vrsta="upozorenje">{t("qr_istekao")}</Obavestenje>
+          <Obavestenje vrsta="info">{t("qr_istekao")}</Obavestenje>
           <Dugme onClick={generisi} disabled={loading}>
             {loading ? t("qr_generisem") : t("qr_obnovi")}
           </Dugme>
@@ -207,6 +209,6 @@ export default function MojQrKod({ zaClanaBezPotvrde = false }: { zaClanaBezPotv
       )}
 
       {error && <Obavestenje vrsta="greska" className="mt-3">{error}</Obavestenje>}
-    </div>
+    </Kartica>
   );
 }

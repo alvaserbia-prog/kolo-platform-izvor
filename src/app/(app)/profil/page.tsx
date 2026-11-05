@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import ProfilKlijent from "./ProfilKlijent";
+import Stranica from "@/components/ui/Stranica";
 import MojaDeca from "@/components/deca/MojaDeca";
 import EmailDeteta from "@/components/deca/EmailDeteta";
 import IzborSkole from "@/components/deca/IzborSkole";
@@ -58,7 +59,7 @@ export default async function ProfilPage() {
       : null;
 
   return (
-    <>
+    <Stranica>
     <ProfilKlijent
       praceneKategorije={user.praceneKategorije.map((p) => p.category)}
       maloletan={user.maloletan}
@@ -92,23 +93,17 @@ export default async function ProfilPage() {
       }}
     />
     {poziv && (
-      <div className="mx-auto mt-6 max-w-3xl">
-        <KodZaRoditelja kod={poziv.kod} />
-      </div>
+      <KodZaRoditelja kod={poziv.kod} />
     )}
     {user.maloletan && (
-      <div className="mx-auto mt-6 max-w-3xl">
-        <EmailDeteta />
-      </div>
+      <EmailDeteta />
     )}
     {user.maloletan && (
-      <div className="mx-auto mt-6 max-w-3xl">
-        <IzborSkole
-          pocetna={skola ? { sifra: skola.sifra, naziv: skola.naziv, mesto: skola.mesto } : null}
-        />
-      </div>
+      <IzborSkole
+        pocetna={skola ? { sifra: skola.sifra, naziv: skola.naziv, mesto: skola.mesto } : null}
+      />
     )}
-    </>
+    </Stranica>
   );
 }
 

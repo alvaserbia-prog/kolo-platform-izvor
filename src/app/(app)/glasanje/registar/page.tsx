@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { MIN_LICA_U_ZBIRU, najmanjiBrojZaVecinu } from "@/lib/pokazatelji-pravila";
 import { intlTag } from "@/lib/format";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { dohvatiRegistarOdluka } from "@/lib/protokol/glasanje";
 import { ucitajStatus } from "@/lib/protokol/status";
@@ -14,6 +13,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import Pseudonim from "@/components/Pseudonim";
 import Kartica from "@/components/ui/Kartica";
 import PraznoStanje from "@/components/ui/PraznoStanje";
+import NaslovStranice from "@/components/ui/NaslovStranice";
 
 export async function generateMetadata() {
   const t = await getTranslations("glasanje");
@@ -36,16 +36,11 @@ export default async function RegistarOdlukaPage() {
 
   return (
     <div className="space-y-6">
-      {/* „Nazad" iznad naslova, kao na ostalim stranicama (bilo je desno u redu naslova). */}
-      <div className="space-y-2">
-        <Link href="/zrno" className="inline-flex min-h-9 items-center text-sm text-kolo-muted hover:text-kolo-green-700">
-          {t("registar_nazad")}
-        </Link>
-        <h1 className="kolo-naslov">{t("registar_naslov")}</h1>
-        <p className="text-sm text-kolo-muted">
-          {t("registar_opis")}
-        </p>
-      </div>
+      <NaslovStranice
+        nazad={{ href: "/zrno", oznaka: t("registar_nazad") }}
+        naslov={t("registar_naslov")}
+        opis={t("registar_opis")}
+      />
 
       {odluke.length === 0 ? (
         <Kartica padding="nema">

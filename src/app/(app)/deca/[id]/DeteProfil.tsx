@@ -18,6 +18,10 @@ import OznakaStatusa from "@/components/OznakaStatusa";
 import type { StatusUcesnika } from "@/lib/status-ucesnika-pravila";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import Stranica from "@/components/ui/Stranica";
 import Prekidac from "@/components/ui/Prekidac";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -118,41 +122,40 @@ export default function DeteProfil({
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <Stranica>
       {dijalog}
       {/* Zaglavlje podešavanja: ko je dete i put do njegovog profila. Stranica je
           mesto RADNJI roditelja — sam profil deteta je na `/profil/<pseudonim>`. */}
-      <p className="text-sm font-medium text-kolo-muted">{t("podesavanja_naslov")}</p>
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-        <div className="flex items-center gap-4">
-          {dete.avatar ? (
+      <NaslovSekcije varijanta="oznaka">{t("podesavanja_naslov")}</NaslovSekcije>
+      <NaslovStranice
+        slika={
+          dete.avatar ? (
             <Image src={dete.avatar} alt="" width={64} height={64} className="h-16 w-16 rounded-full object-cover" />
           ) : (
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-kolo-bg text-xl font-semibold text-kolo-muted">
               {dete.pseudonim.slice(0, 1).toUpperCase()}
             </div>
-          )}
-          <div className="min-w-0">
-            <h1 className="kolo-naslov truncate">{dete.pseudonim}</h1>
-            <p className="text-sm text-kolo-muted">
-              {/* Stanje deteta, ne opšte „dete" (paket F, F2-8): roditelj na vrhu vidi
-                  na šta se čeka. Imenuje ga samo `OznakaStatusa`. */}
-              <OznakaStatusa status={statusIzStanja(dete.stanje)} className="mr-2" />
-              {dete.godine !== null && t("godina", { broj: dete.godine })}
-            </p>
-          </div>
-          <p className="ml-auto shrink-0 text-right text-lg font-semibold tabular-nums text-kolo-text">
+          )
+        }
+        naslov={dete.pseudonim}
+        opis={
+          <>
+            {/* Stanje deteta, ne opšte „dete" (paket F, F2-8): roditelj na vrhu vidi
+                na šta se čeka. Imenuje ga samo `OznakaStatusa`. */}
+            <OznakaStatusa status={statusIzStanja(dete.stanje)} className="mr-2" />
+            {dete.godine !== null && t("godina", { broj: dete.godine })}
+          </>
+        }
+        radnja={
+          <p className="text-right text-lg font-semibold tabular-nums text-kolo-text">
             {dete.balans.toLocaleString("sr-RS")}
             <span className="ml-1 text-xs font-normal text-kolo-muted">POEN</span>
           </p>
-        </div>
-        <Link
-          href={profilHref(dete)}
-          className={klaseDugmeta({ varijanta: "sekundarno" }) + " mt-4"}
-        >
-          {t("pogledaj_profil")}
-        </Link>
-      </section>
+        }
+      />
+      <Link href={profilHref(dete)} className={klaseDugmeta({ varijanta: "sekundarno" })}>
+        {t("pogledaj_profil")}
+      </Link>
 
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
 
@@ -165,16 +168,16 @@ export default function DeteProfil({
 
       <PotvrdaPostojanja dete={dete} />
 
-      <p className="pt-2 text-sm font-medium text-kolo-muted">{t("dopisivanje_naslov")}</p>
+      <div className="pt-2"><NaslovSekcije varijanta="oznaka">{t("dopisivanje_naslov")}</NaslovSekcije></div>
 
       <Pregled deteId={dete.id} />
 
       {/* Prekidač iz čl. 20 st. 2 — jedina saglasnost koju roditelj daje posle
           otvaranja naloga. Stoji iznad razgovora sa odraslima, koje otvara. */}
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
+      <Kartica as="section" padding="lg">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h2 className="font-semibold text-kolo-text">{t("prekidac_naslov")}</h2>
+            <NaslovSekcije>{t("prekidac_naslov")}</NaslovSekcije>
             <p className="mt-1 text-sm text-kolo-muted">
               {smeSaOdraslima ? t("prekidac_opis") : t("prekidac_zatvoren")}
             </p>
@@ -188,13 +191,13 @@ export default function DeteProfil({
             />
           )}
         </div>
-      </section>
+      </Kartica>
 
       <Razgovori deteId={dete.id} />
 
       {/* Oglasi — jedino što roditelj može da ukloni (čl. 20 st. 1). */}
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-        <h2 className="font-semibold text-kolo-text">{t("oglasi_naslov")}</h2>
+      <Kartica as="section" padding="lg">
+        <NaslovSekcije>{t("oglasi_naslov")}</NaslovSekcije>
         {oglasi.length === 0 ? (
           <p className="mt-2 text-sm text-kolo-muted">{t("oglasi_prazno")}</p>
         ) : (
@@ -215,7 +218,7 @@ export default function DeteProfil({
                   <button
                     type="button"
                     onClick={() => ukloniOglas(o.id)}
-                    className="shrink-0 min-h-9 rounded-kontrola border border-kolo-border bg-kolo-surface px-3 text-sm font-semibold text-kolo-danger transition-colors hover:bg-kolo-bg"
+                    className={`${klaseDugmeta({ varijanta: "opasno", velicina: "sm" })} shrink-0`}
                   >
                     {t("dugme_ukloni")}
                   </button>
@@ -225,14 +228,14 @@ export default function DeteProfil({
           </ul>
         )}
         <p className="mt-3 text-xs text-kolo-muted">{t("oglasi_napomena")}</p>
-      </section>
+      </Kartica>
 
       <NovaLozinka deteId={dete.id} imaSvojuAdresu={dete.imaSvojuAdresu} />
 
       <PrijavaRoditeljstva deteId={dete.id} drugiRoditelji={dete.drugiRoditelji} />
 
       <BrisanjeNaloga deteId={dete.id} pseudonim={dete.pseudonim} onGotovo={() => router.push("/profil")} />
-    </div>
+    </Stranica>
   );
 }
 
@@ -274,8 +277,8 @@ function Razgovori({ deteId }: { deteId: string }) {
   }, [deteId, t]);
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="font-semibold text-kolo-text">{t("razgovori_naslov")}</h2>
+    <Kartica as="section" padding="lg">
+      <NaslovSekcije>{t("razgovori_naslov")}</NaslovSekcije>
       <p className="mt-1 text-sm text-kolo-muted">{t("razgovori_opis")}</p>
 
       {greska && <Obavestenje vrsta="greska" className="mt-2">{greska}</Obavestenje>}
@@ -320,7 +323,7 @@ function Razgovori({ deteId }: { deteId: string }) {
           </li>
         ))}
       </ul>
-    </section>
+    </Kartica>
   );
 }
 
@@ -364,13 +367,13 @@ function BrisanjeNaloga({
   }
 
   return (
-    <section className="rounded-kartica border border-kolo-danger/30 bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="font-semibold text-kolo-danger">{t("brisanje_naslov")}</h2>
+    <Kartica as="section" padding="lg" ton="opasnost">
+      <NaslovSekcije>{t("brisanje_naslov")}</NaslovSekcije>
       {!otvoreno ? (
         <button
           type="button"
           onClick={() => setOtvoreno(true)}
-          className="mt-3 min-h-10 rounded-kontrola border border-kolo-danger bg-kolo-surface px-4 text-sm font-semibold text-kolo-danger transition-colors hover:bg-kolo-danger-light"
+          className={`${klaseDugmeta({ varijanta: "opasno" })} mt-3`}
         >
           {t("brisanje_dugme")}
         </button>
@@ -406,7 +409,7 @@ function BrisanjeNaloga({
           </div>
         </div>
       )}
-    </section>
+    </Kartica>
   );
 }
 
@@ -442,8 +445,8 @@ function Pregled({ deteId }: { deteId: string }) {
   }, [deteId, t]);
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="font-semibold text-kolo-text">{t("pregled_naslov")}</h2>
+    <Kartica as="section" padding="lg">
+      <NaslovSekcije>{t("pregled_naslov")}</NaslovSekcije>
       <p className="mt-1 text-sm text-kolo-muted">{t("pregled_opis")}</p>
 
       {greska && <Obavestenje vrsta="greska" className="mt-2">{greska}</Obavestenje>}
@@ -452,7 +455,7 @@ function Pregled({ deteId }: { deteId: string }) {
       {podaci && (
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <h3 className="text-sm font-medium text-kolo-text">{t("pregled_prijatelji")}</h3>
+            <NaslovSekcije nivo={3}>{t("pregled_prijatelji")}</NaslovSekcije>
             {podaci.prijatelji.length === 0 ? (
               <p className="mt-1 text-sm text-kolo-muted">{t("pregled_prijatelji_prazno")}</p>
             ) : (
@@ -469,7 +472,7 @@ function Pregled({ deteId }: { deteId: string }) {
             )}
           </div>
           <div>
-            <h3 className="text-sm font-medium text-kolo-text">{t("pregled_razgovori")}</h3>
+            <NaslovSekcije nivo={3}>{t("pregled_razgovori")}</NaslovSekcije>
             {podaci.razgovori.length === 0 ? (
               <p className="mt-1 text-sm text-kolo-muted">{t("pregled_razgovori_prazno")}</p>
             ) : (
@@ -488,7 +491,7 @@ function Pregled({ deteId }: { deteId: string }) {
           {/* Kutija želja: SAMO tekst predloga deteta — bez stanja, odgovora i
               podrški koje je dete dalo drugoj deci. */}
           <div className="sm:col-span-2">
-            <h3 className="text-sm font-medium text-kolo-text">{t("pregled_zelje")}</h3>
+            <NaslovSekcije nivo={3}>{t("pregled_zelje")}</NaslovSekcije>
             {podaci.zelje.length === 0 ? (
               <p className="mt-1 text-sm text-kolo-muted">{t("pregled_zelje_prazno")}</p>
             ) : (
@@ -501,7 +504,7 @@ function Pregled({ deteId }: { deteId: string }) {
           </div>
         </div>
       )}
-    </section>
+    </Kartica>
   );
 }
 
@@ -553,8 +556,8 @@ function NovaLozinka({
   }
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="font-semibold text-kolo-text">{t("lozinka_naslov")}</h2>
+    <Kartica as="section" padding="lg">
+      <NaslovSekcije>{t("lozinka_naslov")}</NaslovSekcije>
       <p className="mt-1 text-sm text-kolo-muted">
         {imaSvojuAdresu ? t("lozinka_ima_adresu") : t("lozinka_opis")}
       </p>
@@ -586,7 +589,7 @@ function NovaLozinka({
           {poruka.tekst}
         </Obavestenje>
       )}
-    </section>
+    </Kartica>
   );
 }
 
@@ -624,8 +627,8 @@ function PotvrdaPostojanja({ dete }: { dete: Dete }) {
   const statusDeteta = statusIzStanja(dete.stanje);
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="font-semibold text-kolo-text">{t("postojanje_naslov")}</h2>
+    <Kartica as="section" padding="lg">
+      <NaslovSekcije>{t("postojanje_naslov")}</NaslovSekcije>
       <OznakaStatusa
         status={statusDeteta}
         varijanta="kartica"
@@ -663,7 +666,7 @@ function PotvrdaPostojanja({ dete }: { dete: Dete }) {
           </>
         ))}
       {greska && <Obavestenje vrsta="greska" className="mt-2">{greska}</Obavestenje>}
-    </section>
+    </Kartica>
   );
 }
 
@@ -708,8 +711,8 @@ function PrijavaRoditeljstva({
   }
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="font-semibold text-kolo-text">{t("prijava_naslov")}</h2>
+    <Kartica as="section" padding="lg">
+      <NaslovSekcije>{t("prijava_naslov")}</NaslovSekcije>
       <p className="mt-1 text-sm text-kolo-muted">{t("prijava_opis")}</p>
       <ul className="mt-3 space-y-2">
         {drugiRoditelji.map((r) => (
@@ -720,7 +723,7 @@ function PrijavaRoditeljstva({
                 <button
                   type="button"
                   onClick={() => setOtvoren(r.id)}
-                  className="shrink-0 min-h-9 rounded-kontrola border border-kolo-border bg-kolo-surface px-3 text-sm font-semibold text-kolo-danger transition-colors hover:bg-kolo-bg"
+                  className={`${klaseDugmeta({ varijanta: "opasno", velicina: "sm" })} shrink-0`}
                 >
                   {t("prijava_dugme")}
                 </button>
@@ -762,7 +765,7 @@ function PrijavaRoditeljstva({
       {poruka && (
         <Obavestenje vrsta={poruka.greska ? "greska" : "uspeh"} className="mt-2">{poruka.tekst}</Obavestenje>
       )}
-    </section>
+    </Kartica>
   );
 }
 
@@ -808,8 +811,8 @@ function IzjavaRoditelja({ dete }: { dete: Dete }) {
   }
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="text-lg font-medium text-kolo-text">{t("izjava_naslov")}</h2>
+    <Kartica as="section" padding="lg">
+      <NaslovSekcije>{t("izjava_naslov")}</NaslovSekcije>
       <p className="mt-1 text-sm text-kolo-muted">{t("izjava_opis_bez_roka")}</p>
       <pre className="mt-3 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-kontrola border border-kolo-border bg-kolo-surface p-4 text-sm text-kolo-text">
         {tekst}
@@ -823,7 +826,7 @@ function IzjavaRoditelja({ dete }: { dete: Dete }) {
       >
         {t("izjava_dugme")}
       </button>
-    </section>
+    </Kartica>
   );
 }
 
@@ -860,8 +863,8 @@ function PrepisiNaCekanju({ deteId, prepisi }: { deteId: string; prepisi: Prepis
   }
 
   return (
-    <section className="rounded-kartica border border-kolo-green-700/40 bg-kolo-green-50 p-6 shadow-kartica">
-      <h2 className="font-semibold text-kolo-text">{t("prepis_naslov")}</h2>
+    <Kartica as="section" padding="lg" ton="zelena">
+      <NaslovSekcije>{t("prepis_naslov")}</NaslovSekcije>
       <p className="mt-1 text-sm text-kolo-muted">{t("prepis_opis")}</p>
       {greska && <Obavestenje vrsta="greska" className="mt-2">{greska}</Obavestenje>}
 
@@ -899,6 +902,6 @@ function PrepisiNaCekanju({ deteId, prepisi }: { deteId: string; prepisi: Prepis
           </li>
         ))}
       </ul>
-    </section>
+    </Kartica>
   );
 }

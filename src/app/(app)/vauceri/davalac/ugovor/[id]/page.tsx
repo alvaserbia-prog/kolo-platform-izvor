@@ -8,6 +8,7 @@ import { jeAdmin } from "@/lib/dozvole";
 import { zaglavljePrimerka } from "@/lib/protokol/pokroviteljstvo-dobrima";
 import UgovorAkcije from "@/app/(app)/donacije/[id]/ugovor/UgovorAkcije";
 import Kartica from "@/components/ui/Kartica";
+import Stranica from "@/components/ui/Stranica";
 
 export async function generateMetadata() {
   const t = await getTranslations("vauceri");
@@ -41,7 +42,7 @@ export default async function PrimerakUgovoraDobraPage({ params }: { params: Pro
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+    <Stranica className="py-6">
       <div className="flex items-center justify-between gap-3 print:hidden">
         <Link href="/postani-pokrovitelj" className="inline-flex min-h-9 items-center text-sm text-kolo-muted hover:text-kolo-green-700">
           ← {t("primerak_nazad")}
@@ -53,6 +54,6 @@ export default async function PrimerakUgovoraDobraPage({ params }: { params: Pro
         <p className="text-xs text-kolo-muted break-all">{zaglavljePrimerka(locale, u.potpisanoAt, u.kontrolniBroj)}</p>
         <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-kolo-text">{u.ugovorTekst}</pre>
       </Kartica>
-    </div>
+    </Stranica>
   );
 }

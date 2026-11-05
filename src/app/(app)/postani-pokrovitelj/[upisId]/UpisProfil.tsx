@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import LogotipPokrovitelja from "@/components/LogotipPokrovitelja";
@@ -14,6 +13,8 @@ import ZaposleniUpisa from "./ZaposleniUpisa";
 import PodaciUpisa from "./PodaciUpisa";
 import Dugme from "@/components/ui/Dugme";
 import Segmenti from "@/components/ui/Segmenti";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import Stranica from "@/components/ui/Stranica";
 
 export type UpisZaProfil = {
   id: string;
@@ -92,27 +93,26 @@ export default function UpisProfil({
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
-      <Link href="/postani-pokrovitelj" className="inline-flex min-h-9 items-center text-sm text-kolo-muted hover:text-kolo-green-700">← {t("naslov")}</Link>
-
-      <header className="flex items-center gap-4">
-        <LogotipPokrovitelja url={upis.logoUrl} velicina={64} />
-        <div className="min-w-0">
-          <h1 className="kolo-naslov truncate">{upis.naziv}</h1>
-          <p className="text-sm text-kolo-muted">
+    <Stranica>
+      <NaslovStranice
+        nazad={{ href: "/postani-pokrovitelj", oznaka: t("naslov") }}
+        slika={<LogotipPokrovitelja url={upis.logoUrl} velicina={64} />}
+        naslov={upis.naziv}
+        opis={
+          <>
             {upis.vrsta === "GAZDINSTVO" ? t("upis_vrsta_gazdinstvo") : t("upis_vrsta_firma")}
             {" · "}
             <span className={upis.status === "ODOBREN" ? "text-kolo-green-700 font-semibold" : upis.status === "ODBIJEN" ? "text-kolo-danger font-semibold" : "text-kolo-gold-700 font-semibold"}>
               {STATUS[upis.status]}
             </span>
             {upis.izmenaNaProveri && ` · ${t("upis_izmena_na_proveri")}`}
-          </p>
-          {upis.status === "ODBIJEN" && upis.odbijenoRazlog && (
-            <p className="text-xs text-kolo-danger mt-1">{t("odbijena_razlog")} {upis.odbijenoRazlog}</p>
-          )}
-          {naListiZabrane && <p className="text-xs text-kolo-danger mt-1">{t("razlog_zabrana")}</p>}
-        </div>
-      </header>
+          </>
+        }
+      />
+      {upis.status === "ODBIJEN" && upis.odbijenoRazlog && (
+        <p className="text-xs text-kolo-danger">{t("odbijena_razlog")} {upis.odbijenoRazlog}</p>
+      )}
+      {naListiZabrane && <p className="text-xs text-kolo-danger">{t("razlog_zabrana")}</p>}
 
       <div className="flex flex-wrap gap-2">
         <Dugme onClick={() => setPanel(panel === "novac" ? null : "novac")} disabled={!!novac}>
@@ -149,6 +149,6 @@ export default function UpisProfil({
       )}
       {tab === "zaposleni" && <ZaposleniUpisa upisId={upis.id} />}
       {tab === "podaci" && <PodaciUpisa upis={upis} />}
-    </div>
+    </Stranica>
   );
 }

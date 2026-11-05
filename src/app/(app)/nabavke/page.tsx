@@ -21,5 +21,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function NabavkePage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
-  return <NabavkeKlijent />;
+  // Nabavke koristi ko je u Kolu (i član bez potvrde); dečji nalog se ne zaključava ovim obrascem.
+  return <NabavkeKlijent zakljucano={!session.user.verified && !session.user.maloletan} />;
 }

@@ -12,7 +12,7 @@
     "en|sistem.zero_sum_ok_opis": "6e58b0f89b68",
     "en|novcanik.qr_opis": "8a751f8389d5",
     "en|novcanik.opis_stranice": "336287c46c67",
-    "en|novcanik.prazno_opis": "07db6efd7266",
+    "en|novcanik.prazno_opis": "5ada17b4b359",
     "en|novcanik.zabelezen_opis": "7ef89aa50a48",
     "en|novcanik.nadoknada_opis": "2077eedb8ddf",
     "en|novcanik.putanja_zabelezen": "dec9db256f28",
@@ -508,7 +508,7 @@
     "ru|pravnaPozicija.zasto4_tekst": "91f14d37d66f",
     "ru|pravnaPozicija.zasto5_tekst": "292c1edd7fcf",
     "ru|pocetna.brojac_clanovi": "7ab9ca760daf",
-    "ru|postaniPokrovitelj.objasnjenje_dobra": "783bf6c5b954",
+    "ru|postaniPokrovitelj.objasnjenje_dobra": "769b07e4a8fb",
     "ru|notifikacije.zahtev_razgovor_tekst": "b6148cc98883",
     "ru|notifikacije.spisak_nov_tekst": "5f17833733ad",
     "ru|greske.email_je_vec_registrovan": "fc7c21d5018d",
@@ -614,6 +614,16 @@
     "ru|gazdinstva.mapa_preuzmi_vaucer": "168068700c53",
     "ru|programi.pristanak_tekst": "c15c5add62c7",
     "ru|vauceri.uzimanje_napomena": "7d93a39cee0f",
-    "ru|vauceri.preuzmi_vaucer": "168068700c53"
+    "ru|vauceri.preuzmi_vaucer": "168068700c53",
+    "en|mapa.uvod": "da22420f2988",
+    "en|gazdinstva.mapa_prijavi_se_vaucer": "0e9347b4632e",
+    "en|sistem.emisija_danas": "5bc8d0439cce",
+    "en|sistem.programi_zbir_opis": "d72eb3436650",
+    "en|novcanik.ceka_fondaciju_opis": "3bc31d1315cc",
+    "en|novcanik.na_zapisu_opis_dete": "892b7710851a",
+    "en|programi.opis_posebna_briga_n": "f9525e623291",
+    "en|programi.opis_skolovanje_n": "8d34e5ebcba2",
+    "ru|mapa.uvod": "da22420f2988",
+    "ru|gazdinstva.mapa_prijavi_se_vaucer": "0e9347b4632e"
   }
 }

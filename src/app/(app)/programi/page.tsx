@@ -89,6 +89,7 @@ export default async function ProgramiPage() {
       // Pravo ostvaruje verifikovan učesnik, i član bez potvrde (programi čl. 4).
       // Maloletni korisnik nema pravo na programe podrške (deca čl. 29 st. 4).
       imaPristupProgramima={status != null && sme("PRIJAVA_NA_PROGRAM", status)}
+      jeDete={status != null && status.startsWith("DETE_")}
       brojVerifikatora={brojVerifikatora}
       emisioniKontekst={{
         opticaj,

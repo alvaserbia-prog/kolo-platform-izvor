@@ -7,6 +7,8 @@ import { intlTag } from "@/lib/format";
 import Pseudonim from "@/components/Pseudonim";
 import LogotipPokrovitelja from "@/components/LogotipPokrovitelja";
 import AdminLogotip from "./AdminLogotip";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import { useDijalog } from "@/components/ui/Dijalog";
@@ -106,7 +108,7 @@ export default function PokroviteljUpisiTab({ onDone }: { onDone?: () => void })
       {dijalog}
       <p className="text-xs text-kolo-muted">{t("upisi_uvod")}</p>
       {upisi.length === 0 && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica"><PraznoStanje naslov={t("upisi_nema")} /></div>
+        <div className={klaseKartice({ padding: "nema" })}><PraznoStanje naslov={t("upisi_nema")} /></div>
       )}
       {upisi.map((u) => {
         const firma = u.vrsta === "FIRMA";
@@ -127,7 +129,7 @@ export default function PokroviteljUpisiTab({ onDone }: { onDone?: () => void })
           </div>
         );
         return (
-          <div key={u.id} className={`bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica p-4 space-y-2 ${u.obrisanAt ? "opacity-70" : ""}`}>
+          <div key={u.id} className={`${klaseKartice({ padding: "sm" })} space-y-2 ${u.obrisanAt ? "opacity-70" : ""}`}>
             <div className="flex items-start gap-3">
               <LogotipPokrovitelja url={u.logoUrl} />
               <div className="min-w-0 flex-1">
@@ -193,7 +195,7 @@ export default function PokroviteljUpisiTab({ onDone }: { onDone?: () => void })
 
             {u.izmenaPodnetaAt && !u.obrisanAt && (
               <div className="space-y-2 border-t border-kolo-border pt-2">
-                <p className="text-sm font-semibold text-kolo-text">{t("upisi_izmena_naslov")}</p>
+                <NaslovSekcije nivo={3} varijanta="oznaka">{t("upisi_izmena_naslov")}</NaslovSekcije>
                 {u.izmenaNaziv && <p className="text-xs text-kolo-text">{t("upisi_izmena_naziv", { naziv: u.izmenaNaziv })}</p>}
                 {u.izmenaMaticniBroj && <p className="text-xs text-kolo-text">{t("upisi_izmena_mb", { mb: u.izmenaMaticniBroj })}</p>}
                 {u.izmenaLogoUrl && (

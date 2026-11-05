@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 type Stanje = { email: string | null; naCekanju: string | null };
@@ -81,7 +82,7 @@ export default function EmailDeteta() {
   if (!stanje) return null;
 
   return (
-    <div className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-5">
+    <Kartica>
       <h2 className="text-base font-semibold text-kolo-text">{t("naslov")}</h2>
       <p className="mt-1 text-sm text-kolo-muted">{t("opis")}</p>
 
@@ -129,6 +130,6 @@ export default function EmailDeteta() {
           {poruka.tekst}
         </Obavestenje>
       )}
-    </div>
+    </Kartica>
   );
 }

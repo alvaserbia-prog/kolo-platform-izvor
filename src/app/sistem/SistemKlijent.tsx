@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { intlTag } from "@/lib/format";
-import OznakaStatusa, { type ZrnoPolozaj } from "@/components/OznakaStatusa";
 import type { StatusUcesnika } from "@/lib/status-ucesnika-pravila";
 import Link from "next/link";
 import { klaseDugmeta } from "@/components/ui/Dugme";
+import { klaseKartice } from "@/components/ui/Kartica";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import { useTranslations, useLocale } from "next-intl";
-import PageOpis from "@/components/PageOpis";
 import Pojam from "@/components/Pojam";
 import Pseudonim from "@/components/Pseudonim";
 
@@ -86,9 +87,8 @@ interface Props {
   aktivneDece: number;
   /** Korisnici: punoletni živi nalozi koji nisu u Kolu (dete se ovde ne broji). */
   korisnika: number;
-  /** Status posmatrača (set 4.8.2) — crta ga `OznakaStatusa`. */
+  /** Status posmatrača (set 4.8.2) — određuje šta se sme videti (deca), ne crta se. */
   status?: StatusUcesnika | null;
-  zrno?: ZrnoPolozaj;
   ukupnoTransakcija: number;
   danasEmitovano: number;
   danasLimit: number;
@@ -146,7 +146,6 @@ export default function SistemKlijent({
   aktivneDece,
   korisnika,
   status = null,
-  zrno = null,
   ukupnoTransakcija,
   danasEmitovano,
   danasLimit,
@@ -217,22 +216,10 @@ export default function SistemKlijent({
       {/* Sopstveni naslov: sa pozdravom „Zdravo, X" stranica se nije razlikovala
           od Početne, pa čovek nije video da je promenio stranicu. Pozdrav ostaje
           samo na Početnoj. */}
-      <h1 className="kolo-naslov">{t("naslov_stranice")}</h1>
-      <PageOpis>
-        {gost ? t("opis_gost") : t("opis_stranice")}
-      </PageOpis>
+      <NaslovStranice naslov={t("naslov_stranice")} opis={gost ? t("opis_gost") : t("opis_stranice")} />
 
-      {/* Kartica statusa (set 4.8.2) korisniku i članu bez potvrde. Korisniku je
-          put u Kolo poznanik ili „Želim da me neko nazove" (dokaz stvarnosti čl.
-          8) — uplata više ne potvrđuje stvarnost, pa prag
-          donacije ovde ne stoji. Prvi oglas ostaje kao drugi potez (Pravilnik čl. 38).
-          Članu bez potvrde kartica nosi obavezne rečenice (Pravilnik čl. 28; dokaz stvarnosti čl. 6). */}
-      {(status === "KORISNIK" || status === "CLAN_BEZ_POTVRDE") && (
-        // Na Sistemu kratko: puna kartica (sa sledećim korakom i obaveznim
-        // rečenicama) stoji na Početnoj, Profilu i Potvrdama — ovde je samo
-        // ponavljanje koje gura brojke ispod prvog ekrana.
-        <OznakaStatusa varijanta="kratko" status={status} />
-      )}
+      {/* Bez kartice statusa (odluka vlasnika 02.11.2026): status stoji na Profilu,
+          Početnoj i Potvrdama; ovde bi samo gurao brojke ispod prvog ekrana. */}
 
       {/* Kartice pokazatelja (odluka vlasnika, 24.10.2026): četiri reda po četiri,
           naslovi redova idu redom bočnog menija. Kartica sa nulom zadržava mesto i
@@ -431,14 +418,14 @@ function FondacijaSekcija() {
 
   if (stavke === null) {
     return (
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-8 text-center text-sm text-kolo-muted shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} p-8 text-center text-sm text-kolo-muted`}>
         {t("fondacija_ucitavanje")}
       </div>
     );
   }
   if (stavke.length === 0) {
     return (
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-8 text-center text-sm text-kolo-muted shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} p-8 text-center text-sm text-kolo-muted`}>
         {t("fondacija_nema_tx")}
       </div>
     );
@@ -448,7 +435,7 @@ function FondacijaSekcija() {
     new Date(iso).toLocaleDateString(intlTag(locale), { day: "2-digit", month: "2-digit", year: "2-digit" });
 
   return (
-    <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+    <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
       <div className="hidden sm:grid grid-cols-[1fr_140px_110px] gap-4 px-5 py-2.5 bg-kolo-bg border-b border-kolo-border text-xs font-semibold text-kolo-muted">
         <span>{t("fondacija_col_opis")}</span>
         <span className="text-right">{t("fondacija_col_iznos")}</span>
@@ -536,9 +523,9 @@ function FazaSekcija({ opticaj }: { opticaj: number }) {
 
   return (
     <div className="space-y-5">
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 md:p-6 shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} p-5 md:p-6`}>
         <span className="text-xs text-kolo-muted font-medium tracking-wide">{t("status_datum")}</span>
-        <h2 className="text-xl md:text-2xl font-bold text-kolo-green-900 mt-1 mb-3" style={{ letterSpacing: "-0.02em" }}>
+        <h2 className="mt-1 mb-3 text-lg font-semibold leading-snug text-kolo-text">
           {t("status_naslov")}
         </h2>
         {/* Rečenica „Prva je iza nas, u drugoj smo sada" (`oNama.status_opis`) je
@@ -680,7 +667,7 @@ function FazaSekcija({ opticaj }: { opticaj: number }) {
 function RedPokazatelja({ naslov, children }: { naslov: string; children: React.ReactNode }) {
   return (
     <section className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-kolo-muted">{naslov}</h2>
+      <NaslovSekcije varijanta="oznaka">{naslov}</NaslovSekcije>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">{children}</div>
     </section>
   );
@@ -710,13 +697,7 @@ function Pokazatelj({
   // Uniformno na telefonu (vlasnik, 24.10.2026): ista visina u redu, naslov ima
   // rezervisana dva reda, vrednost je na istom mestu, a podnaslov pri dnu — pa
   // kartica sa brojem i kartica sa rečenicom stoje poravnato jedna pored druge.
-  const klase = `flex flex-col h-full min-h-[9rem] md:min-h-[10.5rem] rounded-kartica shadow-kartica p-3.5 md:p-5 text-left transition-colors border ${
-    aktivan
-      ? "bg-kolo-green-700 border-kolo-green-700 text-white"
-      : onClick || href
-        ? "bg-kolo-surface border-kolo-border hover:border-kolo-green-500"
-        : "bg-kolo-surface border-kolo-border"
-  }`;
+  const klase = `${klaseKartice({ ton: aktivan ? "naglasena" : "obicna", padding: "nema", link: !aktivan && Boolean(onClick || href) })} flex flex-col h-full min-h-[9rem] md:min-h-[10.5rem] p-3.5 md:p-5 text-left`;
   const sadrzaj = (
     <>
       <p className={`text-sm md:text-base font-semibold leading-tight min-h-[2.5em] md:min-h-0 mb-1 ${aktivan ? "text-white/70" : "text-kolo-muted"}`}>{label}</p>
@@ -756,7 +737,7 @@ function Pokazatelj({
 function ZatvorenoGostu() {
   const t = useTranslations("sistem");
   return (
-    <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 md:p-8 text-center shadow-kartica">
+    <div className={`${klaseKartice({ padding: "nema" })} p-6 md:p-8 text-center`}>
       <p className="text-sm text-kolo-muted mb-4">{t("gost_zatvoreno")}</p>
       <div className="flex flex-wrap justify-center gap-3">
         <Link href="/registracija" className={klaseDugmeta({ varijanta: "zlatno" })}>{t("gost_pridruzi")}</Link>
@@ -803,16 +784,16 @@ function PregledSekcija({
           ne odaje, a proverljivost ostaje potpuna — zbir agregata plus ostali
           kanali daju promenu opticaja. */}
       {programiPregled.length > 0 && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
           <div className="px-5 py-3 border-b border-kolo-border">
             <p className="text-sm font-semibold text-kolo-text">{t("programi_zbir_naslov")}</p>
             <p className="text-xs text-kolo-muted mt-0.5">{t("programi_zbir_opis")}</p>
           </div>
           <div className="hidden sm:grid grid-cols-[9rem_1fr_7rem_7rem] gap-x-3 px-4 py-2 border-b border-kolo-border bg-kolo-bg">
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("col_datum")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("programi_zbir_program")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide text-right">{t("programi_zbir_korisnika")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide text-right">{tc("poen")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("col_datum")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("programi_zbir_program")}</span>
+            <span className="text-xs font-semibold text-kolo-muted text-right">{t("programi_zbir_korisnika")}</span>
+            <span className="text-xs font-semibold text-kolo-muted text-right">{tc("poen")}</span>
           </div>
           {programiPregled.map((r, i) => (
             <div
@@ -858,7 +839,7 @@ function PregledSekcija({
 
       {/* Grafikon emisija — samo za verifikovane */}
       {verified && emisijeChart.length > 0 && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} p-5`}>
           <div className="flex justify-between items-center mb-4">
             <p className="text-sm font-semibold text-kolo-text">
               {t("emisija_14_dana")}
@@ -918,7 +899,7 @@ function DonacijeSekcija({
   // st. 1); zaključana je samo detetu (`verified` ovde znači „nije dete").
   if (!verified) {
     return (
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-8 text-center shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} p-8 text-center`}>
         <p className="text-sm text-kolo-muted">
           {t("donacije_pregled_blokiran")}
         </p>
@@ -929,12 +910,12 @@ function DonacijeSekcija({
   return (
     <div className="space-y-4">
       {donacije.length === 0 ? (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-8 text-center text-sm text-kolo-muted shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} p-8 text-center text-sm text-kolo-muted`}>
           {t("nema_donacija")}
         </div>
       ) : (<>
       <p className="text-xs text-kolo-muted">{t("prikazanih_donacija", { count: donacije.length })}</p>
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
         <div className="hidden sm:grid grid-cols-[1fr_120px_110px] gap-4 px-5 py-2.5 bg-kolo-bg border-b border-kolo-border text-xs font-semibold text-kolo-muted">
           <span>{t("col_donator")}</span>
           <span className="text-right">RSD</span>
@@ -1020,14 +1001,14 @@ function IznosSekcija({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} p-5`}>
           <p className="text-xs text-kolo-muted mb-1">{t("ukupno_prometa")}</p>
           <p className="text-2xl font-bold text-kolo-text">
             {ukupanIznosTx.toLocaleString(intlTag(locale))}
           </p>
           <p className="text-xs text-kolo-muted mt-1">{t("poen_izmedju_clanova")}</p>
         </div>
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} p-5`}>
           <p className="text-xs text-kolo-muted mb-1">{t("danas")}</p>
           <p className="text-2xl font-bold text-kolo-text">
             {danasIznosTx.toLocaleString(intlTag(locale))}
@@ -1036,7 +1017,7 @@ function IznosSekcija({
         </div>
       </div>
       {transferi.length > 0 && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
           <div className="px-5 py-2.5 bg-kolo-bg border-b border-kolo-border flex justify-between items-center">
             <p className="text-xs font-semibold text-kolo-muted">
               {t("poslednjih_transfera", { count: transferi.length })}

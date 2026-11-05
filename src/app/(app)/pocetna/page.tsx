@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import OznakaStatusa from "@/components/OznakaStatusa";
 import { prikazStatusa } from "@/lib/status-prikaz";
-import ZelimDaMeNekoNazove from "@/components/verifikacija/ZelimDaMeNekoNazove";
-import { mojZahtev, osnoviZaSpisak } from "@/lib/protokol/zahtev-razgovor";
 import CekaNaTebe from "@/components/CekaNaTebe";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -19,9 +17,8 @@ import { usloviSobe, usloviSobeOdraslih } from "@/lib/protokol/pricaonica";
 import { smeUPricaonicu } from "@/lib/deca-pravila";
 import DecjaPocetna from "./DecjaPocetna";
 import { karticaSkoleZaDete } from "@/lib/protokol/skole";
-import { USLOV_RAZMENE } from "@/lib/razmena-brojac-pravila";
-import { USLOV_CLANA_U_SPISKU } from "@/lib/clanovi-spisak";
 import { klaseDugmeta } from "@/components/ui/Dugme";
+import Kartica from "@/components/ui/Kartica";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
 export async function generateMetadata(): Promise<Metadata> {
@@ -131,11 +128,10 @@ export default async function PocetnaPage() {
     );
   }
 
-  // Korisniku početna nudi spisak za poziv (dokaz stvarnosti čl. 8).
+  // Korisniku Početna kaže jedan red: da nije u Kolu i kuda dalje (odluka vlasnika
+  // 02.11.2026). Pun tekst o spisku za poziv („Želim da me neko nazove") stoji samo
+  // na Potvrdama, gde se na spisak i ulazi — tamo je vidljiv pre klika.
   const jeKorisnik = prikaz?.status === "KORISNIK";
-  const [osnoviSpiska, zahtevNaSpisku] = jeKorisnik
-    ? await Promise.all([osnoviZaSpisak(session.user.id), mojZahtev(session.user.id)])
-    : [[], null];
 
   // Članu Kola, čuvaru i osnivaču Početna kaže šta čeka baš njega (spisak za
   // poziv, potvrda postojanja deteta; nadzor dodaje klijent iz `useMe`).
@@ -159,13 +155,11 @@ export default async function PocetnaPage() {
   const mojaAdresa = await prisma.user.findUnique({ where: { id: session.user.id }, select: { email: true } });
   const roditelj = await cekaRoditelja(session.user.id, mojaAdresa?.email ?? null);
   const tPocetna = await getTranslations("pocetna");
+  const tCommon = await getTranslations("common");
 
-  // Brojač na vrhu početne: korisnici, oglasi, razmene, opticaj. Isti izvor kao
-  // kartice na /sistem — „razmene" su prenosi između korisnika (TRANSFER) od
-  // najmanje `MIN_POEN_RAZMENE` (uslov stoji na jednom mestu, u
-  // `razmena-brojac-pravila.ts`), a „opticaj" apsolutna vrednost protivzapisa
-  // Protokola.
-  const [blogObjave, chatPoruke, clanovi, oglasi, razmene, protokol] = await Promise.all([
+  // Brojke zajednice (korisnici, oglasi, razmene, ukupno POEN-a) više nisu na
+  // Početnoj — ostaju na /sistem (odluka vlasnika 02.11.2026).
+  const [blogObjave, chatPoruke] = await Promise.all([
     prisma.blogPost.findMany({
       orderBy: { publishedAt: "desc" },
       take: 5,
@@ -180,13 +174,6 @@ export default async function PocetnaPage() {
       take: 100,
       include: { user: { select: { id: true, pseudonim: true, verified: true, avatar: true } } },
     }),
-    // Korisnici: živi punoletni nalozi (pravilo 19), bez dece (deca čl. 2 st. 2).
-    prisma.user.count({ where: { ...USLOV_CLANA_U_SPISKU, maloletan: false } }),
-    // Isti uslov kao spisak koji ovaj član vidi na Pijaci — broj ne sme da bude
-    // veći od onoga što se tamo nađe.
-    prisma.marketplaceListing.count({ where: { status: "ACTIVE", seller: usloviVidljivostiOglasa(ja) } }),
-    prisma.transaction.count({ where: { ...USLOV_RAZMENE } }),
-    prisma.wallet.findUnique({ where: { id: "banka-singleton" }, select: { balance: true } }),
   ]);
 
   const blog = blogObjave.map((o) => ({
@@ -213,40 +200,39 @@ export default async function PocetnaPage() {
   return (
     <PocetnaKlijent
       pseudonim={session.user.pseudonim}
-      verified={session.user.verified}
       currentUserId={session.user.id}
       blog={blog}
       chatInicijalno={chat}
       jeAdminViewer={jeAdmin(session.user)}
-      // Kartica po statusu (set 4.8.2) — korisniku status i „Želim da me neko
-      // nazove" (komponenta spiska za poziv), članu bez potvrde obavezne rečenice
-      // (Pravilnik čl. 2, 28; dokaz stvarnosti čl. 6; Uslovi čl. 2). Član Kola, čuvar i osnivač ovde ne
-      // dobijaju karticu.
+      // Po statusu (set 4.8.2; odluka vlasnika 02.11.2026): korisniku jedan red
+      // „Još nisi u Kolu." sa putem na Potvrde; članu bez potvrde kartica sa
+      // obaveznim rečenicama (Pravilnik čl. 2, 28; dokaz stvarnosti čl. 6; Uslovi
+      // čl. 2). Član Kola, čuvar i osnivač dobijaju samo „Čeka na tebe".
       karticaStatusa={
-        prikaz && (prikaz.status === "KORISNIK" || prikaz.status === "CLAN_BEZ_POTVRDE") ? (
+        jeKorisnik ? (
+          <div className="space-y-4">
+            <Kartica padding="sm" className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+              <p className="text-sm font-medium text-kolo-text">{tPocetna("nisi_u_kolu")}</p>
+              <Link href="/verifikacija" className="inline-flex min-h-10 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
+                {tCommon("kako_u_kolo")} →
+              </Link>
+            </Kartica>
+            <CekaNaTebe roditelj={roditelj} />
+          </div>
+        ) : prikaz?.status === "CLAN_BEZ_POTVRDE" ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
             <OznakaStatusa varijanta="kartica" svoj status={prikaz.status} zrno={prikaz.zrno}>
               {/* Sledeći korak kao dugme, ne kao poslednja rečenica kartice. */}
-              <Link
-                href={prikaz.status === "KORISNIK" ? "/pijaca/novi-oglas" : "/verifikacija"}
-                className={klaseDugmeta() + " mt-4"}
-              >
-                {prikaz.status === "KORISNIK" ? tPocetna("dugme_prvi_oglas") : tPocetna("dugme_pokazi_kod")}
+              <Link href="/verifikacija" className={klaseDugmeta() + " mt-4"}>
+                {tPocetna("dugme_pokazi_kod")}
               </Link>
             </OznakaStatusa>
-            {jeKorisnik && <ZelimDaMeNekoNazove osnovi={osnoviSpiska} mojZahtev={zahtevNaSpisku} />}
             <CekaNaTebe roditelj={roditelj} />
           </div>
         ) : jePotvrdjen ? (
           <CekaNaTebe spisak={naSpisku} postojanjeDeteta={postojanjeDeteta} roditelj={roditelj} />
         ) : null
       }
-      brojac={{
-        clanovi,
-        oglasi,
-        razmene,
-        opticaj: protokol ? Math.abs(protokol.balance) : 0,
-      }}
     />
   );
 }

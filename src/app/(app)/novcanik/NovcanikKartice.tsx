@@ -13,6 +13,14 @@ import { dogadjaj } from "@/lib/analitika";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Fioka from "@/components/ui/Fioka";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+
+/** Puno belo dugme na zelenom zaglavlju (odluka vlasnika 02.11.2026: ne providno). */
+const KLASE_BELOG_DUGMETA =
+  "inline-flex min-h-11 items-center justify-center rounded-kontrola bg-white px-5 text-sm font-semibold text-kolo-green-800 transition-colors hover:bg-kolo-green-50";
 
 // qrcode.react se deli sa html5-qrcode u isti veliki chunk (~361KB). Učitava se
 // LENJO — QR se prikazuje tek kad korisnik otvori karticu za upis POEN-a, pa ne
@@ -110,81 +118,66 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
 
   return (
     <>
-      {/* Gornja kartica: balans POEN (ZRNO kartica privremeno uklonjena) */}
-      <div>
-        {/* Balans kartica: dugmad levo (jedno ispod drugog), stanje veliko desno.
+      <div className="space-y-3">
+        {/* Zeleno zaglavlje POEN-a (odluka vlasnika 02.11.2026): kartica stanja JESTE
+            zaglavlje stranice — ista tamnozelena ploča kao na Vaučerima
+            (`NaslovStranice varijanta="istaknuto"`), bez vidljivog naslova „POEN" iznad.
+            Gore krupno „Na tvom zapisu" i broj, ispod puna bela dugmad.
 
-            🟢 Kartica je zelena SVIMA (odluka vlasnika, 13.10.2026). Do tada je ko ne sme
-            da prepisuje dobijao belu karticu, da zelena ne bi obećavala raspolaganje koje
-            pravilo ne daje. Ostaje ono što nosi pravilo: takav nalog na velikom broju vidi
-            koliko SME da prepiše, dakle nulu, uz oznaku ispod broja i objašnjenje u
-            kartici, a koliko mu je stvarno evidentirano stoji u redu „Na tvom zapisu"
-            odmah ispod. Dugme za prepis i skener mu se i dalje ne prikazuju.
+            🟢 Ploča je zelena SVIMA (odluka vlasnika, 13.10.2026). Ostaje ono što nosi
+            pravilo: ko ne sme da prepisuje (dete koje nije dete Kola, nalog u nadoknadi)
+            na velikom broju vidi koliko SME da prepiše, dakle nulu, pod naslovom
+            „Raspoloživo za prepis", a koliko mu je stvarno evidentirano stoji u redu
+            „Na tvom zapisu" odmah ispod ploče. Dugme za prepis i skener mu se ne prikazuju.
 
-            🔴 Pun ton je `bg-kolo-green-700`, a prelaz ide preko njega. Prelaz sam nije
-            dovoljan: stara klasa za prelaz (`gradient-to`) daje `in oklab` bez rezerve, pa ga
-            pregledač koji to ne zna odbaci celog — kartica je ostajala bela, sa belim
-            slovima, i kod onoga ko sme da prepisuje. Brana: `novcanik-kartica-izvor.test.ts`.
+            🔴 Pun ton ploče je `bg-kolo-green-900`, a prelaz ide preko njega (`bg-linear-*`,
+            nikad stara klasa `gradient-to`, koja daje `in oklab` bez rezerve — ploča je
+            ostajala bela, sa belim slovima). Brana: `novcanik-kartica-izvor.test.ts`.
 
             🟢 „Moj QR" OSTAJE i takvom nalogu, i to namerno: takav nalog sme da PRIMA,
-            a QR je način da mu se prepiše POEN za prodato dobro. To mu
-            je ujedno i put do potvrde (Pravilnik čl. 38), pa bi sklanjanje tog dugmeta zatvorilo
-            ulaz kroz Pijacu. Skener se sklanja jer vodi u suprotnom smeru — u obrazac
-            za prepis DRUGOME. */}
-        <div className="bg-kolo-green-700 bg-linear-to-br from-kolo-green-700 to-kolo-green-500 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between gap-4">
-            {/* LEVO — dugmad jedno ispod drugog */}
-            <div className="flex flex-col gap-3 shrink-0">
-              {smeDaPrepisuje && (
-                <button
-                  onClick={() => setShowSend(true)}
-                  className="min-h-10 px-5 bg-kolo-surface text-kolo-green-700 text-sm font-semibold rounded-kontrola hover:bg-kolo-green-100 transition-colors"
-                >
-                  {t("posalji_poen")}
-                </button>
-              )}
-              {/* Skener otvara obrazac za prepis, pa ga ne vidi ko ne sme da prepisuje. */}
-              {smeDaPrepisuje && (
-                <button
-                  onClick={() => setShowSkener(true)}
-                  className="min-h-10 px-5 bg-white/20 text-white text-sm font-semibold rounded-kontrola hover:bg-white/30 transition-colors border border-white/30"
-                >
-                  {t("skeniraj_dugme")}
-                </button>
-              )}
-              <button
-                onClick={() => setShowQR(true)}
-                className="min-h-10 px-5 bg-white/20 text-white text-sm font-semibold rounded-kontrola hover:bg-white/30 transition-colors border border-white/30"
-              >
-                {t("moj_qr")}
-              </button>
-            </div>
+            a QR je način da mu se prepiše POEN za prodato dobro. To mu je ujedno i put do
+            potvrde (Pravilnik čl. 38). Skener se sklanja jer vodi u suprotnom smeru — u
+            obrazac za prepis DRUGOME. */}
+        <NaslovStranice
+          varijanta="istaknuto"
+          naslov={
+            <>
+              {/* Jedini h1 stranice; čitač ekrana čuje i ime ekrana. */}
+              <span className="sr-only">{tc("poen")}: </span>
+              {smeDaPrepisuje ? t("na_zapisu_naslov") : t("raspolozivo_naslov")}
+            </>
+          }
+          opis={t("zaglavlje_opis")}
+        >
+          <p className="text-4xl font-bold tracking-tight tabular-nums break-words sm:text-5xl">
+            {(smeDaSalje ? raspolozivo(balance) : 0).toLocaleString(intlTag(locale))}
+            <span className="ml-2 text-lg font-semibold text-white/85">{tc("poen")}</span>
+          </p>
 
-            {/* DESNO — stanje veliko */}
-            <div className="text-right min-w-0">
-              <p className="text-4xl sm:text-5xl font-bold tracking-tight tabular-nums break-words">
-                {(smeDaSalje ? raspolozivo(balance) : 0).toLocaleString(intlTag(locale))}
-              </p>
-              <p className="text-lg text-white/70 mt-0.5">
-                {tc("poen")}
-              </p>
-              {/* Bez ove oznake veliki broj se i dalje čita kao „stanje računa". */}
-              {!smeDaSalje && (
-                <p className="text-sm text-white/80 mt-0.5">{t("raspolozivo_labela")}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Objašnjenje stoji UZ broj, u istoj kartici. Do ove izmene je stajalo ispod
-              svih redova, pa se na dužem ekranu nije videlo u istom pogledu sa brojem
-              koji objašnjava — a bez njega nula izgleda kao da je nešto nestalo. */}
-          {/* Punoletnom bez prepisa (nalog u nadoknadi) razlog kaže red „Nadoknada";
-              rečenica „prepis ti nije otvoren" bila je ostatak iz vremena kad
-              korisnik nije prepisivao (filter, 24.10.2026). */}
+          {/* Objašnjenje stoji UZ broj, u istoj ploči — bez njega nula izgleda kao da je
+              nešto nestalo. Punoletnom bez prepisa (nalog u nadoknadi) razlog kaže red
+              „Nadoknada" ispod ploče. */}
           {!smeDaSalje && razlogZabrane === "ceka_roditelja" && (
-            <p className="mt-4 text-sm text-white/85">{t("ceka_roditelja")}</p>
+            <p className="mt-2 text-sm text-white/85">{t("ceka_roditelja")}</p>
           )}
-        </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {smeDaPrepisuje && (
+              <button type="button" onClick={() => setShowSend(true)} className={KLASE_BELOG_DUGMETA}>
+                {t("posalji_poen")}
+              </button>
+            )}
+            {/* Skener otvara obrazac za prepis, pa ga ne vidi ko ne sme da prepisuje. */}
+            {smeDaPrepisuje && (
+              <button type="button" onClick={() => setShowSkener(true)} className={KLASE_BELOG_DUGMETA}>
+                {t("skeniraj_dugme")}
+              </button>
+            )}
+            <button type="button" onClick={() => setShowQR(true)} className={KLASE_BELOG_DUGMETA}>
+              {t("moj_qr")}
+            </button>
+          </div>
+        </NaslovStranice>
 
         {/* Forma za prepis POEN-a stoji ODMAH ispod kartice sa stanjem, a iznad
             redova sa zabeleženim doprinosom i potvrdama. Razlog je redosled
@@ -193,7 +186,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             klik nije video i delovalo je kao da dugme ne radi. Redovi ispod su
             stanje koje se čita, obrazac je radnja koja se izvodi. */}
         {showSend && (
-          <div className="mt-3">
+          <div>
             <SendForma
               onClose={() => setShowSend(false)}
               onSuccess={() => { setShowSend(false); window.dispatchEvent(new Event("balans-updated")); router.refresh(); }}
@@ -211,10 +204,9 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
         {uNadoknadi && (
           <Obavestenje
             vrsta="upozorenje"
-            className="mt-3"
             naslov={
               <span className="flex items-baseline justify-between gap-3">
-                <span>{t(maloletan ? "nadoknada_naslov_dete" : "nadoknada_naslov")}</span>
+                <span>{t("nadoknada_naslov")}</span>
                 <span className="text-lg font-bold tabular-nums">
                   {iznosNadoknade(balance).toLocaleString(intlTag(locale))} {tc("poen")}
                 </span>
@@ -235,7 +227,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             🔴 Ovo NIJE isto što i zabeleženo ispod: ovde je POEN upisan u Protokol,
             tamo zapis još ne postoji (Pravilnik čl. 38 st. 2). Dva reda se ne spajaju. */}
         {!smeDaSalje && raspolozivo(balance) > 0 && (
-          <div className="mt-3 rounded-kartica border border-kolo-border bg-kolo-surface px-5 py-4 shadow-kartica">
+          <Kartica padding="nema" className="px-5 py-4">
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-sm font-semibold text-kolo-text">{t("na_zapisu_naslov")}</p>
               <p className="text-lg font-bold tabular-nums text-kolo-green-700">
@@ -245,7 +237,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             {razlogZabrane === "ceka_roditelja" && (
               <p className="text-sm text-kolo-muted mt-1">{t("na_zapisu_opis_dete")}</p>
             )}
-          </div>
+          </Kartica>
         )}
 
         {/* Zabeležen doprinos — JEDAN broj za sve što čeka uslov, sa razlaganjem na
@@ -269,7 +261,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             upisan u zapis, samo je vezan do preuzimanja (nabavke čl. 21 st. 3) — drugi institut
             i drugi ishod. */}
         {zabelezenoUkupno > 0 && (
-          <div className="mt-3 rounded-kartica border border-kolo-border bg-kolo-surface px-5 py-4 shadow-kartica">
+          <Kartica padding="nema" className="px-5 py-4">
             {/* Zatvoreno stanje nosi SAMO naziv i iznos (odluka vlasnika): rečenica
                 objašnjenja je sklonjena, a znak da se red otvara je strelica. Ceo red
                 je dugme — meta od jednog reda je na telefonu pouzdanija od male
@@ -332,7 +324,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                     )}
                     {/* Put do prvog doprinosa odmah uz broj (simulirani korisnici,
                         24.10.2026) — ista radnja kao na Potvrdama. */}
-                    <Link href="/pijaca/novi-oglas" className="mt-1 inline-flex min-h-9 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
+                    <Link href="/pijaca/novi-oglas" className="mt-1 inline-flex min-h-10 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
                       {t("objavi_ponudu")}
                     </Link>
                     {zabelezenGazdinstvo > 0 && (
@@ -364,7 +356,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                         </p>
                         {/* Spisak ljudi stoji jednom — na Potvrdama (odluka vlasnika,
                             24.10.2026); ovde zbir i veza. */}
-                        <Link href="/verifikacija#zabelezene" className="mt-1 inline-flex min-h-9 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
+                        <Link href="/verifikacija#zabelezene" className="mt-1 inline-flex min-h-10 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
                           {t("zabelezene_vidi")}
                         </Link>
                       </div>
@@ -380,7 +372,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                     brane. */}
               </div>
             )}
-          </div>
+          </Kartica>
         )}
 
         {/* Rezervisano za kolektivnu nabavku (Pravilnik o projektima i kolektivnim
@@ -388,7 +380,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             razlog kao zabeležen doprinos. Red se prikazuje samo kad rezervacija
             postoji; do preuzimanja POEN nije poništen (čl. 25 st. 2). */}
         {rezervisanoNabavka > 0 && (
-          <div className="mt-3 rounded-kartica border border-kolo-border bg-kolo-surface px-5 py-4 shadow-kartica">
+          <Kartica padding="nema" className="px-5 py-4">
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-sm font-semibold text-kolo-text">{t("rezervisano_nabavka")}</p>
               <p className="text-lg font-bold tabular-nums text-kolo-green-700">
@@ -396,7 +388,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
               </p>
             </div>
             <p className="text-sm text-kolo-muted mt-1">{t("rezervisano_nabavka_opis")}</p>
-          </div>
+          </Kartica>
         )}
 
 
@@ -419,7 +411,6 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
 
 function SkenerModal({ onClose }: { onClose: () => void }) {
   const t = useTranslations("novcanik");
-  const tc = useTranslations("common");
   const router = useRouter();
   const [greska, setGreska] = useState("");
 
@@ -447,12 +438,7 @@ function SkenerModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-kolo-surface rounded-kartica shadow-xl w-full max-w-sm p-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-base font-semibold text-kolo-text">{t("skener_naslov")}</h3>
-          <button type="button" onClick={onClose} aria-label={tc("zatvori")} className="inline-flex h-10 w-10 -m-2 items-center justify-center text-kolo-muted hover:text-kolo-text text-xl leading-none">×</button>
-        </div>
+    <Fioka naslov={t("skener_naslov")} onZatvori={onClose} sirina="sm">
         <p className="text-sm text-kolo-muted">{t("skener_opis")}</p>
         {greska && (
           <Obavestenje vrsta="greska">{greska}</Obavestenje>
@@ -462,8 +448,7 @@ function SkenerModal({ onClose }: { onClose: () => void }) {
           onZatvori={onClose}
           uputstvo={t("skener_uputstvo")}
         />
-      </div>
-    </div>
+    </Fioka>
   );
 }
 
@@ -584,10 +569,15 @@ function SendForma({ onClose, onSuccess, initialPseudonim, initialIznos, initial
   }
 
   return (
-    <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-5 shadow-kartica">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-base font-semibold text-kolo-muted">{t("send_naslov")}</h2>
-        <button type="button" onClick={onClose} aria-label={tc("zatvori")} className="inline-flex h-10 w-10 -m-2 items-center justify-center text-kolo-muted hover:text-kolo-text text-xl leading-none">×</button>
+    <Kartica>
+      <div className="mb-4">
+        <NaslovSekcije
+          radnja={
+            <button type="button" onClick={onClose} aria-label={tc("zatvori")} className="inline-flex h-10 w-10 -m-2 items-center justify-center rounded-kontrola text-kolo-muted hover:text-kolo-text text-xl leading-none">×</button>
+          }
+        >
+          {t("send_naslov")}
+        </NaslovSekcije>
       </div>
       <form onSubmit={handleSubmit} noValidate className="space-y-3">
         <div className="relative" ref={wrapperRef}>
@@ -669,7 +659,7 @@ function SendForma({ onClose, onSuccess, initialPseudonim, initialIznos, initial
           </button>
         </div>
       </form>
-    </div>
+    </Kartica>
   );
 }
 
@@ -704,13 +694,11 @@ function QRModal({ pseudonim, memberHash, onClose }: { pseudonim: string; member
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-kolo-surface rounded-kartica shadow-xl w-full max-w-xs p-6 space-y-4 text-center">
-        <h3 className="text-base font-semibold text-kolo-text">{t("qr_naslov")}</h3>
+    <Fioka naslov={t("qr_naslov")} onZatvori={onClose} sirina="sm">
         <p className="text-sm text-kolo-muted">{t("qr_opis")}</p>
 
         <div className="space-y-2 text-left">
-          <Polje oznaka={<>{t("qr_iznos")} <span className="text-kolo-border font-normal">({tc("opciono")})</span></>}>
+          <Polje oznaka={<>{t("qr_iznos")} <span className="text-kolo-muted font-normal">({tc("opciono")})</span></>}>
             <input
               type="number"
               min={1}
@@ -721,7 +709,7 @@ function QRModal({ pseudonim, memberHash, onClose }: { pseudonim: string; member
               className={KLASE_UNOSA + " font-mono"}
             />
           </Polje>
-          <Polje oznaka={<>{tc("opis")} <span className="text-kolo-border font-normal">({tc("opciono")})</span></>}>
+          <Polje oznaka={<>{tc("opis")} <span className="text-kolo-muted font-normal">({tc("opciono")})</span></>}>
             <input
               type="text"
               maxLength={100}
@@ -742,7 +730,7 @@ function QRModal({ pseudonim, memberHash, onClose }: { pseudonim: string; member
             level="M"
           />
         </div>
-        <p className="text-sm font-semibold text-kolo-green-700 font-mono"><Pseudonim>{pseudonim}</Pseudonim></p>
+        <p className="text-center text-sm font-semibold text-kolo-green-700 font-mono"><Pseudonim>{pseudonim}</Pseudonim></p>
         <div className="flex gap-2">
           <button
             onClick={kopiraj}
@@ -757,7 +745,6 @@ function QRModal({ pseudonim, memberHash, onClose }: { pseudonim: string; member
             {tc("zatvori")}
           </button>
         </div>
-      </div>
-    </div>
+    </Fioka>
   );
 }

@@ -27,6 +27,8 @@ import { intlTag } from "@/lib/format";
 import Pseudonim from "@/components/Pseudonim";
 // Prijave lažnog roditeljstva (deca čl. 17) — odluka ovlašćenog lica, isti tab.
 import PrijaveRoditeljstva from "./PrijaveRoditeljstva";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -222,7 +224,7 @@ export default function OdlukeTab() {
     <div className="space-y-4">
       {dijalog}
       <div>
-        <h2 className="text-lg font-semibold text-kolo-text">Odluke o spornim potvrdama</h2>
+        <NaslovSekcije>Odluke o spornim potvrdama</NaslovSekcije>
         <p className="text-sm text-kolo-muted">
           Predmeti koje su otvorili nadzornici ishodom „za proveru" ili „sporno" (čl. 27).
           Predmet sam po sebi ne proizvodi dejstvo prema članu — lažnu potvrdu
@@ -242,17 +244,17 @@ export default function OdlukeTab() {
       )}
 
       {ucitava ? (
-        <div className="rounded-kartica border border-kolo-border bg-kolo-surface p-8 text-center text-kolo-muted shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} p-8 text-center text-kolo-muted`}>
           Učitavanje…
         </div>
       ) : predmeti.length === 0 ? (
-        <div className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica">
+        <div className={klaseKartice({ padding: "nema" })}>
           <PraznoStanje naslov="Nema predmeta." />
         </div>
       ) : (
         <div className="space-y-3">
           {predmeti.map((p) => (
-            <div key={p.id} className="rounded-kartica border border-kolo-border bg-kolo-surface p-4 space-y-3 shadow-kartica">
+            <div key={p.id} className={`${klaseKartice({ padding: "sm" })} space-y-3`}>
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="text-sm">
                   <div className="text-xs font-semibold text-kolo-muted mb-0.5">

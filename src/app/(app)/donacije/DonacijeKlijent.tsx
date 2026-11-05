@@ -3,7 +3,10 @@
 import Link from "next/link";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
-import Dugme from "@/components/ui/Dugme";
+import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
+import Ucitavanje from "@/components/ui/Ucitavanje";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import Segmenti from "@/components/ui/Segmenti";
 import { RACUN_FONDACIJE } from "@/lib/placanje/racun-fondacije";
@@ -171,8 +174,8 @@ export default function DonacijeKlijent() {
     }
   }
 
-  if (loading) return <div className="max-w-xl mx-auto py-12 text-center text-kolo-muted text-sm">{tc("ucitavanje")}</div>;
-  if (!data) return <div className="max-w-xl mx-auto py-12 text-center text-kolo-danger text-sm">{tc("greska_ucitavanja")}</div>;
+  if (loading) return <Stranica><Ucitavanje className="py-12 text-center" /></Stranica>;
+  if (!data) return <Stranica><Obavestenje vrsta="greska">{tc("greska_ucitavanja")}</Obavestenje></Stranica>;
 
   const sledeci = data.rangTabela.find((r) => r.nivo === data.trenutniNivo + 1);
 
@@ -187,39 +190,44 @@ export default function DonacijeKlijent() {
   }
 
   return (
-    <div className="space-y-6">
+    <Stranica>
       {dijalog}
-      <NaslovStranice naslov={t("naslov")} />
+      {/* Zeleno zaglavlje (odluka vlasnika 02.11.2026): rečenica o nepovratnosti,
+          nivo i ukupan iznos donacija, radnja vodi na izbor uplate. */}
+      <NaslovStranice
+        varijanta="istaknuto"
+        naslov={t("naslov")}
+        opis={t("objasnjenje")}
+        brojke={[
+          { vrednost: t("nivo", { n: data.trenutniNivo }), oznaka: t("zaglavlje_nivo") },
+          { vrednost: `${data.kumulativRSD.toLocaleString(intlTag(locale))} RSD`, oznaka: t("zaglavlje_ukupno") },
+        ]}
+        radnja={
+          <a href="#uplata" className={klaseDugmeta({ varijanta: "sekundarno" })}>
+            {t("zaglavlje_doniraj")}
+          </a>
+        }
+      />
 
       {/* Ishod kartičnog plaćanja (povratak sa gateway-a) */}
       {ishod === "uspeh" && (
         <Obavestenje vrsta="uspeh">{t("placanje_uspeh")}</Obavestenje>
       )}
       {ishod === "neuspeh" && (
-        <Obavestenje vrsta="upozorenje">{t("placanje_neuspeh")}</Obavestenje>
+        <Obavestenje vrsta="greska">{t("placanje_neuspeh")}</Obavestenje>
       )}
       {ishod === "greska" && (
         <Obavestenje vrsta="greska">{t("placanje_greska")}</Obavestenje>
       )}
 
-      {/* Beta napomena */}
-      <Obavestenje vrsta="upozorenje" naslov={t("beta_naslov")}>
-        <p>{t("beta_opis")}</p>
-      </Obavestenje>
-
-      {/* Objašnjenje */}
-      <Kartica>
-        <p className="text-sm text-kolo-muted">{t("objasnjenje")}</p>
-      </Kartica>
-
       {/* Udruženje ili firma doniraju kao pokrovitelji (C2, zajednica, 24.10.2026). */}
       <p className="text-sm">
-        <Link href="/postani-pokrovitelj" className="font-semibold text-kolo-green-700 hover:underline">{t("pokrovitelj_link")}</Link>
+        <Link href="/postani-pokrovitelj" className="inline-flex min-h-10 items-center font-semibold text-kolo-green-700 hover:underline">{t("pokrovitelj_link")}</Link>
       </p>
 
       {/* Vrsta donacije — javna (POEN, ime javno) ili anonimna (bez POEN); važi za IPS i karticu */}
-      <Kartica className="space-y-2">
-        <p className="text-sm font-semibold text-kolo-text">{t("vidljivost_naslov")}</p>
+      <Kartica className="space-y-2" id="uplata">
+        <NaslovSekcije nivo={2}>{t("vidljivost_naslov")}</NaslovSekcije>
         <label className={`flex items-start gap-2 rounded-kontrola border p-3 cursor-pointer transition-colors ${javno ? "border-kolo-green-700/50 bg-kolo-green-100/40" : "border-kolo-border"}`}>
           <input type="radio" name="vidljivost" checked={javno} onChange={() => setJavno(true)} className="mt-0.5" />
           <span className="text-xs">
@@ -240,7 +248,9 @@ export default function DonacijeKlijent() {
       </Kartica>
 
       {/* Način plaćanja (C2, uloga 1, 24.10.2026): tri načina kao jezičci, vidi se
-          samo izabrani — ranije su sva tri stajala jedan ispod drugog. */}
+          samo izabrani — ranije su sva tri stajala jedan ispod drugog. Da kartica i
+          IPS još nisu uključeni kaže običan red ispod (jedno upozorenje po ekranu). */}
+      <div className="space-y-2">
       <Segmenti
         oznaka={t("nacin_oznaka")}
         punaSirina
@@ -252,6 +262,8 @@ export default function DonacijeKlijent() {
           { vrednost: "uplatnica", oznaka: t("nacin_uplatnica") },
         ]}
       />
+      <p className="text-sm text-kolo-muted">{t("beta_opis")}</p>
+      </div>
 
       {/* IPS QR — instant dinarska uplata skeniranjem mobilnom bankom */}
       {nacin === "ips" && <IpsQrPlacanje javno={javno} />}
@@ -260,7 +272,7 @@ export default function DonacijeKlijent() {
       {nacin === "kartica" && (
       <Kartica className="space-y-4">
         <div>
-          <p className="text-sm font-semibold text-kolo-text">{t("karticno_naslov")}</p>
+          <NaslovSekcije nivo={3}>{t("karticno_naslov")}</NaslovSekcije>
           <p className="text-xs text-kolo-muted mt-0.5">
             {t("karticno_opis")}
           </p>
@@ -309,7 +321,7 @@ export default function DonacijeKlijent() {
       {/* Instrukcije za uplatu */}
       {nacin === "uplatnica" && (
       <Kartica className="space-y-4">
-        <p className="text-sm font-semibold text-kolo-text">{t("instrukcije")}</p>
+        <NaslovSekcije nivo={3}>{t("instrukcije")}</NaslovSekcije>
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
             <span className="text-kolo-muted">{t("primalac")}</span>
@@ -344,39 +356,27 @@ export default function DonacijeKlijent() {
       </Kartica>
       )}
 
-      {/* Rang */}
-      <Kartica>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-kolo-text">{t("vas_rang")}</p>
-            <p className="text-3xl font-bold text-kolo-green-700 mt-1">{t("nivo", { n: data.trenutniNivo })}</p>
-            <p className="text-xs text-kolo-muted mt-0.5">
-              {t("kumulativ")} {data.kumulativRSD.toLocaleString(intlTag(locale))} RSD
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-kolo-muted">{t("trenutni_kurs")}</p>
-            <p className="text-2xl font-bold text-kolo-gold-700">{data.trenutniKurs.toFixed(2)}</p>
-            <p className="text-xs text-kolo-muted">{t("kurs_opis")}</p>
-          </div>
+      {/* Koeficijent dostignutog nivoa — nivo i ukupan iznos su u zaglavlju. */}
+      <Kartica className="space-y-2">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-sm font-semibold text-kolo-text">{t("trenutni_kurs")} <span className="font-normal text-kolo-muted">{t("kurs_opis")}</span></p>
+          <p className="text-2xl font-bold text-kolo-gold-700">{data.trenutniKurs.toFixed(2)}</p>
         </div>
-        <div className="mt-4 pt-4 border-t border-kolo-border space-y-1">
-          <p className="text-xs text-kolo-muted">{t("rang_pojasnjenje")}</p>
-          {sledeci && (
-            <p className="text-xs text-kolo-muted">
-              {t("do_nivoa", { n: sledeci.nivo, kurs: sledeci.kurs.toFixed(2) })}{" "}
-              <span className="font-semibold text-kolo-text">
-                {(sledeci.do - data.kumulativRSD).toLocaleString(intlTag(locale))} RSD
-              </span>
-            </p>
-          )}
-        </div>
+        <p className="text-xs text-kolo-muted">{t("rang_pojasnjenje")}</p>
+        {sledeci && (
+          <p className="text-xs text-kolo-muted">
+            {t("do_nivoa", { n: sledeci.nivo, kurs: sledeci.kurs.toFixed(2) })}{" "}
+            <span className="font-semibold text-kolo-text">
+              {(sledeci.do - data.kumulativRSD).toLocaleString(intlTag(locale))} RSD
+            </span>
+          </p>
+        )}
       </Kartica>
 
       {/* Tabela rangova — sklopljena, otvara se klikom (C2, uloga 1). */}
       <Kartica padding="nema" className="overflow-hidden">
         <details>
-        <summary className="px-4 py-3 border-b border-kolo-border cursor-pointer text-sm font-semibold text-kolo-text">
+        <summary className="flex min-h-11 items-center px-4 py-3 border-b border-kolo-border cursor-pointer text-sm font-semibold text-kolo-text">
           {t("tabela_naslov")}
         </summary>
         <div className="overflow-x-auto">
@@ -416,8 +416,8 @@ export default function DonacijeKlijent() {
       </Kartica>
 
       {/* Istorija donacija */}
-      <div>
-        <h2 className="text-base font-semibold text-kolo-text mb-3">{t("istorija_naslov")}</h2>
+      <section className="space-y-3">
+        <NaslovSekcije>{t("istorija_naslov")}</NaslovSekcije>
         {data.donacije.length === 0 ? (
           <Kartica padding="nema">
             <PraznoStanje kompaktno naslov={t("nema_donacija")} />
@@ -457,7 +457,7 @@ export default function DonacijeKlijent() {
                   {d.imaUgovor && (
                     <a
                       href={`/donacije/${d.id}/ugovor`}
-                      className="text-xs text-kolo-muted underline hover:text-kolo-text mt-1 inline-block"
+                      className="text-xs text-kolo-muted underline hover:text-kolo-text mt-1 inline-flex min-h-9 items-center"
                     >
                       {t("ugovor_link")}
                     </a>
@@ -483,12 +483,11 @@ export default function DonacijeKlijent() {
             ))}
           </Kartica>
         )}
-      </div>
+      </section>
 
       {/* Javna lista donacija — javni donatori imenom, anonimni bez imena */}
-      <div>
-        <h2 className="text-base font-semibold text-kolo-text mb-1">{t("lista_naslov")}</h2>
-        <p className="text-xs text-kolo-muted mb-3">{t("lista_opis")}</p>
+      <section className="space-y-3">
+        <NaslovSekcije opis={t("lista_opis")}>{t("lista_naslov")}</NaslovSekcije>
         {data.listaZakljucana ? (
           <Kartica padding="nema">
             <PraznoStanje kompaktno naslov={t("lista_zakljucana")} />
@@ -518,8 +517,7 @@ export default function DonacijeKlijent() {
             ))}
           </Kartica>
         )}
-      </div>
-
-    </div>
+      </section>
+    </Stranica>
   );
 }

@@ -221,7 +221,10 @@ export async function pokreniNadzorIntegriteta(): Promise<NadzorRezultat> {
     if (lista) lista.push(k);
     else poSatu.set(kljuc, [k]);
   }
-  for (const [, clanoviSata] of poSatu) {
+  // Osnivači su koren lanca: verifikovani su od uspostavljanja naloga, niko ih nije
+  // verifikovao, pa nisu roj — inače bi ih P12 hvatao svake noći (svi napravljeni istim seed-om).
+  for (const [, sviSata] of poSatu) {
+    const clanoviSata = sviSata.filter((k) => !k.jeOsnivac);
     if (clanoviSata.length < P12_MIN || clanoviSata.length > P12_MAX) continue;
     const brzoVerifikovani = clanoviSata.filter(
       (k) => k.verifiedAt && k.verifiedAt.getTime() - k.createdAt.getTime() <= P12_VERIF_SATI * MS.sat
@@ -239,15 +242,25 @@ export async function pokreniNadzorIntegriteta(): Promise<NadzorRezultat> {
   }
 
   // ── Upis: poštuj CISTO odbacivanja, ne re-spamuj već poznate HITNO ───────────
+  // Grupa nema subjektId, pa se prepoznaje po skupu članova (sortirani id-jevi).
+  const kljucGrupe = (clanovi: string | null) => {
+    try {
+      return (JSON.parse(clanovi ?? "[]") as { id: string }[]).map((c) => c.id).sort().join(",");
+    } catch {
+      return "";
+    }
+  };
   const [prethodniOtvoreniRedovi, cistoRedovi] = await Promise.all([
-    prisma.rizikNalaz.findMany({ where: { status: "OTVOREN", tip: "NALOG" }, select: { subjektId: true } }),
+    prisma.rizikNalaz.findMany({ where: { status: "OTVOREN" }, select: { tip: true, subjektId: true, clanovi: true } }),
     prisma.rizikNalaz.findMany({
-      where: { status: "CISTO", subjektId: { not: null }, resenAt: { gte: new Date(sada - 30 * MS.dan) } },
-      select: { subjektId: true },
+      where: { status: "CISTO", resenAt: { gte: new Date(sada - 30 * MS.dan) } },
+      select: { tip: true, subjektId: true, clanovi: true },
     }),
   ]);
-  const prethodniOtvoreni = new Set(prethodniOtvoreniRedovi.map((r) => r.subjektId));
-  const cistoSubjekti = new Set(cistoRedovi.map((r) => r.subjektId));
+  const prethodniOtvoreni = new Set(prethodniOtvoreniRedovi.filter((r) => r.tip === "NALOG").map((r) => r.subjektId));
+  const cistoSubjekti = new Set(cistoRedovi.filter((r) => r.tip === "NALOG").map((r) => r.subjektId));
+  const prethodneOtvoreneGrupe = new Set(prethodniOtvoreniRedovi.filter((r) => r.tip === "GRUPA").map((r) => kljucGrupe(r.clanovi)));
+  const cisteGrupe = new Set(cistoRedovi.filter((r) => r.tip === "GRUPA").map((r) => kljucGrupe(r.clanovi)));
 
   type Red = {
     tip: string; subjektId: string | null; pseudonim: string | null;
@@ -267,11 +280,14 @@ export async function pokreniNadzorIntegriteta(): Promise<NadzorRezultat> {
   }
   let novaHitnaGrupa = 0;
   for (const g of grupe) {
+    const clanovi = JSON.stringify(g.clanovi);
+    const kljuc = kljucGrupe(clanovi);
+    if (cisteGrupe.has(kljuc)) continue; // superadmin već odbacio istu grupu
     redovi.push({
-      tip: "GRUPA", subjektId: null, pseudonim: null, clanovi: JSON.stringify(g.clanovi),
+      tip: "GRUPA", subjektId: null, pseudonim: null, clanovi,
       pravila: JSON.stringify(g.pravila), rizik: g.rizik, nivo: g.nivo,
     });
-    if (g.nivo === "HITNO") novaHitnaGrupa++;
+    if (g.nivo === "HITNO" && !prethodneOtvoreneGrupe.has(kljuc)) novaHitnaGrupa++;
   }
 
   // Atomarno: obriši stare OTVORENE i upiši nove.

@@ -13,6 +13,7 @@ import { MAX_IME_PREZIME, procitajImePrezime } from "@/lib/identitet-pravila";
 import { ispravanTelefon } from "@/lib/nov-clan-pravila";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 const MapaGazdinstava = dynamic(() => import("@/components/MapaGazdinstava"), { ssr: false });
@@ -128,7 +129,12 @@ export default function PrijavaForma({
 
   async function posalji(e: React.FormEvent) {
     e.preventDefault();
-    if (!spremno || !tacka) return;
+    if (radi) return;
+    // Dugme se ne gasi zbog nepotpunog obrasca: klik kaže šta fali (dizajn-sistem.md).
+    if (!spremno || !tacka) {
+      setGreska(t("prijava_fali"));
+      return;
+    }
     setRadi(true);
     setGreska(null);
     try {
@@ -166,7 +172,7 @@ export default function PrijavaForma({
   const oznaka = "mb-1.5 block text-sm font-medium text-kolo-text";
 
   return (
-    <form onSubmit={posalji} noValidate className="space-y-5 bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica p-5">
+    <form onSubmit={posalji} noValidate className={`space-y-5 ${klaseKartice()}`}>
       <div>
         <label htmlFor="polje2-prijava-1" className={oznaka}>{t("polje_ime_prezime")}</label>
         {upisanoIme === null ? (
@@ -314,7 +320,7 @@ export default function PrijavaForma({
 
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
 
-      <Dugme type="submit" velicina="lg" punaSirina disabled={radi || !spremno}>
+      <Dugme type="submit" velicina="lg" punaSirina disabled={radi}>
         {izmenaId ? t("sacuvaj") : t("prijava_posalji")}
       </Dugme>
       {!izmenaId && <p className="text-xs text-kolo-muted">{t("prijava_sledeci_korak")}</p>}

@@ -6,6 +6,7 @@ import LokacijaSearch from "@/components/LokacijaSearch";
 import { MAX_DOSTUPNOST, MAX_OPIS_ZAHTEVA } from "@/lib/nov-clan-pravila";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import { klaseKartice } from "@/components/ui/Kartica";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 
 type Podaci = { imePrezime: string; mesto: string; opis: string; dostupnost: string; telefon: string };
@@ -82,7 +83,7 @@ export default function KontaktObrazac({
       {poslat && (
         <Obavestenje vrsta="uspeh">{radiPotvrde ? t("status_poslat_potvrda") : t("status_poslat")}</Obavestenje>
       )}
-      <form onSubmit={posalji} className="space-y-4 rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-5">
+      <form onSubmit={posalji} className={`space-y-4 ${klaseKartice()}`}>
         <p className="text-xs text-kolo-muted">{t("profil_napomena")}</p>
         <Polje oznaka={t("ime_prezime")} pomoc={imeUpisano ? t("ime_prezime_upisano") : t("ime_prezime_opis")}>
           <input

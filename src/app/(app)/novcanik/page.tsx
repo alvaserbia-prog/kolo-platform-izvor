@@ -13,6 +13,7 @@ import { smePrepis as smePrepisDeteta } from "@/lib/deca-pravila";
 import { smeDaSalje as smePrepisPravilo } from "@/lib/doprinos-pravila";
 import { rezervisanoZaNabavku } from "@/lib/protokol/nabavka";
 import { dohvatiZabelezenGazdinstva } from "@/lib/protokol/gazdinstvo";
+import Stranica from "@/components/ui/Stranica";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,7 +30,6 @@ export default async function NovcanikPage({
   // dodatnog dekodiranja JWT-a / DB poziva).
   const session = await sesija();
   if (!session) redirect("/login");
-  const tNav = await getTranslations("nav");
   const { plati, primalac, iznos, description } = await searchParams;
 
   // Laki upiti potrebni za gornju karticu (stanje POEN). ZRNO kartica je
@@ -75,10 +75,10 @@ export default async function NovcanikPage({
     : smePrepisPravilo(dbUser?.tipKorisnika ?? "NEVERIFIKOVAN");
 
   return (
-    <div className="space-y-6">
-      {/* Naslov stranice za čitač ekrana i za onoga ko stigne iz obaveštenja —
-          vizuelno ga nosi kartica POEN, pa se ne crta dvaput. */}
-      <h1 className="sr-only">{tNav("novcanik")}</h1>
+    <Stranica sirina="siroka">
+      {/* Bez vidljivog naslova „POEN" (odluka vlasnika 02.11.2026): zeleno zaglavlje
+          sa stanjem JESTE zaglavlje stranice i nosi jedini h1 (uz ime ekrana za čitač
+          ekrana) — vidi `NovcanikKartice`. */}
       {/* Maloletni nalog ne ulazi u lanac potvrda (čl. 29 st. 2 Pravilnika o učešću dece),
           pa po toj osnovi nema šta da čeka. */}
       <NovcanikKartice
@@ -123,6 +123,6 @@ export default async function NovcanikPage({
           pseudonim={session.user.pseudonim}
         />
       </Suspense>
-    </div>
+    </Stranica>
   );
 }

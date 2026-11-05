@@ -1,5 +1,8 @@
 "use client";
 
+import { KLASE_TABELE, KLASE_ZAGLAVLJA, KLASE_REDA, klaseTh, klaseTd } from "./tabela";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { useState } from "react";
 import { intlTag } from "@/lib/format";
@@ -220,9 +223,9 @@ export default function OsnivaciTab({
 
       {/* Status kanala */}
       {status && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
+        <div className={klaseKartice({ padding: "lg" })}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-kolo-text">{t("osnivaci_kanal_naslov")}</h2>
+            <NaslovSekcije nivo={3}>{t("osnivaci_kanal_naslov")}</NaslovSekcije>
             {status.zatvoren && (
               <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-kolo-bg text-kolo-muted">{t("osnivaci_trajno_zatvoren")}</span>
             )}
@@ -249,8 +252,8 @@ export default function OsnivaciTab({
       {/* Provera kanala doprinosa za prvi oglas (Pravilnik čl. 38) — samo čita. Prelazna
           radnja „Evidentiraj zatečene" (prelazni stav Pravilnika 4.8.5) uklonjena je setom 5.0:
           u važećem aktu za nju nema osnova. */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-        <h2 className="text-base font-semibold text-kolo-text mb-2">{t("doprinos_revizija_naslov")}</h2>
+      <div className={klaseKartice({ padding: "lg" })}>
+        <div className="mb-2"><NaslovSekcije nivo={3}>{t("doprinos_revizija_naslov")}</NaslovSekcije></div>
         <p className="text-sm text-kolo-muted mb-4">{t("doprinos_revizija_opis")}</p>
         <div className="flex flex-wrap gap-2">
           <button
@@ -302,9 +305,9 @@ export default function OsnivaciTab({
       </div>
 
       {/* Lista osnivaca */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
+      <div className={klaseKartice({ padding: "lg" })}>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-semibold text-kolo-text">{t("osnivaci_lista_naslov")}</h2>
+          <NaslovSekcije nivo={3}>{t("osnivaci_lista_naslov")}</NaslovSekcije>
           <span className={`text-xs font-semibold ${udeliValidni ? "text-kolo-green-700" : "text-kolo-danger"}`}>
             {t("osnivaci_zbir_udela", { zbir: zbirBrojilaca, imenilac: zajednickiImenilac || "—", valid: udeliValidni ? "✓" : "(mora biti 1/1)" })}
           </span>
@@ -316,35 +319,35 @@ export default function OsnivaciTab({
           </p>
         ) : (
           <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[30rem]">
+          <table className={`${KLASE_TABELE} min-w-[30rem]`}>
             <thead>
-              <tr className="text-left text-kolo-muted border-b border-kolo-border">
-                <th className="py-2 font-medium">{t("osnivaci_tbl_rb")}</th>
-                <th className="py-2 font-medium">{t("osnivaci_tbl_pseudonim")}</th>
-                <th className="py-2 font-medium">{t("osnivaci_tbl_udeo")}</th>
-                <th className="py-2 font-medium">{t("osnivaci_tbl_napomena")}</th>
-                <th className="py-2"></th>
+              <tr className={KLASE_ZAGLAVLJA}>
+                <th className={klaseTh()}>{t("osnivaci_tbl_rb")}</th>
+                <th className={klaseTh()}>{t("osnivaci_tbl_pseudonim")}</th>
+                <th className={klaseTh()}>{t("osnivaci_tbl_udeo")}</th>
+                <th className={klaseTh()}>{t("osnivaci_tbl_napomena")}</th>
+                <th className={klaseTh()}></th>
               </tr>
             </thead>
             <tbody>
               {osnivaci.map((o) => (
                 izmenaId === o.id ? (
-                  <tr key={o.id} className="border-b border-kolo-border last:border-0 bg-kolo-bg/50">
-                    <td className="py-2 pr-2 w-16">
+                  <tr key={o.id} className={`${KLASE_REDA} bg-kolo-bg/50`}>
+                    <td className={`${klaseTd()} w-16`}>
                       <input type="number" aria-label={t("osnivaci_tbl_rb")} value={izRedniBroj} onChange={(e) => setIzRedniBroj(e.target.value)} className={inputCls} />
                     </td>
-                    <td className="py-2 font-medium text-kolo-text"><Pseudonim>{o.user.pseudonim}</Pseudonim></td>
-                    <td className="py-2 pr-2">
+                    <td className={`${klaseTd()} font-medium text-kolo-text`}><Pseudonim>{o.user.pseudonim}</Pseudonim></td>
+                    <td className={klaseTd()}>
                       <div className="flex items-center gap-1">
                         <input type="number" aria-label={t("osnivaci_brojilac_label")} value={izBrojilac} onChange={(e) => setIzBrojilac(e.target.value)} className={`${inputCls} w-16`} />
                         <span className="text-kolo-muted">/</span>
                         <input type="number" aria-label={t("osnivaci_imenilac_label")} value={izImenilac} onChange={(e) => setIzImenilac(e.target.value)} className={`${inputCls} w-16`} />
                       </div>
                     </td>
-                    <td className="py-2 pr-2">
+                    <td className={klaseTd()}>
                       <input type="text" aria-label={t("osnivaci_tbl_napomena")} value={izNapomena} onChange={(e) => setIzNapomena(e.target.value)} maxLength={200} className={inputCls} />
                     </td>
-                    <td className="py-2 text-right whitespace-nowrap">
+                    <td className={`${klaseTd("desno")} whitespace-nowrap`}>
                       <button onClick={sacuvajIzmenu} disabled={radnja === "izmena" || !izRedniBroj || !izBrojilac || !izImenilac}
                         className={klaseDugmeta({ varijanta: "primarno", velicina: "sm" })}>
                         {t("osnivaci_sacuvaj_btn")}
@@ -356,15 +359,15 @@ export default function OsnivaciTab({
                     </td>
                   </tr>
                 ) : (
-                  <tr key={o.id} className="border-b border-kolo-border last:border-0">
-                    <td className="py-2">{o.redniBroj}</td>
-                    <td className="py-2 font-medium text-kolo-text"><Pseudonim>{o.user.pseudonim}</Pseudonim></td>
-                    <td className="py-2">
+                  <tr key={o.id} className={KLASE_REDA}>
+                    <td className={klaseTd()}>{o.redniBroj}</td>
+                    <td className={`${klaseTd()} font-medium text-kolo-text`}><Pseudonim>{o.user.pseudonim}</Pseudonim></td>
+                    <td className={klaseTd()}>
                       {o.udeoBrojilac}/{o.udeoImenilac}
                       <span className="text-kolo-muted"> ({Math.round((o.udeoBrojilac / o.udeoImenilac) * 1000) / 10}%)</span>
                     </td>
-                    <td className="py-2 text-kolo-muted">{o.napomena ?? "—"}</td>
-                    <td className="py-2 text-right whitespace-nowrap">
+                    <td className={`${klaseTd()} text-kolo-muted`}>{o.napomena ?? "—"}</td>
+                    <td className={`${klaseTd("desno")} whitespace-nowrap`}>
                       {izmeneDozvoljene && (
                         <>
                           <button onClick={() => pocniIzmenu(o)} disabled={radnja !== null}
@@ -414,8 +417,8 @@ export default function OsnivaciTab({
 
       {/* Forma za dodavanje */}
       {izmeneDozvoljene && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 space-y-4 shadow-kartica">
-          <h2 className="text-base font-semibold text-kolo-text">{t("osnivaci_dodaj_naslov")}</h2>
+        <div className={`${klaseKartice({ padding: "lg" })} space-y-4`}>
+          <NaslovSekcije nivo={3}>{t("osnivaci_dodaj_naslov")}</NaslovSekcije>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Polje oznaka={t("osnivaci_korisnik_label")}>
               <select value={userId} onChange={(e) => setUserId(e.target.value)}

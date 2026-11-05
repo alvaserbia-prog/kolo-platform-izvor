@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
 /**
  * Mini stablo verifikacija (varijanta A) — gore verifikator, dole verifikovani.
@@ -38,7 +40,7 @@ function OznakaVrste({ vrsta, potvrdjen }: { vrsta?: "POTVRDA" | "UVODJENJE"; po
   const t = useTranslations("verifikacija");
   if (vrsta !== "UVODJENJE") return null;
   return (
-    <span className="text-[11px] px-1.5 py-0.5 rounded-md border shrink-0 bg-kolo-surface text-kolo-muted border-kolo-border">
+    <span className="text-xs px-1.5 py-0.5 rounded-md border shrink-0 bg-kolo-surface text-kolo-muted border-kolo-border">
       {potvrdjen ? t("stablo_uveden_potvrdjen") : t("stablo_uveden")}
     </span>
   );
@@ -97,7 +99,7 @@ export function StatusBadge({ status }: { status: CvorVerifikovani["statusNadzor
     );
   }
   return (
-    <span className="text-[11px] px-1.5 py-0.5 rounded-md border shrink-0 bg-kolo-gold-100 text-kolo-gold-700 border-kolo-gold-100">
+    <span className="text-xs px-1.5 py-0.5 rounded-md border shrink-0 bg-kolo-gold-100 text-kolo-gold-700 border-kolo-gold-100">
       {t("stablo_ceka_nadzor")}
     </span>
   );
@@ -151,9 +153,9 @@ export default function MiniStablo({
   const bezVerifikovanih = tekstovi?.bezVerifikovanih ?? t("stablo_bez_verifikovanih");
 
   return (
-    <div className={`rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica ${className}`}>
-      <div className="text-sm uppercase tracking-wide text-kolo-muted font-semibold mb-4">
-        {naslovFinal}
+    <Kartica padding="lg" className={className}>
+      <div className="mb-4">
+        <NaslovSekcije>{naslovFinal}</NaslovSekcije>
       </div>
 
       {/* Gore: verifikatori (može ih biti više) */}
@@ -166,7 +168,7 @@ export default function MiniStablo({
                 id={v.id}
                 pseudonim={v.pseudonim}
                 onKlik={onKlik}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-kolo-bg hover:bg-kolo-green-100 text-sm font-medium"
+                className="inline-flex min-h-10 items-center gap-1.5 px-3 py-1.5 rounded-kontrola bg-kolo-bg hover:bg-kolo-green-100 text-sm font-medium"
               >
                 @<Pseudonim>{v.pseudonim}</Pseudonim>
                 <OznakaVrste vrsta={v.vrsta} potvrdjen={v.potvrdjen} />
@@ -174,18 +176,18 @@ export default function MiniStablo({
             ))}
           </div>
         ) : jeJaPocetni ? (
-          <div className="px-3 py-1.5 rounded-xl bg-kolo-bg text-sm text-kolo-muted italic">
+          <div className="px-3 py-1.5 rounded-kontrola bg-kolo-bg text-sm text-kolo-muted italic">
             {osnivac}
           </div>
         ) : (
-          <div className="px-3 py-1.5 rounded-xl bg-kolo-bg text-sm text-kolo-muted italic">
+          <div className="px-3 py-1.5 rounded-kontrola bg-kolo-bg text-sm text-kolo-muted italic">
             {bezVerifikatora}
           </div>
         )}
         <div className="text-kolo-muted text-lg">↓</div>
 
         {/* Sredina: nosilac kartice */}
-        <div className="px-4 py-2 rounded-xl bg-kolo-green-700 text-white text-sm font-semibold">
+        <div className="px-4 py-2 rounded-kontrola bg-kolo-green-700 text-white text-sm font-semibold">
           <Pseudonim>{ja.pseudonim}</Pseudonim>
           {ja.prikaz && <span className="ml-2 text-white/70 text-xs font-mono">{ja.prikaz}</span>}
         </div>
@@ -194,7 +196,7 @@ export default function MiniStablo({
         {verifikovaniIspod && verifikovani.length > 0 && (
           <>
             <div className="text-kolo-muted text-lg">↓</div>
-            <a href="#moje-oznake" className="px-3 py-1.5 rounded-xl bg-kolo-bg hover:bg-kolo-green-100 text-sm font-medium text-kolo-green-700">
+            <a href="#moje-oznake" className="inline-flex min-h-10 items-center px-3 py-1.5 rounded-kontrola bg-kolo-bg hover:bg-kolo-green-100 text-sm font-medium text-kolo-green-700">
               {t("stablo_vidi_ispod", { n: verifikovani.length })}
             </a>
           </>
@@ -209,7 +211,7 @@ export default function MiniStablo({
                   id={v.id}
                   pseudonim={v.pseudonim}
                   onKlik={onKlik}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-kolo-bg hover:bg-kolo-green-100"
+                  className="flex min-h-10 items-center gap-1.5 px-3 py-2 rounded-kontrola bg-kolo-bg hover:bg-kolo-green-100"
                 >
                   <span className="text-sm font-medium truncate">@<Pseudonim>{v.pseudonim}</Pseudonim></span>
                   <OznakaVrste vrsta={v.vrsta} potvrdjen={v.potvrdjen} />
@@ -222,12 +224,12 @@ export default function MiniStablo({
         {verifikovani.length === 0 && (
           <>
             <div className="text-kolo-muted text-lg">↓</div>
-            <div className="px-3 py-1.5 rounded-xl bg-kolo-bg text-xs text-kolo-muted italic">
+            <div className="px-3 py-1.5 rounded-kontrola bg-kolo-bg text-xs text-kolo-muted italic">
               {bezVerifikovanih}
             </div>
           </>
         )}
       </div>
-    </div>
+    </Kartica>
   );
 }

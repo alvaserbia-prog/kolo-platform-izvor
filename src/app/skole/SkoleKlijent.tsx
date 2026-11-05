@@ -7,6 +7,8 @@ import { useTranslations, useLocale } from "next-intl";
 import { intlTag } from "@/lib/format";
 import type { RedSkole, RedSkoleSaProcentom, TipSkole } from "@/lib/skola";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import Obavestenje from "@/components/ui/Obavestenje";
 import PraznoStanje from "@/components/ui/PraznoStanje";
@@ -45,7 +47,7 @@ export default function SkoleKlijent() {
   const broj = (n: number) => n.toLocaleString(intlTag(locale));
 
   return (
-    <div className="space-y-6">
+    <Stranica sirina="siroka">
       <NaslovStranice naslov={t("naslov")} opis={t("podnaslov")} />
 
       <Segmenti
@@ -109,7 +111,7 @@ export default function SkoleKlijent() {
       )}
 
       <p className="text-xs text-kolo-muted">{t("napomena")}</p>
-    </div>
+    </Stranica>
   );
 }
 
@@ -135,8 +137,7 @@ function Tabela({
   return (
     <Kartica as="section" padding="nema">
       <div className="border-b border-kolo-border px-5 py-4">
-        <h2 className="text-sm font-semibold text-kolo-text">{naslov}</h2>
-        <p className="mt-0.5 text-xs text-kolo-muted">{opis}</p>
+        <NaslovSekcije opis={opis}>{naslov}</NaslovSekcije>
       </div>
 
       {redovi.length === 0 ? (

@@ -7,6 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { gazdinstvaZaMapu, aktivnoClanstvo, pravaUGazdinstvu } from "@/lib/protokol/gazdinstvo";
 import { MIN_OGLASA_UZ_PRIJAVU } from "@/lib/gazdinstvo-pravila";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import PraznoStanje from "@/components/ui/PraznoStanje";
@@ -63,7 +65,7 @@ export default async function GazdinstvaPage() {
   const naselja = [...poNaseljima.keys()].sort((a, b) => a.localeCompare(b, "sr"));
 
   return (
-    <div className="max-w-[1000px] mx-auto pb-16 space-y-6">
+    <Stranica sirina="siroka">
       <NaslovStranice naslov={t("naslov")} opis={t("uvod")} />
 
       {/* Moje gazdinstvo / pozivi / prijava */}
@@ -80,13 +82,10 @@ export default async function GazdinstvaPage() {
           ))}
           {clanstvo ? (
             <>
-              <Link
-                href={`/gazdinstva/${clanstvo.gazdinstvo.id}`}
-                className="block rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica px-5 py-4 text-sm hover:border-kolo-green-500 transition-colors"
-              >
+              <Kartica href={`/gazdinstva/${clanstvo.gazdinstvo.id}`} className="text-sm">
                 <span className="font-semibold">{t("moje_gazdinstvo")}:</span> {clanstvo.gazdinstvo.naziv} ·{" "}
                 {t(`status_${clanstvo.gazdinstvo.status}`)}
-              </Link>
+              </Kartica>
               {/* Doniranje u ime gazdinstva ide kroz upis pokrovitelja (donacije
                   čl. 16), koji vodi samo nosilac — upis se popunjava podacima
                   gazdinstva, pa se gazdinstvo ne unosi dvaput. */}
@@ -118,7 +117,7 @@ export default async function GazdinstvaPage() {
           (čl. 4–7). Odobrenje utvrđuje potpunost prijave, ne proverava gazdinstvo. */}
       {!session && (
         <Kartica>
-          <p className="text-sm font-semibold text-kolo-text">{t("gost_koraci_naslov")}</p>
+          <NaslovSekcije nivo={2}>{t("gost_koraci_naslov")}</NaslovSekcije>
           <ol className="mt-2 space-y-1 text-sm text-kolo-text list-decimal list-inside">
             <li>{t("gost_korak_1")}</li>
             <li>{t("gost_korak_2", { min: MIN_OGLASA_UZ_PRIJAVU })}</li>
@@ -150,18 +149,15 @@ export default async function GazdinstvaPage() {
         <div className="space-y-5">
           {naselja.map((n) => (
             <section key={n}>
-              <h2 className="text-sm font-semibold text-kolo-green-900 mb-2">{n}</h2>
+              <div className="mb-2"><NaslovSekcije varijanta="oznaka">{n}</NaslovSekcije></div>
               <ul className="grid gap-3 sm:grid-cols-2">
                 {poNaseljima.get(n)!.map((g) => (
                   <li key={g.id}>
-                    <Link
-                      href={`/gazdinstva/${g.id}`}
-                      className="block rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-4 hover:border-kolo-green-500 transition-colors"
-                    >
+                    <Kartica href={`/gazdinstva/${g.id}`} padding="sm">
                       <p className="font-semibold text-kolo-text">{g.naziv}</p>
                       <p className="mt-1 text-xs text-kolo-muted line-clamp-2">{g.opis}</p>
                       <p className="mt-2 text-xs text-kolo-green-700">{t("oglasa_n", { n: g.brojOglasa })}</p>
-                    </Link>
+                    </Kartica>
                   </li>
                 ))}
               </ul>
@@ -181,6 +177,6 @@ export default async function GazdinstvaPage() {
           {t("pravilnik_link")}
         </Link>
       </p>
-    </div>
+    </Stranica>
   );
 }

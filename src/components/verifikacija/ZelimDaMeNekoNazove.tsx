@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
 export type MojZahtevNaSpisku = {
   osnov: string;
@@ -68,15 +70,20 @@ export default function ZelimDaMeNekoNazove({
   const zakljucano = radiPotvrde && uslov && !uslov.ok ? uslov : null;
 
   return (
-    <div id="nazove" className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-5 space-y-3 scroll-mt-20">
-      <h2 className="text-sm font-semibold text-kolo-text">
+    <Kartica id="nazove" className="space-y-3 scroll-mt-20">
+      <NaslovSekcije opis={radiPotvrde ? t("nazove_potvrda_opis") : t("nazove_opis")}>
         {radiPotvrde ? t("nazove_potvrda_naslov") : t("nazove_naslov")}
-      </h2>
-      <p className="text-sm text-kolo-muted">{radiPotvrde ? t("nazove_potvrda_opis") : t("nazove_opis")}</p>
+      </NaslovSekcije>
+      {/* 🔴 Obavezni elementi pre ulaska (dokaz stvarnosti čl. 9 st. 1, čl. 11, 12):
+          ko zove, šta vidi, da se beleži ko je otvorio, rok, da spisak sam po sebi ne
+          uvodi u Kolo i rečenica protiv prevare — uvek vidljivi, IZNAD dugmeta, nikad
+          samo u sklopivom delu. Ostatak je u „Šta treba da znaš" ispod. */}
       <p className="text-sm text-kolo-text">
         {radiPotvrde ? t("nazove_potvrda_obavestenje") : t("nazove_obavestenje")}
       </p>
-      {!radiPotvrde && <p className="text-xs text-kolo-muted">{t("nazove_ne_potvrdjuje")}</p>}
+      <p className="text-xs text-kolo-muted">
+        {radiPotvrde ? t("nazove_potvrda_ne_potvrdjuje") : t("nazove_ne_potvrdjuje")}
+      </p>
       {zakljucano && (
         <Obavestenje vrsta="info">
           {zakljucano.uslov === "TRIDESET_DANA" && zakljucano.odDana
@@ -127,8 +134,22 @@ export default function ZelimDaMeNekoNazove({
           </Link>
         </div>
       )}
+      {/* Pun tekst o spisku stoji samo ovde, na Potvrdama (odluka vlasnika 02.11.2026). */}
+      <details className="rounded-kontrola bg-kolo-bg px-4 py-2">
+        <summary className="flex min-h-10 cursor-pointer items-center text-sm font-semibold text-kolo-green-700">
+          {t("nazove_vise_naslov")}
+        </summary>
+        <ul className="mt-1 list-disc space-y-1.5 pb-2 pl-5 text-sm text-kolo-text">
+          <li>{t("nazove_vise_podaci")}</li>
+          <li>{t("nazove_vise_otvaranje")}</li>
+          <li>{t("nazove_vise_zapis")}</li>
+          <li>{t("nazove_vise_poredjenje")}</li>
+          <li>{radiPotvrde ? t("nazove_vise_posle_potvrda") : t("nazove_vise_posle")}</li>
+          <li>{t("nazove_vise_brisanje")}</li>
+        </ul>
+      </details>
       {poruka && <Obavestenje vrsta="uspeh">{poruka}</Obavestenje>}
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
-    </div>
+    </Kartica>
   );
 }

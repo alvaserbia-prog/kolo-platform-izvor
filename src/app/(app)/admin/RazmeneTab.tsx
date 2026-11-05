@@ -22,6 +22,7 @@ import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
 import { iznosPovracaja, stanjePosle, idUMinus } from "@/lib/razmena-prijava";
 import { useStanjeUAdresi } from "@/hooks/useStanjeUAdresi";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -160,7 +161,7 @@ export default function RazmeneTab({ onDone }: { onDone?: () => void }) {
             const nakon = stanjePosle(s.protiv.stanje, s.prepis.iznos);
             const uMinus = idUMinus(s.protiv.stanje, s.prepis.iznos);
             return (
-              <div key={s.id} className="bg-kolo-surface rounded-kartica border border-kolo-border p-4 space-y-3 shadow-kartica">
+              <div key={s.id} className={`${klaseKartice({ padding: "sm" })} space-y-3`}>
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm">
                   <a href={profilHref(s.prijavioc)} className="font-semibold text-kolo-green-700 hover:underline">
                     <Pseudonim>{s.prijavioc.pseudonim}</Pseudonim>

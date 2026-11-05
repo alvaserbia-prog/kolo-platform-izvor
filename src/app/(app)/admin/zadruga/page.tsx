@@ -4,6 +4,8 @@ import { getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { jeAdmin, jeZadruzniAdmin } from "@/lib/dozvole";
+import Stranica from "@/components/ui/Stranica";
+import NaslovStranice from "@/components/ui/NaslovStranice";
 import ZadrugeTab from "../ZadrugeTab";
 
 /**
@@ -20,9 +22,9 @@ export default async function ZadruzniAdminPage() {
   if (!jeZadruzniAdmin(me) || !me?.adminZadrugaId) redirect("/dashboard");
   const t = await getTranslations("admin");
   return (
-    <div className="mx-auto max-w-4xl space-y-4 px-4 py-6">
-      <h1 className="text-xl font-semibold text-kolo-text">{t("zad_admin_naslov")}</h1>
+    <Stranica sirina="siroka">
+      <NaslovStranice naslov={t("zad_admin_naslov")} />
       <ZadrugeTab />
-    </div>
+    </Stranica>
   );
 }

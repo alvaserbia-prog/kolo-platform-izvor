@@ -46,6 +46,10 @@ import MojeOznake, { type VerifikovanaOsoba } from "@/components/verifikacija/Mo
 import PrijaviVerifikaciju from "@/components/verifikacija/PrijaviVerifikaciju";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import { klaseDugmeta } from "@/components/ui/Dugme";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
+import OznakaStatusa from "@/components/OznakaStatusa";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
 export async function generateMetadata(): Promise<Metadata> {
@@ -120,6 +124,9 @@ export default async function VerifikacijaPage() {
   // verifikovanog) i član bez potvrde (samo potvrdu člana Kola). Osnivač nikad.
   const mozePrimiti = korisnik || bezPotvrde;
 
+  // Ko je ovog učesnika verifikovao — jedna verifikacija (dokaz stvarnosti čl. 15).
+  const mojVerifikator = user.verifikacijeKojeSuMeVerifikovale[0] ?? null;
+
   const verifikatorCvorovi: CvorVerifikator[] = user.verifikacijeKojeSuMeVerifikovale.map((v) => ({
     id: v.verifikator.id,
     pseudonim: v.verifikator.pseudonim,
@@ -183,11 +190,44 @@ export default async function VerifikacijaPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-6 space-y-6">
-      <NaslovStranice naslov={t("page_naslov")} />
+    <Stranica>
+      {/* Zeleno zaglavlje (odluka vlasnika 02.11.2026): rečenica, brojke koliko ih
+          podaci daju i „Pokaži svoj kod" onome ko verifikaciju još može da primi.
+          Status imenuje samo `OznakaStatusa`. */}
+      <NaslovStranice
+        varijanta="istaknuto"
+        naslov={t("page_naslov")}
+        opis={t("zaglavlje_opis")}
+        brojke={[
+          { vrednost: <OznakaStatusa status={status} />, oznaka: t("zaglavlje_status") },
+          ...(mojVerifikator
+            ? [{
+                vrednost: mojVerifikator.verifikator.pseudonim,
+                oznaka: mojVerifikator.vrsta === "UVODJENJE" ? t("zaglavlje_uveo_te") : t("zaglavlje_potvrdio_te"),
+              }]
+            : []),
+          ...(mozeDaVerifikuje
+            ? [{
+                vrednost: user.verifikacijeKojeSamObavio.length.toLocaleString("sr-RS"),
+                oznaka: t(bezPotvrde ? "zaglavlje_uveo_si" : "zaglavlje_potvrdio_si", { broj: user.verifikacijeKojeSamObavio.length }),
+              }]
+            : []),
+        ]}
+        radnja={
+          mozePrimiti ? (
+            <a href="#moj-kod" className={klaseDugmeta({ varijanta: "sekundarno" })}>
+              {t("zaglavlje_pokazi_kod")}
+            </a>
+          ) : undefined
+        }
+      />
 
       <div className="grid lg:grid-cols-2 gap-6">
         <div className="flex flex-col gap-6">
+          {/* Korisniku status već stoji u zelenom zaglavlju — kartica se ne ponavlja
+              (odluka vlasnika 02.11.2026). Članu bez potvrde kartica nosi obavezne
+              rečenice (dokaz stvarnosti čl. 6), pa ostaje. */}
+          {status !== "KORISNIK" && (
           <IndeksPrikaz
             status={status}
             podnaslov={podnaslov}
@@ -195,6 +235,7 @@ export default async function VerifikacijaPage() {
             naStaSeCeka={prikaz.naStaSeCeka}
             zrno={prikaz.zrno}
           />
+          )}
 
           {mozePrimiti && (
             <div id="moj-kod">
@@ -227,8 +268,8 @@ export default async function VerifikacijaPage() {
           {/* Zabeležene potvrde stoje LEVO, ispod koda i potvrđivanja, a pored lanca
               potvrda (odluka vlasnika, 20.10.2026). */}
           {(cekaMoje > 0 || cekaDate.length > 0) && (
-            <div id="zabelezene" className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-              <h2 className="text-sm font-semibold text-kolo-text">{t("ceka_naslov")}</h2>
+            <Kartica id="zabelezene">
+              <NaslovSekcije>{t("ceka_naslov")}</NaslovSekcije>
               {cekaMoje > 0 && (
                 <p className="mt-2 text-sm text-kolo-text">
                   {t("ceka_moja", { iznos: cekaMoje.toLocaleString("sr-RS") })}
@@ -260,7 +301,7 @@ export default async function VerifikacijaPage() {
                   </a>
                 </div>
               )}
-            </div>
+            </Kartica>
           )}
         </div>
 
@@ -284,6 +325,6 @@ export default async function VerifikacijaPage() {
 
       {/* Diskretna prijava pogrešne/neželjene verifikacije (hrani nadzor integriteta). */}
       {mozeDaVerifikuje && verifikatorCvorovi.length > 0 && <PrijaviVerifikaciju />}
-    </div>
+    </Stranica>
   );
 }

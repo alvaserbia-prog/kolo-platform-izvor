@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { Skola } from "@/lib/skola";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
@@ -86,7 +87,7 @@ export default function IzborSkole({
   }
 
   return (
-    <div className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-5">
+    <Kartica>
       <h2 className="text-base font-semibold text-kolo-text">{t("izbor_naslov")}</h2>
       <p className="mt-1 text-sm text-kolo-muted">{t("izbor_opis")}</p>
 
@@ -151,6 +152,6 @@ export default function IzborSkole({
           {poruka.tekst}
         </Obavestenje>
       )}
-    </div>
+    </Kartica>
   );
 }

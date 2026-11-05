@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import Dugme from "@/components/ui/Dugme";
+import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
  * Diskretna prijava: „nešto nije u redu sa mojom verifikacijom".
@@ -40,7 +42,7 @@ export default function PrijaviVerifikaciju() {
     return (
       <button
         onClick={() => setOtvoreno(true)}
-        className="text-xs text-kolo-muted underline hover:text-kolo-text mt-2"
+        className="inline-flex min-h-10 items-center text-xs text-kolo-muted underline hover:text-kolo-text mt-2"
       >
         {t("prijava_link")}
       </button>
@@ -55,17 +57,16 @@ export default function PrijaviVerifikaciju() {
         rows={2}
         maxLength={500}
         placeholder={t("prijava_placeholder")}
-        className="w-full px-3 py-2 rounded-lg border border-kolo-border text-sm outline-none focus:border-kolo-green-700 resize-none transition-colors"
+        aria-label={t("prijava_placeholder")}
+        className={KLASE_UNOSA + " resize-none"}
       />
       <div className="flex gap-2">
-        <button onClick={posalji} disabled={radnja}
-          className="px-3 py-1.5 rounded-lg bg-kolo-danger-light text-kolo-danger text-xs font-semibold hover:opacity-80 disabled:opacity-60 transition-opacity">
+        <Dugme varijanta="sekundarno" velicina="sm" onClick={posalji} disabled={radnja}>
           {radnja ? "..." : t("prijava_dugme")}
-        </button>
-        <button onClick={() => { setOtvoreno(false); setRazlog(""); }} disabled={radnja}
-          className="px-3 py-1.5 rounded-lg bg-kolo-bg border border-kolo-border text-kolo-muted text-xs font-semibold hover:bg-kolo-border disabled:opacity-60 transition-colors">
+        </Dugme>
+        <Dugme varijanta="tiho" velicina="sm" onClick={() => { setOtvoreno(false); setRazlog(""); }} disabled={radnja}>
           {t("dugme_otkazi")}
-        </button>
+        </Dugme>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
 import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
 import NaslovStranice from "@/components/ui/NaslovStranice";
+import ZakljucanModul from "@/components/ui/ZakljucanModul";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { useState, useCallback, memo } from "react";
@@ -50,6 +51,8 @@ interface Props {
   brojAktivnih: number;
   isVerified: boolean;
   imaPristupProgramima: boolean;
+  /** Maloletni nalog — obrazac zaključanog modula se ne primenjuje. */
+  jeDete: boolean;
   /** Koliko će ljudi biti zamoljeno da potvrdi — ide u tekst pristanka (programi čl. 6). */
   brojVerifikatora: number;
   emisioniKontekst: EmisioniKontekst;
@@ -66,7 +69,7 @@ function useStatusBadge(): Record<EnrollmentStatus, { label: string; cls: string
 }
 
 
-export default function ProgramiKlijent({ programi, pedAktivan, brojAktivnih, isVerified, imaPristupProgramima, brojVerifikatora, emisioniKontekst }: Props) {
+export default function ProgramiKlijent({ programi, pedAktivan, brojAktivnih, isVerified, imaPristupProgramima, jeDete, brojVerifikatora, emisioniKontekst }: Props) {
   const locale = useLocale();
   const t = useTranslations("programi");
   const tc = useTranslations("common");
@@ -125,9 +128,15 @@ export default function ProgramiKlijent({ programi, pedAktivan, brojAktivnih, is
         }
       />
 
-      {/* Ko ne može da se prijavi, to vidi PRE statistike (ranije je stajalo ispod). */}
-      {!isVerified && <Obavestenje vrsta="upozorenje">{t("nije_verifikovan")}</Obavestenje>}
-      {isVerified && !imaPristupProgramima && <Obavestenje vrsta="upozorenje">{t("nepun_indeks")}</Obavestenje>}
+      {/* Ko ne može da se prijavi, to vidi PRE spiska programa. Na program se
+          prijavljuje učesnik, i član bez potvrde (programi čl. 4) — zato „ko je u
+          Kolu". Maloletni nema pravo na programe (deca čl. 29 st. 4), pa dečji nalog
+          ne dobija poziv da uđe u Kolo (odluka vlasnika 02.11.2026). */}
+      {jeDete ? (
+        <Obavestenje vrsta="info">{t("dete_nema_programa")}</Obavestenje>
+      ) : (
+        !imaPristupProgramima && <ZakljucanModul poruka={t("zakljucano")} />
+      )}
 
       <div className="space-y-3">
         {programi.map((p) => (
@@ -194,7 +203,7 @@ const ProgramKartica = memo(function ProgramKartica({
           <div className="flex items-center gap-2 flex-wrap">
             <p className="font-semibold text-kolo-text">{p.label}</p>
             {!p.programAktivan && (
-              <span className="text-xs bg-kolo-bg text-kolo-muted px-2 py-0.5 rounded-lg">{tc("neaktivan")}</span>
+              <span className="text-xs bg-kolo-bg text-kolo-muted px-2 py-0.5 rounded-lg">{t("jos_ne_radi")}</span>
             )}
             {enStatus && (
               <span className={`text-xs px-2 py-0.5 rounded-lg border font-medium ${statusBadge[enStatus].cls}`}>
@@ -473,12 +482,28 @@ function PrijavnaForma({ type, loading, brojVerifikatora, onSubmit, onCancel }: 
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+/** Uzrast deteta i godine u primerima na kartici — samo primer, iznos daje pravilo. */
+const PRIMER_UZRAST_DETETA = 5;
+const PRIMER_GODINA_STARIJI = 70;
+
 function opisPrograma(type: string, t: (key: string, v?: Record<string, string | number>) => string): string {
   const fmt = (n: number) => n.toLocaleString("sr-RS");
   const mapa: Record<string, string> = {
-    // Iznosi se čitaju iz pravila (pravilo 10), ne prepisuju u tekst.
-    PODRSKA_MAJKAMA:   t("opis_majkama_n", { osnovica: fmt(MAJKE_OSNOVICA), umanjenje: fmt(MAJKE_UMANJENJE_PO_GODINI), trajanje: MAJKE_TRAJANJE_GODINA }),
-    PODRSKA_STARIJIMA: t("opis_starijima_n", { osnovica: fmt(STARIJI_OSNOVICA), poGodini: fmt(STARIJI_PO_GODINI), od: STARIJI_OD_GODINA }),
+    // Iznosi se čitaju iz pravila (pravilo 10), ne prepisuju u tekst. Umesto
+    // formule stoji primer (odluka vlasnika 02.11.2026), izračunat istim pravilima
+    // kao obračun (`izracunajMajke`/`izracunajStariji` u protokol/programi.ts):
+    // prvo dete ima koeficijent 1, a stariji dobijaju osnovicu i iznos po godini
+    // preko granice.
+    PODRSKA_MAJKAMA:   t("opis_majkama_n", {
+      uzrast: PRIMER_UZRAST_DETETA,
+      iznos: fmt(Math.max(0, MAJKE_OSNOVICA - PRIMER_UZRAST_DETETA * MAJKE_UMANJENJE_PO_GODINI)),
+      trajanje: MAJKE_TRAJANJE_GODINA,
+    }),
+    PODRSKA_STARIJIMA: t("opis_starijima_n", {
+      godine: PRIMER_GODINA_STARIJI,
+      iznos: fmt(STARIJI_OSNOVICA + STARIJI_PO_GODINI * (PRIMER_GODINA_STARIJI - STARIJI_OD_GODINA)),
+      od: STARIJI_OD_GODINA,
+    }),
     POSEBNA_BRIGA:     t("opis_posebna_briga_n", { iznos: fmt(POSEBNA_PODRSKA_DNEVNO) }),
     SKOLOVANJE:        t("opis_skolovanje_n", { iznos: fmt(SKOLOVANJE_DNEVNO) }),
   };

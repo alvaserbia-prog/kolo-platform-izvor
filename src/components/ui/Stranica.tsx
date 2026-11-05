@@ -15,7 +15,7 @@ export default function Stranica({
   className?: string;
 }) {
   return (
-    <div className={`${sirina === "uska" ? "max-w-uska" : "max-w-siroka"} w-full space-y-6 pb-16 ${className}`.trim()}>
+    <div className={`${sirina === "uska" ? "max-w-uska" : "max-w-siroka"} mx-auto w-full space-y-6 pb-16 ${className}`.trim()}>
       {children}
     </div>
   );

@@ -8,6 +8,8 @@ import { profilHref } from "@/lib/profil-link";
 import { intlTag } from "@/lib/format";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
 type Red = {
   id: string;
@@ -170,9 +172,8 @@ export default function SpisakZaPoziv() {
   };
 
   return (
-    <div id="zahtevi" className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-5 space-y-3 scroll-mt-20">
-      <h2 className="text-sm font-semibold text-kolo-text">{t("naslov")}</h2>
-      <p className="text-sm text-kolo-muted">{t("opis_clan_kola", { minuta: BROJ_OTVOREN_MINUTA })}</p>
+    <Kartica id="zahtevi" className="space-y-3 scroll-mt-20">
+      <NaslovSekcije opis={t("opis_clan_kola", { minuta: BROJ_OTVOREN_MINUTA })}>{t("naslov")}</NaslovSekcije>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
       {!poverljivostData && redovi.length > 0 && (
         <label className="flex items-start gap-2 rounded-kontrola bg-kolo-bg p-3 text-sm text-kolo-text cursor-pointer">
@@ -235,8 +236,9 @@ export default function SpisakZaPoziv() {
                         {t("zatvori")}
                       </Dugme>
                     </div>
+                    {/* Poklapanje nije zabrana (dokaz stvarnosti čl. 13 st. 3) — informacija. */}
                     {o.oznake && (o.oznake.istiTelefon || o.oznake.istoImeMesta.length > 0) && (
-                      <Obavestenje vrsta="upozorenje">
+                      <Obavestenje vrsta="info">
                         {o.oznake.istiTelefon && <span className="block">{t("oznaka_isti_telefon")}</span>}
                         {o.oznake.istoImeMesta.length > 0 && (
                           <span className="block">
@@ -282,6 +284,6 @@ export default function SpisakZaPoziv() {
           })}
         </ul>
       )}
-    </div>
+    </Kartica>
   );
 }

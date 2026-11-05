@@ -7,6 +7,8 @@ import { useTranslations, useLocale } from "next-intl";
 import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
 import { useStanjeUAdresi } from "@/hooks/useStanjeUAdresi";
+import { KLASE_TABELE, KLASE_ZAGLAVLJA, KLASE_REDA, klaseTh, klaseTd } from "./tabela";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import PraznoStanje from "@/components/ui/PraznoStanje";
@@ -250,25 +252,25 @@ export default function AktivnostTab() {
       )}
 
       {view === "pregled" && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
           {pregled === null || (loading && pregled.length === 0) ? (
             <p className="px-5 py-8 text-center text-sm text-kolo-muted">…</p>
           ) : pregled.length === 0 ? (
             <PraznoStanje kompaktno naslov={t("aktivnost_nema")} />
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className={KLASE_TABELE}>
                 <thead>
-                  <tr className="text-left text-xs text-kolo-muted border-b border-kolo-border">
-                    <th className="px-4 py-2.5 font-medium">{t("aktivnost_kolona_korisnik")}</th>
-                    <th className="px-4 py-2.5 font-medium">{t("aktivnost_kolona_poslednja")}</th>
-                    <th className="px-4 py-2.5 font-medium text-right">{t("aktivnost_kolona_poseta")}</th>
+                  <tr className={KLASE_ZAGLAVLJA}>
+                    <th className={klaseTh()}>{t("aktivnost_kolona_korisnik")}</th>
+                    <th className={klaseTh()}>{t("aktivnost_kolona_poslednja")}</th>
+                    <th className={klaseTh("desno")}>{t("aktivnost_kolona_poseta")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pregled.map((r) => (
-                    <tr key={r.userId} className="border-b border-kolo-border last:border-0">
-                      <td className="px-4 py-2.5">
+                    <tr key={r.userId} className={KLASE_REDA}>
+                      <td className={klaseTd()}>
                         {r.pseudonim === "?" ? (
                           <Pseudonim>{r.pseudonim}</Pseudonim>
                         ) : (
@@ -280,10 +282,10 @@ export default function AktivnostTab() {
                           </Link>
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-kolo-muted">
+                      <td className={`${klaseTd()} text-kolo-muted`}>
                         {formatVreme(r.poslednjaAktivnost, locale)}
                       </td>
-                      <td className="px-4 py-2.5 text-right text-kolo-muted">{r.brojPoseta}</td>
+                      <td className={`${klaseTd("desno")} text-kolo-muted`}>{r.brojPoseta}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -310,7 +312,7 @@ export default function AktivnostTab() {
             </button>
           </form>
 
-          <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+          <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
             {dnevnik.length === 0 ? (
               loading ? (
                 <p className="px-5 py-8 text-center text-sm text-kolo-muted">…</p>

@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     // uporedio sa APR-om (Pravilnik čl. 31 st. 4) — beleži se samo činjenica poređenja.
     const rez = await potvrdiPrijavu(id, session.user.id, body.aprUporedjeno === true);
     await logAdminAkcija(session.user.id, "POKROVITELJSTVO_POTVRDJENO", id,
-      `Bonus ${rez.bonus.toLocaleString("sr-RS")} POEN`);
+      `Evidentirano ${rez.bonus.toLocaleString("sr-RS")} POEN (koeficijent 1,00)`);
     await obavesti(rez.vlasnikId, {
       tip: "pokroviteljstvo_potvrdjeno",
       kljuc: rez.bonus > 0
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       parametri: { bonus: rez.bonus },
       naslov: "Pokroviteljstvo potvrđeno",
       tekst: rez.bonus > 0
-        ? `Doprinos pokroviteljstva je potvrđen. Evidentirano je ${rez.bonus.toLocaleString("sr-RS")} bonus POEN.`
+        ? `Doprinos pokroviteljstva je potvrđen. Evidentirano je ${rez.bonus.toLocaleString("sr-RS")} POEN, sa koeficijentom 1,00.`
         : "Doprinos pokroviteljstva je potvrđen i dodat kumulativnom doprinosu.",
       link: "/postani-pokrovitelj",
     });

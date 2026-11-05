@@ -14,6 +14,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { intlTag } from "@/lib/format";
 import { useTranslations, useLocale } from "next-intl";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 import ObavestenjeBoks from "@/components/ui/Obavestenje";
@@ -155,9 +157,9 @@ export default function ObavestenjaTab() {
         <p>{t("obav_upozorenje")}</p>
       </ObavestenjeBoks>
 
-      <form onSubmit={napraviNacrt} className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 space-y-4 shadow-kartica">
+      <form onSubmit={napraviNacrt} className={`${klaseKartice({ padding: "lg" })} space-y-4`}>
         <div>
-          <h2 className="text-base font-semibold text-kolo-muted">{t("obav_novo")}</h2>
+          <NaslovSekcije nivo={3}>{t("obav_novo")}</NaslovSekcije>
           <p className="text-xs text-kolo-muted mt-1">{t("obav_primalaca", { broj: primalaca })}</p>
         </div>
 
@@ -218,8 +220,8 @@ export default function ObavestenjaTab() {
         </button>
       </form>
 
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-        <h2 className="text-base font-semibold text-kolo-muted mb-4">{t("obav_lista")}</h2>
+      <div className={klaseKartice({ padding: "lg" })}>
+        <div className="mb-4"><NaslovSekcije nivo={3}>{t("obav_lista")}</NaslovSekcije></div>
 
         {ucitava ? (
           <p className="text-sm text-kolo-muted">{t("obav_ucitavam")}</p>

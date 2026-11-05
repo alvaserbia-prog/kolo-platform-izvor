@@ -1,7 +1,13 @@
 "use client";
 
-import { klaseDugmeta } from "@/components/ui/Dugme";
-
+import Dugme from "@/components/ui/Dugme";
+import Filter from "@/components/ui/Filter";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import Obavestenje from "@/components/ui/Obavestenje";
+import Stranica from "@/components/ui/Stranica";
+import Ucitavanje from "@/components/ui/Ucitavanje";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -93,40 +99,32 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
     }
   }
 
-  if (ucitava) return <p className="mx-auto max-w-2xl text-sm text-kolo-muted">{t("ucitavanje")}</p>;
-  if (!n) return <p className="mx-auto max-w-2xl text-sm text-kolo-muted">{t("nije_nadjena")}</p>;
+  if (ucitava) return <Stranica><Ucitavanje /></Stranica>;
+  if (!n) return <Stranica><Obavestenje vrsta="greska">{t("nije_nadjena")}</Obavestenje></Stranica>;
 
   const dani = daniPerioda(n.preuzimanjeOd, n.preuzimanjeDo);
   const m = n.moja;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
-      <div>
-        <Link href="/nabavke" className="text-sm text-kolo-muted hover:underline">
-          ← {t("nazad")}
-        </Link>
-        <h1 className="mt-1 text-2xl font-bold">{n.naziv}</h1>
-        <p className="mt-1 text-sm text-kolo-muted">{t(`status_${n.status}` as never)}</p>
-      </div>
+    <Stranica>
+      <NaslovStranice
+        nazad={{ href: "/nabavke", oznaka: t("nazad") }}
+        naslov={n.naziv}
+        opis={t(`status_${n.status}` as never)}
+      />
 
       {n.obustavaRazlog && (
-        <p className="rounded-xl border border-kolo-danger bg-white p-3 text-sm text-kolo-danger">
-          {t("obustavljena", { razlog: n.obustavaRazlog })}
-        </p>
+        <Obavestenje vrsta="greska">{t("obustavljena", { razlog: n.obustavaRazlog })}</Obavestenje>
       )}
 
       {/* ── Moje mesto u postupku ─────────────────────────────────────────── */}
-      <section className="rounded-kartica border border-kolo-green-700 bg-kolo-green-50 p-5 shadow-kartica">
+      <Kartica as="section" ton="zelena">
         {!m && n.status === "OBJAVLJENA" && (
           <>
             <p className="text-sm">{t("prijava_opis", { rok: dan(n.prijaveDo) })}</p>
-            <button
-              onClick={() => posalji("prijavi")}
-              disabled={radi}
-              className={`${klaseDugmeta({ punaSirina: true })} mt-3`}
-            >
+            <Dugme punaSirina className="mt-3" onClick={() => posalji("prijavi")} disabled={radi}>
               {t("prijavi_se")}
-            </button>
+            </Dugme>
           </>
         )}
 
@@ -137,13 +135,9 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
             <p className="text-sm font-medium">
               {m.mesto ? t("cekas_mesto", { mesto: m.mesto }) : t("cekas_red")}
             </p>
-            <button
-              onClick={() => posalji("odustani")}
-              disabled={radi}
-              className={`${klaseDugmeta({ varijanta: "sekundarno", velicina: "sm" })} mt-3`}
-            >
+            <Dugme varijanta="sekundarno" velicina="sm" className="mt-3" onClick={() => posalji("odustani")} disabled={radi}>
               {t("odustani")}
-            </button>
+            </Dugme>
           </>
         )}
 
@@ -153,35 +147,25 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
               {t("pozvan", { mesto: m.mesto ?? 0, poen: poen(n.poenPoDelu) })}
             </p>
             <p className="mt-1 text-sm text-kolo-muted">{t("pozvan_uputstvo")}</p>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label={t("pozvan_uputstvo")}>
               {dani.map((d) => (
-                <button
-                  key={d}
-                  onClick={() => setIzabranDan(d)}
-                  className={`min-h-10 rounded-kontrola border px-3 text-sm transition-colors ${
-                    izabranDan === d
-                      ? "border-kolo-green-700 bg-kolo-green-700 text-white"
-                      : "border-kolo-border bg-white"
-                  }`}
-                >
+                <Filter key={d} ukljucen={izabranDan === d} onClick={() => setIzabranDan(d)}>
                   {new Date(d).toLocaleDateString("sr-RS", { timeZone: "UTC" })}
-                </button>
+                </Filter>
               ))}
             </div>
-            <button
-              onClick={() => posalji("potvrdi", { dan: izabranDan })}
-              disabled={radi || !izabranDan}
-              className={`${klaseDugmeta({ punaSirina: true })} mt-3`}
+            {/* Dugme se ne gasi dok dan nije izabran: klik kaže šta fali. */}
+            <Dugme
+              punaSirina
+              className="mt-3"
+              onClick={() => (izabranDan ? posalji("potvrdi", { dan: izabranDan }) : setGreska(t("izaberi_dan")))}
+              disabled={radi}
             >
               {t("potvrdi")}
-            </button>
-            <button
-              onClick={() => posalji("odustani")}
-              disabled={radi}
-              className={`${klaseDugmeta({ varijanta: "sekundarno", velicina: "sm" })} mt-2`}
-            >
+            </Dugme>
+            <Dugme varijanta="sekundarno" velicina="sm" className="mt-2" onClick={() => posalji("odustani")} disabled={radi}>
               {t("odustani")}
-            </button>
+            </Dugme>
           </>
         )}
 
@@ -190,18 +174,14 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
             <p className="text-sm font-medium">
               {t("potvrdjeno", { dan: dan(m.danPreuzimanja), mesto: n.mestoPreuzimanja ?? "" })}
             </p>
-            <p className="mt-2 inline-block rounded-xl bg-white px-4 py-2 font-mono text-lg font-bold tracking-wider">
+            <p className="mt-2 inline-block rounded-kontrola bg-kolo-surface px-4 py-2 font-mono text-lg font-bold tracking-wider">
               {m.kod}
             </p>
             <p className="mt-2 text-sm text-kolo-muted">{t("kod_uputstvo")}</p>
             <p className="mt-1 text-sm">{t("rezervisano", { poen: poen(m.rezervisano) })}</p>
-            <button
-              onClick={() => posalji("odustani")}
-              disabled={radi}
-              className={`${klaseDugmeta({ varijanta: "sekundarno", velicina: "sm" })} mt-3`}
-            >
+            <Dugme varijanta="sekundarno" velicina="sm" className="mt-3" onClick={() => posalji("odustani")} disabled={radi}>
               {t("odustani")}
-            </button>
+            </Dugme>
           </>
         )}
 
@@ -210,8 +190,8 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
           <p className="text-sm">{t(`moja_${m.status}` as never)}</p>
         )}
 
-        {greska && <p className="mt-2 text-sm text-kolo-danger">{greska}</p>}
-      </section>
+        {greska && <Obavestenje vrsta="greska" className="mt-3">{greska}</Obavestenje>}
+      </Kartica>
 
       {/* ── Kalkulacija (čl. 18 st. 1) ────────────────────────────────────── */}
       {/* 🔴 R-02, mera M-11: dinarska strana je IZVUČENA iz ove tabele. Do 4.5.9 su
@@ -221,8 +201,8 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
           podatka ostaju javna (čl. 37), samo više nisu u istom dokumentu.
           NE VRAĆATI dinarske redove u ovu tabelu. */}
       {n.poenPoDelu !== null && (
-        <section className="rounded-kartica border border-kolo-border bg-white p-5 shadow-kartica">
-          <h2 className="text-lg font-semibold">{t("kalkulacija")}</h2>
+        <Kartica as="section">
+          <NaslovSekcije>{t("kalkulacija")}</NaslovSekcije>
           <dl className="mt-3 divide-y divide-kolo-border text-sm">
             {[
               [t("k_jedinica"), String(n.brojJedinica ?? "—")],
@@ -243,7 +223,7 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
             <p className="mt-3 text-xs text-kolo-muted">{t("k_obrazlozenje", { obrazlozenje: n.poenObrazlozenje })}</p>
           )}
           <p className="mt-2 text-xs text-kolo-muted">{t("paritet_napomena")}</p>
-        </section>
+        </Kartica>
       )}
 
       {/* ── Dinarska strana: samo upućivanje (čl. 18 st. 2, čl. 37 st. 2) ──── */}
@@ -258,8 +238,8 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
 
       {/* ── Ko je preuzeo (čl. 37 st. 3) ──────────────────────────────────── */}
       {n.preuzeli && n.preuzeli.length > 0 && (
-        <section className="rounded-kartica border border-kolo-border bg-white p-5 shadow-kartica">
-          <h2 className="text-lg font-semibold">{t("preuzeli")}</h2>
+        <Kartica as="section">
+          <NaslovSekcije>{t("preuzeli")}</NaslovSekcije>
           <ul className="mt-3 space-y-1 text-sm">
             {n.preuzeli.map((p, i) => (
               <li key={i} className="flex justify-between gap-3">
@@ -270,10 +250,10 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
           </ul>
           {/* Broj POEN-a u zapisu se uz spisak NE objavljuje (čl. 37 st. 3). */}
           <p className="mt-2 text-xs text-kolo-muted">{t("preuzeli_napomena")}</p>
-        </section>
+        </Kartica>
       )}
 
       <p className="text-sm text-kolo-muted">{t("broj_prijava", { broj: n.brojPrijava })}</p>
-    </div>
+    </Stranica>
   );
 }

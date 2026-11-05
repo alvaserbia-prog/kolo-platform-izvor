@@ -2,14 +2,15 @@
 
 import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
-import Dugme from "@/components/ui/Dugme";
+import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
 import NaslovStranice from "@/components/ui/NaslovStranice";
-import StatKartica from "@/components/ui/StatKartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import ZakljucanModul from "@/components/ui/ZakljucanModul";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { useState, useCallback } from "react";
 import { intlTag } from "@/lib/format";
-import { najviseZaUpisZrna } from "@/lib/zrno-upis-pravila";
+import { najviseZaUpisZrna, PROCENAT_UPISA_ZRNA_PO_PERIODU } from "@/lib/zrno-upis-pravila";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import GlasanjeKlijent from "@/app/(app)/glasanje/GlasanjeKlijent";
@@ -42,6 +43,8 @@ interface Props {
   /** Delegiranje: čuvar Kola (čl. 44 st. 2; Gornje Kolo čl. 14). */
   smeDelegirati: boolean;
   minimumPoenZaUpis: number;
+  /** Prag ukupnog broja POEN-a za prelaz u Fazu 2, od koje je upis otvoren (Pravilnik čl. 41 st. 1, 22 st. 1). */
+  pragOtvaranja: number;
   /** Primalac podrške: u periodu upisa ZRNA dnevni iznos programa se ne evidentira (Pravilnik čl. 22 st. 6). */
   jePrimalacPodrske: boolean;
   upisZahtev: { poenIznos: number; status: string } | null;
@@ -64,61 +67,66 @@ export default function ZrnoKlijent(props: Props) {
   const t = useTranslations("zrno");
   const onRefresh = useCallback(() => router.refresh(), [router]);
 
+  const broj = (n: number) => n.toLocaleString(intlTag(locale));
+  // Korisnik koji nije u Kolu ZRNO ne upisuje (čl. 22 st. 3); član bez potvrde ga
+  // upisuje, ali ne aktivira dok ga ne potvrdi član Kola (čl. 22 st. 3, 23 st. 2).
+  const korisnik = !props.smeUpis && !props.jeBezPotvrde;
+
   return (
     <div className="space-y-6">
+      {/* Zeleno zaglavlje (odluka vlasnika 02.11.2026): rečenica, tri brojke (uz
+          koeficijent „nije cena") i „Upiši ZRNO" samo onome ko sme da upisuje. */}
       <NaslovStranice
+        varijanta="istaknuto"
         naslov={t("naslov")}
         opis={t("opis")}
+        brojke={[
+          { vrednost: broj(props.slobodno), oznaka: t("zaglavlje_slobodno") },
+          { vrednost: broj(props.aktivno), oznaka: t("zaglavlje_aktivno") },
+          {
+            vrednost: props.koeficijent.toLocaleString(intlTag(locale), { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            oznaka: t("zaglavlje_koeficijent"),
+          },
+          ...(props.glasackaMoc > 0 ? [{ vrednost: broj(props.glasackaMoc), oznaka: t("glasova") }] : []),
+        ]}
         radnja={
-          props.glasackaMoc > 0 ? (
-            <div className="bg-kolo-gold-100 border border-kolo-gold-600 rounded-kontrola px-4 py-2 text-center">
-              <p className="text-sm font-bold text-kolo-gold-700">{props.glasackaMoc}</p>
-              <p className="text-xs text-kolo-gold-700">{t("glasova")}</p>
-            </div>
+          props.smeUpis && props.kanalAktivan ? (
+            <a href="#upis" className={klaseDugmeta({ varijanta: "sekundarno" })}>
+              {t("upis_naslov")}
+            </a>
           ) : undefined
         }
       />
 
-      {/* Stanje */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
-        <StatKartica
-          oznaka={t("slobodno")}
-          vrednost={props.slobodno.toLocaleString(intlTag(locale))}
-          podnaslov={t("slobodno_opis")}
-        />
-        <StatKartica
-          oznaka={t("aktivno")}
-          vrednost={props.aktivno.toLocaleString(intlTag(locale))}
-          podnaslov={t("aktivno_opis")}
-        />
-        <StatKartica
-          oznaka={
-            <Pojam
-              termin={t("koeficijent")}
-              objasnjenje={t("koeficijent_objasnjenje")}
-            />
-          }
-          vrednost={props.koeficijent.toLocaleString(intlTag(locale), { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          podnaslov={t("koeficijent_opis")}
-        />
-      </div>
+      {/* Šta je obračunski koeficijent — nosiva rečenica „Nije cena i ne izražava vrednost". */}
+      <p className="text-sm text-kolo-muted">
+        <Pojam termin={t("koeficijent")} objasnjenje={t("koeficijent_objasnjenje")} />
+      </p>
+
+      {/* Zaključano (odluka vlasnika 02.11.2026): korisniku „ZRNO upisuje ko je u
+          Kolu.", članu bez potvrde „Upisano ZRNO aktiviraš kad te potvrdi član Kola." */}
+      {korisnik && <ZakljucanModul poruka={t("zakljucano_korisnik")} />}
+      {props.jeBezPotvrde && (
+        <ZakljucanModul poruka={t("zakljucano_bez_potvrde")} dugme={t("zakljucano_bez_potvrde_dugme")} />
+      )}
+
+      {/* Najviše jedno upozorenje: dok upis nije otvoren to je prag faze (Pravilnik
+          čl. 41 st. 1, 22 st. 1), a posle toga zamrznuto ZRNO (čl. 29 st. 1). */}
+      {!props.kanalAktivan ? (
+        <Obavestenje vrsta="upozorenje">
+          {t("kanal_neaktivan", { prag: broj(props.pragOtvaranja) })}
+        </Obavestenje>
+      ) : props.polozaj === "zamrznuto" ? (
+        <Obavestenje vrsta="upozorenje">{t("polozaj_zamrznuto")}</Obavestenje>
+      ) : null}
+      {!props.kanalAktivan && props.polozaj === "zamrznuto" && (
+        <Obavestenje vrsta="info">{t("polozaj_zamrznuto")}</Obavestenje>
+      )}
 
       {/* Glasačka moć formula */}
       {props.aktivno > 0 && (
         <Obavestenje vrsta="info">
           {t("glasacka_moc_formula", { aktivno: props.aktivno, moc: props.glasackaMoc })}
-        </Obavestenje>
-      )}
-
-      {props.polozaj && (
-        <Obavestenje vrsta="upozorenje">
-          {t(props.polozaj === "zamrznuto" ? "polozaj_zamrznuto" : "polozaj_bez_potvrde")}
-        </Obavestenje>
-      )}
-
-      {!props.kanalAktivan && (
-        <Obavestenje vrsta="upozorenje">
-          {t("kanal_neaktivan")}
         </Obavestenje>
       )}
 
@@ -165,6 +173,7 @@ function UpisOtpisSekcija({
   smeUpis,
   smeOtpis,
   smeAktivirati,
+  polozaj,
   onRefresh,
 }: Props & { onRefresh: () => void }) {
   const t = useTranslations("zrno");
@@ -207,7 +216,7 @@ function UpisOtpisSekcija({
 
   return (
     <div className="space-y-4">
-      <p className="text-sm font-semibold text-kolo-muted">{t("upravljanje_naslov")}</p>
+      <NaslovSekcije>{t("upravljanje_naslov")}</NaslovSekcije>
 
       {poruka && (
         <Obavestenje vrsta={poruka.ok ? "uspeh" : "greska"}>{poruka.text}</Obavestenje>
@@ -217,15 +226,15 @@ function UpisOtpisSekcija({
           ZRNO, a „Glas" (aktiviranje, pa glasanje i delegacija ispod) za čuvara Kola. */}
       <div className="grid gap-4 md:grid-cols-2">
         {/* ── Upis ── */}
-        <Kartica className="space-y-3">
-          <p className="text-sm font-semibold text-kolo-muted">{t("upis_naslov")}</p>
+        <Kartica id="upis" className="space-y-3 scroll-mt-20">
+          <NaslovSekcije nivo={3}>{t("upis_naslov")}</NaslovSekcije>
           <p className="text-xs text-kolo-muted">{t("upis_opis")}</p>
 
           {jeBezPotvrde ? (
-            <Obavestenje vrsta="upozorenje">{t("upis_bez_potvrde_napomena")}</Obavestenje>
+            <Obavestenje vrsta="info">{t("upis_bez_potvrde_napomena")}</Obavestenje>
           ) : null}
           {smeUpis && jePrimalacPodrske ? (
-            <Obavestenje vrsta="upozorenje">{t("upis_primalac_podrske_napomena")}</Obavestenje>
+            <Obavestenje vrsta="info">{t("upis_primalac_podrske_napomena")}</Obavestenje>
           ) : null}
           {!smeUpis ? (
             <p className={napomenaCls}>{t("upis_samo_verifikovan")}</p>
@@ -240,7 +249,7 @@ function UpisOtpisSekcija({
           ) : (
             <>
               <p className="text-xs text-kolo-muted">
-                {t("upis_max", { max: maxUpis.toLocaleString(intlTag(locale)) })}
+                {t("upis_max", { max: maxUpis.toLocaleString(intlTag(locale)), procenat: PROCENAT_UPISA_ZRNA_PO_PERIODU })}
               </p>
               <input
                 type="number"
@@ -265,10 +274,12 @@ function UpisOtpisSekcija({
 
         {/* ── Otpis ── */}
         <Kartica className="space-y-3">
-          <p className="text-sm font-semibold text-kolo-muted">{t("otpis_naslov")}</p>
+          <NaslovSekcije nivo={3}>{t("otpis_naslov")}</NaslovSekcije>
           <p className="text-xs text-kolo-muted">{t("otpis_opis")}</p>
           {!smeOtpis ? (
-            <p className={napomenaCls}>{t("otpis_zamrznuto")}</p>
+            // Napomena o zamrznutom ZRNU samo kad ZRNO zaista postoji (čl. 29 st. 1);
+            // korisniku bez ZRNA zaključanost već kaže ZakljucanModul.
+            polozaj === "zamrznuto" ? <p className={napomenaCls}>{t("otpis_zamrznuto")}</p> : null
           ) : otpisZahtev && otpisZahtev.status === "PENDING" ? (
             <Obavestenje vrsta="info">
               {t("otpis_na_cekanju", { kolicina: otpisZahtev.kolicina.toLocaleString(intlTag(locale)) })}
@@ -305,13 +316,15 @@ function UpisOtpisSekcija({
 
       </div>
 
-      <p className="pt-2 text-sm font-semibold text-kolo-muted">
-        <Pojam termin={t("glas_naslov")} objasnjenje={t("gornje_kolo_objasnjenje")} />
-      </p>
+      <div className="pt-2">
+        <NaslovSekcije>
+          <Pojam termin={t("glas_naslov")} objasnjenje={t("gornje_kolo_objasnjenje")} />
+        </NaslovSekcije>
+      </div>
       <div className="grid gap-4">
         {/* ── Aktiviranje / deaktiviranje ── */}
         <Kartica className="space-y-3">
-          <p className="text-sm font-semibold text-kolo-muted">{t("status_naslov")}</p>
+          <NaslovSekcije nivo={3}>{t("status_naslov")}</NaslovSekcije>
           <p className="text-xs text-kolo-muted">{t("status_opis")}</p>
           {statusZahtevi.length > 0 && (
             <div className="space-y-1">
@@ -396,7 +409,7 @@ function DelegacijaSekcija({ glasackaMoc: moja, delegacija, smeDelegirati, onRef
     <div className="space-y-4">
       {dijalog}
       <Kartica className="space-y-3">
-        <p className="text-sm font-semibold text-kolo-muted">{t("delegacija_naslov")}</p>
+        <NaslovSekcije nivo={3}>{t("delegacija_naslov")}</NaslovSekcije>
         <p className="text-xs text-kolo-muted">
           {t("delegacija_opis", { moc: moja })}
         </p>

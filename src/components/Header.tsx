@@ -51,7 +51,7 @@ export default function Header({ onMenuOpen }: { onMenuOpen?: () => void }) {
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />
               </svg>
-              <span className="text-[17px] font-semibold">{t("aria_meni")}</span>
+              <span className="text-lg font-semibold">{t("aria_meni")}</span>
             </button>
             <Link href="/pocetna" className="flex items-center">
               <Logo tema="tamna" velicina="xs" prioritet />
@@ -200,7 +200,7 @@ function ProfilMeni({ userId, pseudonim }: { userId: string; pseudonim: string }
       </button>
 
       {open && (
-        <div className="absolute right-0 top-11 w-auto min-w-max bg-kolo-surface rounded-kartica shadow-xl border border-kolo-border z-50 overflow-hidden">
+        <div className="absolute right-0 top-11 w-auto min-w-max bg-kolo-surface rounded-kartica shadow-plutajuce border border-kolo-border z-50 overflow-hidden">
           <div className="px-4 py-3 border-b border-kolo-border">
             <p className="text-sm font-semibold text-kolo-text truncate text-right"><Pseudonim>{pseudonim}</Pseudonim></p>
           </div>
@@ -369,7 +369,7 @@ function BellNotifikacije() {
     <div className="relative flex items-center" ref={panelRef}>
       {toast && (
         <div
-          className="fixed bottom-6 right-6 z-[100] w-80 bg-kolo-surface rounded-kartica shadow-xl border border-kolo-border p-4 flex items-start gap-3 animate-slide-up"
+          className="fixed bottom-6 right-6 z-[100] w-80 bg-kolo-surface rounded-kartica shadow-plutajuce border border-kolo-border p-4 flex items-start gap-3 animate-slide-up"
           onClick={() => { setToast(null); if (toast.link) router.push(toast.link); }}
           style={{ cursor: toast.link ? "pointer" : "default" }}
         >
@@ -378,7 +378,7 @@ function BellNotifikacije() {
             <p className={`text-sm font-semibold ${TIP_BOJA[toast.tip] ?? "text-kolo-text"}`}>{toast.naslov}</p>
             <p className="text-xs text-kolo-muted mt-0.5 leading-relaxed line-clamp-2">{toast.tekst}</p>
           </div>
-          <button onClick={(e) => { e.stopPropagation(); setToast(null); }} aria-label={tc("zatvori")} className="w-8 h-8 -m-1.5 text-kolo-muted hover:text-kolo-text text-lg leading-none shrink-0">×</button>
+          <button onClick={(e) => { e.stopPropagation(); setToast(null); }} aria-label={tc("zatvori")} className="w-10 h-10 -m-2.5 text-kolo-muted hover:text-kolo-text text-lg leading-none shrink-0">×</button>
         </div>
       )}
       <button
@@ -398,11 +398,11 @@ function BellNotifikacije() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-11 w-80 bg-kolo-surface rounded-kartica shadow-xl border border-kolo-border z-50 overflow-hidden">
+        <div className="absolute right-0 top-11 w-80 bg-kolo-surface rounded-kartica shadow-plutajuce border border-kolo-border z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-kolo-border">
             <span className="text-sm font-semibold text-kolo-text">{t("obavestenja")}</span>
             {neprocitano > 0 && (
-              <button onClick={oznaciProcitane} disabled={loading} className="text-xs text-kolo-green-700 hover:underline disabled:opacity-50">
+              <button onClick={oznaciProcitane} disabled={loading} className="inline-flex min-h-10 items-center text-xs text-kolo-green-700 hover:underline disabled:opacity-50">
                 {t("oznaci_procitane")}
               </button>
             )}
@@ -420,7 +420,7 @@ function BellNotifikacije() {
                     <div className={!n.procitana ? "" : "pl-4"}>
                       <p className={`text-sm font-semibold ${TIP_BOJA[n.tip] ?? "text-kolo-text"}`}>{n.naslov}</p>
                       <p className="text-xs text-kolo-muted mt-0.5 leading-relaxed">{n.tekst}</p>
-                      <p className="text-[11px] text-kolo-border mt-1">
+                      <p className="text-xs text-kolo-muted mt-1">
                         {new Date(n.createdAt).toLocaleString(intlTag(locale), { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
                       </p>
                     </div>

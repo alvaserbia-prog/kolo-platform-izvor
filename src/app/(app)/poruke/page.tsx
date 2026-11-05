@@ -11,6 +11,9 @@ import { profilHref } from "@/lib/profil-link";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import PraznoStanje from "@/components/ui/PraznoStanje";
 
 type Konverzacija = {
   id: string;
@@ -300,11 +303,11 @@ function PorukeContent() {
   // je kutija ispadala viša od vidljivog dela ekrana i unos je bio ispod ivice.
   // Ako se promeni visina Header-a ili padding u AppShell-u, ispraviti i ovde.
   return (
-    <div className="flex h-[calc(100dvh_-_6rem)] md:h-[calc(100dvh_-_7rem)] overflow-hidden rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica">
+    <Kartica padding="nema" className="flex h-[calc(100dvh_-_6rem)] md:h-[calc(100dvh_-_7rem)] overflow-hidden">
       {/* Leva tabla — lista konverzacija */}
       <div className={`w-full md:w-72 shrink-0 border-r border-kolo-border flex flex-col ${mobilniPrikaz === "chat" ? "hidden md:flex" : "flex"}`}>
         <div className="px-4 py-3 border-b border-kolo-border">
-          <h1 className="text-base font-semibold text-kolo-text">{t("naslov")}</h1>
+          <NaslovStranice naslov={t("naslov")} />
         </div>
 
         {/* Nova konverzacija — pretraga (samo verifikovani mogu da iniciraju) */}
@@ -331,7 +334,7 @@ function PorukeContent() {
           </div>
         ) : !verified ? (
           <div className="px-3 py-2 border-b border-kolo-border">
-            <p className="text-[11px] text-kolo-muted leading-relaxed">
+            <p className="text-xs text-kolo-muted leading-relaxed">
               {t("neverifikovan_info")}
             </p>
           </div>
@@ -377,7 +380,9 @@ function PorukeContent() {
         {/* Lista konverzacija */}
         <div className="flex-1 overflow-y-auto">
           {konverzacije.length === 0 ? (
-            <p className="px-4 py-8 text-center text-xs text-kolo-muted whitespace-pre-line">{t("nema_konverzacija")}</p>
+            <div className="px-4">
+              <PraznoStanje naslov={<span className="whitespace-pre-line">{t("nema_konverzacija")}</span>} />
+            </div>
           ) : (
             konverzacije.map((k) => (
               <KonverzacijaRed
@@ -395,8 +400,8 @@ function PorukeContent() {
       {/* Desna tabla — aktivni chat */}
       <div className={`flex-1 flex-col min-w-0 ${mobilniPrikaz === "lista" ? "hidden md:flex" : "flex"}`}>
         {!aktivnaKonvId ? (
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-kolo-muted text-sm">{t("izaberite_konverzaciju")}</p>
+          <div className="flex-1 flex items-center justify-center px-4">
+            <PraznoStanje naslov={t("izaberite_konverzaciju")} />
           </div>
         ) : (
           <>
@@ -429,7 +434,7 @@ function PorukeContent() {
             {/* Poruke */}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-2">
               {poruke.length === 0 && (
-                <p className="text-center text-xs text-kolo-muted py-8">{t("pocnite_konverzaciju")}</p>
+                <PraznoStanje naslov={t("pocnite_konverzaciju")} />
               )}
               {poruke.map((p) => (
                 <PorukaBubble
@@ -448,7 +453,7 @@ function PorukeContent() {
               {/* Povodom čega je razgovor otvoren. Stoji dok se ne napiše prva
                   poruka — tada prelazi na nju, kao kartica iznad teksta. */}
               {roditeljCita && (
-                <p className="mb-2 rounded-xl border-l-4 border-kolo-gold-400 bg-kolo-bg px-3 py-2 text-xs text-kolo-text">
+                <p className="mb-2 rounded-kontrola border-l-4 border-kolo-gold-400 bg-kolo-bg px-3 py-2 text-xs text-kolo-text">
                   {t("roditelj_cita")}
                 </p>
               )}
@@ -500,7 +505,7 @@ function PorukeContent() {
           </>
         )}
       </div>
-    </div>
+    </Kartica>
   );
 }
 
@@ -548,11 +553,11 @@ const KonverzacijaRed = memo(function KonverzacijaRed({
             <span className="text-sm font-semibold text-kolo-text truncate"><Pseudonim>{k.drugiPseudonim}</Pseudonim></span>
             <div className="flex items-center gap-1.5 shrink-0">
               {k.neprocitano > 0 && (
-                <span className="w-4 h-4 bg-kolo-green-700 text-white text-[11px] font-bold rounded-full flex items-center justify-center">
+                <span className="min-w-5 h-5 bg-kolo-green-700 text-white text-xs font-bold leading-none rounded-full flex items-center justify-center">
                   {k.neprocitano > 9 ? "9+" : k.neprocitano}
                 </span>
               )}
-              <span className="text-[11px] text-kolo-border">
+              <span className="text-xs text-kolo-muted">
                 {new Date(k.poslednjeVreme).toLocaleString(intlTag(locale), { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
               </span>
             </div>
@@ -609,7 +614,7 @@ const PorukaBubble = memo(function PorukaBubble({
           </a>
         )}
         <p className="whitespace-pre-wrap break-words">{p.tekst}</p>
-        <p className={`text-[11px] mt-1 ${p.moja ? "text-white/70" : "text-kolo-border"}`}>
+        <p className={`text-xs mt-1 ${p.moja ? "text-white/70" : "text-kolo-muted"}`}>
           {new Date(p.createdAt).toLocaleString(intlTag(locale), { hour: "2-digit", minute: "2-digit" })}
         </p>
       </div>

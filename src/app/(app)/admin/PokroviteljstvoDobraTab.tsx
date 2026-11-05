@@ -6,9 +6,14 @@ import { useTranslations, useLocale } from "next-intl";
 import { intlTag } from "@/lib/format";
 import Pseudonim from "@/components/Pseudonim";
 import AdminLogotip from "./AdminLogotip";
+import { KLASE_REDA, klaseTd } from "./tabela";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import { useDijalog } from "@/components/ui/Dijalog";
+
+const GUSTO = klaseTd("levo", { gusto: true });
 
 /**
  * Admin → Pokrovitelji → Dobra i usluge (Pravilnik o pokroviteljstvu i donacijama
@@ -199,13 +204,13 @@ export default function PokroviteljstvoDobraTab({ onDone }: { onDone?: () => voi
       {dijalog}
       <p className="text-xs text-kolo-muted">{t("dobra_uvod")}</p>
       {ugovori.length === 0 && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica"><PraznoStanje naslov={t("dobra_nema")} /></div>
+        <div className={klaseKartice({ padding: "nema" })}><PraznoStanje naslov={t("dobra_nema")} /></div>
       )}
       {ugovori.map((u) => {
         const imaCenovnik = u.dokazi.some((d) => d.vrsta === "CENOVNIK");
         const slobodnih = u.vauceri.filter((v) => v.status === "SLOBODAN").length;
         return (
-          <div key={u.id} className="bg-kolo-surface rounded-kartica border border-kolo-border p-4 space-y-2 shadow-kartica">
+          <div key={u.id} className={`${klaseKartice({ padding: "sm" })} space-y-2`}>
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 {u.vrstaDavaoca === "GAZDINSTVO" ? (
@@ -367,17 +372,17 @@ export default function PokroviteljstvoDobraTab({ onDone }: { onDone?: () => voi
                   <table className="w-full text-xs">
                     <tbody>
                       {u.vauceri.map((v) => (
-                        <tr key={v.id} className="border-b border-kolo-border last:border-0">
-                          <td className="px-2 py-1 font-mono">{v.kod}</td>
-                          <td className="px-2 py-1">{V_STATUS[v.status]}</td>
-                          <td className="px-2 py-1">{v.imalacPseudonim ? <Pseudonim>{v.imalacPseudonim}</Pseudonim> : "—"}</td>
-                          <td className="px-2 py-1">
+                        <tr key={v.id} className={KLASE_REDA}>
+                          <td className={`${GUSTO} font-mono`}>{v.kod}</td>
+                          <td className={GUSTO}>{V_STATUS[v.status]}</td>
+                          <td className={GUSTO}>{v.imalacPseudonim ? <Pseudonim>{v.imalacPseudonim}</Pseudonim> : "—"}</td>
+                          <td className={GUSTO}>
                             {v.potvrdioPseudonim && (
                               <>{t("dobra_potvrdio")} <Pseudonim>{v.potvrdioPseudonim}</Pseudonim></>
                             )}
                           </td>
-                          <td className="px-2 py-1">{v.prigovor ? t("dobra_prigovor", { status: v.prigovor }) : ""}</td>
-                          <td className="px-2 py-1 text-right">
+                          <td className={GUSTO}>{v.prigovor ? t("dobra_prigovor", { status: v.prigovor }) : ""}</td>
+                          <td className={klaseTd("desno", { gusto: true })}>
                             {u.status === "POTPISAN" && v.prigovor && v.prigovor !== "ODBIJENO" && v.imalacPseudonim && (
                               <button onClick={() => raskid(u.id, v)} disabled={radi === v.id}
                                 className={klaseDugmeta({ varijanta: "opasno", velicina: "sm" })}>
@@ -397,8 +402,8 @@ export default function PokroviteljstvoDobraTab({ onDone }: { onDone?: () => voi
       })}
 
       {/* ── Lista zabrane (čl. 35 st. 5) ──────────────────────────────────── */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-4 space-y-2 shadow-kartica">
-        <p className="font-semibold text-kolo-text">{t("dobra_zabrane_naslov")}</p>
+      <div className={`${klaseKartice({ padding: "sm" })} space-y-2`}>
+        <NaslovSekcije nivo={3}>{t("dobra_zabrane_naslov")}</NaslovSekcije>
         <p className="text-xs text-kolo-muted">{t("dobra_zabrane_opis")}</p>
         {zabrane.length === 0 ? (
           <p className="text-xs text-kolo-muted">{t("dobra_zabrane_prazno")}</p>

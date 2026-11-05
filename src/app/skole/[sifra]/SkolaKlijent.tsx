@@ -8,6 +8,8 @@ import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
 import type { Pozicija, Skola } from "@/lib/skola";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import Obavestenje from "@/components/ui/Obavestenje";
 import PraznoStanje from "@/components/ui/PraznoStanje";
@@ -51,7 +53,7 @@ export default function SkolaKlijent({ sifra }: { sifra: string }) {
   const { skola, brojDece, procenat, pozicijaPoBroju: poz, mestoPoProcentu, deca } = data;
 
   return (
-    <div className="space-y-6">
+    <Stranica sirina="siroka">
       <NaslovStranice
         nazad={{ href: "/skole", oznaka: t("nazad") }}
         naslov={skola.naziv}
@@ -104,7 +106,7 @@ export default function SkolaKlijent({ sifra }: { sifra: string }) {
 
       <Kartica as="section" padding="nema">
         <div className="border-b border-kolo-border px-5 py-4">
-          <h2 className="text-sm font-semibold text-kolo-text">{t("deca_naslov")}</h2>
+          <NaslovSekcije>{t("deca_naslov")}</NaslovSekcije>
         </div>
 
         {deca === null ? (
@@ -132,6 +134,6 @@ export default function SkolaKlijent({ sifra }: { sifra: string }) {
       </Kartica>
 
       <p className="text-xs text-kolo-muted">{t("napomena")}</p>
-    </div>
+    </Stranica>
   );
 }

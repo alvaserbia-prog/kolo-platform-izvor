@@ -9,6 +9,7 @@ import Segmenti from "@/components/ui/Segmenti";
 import Kartica from "@/components/ui/Kartica";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import { klaseDugmeta } from "@/components/ui/Dugme";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
 export type Transakcija = {
   id: string;
@@ -39,8 +40,8 @@ export default function IstorijaKlijent({ transakcije, pseudonim }: { transakcij
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="text-base font-semibold text-kolo-muted">{t("istorija_transakcija")}</h2>
+      <div className="mb-3">
+        <NaslovSekcije>{t("istorija_transakcija")}</NaslovSekcije>
       </div>
 
       {/* Filteri */}
@@ -78,16 +79,16 @@ export default function IstorijaKlijent({ transakcije, pseudonim }: { transakcij
           </Kartica>
         )
       ) : (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+        <Kartica padding="nema" className="overflow-hidden">
           {/* Zaglavlje tabele — desktop */}
           <div className="hidden sm:grid grid-cols-[7rem_4.5rem_1fr_1.5rem_1fr_minmax(0,1.5fr)_7rem] gap-x-3 px-4 py-2 border-b border-kolo-border bg-kolo-bg">
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("col_datum")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("col_vreme")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("col_posiljac")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("col_datum")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("col_vreme")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("col_posiljac")}</span>
             <span />
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("col_primalac")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide">{t("col_opis")}</span>
-            <span className="text-xs font-semibold text-kolo-muted uppercase tracking-wide text-right">{t("col_iznos")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("col_primalac")}</span>
+            <span className="text-xs font-semibold text-kolo-muted">{t("col_opis")}</span>
+            <span className="text-xs font-semibold text-kolo-muted text-right">{t("col_iznos")}</span>
           </div>
           {filtered.map((tx, i) => (
             <TxRed
@@ -97,7 +98,7 @@ export default function IstorijaKlijent({ transakcije, pseudonim }: { transakcij
               jePoslednji={i === filtered.length - 1}
             />
           ))}
-        </div>
+        </Kartica>
       )}
     </div>
   );

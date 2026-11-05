@@ -5,6 +5,7 @@ import { intlTag } from "@/lib/format";
 import { useTranslations, useLocale } from "next-intl";
 import { MINIMUM_PRIJAVE_POKROVITELJSTVA } from "@/lib/donacija-pravila";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -24,7 +25,8 @@ export default function NovcanaPrijava({ upisId, onPoslato }: { upisId: string; 
 
   async function posalji() {
     setGreska("");
-    if (Number(vrednost) < MINIMUM_PRIJAVE_POKROVITELJSTVA) {
+    if (radi) return;
+    if (!(Number(vrednost) >= MINIMUM_PRIJAVE_POKROVITELJSTVA)) {
       setGreska(t("forma_minimum", { iznos: minimum }));
       return;
     }
@@ -42,8 +44,7 @@ export default function NovcanaPrijava({ upisId, onPoslato }: { upisId: string; 
 
   return (
     <Kartica className="space-y-3">
-      <h2 className="font-semibold text-kolo-text">{t("forma_naslov")}</h2>
-      <p className="text-sm text-kolo-muted">{t("forma_opis")}</p>
+      <NaslovSekcije opis={t("forma_opis")}>{t("forma_naslov")}</NaslovSekcije>
       <Polje className="max-w-xs" oznaka={t("forma_vrednost_label")} pomoc={t("forma_minimum_napomena", { iznos: minimum })}>
         <input type="number" value={vrednost} onChange={(e) => setVrednost(e.target.value)}
           className={KLASE_UNOSA} />
@@ -51,7 +52,7 @@ export default function NovcanaPrijava({ upisId, onPoslato }: { upisId: string; 
       {/* Ime iz upisa ide u evidenciju identiteta pri potvrdi prijema (čl. 19 st. 3). */}
       <p className="text-xs text-kolo-muted">{t("forma_zastupnik_napomena")}</p>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
-      <Dugme onClick={posalji} disabled={radi || !vrednost || Number(vrednost) <= 0}>
+      <Dugme onClick={posalji} disabled={radi}>
         {radi ? t("forma_saljem") : t("forma_podnesi")}
       </Dugme>
     </Kartica>

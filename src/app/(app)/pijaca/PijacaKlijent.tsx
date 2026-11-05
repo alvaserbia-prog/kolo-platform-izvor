@@ -17,6 +17,11 @@ import { dogadjaj } from "@/lib/analitika";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Segmenti from "@/components/ui/Segmenti";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import { klaseKartice } from "@/components/ui/Kartica";
+import Filter, { klaseFiltera } from "@/components/ui/Filter";
+import Pecat from "@/components/ui/Pecat";
+import PraznoStanje from "@/components/ui/PraznoStanje";
 
 interface Listing {
   id: string;
@@ -246,19 +251,19 @@ export default function PijacaKlijent({
           poziv na radnju koju ne može da izvrši. Njemu umesto dugmeta ide traka
           ispod, koja ga zove tamo gde stvarno može da nastavi: na pridruživanje. */}
       <div className="space-y-1">
-        <div className="flex justify-between items-center gap-3">
-          <div className="min-w-0">
-            <h1 className="kolo-naslov">{t("naslov")}</h1>
-          </div>
-          {prijavljen && (
-            <Link
-              href={isVerified && jePotraznja ? "/pijaca/novi-oglas?tip=potraznja" : "/pijaca/novi-oglas"}
-              className={klaseDugmeta() + " hidden md:inline-flex shrink-0"}
-            >
-              {isVerified && jePotraznja ? t("nova_potraznja") : t("novi_oglas")}
-            </Link>
-          )}
-        </div>
+        <NaslovStranice
+          naslov={t("naslov")}
+          radnja={
+            prijavljen ? (
+              <Link
+                href={isVerified && jePotraznja ? "/pijaca/novi-oglas?tip=potraznja" : "/pijaca/novi-oglas"}
+                className={klaseDugmeta() + " hidden md:inline-flex shrink-0"}
+              >
+                {isVerified && jePotraznja ? t("nova_potraznja") : t("novi_oglas")}
+              </Link>
+            ) : undefined
+          }
+        />
         {!isVerified && prijavljen && (
           <Link
             href="/pijaca/novi-oglas"
@@ -336,25 +341,16 @@ export default function PijacaKlijent({
             type="button"
             onClick={() => setFilteriOtvoreni((v) => !v)}
             aria-expanded={filteriOtvoreni}
-            className={`sm:hidden inline-flex min-h-10 items-center justify-center gap-2 rounded-kontrola border bg-kolo-surface px-4 text-sm font-semibold transition-colors ${
-              brojAktivnihFiltera > 0 ? "border-kolo-green-700 text-kolo-green-700" : "border-kolo-border text-kolo-text"
-            }`}
+            className={`${klaseFiltera(brojAktivnihFiltera > 0)} sm:hidden justify-center`}
           >
             {t("filteri")}{brojAktivnihFiltera > 0 ? ` (${brojAktivnihFiltera})` : ""}
           </button>
           {/* LEVO — padajuci meniji */}
           <div className={`${filteriOtvoreni ? "flex" : "hidden"} sm:flex gap-2 flex-wrap items-center`}>
             {!jePotraznja && (
-              <button
-                type="button"
-                onClick={() => setSamoDomace((v) => !v)}
-                aria-pressed={samoDomace}
-                className={`min-h-10 px-3 rounded-kontrola border text-sm font-medium transition-colors ${
-                  samoDomace ? "bg-kolo-green-700 border-kolo-green-700 text-white" : "bg-kolo-surface border-kolo-border text-kolo-text hover:border-kolo-green-500"
-                }`}
-              >
+              <Filter ukljucen={samoDomace} onClick={() => setSamoDomace((v) => !v)}>
                 {t("samo_domace")}
-              </button>
+              </Filter>
             )}
             {/* Lokacija — dropdown sa multi-select listom lokacija iz oglasa.
                 Podrazumevano „Sve lokacije" (prazan izbor = bez filtriranja). */}
@@ -362,11 +358,8 @@ export default function PijacaKlijent({
               <button
                 type="button"
                 onClick={() => setShowLokacija((v) => !v)}
-                className={`min-h-10 px-3 rounded-kontrola border bg-kolo-surface text-sm transition-colors ${
-                  lokacijeIzabrane.length > 0
-                    ? "border-kolo-green-700 text-kolo-green-900 font-medium"
-                    : "border-kolo-border text-kolo-text hover:border-kolo-green-700"
-                }`}
+                aria-expanded={showLokacija}
+                className={klaseFiltera(lokacijeIzabrane.length > 0)}
               >
                 {lokacijeIzabrane.length === 0
                   ? t("lokacija_sve")
@@ -379,7 +372,7 @@ export default function PijacaKlijent({
                   <button
                     type="button"
                     onClick={() => setLokacijeIzabrane([])}
-                    className={`block w-full min-h-9 text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                    className={`block w-full min-h-10 text-left px-3 py-1.5 rounded-kontrola text-sm transition-colors ${
                       lokacijeIzabrane.length === 0
                         ? "bg-kolo-green-100 text-kolo-green-900 font-medium"
                         : "text-kolo-text hover:bg-kolo-bg"
@@ -394,7 +387,7 @@ export default function PijacaKlijent({
                         key={lok}
                         type="button"
                         onClick={() => toggleLokacija(lok)}
-                        className={`flex items-center justify-between gap-2 w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                        className={`flex items-center justify-between gap-2 w-full min-h-10 text-left px-3 py-1.5 rounded-kontrola text-sm transition-colors ${
                           izabrana ? "bg-kolo-green-100 text-kolo-green-900 font-medium" : "text-kolo-text hover:bg-kolo-bg"
                         }`}
                       >
@@ -416,11 +409,8 @@ export default function PijacaKlijent({
               <button
                 type="button"
                 onClick={() => setShowCena((v) => !v)}
-                className={`min-h-10 px-3 rounded-kontrola border bg-kolo-surface text-sm transition-colors ${
-                  minCena || maxCena
-                    ? "border-kolo-green-700 text-kolo-green-900 font-medium"
-                    : "border-kolo-border text-kolo-text hover:border-kolo-green-700"
-                }`}
+                aria-expanded={showCena}
+                className={klaseFiltera(!!(minCena || maxCena))}
               >
                 {t("cena_filter")}
                 {minCena || maxCena ? ` (${minCena || "0"}–${maxCena || "∞"})` : ""}
@@ -436,7 +426,7 @@ export default function PijacaKlijent({
                     onChange={(e) => setMinCena(e.target.value)}
                     className="w-24 min-h-10 px-3 rounded-kontrola border border-kolo-border bg-kolo-surface text-sm outline-none focus:border-kolo-green-700 transition-colors"
                   />
-                  <span className="text-kolo-border text-xs">—</span>
+                  <span className="text-kolo-muted text-xs" aria-hidden="true">—</span>
                   <input
                     type="number"
                     min={0}
@@ -447,7 +437,7 @@ export default function PijacaKlijent({
                     className="w-24 min-h-10 px-3 rounded-kontrola border border-kolo-border bg-kolo-surface text-sm outline-none focus:border-kolo-green-700 transition-colors"
                   />
                   {(minCena || maxCena) && (
-                    <button type="button" onClick={() => { setMinCena(""); setMaxCena(""); }} className="inline-flex h-9 w-9 items-center justify-center text-sm text-kolo-muted hover:text-kolo-text">
+                    <button type="button" onClick={() => { setMinCena(""); setMaxCena(""); }} className="inline-flex size-10 items-center justify-center text-sm text-kolo-muted hover:text-kolo-text">
                       ×
                     </button>
                   )}
@@ -462,11 +452,8 @@ export default function PijacaKlijent({
               <button
                 type="button"
                 onClick={() => setShowSort((v) => !v)}
-                className={`min-h-10 px-3 rounded-kontrola border bg-kolo-surface text-sm transition-colors ${
-                  sort !== "novo"
-                    ? "border-kolo-green-700 text-kolo-green-900 font-medium"
-                    : "border-kolo-border text-kolo-text hover:border-kolo-green-700"
-                }`}
+                aria-expanded={showSort}
+                className={klaseFiltera(sort !== "novo")}
               >
                 {t(`sort_${sort}`)}
               </button>
@@ -475,8 +462,9 @@ export default function PijacaKlijent({
                   {(["novo", "jeftino", "skupo"] as const).map((val) => (
                     <button
                       key={val}
+                      type="button"
                       onClick={() => { setSort(val); setShowSort(false); }}
-                      className={`block w-full min-h-9 text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                      className={`block w-full min-h-10 text-left px-3 py-1.5 rounded-kontrola text-sm transition-colors ${
                         sort === val ? "bg-kolo-green-100 text-kolo-green-900 font-medium" : "text-kolo-text hover:bg-kolo-bg"
                       }`}
                     >
@@ -503,22 +491,24 @@ export default function PijacaKlijent({
 
       {/* Lista oglasa */}
       {filtrirani.length === 0 ? (
-        <div className="bg-kolo-surface rounded-kartica shadow-kartica border border-kolo-border p-10 flex flex-col items-center text-center gap-2">
-          <div className="text-kolo-green-500">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
-            </svg>
-          </div>
-          <p className="text-sm font-semibold text-kolo-text">
-            {(jePotraznja ? brojPotraznja : brojPonuda) === 0
-              ? t(jePotraznja ? "nema_potraznja_naslov" : "nema_oglasa_naslov")
-              : t("nema_rezultata_naslov")}
-          </p>
-          <p className="text-sm text-kolo-muted">
-            {(jePotraznja ? brojPotraznja : brojPonuda) === 0
-              ? t(jePotraznja ? "nema_potraznja_opis" : "nema_oglasa_opis")
-              : t("nema_rezultata_opis")}
-          </p>
+        <div className={klaseKartice({ padding: "md" })}>
+          <PraznoStanje
+            ikona={
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
+            }
+            naslov={
+              (jePotraznja ? brojPotraznja : brojPonuda) === 0
+                ? t(jePotraznja ? "nema_potraznja_naslov" : "nema_oglasa_naslov")
+                : t("nema_rezultata_naslov")
+            }
+            opis={
+              (jePotraznja ? brojPotraznja : brojPonuda) === 0
+                ? t(jePotraznja ? "nema_potraznja_opis" : "nema_oglasa_opis")
+                : t("nema_rezultata_opis")
+            }
+          />
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -618,7 +608,7 @@ const OglasKartica = memo(function OglasKartica({
   const tc = useTranslations("common");
 
   return (
-    <div className="bg-kolo-surface rounded-kartica shadow-kartica border border-kolo-border overflow-hidden flex flex-col">
+    <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden flex flex-col`}>
       {/* Slika ili placeholder — ceo blok vodi na oglas */}
       <Link href={`/pijaca/${oglas.id}`} className="relative w-full h-[180px] bg-kolo-bg flex items-center justify-center">
         {oglas.slike > 0 ? (
@@ -638,7 +628,7 @@ const OglasKartica = memo(function OglasKartica({
         ) : (
           <span className="text-4xl">{kategorijaEmoji(oglas.category)}</span>
         )}
-        <span className="absolute top-2 left-2 bg-white/90 text-kolo-muted text-xs font-medium px-2 py-0.5 rounded-lg">
+        <span className="absolute top-2 left-2 bg-kolo-surface/90 text-kolo-muted text-xs font-medium px-2 py-0.5 rounded-kontrola">
           {t(`kategorija_${kategorijaKljuc(oglas.category)}`)}
         </span>
         {/* Pečat da oglašivač nije verifikovan (Uslovi čl. 18 st. 2).
@@ -657,20 +647,13 @@ const OglasKartica = memo(function OglasKartica({
             kvalitetu ni poreklu robe, samo da oglas stoji u ime gazdinstva. */}
         <div className="absolute top-2 right-2 flex flex-col items-end gap-1.5">
           {oglas.sellerMaloletan ? (
-            <span className="bg-white/95 text-kolo-green-700 border-2 border-kolo-green-700 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md rotate-[-6deg]">
-              {t("oznaka_dete")}
-            </span>
+            <Pecat ton="zeleni">{t("oznaka_dete")}</Pecat>
           ) : !oglas.sellerVerified ? (
-            <span className="bg-white/95 text-kolo-gold-700 border-2 border-kolo-gold-600 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md rotate-[-6deg]">
-              {t("oznaka_neverifikovan")}
-            </span>
+            <Pecat ton="zlatni">{t("oznaka_neverifikovan")}</Pecat>
           ) : null}
           {oglas.domace && (
-            <span
-              className="bg-white/95 text-kolo-green-700 border-2 border-kolo-green-700 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md rotate-[-6deg]"
-              title={t("oznaka_domace_opis")}
-            >
-              {t("oznaka_domace")}
+            <span title={t("oznaka_domace_opis")}>
+              <Pecat ton="zeleni">{t("oznaka_domace")}</Pecat>
             </span>
           )}
         </div>
@@ -689,11 +672,11 @@ const OglasKartica = memo(function OglasKartica({
             <p className="text-xs text-kolo-muted mt-0.5 line-clamp-1">{oglas.description}</p>
           </div>
           {oglas.tip === "POTRAZNJA" ? (
-            <span className="shrink-0 bg-kolo-gold-100 text-kolo-gold-700 rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide self-start">
+            <span className="shrink-0 bg-kolo-gold-100 text-kolo-gold-700 rounded-kontrola px-2.5 py-1 text-xs font-bold uppercase tracking-wide self-start">
               {t("trazi_se")}
             </span>
           ) : (
-            <div className="shrink-0 bg-kolo-green-100 rounded-xl px-2.5 py-1.5 text-center">
+            <div className="shrink-0 bg-kolo-green-100 rounded-kontrola px-2.5 py-1.5 text-center">
               <p className="text-base font-bold text-kolo-green-700 leading-none">
                 {formatCenaGlavni(oglas, t("cena_po_dogovoru"))}
               </p>
@@ -730,6 +713,7 @@ const OglasKartica = memo(function OglasKartica({
             // vlasnika 22.10.2026). Granicu drži server (`/api/poruke`).
             : prijavljen) ? (
             <button
+              type="button"
               onClick={() => onKontakt(oglas.id, oglas.sellerId)}
               disabled={kontaktLoading}
               className={`shrink-0 font-semibold text-white transition-colors disabled:opacity-60 ${
@@ -756,7 +740,7 @@ const OglasKartica = memo(function OglasKartica({
                kroz njega ga mreža i nađe (dokaz stvarnosti čl. 15 st. 7). */
             <Link
               href={prijavljen ? "/pijaca/novi-oglas" : "/registracija"}
-              className="shrink-0 text-xs text-kolo-green-700 font-semibold hover:underline"
+              className="shrink-0 inline-flex min-h-10 items-center text-xs text-kolo-green-700 font-semibold hover:underline"
             >
               {prijavljen ? t("cta_postavi_oglas") : t("registruj_se")}
             </Link>

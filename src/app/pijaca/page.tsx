@@ -16,6 +16,7 @@ import { idPrijatelja } from "@/lib/protokol/prijateljstva";
 import Link from "next/link";
 import Dugme from "@/components/ui/Dugme";
 import Kartica from "@/components/ui/Kartica";
+import Stranica from "@/components/ui/Stranica";
 import { GAZDINSTVO_ZA_OZNAKU, jeDomace } from "@/lib/protokol/gazdinstvo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -98,9 +99,9 @@ export default async function PijacaPage({
   const prijatelji = deteSaRoditeljem && posmatrac ? new Set(await idPrijatelja(posmatrac.id)) : new Set<string>();
 
   return (
-    <>
+    <Stranica sirina="siroka">
       {!session && (
-        <div className="mb-5 bg-kolo-green-100 border border-kolo-green-500/20 rounded-kartica px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <Kartica ton="zelena" padding="nema" className="px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <p className="text-sm text-kolo-green-900">
             {t("gost_tekst")}
           </p>
@@ -112,12 +113,12 @@ export default async function PijacaPage({
               {t("registruj_se")}
             </Dugme>
           </div>
-        </div>
+        </Kartica>
       )}
       {gazdinstvoFilter && (
-        <Kartica padding="nema" className="mb-4 px-5 py-3 flex flex-wrap items-center justify-between gap-2 text-sm">
+        <Kartica padding="nema" className="px-5 py-3 flex flex-wrap items-center justify-between gap-2 text-sm">
           <span className="text-kolo-text">{t("filter_gazdinstvo", { naziv: gazdinstvoFilter.naziv })}</span>
-          <Link href="/pijaca" className="inline-flex min-h-9 items-center font-medium text-kolo-green-700 hover:underline">{t("filter_gazdinstvo_sve")}</Link>
+          <Link href="/pijaca" className="inline-flex min-h-10 items-center font-medium text-kolo-green-700 hover:underline">{t("filter_gazdinstvo_sve")}</Link>
         </Kartica>
       )}
       <PijacaKlijent
@@ -159,6 +160,6 @@ export default async function PijacaPage({
         pracene={pracene}
         mojaLokacija={korisnik?.location ?? null}
       />
-    </>
+    </Stranica>
   );
 }

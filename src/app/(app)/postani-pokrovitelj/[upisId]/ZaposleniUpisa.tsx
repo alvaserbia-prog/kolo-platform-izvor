@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { intlTag } from "@/lib/format";
 import Pseudonim from "@/components/Pseudonim";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -73,8 +74,7 @@ export default function ZaposleniUpisa({ upisId }: { upisId: string }) {
   return (
     <Kartica as="section" className="space-y-3">
       {dijalog}
-      <h2 className="text-lg font-semibold">{t("zaposleni_naslov")}</h2>
-      <p className="text-sm text-kolo-muted">{t("zaposleni_opis")}</p>
+      <NaslovSekcije opis={t("zaposleni_opis")}>{t("zaposleni_naslov")}</NaslovSekcije>
       {poruka && (
         <Obavestenje vrsta={poruka.ok ? "uspeh" : "greska"}>
           {poruka.tekst}

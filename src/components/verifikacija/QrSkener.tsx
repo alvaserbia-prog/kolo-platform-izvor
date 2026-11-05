@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { Html5Qrcode } from "html5-qrcode";
+import Dugme from "@/components/ui/Dugme";
+import Obavestenje from "@/components/ui/Obavestenje";
 
 /**
  * Skener QR kodova preko kamere uređaja.
@@ -106,29 +108,19 @@ export default function QrSkener({ onDetektovan, onZatvori, uputstvo }: Props) {
     <div className="space-y-3">
       <div
         id={SKENER_REGION_ID}
-        className="w-full max-w-sm mx-auto rounded-xl overflow-hidden bg-black"
+        className="w-full max-w-sm mx-auto rounded-kontrola overflow-hidden bg-black"
         style={{ aspectRatio: "1 / 1" }}
       />
       {error && (
-        <div role="alert" className="text-sm text-kolo-danger bg-kolo-danger-light border border-kolo-danger-light rounded-xl p-3">
-          {error}
-        </div>
+        <Obavestenje vrsta="greska">{error}</Obavestenje>
       )}
       <div className="flex gap-2 justify-center">
-        <button
-          type="button"
-          onClick={preokreni}
-          className="px-3 py-1.5 rounded-xl bg-kolo-bg hover:bg-kolo-green-100 text-sm font-medium"
-        >
+        <Dugme varijanta="sekundarno" onClick={preokreni}>
           Preokreni kameru ({aktivnaKamera === "environment" ? "zadnja" : "prednja"})
-        </button>
-        <button
-          type="button"
-          onClick={onZatvori}
-          className="px-3 py-1.5 rounded-xl bg-kolo-bg hover:bg-kolo-green-100 text-sm font-medium"
-        >
+        </Dugme>
+        <Dugme varijanta="sekundarno" onClick={onZatvori}>
           Zatvori skener
-        </button>
+        </Dugme>
       </div>
       <p className="text-xs text-kolo-muted text-center">
         {uputstvo ?? t("skener_uputstvo")}

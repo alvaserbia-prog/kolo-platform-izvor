@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { OSNOVI_U_ZAPIS, MAX_OPIS, type OsnovUZapis } from "@/lib/zadruga-pravila";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -52,8 +53,7 @@ export default function ZadrugaPrepis({ zadrugaId }: { zadrugaId: string }) {
   const polje = KLASE_UNOSA;
   return (
     <Kartica as="section">
-      <h2 className="text-sm font-semibold">{t("prepis_naslov")}</h2>
-      <p className="text-xs text-kolo-muted mt-1">{t("prepis_opis")}</p>
+      <NaslovSekcije opis={t("prepis_opis")}>{t("prepis_naslov")}</NaslovSekcije>
       <div className="mt-3 grid gap-2 md:grid-cols-3">
         <select className={polje} aria-label={t("prepis_naslov")} value={osnov} onChange={(e) => setOsnov(e.target.value as OsnovUZapis)}>
           {OSNOVI_U_ZAPIS.map((o) => (
@@ -69,7 +69,7 @@ export default function ZadrugaPrepis({ zadrugaId }: { zadrugaId: string }) {
       </div>
       {greska && <Obavestenje vrsta="greska" className="mt-2">{greska}</Obavestenje>}
       {uspeh && <Obavestenje vrsta="uspeh" className="mt-2">{t("prepis_uspeh")}</Obavestenje>}
-      <Dugme className="mt-3" onClick={posalji} disabled={radi || !iznos}>
+      <Dugme className="mt-3" onClick={posalji} disabled={radi}>
         {t("prepis_dugme")}
       </Dugme>
     </Kartica>

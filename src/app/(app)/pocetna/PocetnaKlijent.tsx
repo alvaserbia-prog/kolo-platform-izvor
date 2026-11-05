@@ -6,18 +6,14 @@ import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
-import {
-  ClanoviSekcija,
-  ProtokolLista,
-  TransakcijeSekcija,
-  type Clan,
-  type Transakcija,
-} from "@/components/SistemListe";
-import { useStanjeUAdresi } from "@/hooks/useStanjeUAdresi";
-import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
+import { klaseDugmeta } from "@/components/ui/Dugme";
 import { useDijalog } from "@/components/ui/Dijalog";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import PraznoStanje from "@/components/ui/PraznoStanje";
+import Stranica from "@/components/ui/Stranica";
 import { izmeniPorukuPricaonice, obrisiPorukuPricaonice } from "@/lib/pricaonica-klijent";
 
 interface BlogObjava {
@@ -40,41 +36,28 @@ interface ChatPoruka {
   izmenjeno: boolean;
 }
 
-/**
- * Kartica brojača koja se otvara u spisak ispod. `oglasi` je jedina bez spiska —
- * oglasi žive na Pijaci, sa svojom pretragom po kategoriji i mestu, pa ih ovde
- * ne treba prepisivati; kartica vodi tamo.
- */
-type Sekcija = "clanovi" | "oglasi" | "razmene" | "protokol";
-const SEKCIJE: Sekcija[] = ["clanovi", "oglasi", "razmene", "protokol"];
 
 interface Props {
   pseudonim: string;
-  verified: boolean;
   currentUserId: string;
   blog: BlogObjava[];
   chatInicijalno: ChatPoruka[];
   /** UO Fondacije — može ukloniti spornu poruku iz sobe (Uslovi čl. 29 st. 2). */
   jeAdminViewer: boolean;
-  /** Brojač stanja sistema na vrhu strane. */
-  brojac: { clanovi: number; oglasi: number; razmene: number; opticaj: number };
   /** Kartica statusa (`OznakaStatusa`) za korisnika i člana bez potvrde — renderuje je server (set 4.8.2). */
   karticaStatusa?: React.ReactNode;
 }
 
 export default function PocetnaKlijent({
   pseudonim,
-  verified,
   currentUserId,
   blog,
   chatInicijalno,
   jeAdminViewer,
-  brojac,
   karticaStatusa,
 }: Props) {
   const locale = useLocale();
   const t = useTranslations("pocetna");
-  const tc = useTranslations("common");
   const { dijalog, potvrdi, unesi } = useDijalog();
   const [poruke, setPoruke] = useState<ChatPoruka[]>(chatInicijalno);
   const [input, setInput] = useState("");
@@ -87,53 +70,6 @@ export default function PocetnaKlijent({
   const [otvorenaObjava, setOtvorenaObjava] = useState<string | null>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
-  // Otvorena kartica brojača. `null` = sve zatvorene; ponovni klik na istu
-  // karticu je gasi, kao na /sistem gde kartica ostaje upaljena dok se ne
-  // izabere druga. Živi u adresi (`?kartica=clanovi`), da „nazad" sa profila
-  // člana vrati otvoren spisak, a ne zatvorene kartice.
-  const [karticaIzAdrese, postaviKarticu] = useStanjeUAdresi("kartica");
-  const sekcija: Sekcija | null = SEKCIJE.includes(karticaIzAdrese as Sekcija)
-    ? (karticaIzAdrese as Sekcija)
-    : null;
-  const postaviSekciju = (s: Sekcija | null) => postaviKarticu(s ?? "");
-  // Jednom dignut spisak ostaje u stanju — gašenje i paljenje kartice ne sme da
-  // pokrene isti upit iznova.
-  const [clanovi, setClanovi] = useState<Clan[] | null>(null);
-  const [razmene, setRazmene] = useState<Transakcija[] | null>(null);
-  const [protokolTx, setProtokolTx] = useState<Transakcija[] | null>(null);
-  const [greskaListe, setGreskaListe] = useState(false);
-
-  /**
-   * Spiskovi se dižu tek kad se kartica otvori (`/api/pocetna/liste`).
-   *
-   * Početna je prvi ekran posle prijave i otvara je svako; spisak članova nosi
-   * upit nad svim nalozima, pa zatvorena kartica ne sme da košta nijedan upit.
-   */
-  useEffect(() => {
-    if (!sekcija || sekcija === "oglasi") return;
-    const vec =
-      sekcija === "clanovi" ? clanovi : sekcija === "razmene" ? razmene : protokolTx;
-    if (vec !== null) return;
-
-    let aktivno = true;
-    setGreskaListe(false);
-    fetch(`/api/pocetna/liste?sekcija=${sekcija}`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("greska"))))
-      .then((d) => {
-        if (!aktivno) return;
-        if (sekcija === "clanovi") setClanovi(d.clanovi ?? []);
-        else if (sekcija === "razmene") setRazmene(d.stavke ?? []);
-        else setProtokolTx(d.stavke ?? []);
-      })
-      .catch(() => {
-        if (aktivno) setGreskaListe(true);
-      });
-    return () => {
-      aktivno = false;
-    };
-  }, [sekcija, clanovi, razmene, protokolTx]);
-
-  const prebaci = (s: Sekcija) => postaviSekciju(sekcija === s ? null : s);
 
   /**
    * Uklanjanje sporne poruke iz Pričaonice (Uslovi čl. 29 — obuhvata „svu
@@ -235,7 +171,7 @@ export default function PocetnaKlijent({
   }
 
   return (
-    <div className="space-y-6">
+    <Stranica sirina="siroka">
       {dijalog}
       <h1 className="kolo-naslov-pozdrav">
         {t.rich("dobrodoslice", { pseudonim, ime: (c) => <Pseudonim>{c}</Pseudonim> })}
@@ -246,121 +182,24 @@ export default function PocetnaKlijent({
           bez potvrde kartica statusa sa dugmetom, članu Kola „Čeka na tebe". */}
       {karticaStatusa}
 
-      {/* Brojač stanja sistema. Stoji na vrhu jer je jedini zajednički pokazatelj
-          da mreža raste — sve ostalo na strani je tekst pojedinaca.
-
-          Od 2026-09-22 je svaka kartica dugme koje ispod sebe otvara isti spisak
-          koji stoji iza iste kartice na /sistem — i to iste komponente
-          (`SistemListe`), ne njihov prepis. Klik na upaljenu karticu je gasi. */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {([
-          ["brojac_clanovi", brojac.clanovi, "clanovi"],
-          ["brojac_oglasi", brojac.oglasi, "oglasi"],
-          ["brojac_razmene", brojac.razmene, "razmene"],
-          ["brojac_opticaj", brojac.opticaj, "protokol"],
-        ] as const).map(([kljuc, vrednost, koja]) => {
-          const aktivna = sekcija === koja;
-          return (
-            <button
-              key={kljuc}
-              type="button"
-              onClick={() => prebaci(koja)}
-              aria-expanded={aktivna}
-              className={`rounded-kartica shadow-kartica border px-4 py-3 text-left transition-colors ${
-                aktivna
-                  ? "bg-kolo-green-700 border-kolo-green-700 text-white"
-                  : "bg-kolo-surface border-kolo-border hover:border-kolo-green-500"
-              }`}
-            >
-              <p className={`text-2xl font-bold tabular-nums ${aktivna ? "text-white" : "text-kolo-text"}`}>
-                {vrednost.toLocaleString(intlTag(locale))}
-              </p>
-              <p className={`text-xs mt-0.5 ${aktivna ? "text-white/70" : "text-kolo-muted"}`}>
-                {t(kljuc)}
-              </p>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Spisak otvorene kartice — ispod kartica, IZNAD vesti i Pričaonice. */}
-      {sekcija && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold text-kolo-text">
-              {t(
-                sekcija === "clanovi"
-                  ? "brojac_clanovi"
-                  : sekcija === "oglasi"
-                    ? "brojac_oglasi"
-                    : sekcija === "razmene"
-                      ? "brojac_razmene"
-                      : "brojac_opticaj"
-              )}
-            </h2>
-            <Dugme varijanta="tiho" velicina="sm" onClick={() => postaviSekciju(null)}>
-              {tc("zatvori")}
-            </Dugme>
-          </div>
-
-          {sekcija === "oglasi" ? (
-            /* Oglasi se NE prepisuju ovde: na Pijaci imaju svoju pretragu po
-               kategoriji i mestu, sliku i put do oglašivača. Kartica vodi tamo. */
-            <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 text-center shadow-kartica">
-              <p className="text-sm text-kolo-muted mb-3">{t("oglasi_panel_opis")}</p>
-              <Link
-                href="/pijaca"
-                className={klaseDugmeta()}
-              >
-                {t("oglasi_panel_dugme")}
-              </Link>
-            </div>
-          ) : greskaListe ? (
-            <Obavestenje vrsta="greska">{tc("greska_ucitavanja")}</Obavestenje>
-          ) : sekcija === "clanovi" ? (
-            clanovi === null && verified ? (
-              <UcitavanjeListe poruka={tc("ucitavanje")} />
-            ) : (
-              /* Nov član spisak članova ne dobija ni od servera (Pravilnik
-                 čl. 56) — komponenta mu na isto mesto stavlja objašnjenje. */
-              <ClanoviSekcija clanovi={clanovi ?? []} verified={verified} />
-            )
-          ) : sekcija === "razmene" ? (
-            razmene === null ? (
-              <UcitavanjeListe poruka={tc("ucitavanje")} />
-            ) : (
-              <TransakcijeSekcija razmene={razmene} verified={verified} />
-            )
-          ) : protokolTx === null ? (
-            <UcitavanjeListe poruka={tc("ucitavanje")} />
-          ) : (
-            <ProtokolLista protokolTx={protokolTx} verified={verified} />
-          )}
-        </div>
-      )}
 
 
       {/* Levo Vesti Fondacije, desno Pričaonica */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
       {/* ── BLOG / VESTI FONDACIJE ──────────────────────────────────── */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-kolo-text">{t("vesti_naslov")}</h2>
-        </div>
+        <NaslovSekcije>{t("vesti_naslov")}</NaslovSekcije>
 
         {/* Prozor vesti. Visina je GORNJA granica (na telefonu manja), ne fiksna:
             prazna kutija je zauzimala 640 px sa jednom rečenicom u sredini. */}
-        <div className={`bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica overflow-y-auto divide-y divide-kolo-border ${blog.length === 0 ? "" : "max-h-[420px] md:max-h-[640px]"}`}>
+        <Kartica padding="nema" className={`overflow-y-auto divide-y divide-kolo-border ${blog.length === 0 ? "" : "max-h-[420px] md:max-h-[640px]"}`}>
           {blog.length === 0 ? (
-            <div className="px-5 py-4 text-center text-sm text-kolo-muted">
-              {t("nema_objava")}
-            </div>
+            <PraznoStanje kompaktno naslov={t("nema_objava")} />
           ) : (
             blog.map((o) => {
               const otvorena = otvorenaObjava === o.id;
-              // Ako je jedina objava, prikaži je celu (bez skraćivanja) da popuni prozor.
-              const jedina = blog.length === 1;
-              const sazet = o.content.length > 280 && !otvorena && !jedina;
+              // Vest je kratka: tri reda i „Pročitaj" (odluka vlasnika 02.11.2026).
+              const duga = o.content.length > 160 || o.content.includes("\n");
               return (
                 <article
                   key={o.id}
@@ -376,13 +215,15 @@ export default function PocetnaKlijent({
                       year: "numeric",
                     })}
                   </p>
-                  <p className="text-sm text-kolo-text leading-relaxed whitespace-pre-wrap text-body">
-                    {sazet ? o.content.slice(0, 280) + "…" : o.content}
+                  <p className={`text-sm text-kolo-text leading-relaxed whitespace-pre-wrap text-body ${duga && !otvorena ? "line-clamp-3" : ""}`}>
+                    {o.content}
                   </p>
-                  {o.content.length > 280 && !jedina && (
+                  {duga && (
                     <button
+                      type="button"
+                      aria-expanded={otvorena}
                       onClick={() => setOtvorenaObjava(otvorena ? null : o.id)}
-                      className="mt-2 text-sm font-medium text-kolo-green-700 hover:underline"
+                      className="mt-1 inline-flex min-h-10 items-center text-sm font-medium text-kolo-green-700 hover:underline"
                     >
                       {otvorena ? t("skupi") : t("procitaj_celo")}
                     </button>
@@ -391,7 +232,7 @@ export default function PocetnaKlijent({
               );
             })
           )}
-        </div>
+        </Kartica>
         {blog.length > 0 && (
           <Link href="/vesti" className="inline-flex min-h-10 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
             {t("sve_vesti")} →
@@ -401,24 +242,19 @@ export default function PocetnaKlijent({
 
       {/* ── PRIČAONICA ──────────────────────────────────────────────── */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-kolo-text">{t("chat_naslov")}</h2>
-          <span className="text-xs text-kolo-muted">
-            {t("chat_brisanje")}
-          </span>
-        </div>
+        <NaslovSekcije radnja={<span className="text-xs text-kolo-muted">{t("chat_brisanje")}</span>}>
+          {t("chat_naslov")}
+        </NaslovSekcije>
 
         {/* Visina: 420 px na telefonu, 640 na računaru; prazna Pričaonica je niska. */}
-        <div className={`bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica overflow-hidden flex flex-col ${poruke.length === 0 ? "" : "h-[420px] md:h-[640px]"}`}>
+        <Kartica padding="nema" className={`overflow-hidden flex flex-col ${poruke.length === 0 ? "" : "h-[420px] md:h-[640px]"}`}>
           {/* Spisak poruka */}
           <div
             ref={chatScrollRef}
             className="flex-1 overflow-y-auto px-4 py-3 space-y-2"
           >
             {poruke.length === 0 ? (
-              <div className="py-4 flex items-center justify-center text-center text-sm text-kolo-muted">
-                {t("chat_nema_poruka")}
-              </div>
+              <PraznoStanje kompaktno naslov={t("chat_nema_poruka")} />
             ) : (
               poruke.map((p) => {
                 const moja = p.userId === currentUserId;
@@ -437,11 +273,11 @@ export default function PocetnaKlijent({
                           <Pseudonim>{p.pseudonim}</Pseudonim>
                         </Link>
                         {p.verified && (
-                          <span className="text-[11px] bg-kolo-green-100 text-kolo-green-700 px-1 rounded font-medium">
+                          <span className="text-xs bg-kolo-green-100 text-kolo-green-700 px-1 rounded font-medium">
                             ✓
                           </span>
                         )}
-                        <span className="text-[11px] text-kolo-muted">
+                        <span className="text-xs text-kolo-muted">
                           {new Date(p.createdAt).toLocaleString(intlTag(locale), {
                             day: "2-digit",
                             month: "2-digit",
@@ -450,14 +286,14 @@ export default function PocetnaKlijent({
                           })}
                         </span>
                         {p.izmenjeno && (
-                          <span className="text-[11px] text-kolo-muted italic">{t("chat_izmenjeno")}</span>
+                          <span className="text-xs text-kolo-muted italic">{t("chat_izmenjeno")}</span>
                         )}
                         {jeAdminViewer && (
                           <button
                             onClick={() => ukloniPoruku(p.id)}
                             title={t("chat_ukloni_poruku")}
                             aria-label={t("chat_ukloni_poruku")}
-                            className="inline-flex min-h-6 min-w-6 items-center justify-center text-xs text-kolo-muted hover:text-kolo-danger transition-colors"
+                            className="-my-3 inline-flex size-10 items-center justify-center rounded-kontrola text-xs text-kolo-muted hover:text-kolo-danger transition-colors"
                           >
                             ✕
                           </button>
@@ -481,13 +317,13 @@ export default function PocetnaKlijent({
                             className={KLASE_UNOSA + " w-72 max-w-full"}
                           />
                           <div className="flex gap-3 text-xs">
-                            <button type="button" onClick={() => setMenjaId(null)} className="text-kolo-muted hover:underline">
+                            <button type="button" onClick={() => setMenjaId(null)} className="inline-flex min-h-10 items-center text-kolo-muted hover:underline">
                               {t("chat_odustani")}
                             </button>
                             <button
                               type="submit"
                               disabled={!menjaTekst.trim() || cuva}
-                              className="font-medium text-kolo-green-700 hover:underline disabled:opacity-50"
+                              className="inline-flex min-h-10 items-center font-medium text-kolo-green-700 hover:underline disabled:opacity-50"
                             >
                               {cuva ? "..." : t("chat_sacuvaj")}
                             </button>
@@ -505,21 +341,21 @@ export default function PocetnaKlijent({
                         </div>
                       )}
                       {moja && menjaId !== p.id && (
-                        <div className="mt-0.5 flex gap-3 text-[11px] text-kolo-muted">
+                        <div className="flex gap-3 text-xs text-kolo-muted">
                           <button
                             type="button"
                             onClick={() => {
                               setMenjaId(p.id);
                               setMenjaTekst(p.content);
                             }}
-                            className="hover:text-kolo-green-700 hover:underline"
+                            className="inline-flex min-h-10 items-center hover:text-kolo-green-700 hover:underline"
                           >
                             {t("chat_izmeni")}
                           </button>
                           <button
                             type="button"
                             onClick={() => obrisiSvoju(p.id)}
-                            className="hover:text-kolo-danger hover:underline"
+                            className="inline-flex min-h-10 items-center hover:text-kolo-danger hover:underline"
                           >
                             {t("chat_obrisi")}
                           </button>
@@ -557,10 +393,10 @@ export default function PocetnaKlijent({
               <Obavestenje vrsta="greska" className="mt-2">{greska}</Obavestenje>
             )}
           </div>
-        </div>
+        </Kartica>
       </section>
       </div>
-    </div>
+    </Stranica>
   );
 }
 
@@ -580,7 +416,7 @@ function ChatAvatar({
     <Link
       href={profilHref({ id: userId, pseudonim })}
       title={pseudonim}
-      className="shrink-0 w-7 h-7 rounded-full overflow-hidden bg-kolo-green-500 flex items-center justify-center text-white font-bold text-[11px] mb-0.5"
+      className="shrink-0 w-7 h-7 rounded-full overflow-hidden bg-kolo-green-500 flex items-center justify-center text-white font-bold text-xs mb-0.5"
     >
       {avatar ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -599,11 +435,3 @@ function ChatAvatar({
   );
 }
 
-// Mesto spiska dok se diže — ista visina okvira kao spisak, da se strana ne trza.
-function UcitavanjeListe({ poruka }: { poruka: string }) {
-  return (
-    <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-8 text-center text-sm text-kolo-muted shadow-kartica">
-      {poruka}
-    </div>
-  );
-}

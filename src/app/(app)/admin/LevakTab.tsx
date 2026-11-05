@@ -16,6 +16,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { KLASE_TABELE, KLASE_ZAGLAVLJA, KLASE_REDA, klaseTh, klaseTd } from "./tabela";
+import { klaseKartice } from "@/components/ui/Kartica";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Segmenti from "@/components/ui/Segmenti";
 import StatKartica from "@/components/ui/StatKartica";
@@ -173,28 +175,28 @@ export default function LevakTab() {
           : oznakaPerioda(grupa.oznaka)}
       </p>
 
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
-        <table className="w-full text-sm">
+      <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
+        <table className={KLASE_TABELE}>
           <thead>
-            <tr className="border-b border-kolo-border text-xs text-kolo-muted">
-              <th className="text-left font-medium px-4 py-2.5">{t("levak_kolona_korak")}</th>
-              <th className="text-right font-medium px-4 py-2.5 w-20">{t("levak_kolona_ljudi")}</th>
-              <th className="text-right font-medium px-4 py-2.5 w-24">{t("levak_kolona_prolaz")}</th>
+            <tr className={KLASE_ZAGLAVLJA}>
+              <th className={klaseTh()}>{t("levak_kolona_korak")}</th>
+              <th className={`${klaseTh("desno")} w-20`}>{t("levak_kolona_ljudi")}</th>
+              <th className={`${klaseTh("desno")} w-24`}>{t("levak_kolona_prolaz")}</th>
             </tr>
           </thead>
           <tbody>
             {grupa.koraci.map((k, i) => (
-              <tr key={k.korak} className="border-b border-kolo-border last:border-0">
-                <td className="px-4 py-2.5">
+              <tr key={k.korak} className={KLASE_REDA}>
+                <td className={klaseTd()}>
                   <span className="text-kolo-text">{t(`levak_k_${k.korak}`)}</span>
                   {/* Traka širine srazmerne polaznom broju — levak se vidi na prvi pogled */}
                   <span className="block mt-1 h-1.5 rounded-full bg-kolo-green-500/70" style={{
                     width: polazna > 0 ? `${Math.max(2, Math.round((k.broj / polazna) * 100))}%` : "2%",
                   }} />
                 </td>
-                <td className="px-4 py-2.5 text-right font-semibold text-kolo-text align-top">{k.broj}</td>
+                <td className={`${klaseTd("desno")} font-semibold text-kolo-text`}>{k.broj}</td>
                 <td
-                  className={`px-4 py-2.5 text-right align-top ${
+                  className={`${klaseTd("desno")} ${
                     i === najgoriIndeks ? "text-kolo-danger font-semibold" : "text-kolo-muted"
                   }`}
                 >

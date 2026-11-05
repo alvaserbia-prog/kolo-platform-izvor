@@ -6,9 +6,11 @@ import Kartica from "@/components/ui/Kartica";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Ucitavanje from "@/components/ui/Ucitavanje";
+import ZakljucanModul from "@/components/ui/ZakljucanModul";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 type Registar = { nazivId: string; naziv: string; brojKorisnika: number };
@@ -35,7 +37,7 @@ type Nabavka = {
  * (čl. 10 st. 1) — služi odlučivanju o tome šta se nabavlja, a ne uvidu u to ko
  * šta traži.
  */
-export default function NabavkeKlijent() {
+export default function NabavkeKlijent({ zakljucano = false }: { zakljucano?: boolean }) {
   const t = useTranslations("nabavke");
 
   const [registar, setRegistar] = useState<Registar[]>([]);
@@ -133,31 +135,15 @@ export default function NabavkeKlijent() {
 
   return (
     <Stranica sirina="uska">
-      <div>
-        <NaslovStranice naslov={t("naslov")} opis={t("uvod")} />
-        {/* Zbirni godišnji pregled projekata (čl. 37 st. 5). Evidencija obima, ne
-            granica — učestalost nabavki pravilnikom nije ograničena. */}
-        {projekti && (
-          <p className="mt-2 text-xs text-kolo-muted">
-            {t("godisnji_pregled", {
-              godina: projekti.godina,
-              iznos: projekti.utrosenoRSD.toLocaleString("sr-RS"),
-              broj: projekti.brojNabavki,
-            })}
-          </p>
-        )}
-      </div>
+      <NaslovStranice naslov={t("naslov")} opis={t("uvod")} />
+      {zakljucano && <ZakljucanModul poruka={t("zakljucano")} />}
 
       {/* ── Nabavke u toku ────────────────────────────────────────────────── */}
       {aktivne.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">{t("nabavke_naslov")}</h2>
+          <NaslovSekcije>{t("nabavke_naslov")}</NaslovSekcije>
           {aktivne.map((n) => (
-            <Link
-              key={n.id}
-              href={`/nabavke/${n.id}`}
-              className="block rounded-kartica border border-kolo-green-700 bg-kolo-green-50 p-4 shadow-kartica transition-colors hover:bg-kolo-green-100"
-            >
+            <Kartica key={n.id} href={`/nabavke/${n.id}`} ton="zelena" padding="sm">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-semibold">{n.naziv}</span>
                 <span className="text-sm text-kolo-muted">{t(`status_${n.status}` as never)}</span>
@@ -172,7 +158,7 @@ export default function NabavkeKlijent() {
                 </p>
               )}
               {n.moja && <p className="mt-1 text-sm font-medium">{t(`moja_${n.moja.status}` as never)}</p>}
-            </Link>
+            </Kartica>
           ))}
         </section>
       )}
@@ -182,8 +168,7 @@ export default function NabavkeKlijent() {
           počinje od obrasca. */}
       {/* ── Tvoj predlog (čl. 9) ─────────────────────────────────────────── */}
       <Kartica as="section">
-        <h2 className="text-lg font-semibold">{t("predlog_naslov")}</h2>
-        <p className="mt-1 text-sm text-kolo-muted">{t("predlog_opis")}</p>
+        <NaslovSekcije opis={t("predlog_opis")}>{t("predlog_naslov")}</NaslovSekcije>
 
         {moj ? (
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-kolo-bg px-3 py-2">
@@ -210,7 +195,7 @@ export default function NabavkeKlijent() {
                   <button
                     onClick={() => sacuvaj(p.naziv)}
                     disabled={radi}
-                    className="w-full px-3 py-2 text-left text-sm hover:bg-kolo-bg disabled:opacity-50"
+                    className="w-full min-h-10 px-3 py-2 text-left text-sm hover:bg-kolo-bg disabled:opacity-50"
                   >
                     {p.naziv}
                   </button>
@@ -231,10 +216,10 @@ export default function NabavkeKlijent() {
 
       {/* ── Registar predloga (čl. 10) ────────────────────────────────────── */}
       <Kartica as="section">
-        <h2 className="text-lg font-semibold">{t("registar_naslov")}</h2>
+        <NaslovSekcije>{t("registar_naslov")}</NaslovSekcije>
 
         {ucitava ? (
-          <p className="mt-3 text-sm text-kolo-muted">{t("ucitavanje")}</p>
+          <Ucitavanje className="mt-3" />
         ) : registar.length === 0 ? (
           <p className="mt-3 text-sm text-kolo-muted">{t("registar_prazan")}</p>
         ) : (
@@ -259,19 +244,27 @@ export default function NabavkeKlijent() {
 
       {zavrsene.length > 0 && (
         <section className="space-y-2">
-          <h2 className="text-lg font-semibold">{t("zavrsene_naslov")}</h2>
+          <NaslovSekcije>{t("zavrsene_naslov")}</NaslovSekcije>
           {zavrsene.map((n) => (
-            <Link
-              key={n.id}
-              href={`/nabavke/${n.id}`}
-              className="block rounded-xl border border-kolo-border bg-white px-3 py-2 text-sm transition hover:bg-kolo-bg"
-            >
+            <Kartica key={n.id} href={`/nabavke/${n.id}`} padding="sm" className="text-sm">
               {n.naziv}
-            </Link>
+            </Kartica>
           ))}
         </section>
       )}
 
+      {/* Zbirni godišnji pregled projekata (čl. 37 st. 5) i član pravilnika — na dnu
+          (odluka vlasnika 02.11.2026). Evidencija obima, ne granica — učestalost
+          nabavki pravilnikom nije ograničena. */}
+      {projekti && (
+        <p className="text-xs text-kolo-muted">
+          {t("godisnji_pregled", {
+            godina: projekti.godina,
+            iznos: projekti.utrosenoRSD.toLocaleString("sr-RS"),
+            broj: projekti.brojNabavki,
+          })}
+        </p>
+      )}
       <p className="text-xs text-kolo-muted">{t("pravni_osnov")}</p>
     </Stranica>
   );

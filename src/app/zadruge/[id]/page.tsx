@@ -12,6 +12,8 @@ import { opisTransakcije } from "@/lib/prevod-servera";
 import { intlTag } from "@/lib/format";
 import { profilHref } from "@/lib/profil-link";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import StatKartica from "@/components/ui/StatKartica";
 import PraznoStanje from "@/components/ui/PraznoStanje";
@@ -93,7 +95,7 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
   const zamrznut = zapisZamrznut(z);
 
   return (
-    <div className="space-y-6">
+    <Stranica sirina="siroka">
       <div>
         <NaslovStranice
           nazad={{ href: "/zadruge", oznaka: t("nazad") }}
@@ -124,7 +126,7 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
       {verified ? (
         <>
           <Kartica as="section">
-            <h2 className="text-sm font-semibold">{t("zadrugari")}</h2>
+            <NaslovSekcije>{t("zadrugari")}</NaslovSekcije>
             {zadrugari.length === 0 ? (
               <p className="text-sm text-kolo-muted mt-2">{t("nema_zadrugara")}</p>
             ) : (
@@ -141,7 +143,7 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
           </Kartica>
 
           <Kartica as="section">
-            <h2 className="text-sm font-semibold">{t("zapisi")}</h2>
+            <NaslovSekcije>{t("zapisi")}</NaslovSekcije>
             {zapisi.length === 0 ? (
               <p className="text-sm text-kolo-muted mt-2">{t("nema_zapisa")}</p>
             ) : (
@@ -174,6 +176,6 @@ export default async function ZadrugaPage({ params }: { params: Promise<{ id: st
           <PraznoStanje kompaktno naslov={t("samo_redovni")} />
         </Kartica>
       )}
-    </div>
+    </Stranica>
   );
 }

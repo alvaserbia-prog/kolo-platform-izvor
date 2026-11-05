@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
 type Zahtev = { id: string; roditelj: string; trazeno: string | null };
 
@@ -68,9 +70,8 @@ export default function ZahteviPostojanjaDeteta() {
   if (skriven) return null;
 
   return (
-    <section id="postojanje-deteta" className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica">
-      <h2 className="font-semibold text-kolo-text">{t("zahtevi_naslov")}</h2>
-      <p className="mt-1 text-sm text-kolo-muted">{t("zahtevi_opis")}</p>
+    <Kartica as="section" id="postojanje-deteta" padding="lg">
+      <NaslovSekcije opis={t("zahtevi_opis")}>{t("zahtevi_naslov")}</NaslovSekcije>
 
       {zahtevi === null && !poruka && <p className="mt-3 text-sm text-kolo-muted">{t("ucitavanje")}</p>}
       {zahtevi && zahtevi.length === 0 && <p className="mt-3 text-sm text-kolo-muted">{t("zahtevi_prazno")}</p>}
@@ -105,6 +106,6 @@ export default function ZahteviPostojanjaDeteta() {
       {poruka && (
         <Obavestenje vrsta={poruka.greska ? "greska" : "uspeh"} className="mt-2">{poruka.tekst}</Obavestenje>
       )}
-    </section>
+    </Kartica>
   );
 }

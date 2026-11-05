@@ -11,7 +11,9 @@ import UkloniSaRangListe from "./UkloniSaRangListe";
 import Kartica from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import NaslovStranice from "@/components/ui/NaslovStranice";
-import Obavestenje from "@/components/ui/Obavestenje";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
+import ZakljucanModul from "@/components/ui/ZakljucanModul";
 
 export const metadata = { title: "Pokroviteljstvo — KOLO" };
 
@@ -45,64 +47,48 @@ export default async function PokroviteljstvoPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <NaslovStranice naslov={t("naslov")} opis={t("opis")} />
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <Kartica padding="sm">
-            <p className="text-sm font-semibold text-kolo-text">{t("objasnjenje_novac_naslov")}</p>
-            <p className="mt-1 text-sm text-kolo-muted">{t("objasnjenje_novac")}</p>
-          </Kartica>
-          <Kartica padding="sm">
-            <p className="text-sm font-semibold text-kolo-text">{t("objasnjenje_dobra_naslov")}</p>
-            <p className="mt-1 text-sm text-kolo-muted">{t("objasnjenje_dobra")}</p>
-          </Kartica>
-          {/* Nalaz građana (24.10.2026): „Šta ja dobijam?“ — samo ono što je tačno (donacije čl. 26). */}
-          <Kartica padding="sm" className="sm:col-span-2">
-            <p className="text-sm font-semibold text-kolo-text">{t("sta_dobija_naslov")}</p>
-            <p className="mt-1 text-sm text-kolo-muted">{t("sta_dobija_tekst")}</p>
-          </Kartica>
-        </div>
+    <Stranica>
+      <NaslovStranice naslov={t("naslov")} opis={t("opis")} />
+      {/* Prvo radnja (odluka vlasnika 02.11.2026): upis odmah ispod uvoda. */}
+      {smeUpis && (
+        <Link href="/postani-pokrovitelj/upis" className={klaseDugmeta()}>
+          {t("upis_dugme")}
+        </Link>
+      )}
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Kartica padding="sm">
+          <NaslovSekcije nivo={3}>{t("objasnjenje_novac_naslov")}</NaslovSekcije>
+          <p className="mt-1 text-sm text-kolo-muted">{t("objasnjenje_novac")}</p>
+        </Kartica>
+        <Kartica padding="sm">
+          <NaslovSekcije nivo={3}>{t("objasnjenje_dobra_naslov")}</NaslovSekcije>
+          <p className="mt-1 text-sm text-kolo-muted">{t("objasnjenje_dobra")}</p>
+        </Kartica>
+        {/* Nalaz građana (24.10.2026): „Šta ja dobijam?“ — samo ono što je tačno (donacije čl. 26). */}
+        <Kartica padding="sm" className="sm:col-span-2">
+          <NaslovSekcije nivo={3}>{t("sta_dobija_naslov")}</NaslovSekcije>
+          <p className="mt-1 text-sm text-kolo-muted">{t("sta_dobija_tekst")}</p>
+        </Kartica>
       </div>
 
+      {/* Novčano pokroviteljstvo nikad nije zaključano; zaključano je samo
+          pokroviteljstvo dobrima i uslugama (ruta `dobra` traži da je u Kolu). */}
       {!session.user.verified && !session.user.maloletan && (
-        <Obavestenje
-          vrsta="upozorenje"
-          naslov={t("verifikacija_potrebna")}
-          radnja={
-            <Link href="/verifikacija" className="text-sm font-semibold text-kolo-green-700 underline">
-              {t("verifikacija_link")}
-            </Link>
-          }
-        >
-          <p>{t("verifikacija_opis")}</p>
-        </Obavestenje>
+        <ZakljucanModul poruka={t("dobra_zakljucano")} />
       )}
 
       <section className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-semibold text-kolo-text">{t("moje_firme_naslov")}</h2>
-          {smeUpis && (
-            <Link
-              href="/postani-pokrovitelj/upis"
-              className={klaseDugmeta()}
-            >
-              {t("upis_dugme")}
-            </Link>
-          )}
-        </div>
+        <NaslovSekcije>{t("moje_firme_naslov")}</NaslovSekcije>
         {zivi.length === 0 ? (
-          <p className="bg-kolo-surface border border-kolo-border rounded-kartica shadow-kartica p-5 text-sm text-kolo-muted">
-            {smeUpis ? t("moje_firme_prazno") : t("upis_samo_punoletni")}
-          </p>
+          <Kartica>
+            <p className="text-sm text-kolo-muted">{smeUpis ? t("moje_firme_prazno") : t("upis_samo_punoletni")}</p>
+          </Kartica>
         ) : (
           <ul className="grid gap-3 sm:grid-cols-2">
             {zivi.map((u) => (
               <li key={u.id}>
-                <Link
-                  href={`/postani-pokrovitelj/${u.id}`}
-                  className="flex items-center gap-3 rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-4 hover:border-kolo-green-500 transition-colors"
-                >
+                <Kartica href={`/postani-pokrovitelj/${u.id}`} padding="sm" className="flex items-center gap-3">
                   <LogotipPokrovitelja url={u.logoUrl} velicina={48} />
                   <span className="min-w-0">
                     <span className="block font-semibold text-kolo-text truncate">{u.naziv}</span>
@@ -114,7 +100,7 @@ export default async function PokroviteljstvoPage() {
                       {u.izmenaPodnetaAt && ` · ${t("upis_izmena_na_proveri")}`}
                     </span>
                   </span>
-                </Link>
+                </Kartica>
               </li>
             ))}
           </ul>
@@ -123,8 +109,7 @@ export default async function PokroviteljstvoPage() {
             vodio upis pokrovitelj se uklanja i sa nje (čl. 18 st. 4). */}
         {obrisani.length > 0 && (
           <div className="rounded-kontrola bg-kolo-bg p-4 space-y-2">
-            <p className="text-sm font-semibold text-kolo-text">{t("obrisani_naslov")}</p>
-            <p className="text-xs text-kolo-muted">{t("obrisani_opis")}</p>
+            <NaslovSekcije nivo={3} opis={t("obrisani_opis")}>{t("obrisani_naslov")}</NaslovSekcije>
             <ul className="space-y-2">
               {obrisani.map((u) => (
                 <li key={u.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
@@ -140,8 +125,7 @@ export default async function PokroviteljstvoPage() {
       {davaoci.length > 0 && (
         <section className="space-y-3">
           <Kartica className="space-y-2">
-            <h2 className="font-semibold text-kolo-text">{t("potvrdjujem_naslov")}</h2>
-            <p className="text-sm text-kolo-muted">{t("potvrdjujem_opis")}</p>
+            <NaslovSekcije opis={t("potvrdjujem_opis")}>{t("potvrdjujem_naslov")}</NaslovSekcije>
             <ul className="space-y-2">
               {davaoci.map((d) => (
                 <li key={d.upisId} className="flex items-center gap-3 text-sm text-kolo-text">
@@ -156,12 +140,12 @@ export default async function PokroviteljstvoPage() {
       )}
 
       <p className="text-sm">
-        <Link href="/pokrovitelji" className="font-medium text-kolo-green-700 hover:underline">{t("ranglista_link")}</Link>
+        <Link href="/pokrovitelji" className="inline-flex min-h-10 items-center font-medium text-kolo-green-700 hover:underline">{t("ranglista_link")}</Link>
       </p>
 
       {/* Pokroviteljstvo nema tabelu nivoa: koeficijent je 1,00 za novac i za dobra i
           usluge (donacije čl. 22, set 5.0.0, izmena 28.10.2026). Tabela nivoa živi samo na ekranu Donacije. */}
       <p className="text-xs text-kolo-muted">{t("nivoi_napomena")}</p>
-    </div>
+    </Stranica>
   );
 }

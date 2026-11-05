@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { opisTransakcije } from "@/lib/prevod-servera";
 import { PROTOKOL_WALLET_ID } from "@/lib/protokol/zrno";
 import IstorijaKlijent from "./IstorijaKlijent";
+import Kartica from "@/components/ui/Kartica";
 
 /**
  * Serverska komponenta sa najtežim upitom novčanika (100 transakcija + ugnežđeni
@@ -85,14 +86,14 @@ export function IstorijaSkeleton() {
           <div key={i} className="h-10 w-24 bg-kolo-border/50 rounded-kontrola animate-pulse" />
         ))}
       </div>
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica overflow-hidden divide-y divide-kolo-border">
+      <Kartica padding="nema" className="overflow-hidden divide-y divide-kolo-border">
         {[0, 1, 2, 3, 4].map((i) => (
           <div key={i} className="px-4 py-3 flex items-center justify-between">
             <div className="h-4 w-40 bg-kolo-border/50 rounded animate-pulse" />
             <div className="h-4 w-16 bg-kolo-border/50 rounded animate-pulse" />
           </div>
         ))}
-      </div>
+      </Kartica>
     </div>
   );
 }

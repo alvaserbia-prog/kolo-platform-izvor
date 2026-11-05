@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import Pseudonim from "@/components/Pseudonim";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
@@ -63,7 +64,7 @@ export default function PrijavaRoditeljstva({
   }
 
   return (
-    <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-4 shadow-kartica sm:p-6">
+    <Kartica as="section" padding="sm" className="sm:p-6">
       <h2 className={dete ? "text-lg font-semibold text-kolo-text" : "font-semibold text-kolo-text"}>
         {dete ? t("prijava_dete_naslov") : t("prijava_trece_naslov")}
       </h2>
@@ -123,6 +124,6 @@ export default function PrijavaRoditeljstva({
       {poruka && (
         <Obavestenje vrsta={poruka.greska ? "greska" : "uspeh"} className="mt-2">{poruka.tekst}</Obavestenje>
       )}
-    </section>
+    </Kartica>
   );
 }

@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { intlTag } from "@/lib/format";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations, useLocale } from "next-intl";
 import Pseudonim from "@/components/Pseudonim";
 import AdminLogotip from "./AdminLogotip";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import PraznoStanje from "@/components/ui/PraznoStanje";
+import Fioka from "@/components/ui/Fioka";
 import { useDijalog } from "@/components/ui/Dijalog";
 
 type Prijava = {
@@ -57,6 +59,7 @@ export default function PokroviteljPrijaveTab({ onDone }: { onDone: () => void }
   const [radnja, setRadnja] = useState<string | null>(null);
   const [detalji, setDetalji] = useState<Detalji | null>(null);
   const [aprUporedjeno, setAprUporedjeno] = useState(false);
+  const zatvoriDetalje = useCallback(() => setDetalji(null), []);
   const { dijalog, potvrdi: pitaj, unesi, obavesti } = useDijalog();
 
   async function otvoriDetalje(id: string) {
@@ -95,13 +98,13 @@ export default function PokroviteljPrijaveTab({ onDone }: { onDone: () => void }
 
   if (ucitavanje) return <p className="text-sm text-kolo-muted">{t("pokr_prijave_ucitavanje")}</p>;
   if (prijave.length === 0)
-    return <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica"><PraznoStanje naslov={t("pokr_prijave_nema")} /></div>;
+    return <div className={klaseKartice({ padding: "nema" })}><PraznoStanje naslov={t("pokr_prijave_nema")} /></div>;
 
   return (
     <div className="space-y-3">
       {dijalog}
       {prijave.map((p) => (
-        <div key={p.id} className="bg-kolo-surface rounded-kartica border border-kolo-border p-4 shadow-kartica">
+        <div key={p.id} className={klaseKartice({ padding: "sm" })}>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               {p.vrstaDavaoca === "GAZDINSTVO" ? (
@@ -158,9 +161,7 @@ export default function PokroviteljPrijaveTab({ onDone }: { onDone: () => void }
       ))}
 
       {detalji && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50" onClick={() => setDetalji(null)}>
-          <div className="bg-kolo-surface rounded-kartica shadow-kartica max-w-lg w-full max-h-[85vh] overflow-auto p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
-            <h3 className="font-semibold text-kolo-text">{t("pokr_prijave_ugovor_naslov")}</h3>
+        <Fioka naslov={t("pokr_prijave_ugovor_naslov")} onZatvori={zatvoriDetalje}>
             <pre className="text-xs text-kolo-text whitespace-pre-wrap font-sans bg-kolo-bg rounded-kontrola p-4">{detalji.ugovorTekst}</pre>
             {/* Poređenje sa APR-om (Pravilnik čl. 31 st. 4): bez njega se nova prijava
                 ne potvrđuje, a ime zastupnika ne ide u evidenciju identiteta. */}
@@ -181,8 +182,7 @@ export default function PokroviteljPrijaveTab({ onDone }: { onDone: () => void }
             <button onClick={() => setDetalji(null)} className={klaseDugmeta({ varijanta: "sekundarno", velicina: "md" })}>
               {t("pokr_prijave_zatvori")}
             </button>
-          </div>
-        </div>
+        </Fioka>
       )}
     </div>
   );

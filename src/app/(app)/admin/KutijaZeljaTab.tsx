@@ -14,6 +14,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -82,7 +83,7 @@ export default function KutijaZeljaTab({ onDone }: { onDone?: () => void }) {
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-kolo-text">{t("kutija_naslov")}</h2>
+        <NaslovSekcije>{t("kutija_naslov")}</NaslovSekcije>
         <p className="mt-1 text-sm text-kolo-muted">{t("kutija_opis")}</p>
       </div>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
@@ -91,7 +92,7 @@ export default function KutijaZeljaTab({ onDone }: { onDone?: () => void }) {
       ) : (
         <>
           <div className="space-y-3">
-            <h3 className="font-semibold text-kolo-text">{t("kutija_na_pregledu", { broj: podaci.naPregledu.length })}</h3>
+            <NaslovSekcije nivo={3}>{t("kutija_na_pregledu", { broj: podaci.naPregledu.length })}</NaslovSekcije>
             <p className="text-sm text-kolo-muted">{t("kutija_pregled_uputstvo")}</p>
             {podaci.naPregledu.length === 0 && <p className="text-sm text-kolo-muted">{t("kutija_prazno")}</p>}
             {podaci.naPregledu.map((z) => (
@@ -122,7 +123,7 @@ export default function KutijaZeljaTab({ onDone }: { onDone?: () => void }) {
           </div>
 
           <div className="space-y-3">
-            <h3 className="font-semibold text-kolo-text">{t("kutija_prikazani", { broj: podaci.prikazani.length })}</h3>
+            <NaslovSekcije nivo={3}>{t("kutija_prikazani", { broj: podaci.prikazani.length })}</NaslovSekcije>
             <p className="text-sm text-kolo-muted">{t("kutija_odgovor_uputstvo")}</p>
             {podaci.prikazani.length === 0 && <p className="text-sm text-kolo-muted">{t("kutija_prazno")}</p>}
             {podaci.prikazani.map((z) => (
@@ -148,7 +149,7 @@ export default function KutijaZeljaTab({ onDone }: { onDone?: () => void }) {
 
           {podaci.odgovoreni.length > 0 && (
             <div className="space-y-3">
-              <h3 className="font-semibold text-kolo-text">{t("kutija_odgovoreni", { broj: podaci.odgovoreni.length })}</h3>
+              <NaslovSekcije nivo={3}>{t("kutija_odgovoreni", { broj: podaci.odgovoreni.length })}</NaslovSekcije>
               {podaci.odgovoreni.map((z) => (
                 <Kartica key={z.id}>
                   <p className="text-xs text-kolo-muted">{t("kutija_podrski", { broj: z.brojPodrski })}</p>
@@ -165,7 +166,7 @@ export default function KutijaZeljaTab({ onDone }: { onDone?: () => void }) {
 
           {podaci.odbijeni.length > 0 && (
             <div className="space-y-3">
-              <h3 className="font-semibold text-kolo-text">{t("kutija_odbijeni", { broj: podaci.odbijeni.length })}</h3>
+              <NaslovSekcije nivo={3}>{t("kutija_odbijeni", { broj: podaci.odbijeni.length })}</NaslovSekcije>
               {podaci.odbijeni.map((z) => (
                 <Kartica key={z.id}>
                   <p className="whitespace-pre-wrap text-sm text-kolo-text">{z.tekst}</p>

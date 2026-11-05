@@ -7,6 +7,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import UgovorAkcije from "./UgovorAkcije";
 import Kartica from "@/components/ui/Kartica";
+import Stranica from "@/components/ui/Stranica";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
 export async function generateMetadata(): Promise<Metadata> {
@@ -45,7 +46,7 @@ export default async function UgovorODonacijiPage({
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+    <Stranica className="py-6">
       <div className="flex items-center justify-between gap-3 print:hidden">
         <Link href="/donacije" className="inline-flex min-h-9 items-center text-sm text-kolo-muted hover:text-kolo-green-700">
           ← {t("ugovor_nazad")}
@@ -60,6 +61,6 @@ export default async function UgovorODonacijiPage({
       </Kartica>
 
       <p className="text-xs text-kolo-muted print:hidden">{t("ugovor_napomena")}</p>
-    </div>
+    </Stranica>
   );
 }

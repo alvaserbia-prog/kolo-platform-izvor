@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { generisiIzjavuIzvrsioca } from "@/lib/operativni-izjava";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import NaslovStranice from "@/components/ui/NaslovStranice";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -155,9 +157,7 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
   return (
     <div className="space-y-6">
       {dijalog}
-      <div className="flex items-center gap-3">
-        <Link href="/doprinos-oglasi" className="inline-flex min-h-9 items-center text-kolo-muted hover:text-kolo-green-700 text-sm transition-colors">← {t("naslov")}</Link>
-      </div>
+      <NaslovStranice nazad={{ href: "/doprinos-oglasi", oznaka: t("naslov") }} naslov={oglas.title} />
 
       {/* Header */}
       <Kartica padding="lg" className="space-y-4">
@@ -175,7 +175,6 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
               <span className="text-xs bg-kolo-bg text-kolo-muted px-2 py-0.5 rounded-lg">{t(`status_zadatka_${oglas.statusZadatka}`)}</span>
             </div>
           </div>
-          <h1 className="kolo-naslov">{oglas.title}</h1>
           <p className="text-sm text-kolo-muted mt-2 leading-relaxed whitespace-pre-line">{oglas.description}</p>
         </div>
 
@@ -358,7 +357,7 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
       {oglas.mojeEvidencije.length > 0 && (
         <Kartica padding="nema" className="overflow-hidden">
           <div className="px-5 py-3 border-b border-kolo-border">
-            <h3 className="text-sm font-semibold text-kolo-muted">{t("moja_dnevna_izvrsenja")}</h3>
+            <NaslovSekcije nivo={3}>{t("moja_dnevna_izvrsenja")}</NaslovSekcije>
           </div>
           {oglas.mojeEvidencije.map((e, i) => {
             const badge = evStatusBadge[e.status];
@@ -473,7 +472,7 @@ function EvidencijaForma({ oglasId, maxPredlozeni, celine, onSuccess }: {
   return (
     <Kartica className="space-y-4">
       <div className="flex flex-wrap gap-2 justify-between items-center">
-        <h3 className="text-sm font-semibold text-kolo-muted">{celine ? t("evidentiraj_celine") : t("evidentiraj_dnevno")}</h3>
+        <NaslovSekcije nivo={3}>{celine ? t("evidentiraj_celine") : t("evidentiraj_dnevno")}</NaslovSekcije>
         {predlozeni > 0 && (
           <span className="text-sm font-bold text-kolo-green-700">{t("ev_iznos_predlozeno", { iznos: predlozeni.toLocaleString(intlTag(locale)) })}</span>
         )}

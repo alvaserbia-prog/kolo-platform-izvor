@@ -8,6 +8,7 @@ import { ucitajStatus, jePotvrdjen } from "@/lib/protokol/status";
 import { imeNaloga } from "@/lib/protokol/identitet";
 import PrijavaForma from "./PrijavaForma";
 import NaslovStranice from "@/components/ui/NaslovStranice";
+import Stranica from "@/components/ui/Stranica";
 import { MIN_OGLASA_UZ_PRIJAVU } from "@/lib/gazdinstvo-pravila";
 import Obavestenje from "@/components/ui/Obavestenje";
 
@@ -59,7 +60,7 @@ export default async function PrijavaGazdinstvaPage({
       redirect(`/gazdinstva/${izmena}`);
     }
     return (
-      <div className="max-w-[760px] mx-auto pb-16 space-y-4">
+      <Stranica>
         <NaslovStranice naslov={t("izmena_naslov")} />
         <PrijavaForma
           izmenaId={g.id}
@@ -79,7 +80,7 @@ export default async function PrijavaGazdinstvaPage({
             imaIzjavuAdrese: !!g.izjavaAdresaAt,
           }}
         />
-      </div>
+      </Stranica>
     );
   }
 
@@ -87,10 +88,10 @@ export default async function PrijavaGazdinstvaPage({
   if (clanstvo) redirect(`/gazdinstva/${clanstvo.gazdinstvo.id}`);
 
   return (
-    <div className="max-w-[760px] mx-auto pb-16 space-y-4">
+    <Stranica>
       <NaslovStranice naslov={t("prijava_naslov")} opis={t("prijava_uvod", { min: MIN_OGLASA_UZ_PRIJAVU })} />
       {samoNosilac && <Obavestenje vrsta="upozorenje">{t("prijava_samo_rpg")}</Obavestenje>}
       <PrijavaForma upisanoIme={upisanoIme} samoNosilac={samoNosilac} trebaTelefon />
-    </div>
+    </Stranica>
   );
 }

@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -118,7 +120,7 @@ export default function ZadrugeTab() {
       {/* ── Spisak zadruga ─────────────────────────────────────────────────── */}
       {zadruge.length === 0 && <p className="text-sm text-kolo-muted">{t("zad_nema")}</p>}
       {zadruge.map((z) => (
-        <section key={z.id} className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
+        <section key={z.id} className={klaseKartice()}>
           <button
             type="button"
             className="flex w-full flex-wrap items-baseline justify-between gap-2 text-left"
@@ -155,7 +157,7 @@ export default function ZadrugeTab() {
             <div className="mt-4 space-y-5">
               {/* Zadrugari (čl. 6, 8) */}
               <div>
-                <h4 className="text-sm font-semibold">{t("zad_zadrugari")}</h4>
+                <NaslovSekcije nivo={3} varijanta="oznaka">{t("zad_zadrugari")}</NaslovSekcije>
                 <ul className="mt-2 space-y-1 text-sm">
                   {z.zadrugari.map((c) => (
                     <li key={c.clanstvoId} className="flex items-center justify-between gap-3 rounded-kontrola bg-kolo-bg px-3 py-1.5">
@@ -198,7 +200,7 @@ export default function ZadrugeTab() {
 
               {/* Zapis sa osnovom (čl. 11–16) */}
               <div>
-                <h4 className="text-sm font-semibold">{t("zad_zapis_naslov")}</h4>
+                <NaslovSekcije nivo={3} varijanta="oznaka">{t("zad_zapis_naslov")}</NaslovSekcije>
                 <p className="mt-1 text-xs text-kolo-muted">{t("zad_zapis_opis")}</p>
                 <div className="mt-2 grid gap-2 md:grid-cols-2">
                   <select className={polje} aria-label={t("zad_zapis_naslov")} value={zapis.osnov} onChange={(e) => setZapis({ ...zapis, osnov: e.target.value })}>
@@ -236,7 +238,7 @@ export default function ZadrugeTab() {
 
               {/* Zadružni doprinos (čl. 17; operativni čl. 23) */}
               <div>
-                <h4 className="text-sm font-semibold">{t("zad_zd_naslov")}</h4>
+                <NaslovSekcije nivo={3} varijanta="oznaka">{t("zad_zd_naslov")}</NaslovSekcije>
                 <p className="mt-1 text-xs text-kolo-muted">{t("zad_zd_opis")}</p>
                 {z.zadaci.length > 0 && (
                   <ul className="mt-2 space-y-2 text-sm">
@@ -267,7 +269,7 @@ export default function ZadrugeTab() {
                   <p className="mt-2 text-xs text-kolo-muted">{t("zad_jedinica_nije_utvrdjena")}</p>
                 ) : (
                   <div className="mt-3 space-y-2">
-                    <p className="text-xs font-semibold text-kolo-muted">{t("zad_zd_objava")}</p>
+                    <NaslovSekcije nivo={3} varijanta="oznaka">{t("zad_zd_objava")}</NaslovSekcije>
                     <div className="grid gap-2 md:grid-cols-2">
                       {(["title", "description", "opisCeline", "procenaObima", "obrazlozenje"] as const).map((k) => (
                         <input key={k} className={polje} placeholder={t(`zad_zd_${k}`)} aria-label={t(`zad_zd_${k}`)} value={zadatak[k]}
@@ -328,8 +330,8 @@ export default function ZadrugeTab() {
       ))}
 
       {/* ── Upis zadruge (čl. 4) — samo administratorski tim Fondacije ─────── */}
-      {!samoSvoja && <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-        <h3 className="font-semibold">{t("zad_upis_naslov")}</h3>
+      {!samoSvoja && <section className={klaseKartice()}>
+        <NaslovSekcije nivo={3}>{t("zad_upis_naslov")}</NaslovSekcije>
         <p className="mt-1 text-xs text-kolo-muted">{t("zad_upis_opis")}</p>
         <div className="mt-3 grid gap-2 md:grid-cols-2">
           <input className={polje} placeholder={t("zad_naziv")} aria-label={t("zad_naziv")} value={nova.naziv} onChange={(e) => setNova({ ...nova, naziv: e.target.value })} />

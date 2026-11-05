@@ -17,6 +17,10 @@ import { formatCenaGlavni, prikaziJedinicuCene, parsirajCenu, type CenaTip } fro
 import { kategorijaKljuc, kategorijaEmoji } from "@/lib/kategorije";
 import { PRIJAVA_RAZLOZI, type PrijavaRazlogKod } from "@/lib/moderacija";
 
+/** „×" na sličici: vidljiv krug od 20 px, dodirna meta 40 px (gornji desni ugao sličice). */
+const DUGME_UKLONI_SLIKU = "absolute top-0 right-0 flex size-10 items-start justify-end p-0.5";
+const KRUG_UKLONI_SLIKU = "flex size-5 items-center justify-center rounded-full bg-black/60 text-xs text-white";
+
 /** Veza <label> → <input type="file"> pri izmeni oglasa. */
 const ID_UNOSA_IZMENA = "pijaca-izmena-slike-unos";
 import {
@@ -32,6 +36,10 @@ import { dogadjaj } from "@/lib/analitika";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
+import { klaseKartice } from "@/components/ui/Kartica";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import Pecat from "@/components/ui/Pecat";
+import Stranica from "@/components/ui/Stranica";
 import PrepisPovodomOglasa from "./PrepisPovodomOglasa";
 
 interface OglasProps {
@@ -181,15 +189,15 @@ export default function OglasDetalj({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-3">
-        <Link href="/pijaca" className="text-kolo-muted hover:text-kolo-muted transition-colors text-sm">
-          {t("nazad_pijaca")}
-        </Link>
-        <PodeliOglas naslov={oglas.title} />
-      </div>
+    <Stranica sirina="uska">
+      {/* „← Pijaca" (`nazad_pijaca` = strelica + `naslov`); strelicu dodaje NaslovStranice. */}
+      <NaslovStranice
+        nazad={{ href: "/pijaca", oznaka: t("naslov") }}
+        naslov={oglas.title}
+        radnja={<PodeliOglas naslov={oglas.title} />}
+      />
 
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden shadow-kartica">
+      <div className={`${klaseKartice({ padding: "nema" })} overflow-hidden`}>
         {/* Slike */}
         {imaSlika ? (
           <div className="space-y-2">
@@ -210,8 +218,9 @@ export default function OglasDetalj({
                 {oglas.images.map((_, i) => (
                   <button
                     key={i}
+                    type="button"
                     onClick={() => setActiveSlika(i)}
-                    className={`relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-colors ${
+                    className={`relative w-16 h-12 rounded-kontrola overflow-hidden border-2 transition-colors ${
                       activeSlika === i ? "border-kolo-green-500" : "border-transparent"
                     }`}
                   >
@@ -240,11 +249,10 @@ export default function OglasDetalj({
               <span className="text-xs text-kolo-muted font-medium uppercase tracking-wide">
                 {t(`kategorija_${kategorijaKljuc(oglas.category)}`)}
               </span>
-              <h1 className="kolo-naslov mt-0.5">{oglas.title}</h1>
             </div>
             <div className="shrink-0 text-right">
               {jePotraznja ? (
-                <span className="inline-block bg-kolo-gold-100 text-kolo-gold-700 rounded-lg px-3 py-1.5 text-sm font-bold uppercase tracking-wide">
+                <span className="inline-block bg-kolo-gold-100 text-kolo-gold-700 rounded-kontrola px-3 py-1.5 text-sm font-bold uppercase tracking-wide">
                   {t("trazi_se")}
                 </span>
               ) : (
@@ -275,27 +283,26 @@ export default function OglasDetalj({
             // deteta sa PUNOLETNIM licem (deca čl. 19 st. 3) — razgovore između dece ne čita
             // niko, pa bi ista rečenica detetu bila neistinita.
             posmatracMaloletan ? null : (
-              <div className="flex items-start gap-2 text-xs text-kolo-green-700 bg-kolo-green-100 border border-kolo-green-500/20 rounded-xl px-3 py-2">
-                <span className="shrink-0 bg-white/95 border-2 border-kolo-green-700 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md rotate-[-6deg]">
-                  {t("oznaka_dete")}
-                </span>
-                <span>{t("oznaka_dete_opis")}</span>
-              </div>
+              <Obavestenje vrsta="info">
+                <div className="flex items-start gap-2">
+                  <Pecat ton="zeleni" className="shrink-0">{t("oznaka_dete")}</Pecat>
+                  <span>{t("oznaka_dete_opis")}</span>
+                </div>
+              </Obavestenje>
             )
           ) : !oglas.sellerVerified ? (
-            <div className="flex items-start gap-2 text-xs text-kolo-gold-700 bg-kolo-gold-100 border border-kolo-gold-100 rounded-xl px-3 py-2">
-              <span className="shrink-0 bg-white/95 border-2 border-kolo-gold-600 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md rotate-[-6deg]">
-                {t("oznaka_neverifikovan")}
-              </span>
-              <span>{t("oznaka_neverifikovan_opis")}</span>
-            </div>
+            <Obavestenje vrsta="upozorenje">
+              <div className="flex items-start gap-2">
+                <Pecat ton="zlatni" className="shrink-0">{t("oznaka_neverifikovan")}</Pecat>
+                <span>{t("oznaka_neverifikovan_opis")}</span>
+              </div>
+            </Obavestenje>
           ) : null}
 
           {oglas.domace && (
-            <div className="flex items-start gap-2 text-xs text-kolo-green-700 bg-kolo-green-100 border border-kolo-green-500/20 rounded-xl px-3 py-2">
-              <span className="shrink-0 bg-white/95 text-kolo-green-700 border-2 border-kolo-green-700 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md rotate-[-6deg]">
-                {t("oznaka_domace")}
-              </span>
+            <Obavestenje vrsta="info">
+              <div className="flex items-start gap-2">
+              <Pecat ton="zeleni" className="shrink-0">{t("oznaka_domace")}</Pecat>
               <span>
                 {t("oznaka_domace_gazdinstvo")}{" "}
                 <Link href={`/gazdinstva/${oglas.domace.gazdinstvoId}`} className="font-semibold underline">
@@ -303,7 +310,8 @@ export default function OglasDetalj({
                 </Link>
                 . {t("oznaka_domace_opis")}
               </span>
-            </div>
+              </div>
+            </Obavestenje>
           )}
 
           <div className="flex flex-wrap gap-4 text-xs text-kolo-muted pt-1 border-t border-kolo-border">
@@ -387,6 +395,7 @@ export default function OglasDetalj({
             <div className="space-y-2">
               {smePisati ? (
                 <button
+                  type="button"
                   onClick={handleKontakt}
                   disabled={chatLoading}
                   className={`w-full rounded-kontrola font-semibold text-white transition-colors disabled:opacity-50 ${
@@ -419,7 +428,7 @@ export default function OglasDetalj({
                 /* Dete koje ne može da piše dobija ISTINIT razlog i kraj koji se
                    vidi — nikad poziv da postane redovan član, jer to za maloletni
                    nalog nije put (deca čl. 29 st. 2). */
-                <div className="rounded-xl border border-deca-sunce-400 bg-deca-sunce-100 px-4 py-3">
+                <div className="rounded-kontrola border border-deca-sunce-400 bg-deca-sunce-100 px-4 py-3">
                   <p className="text-base text-deca-sunce-ink">
                     {razlogZabrane === "ceka_odobrenje"
                       ? t("dete_ceka_odobrenje")
@@ -469,6 +478,7 @@ export default function OglasDetalj({
           {dostupan && oglas.isMine && (
             <div className="pt-2 border-t border-kolo-border flex gap-2">
               <button
+                type="button"
                 onClick={() => setEditMode(true)}
                 className={klaseDugmeta() + " flex-1"}
               >
@@ -481,6 +491,7 @@ export default function OglasDetalj({
                 {t("moji_oglasi")}
               </Link>
               <button
+                type="button"
                 onClick={handleDeaktiviraj}
                 disabled={deaktiviranjeLoading}
                 className="flex-1 min-h-10 px-3 rounded-kontrola border border-kolo-danger/30 bg-kolo-surface text-kolo-danger text-sm font-semibold hover:bg-kolo-danger-light transition-colors disabled:opacity-60"
@@ -498,7 +509,7 @@ export default function OglasDetalj({
           )}
         </div>
       </div>
-    </div>
+    </Stranica>
   );
 }
 
@@ -550,8 +561,9 @@ function PrijaviOglas({ oglasId }: { oglasId: string }) {
     return (
       <div className="pt-2 border-t border-kolo-border">
         <button
+          type="button"
           onClick={() => setOtvoreno(true)}
-          className="inline-flex min-h-9 items-center text-xs text-kolo-muted hover:text-kolo-danger transition-colors"
+          className="inline-flex min-h-10 items-center text-xs text-kolo-muted hover:text-kolo-danger transition-colors"
         >
           {t("prijavi_oglas")}
         </button>
@@ -743,15 +755,14 @@ function IzmeniOglas({
   }
 
   return (
-    <div className="max-w-lg mx-auto space-y-6">
-      <div className="space-y-2">
-        <button type="button" onClick={onCancel} className="inline-flex min-h-9 items-center text-sm text-kolo-muted hover:text-kolo-green-700">
-          {t("nazad")}
-        </button>
-        <h1 className="kolo-naslov">{t("izmeni_oglas_naslov")}</h1>
-      </div>
+    <Stranica sirina="uska">
+      {/* `nazad` nosi strelicu u prevodu („← Nazad"); NaslovStranice je dodaje sam. */}
+      <NaslovStranice
+        nazad={{ onClick: onCancel, oznaka: t("nazad").replace(/^←\s*/, "") }}
+        naslov={t("izmeni_oglas_naslov")}
+      />
 
-      <form onSubmit={handleSubmit} noValidate className="space-y-5 bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
+      <form onSubmit={handleSubmit} noValidate className={`${klaseKartice({ padding: "lg" })} space-y-5`}>
         <Polje oznaka={t("naslov_label")}>
           <input type="text" maxLength={80} value={title} onChange={(e) => setTitle(e.target.value)}
             className={KLASE_UNOSA} />
@@ -798,7 +809,7 @@ function IzmeniOglas({
             {/* Postojeće slike */}
             {oglas.images.map((_, idx) => (
               keepIndices.includes(idx) && (
-                <div key={`e-${idx}`} className="relative w-20 h-20 rounded-xl border border-kolo-border overflow-hidden bg-kolo-bg">
+                <div key={`e-${idx}`} className="relative w-20 h-20 rounded-kontrola border border-kolo-border overflow-hidden bg-kolo-bg">
                   <Image
                     src={`/api/pijaca/slika/${oglas.id}/${idx}`}
                     alt=""
@@ -809,24 +820,24 @@ function IzmeniOglas({
                   <button
                     type="button"
                     onClick={() => ukloniPostojecu(idx)}
-                    className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white text-xs flex items-center justify-center"
+                    className={DUGME_UKLONI_SLIKU}
                   >
-                    ×
+                    <span className={KRUG_UKLONI_SLIKU}>×</span>
                   </button>
                 </div>
               )
             ))}
             {/* Nove slike */}
             {noveSlike.map((s, i) => (
-              <div key={s.pregled} className="relative w-20 h-20 rounded-xl border border-kolo-green-100 overflow-hidden bg-kolo-bg">
+              <div key={s.pregled} className="relative w-20 h-20 rounded-kontrola border border-kolo-green-100 overflow-hidden bg-kolo-bg">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={s.pregled} alt="" className="w-full h-full object-cover" />
                 <button
                   type="button"
                   onClick={() => ukloniNovu(i)}
-                  className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white text-xs flex items-center justify-center"
+                  className={DUGME_UKLONI_SLIKU}
                 >
-                  ×
+                  <span className={KRUG_UKLONI_SLIKU}>×</span>
                 </button>
               </div>
             ))}
@@ -837,7 +848,7 @@ function IzmeniOglas({
               <label
                 htmlFor={ID_UNOSA_IZMENA}
                 aria-disabled={obrada}
-                className={`w-20 h-20 rounded-xl border-2 border-dashed border-kolo-border flex items-center justify-center text-kolo-muted hover:border-kolo-muted transition-colors text-xl cursor-pointer ${obrada ? "opacity-50 pointer-events-none" : ""}`}
+                className={`w-20 h-20 rounded-kontrola border-2 border-dashed border-kolo-border flex items-center justify-center text-kolo-muted hover:border-kolo-muted transition-colors text-xl cursor-pointer ${obrada ? "opacity-50 pointer-events-none" : ""}`}
               >
                 {obrada ? (
                   <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}>
@@ -871,6 +882,6 @@ function IzmeniOglas({
           </button>
         </div>
       </form>
-    </div>
+    </Stranica>
   );
 }

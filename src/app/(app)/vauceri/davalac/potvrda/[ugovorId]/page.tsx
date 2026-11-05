@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect, notFound } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { jeAdmin } from "@/lib/dozvole";
@@ -9,6 +8,8 @@ import { intlTag } from "@/lib/format";
 import { kljucMeseca, procitajMesec, zbirPotvrde } from "@/lib/pokroviteljstvo-dobrima-pravila";
 import UgovorAkcije from "@/app/(app)/donacije/[id]/ugovor/UgovorAkcije";
 import Kartica from "@/components/ui/Kartica";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import Stranica from "@/components/ui/Stranica";
 
 export async function generateMetadata() {
   const t = await getTranslations("vauceri");
@@ -81,17 +82,14 @@ export default async function PotvrdaPredajePage({
   const gazdinstvo = u.vrstaDavaoca === "GAZDINSTVO";
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
-      <div className="flex items-center justify-between gap-3 print:hidden">
-        <Link href={u.upisId ? `/postani-pokrovitelj/${u.upisId}?tab=vauceri` : "/postani-pokrovitelj"} className="inline-flex min-h-9 items-center text-sm text-kolo-muted hover:text-kolo-green-700">
-          ← {t("primerak_nazad")}
-        </Link>
-        <UgovorAkcije labela={t("primerak_stampaj")} />
-      </div>
+    <Stranica sirina="siroka" className="py-6">
+      <NaslovStranice
+        nazad={{ href: u.upisId ? `/postani-pokrovitelj/${u.upisId}?tab=vauceri` : "/postani-pokrovitelj", oznaka: t("primerak_nazad") }}
+        naslov={t("potvrda_naslov")}
+        radnja={<div className="print:hidden"><UgovorAkcije labela={t("primerak_stampaj")} /></div>}
+      />
 
       <Kartica padding="lg" className="space-y-4 text-sm text-kolo-text print:border-0 print:shadow-none print:rounded-none">
-        <h1 className="text-base font-bold text-center uppercase tracking-wide">{t("potvrda_naslov")}</h1>
-
         <div className="space-y-0.5">
           <p><span className="font-semibold">{t("potvrda_davalac")}:</span> {u.naziv}</p>
           {gazdinstvo ? (
@@ -148,6 +146,6 @@ export default async function PotvrdaPredajePage({
         <p>{t("potvrda_tekst")}</p>
         <p className="text-xs text-kolo-muted">{t("potvrda_izdato", { datum: datum(new Date()) })}</p>
       </Kartica>
-    </div>
+    </Stranica>
   );
 }

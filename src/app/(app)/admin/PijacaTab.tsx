@@ -18,6 +18,7 @@ import Link from "next/link";
 import Pseudonim from "@/components/Pseudonim";
 import { useStanjeUAdresi } from "@/hooks/useStanjeUAdresi";
 import { OBRAZLOZENJE_TRGOVINA_POENOM } from "@/lib/moderacija";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -206,7 +207,7 @@ export default function PijacaTab() {
       ) : (
         <div className="space-y-3">
           {oglasi.map((o) => (
-            <div key={o.id} className="bg-kolo-surface border border-kolo-border rounded-kartica shadow-kartica p-4 space-y-3">
+            <div key={o.id} className={`${klaseKartice({ padding: "sm" })} space-y-3`}>
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <Link href={`/pijaca/${o.id}`} className="text-sm font-semibold text-kolo-green-700 hover:underline">

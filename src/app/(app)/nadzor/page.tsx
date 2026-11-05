@@ -16,6 +16,7 @@ import { getTranslations } from "next-intl/server";
 import Kartica from "@/components/ui/Kartica";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import PraznoStanje from "@/components/ui/PraznoStanje";
+import Stranica from "@/components/ui/Stranica";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,12 +35,9 @@ export default async function NadzorPage() {
   });
   if (!user || !mozeNadzor(user)) {
     return (
-      <div className="max-w-2xl mx-auto py-12 text-center">
-        <h1 className="kolo-naslov mb-2">{t("nema_ovlascenja_naslov")}</h1>
-        <p className="text-kolo-muted">
-          {t("nema_ovlascenja_opis")}
-        </p>
-      </div>
+      <Stranica>
+        <NaslovStranice naslov={t("nema_ovlascenja_naslov")} opis={t("nema_ovlascenja_opis")} />
+      </Stranica>
     );
   }
 
@@ -49,7 +47,7 @@ export default async function NadzorPage() {
   const { lista, signali } = await listajZaNadzorSaSignalima(session.user.id);
 
   return (
-    <div className="max-w-3xl mx-auto py-6 space-y-6">
+    <Stranica>
       <NaslovStranice naslov={t("page_naslov")} opis={t("page_opis")} />
 
       {lista.length === 0 ? (
@@ -80,6 +78,6 @@ export default async function NadzorPage() {
           ))}
         </div>
       )}
-    </div>
+    </Stranica>
   );
 }

@@ -24,8 +24,15 @@ import { dogadjaj } from "@/lib/analitika";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import Stranica from "@/components/ui/Stranica";
+import UspehKartica from "@/components/UspehKartica";
 
 const MAX_IMAGES = MAX_SLIKA;
+
+/** „×" na sličici: vidljiv krug od 20 px, dodirna meta 40 px (gornji desni ugao sličice). */
+const DUGME_UKLONI_SLIKU = "absolute top-0 right-0 flex size-10 items-start justify-end p-0.5";
+const KRUG_UKLONI_SLIKU = "flex size-5 items-center justify-center rounded-full bg-black/60 text-xs text-white";
 
 /** Veza <label> → <input type="file">; birač otvara pretraživač, ne JavaScript. */
 const ID_UNOSA = "pijaca-slike-unos";
@@ -223,33 +230,25 @@ export default function NoviOglasForma({
 
   if (uspeh) {
     return (
-      <div className="max-w-lg mx-auto py-16 text-center space-y-5">
-        <div className="mx-auto w-16 h-16 rounded-full bg-kolo-green-100 flex items-center justify-center">
-          <svg className="w-8 h-8 text-kolo-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 6 9 17l-5-5" />
-          </svg>
-        </div>
-        <h1 className="kolo-naslov">{t("uspeh_naslov")}</h1>
-        <p className="text-sm text-kolo-muted">{t("uspeh_opis")}</p>
-        <button
-          onClick={() => router.push("/pijaca")}
-          className={klaseDugmeta({ velicina: "lg" })}
-        >
-          {t("uspeh_dugme")}
-        </button>
-      </div>
+      <Stranica sirina="uska">
+        <UspehKartica
+          naslov={t("uspeh_naslov")}
+          opis={t("uspeh_opis")}
+          dugmeTekst={t("uspeh_dugme")}
+          onDugme={() => router.push("/pijaca")}
+        />
+      </Stranica>
     );
   }
 
   return (
-    <div className="max-w-lg mx-auto space-y-6">
-      {/* „Nazad" u svom redu iznad naslova, kao na ostalim stranicama. */}
-      <div className="space-y-2">
-        <button onClick={() => router.back()} className="inline-flex min-h-9 items-center text-sm text-kolo-muted hover:text-kolo-green-700 transition-colors">
-          {t("nazad")}
-        </button>
-        <h1 className="kolo-naslov">{jePotraznja ? t("nova_potraznja_naslov") : t("novi_oglas_naslov")}</h1>
-      </div>
+    <Stranica sirina="uska">
+      {/* „Nazad" u svom redu iznad naslova, kao na ostalim stranicama. `nazad` nosi
+          strelicu u prevodu („← Nazad"); NaslovStranice je dodaje sam. */}
+      <NaslovStranice
+        nazad={{ onClick: () => router.back(), oznaka: t("nazad").replace(/^←\s*/, "") }}
+        naslov={jePotraznja ? t("nova_potraznja_naslov") : t("novi_oglas_naslov")}
+      />
 
       {/* Nepotvrđenom se kaže jedino šta dobija i kada — objava mu je otvorena
           (Uslovi čl. 14 st. 2), pa nema šta da se pravda. Šta oglasu fali po
@@ -412,7 +411,7 @@ export default function NoviOglasForma({
           </p>
           <div className="flex flex-wrap gap-2">
             {slike.map((s, i) => (
-              <div key={s.pregled} className="relative w-20 h-20 rounded-xl border border-kolo-border overflow-hidden bg-kolo-bg">
+              <div key={s.pregled} className="relative w-20 h-20 rounded-kontrola border border-kolo-border overflow-hidden bg-kolo-bg">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={s.pregled}
@@ -422,9 +421,9 @@ export default function NoviOglasForma({
                 <button
                   type="button"
                   onClick={() => ukloniSliku(i)}
-                  className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white text-xs flex items-center justify-center"
+                  className={DUGME_UKLONI_SLIKU}
                 >
-                  ×
+                  <span className={KRUG_UKLONI_SLIKU}>×</span>
                 </button>
               </div>
             ))}
@@ -439,7 +438,7 @@ export default function NoviOglasForma({
               <label
                 htmlFor={ID_UNOSA}
                 aria-disabled={obrada}
-                className={`w-20 h-20 rounded-xl border-2 border-dashed border-kolo-border flex flex-col items-center justify-center text-kolo-muted hover:border-kolo-muted transition-colors text-xl cursor-pointer ${obrada ? "opacity-50 pointer-events-none" : ""}`}
+                className={`w-20 h-20 rounded-kontrola border-2 border-dashed border-kolo-border flex flex-col items-center justify-center text-kolo-muted hover:border-kolo-muted transition-colors text-xl cursor-pointer ${obrada ? "opacity-50 pointer-events-none" : ""}`}
               >
                 {obrada ? (
                   <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}>
@@ -486,6 +485,6 @@ export default function NoviOglasForma({
           {loading ? t("objavljivanje") : jePotraznja ? t("objavi_potraznja") : t("objavi_oglas")}
         </button>
       </form>
-    </div>
+    </Stranica>
   );
 }

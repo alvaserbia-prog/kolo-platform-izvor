@@ -2,11 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import { KATEGORIJE, kategorijaKljuc } from "@/lib/kategorije";
+import Filter from "@/components/ui/Filter";
 
 // Čipovi kategorija Pijace — višestruki izbor (filter na Pijaci, praćene
 // kategorije u profilu). Svih 13 kategorija je stalno vidljivo u flex-wrap
-// rasporedu; veličina čipa prati dugmad prekidača Ponude|Potražnja
-// (px-4 py-1.5, zahtev vlasnika).
+// rasporedu; čip je zajednički `Filter` (40 px, ista težina fonta kao ostali
+// filteri na Pijaci — pregled izgleda 02.11.2026).
 // Forma za objavu oglasa NE koristi čipove — tamo se bira tačno jedna
 // kategorija, pa stoji padajući meni (raniji mod „single" je uklonjen).
 // `counts` (samo filter): prikazuje broj u čipu; kategorija sa 0 oglasa je
@@ -36,42 +37,26 @@ export default function CategoryChips({ selected, onChange, counts, leadingChip 
   }
 
   return (
-    <div className="flex flex-wrap gap-1.5" role="group">
+    <div className="flex flex-wrap gap-2" role="group">
       {leadingChip && (
-        <button
-          type="button"
-          onClick={leadingChip.onClick}
-          aria-pressed={leadingChip.active}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-            leadingChip.active
-              ? "bg-kolo-green-700 text-white"
-              : "bg-kolo-surface border border-kolo-gold-600/40 text-kolo-gold-700 hover:border-kolo-gold-600"
-          }`}
-        >
+        <Filter ukljucen={leadingChip.active} onClick={leadingChip.onClick}>
           {leadingChip.label}
-        </button>
+        </Filter>
       )}
       {KATEGORIJE.map((slug) => {
         const aktivna = selected.includes(slug);
         const broj = counts?.[slug] ?? 0;
         const prigusena = counts !== undefined && broj === 0 && !aktivna;
         return (
-          <button
+          <Filter
             key={slug}
-            type="button"
+            ukljucen={aktivna}
             onClick={() => toggle(slug)}
-            aria-pressed={aktivna}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              aktivna
-                ? "bg-kolo-green-700 text-white"
-                : `bg-kolo-surface border border-kolo-border text-kolo-text hover:border-kolo-green-700 ${
-                    prigusena ? "opacity-50" : ""
-                  }`
-            }`}
+            className={prigusena ? "opacity-50" : ""}
           >
             {t(`kategorija_${kategorijaKljuc(slug)}`)}
-            {counts !== undefined && <span className="opacity-70"> ({broj})</span>}
-          </button>
+            {counts !== undefined && <span className="font-normal opacity-80">({broj})</span>}
+          </Filter>
         );
       })}
     </div>

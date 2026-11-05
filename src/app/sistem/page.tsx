@@ -442,7 +442,6 @@ export default async function SistemPage({
       aktivneDece={aktivneDece}
       korisnika={korisnika}
       status={prikaz?.status ?? null}
-      zrno={prikaz?.zrno ?? null}
       ukupnoTransakcija={ukupnoTransakcija}
       danasEmitovano={danasEmitovano}
       danasLimit={danasLimit}

@@ -17,7 +17,7 @@ import {
 import { ucitajStatus } from "@/lib/protokol/status";
 import { beogradskiDan } from "@/lib/protokol/obracunski-dan";
 import { dohvatiPredlogeZaPrikaz } from "@/lib/protokol/glasanje";
-import { dohvatiFazuStatus } from "@/lib/protokol/faza-sistema";
+import { dohvatiFazuStatus, PRAG_FAZE_2_POEN } from "@/lib/protokol/faza-sistema";
 import { smePodnetiPredlog, vidiPseudonimeGornjegKola } from "@/lib/gornje-kolo-pravila";
 import ZrnoKlijent from "./ZrnoKlijent";
 
@@ -85,6 +85,7 @@ export default async function ZrnoPage() {
       smeAktivirati={smeAktiviratiZrno(st)}
       smeDelegirati={smeDelegirati(st, st)}
       minimumPoenZaUpis={MINIMUM_POEN_ZA_UPIS_ZRNA}
+      pragOtvaranja={PRAG_FAZE_2_POEN}
       jePrimalacPodrske={jePrimalacPodrske}
       upisZahtev={upisZahtev ? { poenIznos: upisZahtev.poenIznos, status: upisZahtev.status } : null}
       otpisZahtev={otpisZahtev ? { kolicina: otpisZahtev.kolicina, status: otpisZahtev.status } : null}

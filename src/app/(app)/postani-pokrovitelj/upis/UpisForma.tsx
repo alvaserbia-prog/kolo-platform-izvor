@@ -22,6 +22,8 @@ import { kljuceviIzjavaUpisa } from "@/lib/upis-pokrovitelja-pravila";
 import LogotipPolje from "../LogotipPolje";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import { klaseKartice } from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 
 const MapaGazdinstava = dynamic(() => import("@/components/MapaGazdinstava"), { ssr: false });
@@ -122,7 +124,7 @@ export default function UpisForma({
   }
 
   const spremno =
-    !radi && f.naziv.trim() && f.imePrezime.trim() && odnos !== "" &&
+    f.naziv.trim() && f.imePrezime.trim() && odnos !== "" &&
     (gazdinstvo ? f.bpg.trim() : oblik !== "" && f.pib.trim() && f.maticniBroj.trim() && f.adresaSedista.trim() && (odnos !== "ZASTUPNIK" || f.zastupnikFunkcija.trim())) &&
     !!ocistiKontaktTelefon(f.kontaktTelefon) &&
     f.mapaMesto.trim() && f.mapaAdresa.trim() && tacka && lokacijaUSrbiji(tacka.lat, tacka.lng) &&
@@ -130,7 +132,12 @@ export default function UpisForma({
 
   async function posalji(e: React.FormEvent) {
     e.preventDefault();
-    if (!spremno || !tacka) return;
+    if (radi) return;
+    // Dugme se ne gasi zbog nepotpunog obrasca: klik kaže šta fali (dizajn-sistem.md).
+    if (!spremno || !tacka) {
+      setGreska(t("upis_fali"));
+      return;
+    }
     setRadi(true);
     setGreska(null);
     const r = await fetch("/api/pokroviteljstvo/upis", {
@@ -173,7 +180,7 @@ export default function UpisForma({
   };
 
   return (
-    <form onSubmit={posalji} noValidate className="space-y-4 bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica p-5">
+    <form onSubmit={posalji} noValidate className={`space-y-4 ${klaseKartice()}`}>
       {izGazdinstva && (
         <Obavestenje vrsta="info">
           <p>{t("upis_predlog_gazdinstva", { naziv: izGazdinstva.naziv })}</p>
@@ -233,7 +240,7 @@ export default function UpisForma({
       </div>
 
       {/* ── Prikaz na mapi (čl. 16, čl. 26 st. 2) ─────────────────────── */}
-      <h3 className="text-sm font-semibold text-kolo-text pt-2">{t("upis_mapa_naslov")}</h3>
+      <div className="pt-2"><NaslovSekcije nivo={3}>{t("upis_mapa_naslov")}</NaslovSekcije></div>
       <p className="text-xs text-kolo-muted">{t("upis_mapa_opis")}</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Polje oznaka={t("upis_mapa_mesto_label")}>
@@ -282,7 +289,7 @@ export default function UpisForma({
       </p>
 
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
-      <Dugme type="submit" velicina="lg" punaSirina disabled={!spremno}>
+      <Dugme type="submit" velicina="lg" punaSirina disabled={radi}>
         {radi ? t("forma_saljem") : t("upis_posalji")}
       </Dugme>
     </form>

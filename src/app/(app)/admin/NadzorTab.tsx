@@ -17,6 +17,8 @@ import { useTranslations } from "next-intl";
 import Pseudonim from "@/components/Pseudonim";
 import ZapisiOtvaranja from "./ZapisiOtvaranja";
 import { profilHref } from "@/lib/profil-link";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import PraznoStanje from "@/components/ui/PraznoStanje";
@@ -75,18 +77,18 @@ function ZatvoreneGrupe() {
 
   return (
     <section className="space-y-2">
-      <h3 className="text-base font-semibold text-kolo-text">{t("provere_grupe_naslov")}</h3>
+      <NaslovSekcije nivo={3}>{t("provere_grupe_naslov")}</NaslovSekcije>
       <p className="text-sm text-kolo-muted">{t("provere_grupe_opis")}</p>
       {greska ? (
         <Obavestenje vrsta="greska">{greska}</Obavestenje>
       ) : grupe === null ? (
         <p className="text-sm text-kolo-muted">…</p>
       ) : grupe.length === 0 ? (
-        <div className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica">
+        <div className={klaseKartice({ padding: "nema" })}>
           <PraznoStanje kompaktno naslov={t("provere_grupe_nema")} />
         </div>
       ) : (
-        <ul className="divide-y divide-kolo-border rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica">
+        <ul className={`${klaseKartice({ padding: "nema" })} divide-y divide-kolo-border`}>
           {grupe.map((g) => (
             <li key={g.clanovi.map((c) => c.id).join("|")} className="p-3 text-sm space-y-1">
               <div className="text-kolo-muted">
@@ -142,7 +144,7 @@ export default function NadzorTab({ nalazi }: { nalazi: NadzorNalaz[] }) {
       {dijalog}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-kolo-text">{t("nadzor_naslov")}</h2>
+          <NaslovSekcije>{t("nadzor_naslov")}</NaslovSekcije>
           <p className="text-sm text-kolo-muted">
             {t("nadzor_opis")}
           </p>
@@ -154,11 +156,11 @@ export default function NadzorTab({ nalazi }: { nalazi: NadzorNalaz[] }) {
       </div>
 
       {nalazi.length === 0 ? (
-        <div className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica">
+        <div className={klaseKartice({ padding: "nema" })}>
           <PraznoStanje naslov={t("nadzor_nema")} />
         </div>
       ) : (
-        <div className="divide-y divide-kolo-border rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica">
+        <div className={`${klaseKartice({ padding: "nema" })} divide-y divide-kolo-border`}>
           {nalazi.map((n) => {
             const naslov =
               n.tip === "GRUPA" ? t("nadzor_grupa_label", { count: n.clanovi?.length ?? 0 }) : n.pseudonim ?? n.subjektId ?? "—";

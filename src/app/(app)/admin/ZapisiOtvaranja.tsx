@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { profilHref } from "@/lib/profil-link";
+import { KLASE_TABELE, KLASE_ZAGLAVLJA, KLASE_REDA, klaseTh, klaseTd } from "./tabela";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Kartica from "@/components/ui/Kartica";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -54,7 +56,7 @@ export default function ZapisiOtvaranja() {
 
   return (
     <Kartica className="space-y-3">
-      <h3 className="text-sm font-semibold text-kolo-text">{t("zapisi_otvaranja_naslov")}</h3>
+      <NaslovSekcije nivo={3}>{t("zapisi_otvaranja_naslov")}</NaslovSekcije>
       <p className="text-xs text-kolo-muted">{t("zapisi_otvaranja_opis")}</p>
       <form
         onSubmit={(e) => {
@@ -82,26 +84,26 @@ export default function ZapisiOtvaranja() {
         <p className="text-sm text-kolo-muted">{t("zapisi_otvaranja_prazno")}</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className={KLASE_TABELE}>
             <thead>
-              <tr className="text-left text-xs text-kolo-muted">
-                <th className="py-1 pr-3 font-semibold">{t("zapisi_otvaranja_vreme")}</th>
-                <th className="py-1 pr-3 font-semibold">{t("zapisi_otvaranja_otvorio")}</th>
-                <th className="py-1 font-semibold">{t("zapisi_otvaranja_pozvani")}</th>
+              <tr className={KLASE_ZAGLAVLJA}>
+                <th className={klaseTh()}>{t("zapisi_otvaranja_vreme")}</th>
+                <th className={klaseTh()}>{t("zapisi_otvaranja_otvorio")}</th>
+                <th className={klaseTh()}>{t("zapisi_otvaranja_pozvani")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-kolo-border">
+            <tbody>
               {zapisi.map((z) => (
-                <tr key={z.id}>
-                  <td className="py-1.5 pr-3 tabular-nums whitespace-nowrap">
+                <tr key={z.id} className={KLASE_REDA}>
+                  <td className={`${klaseTd()} tabular-nums whitespace-nowrap`}>
                     {new Date(z.otvorenoAt).toLocaleString("sr-RS")}
                   </td>
-                  <td className="py-1.5 pr-3">
+                  <td className={klaseTd()}>
                     <Link href={profilHref(z.otvorio)} className="text-kolo-green-700 hover:underline">
                       {z.otvorio.pseudonim}
                     </Link>
                   </td>
-                  <td className="py-1.5">
+                  <td className={klaseTd()}>
                     <Link href={profilHref(z.pozvani)} className="text-kolo-green-700 hover:underline">
                       {z.pozvani.pseudonim}
                     </Link>

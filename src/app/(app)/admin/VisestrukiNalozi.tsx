@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { profilHref } from "@/lib/profil-link";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Kartica from "@/components/ui/Kartica";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -99,7 +100,7 @@ export default function VisestrukiNalozi() {
   return (
     <Kartica className="space-y-4">
       {dijalog}
-      <h3 className="text-sm font-semibold text-kolo-text">{t("visestruki_naslov")}</h3>
+      <NaslovSekcije nivo={3}>{t("visestruki_naslov")}</NaslovSekcije>
       <p className="text-xs text-kolo-muted">{t("visestruki_opis")}</p>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
       {grupe && grupe.length === 0 && <p className="text-sm text-kolo-muted">{t("visestruki_prazno")}</p>}
@@ -144,7 +145,7 @@ export default function VisestrukiNalozi() {
 
       {predmeti.length > 0 && (
         <div className="space-y-2 border-t border-kolo-border pt-3">
-          <h4 className="text-sm font-semibold text-kolo-text">{t("visestruki_predmeti_naslov")}</h4>
+          <NaslovSekcije nivo={3} varijanta="oznaka">{t("visestruki_predmeti_naslov")}</NaslovSekcije>
           <p className="text-xs text-kolo-muted">{t("visestruki_predmeti_opis")}</p>
           <ul className="divide-y divide-kolo-border">
             {predmeti.map((p) => (

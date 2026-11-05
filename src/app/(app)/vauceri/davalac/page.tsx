@@ -8,6 +8,8 @@ import { mojiUpisi } from "@/lib/protokol/upis-pokrovitelja";
 import LogotipPokrovitelja from "@/components/LogotipPokrovitelja";
 import ProveraVaucera from "@/components/pokroviteljstvo/ProveraVaucera";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 
 export async function generateMetadata() {
@@ -29,12 +31,12 @@ export default async function DavalacPage() {
   const moji = upisi.filter((u) => !u.obrisanAt);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <Stranica>
       <NaslovStranice naslov={t("davalac_naslov")} opis={t("davalac_uvod")} />
 
       {moji.length > 0 && (
         <Kartica as="section" className="space-y-2">
-          <h2 className="text-lg font-semibold">{tp("moje_firme_naslov")}</h2>
+          <NaslovSekcije>{tp("moje_firme_naslov")}</NaslovSekcije>
           <ul className="space-y-2">
             {moji.map((u) => (
               <li key={u.id}>
@@ -50,8 +52,7 @@ export default async function DavalacPage() {
 
       {davaoci.length > 0 && (
         <Kartica as="section" className="space-y-2">
-          <h2 className="text-lg font-semibold">{tp("potvrdjujem_naslov")}</h2>
-          <p className="text-sm text-kolo-muted">{tp("potvrdjujem_opis")}</p>
+          <NaslovSekcije opis={tp("potvrdjujem_opis")}>{tp("potvrdjujem_naslov")}</NaslovSekcije>
           <ul className="space-y-2">
             {davaoci.map((d) => (
               <li key={d.upisId} className="flex items-center gap-3 text-sm text-kolo-text">
@@ -71,6 +72,6 @@ export default async function DavalacPage() {
           <Link href="/postani-pokrovitelj" className="underline">{t("prijava_link")}</Link>
         </p>
       )}
-    </div>
+    </Stranica>
   );
 }

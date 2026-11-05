@@ -8,6 +8,8 @@ import { MAX_IME_PREZIME, procitajImePrezime } from "@/lib/identitet-pravila";
 import { MAX_OPIS } from "@/lib/gazdinstvo-pravila";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import { klaseKartice } from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
@@ -159,12 +161,15 @@ export default function UpravljanjeGazdinstvom({
     ? ` ${t("izlazak_poslednji", { otpis: iznos(posledica.otpis), ponisten: iznos(posledica.ponistava) })}`
     : "";
 
-  const kartica = "bg-kolo-surface border border-kolo-border rounded-kartica shadow-kartica p-5 space-y-3";
+  const kartica = `${klaseKartice()} space-y-3`;
   const dugme = klaseDugmeta();
   const dugmeSek = klaseDugmeta({ varijanta: "sekundarno" });
   const dugmeOpasno = klaseDugmeta({ varijanta: "opasno" });
   const polje = KLASE_UNOSA;
+  // Jedno upozorenje po ekranu (odluka vlasnika 02.11.2026): žuto je samo upit o
+  // preuzimanju izjave (rok); ostalo je informacija u mirnom bloku.
   const napomena = "rounded-kontrola border-l-4 border-kolo-gold-600 bg-kolo-gold-100 px-4 py-3 text-sm text-kolo-text";
+  const blok = "rounded-kontrola bg-kolo-bg px-4 py-3 text-sm text-kolo-text";
 
   const poljeImena = (
     <Polje oznaka={t("polje_ime_prezime")} pomoc={t("polje_ime_prezime_napomena")}>
@@ -183,7 +188,7 @@ export default function UpravljanjeGazdinstvom({
     return (
       <section className={kartica}>
         {dijalog}
-        <h2 className="font-semibold text-kolo-green-900">{t("poziv_naslov")}</h2>
+        <NaslovSekcije>{t("poziv_naslov")}</NaslovSekcije>
         <p className="text-sm text-kolo-text">{t("poziv_tekst")}</p>
         {/* Uslov pristupanja (čl. 10): pozvani je član Kola u trenutku odobrenja. */}
         {!uKolu && <Obavestenje vrsta="upozorenje">{t("poziv_uslov_kolo")}</Obavestenje>}
@@ -235,7 +240,7 @@ export default function UpravljanjeGazdinstvom({
   return (
     <section className={kartica}>
       {dijalog}
-      <h2 className="font-semibold text-kolo-green-900">{t("upravljanje_naslov")}</h2>
+      <NaslovSekcije>{t("upravljanje_naslov")}</NaslovSekcije>
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
       {poruka && <Obavestenje vrsta="uspeh">{poruka}</Obavestenje>}
 
@@ -268,7 +273,7 @@ export default function UpravljanjeGazdinstvom({
       )}
 
       {!imaIme && zivo && (
-        <div className={`${napomena} space-y-2`}>
+        <div className={`${blok} space-y-2`}>
           <p>{t("ime_nedostaje")}</p>
           {poljeImena}
           <button
@@ -285,7 +290,7 @@ export default function UpravljanjeGazdinstvom({
       {/* Izjava o prikazu adrese (čl. 19 st. 1) za gazdinstvo odobreno ranije — daje je
           lice koje odgovara za izjavu, jednom. 🔴 Nema „povuci": izlaz je brisanje gazdinstva. */}
       {odgovaram && zivo && !imaIzjavuAdrese && (
-        <div className={`${napomena} space-y-2`}>
+        <div className={`${blok} space-y-2`}>
           <p>{t("adresa_izjava_nedostaje")}</p>
           <label className="flex items-start gap-2 text-sm">
             <input type="checkbox" className="mt-1" checked={izjavaAdrese} onChange={(e) => setIzjavaAdrese(e.target.checked)} />

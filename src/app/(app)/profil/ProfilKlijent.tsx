@@ -19,6 +19,10 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Prekidac from "@/components/ui/Prekidac";
 import NaslovStranice from "@/components/ui/NaslovStranice";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Kartica from "@/components/ui/Kartica";
+import Fioka from "@/components/ui/Fioka";
+import Dugme from "@/components/ui/Dugme";
 
 const MAX_DISPLAY = 440;
 
@@ -213,6 +217,13 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
 
   const mozeMenjatiPseudonim = !user.pseudonimChangedAt ||
     (Date.now() - new Date(user.pseudonimChangedAt).getTime()) > 30 * 24 * 60 * 60 * 1000;
+
+  // Stabilna funkcija: Fioka je drži u efektu, pa bi nova funkcija pri svakom
+  // pomeranju kruga ponovo pomerala fokus.
+  const zatvoriIsecanje = useCallback(() => {
+    if (cropSrc) URL.revokeObjectURL(cropSrc);
+    setCropSrc(null);
+  }, [cropSrc]);
 
   function selectAvatar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -511,22 +522,35 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
     />
   );
 
+  // Širinu daje `Stranica` u page.tsx — ispod ove komponente stoje i kartice
+  // deteta (kod za roditelja, mejl, škola), pa je omotač jedan za sve.
   return (
     <div className="space-y-6">
       <NaslovStranice naslov={t("naslov")} />
 
-      {/* Kartica statusa: opis, obavezne rečenice člana bez potvrde (Pravilnik
-          čl. 2, 28; dokaz stvarnosti čl. 6; Uslovi čl. 2), položaj ZRNA, a kod deteta
-          na šta se čeka (deca čl. 5 st. 4). */}
-      {status && (
+      {/* Status u jednom redu (odluka vlasnika 02.11.2026): korisniku „Korisnik ·
+          Kako da uđem u Kolo →", članu Kola, čuvaru i osnivaču naziv, rečenica i veza
+          na Potvrde. Puna kartica ostaje gde je pravilo traži: obavezne rečenice člana
+          bez potvrde (Pravilnik čl. 2, 28; dokaz stvarnosti čl. 6; Uslovi čl. 2),
+          zamrznuto ZRNO i kod deteta na šta se čeka (deca čl. 5 st. 4). */}
+      {status && (status === "KORISNIK" && zrno !== "ZAMRZNUTO" ? (
+        <Kartica padding="sm" className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <OznakaStatusa status={status} />
+          <Link href="/verifikacija" className="inline-flex min-h-10 items-center text-sm font-semibold text-kolo-green-700 hover:underline">
+            {tc("kako_u_kolo")} →
+          </Link>
+        </Kartica>
+      ) : status === "CLAN_KOLA" || status === "CUVAR_KOLA" || status === "OSNIVAC" ? (
+        <OznakaStatusa varijanta="kratko" status={status} />
+      ) : (
         <OznakaStatusa varijanta="kartica" svoj status={status} naStaSeCeka={naStaSeCeka} zrno={zrno} vezaNazove />
-      )}
+      ))}
 
       {/* Osnovni podaci sa profilnom slikom u zaglavlju kartice. Slika je 112 px
           (bila je krug od 320 px u zasebnoj kartici i na telefonu je sama zauzimala
           ceo ekran). */}
       <div>
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
+        <Kartica padding="lg">
           <div className="flex flex-wrap items-center gap-4 mb-5">
             <div className="w-28 h-28 rounded-full overflow-hidden ring-2 ring-kolo-border shrink-0">
               {avatar ? (
@@ -558,7 +582,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
               {avatarError && <Obavestenje vrsta="greska">{avatarError}</Obavestenje>}
             </div>
           </div>
-          <h2 className="text-base font-semibold text-kolo-muted mb-4">{t("osnovi_podaci")}</h2>
+          <div className="mb-4"><NaslovSekcije>{t("osnovi_podaci")}</NaslovSekcije></div>
           <dl className="space-y-3 text-sm">
             <div className="flex justify-between">
               <dt className="text-kolo-muted">{t("pseudonim_label")}</dt>
@@ -599,13 +623,12 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
               <dd className="text-kolo-muted">{new Date(user.createdAt).toLocaleDateString(intlTag(locale))}</dd>
             </div>
           </dl>
-        </div>
+        </Kartica>
       </div>
 
       {/* Podaci i vidljivost — jedan meni: svako polje + on/off klizač prikazivanja na kraju */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-        <h2 className="text-base font-semibold text-kolo-muted mb-1">{t("vidljivost_naslov")}</h2>
-        <p className="text-xs text-kolo-muted mb-5">{t("vidljivost_opis")}</p>
+      <Kartica padding="lg">
+        <div className="mb-5"><NaslovSekcije opis={t("vidljivost_opis")}>{t("vidljivost_naslov")}</NaslovSekcije></div>
         <form onSubmit={sacuvajSve} className="space-y-4">
           {/* Puno ime */}
           <div>
@@ -673,12 +696,12 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
             {podaciLoading ? tc("cuvam") : tc("sacuvaj")}
           </button>
         </form>
-      </div>
+      </Kartica>
 
       {/* Promena pseudonima + Promena lozinke — jedno pored drugog */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-          <h2 className="text-base font-semibold text-kolo-muted mb-4">{t("promena_pseudonima")}</h2>
+        <Kartica padding="lg">
+          <div className="mb-4"><NaslovSekcije>{t("promena_pseudonima")}</NaslovSekcije></div>
           {mozeMenjatiPseudonim ? (
             <form onSubmit={promeniPseudonim} className="space-y-3">
               <input
@@ -706,10 +729,10 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
               )}
             </p>
           )}
-        </div>
+        </Kartica>
 
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-          <h2 className="text-base font-semibold text-kolo-muted mb-4">{t("promena_lozinke")}</h2>
+        <Kartica padding="lg">
+          <div className="mb-4"><NaslovSekcije>{t("promena_lozinke")}</NaslovSekcije></div>
           <form onSubmit={promeniLozinku} className="space-y-3">
             <input
               type="password"
@@ -733,16 +756,16 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
               {t("promeni_lozinku")}
             </button>
           </form>
-        </div>
+        </Kartica>
       </div>
 
       {/* Crop modal */}
       {cropSrc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4">
-          <div className="bg-kolo-surface rounded-kartica p-6 flex flex-col items-center gap-4 shadow-xl max-w-full">
+        <Fioka naslov={t("postavi_sliku")} onZatvori={zatvoriIsecanje}>
+          <div className="flex flex-col items-center gap-4">
             <p className="text-sm text-kolo-muted">{t("crop_opis")}</p>
             <div
-              className="relative cursor-grab active:cursor-grabbing rounded-xl overflow-hidden select-none"
+              className="relative cursor-grab active:cursor-grabbing rounded-kontrola overflow-hidden select-none max-w-full"
               style={{ width: cropDisplay.w, height: cropDisplay.h, touchAction: "none" }}
               onMouseDown={onDragStart}
               onMouseMove={onDragMove}
@@ -791,7 +814,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
             </div>
             <div className="flex gap-3 w-full">
               <button
-                onClick={() => { URL.revokeObjectURL(cropSrc); setCropSrc(null); }}
+                onClick={zatvoriIsecanje}
                 className={klaseDugmeta({ varijanta: "sekundarno" }) + " flex-1"}
               >
                 {tc("otkazi")}
@@ -805,15 +828,12 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
               </button>
             </div>
           </div>
-        </div>
+        </Fioka>
       )}
 
       {/* Moji oglasi — kartica sa vidljivim dugmetom za ulaz */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-kartica">
-        <div>
-          <h2 className="text-base font-semibold text-kolo-muted mb-1">{t("moji_oglasi")}</h2>
-          <p className="text-xs text-kolo-muted">{t("moji_oglasi_opis")}</p>
-        </div>
+      <Kartica padding="lg" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <NaslovSekcije opis={t("moji_oglasi_opis")}>{t("moji_oglasi")}</NaslovSekcije>
         <Link
           href="/profil/oglasi"
           className={klaseDugmeta() + " shrink-0"}
@@ -821,24 +841,22 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
           {t("moji_oglasi_dugme")}
           <span aria-hidden>→</span>
         </Link>
-      </div>
+      </Kartica>
 
       {mojaDeca}
 
       {/* Kategorije Pijace koje pratim — multi čipovi, optimistički upis na tap.
           Vizuelno identično filteru na Pijaci, bez brojača. */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-        <h2 className="text-base font-semibold text-kolo-muted mb-1">{t("pratim_kategorije_naslov")}</h2>
-        <p className="text-xs text-kolo-muted mb-4">{t("pratim_kategorije_opis")}</p>
+      <Kartica padding="lg">
+        <div className="mb-4"><NaslovSekcije opis={t("pratim_kategorije_opis")}>{t("pratim_kategorije_naslov")}</NaslovSekcije></div>
         <CategoryChips selected={pracene} onChange={togglePracenje} />
-      </div>
+      </Kartica>
 
       {/* Obaveštenja — email prekidač gasi SVE obaveštajne mejlove (mejl za reset
           lozinke ne zavisi od njega jer bez njega nalog nije povratljiv); ispod je
           prekidač za push na ovom uređaju, isti koji stoji u meniju zvonca. */}
-      <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-        <h2 className="text-base font-semibold text-kolo-muted mb-1">{t("email_naslov")}</h2>
-        <p className="text-xs text-kolo-muted mb-4">{t("email_opis")}</p>
+      <Kartica padding="lg">
+        <div className="mb-4"><NaslovSekcije opis={t("email_opis")}>{t("email_naslov")}</NaslovSekcije></div>
         <div className="flex justify-between items-center gap-4">
           <div>
             <p className="text-sm font-semibold text-kolo-text">{t("email_toggle")}</p>
@@ -854,7 +872,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
         <div className="mt-4 pt-4 border-t border-kolo-border empty:hidden">
           <PushObavestenja varijanta="profil" />
         </div>
-      </div>
+      </Kartica>
 
       {/* Podaci i privatnost — prigovor levo; desno prenosivost (gore) + gašenje (dole).
           Detetu se ne prikazuje: prigovor Fondaciji, GDPR eksport i nepovratno
@@ -862,11 +880,11 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
           uskraćena — ostvaruje ih roditelj, koji za dete i odgovara (deca čl. 20 st. 4). */}
       <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 items-start ${maloletan ? "hidden" : ""}`}>
         {/* Prigovor na odluku — levo */}
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
+        <Kartica padding="lg">
           {/* Izjašnjenje pre odluke (Uslovi čl. 40 st. 5) — stoji IZNAD obrasca
               jer je vezano rokom: dok traje, Fondacija ne odlučuje. */}
           {(predmeti?.izjasnjenja.length ?? 0) > 0 && (
-            <div className="mb-6 rounded-kontrola border-l-4 border-kolo-gold-600 bg-kolo-gold-100 p-4 space-y-4">
+            <div className="mb-6 rounded-kontrola border-l-4 border-kolo-green-500 bg-kolo-green-50 p-4 space-y-4">
               <h3 className="text-sm font-semibold text-kolo-text">{t("izjasni_naslov")}</h3>
               {predmeti!.izjasnjenja.map((iz) => (
                 <Izjasnjenje
@@ -880,10 +898,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
               ))}
             </div>
           )}
-          <h2 className="text-base font-semibold text-kolo-muted mb-2">{t("prigovor_naslov")}</h2>
-          <p className="text-xs text-kolo-muted mb-4">
-            {t("prigovor_opis")}
-          </p>
+          <div className="mb-4"><NaslovSekcije opis={t("prigovor_opis")}>{t("prigovor_naslov")}</NaslovSekcije></div>
           <form onSubmit={posaljiPrigovor} className="space-y-3">
             <select
               value={prigovorTip}
@@ -935,16 +950,13 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
               {prigovorLoading ? t("saljem") : t("prigovor_dugme")}
             </button>
           </form>
-        </div>
+        </Kartica>
 
         {/* Desno: prenosivost podataka (gore) + gašenje profila (dole) */}
         <div className="space-y-6">
           {/* Pravo na prenosivost podataka */}
-          <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 shadow-kartica">
-            <h2 className="text-base font-semibold text-kolo-muted mb-2">{t("eksport_naslov")}</h2>
-            <p className="text-xs text-kolo-muted mb-4">
-              {t("eksport_opis")}
-            </p>
+          <Kartica padding="lg">
+            <div className="mb-4"><NaslovSekcije opis={t("eksport_opis")}>{t("eksport_naslov")}</NaslovSekcije></div>
             <a
               href="/api/profil/eksport"
               download
@@ -952,24 +964,18 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
             >
               {t("eksport_dugme")}
             </a>
-          </div>
+          </Kartica>
 
           {/* Šta sam prihvatio i kada (R-06) */}
           <MojiPristanci />
 
           {/* Gašenje profila (brisanje naloga) */}
-          <div className="bg-kolo-surface rounded-kartica border border-kolo-danger/30 p-6 shadow-kartica">
-            <h2 className="text-base font-semibold text-kolo-danger mb-2">{t("brisi_naslov")}</h2>
-            <p className="text-xs text-kolo-muted mb-4">
-              {t("brisi_opis")}
-            </p>
+          <Kartica ton="opasnost" padding="lg">
+            <div className="mb-4"><NaslovSekcije opis={t("brisi_opis")}>{t("brisi_naslov")}</NaslovSekcije></div>
         {!brisiModalOpen ? (
-          <button
-            onClick={() => setBrisiModalOpen(true)}
-            className="min-h-10 px-4 rounded-kontrola border border-kolo-danger/30 bg-kolo-surface text-kolo-danger text-sm font-semibold hover:bg-kolo-danger-light transition-colors"
-          >
+          <Dugme varijanta="opasno" onClick={() => setBrisiModalOpen(true)}>
             {t("brisi_dugme")}
-          </button>
+          </Dugme>
         ) : (
           <div className="space-y-3 border border-kolo-danger/30 rounded-kontrola p-4 bg-kolo-danger-light">
             <p className="text-sm font-semibold text-kolo-danger">{t("brisi_potvrda_naslov")}</p>
@@ -1003,7 +1009,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
             </div>
           </div>
         )}
-          </div>
+          </Kartica>
         </div>
       </div>
 
@@ -1013,16 +1019,12 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
           iz obrade koja se u tom razdoblju vodi po legitimnom interesu jeste.
           Po preuzimanju naloga blok nestaje — tada nalog briše roditelj. */}
       {maloletan && stanjeDeteta === "NA_CEKANJU" && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-danger/30 p-6 shadow-kartica">
-          <h2 className="text-base font-semibold text-kolo-danger mb-2">{t("dete_brisi_naslov")}</h2>
-          <p className="text-xs text-kolo-muted mb-4">{t("dete_brisi_opis")}</p>
+        <Kartica ton="opasnost" padding="lg">
+          <div className="mb-4"><NaslovSekcije opis={t("dete_brisi_opis")}>{t("dete_brisi_naslov")}</NaslovSekcije></div>
           {!deteBrisiOpen ? (
-            <button
-              onClick={() => setDeteBrisiOpen(true)}
-              className="min-h-10 px-4 rounded-kontrola border border-kolo-danger/30 bg-kolo-surface text-kolo-danger text-sm font-semibold hover:bg-kolo-danger-light transition-colors"
-            >
+            <Dugme varijanta="opasno" onClick={() => setDeteBrisiOpen(true)}>
               {t("dete_brisi_dugme")}
-            </button>
+            </Dugme>
           ) : (
             <div className="space-y-3 border border-kolo-danger/30 rounded-kontrola p-4 bg-kolo-danger-light">
               <p className="text-sm font-semibold text-kolo-danger">{t("dete_brisi_potvrda")}</p>
@@ -1046,7 +1048,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
               </div>
             </div>
           )}
-        </div>
+        </Kartica>
       )}
     </div>
   );

@@ -28,6 +28,8 @@ import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
 import Link from "next/link";
 import VisestrukiNalozi from "./VisestrukiNalozi";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -125,9 +127,9 @@ function PotvrdaOdlukomFondacije({ onDone }: { onDone?: () => void }) {
   }
 
   return (
-    <section className="space-y-3 rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
+    <section className={`${klaseKartice()} space-y-3`}>
       {dijalog}
-      <h2 className="text-lg font-semibold text-kolo-text">{t("potvrde_fondacija_naslov")}</h2>
+      <NaslovSekcije nivo={3}>{t("potvrde_fondacija_naslov")}</NaslovSekcije>
       <p className="text-sm text-kolo-muted">{t("potvrde_fondacija_opis")}</p>
       <input
         className={KLASE_UNOSA + " max-w-xs"}
@@ -381,7 +383,7 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
 
       {/* ── Ventil ─────────────────────────────────────────────────────────── */}
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-kolo-text">{t("potvrde_naslov")}</h2>
+        <NaslovSekcije>{t("potvrde_naslov")}</NaslovSekcije>
         <p className="text-sm text-kolo-muted">{t("potvrde_opis")}</p>
 
         {ucitava ? (
@@ -391,7 +393,7 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
         ) : (
           <ul className="space-y-3">
             {veze.map((v) => (
-              <li key={v.id} className="rounded-kartica border border-kolo-border bg-kolo-surface p-4 shadow-kartica">
+              <li key={v.id} className={klaseKartice({ padding: "sm" })}>
                 <p className="text-sm text-kolo-text">
                   <Link href={profilHref(v.potvrdjivac)} className="font-semibold hover:underline">
                     <Pseudonim>{v.potvrdjivac.pseudonim}</Pseudonim>
@@ -425,8 +427,8 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
 
       {/* ── Usklađivanje zatečenih ─────────────────────────────────────────── */}
       {jeSuperadmin && (
-        <section className="space-y-3 rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-          <h2 className="text-lg font-semibold text-kolo-text">{t("potvrde_uskladjivanje_naslov")}</h2>
+        <section className={`${klaseKartice()} space-y-3`}>
+          <NaslovSekcije nivo={3}>{t("potvrde_uskladjivanje_naslov")}</NaslovSekcije>
           <Obavestenje vrsta="upozorenje">{t("potvrde_uskladjivanje_opis")}</Obavestenje>
 
           <button
@@ -494,8 +496,8 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
 
       {/* ── Uklanjanje parova emisija+usklađivanje ─────────────────────────── */}
       {jeSuperadmin && (
-        <section className="space-y-3 rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-          <h2 className="text-lg font-semibold text-kolo-text">{t("parovi_naslov")}</h2>
+        <section className={`${klaseKartice()} space-y-3`}>
+          <NaslovSekcije nivo={3}>{t("parovi_naslov")}</NaslovSekcije>
           <Obavestenje vrsta="info">{t("parovi_opis")}</Obavestenje>
 
           <button
@@ -587,8 +589,8 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
 
       {/* ── Uklanjanje POEN-a za nadzor (set 4.7.5) ────────────────────────── */}
       {jeSuperadmin && (
-        <section className="space-y-3 rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica">
-          <h2 className="text-lg font-semibold text-kolo-text">{t("nadzor_poen_naslov")}</h2>
+        <section className={`${klaseKartice()} space-y-3`}>
+          <NaslovSekcije nivo={3}>{t("nadzor_poen_naslov")}</NaslovSekcije>
           <Obavestenje vrsta="upozorenje">{t("nadzor_poen_opis")}</Obavestenje>
 
           <button

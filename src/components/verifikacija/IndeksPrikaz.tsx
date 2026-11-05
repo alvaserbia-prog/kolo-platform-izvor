@@ -8,6 +8,7 @@
 import OznakaStatusa, { type ZrnoPolozaj } from "@/components/OznakaStatusa";
 import type { StatusUcesnika } from "@/lib/status-ucesnika-pravila";
 import type { NaStaSeCeka } from "@/lib/deca-pravila";
+import Kartica from "@/components/ui/Kartica";
 
 type Props = {
   status: StatusUcesnika;
@@ -35,13 +36,9 @@ export default function IndeksPrikaz({
 }: Props) {
   if (statusKaoBadge) {
     return (
-      <div
-        className={`rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica flex items-center justify-center${
-          ispuniVisinu ? " h-full" : ""
-        }`}
-      >
+      <Kartica padding="lg" className={`flex items-center justify-center${ispuniVisinu ? " h-full" : ""}`}>
         <OznakaStatusa status={status} className="text-sm px-3 py-1.5" />
-      </div>
+      </Kartica>
     );
   }
 

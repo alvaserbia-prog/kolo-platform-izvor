@@ -17,6 +17,7 @@ import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Pseudonim from "@/components/Pseudonim";
+import Kartica from "@/components/ui/Kartica";
 import { profilHref } from "@/lib/profil-link";
 import { RAZLOZI, SUBJEKTI, jeSumnja, type Ishod, type Subjekt, type Razlog } from "@/lib/nadzor-pravila";
 import type { SignalNadzora } from "@/lib/nadzor-signali-pravila";
@@ -106,7 +107,7 @@ export default function VerifikacijaCard({
   });
 
   return (
-    <div className="rounded-kartica border border-kolo-border bg-kolo-surface p-4 shadow-kartica space-y-3">
+    <Kartica padding="sm" className="space-y-3">
       <div className="min-w-0 space-y-1">
         <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm leading-tight">
           {verifikator ? (
@@ -252,6 +253,6 @@ export default function VerifikacijaCard({
           </div>
         </div>
       )}
-    </div>
+    </Kartica>
   );
 }

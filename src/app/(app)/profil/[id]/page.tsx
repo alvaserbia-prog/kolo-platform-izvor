@@ -20,6 +20,9 @@ import { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
 import PraznoStanje from "@/components/ui/PraznoStanje";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
 
 interface Transakcija {
   id: string;
@@ -219,9 +222,9 @@ export default function JavniProfilPage() {
 
   if (ucitavam) {
     return (
-      <div className="space-y-4">
+      <Stranica sirina="siroka">
         <div className="h-4 w-32 bg-kolo-border rounded animate-pulse" />
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border p-6 space-y-4 shadow-kartica">
+        <Kartica padding="lg" className="space-y-4">
           <div className="flex gap-4">
             <div className="w-16 h-16 rounded-full bg-kolo-border animate-pulse shrink-0" />
             <div className="space-y-2 flex-1">
@@ -229,8 +232,8 @@ export default function JavniProfilPage() {
               <div className="h-4 w-24 bg-kolo-border rounded animate-pulse" />
             </div>
           </div>
-        </div>
-      </div>
+        </Kartica>
+      </Stranica>
     );
   }
 
@@ -241,7 +244,8 @@ export default function JavniProfilPage() {
   if (profil?.zatvoren) {
     const z = profil.zatvoren;
     return (
-      <div className="mx-auto max-w-xl rounded-kartica border border-kolo-border bg-kolo-surface p-8 shadow-kartica">
+      <Stranica>
+      <Kartica padding="lg">
         <p className="text-lg font-semibold text-kolo-text">
           <Pseudonim>{z.pseudonim}</Pseudonim>
         </p>
@@ -277,15 +281,18 @@ export default function JavniProfilPage() {
             <PrijavaRoditeljstva deteId={adresa} roditelji={z.roditelji} varijanta="trece" />
           </div>
         )}
-      </div>
+      </Kartica>
+      </Stranica>
     );
   }
 
   if (greska || !profil) {
     return (
-      <Kartica>
-        <PraznoStanje naslov={greska || t("profil_nije_pronadjen")} />
-      </Kartica>
+      <Stranica>
+        <Kartica>
+          <PraznoStanje naslov={greska || t("profil_nije_pronadjen")} />
+        </Kartica>
+      </Stranica>
     );
   }
 
@@ -297,11 +304,26 @@ export default function JavniProfilPage() {
   const znakovaStil = { "--znakova": String(poenTekst.length) } as CSSProperties;
 
   return (
-    <div className="space-y-4">
-      {/* Naslov */}
-      <div className="text-sm font-medium text-kolo-text">
-        <Pseudonim>{profil.pseudonim}</Pseudonim>
-      </div>
+    <Stranica sirina="siroka">
+      {/* Naslov sa avatarom; ime i mesto (ako ih je vlasnik profila otvorio) u opisu. */}
+      <NaslovStranice
+        naslov={<Pseudonim>{profil.pseudonim}</Pseudonim>}
+        slika={
+          profil.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={profil.avatar}
+              alt={profil.pseudonim}
+              className="size-16 rounded-full object-cover border-2 border-kolo-border"
+            />
+          ) : (
+            <div className="size-16 rounded-full bg-kolo-green-100 flex items-center justify-center border-2 border-kolo-border">
+              <span className="text-2xl font-bold text-kolo-green-700">{inicijali}</span>
+            </div>
+          )
+        }
+        opis={[profil.punoIme, profil.lokacija].filter(Boolean).join(" · ") || undefined}
+      />
 
       {/* Sužen pregled — ekran mora da objasni zašto, inače izgleda kao kvar. */}
       {profil.suzen && (
@@ -311,40 +333,9 @@ export default function JavniProfilPage() {
       {/* Gornji raspored: levo manja pseudonim kartica, desno statistike + indeks */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
         {/* LEVO — pseudonim kartica (ista visina kao lanac/transakcije) */}
-        <div className="lg:col-span-6 bg-kolo-surface rounded-kartica border border-kolo-border p-5 flex flex-col lg:h-[460px] shadow-kartica">
-          <div className="flex flex-col items-center text-center">
-            {/* Avatar */}
-            {profil.avatar ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={profil.avatar}
-                alt={profil.pseudonim}
-                className="w-28 h-28 rounded-full object-cover border-2 border-kolo-border"
-              />
-            ) : (
-              <div className="w-28 h-28 rounded-full bg-kolo-green-100 flex items-center justify-center border-2 border-kolo-border">
-                <span className="text-4xl font-bold text-kolo-green-700">{inicijali}</span>
-              </div>
-            )}
-
-            <h1 className="text-lg font-bold text-kolo-text mt-3"><Pseudonim>{profil.pseudonim}</Pseudonim></h1>
-            {profil.punoIme && (
-              <p className="text-sm text-kolo-muted mt-0.5">{profil.punoIme}</p>
-            )}
-            {profil.lokacija && (
-              <p className="text-sm text-kolo-muted mt-0.5">{profil.lokacija}</p>
-            )}
-
-            {profil.jaSamRoditelj && (
-              <Link
-                href={`/deca/${profil.id}`}
-                className={klaseDugmeta({ varijanta: "sekundarno" }) + " mt-3"}
-              >
-                {t("podesavanja_deteta")}
-              </Link>
-            )}
-
-            <div className="flex flex-wrap justify-center gap-1.5 mt-2">
+        <Kartica className="lg:col-span-6 flex flex-col">
+          <div className="flex flex-col items-start">
+            <div className="flex flex-wrap gap-1.5">
               {/* Status (set 4.8.2): jedna komponenta za ceo sistem. Dete je dete
                   (na čekanju, sa roditeljem, dete Kola), nikad „korisnik". */}
               {profil.statusUcesnika && <OznakaStatusa status={profil.statusUcesnika} />}
@@ -357,6 +348,15 @@ export default function JavniProfilPage() {
 
             {profil.opis && (
               <p className="text-sm text-kolo-muted mt-2 line-clamp-3">{profil.opis}</p>
+            )}
+
+            {profil.jaSamRoditelj && (
+              <Link
+                href={`/deca/${profil.id}`}
+                className={klaseDugmeta({ varijanta: "sekundarno" }) + " mt-3"}
+              >
+                {t("podesavanja_deteta")}
+              </Link>
             )}
           </div>
 
@@ -434,8 +434,8 @@ export default function JavniProfilPage() {
             )}
           </dl>
 
-          {/* Akcijska dugmad */}
-          <div className="mt-4 flex gap-2">
+          {/* Akcijska dugmad — na dnu kartice kad je desna kolona viša */}
+          <div className="mt-auto pt-4 flex gap-2">
             <Link
               href={`/novcanik?prima=${profil.pseudonim}`}
               className={klaseDugmeta() + " flex-1"}
@@ -444,7 +444,7 @@ export default function JavniProfilPage() {
             </Link>
             <PorukaButton userId={profil.id} />
           </div>
-        </div>
+        </Kartica>
 
         {/* DESNO — gore stanje POEN-a, dole indeks stvarnosti.
 
@@ -453,12 +453,12 @@ export default function JavniProfilPage() {
             kod svakoga pokazivala nulu. */}
         <div className="lg:col-span-6 flex flex-col gap-4">
           <div className="flex-1">
-            <div className="broj-kartica h-full bg-kolo-surface rounded-kartica border border-kolo-border p-4 sm:p-6 text-center flex flex-col justify-center shadow-kartica">
+            <Kartica className="broj-kartica h-full text-center flex flex-col justify-center">
               <p className="text-base font-medium text-kolo-muted mb-1">{tc("poen")}</p>
               <p className="broj-kartica-vrednost font-bold text-kolo-text" style={znakovaStil}>
                 {poenTekst}
               </p>
-            </div>
+            </Kartica>
           </div>
 
           {/* Kartica koja je ovde nosila samo oznaku statusa uklonjena je (pregled
@@ -496,9 +496,11 @@ export default function JavniProfilPage() {
         )}
 
         {/* DESNO — transakcije (fiksna visina + skrol) */}
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border flex flex-col lg:h-[460px] shadow-kartica">
+        {/* Gornja granica visine (ne fiksna visina): lista se skroluje u kartici,
+            a kraća lista ne ostavlja praznu belinu. */}
+        <Kartica padding="nema" className="flex flex-col lg:max-h-[460px]">
         <div className="px-6 py-4 border-b border-kolo-border shrink-0">
-          <h2 className="text-sm font-semibold text-kolo-text">{t("transakcije_naslov")}</h2>
+          <NaslovSekcije>{t("transakcije_naslov")}</NaslovSekcije>
         </div>
         <div className="flex-1 overflow-y-auto">
         {sveTrx.length === 0 ? (
@@ -559,23 +561,28 @@ export default function JavniProfilPage() {
           </div>
         )}
         </div>
-        </div>
+        </Kartica>
       </div>
       )}
 
       {/* Oznake verifikatora — vidi samo UO Fondacije (admin). Nije javno. */}
       {profil.adminOznake &&
         (profil.adminOznake.dolazne.length > 0 || profil.adminOznake.odlazne.length > 0) && (
-          <div className="bg-kolo-surface rounded-kartica border-2 border-kolo-gold-200 shadow-kartica">
-            <div className="px-6 py-4 border-b border-kolo-border flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-kolo-text">Oznake verifikatora</h2>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-kolo-gold-100 text-kolo-gold-700">
-                samo UO Fondacije
-              </span>
+          <Kartica padding="nema">
+            <div className="px-6 py-4 border-b border-kolo-border">
+              <NaslovSekcije
+                radnja={
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-kolo-gold-100 text-kolo-gold-700">
+                    samo UO Fondacije
+                  </span>
+                }
+              >
+                Oznake verifikatora
+              </NaslovSekcije>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-kolo-border">
               <div className="p-5">
-                <p className="text-xs uppercase tracking-wide text-kolo-muted font-semibold mb-2">
+                <p className="text-sm font-semibold text-kolo-muted mb-2">
                   Kako su ga označili verifikatori
                 </p>
                 {profil.adminOznake.dolazne.length === 0 ? (
@@ -594,7 +601,7 @@ export default function JavniProfilPage() {
                 )}
               </div>
               <div className="p-5">
-                <p className="text-xs uppercase tracking-wide text-kolo-muted font-semibold mb-2">
+                <p className="text-sm font-semibold text-kolo-muted mb-2">
                   Kako je on označio one koje je verifikovao
                 </p>
                 {profil.adminOznake.odlazne.length === 0 ? (
@@ -613,14 +620,14 @@ export default function JavniProfilPage() {
                 )}
               </div>
             </div>
-          </div>
+          </Kartica>
         )}
 
       {/* Oglasi */}
       {profil.oglasi.length > 0 && (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border shadow-kartica">
+        <Kartica padding="nema">
           <div className="px-6 py-4 border-b border-kolo-border">
-            <h2 className="text-sm font-semibold text-kolo-text">{t("aktivni_oglasi")}</h2>
+            <NaslovSekcije>{t("aktivni_oglasi")}</NaslovSekcije>
           </div>
           <ul className="divide-y divide-kolo-border">
             {profil.oglasi.map((oglas) => (
@@ -640,9 +647,9 @@ export default function JavniProfilPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Kartica>
       )}
-    </div>
+    </Stranica>
   );
 }
 

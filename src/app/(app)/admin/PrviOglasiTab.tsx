@@ -21,6 +21,7 @@ import Image from "next/image";
 import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
 import { useStanjeUAdresi } from "@/hooks/useStanjeUAdresi";
+import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -173,7 +174,7 @@ export default function PrviOglasiTab({ onDone }: { onDone?: () => void }) {
       ) : (
         <div className="space-y-3">
           {stavke.map((s) => (
-            <div key={s.id} className="bg-kolo-surface border border-kolo-border rounded-kartica shadow-kartica p-4">
+            <div key={s.id} className={klaseKartice({ padding: "sm" })}>
               <div className="flex gap-4">
                 {/* Sličica vodi na sam oglas — odluka se ne donosi po naslovu. */}
                 {s.oglas && s.oglas.brojSlika > 0 ? (

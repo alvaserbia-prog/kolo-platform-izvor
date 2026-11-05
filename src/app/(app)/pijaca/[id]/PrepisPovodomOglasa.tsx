@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { klaseDugmeta } from "@/components/ui/Dugme";
+import Fioka from "@/components/ui/Fioka";
 
 /**
  * „Prepiši POEN" uz oglas — prečica do postojećeg prepisa na ekranu POEN
@@ -32,9 +33,7 @@ export default function PrepisPovodomOglasa({
   iznos: number | null;
 }) {
   const t = useTranslations("pijaca");
-  const tc = useTranslations("common");
   const router = useRouter();
-  const id = useId();
   const [otvoren, setOtvoren] = useState(false);
   const [nePrikazuj, setNePrikazuj] = useState(false);
   const dugmeRef = useRef<HTMLButtonElement | null>(null);
@@ -66,14 +65,13 @@ export default function PrepisPovodomOglasa({
     router.push(putanja);
   }
 
+  // Stabilna referenca: Fioka na promenu `onZatvori` ponovo hvata fokus.
+  const zatvori = useCallback(() => setOtvoren(false), []);
+
+  // Escape, klik van prozora i „×" vodi Fioka; fokus ide na „Nastavi" (efekat
+  // roditelja teče posle efekta Fioke, koja fokusira sam prozor).
   useEffect(() => {
-    if (!otvoren) return;
-    dugmeRef.current?.focus();
-    const naTaster = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOtvoren(false);
-    };
-    window.addEventListener("keydown", naTaster);
-    return () => window.removeEventListener("keydown", naTaster);
+    if (otvoren) dugmeRef.current?.focus();
   }, [otvoren]);
 
   return (
@@ -83,50 +81,26 @@ export default function PrepisPovodomOglasa({
       </button>
 
       {otvoren && (
-        <div
-          className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/50 p-4"
-          onClick={() => setOtvoren(false)}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={`${id}-naslov`}
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-2xl bg-kolo-surface p-5 shadow-xl space-y-4"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <h2 id={`${id}-naslov`} className="text-base font-semibold text-kolo-text">
-                {t("prepis_upozorenje_naslov")}
-              </h2>
-              <button
-                type="button"
-                onClick={() => setOtvoren(false)}
-                aria-label={tc("zatvori")}
-                className="-mt-1 -mr-1 h-8 w-8 shrink-0 rounded-full text-kolo-muted hover:bg-kolo-bg"
-              >
-                ✕
-              </button>
-            </div>
-            <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-kolo-text">
-              <li>{t("prepis_upozorenje_konacan")}</li>
-              <li>{t("prepis_upozorenje_dogovor")}</li>
-              <li>{t("prepis_upozorenje_preuzimanje")}</li>
-              <li>{t("prepis_upozorenje_prijava")}</li>
-            </ul>
-            <label className="flex items-center gap-2 text-sm text-kolo-text">
-              <input
-                type="checkbox"
-                checked={nePrikazuj}
-                onChange={(e) => setNePrikazuj(e.target.checked)}
-                className="h-4 w-4 accent-kolo-green-700"
-              />
-              {t("prepis_upozorenje_ne_prikazuj")}
-            </label>
-            <button ref={dugmeRef} type="button" onClick={nastavi} className={klaseDugmeta() + " w-full"}>
-              {t("prepis_upozorenje_dalje")}
-            </button>
-          </div>
-        </div>
+        <Fioka naslov={t("prepis_upozorenje_naslov")} onZatvori={zatvori}>
+          <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-kolo-text">
+            <li>{t("prepis_upozorenje_konacan")}</li>
+            <li>{t("prepis_upozorenje_dogovor")}</li>
+            <li>{t("prepis_upozorenje_preuzimanje")}</li>
+            <li>{t("prepis_upozorenje_prijava")}</li>
+          </ul>
+          <label className="flex min-h-10 items-center gap-2 text-sm text-kolo-text">
+            <input
+              type="checkbox"
+              checked={nePrikazuj}
+              onChange={(e) => setNePrikazuj(e.target.checked)}
+              className="h-4 w-4 accent-kolo-green-700"
+            />
+            {t("prepis_upozorenje_ne_prikazuj")}
+          </label>
+          <button ref={dugmeRef} type="button" onClick={nastavi} className={klaseDugmeta() + " w-full"}>
+            {t("prepis_upozorenje_dalje")}
+          </button>
+        </Fioka>
       )}
     </>
   );

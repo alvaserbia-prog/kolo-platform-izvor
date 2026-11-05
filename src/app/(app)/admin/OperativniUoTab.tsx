@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import { klaseKartice } from "@/components/ui/Kartica";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -61,8 +63,8 @@ export default function OperativniUoTab() {
         const p = parametri[k];
         const u = unos[k] ?? { vrednost: "", odluka: "" };
         return (
-          <section key={k} className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica space-y-2">
-            <h3 className="font-semibold">{t(`opuo_${k}`)}</h3>
+          <section key={k} className={`${klaseKartice()} space-y-2`}>
+            <NaslovSekcije nivo={3}>{t(`opuo_${k}`)}</NaslovSekcije>
             <p className="text-xs text-kolo-muted">{t(`opuo_${k}_opis`)}</p>
             <p className="text-sm">{p?.vazece == null ? t("opuo_nije_utvrdjen") : t("opuo_vazece", { vrednost: p.vazece.toLocaleString("sr-RS") })}</p>
             {p && p.istorija.length > 0 && (
@@ -87,8 +89,8 @@ export default function OperativniUoTab() {
         );
       })}
 
-      <section className="rounded-kartica border border-kolo-border bg-kolo-surface p-5 shadow-kartica space-y-2">
-        <h3 className="font-semibold">{t("opuo_ovlascenja")}</h3>
+      <section className={`${klaseKartice()} space-y-2`}>
+        <NaslovSekcije nivo={3}>{t("opuo_ovlascenja")}</NaslovSekcije>
         <p className="text-xs text-kolo-muted">{t("opuo_ovlascenja_opis")}</p>
         {ovlascenja == null ? (
           <p className="text-xs text-kolo-muted">{t("opuo_samo_superadmin")}</p>

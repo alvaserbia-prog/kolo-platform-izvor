@@ -12,6 +12,7 @@ import NaslovStranice from "@/components/ui/NaslovStranice";
 import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
 import Kartica from "@/components/ui/Kartica";
 import PraznoStanje from "@/components/ui/PraznoStanje";
+import Stranica from "@/components/ui/Stranica";
 
 interface Oglas {
   id: string;
@@ -63,7 +64,7 @@ export default function MojiOglasiKlijent({ listings }: { listings: Oglas[] }) {
   }
 
   return (
-    <div className="space-y-4">
+    <Stranica>
       {/* „← Profil" iznad naslova, kao na ostalim stranicama (bio je krug bez natpisa). */}
       <NaslovStranice naslov={t("moji_oglasi")} nazad={{ href: "/profil", oznaka: t("nazad_na_profil") }} />
 
@@ -99,7 +100,7 @@ export default function MojiOglasiKlijent({ listings }: { listings: Oglas[] }) {
           )}
         </Kartica>
       ) : (
-        <div className="bg-kolo-surface rounded-kartica border border-kolo-border overflow-hidden divide-y divide-kolo-border shadow-kartica">
+        <Kartica padding="nema" className="overflow-hidden divide-y divide-kolo-border">
           {prikazani.map((l) => (
             <div key={l.id} className="px-4 py-3 sm:px-5 sm:py-4">
               <div className="flex items-start justify-between gap-3">
@@ -109,7 +110,7 @@ export default function MojiOglasiKlijent({ listings }: { listings: Oglas[] }) {
                   </Link>
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1 text-xs">
                     <span className="text-kolo-muted">{tPijaca(`kategorija_${kategorijaKljuc(l.category)}`)}</span>
-                    <span className="text-kolo-border">·</span>
+                    <span className="text-kolo-muted" aria-hidden>·</span>
                     <span className="font-semibold text-kolo-green-700">{formatCenaGlavni(l, t("cena_po_dogovoru"))}{prikaziJedinicuCene(l) ? " POEN" : ""}</span>
                     {l.status === "UKLONJEN" && (
                       <span className="px-1.5 py-0.5 rounded-md font-medium bg-kolo-danger-light text-kolo-danger">{tPijaca("oglas_uklonjen")}</span>
@@ -150,8 +151,8 @@ export default function MojiOglasiKlijent({ listings }: { listings: Oglas[] }) {
               {greske[l.id] && <p className="mt-1.5 text-xs text-kolo-danger">{greske[l.id]}</p>}
             </div>
           ))}
-        </div>
+        </Kartica>
       )}
-    </div>
+    </Stranica>
   );
 }

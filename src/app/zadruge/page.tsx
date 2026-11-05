@@ -8,6 +8,9 @@ import { prisma } from "@/lib/prisma";
 import { USLOV_CLANA_U_SPISKU } from "@/lib/clanovi-spisak";
 import NaslovStranice from "@/components/ui/NaslovStranice";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
+import Stranica from "@/components/ui/Stranica";
+import ZakljucanModul from "@/components/ui/ZakljucanModul";
 import { PRAG_PRVE_ZADRUGE } from "@/lib/zadruga-pravila";
 import LokacijeSekcija from "@/components/LokacijeSekcija";
 import type { Clan } from "@/components/SistemListe";
@@ -61,7 +64,7 @@ export default async function ZadrugePage() {
       createdAt: "",
     }));
     return (
-      <Sadrzaj t={t} zadruge={zadruge}>
+      <Sadrzaj t={t} zadruge={zadruge} zakljucano={!!session}>
         <LokacijeSekcija clanovi={anonimni} verified={false} zadruge={zadruge} bezRangListe={!session} bezUvoda />
       </Sadrzaj>
     );
@@ -107,47 +110,55 @@ export default async function ZadrugePage() {
 function Sadrzaj({
   t,
   zadruge,
+  zakljucano = false,
   children,
 }: {
   t: Awaited<ReturnType<typeof getTranslations<"zadruge">>>;
   zadruge: Awaited<ReturnType<typeof zadrugeZaPrikaz>>;
+  /** Prijavljen korisnik koji nije u Kolu: zadrugu koristi ko je u Kolu. */
+  zakljucano?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-6">
-      <NaslovStranice naslov={t("naslov")} opis={t("opis_stranice")} />
-      {/* Zajednici (udruženju, mesnoj zajednici) stranica kaže šta da uradi, ne samo
-          koliko fali — revizija teksta, uloga 6 (krug 2). */}
-      <Kartica as="section" className="space-y-2">
-        <h2 className="text-sm font-semibold text-kolo-text">{t("zajednica_naslov")}</h2>
-        <ol className="list-decimal pl-5 space-y-1 text-sm text-kolo-text">
-          <li>{t("zajednica_korak_1")}</li>
-          <li>{t("zajednica_korak_2")}</li>
-          <li>{t("zajednica_korak_3", { prag: PRAG_PRVE_ZADRUGE })}</li>
-        </ol>
-        <p className="text-sm text-kolo-muted">{t("zajednica_napomena")}</p>
-      </Kartica>
+    <Stranica sirina="siroka">
+      {/* Prag prve zadruge čita se iz pravila (`PRAG_PRVE_ZADRUGE`), ne prepisuje. */}
+      <NaslovStranice naslov={t("naslov")} opis={t("opis_stranice", { prag: PRAG_PRVE_ZADRUGE })} />
+      {zakljucano && <ZakljucanModul poruka={t("zakljucano")} />}
       {zadruge.length > 0 && (
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold text-kolo-text">{t("upisane_naslov")}</h2>
+        <section className="space-y-3">
+          <NaslovSekcije>{t("upisane_naslov")}</NaslovSekcije>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {zadruge.map((z) => (
-              <Link
-                key={z.id}
-                href={`/zadruge/${z.id}`}
-                className="rounded-kartica border border-kolo-border bg-kolo-surface shadow-kartica p-4 hover:border-kolo-green-500 transition-colors"
-              >
+              <Kartica key={z.id} href={`/zadruge/${z.id}`} padding="sm">
                 <p className="font-semibold text-kolo-text">{z.naziv}</p>
                 <p className="text-xs text-kolo-muted mt-0.5">
                   {z.lokalitet} · {t("zadrugara", { n: z.zadrugara })}
                 </p>
-              </Link>
+              </Kartica>
             ))}
           </div>
         </section>
       )}
       {/* Sidro za karticu „Za koga je KOLO" sa naslovne. */}
       <div id="lokacije" className="scroll-mt-24">{children}</div>
+      {/* Zajednici (udruženju, mesnoj zajednici) stranica kaže šta da uradi, ne samo
+          koliko fali — revizija teksta, uloga 6 (krug 2). Sklopivo, ispod spiska
+          (odluka vlasnika 02.11.2026). */}
+      <Kartica as="section" padding="nema">
+        <details>
+          <summary className="flex min-h-11 cursor-pointer items-center px-5 py-3 text-base font-semibold text-kolo-text">
+            {t("zajednica_naslov")}
+          </summary>
+          <div className="space-y-2 px-5 pb-5">
+            <ol className="list-decimal pl-5 space-y-1 text-sm text-kolo-text">
+              <li>{t("zajednica_korak_1")}</li>
+              <li>{t("zajednica_korak_2")}</li>
+              <li>{t("zajednica_korak_3", { prag: PRAG_PRVE_ZADRUGE })}</li>
+            </ol>
+            <p className="text-sm text-kolo-muted">{t("zajednica_napomena")}</p>
+          </div>
+        </details>
+      </Kartica>
       <p className="text-xs text-kolo-muted">
         {t("napomena_pravno")}{" "}
         {t("pravilnik_napomena")}{" "}
@@ -155,6 +166,6 @@ function Sadrzaj({
           {t("pravilnik_link")}
         </Link>
       </p>
-    </div>
+    </Stranica>
   );
 }

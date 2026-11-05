@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { intlTag } from "@/lib/format";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Kartica from "@/components/ui/Kartica";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
@@ -88,7 +89,7 @@ export default function ZadatakZaUcesnike({ oglasId, aktivan, podaci }: { oglasI
   return (
     <div className="space-y-4">
       <Kartica as="section">
-        <h2 className="text-sm font-semibold">{t("uc_prijave")}</h2>
+        <NaslovSekcije>{t("uc_prijave")}</NaslovSekcije>
         {podaci.prijave.length === 0 ? (
           <p className="mt-2 text-sm text-kolo-muted">{t("uc_nema")}</p>
         ) : (
@@ -117,7 +118,7 @@ export default function ZadatakZaUcesnike({ oglasId, aktivan, podaci }: { oglasI
       </Kartica>
 
       <Kartica as="section">
-        <h2 className="text-sm font-semibold">{t("uc_izvrsenja")}</h2>
+        <NaslovSekcije>{t("uc_izvrsenja")}</NaslovSekcije>
         {podaci.izvrsenja.length === 0 ? (
           <p className="mt-2 text-sm text-kolo-muted">{t("uc_nema")}</p>
         ) : (
@@ -147,7 +148,7 @@ export default function ZadatakZaUcesnike({ oglasId, aktivan, podaci }: { oglasI
       </Kartica>
 
       <Kartica as="section">
-        <h2 className="text-sm font-semibold">{t("uc_limit")}</h2>
+        <NaslovSekcije>{t("uc_limit")}</NaslovSekcije>
         <p className="mt-1 text-sm text-kolo-muted">{t("uc_limit_tekuci", { limit: broj(podaci.limit.limit), potvrdjeno: broj(podaci.limit.potvrdjenoOperativno) })}</p>
         {podaci.limit.prethodni.length > 0 && (
           <ul className="mt-2 space-y-1 text-xs text-kolo-muted">
@@ -161,7 +162,7 @@ export default function ZadatakZaUcesnike({ oglasId, aktivan, podaci }: { oglasI
       </Kartica>
 
       <Kartica as="section" className="space-y-3">
-        <h2 className="text-sm font-semibold">{t("uc_primedbe")}</h2>
+        <NaslovSekcije>{t("uc_primedbe")}</NaslovSekcije>
         {podaci.primedbe.length === 0 ? (
           <p className="text-sm text-kolo-muted">{t("uc_nema")}</p>
         ) : (

@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
+import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
 type Povezan = { id: string; pseudonim: string; smer: "NANIZE" | "NAVISE" };
 
@@ -66,9 +68,8 @@ export default function SpisakPovezanih() {
   if (!lista || lista.length === 0) return poruka ? <Obavestenje vrsta={poruka.greska ? "greska" : "uspeh"}>{poruka.tekst}</Obavestenje> : null;
 
   return (
-    <section id="povezani" className="rounded-kartica border border-kolo-border bg-kolo-surface p-6 shadow-kartica scroll-mt-20">
-      <h2 className="font-semibold text-kolo-text">{t("povezani_naslov")}</h2>
-      <p className="mt-1 text-sm text-kolo-muted">{t("povezani_opis")}</p>
+    <Kartica as="section" id="povezani" padding="lg" className="scroll-mt-20">
+      <NaslovSekcije opis={t("povezani_opis")}>{t("povezani_naslov")}</NaslovSekcije>
       <ul className="mt-3 space-y-3">
         {lista.map((p) => (
           <li key={p.id} className="rounded-kontrola bg-kolo-bg p-4">
@@ -97,6 +98,6 @@ export default function SpisakPovezanih() {
       {poruka && (
         <Obavestenje vrsta={poruka.greska ? "greska" : "uspeh"} className="mt-2">{poruka.tekst}</Obavestenje>
       )}
-    </section>
+    </Kartica>
   );
 }

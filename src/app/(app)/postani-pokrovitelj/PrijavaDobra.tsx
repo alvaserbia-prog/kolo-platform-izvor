@@ -14,6 +14,7 @@ import {
 } from "@/lib/pokroviteljstvo-dobrima-pravila";
 import { VRSTE_HRANE, VRSTE_GRLA, UDELI_HRANE, ISHRANE_KRAVA, DJUBRENJA, ZASTITE, ZIVOTINJSKE, BILJNE, type VrstaHrane } from "@/lib/hrana-pravila";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Dugme from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
@@ -76,6 +77,12 @@ export default function PrijavaDobra({
 
   async function posalji() {
     setGreska(null);
+    if (radi) return;
+    // Dugme se ne gasi zbog nepotpunog obrasca: klik kaže šta fali (dizajn-sistem.md).
+    if (!mozeSlanje) {
+      setGreska(t("dobra_fali"));
+      return;
+    }
     setRadi(true);
     const fd = new FormData();
     fd.append("upisId", upisId);
@@ -102,12 +109,11 @@ export default function PrijavaDobra({
 
   const polje = KLASE_UNOSA;
   const hranaOk = !jeHrana || f.vrsta !== "DOBRO" || (!!vh && h.opisProizvodnje.trim().length >= 5 && h.stalnihRadnika !== "" && izjavaPodataka);
-  const mozeSlanje = !radi && izjavaPropisi && hranaOk && vrednostOk && cenovnik.length > 0 && !!f.mesto.trim() && !!f.adresaPredaje.trim() && dodatna.every((m) => m.mesto.trim() && m.adresa.trim()) && f.opis.trim().length >= 10;
+  const mozeSlanje = izjavaPropisi && hranaOk && vrednostOk && cenovnik.length > 0 && !!f.mesto.trim() && !!f.adresaPredaje.trim() && dodatna.every((m) => m.mesto.trim() && m.adresa.trim()) && f.opis.trim().length >= 10;
 
   return (
     <Kartica className="space-y-4">
-      <h2 className="font-semibold text-kolo-text">{t("dobra_naslov")}</h2>
-      <p className="text-sm text-kolo-muted">{t("dobra_opis")}</p>
+      <NaslovSekcije opis={t("dobra_opis")}>{t("dobra_naslov")}</NaslovSekcije>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Polje oznaka={t("dobra_vrsta_label")}>
           <select value={f.vrsta} onChange={postavi("vrsta")} className={polje}>
@@ -275,7 +281,7 @@ export default function PrijavaDobra({
       <p className="text-xs text-kolo-muted">{t("dobra_porezi_napomena")}</p>
 
       {greska && <Obavestenje vrsta="greska">{greska}</Obavestenje>}
-      <Dugme onClick={posalji} disabled={!mozeSlanje}>
+      <Dugme onClick={posalji} disabled={radi}>
         {radi ? t("forma_saljem") : t("forma_podnesi")}
       </Dugme>
     </Kartica>

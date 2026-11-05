@@ -4,17 +4,26 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
 import { intlTag } from "@/lib/format";
 import { koordinateZaMesto, udaljenostKm, type Koordinate } from "@/lib/udaljenost";
 import { ikonaVaucera, IKONA_DOBRO } from "@/lib/vaucer-ikona-pravila";
 import LogotipPokrovitelja from "@/components/LogotipPokrovitelja";
 import IkonaVaucera from "@/components/IkonaVaucera";
-import Dugme from "@/components/ui/Dugme";
+import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
+import { klaseKartice } from "@/components/ui/Kartica";
+import NaslovStranice from "@/components/ui/NaslovStranice";
+import Stranica from "@/components/ui/Stranica";
+import Filter from "@/components/ui/Filter";
+import Pecat from "@/components/ui/Pecat";
+import Fioka from "@/components/ui/Fioka";
 import Obavestenje from "@/components/ui/Obavestenje";
 import Segmenti from "@/components/ui/Segmenti";
 import PraznoStanje from "@/components/ui/PraznoStanje";
 import { useDijalog } from "@/components/ui/Dijalog";
+import Ucitavanje from "@/components/ui/Ucitavanje";
+import ZakljucanModul from "@/components/ui/ZakljucanModul";
 
 // Isti QR kao „Moj QR" na ekranu POEN — učitava se lenjo.
 const QRCodeSVG = dynamic(() => import("qrcode.react").then((m) => m.QRCodeSVG), { ssr: false });
@@ -90,7 +99,6 @@ const KLJUC_POSETE = "kolo-vauceri-poseta";
 
 export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?: string | null }) {
   const t = useTranslations("vauceri");
-  const tc = useTranslations("common");
   const tz = useTranslations("transakcije");
   const locale = useLocale();
   const { dijalog, potvrdi } = useDijalog();
@@ -107,6 +115,11 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
   const [blizu, setBlizu] = useState(false);
   const [prethodnaPoseta, setPrethodnaPoseta] = useState<number | null>(null);
   const upisFilter = useSearchParams().get("upis");
+  // Vaučere uzima ko je u Kolu (član bez potvrde ima isto pravo kao član Kola).
+  // Ekran samo kaže unapred; odlučuje ruta `/api/vauceri/ugovor/[id]/uzmi`.
+  // Dečji nalog ima sopstvena pravila, pa mu se obrazac zaključanog modula ne prikazuje.
+  const { data: sesija } = useSession();
+  const zakljucano = Boolean(sesija?.user && !sesija.user.maloletan && !sesija.user.verified);
 
   const ucitaj = useCallback(async () => {
     try {
@@ -150,6 +163,8 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
   }, [dostupni, upisFilter, blizu, refKoord]);
 
   const vazeci = vauceri.filter((v) => v.status === "DODELJEN").length;
+  // Zbir preostalih vaučera u celoj ponudi (ne samo u filteru „Blizu mene").
+  const ukupnoDostupno = dostupni.reduce((z, d) => z + d.preostalo, 0);
 
   const datum = (d: string | null) =>
     d ? new Date(d).toLocaleDateString(intlTag(locale), { day: "2-digit", month: "2-digit", year: "numeric" }) : "";
@@ -198,25 +213,22 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
   const qrVaucer = otvorenQr ? vauceri.find((v) => v.id === otvorenQr) ?? null : null;
 
   return (
-    <div className="mx-auto max-w-siroka space-y-5">
+    <Stranica sirina="siroka">
       {dijalog}
 
-      {/* ── Zaglavlje ─────────────────────────────────────────────────────── */}
-      <header className="relative overflow-hidden rounded-kartica bg-kolo-green-900 px-5 py-6 text-white sm:px-8 sm:py-8">
-        <span className="absolute right-5 top-5 rotate-[-8deg] rounded-md border-2 border-kolo-gold-400 px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-[0.18em] text-kolo-gold-400" aria-hidden="true">
-          {t("oznaka_vaucer")}
-        </span>
-        <h1 className="font-citat text-4xl font-bold leading-tight sm:text-5xl">{t("naslov")}</h1>
-        <p className="mt-2 max-w-xl text-base leading-relaxed text-white/85">{t("uvod")}</p>
-        <div className="mt-5 flex flex-wrap gap-3 text-sm">
-          <span className="rounded-kontrola bg-white/10 px-3 py-1.5">
-            <b className="text-lg">{broj(dostupni.reduce((z, d) => z + d.preostalo, 0))}</b> {t("zaglavlje_dostupno")}
-          </span>
-          <span className="rounded-kontrola bg-white/10 px-3 py-1.5">
-            <b className="text-lg">{vazeci}</b> {t("zaglavlje_moji")}
-          </span>
-        </div>
-      </header>
+      {/* Zeleno zaglavlje (odluka vlasnika 02.11.2026): rečenica i dve brojke, bez
+          serifa i bez kosog pečata. Brojke su komadi, nikad POEN uz dinar. */}
+      <NaslovStranice
+        varijanta="istaknuto"
+        naslov={t("naslov")}
+        opis={t("uvod")}
+        brojke={ucitava ? undefined : [
+          { vrednost: broj(ukupnoDostupno), oznaka: t("zaglavlje_dostupno") },
+          { vrednost: broj(vazeci), oznaka: t("zaglavlje_moji") },
+        ]}
+      />
+
+      {zakljucano && <ZakljucanModul poruka={t("zakljucano")} />}
 
       {poruka && (
         <Obavestenje vrsta={poruka.ok ? "uspeh" : "greska"}>
@@ -238,19 +250,11 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
       {pogled === "DOSTUPNI" ? (
         <section className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setBlizu((b) => !b)}
-              aria-pressed={blizu}
-              disabled={!refKoord}
-              className={`min-h-9 rounded-kontrola border px-3 text-sm font-semibold transition-colors disabled:opacity-50 ${
-                blizu ? "border-kolo-green-700 bg-kolo-green-700 text-white" : "border-kolo-border bg-kolo-surface text-kolo-text hover:bg-kolo-bg"
-              }`}
-            >
+            <Filter ukljucen={blizu} onClick={() => setBlizu((b) => !b)} disabled={!refKoord}>
               <Pin /> {t("filter_blizu", { km: BLIZU_KM })}
-            </button>
+            </Filter>
             {!refKoord && (
-              <Link href="/profil" className="text-xs text-kolo-muted underline">{t("filter_blizu_bez_mesta")}</Link>
+              <Link href="/profil" className="inline-flex min-h-10 items-center text-xs text-kolo-muted underline">{t("filter_blizu_bez_mesta")}</Link>
             )}
             {upisFilter && (
               <span className="text-sm text-kolo-muted">
@@ -261,7 +265,7 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
           </div>
 
           {ucitava ? (
-            <p className="text-sm text-kolo-muted">{t("ucitavanje")}</p>
+            <Ucitavanje />
           ) : prikazani.length === 0 ? (
             <PraznoStanje
               ikona={<IkonaVaucera ikona={IKONA_DOBRO} velicina={36} />}
@@ -279,7 +283,6 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
                   opis={d.opis}
                   mesto={d.mestaPrikaz.join("; ")}
                   km={d.km}
-                  oznaka={t("oznaka_vaucer")}
                   onClick={() => setIzabran(d.id)}
                   pecati={
                     <>
@@ -291,7 +294,7 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
                   }
                   dno={
                     <>
-                      <span className="rounded-xl bg-kolo-green-100 px-3 py-1 text-base font-bold text-kolo-green-700">
+                      <span className="rounded-kontrola bg-kolo-green-100 px-3 py-1 text-base font-bold text-kolo-green-700">
                         {t("poen_po_vauceru", { poen: broj(d.poen) })}
                       </span>
                       <span className="text-right text-xs text-kolo-muted">
@@ -305,7 +308,7 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
               ))}
             </div>
           )}
-          <p className="text-xs text-kolo-muted">{t("dostupni_opis")}</p>
+          <p className="text-sm text-kolo-muted">{t("dostupni_opis")}</p>
         </section>
       ) : (
         <section className="space-y-4">
@@ -333,15 +336,14 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
                         opis={v.opis}
                         mesto={v.mestaPrikaz.join("; ")}
                         km={null}
-                        oznaka={t("oznaka_vaucer")}
                         tamno={vazi}
                         onClick={vazi && v.kod ? () => setOtvorenQr(v.id) : undefined}
-                        pecati={<Pecat siv={!vazi}>{STATUS[v.status]}</Pecat>}
+                        pecati={<Pecat ton={vazi ? "zeleni" : "sivi"}>{STATUS[v.status]}</Pecat>}
                         dno={
                           <>
                             <span className="text-xs text-kolo-muted">{t("vazi_do", { datum: datum(v.vaziDo) })}</span>
                             {vazi && v.kod && (
-                              <span className="rounded-xl bg-kolo-green-700 px-3 py-1.5 text-sm font-semibold text-white">
+                              <span className={klaseDugmeta({ velicina: "sm" })}>
                                 {t("prikazi_qr")}
                               </span>
                             )}
@@ -358,7 +360,7 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
                             type="button"
                             onClick={() => povuciPristanak(v.id)}
                             disabled={radi === v.id}
-                            className="min-h-9 text-xs font-medium text-kolo-muted underline disabled:opacity-50"
+                            className="min-h-10 text-xs font-medium text-kolo-muted underline disabled:opacity-50"
                           >
                             {t("pristanak_povuci")}
                           </button>
@@ -367,7 +369,7 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
                       {(v.status === "DODELJEN" || v.status === "ISKORISCEN" || v.status === "ISTEKAO") && (
                         <Link
                           href={`/profil?prigovor=VAUCER&predmet=${v.id}`}
-                          className="inline-flex min-h-9 items-center text-xs font-medium text-kolo-muted underline"
+                          className="inline-flex min-h-10 items-center text-xs font-medium text-kolo-muted underline"
                         >
                           {t("prigovor_link")}
                         </Link>
@@ -378,27 +380,26 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
               })}
             </div>
           )}
-          <p className="text-xs text-kolo-muted">{t("moji_napomena")}</p>
+          <p className="text-sm text-kolo-muted">{t("moji_napomena")}</p>
         </section>
       )}
 
-      <p className="text-xs text-kolo-muted">
-        <Link href="/postani-pokrovitelj" className="underline">{t("davalac_link")}</Link>
+      <p className="text-sm text-kolo-muted">
+        <Link href="/postani-pokrovitelj" className="inline-flex min-h-10 items-center font-medium text-kolo-green-700 underline">{t("davalac_link")}</Link>
       </p>
 
       {/* ── Fioka: detalj vaučera, izjava, pristanak, „Uzmi vaučer" ─────────── */}
       {r && (
-        <Fioka onZatvori={() => setIzabran(null)} zatvoriOznaka={tc("zatvori")}>
+        <Fioka naslov={r.opis} onZatvori={() => setIzabran(null)}>
           <div className="flex items-center gap-3">
             <div className="flex size-16 shrink-0 items-center justify-center rounded-kontrola bg-kolo-gold-100 text-kolo-green-700">
               <IkonaVaucera ikona={ikonaVaucera(r.opis, r.vrsta)} velicina={40} />
             </div>
             <div className="min-w-0">
-              <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-kolo-green-700">
+              <p className="flex items-center gap-2 text-sm font-semibold text-kolo-green-700">
                 <LogotipPokrovitelja url={r.logoUrl} />
                 <span className="min-w-0">{r.davalac}</span>
               </p>
-              <h2 className="mt-1 font-citat text-2xl font-bold leading-tight text-kolo-green-900">{r.opis}</h2>
             </div>
           </div>
 
@@ -425,6 +426,9 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
             <li>{t("tacka_najvise_dva")}</li>
           </ul>
 
+          {zakljucano ? (
+            <ZakljucanModul poruka={t("zakljucano")} />
+          ) : (
           <div className="space-y-3 border-t border-kolo-border pt-4">
             <SklopivaIzjava
               naslov={t("izjava_nepovezan_naslov")}
@@ -453,18 +457,18 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
               <p className="text-center text-xs text-kolo-muted">{t("uzmi_zakljucano")}</p>
             )}
           </div>
+          )}
         </Fioka>
       )}
 
       {/* ── Kod za pokazivanje pokrovitelju ──────────────────────────────── */}
       {qrVaucer && qrVaucer.kod && (
-        <Fioka onZatvori={() => setOtvorenQr(null)} zatvoriOznaka={tc("zatvori")}>
+        <Fioka naslov={qrVaucer.opis} onZatvori={() => setOtvorenQr(null)}>
           <div className="flex flex-col items-center gap-3 text-center">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-kolo-green-700">
+            <p className="flex items-center gap-2 text-sm font-semibold text-kolo-green-700">
               <LogotipPokrovitelja url={qrVaucer.logoUrl} />
               {qrVaucer.davalac}
             </p>
-            <h2 className="font-citat text-2xl font-bold leading-tight text-kolo-green-900">{qrVaucer.opis}</h2>
             <div className="rounded-kartica border border-kolo-border bg-white p-4">
               <QRCodeSVG value={qrVaucer.kod} size={240} fgColor="#1B6B3A" bgColor="#FFFFFF" level="M" />
             </div>
@@ -474,7 +478,7 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
           </div>
         </Fioka>
       )}
-    </div>
+    </Stranica>
   );
 }
 
@@ -502,19 +506,6 @@ function Pin() {
   );
 }
 
-/** Zlatni (odnosno sivi) pečat, nakrivljen kao pečat na flajeru. */
-function Pecat({ children, siv = false }: { children: ReactNode; siv?: boolean }) {
-  return (
-    <span
-      className={`inline-block rotate-[-6deg] rounded-md border-2 bg-kolo-surface/95 px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider ${
-        siv ? "border-kolo-border text-kolo-muted" : "border-kolo-gold-600 text-kolo-gold-700"
-      }`}
-    >
-      {children}
-    </span>
-  );
-}
-
 /**
  * Vaučer kao tiket (flajer za firme i gazdinstva): levo traka sa ikonom, isprekidana
  * linija sa isečenim krajevima, desno naziv pokrovitelja, opis, mesto i dno.
@@ -527,7 +518,6 @@ function Tiket({
   opis,
   mesto,
   km,
-  oznaka,
   pecati,
   dno,
   tamno = false,
@@ -539,7 +529,6 @@ function Tiket({
   opis: string;
   mesto: string;
   km: number | null;
-  oznaka: string;
   pecati?: ReactNode;
   dno: ReactNode;
   tamno?: boolean;
@@ -549,7 +538,7 @@ function Tiket({
   return (
     <Omot
       {...(onClick ? { type: "button" as const, onClick } : {})}
-      className="group relative flex w-full overflow-hidden rounded-kartica border border-kolo-border bg-kolo-surface text-left shadow-kartica transition-shadow hover:shadow-plutajuce"
+      className={`${klaseKartice({ padding: "nema", link: Boolean(onClick) })} relative flex w-full overflow-hidden text-left`}
     >
       <div className={`flex w-24 shrink-0 flex-col items-center justify-center gap-2 py-4 sm:w-28 ${tamno ? "bg-kolo-green-700 text-white" : "bg-kolo-gold-100 text-kolo-green-700"}`}>
         <IkonaVaucera ikona={ikona} velicina={48} />
@@ -560,14 +549,11 @@ function Tiket({
         <span className="absolute -bottom-3 -left-[13px] size-6 rounded-full border border-kolo-border bg-kolo-bg" />
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 p-4">
-        <div className="flex items-start justify-between gap-2">
-          <p className="flex min-w-0 items-center gap-2 text-xs font-bold uppercase tracking-wide text-kolo-green-700">
-            {logoUrl && <LogotipPokrovitelja url={logoUrl} velicina={28} />}
-            <span className="truncate">{pokrovitelj}</span>
-          </p>
-          <span className="shrink-0 text-[11px] font-extrabold tracking-[0.14em] text-kolo-gold-700">{oznaka}</span>
-        </div>
-        <h3 className="line-clamp-2 font-citat text-xl font-bold leading-tight text-kolo-green-900">{opis}</h3>
+        <p className="flex min-w-0 items-center gap-2 text-sm font-semibold text-kolo-green-700">
+          {logoUrl && <LogotipPokrovitelja url={logoUrl} velicina={28} />}
+          <span className="truncate">{pokrovitelj}</span>
+        </p>
+        <h3 className="line-clamp-2 text-base font-semibold leading-snug text-kolo-text">{opis}</h3>
         <p className="truncate text-sm text-kolo-muted">
           {mesto}
           {km !== null && <span className="ml-1 font-medium text-kolo-green-700">· ~{km} km</span>}
@@ -576,40 +562,6 @@ function Tiket({
         <div className="mt-auto flex items-end justify-between gap-2 border-t border-kolo-border pt-2.5">{dno}</div>
       </div>
     </Omot>
-  );
-}
-
-/** Donja fioka na telefonu, prozor na sredini na većem ekranu. */
-function Fioka({ children, onZatvori, zatvoriOznaka }: { children: ReactNode; onZatvori: () => void; zatvoriOznaka: string }) {
-  useEffect(() => {
-    const naTaster = (e: KeyboardEvent) => { if (e.key === "Escape") onZatvori(); };
-    window.addEventListener("keydown", naTaster);
-    const prethodno = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", naTaster);
-      document.body.style.overflow = prethodno;
-    };
-  }, [onZatvori]);
-  return (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/50 sm:items-center sm:p-4" onClick={onZatvori}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        onClick={(e) => e.stopPropagation()}
-        className="relative max-h-[92vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-t-kartica bg-kolo-surface p-5 shadow-plutajuce sm:rounded-kartica"
-      >
-        <button
-          type="button"
-          onClick={onZatvori}
-          aria-label={zatvoriOznaka}
-          className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-kontrola text-xl text-kolo-muted hover:bg-kolo-bg"
-        >
-          ×
-        </button>
-        {children}
-      </div>
-    </div>
   );
 }
 
@@ -652,7 +604,7 @@ function SklopivaIzjava({
           onClick={() => setOtvoreno((o) => !o)}
           aria-expanded={otvoreno}
           aria-label={otvoriLabela}
-          className="shrink-0 px-1 text-kolo-muted"
+          className="-mt-2 flex min-h-10 min-w-10 shrink-0 items-center justify-center text-kolo-muted"
         >
           <span aria-hidden className={`inline-block transition-transform ${otvoreno ? "rotate-180" : ""}`}>▾</span>
         </button>

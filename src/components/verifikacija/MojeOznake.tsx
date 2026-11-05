@@ -7,6 +7,7 @@ import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
 import Dugme from "@/components/ui/Dugme";
 import Kartica from "@/components/ui/Kartica";
+import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import { StatusBadge, type CvorVerifikovani } from "@/components/verifikacija/MiniStablo";
 
 /**
@@ -142,13 +143,18 @@ export default function MojeOznake({
   const uvodjenje = rezim === "UVODJENJE";
   return (
     <Kartica as="section" id="moje-oznake">
-      <h2 className="font-semibold text-kolo-text">
-        {uvodjenje ? t("oznake_naslov_uvodjenje") : t("oznake_naslov")}
-      </h2>
-      <p className="mt-1 text-sm text-kolo-muted mb-4">
-        {t("oznake_opis")}
-        {uvodjenje && <span className="block mt-1">{t("oznake_lanac_napomena")}</span>}
-      </p>
+      <div className="mb-4">
+        <NaslovSekcije
+          opis={
+            <>
+              {t("oznake_opis")}
+              {uvodjenje && <span className="block mt-1">{t("oznake_lanac_napomena")}</span>}
+            </>
+          }
+        >
+          {uvodjenje ? t("oznake_naslov_uvodjenje") : t("oznake_naslov")}
+        </NaslovSekcije>
+      </div>
       <ul className="divide-y divide-kolo-border border border-kolo-border rounded-kontrola overflow-hidden">
         {osobe.map((o) => (
           <Red key={o.verifikacijaId} osoba={o} />
