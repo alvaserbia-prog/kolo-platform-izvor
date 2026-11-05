@@ -9,6 +9,7 @@ import { jeNadoknada, iznosNadoknade } from "@/lib/protokol/nadoknada";
 import { smeDaPrepise, trebaOdobrenjeRoditelja, ucitajUcesnika } from "@/lib/protokol/deca";
 import { izvrsiPrepis, PrepisGreska } from "@/lib/protokol/prepis";
 import { zatraziOdobrenje } from "@/lib/protokol/prepis-odobrenje";
+import { ograniceno } from "@/lib/protokol/ogranicenje-primljenog";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -99,6 +100,15 @@ export async function POST(req: NextRequest) {
   }
   if (posiljac.wallet.balance < iznos) {
     return await greska(`Nemate dovoljno POENA. Stanje: ${posiljac.wallet.balance}.`, 400);
+  }
+  // Iznos ograničen po poništenju donacije unapred ostaje u zapisu, ali se ne prepisuje
+  // (donacije čl. 6 st. 7, set 5.0.9).
+  const ogr = await ograniceno(posiljac.wallet.id);
+  if (ogr > 0 && posiljac.wallet.balance - ogr < iznos) {
+    return await greska(
+      `Od tvog zapisa je ${ogr} POENA privremeno ograničeno, najduže 7 dana, dok Fondacija ne odluči (Pravilnik o pokroviteljstvu i donacijama čl. 6). Možeš da prepišeš najviše ${Math.max(0, posiljac.wallet.balance - ogr)}.`,
+      400
+    );
   }
 
   // Prepis iz dečjeg zapisa iznad praga NE ide odmah nego čeka roditelja (Pravilnik

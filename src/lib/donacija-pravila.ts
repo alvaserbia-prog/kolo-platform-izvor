@@ -29,33 +29,8 @@ import { procitajImePrezime } from "@/lib/identitet-pravila";
  * prag ni izjavu o poreklu u ugovor — brana `n2-pranje-novca-izvor.test.ts`.
  */
 
-/**
- * Najveći iznos JEDNE kartične uplate (R-01, mera M-11).
- *
- * 🔴 Kapa ne štiti POEN — to od mere M-4a radi ljudska potvrda. Ona štiti tri
- * druge stvari: (1) najgori pojedinačan gubitak po osporenoj transakciji, jer
- * rok za chargeback ide mesecima posle evidentiranja, a osnova za poništenje
- * POEN-a nema (mera M-12 je odbijena, pa POEN tada OSTAJE); (2) merchant nalog,
- * koji kartične šeme gase kad odnos osporenih transakcija pređe prag; (3)
- * osnivački kanal, koji jedna velika uplata može da isprazni u jednoj noći
- * (korak se pali na svakih 100.000 POEN opticaja).
- *
- * Veći iznos ide uplatom na račun (domaći) ili deviznom doznakom (inostranstvo),
- * gde se uplatilac vidi iz izvoda — što čl. 4 i 6 Pravilnika o pokroviteljstvu i
- * donacijama ionako traži.
- */
-export const MAX_KARTICNA_UPLATA_RSD = 100_000;
-
-/**
- * Brzinska kočnica (R-01, mera M-11): najviše toliko kartičnih zapisa po nalogu
- * u jednom danu, bez obzira na ishod.
- *
- * 🔴 Protiv druge pretnje nego kapa. Najverovatnija zloupotreba nije jedna
- * velika uplata nego *card testing* — provera ukradenih brojeva kartica nizom
- * sitnih donacija, jer nema isporuke robe ni provere kupca. Kapa po transakciji
- * protiv toga ne radi ništa.
- */
-export const MAX_KARTICNIH_UPLATA_DNEVNO = 3;
+// Kapa na kartičnoj uplati i brzinska kočnica (mera M-11) prestale su setom 5.0.9:
+// kartično plaćanje je uklonjeno (donacije čl. 4 st. 1).
 
 /**
  * 🔴 Maloletni korisnik ne donira (odluka vlasnika, 26.10.2026). Ekran `/donacije`
@@ -201,21 +176,29 @@ export function nivoZaKumulativ(kumulativRSD: number): { nivo: number; kurs: num
 }
 
 /**
- * 🔴 Koeficijent evidencije pokroviteljstva je 1,00 — za novac i za dobra i usluge,
- * bez obzira na iznos, kumulativ i pravni oblik (donacije čl. 22 i 33, set 5.0.0, izmena 28.10.2026;
- * odluka vlasnika 27.10.2026). Tabela iz čl. 8 važi samo za donaciju fizičkog lica.
- * Razlog u aktu: pokrovitelj nema zapis, a doprinos se evidentira u zapisu podnosioca
- * prijave, koji nije pokrovitelj (čl. 22 st. 2) — ne poreski položaj davaoca i ne pravni oblik.
+ * 🔴 Novčano pokroviteljstvo ide po NIVOU POKROVITELJA (donacije čl. 22 st. 1, set 5.0.8;
+ * odluka vlasnika 04.11.2026): ista tabela iz čl. 8 (`nivoZaKumulativ`), ali nad
+ * kumulativnim doprinosom POKROVITELJA (firma po PIB-u, gazdinstvo po BPG-u), koji se
+ * vodi odvojeno od lične kumulativne donacije podnosioca i ne sabira se sa njom (čl. 22
+ * st. 3). Pravni oblik ne utiče na koeficijent; tabela pokrovitelja nikad nije viša od
+ * tabele za fizička lica (inače bi put preko firme bio jeftiniji i davao više — razlog
+ * zbog kog je ×1,20 pao 17.10.2026).
  *
- * Istorija: ×1,20 za firme ukinut 17.10.2026 (set 4.6.8), pa ista tabela 1,00–2,00
- * do 28.10.2026. Zatečeni zapisi i snimljeni koeficijenti ugovora se ne diraju.
+ * Istorija: ×1,20 do 17.10.2026, ista tabela nad zbirom firme do 28.10.2026, pa
+ * koeficijent 1,00 bez nivoa do 04.11.2026. Zatečeni zapisi se ne diraju (čl. 55);
+ * kumulativ zatečenih pokrovitelja ulazi u nivo (čl. 22 st. 1).
  */
-export const KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA = 1.0;
-
-/** Čl. 22 — broj POEN-a za novčano pokroviteljstvo (ceo broj). */
-export function poenZaPokroviteljstvo(rsdIznos: number): number {
-  if (!Number.isFinite(rsdIznos) || rsdIznos <= 0) return 0;
-  return Math.round(rsdIznos * KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA);
+export function poenZaPokroviteljstvo(
+  kumulativPokroviteljaRSD: number,
+  rsdIznos: number,
+): { nivo: number; kurs: number; poen: number; noviKumulativ: number } {
+  const dosada = Number.isFinite(kumulativPokroviteljaRSD) && kumulativPokroviteljaRSD > 0 ? kumulativPokroviteljaRSD : 0;
+  if (!Number.isFinite(rsdIznos) || rsdIznos <= 0) {
+    const { nivo, kurs } = nivoZaKumulativ(dosada);
+    return { nivo, kurs, poen: 0, noviKumulativ: dosada };
+  }
+  const r = izracunajPoenZaDonaciju(dosada, rsdIznos);
+  return { nivo: r.noviNivo, kurs: r.kurs, poen: r.poen, noviKumulativ: r.noviKumulativ };
 }
 
 /**

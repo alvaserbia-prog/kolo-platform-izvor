@@ -143,8 +143,9 @@ export default async function PokroviteljstvoPage() {
         <Link href="/pokrovitelji" className="inline-flex min-h-10 items-center font-medium text-kolo-green-700 hover:underline">{t("ranglista_link")}</Link>
       </p>
 
-      {/* Pokroviteljstvo nema tabelu nivoa: koeficijent je 1,00 za novac i za dobra i
-          usluge (donacije čl. 22, set 5.0.0, izmena 28.10.2026). Tabela nivoa živi samo na ekranu Donacije. */}
+      {/* Novčano pokroviteljstvo ide po nivou pokrovitelja, po tabeli iz čl. 8 nad zbirom
+          pokrovitelja; dobra i usluge 1,00, osim hrane (donacije čl. 22, set 5.0.8). Tabela
+          nivoa se ne prepisuje ovde — živi na ekranu Donacije i čita se iz pravila. */}
       <p className="text-xs text-kolo-muted">{t("nivoi_napomena")}</p>
     </Stranica>
   );

@@ -96,9 +96,11 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 5.0.2 — čl. 16, 17 (deveti osnov), 18, 19, 37 st. 4, 39 st. 5, 47 st. 6: program raspodele hrane.
   // 5.0.3 — čl. 22 st. 4 (prag za upis ZRNA 10.000) i nov st. 6 (u periodu upisa ZRNA
   // primaocu podrške se dnevni iznos programa ne evidentira).
+  // 5.0.9 — čl. 17 st. 2 t. 10 (poništenje donacije unapred, deseti osnov), čl. 36 st. 2, 3
+  // i nov st. 6 (donacija unapred, ograničenje primljenog), čl. 37 st. 2 (pokroviteljstvo u narednom periodu).
   "kolo-sistem": {
-    fajl: "Pravilnik_5_0_3.md",
-    verzija: "5.0.3",
+    fajl: "Pravilnik_5_0_9.md",
+    verzija: "5.0.9",
   },
   // 4.4.6 — čl. 12 st. 4 više ne prenosi nadležnost za opšte akte na Gornje Kolo
   // (akt nižeg ranga to ne može po sopstvenom čl. 8 st. 2); nov st. 6.
@@ -165,9 +167,13 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 5.0.4 — čl. 22 st. 5 i čl. 28: poreklo hrane utvrđuje Fondacija pri prihvatanju prijave; davalac ga ne bira.
   // 5.0.6 — čl. 2 t. 9, čl. 28 st. 2 t. 5 i čl. 31 st. 2 t. 4: više mesta predaje, odnosno pružanja.
   // 5.0.7 — čl. 22 st. 4–8 (koeficijent hrane: mera i lokalne sirovine), 28, 30 (alkohol), 31–33 (podnosilac potpisuje pri prijavi, ugovor zaključen prihvatanjem), 35 st. 6, 40.
+  // 5.0.8 — čl. 2 t. 1–2, čl. 22 st. 1–3 i čl. 33 st. 2: novčano pokroviteljstvo po nivou
+  // pokrovitelja (tabela iz čl. 8 nad kumulativnim doprinosom pokrovitelja); dobra i usluge 1,00, osim hrane.
+  // 5.0.9 — čl. 3, 4, 6 (uplata samo sa računa, poziv na broj po donaciji, potvrda o uplati,
+  // donacija unapred, ograničenje i otpis kod primalaca), 10 st. 2, 20 st. 2–3; kartica uklonjena.
   "pokroviteljstvo-donacije": {
-    fajl: "donacije_5_0_7.md",
-    verzija: "5.0.7",
+    fajl: "donacije_5_0_9.md",
+    verzija: "5.0.9",
   },
   // 4.4.4 — pravna priroda operativnog doprinosa (čl. 27): nema naručioca, nema
   // naknade, rezultat ide u zajedničko dobro pod licencama iz Glave II. Brisan
@@ -236,8 +242,9 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
     // primenjuje se na maloletne učesnike.
     // 4.8.4 — D2–D4: obrazloženje zašto se uzrast ne proverava (čl. 3), veza
     // roditelj–dete dostupna učesnicima (čl. 15b), ponovljena prijava ne zaustavlja vezu (čl. 4e).
-    fajl: "ucesce_dece_5_0_2.md",
-    verzija: "5.0.2",
+    // 5.0.9 — čl. 31 st. 1: otpis po poništenju donacije unapred i ograničenje primljenog.
+    fajl: "ucesce_dece_5_0_9.md",
+    verzija: "5.0.9",
   },
   // Nov akt uz set 4.4.1 — osnov u čl. 14a i 51a Pravilnika o KOLO sistemu.
   // 4.4.3 — broj POEN-a po delu je parametar odluke o nabavci (čl. 17), a ne izvod

@@ -31,6 +31,7 @@ import { KLASE_TABELE, KLASE_ZAGLAVLJA, KLASE_REDA, klaseTh, klaseTd } from "./t
 import StatKartica from "@/components/ui/StatKartica";
 import Lampica from "@/components/ui/Lampica";
 import type { CekanjeAdmina, CekanjePokrovitelja } from "@/lib/admin-cekanje";
+import DonacijeUnapredRed from "./DonacijeUnapredRed";
 
 // Teški tabovi iz zasebnih fajlova — lazy-load (smanjuje početni admin bundle).
 // Svi su `export default`, pa dynamic koristi default export direktno.
@@ -233,6 +234,8 @@ interface DonacijaItem {
   status: string;
   /** Ime sa naloga — stoji uz polje za uplatioca da bi se to dvoje uporedilo (M-4a). */
   donatorIme: string | null;
+  /** Donator je poslao potvrdu o uplati (set 5.0.9) — admin je vidi uz red. */
+  potvrdaPoslata?: boolean;
 }
 
 interface PrigovorItem {
@@ -1613,6 +1616,8 @@ function DonacijeTab({ donacije, onDone, pocetniNacin = "izvod" }: { donacije: D
 
   return (
     <div className="space-y-3">
+      {/* Donacije unapred i ograničenja (set 5.0.9) — prvo u redu, jer imaju rok od 24 časa. */}
+      <DonacijeUnapredRed />
       <Segmenti
         oznaka={t("donacije_nacin")}
         vrednost={nacin}
@@ -1700,6 +1705,12 @@ function DonacijeTab({ donacije, onDone, pocetniNacin = "izvod" }: { donacije: D
                 </p>
                 {d.status === "NAPLACENO" && (
                   <p className="text-xs font-semibold text-kolo-gold-700 mt-1">{t("donacije_status_naplaceno")}</p>
+                )}
+                {/* Set 5.0.9: donator je poslao potvrdu o uplati — vidi je samo administratorski tim. */}
+                {d.potvrdaPoslata && (
+                  <a href={`/api/admin/donacija/${d.id}/potvrda`} target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-9 items-center text-xs font-semibold text-kolo-green-700 underline">
+                    {t("unapred_pogledaj_potvrdu")}
+                  </a>
                 )}
                 <p className="text-xs text-kolo-muted mt-1">{t("donacije_kumulativ", { val: d.cumulativeRSD.toLocaleString(intlTag(locale)) })}</p>
               </div>

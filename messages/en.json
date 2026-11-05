@@ -739,7 +739,11 @@
     "zabelezene_potvrde_tudje": "{iznos} POEN for confirmations you gave — awaiting the first contribution of those you confirmed",
     "zabelezen_gazdinstvo": "Your {iznos} POEN of farm contribution — waiting for your posted listing and your joining the Kolo",
     "zabelezene_vidi": "See who you are waiting for →",
-    "objavi_ponudu": "Post an offer →"
+    "objavi_ponudu": "Post an offer →",
+    "ceka_period": "Waiting for the next accounting period",
+    "ceka_period_opis": "Receipt of the sponsorship has been established. The contribution is recorded in the next accounting period, after midnight.",
+    "ograniceno_naslov": "Temporarily restricted",
+    "ograniceno_opis": "You received this part of your record from a donor whose advance donation was cancelled. It stays in your record, but for at most 7 days, until the Foundation decides, you cannot re-register it, use it in a procurement or enter it into ZRNO. You can file a complaint about the restriction from your profile."
   },
   "verifikacija": {
     "page_naslov": "Confirmation",
@@ -1236,7 +1240,6 @@
   },
   "donacije": {
     "naslov": "Donations to Foundation",
-    "beta_opis": "For now, donations are made only by bank transfer, quoting your reference number. Card and IPS QR will be enabled soon.",
     "objasnjenje": "A donation to the Foundation is non-refundable and acquires nothing. The contribution is recorded.",
     "zaglavlje_nivo": "reached",
     "zaglavlje_ukupno": "your total donations",
@@ -1245,12 +1248,10 @@
     "trenutni_kurs": "Current coefficient",
     "kurs_opis": "for the level reached",
     "do_nivoa": "To level {n} (coefficient {kurs}) still:",
-    "instrukcije": "Payment instructions",
     "primalac": "Recipient:",
     "racun": "Account:",
     "svrha": "Payment purpose:",
     "svrha_vrednost": "Donation",
-    "napomena_uplata": "You decide the amount yourself.",
     "kopiraj_btn": "Copy payment details",
     "kopirano": "Copied ✓",
     "tabela_naslov": "Donation rank table",
@@ -1262,17 +1263,6 @@
     "nema_donacija": "No recorded donations yet.",
     "potvrdeno": "Confirmed",
     "ceka_potvrdu": "Awaiting confirmation",
-    "placanje_uspeh": "The payment has been received. POEN is recorded when the Foundation confirms the payment; you will see it in the history below.",
-    "placanje_neuspeh": "Payment was not approved (the bank declined the transaction). No payment has been recorded.",
-    "placanje_greska": "Something went wrong while processing the payment. If the amount was charged, contact support.",
-    "karticno_naslov": "Donate by payment card",
-    "karticno_opis": "Secure payment on the bank's page (3D Secure). Card data is not stored on the platform.",
-    "karticno_iznos_placeholder": "Amount",
-    "karticno_otvaram": "Opening…",
-    "karticno_plati": "Donate by card",
-    "karticno_min_iznos": "Enter an amount (at least RSD 100).",
-    "karticno_nije_moguce": "Payment is currently unavailable.",
-    "karticno_greska_komunikacije": "Communication error. Try again.",
     "vidljivost_naslov": "Donation type",
     "vidljivost_javna": "Public donation (POEN is recorded for me)",
     "vidljivost_javna_opis": "Your first and last name will be shown publicly in the donation list. POEN is recorded only for a public donation.",
@@ -1285,23 +1275,13 @@
     "lista_zakljucana": "The list of donations is not available in a child's account. Your own donations are shown above.",
     "lista_anoniman": "Anonymous donation",
     "lista_ime_povuceno": "Name not published",
-    "ips_naslov": "Donate via IPS QR code (instant)",
-    "ips_opis": "Scan the QR code with your mobile bank — the payment in dinars arrives within seconds, with no platform fee. POEN is recorded once the Foundation confirms the incoming payment.",
-    "ips_uskoro": "The Foundation's account for IPS payments will be opened soon. This option will activate automatically once the account is configured.",
-    "ips_generisi": "Generate QR",
     "ips_generisem": "Generating…",
-    "ips_min_iznos": "Enter an amount (at least RSD {min}).",
-    "ips_limit": "Maximum per IPS payment: RSD {max}. Pay larger amounts by card or by regular transfer.",
     "ips_greska": "QR code generation is not possible right now.",
     "ips_skeniraj_uputstvo": "Open mobile banking → “Pay / Scan QR” → scan this code. The amount and the reference number are already filled in — just confirm.",
     "ips_iznos_label": "Amount:",
     "ips_poziv_na_broj": "Reference number:",
     "ips_model": "model",
-    "ips_napomena_potvrda": "After payment, the Foundation confirms the incoming amount by the reference number, and POEN is recorded then. The reference number is already in the QR code — do not change it.",
     "ips_novi": "New IPS payment",
-    "model": "Model:",
-    "poziv_na_broj": "Reference number:",
-    "vas_broj_opis": "This is your permanent reference number (model 97). Quote it with every payment: it is how the payment is recognised as yours. The bank rejects a mistyped number.",
     "rang_pojasnjenje": "A larger single contribution has greater significance for the community; a donation acquires nothing.",
     "ugovor_link": "Donation agreement",
     "povuci_ime": "Withdraw name from the list",
@@ -1311,19 +1291,42 @@
     "ugovor_stampaj": "Print",
     "ugovor_nazad": "Back to donations",
     "ugovor_napomena": "The agreement was drawn up at the moment the donation was confirmed and has not changed since. The Serbian original is authoritative.",
-    "karticno_sopstvena_kartica": "By paying you confirm that the card is in your name. The contribution is recorded only for the person whose funds were used for the payment.",
-    "karticno_kapa": "A card payment can be at most {max} RSD. For a larger amount use a bank transfer or an international remittance.",
-    "karticno_kapa_napomena": "Card payments go up to {max} RSD. A larger amount goes by bank transfer (domestic) or international remittance (from abroad).",
-    "karticno_nepovratnost": "I confirm that the donation is non-refundable and that I receive no goods or services for it.",
-    "karticno_nepovratnost_obavezna": "Confirm that the donation is non-refundable before you continue.",
     "nacin_oznaka": "Payment method",
     "nacin_ips": "IPS QR",
-    "nacin_kartica": "Card",
-    "nacin_uplatnica": "Payment slip",
     "pokrovitelj_link": "Donating on behalf of a company or association? That goes as sponsorship →",
-    "kopiraj_tekst": "Recipient: KOLO Foundation\nAccount: {racun}\nPurpose: Donation\nModel: 97\nReference number: {poziv}",
     "primalac_vrednost": "KOLO Foundation",
-    "uplatnica_poen": "For a public donation, POEN is recorded when the Foundation confirms the payment."
+    "min_iznos": "The minimum donation is {min} RSD.",
+    "greska_komunikacije": "Communication error. Try again.",
+    "iznos_naslov": "Donation amount",
+    "iznos_opis": "Choose an amount or enter another. The donation is paid from your own account.",
+    "drugi_iznos": "Another amount",
+    "iznos_placeholder": "At least {min}",
+    "nastavi": "Continue",
+    "nacin_nalog": "Transfer order",
+    "nalog_uputstvo": "In mobile or online banking, or at your bank, create a transfer order from your own account with these details.",
+    "poziv_ne_menjaj": "Do not change anything in the order, and especially not the reference number. That is how we know the payment is yours. Cash and payment cards are not accepted.",
+    "kopiraj_tekst_donacija": "Recipient: KOLO Fondacija\nAccount: {racun}\nAmount: {iznos} RSD\nPurpose: Donation\nModel: 97\nReference number: {poziv}",
+    "posle_uplate_naslov": "I have paid",
+    "posle_uplate_prva": "When your bank reports that the payment succeeded, send the confirmation (a screenshot or a PDF from your banking app, or a stamped order). The Foundation checks whether the payment has arrived, and the contribution is then recorded.",
+    "posle_uplate_unapred": "When your bank reports that the payment succeeded, send the confirmation (a screenshot or a PDF from your banking app, or a stamped order). If the details on the confirmation match, the contribution is recorded immediately, marked “Under review”. Within 24 hours the Foundation checks whether the payment has arrived; if it does not arrive, the recording is cancelled.",
+    "posle_uplate_anonimna": "When your bank reports that the payment succeeded, send the confirmation. An anonymous donation carries no POEN.",
+    "potvrda_dugme": "Send payment confirmation",
+    "potvrda_citam": "Reading the confirmation…",
+    "potvrda_uputstvo": "The confirmation must show the amount, the date, the recipient's account and the reference number. One confirmation is valid for one payment. A false or someone else's confirmation leads to exclusion.",
+    "potvrda_prevelika": "The confirmation is too large (at most 5 MB).",
+    "potvrda_greska": "The confirmation cannot be processed right now. Try again.",
+    "potvrda_unapred": "The confirmation has been accepted. {poen} POEN has been recorded for you, marked “Under review”. Within 24 hours the Foundation checks whether the payment has arrived.",
+    "potvrda_ceka_fondaciju": "The confirmation has been accepted. The contribution is recorded when the Foundation establishes that the payment has arrived.",
+    "potvrda_odbijena_necitljivo": "The details on the confirmation cannot be read. Send a clearer screenshot or a PDF from your banking app.",
+    "potvrda_odbijena_iznos": "The confirmation does not show the amount of this donation. Check the confirmation and send it again.",
+    "potvrda_odbijena_racun": "The confirmation does not show the account of the KOLO Foundation. Check the confirmation and send it again.",
+    "potvrda_odbijena_poziv": "The confirmation does not show the reference number of this donation. If you changed it, the payment cannot be linked to your account until the Foundation links it.",
+    "potvrda_odbijena_datum": "The payment date is not visible on the confirmation. Send a confirmation that shows the date.",
+    "potvrda_odbijena_vec_koriscena": "This confirmation has already been sent for another payment. One confirmation is valid for one payment.",
+    "status_na_proveri": "Under review",
+    "status_ponisteno": "Cancelled",
+    "status_ceka_fondaciju": "Awaiting the Foundation's check",
+    "status_ceka_uplatu": "Awaiting payment"
   },
   "poruke": {
     "naslov": "Messages",
@@ -1357,11 +1360,11 @@
     "otvoriDokument": "Open document →",
     "uslovi": {
       "naslov": "Terms of Use of the KOLO Platform",
-      "ver": "5.0.2"
+      "ver": "5.0.9"
     },
     "privatnost": {
       "naslov": "Privacy Policy of the KOLO Platform",
-      "ver": "5.0.0"
+      "ver": "5.0.9"
     },
     "statut": {
       "naslov": "Statute of the KOLO Foundation",
@@ -1369,11 +1372,11 @@
     },
     "dpia": {
       "naslov": "Data Protection Impact Assessment (DPIA)",
-      "ver": "5.0.3"
+      "ver": "5.0.9"
     },
     "radnjeObrade": {
       "naslov": "Records of Processing Activities of Personal Data",
-      "ver": "5.0.0"
+      "ver": "5.0.9"
     },
     "rizici": {
       "naslov": "Risk Acceptance Statement",
@@ -1381,11 +1384,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.0.7"
+      "ver": "5.0.9"
     },
     "pravilnik": {
       "naslov": "KOLO System Rulebooks",
-      "ver": "5.0.7",
+      "ver": "5.0.9",
       "sviPravilnici": "← All rulebooks",
       "pravilnici": "Rulebooks"
     },
@@ -1406,21 +1409,21 @@
       "odluke": "Foundation decisions"
     },
     "meta_uslovi_title": "Terms of Use · KOLO",
-    "meta_uslovi_desc": "Terms of Use of the KOLO Platform, version 5.0.2",
+    "meta_uslovi_desc": "Terms of Use of the KOLO Platform, version 5.0.9",
     "meta_privatnost_title": "Privacy Policy · KOLO",
-    "meta_privatnost_desc": "Privacy Policy of the KOLO Platform, version 5.0.0",
+    "meta_privatnost_desc": "Privacy Policy of the KOLO Platform, version 5.0.9",
     "meta_statut_title": "Statute of the KOLO Foundation · KOLO",
     "meta_statut_desc": "Statute of the KOLO Foundation, version 4.1",
     "meta_dpia_title": "DPIA · KOLO",
-    "meta_dpia_desc": "Data Protection Impact Assessment, version 5.0.3",
+    "meta_dpia_desc": "Data Protection Impact Assessment, version 5.0.9",
     "meta_radnje_title": "Records of Processing Activities · KOLO",
-    "meta_radnje_desc": "Records of Processing Activities of Personal Data, version 5.0.0",
+    "meta_radnje_desc": "Records of Processing Activities of Personal Data, version 5.0.9",
     "meta_rizici_title": "Risk Acceptance Statement · KOLO",
     "meta_rizici_desc": "Risk acceptance statement for participation in the KOLO system, version 5.0.0",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.0.7",
+    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.0.9",
     "meta_pravilnik_title": "KOLO System Rulebooks · KOLO",
-    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.0.7",
+    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.0.9",
     "rb": {
       "kolo-sistem": {
         "naziv": "Rulebook on the KOLO System",
@@ -1436,7 +1439,7 @@
       },
       "pokroviteljstvo-donacije": {
         "naziv": "Rulebook on Sponsorship and Donations",
-        "opis": "How the contribution of donors and patrons is recorded: a table of tiers for donations by natural persons, a coefficient of 1.00 for sponsorship, a patronage threshold of RSD 10,000, and separate records of personal donations and company donations."
+        "opis": "How the contribution of donors and sponsors is recorded: the table of tiers for donations by natural persons and for monetary sponsorship, a coefficient of 1.00 for goods and services, a sponsorship threshold of RSD 10,000, and separate records of personal donations and company donations."
       },
       "operativni": {
         "naziv": "Rulebook on Operational Contribution",
@@ -1915,7 +1918,7 @@
     "n6_opis": "You donate money to the Foundation, and your contribution is recorded in POEN under a public rulebook, with a donation coefficient by which the community acknowledges the contribution, because a larger contribution matters more to it.\nThe record is one-way: POEN is not converted back into dinars, gives no ownership or claim against the Foundation and does not buy votes.",
     "n6_iznos": "donation coefficient from 1.00 upwards",
     "n5_naslov": "Patronage",
-    "n5_opis": "A company, association or registered farm signs a sponsorship agreement with the Foundation, in money or in goods and services. POEN is recorded for the user who submitted the application, without an increase: the table of tiers applies only to a personal donation.",
+    "n5_opis": "A company, association or registered farm signs a sponsorship agreement with the Foundation, in money or in goods and services. POEN is recorded for the user who submitted the application: for money by the sponsor's tier, under the same table as a personal donation but applied to the total of the sponsor's donations, and for goods and services with a coefficient of 1.00.",
     "n4_naslov": "Social programmes",
     "n4_opis": "Programmes for mothers and guardians, the elderly, special support and students, in which POEN is entered for approved participants every day. This is not social assistance within the meaning of the regulations and does not affect the rights you have with the state.",
     "n4_iznos": "recorded daily",
@@ -2250,7 +2253,7 @@
     "naslov": "Sponsorship",
     "opis": "A sponsor is a legal entity, sole trader or registered agricultural holding that donates to the Foundation. Before the first application, you enter the sponsor in the register once; you manage the entry, and the contribution for the applications you submit is recorded in your record.",
     "dobra_zakljucano": "Sponsorship with goods and services is for those in the Kolo. Any adult user can enter a sponsor and give a monetary sponsorship.",
-    "nivoi_napomena": "Sponsorship has no tiers: the coefficient is 1.00 for both money and goods and services, regardless of the amount. The table of tiers applies only to your personal donations, and the total of the company's donations is kept separately from them and does not raise your tier.",
+    "nivoi_napomena": "Monetary sponsorship has a sponsor tier, under the same table as personal donations (the Donations screen), but applied to the total of the sponsor's donations. That total is kept separately from your personal donations: it does not raise your personal tier, and your personal donations do not raise the sponsor's tier. For goods and services the coefficient is 1.00, except for food.",
     "forma_naslov": "Start sponsorship",
     "forma_opis": "The platform generates a donation agreement from the entry data; you sign the agreement in the Agreements tab. Once the Foundation confirms receipt of the payment, the contribution is recorded in your record.",
     "forma_naziv_label": "Name of legal entity or entrepreneur",
@@ -2442,10 +2445,14 @@
     "brisanje_potvrda": "Delete the sponsor entry? The display on the map and the voucher offer end, while contributions remain on the ranking list.",
     "brisanje_potvrda_rang": "Delete the sponsor entry and remove it from the ranking list? This cannot be undone.",
     "sta_dobija_naslov": "What is recorded",
-    "sta_dobija_tekst": "POEN is recorded for the person who submits the application, with a coefficient of 1.00, without the table of tiers. The sponsor's name, and logo if it has one, is shown on the map and on the sponsor ranking list, and for sponsorship with goods and services also on the vouchers. This is a record of contribution, not advertising: the sponsor gains neither promotion nor an advantage in procurement.",
+    "sta_dobija_tekst": "POEN is recorded for the person who submits the application: for money by the sponsor's tier, under the same table as a personal donation, and for goods and services with a coefficient of 1.00, except for food. The sponsor's name, and logo if it has one, is shown on the map and on the sponsor ranking list, and for sponsorship with goods and services also on the vouchers. This is a record of contribution, not advertising: the sponsor gains neither promotion nor an advantage in procurement.",
     "mejl_kod_naslov": "Code for signing the donation agreement",
     "mejl_kod_telo": "Code for signing the monetary sponsorship agreement ({naziv}) on the KOLO platform:",
-    "mejl_primerak_davalac": "The monetary sponsorship agreement has been concluded electronically on the KOLO platform. Below is a printable copy of the agreement."
+    "mejl_primerak_davalac": "The monetary sponsorship agreement has been concluded electronically on the KOLO platform. Below is a printable copy of the agreement.",
+    "uplata_naslov": "Sponsorship payment",
+    "uplata_opis": "Pay from the sponsor's account, by a transfer order or by scanning the IPS QR code in business online banking, with this reference number. After paying, send the payment confirmation. The contribution is recorded in the next accounting period after receipt is established.",
+    "uplata_podaci": "Account {racun} · amount {iznos} RSD · purpose: Donation · model 97 · reference number {poziv}",
+    "uplata_potvrda_poslata": "The payment confirmation has been sent. The Foundation is checking receipt."
   },
   "doprinosOglasi": {
     "naslov": "Community tasks",
@@ -2803,7 +2810,7 @@
     "pokroviteljstvo_potvrdjeno_naslov": "Sponsorship confirmed",
     "pokroviteljstvo_potvrdjeno_tekst": "The sponsorship contribution has been confirmed and added to the cumulative total.",
     "pokroviteljstvo_potvrdjeno_bonus_naslov": "Sponsorship confirmed",
-    "pokroviteljstvo_potvrdjeno_bonus_tekst": "The sponsorship contribution has been confirmed. {bonus} POEN has been recorded, with a coefficient of 1.00.",
+    "pokroviteljstvo_potvrdjeno_bonus_tekst": "The sponsorship contribution has been confirmed. {bonus} POEN has been recorded, with a coefficient of {koeficijent}.",
     "izvrsenje_odbijeno_naslov": "Daily execution rejected",
     "izvrsenje_odbijeno_tekst": "Your daily execution was rejected. No POEN is recorded for it (art. 15).",
     "izvrsenje_potvrdjeno_naslov": "Execution confirmed",
@@ -3063,7 +3070,27 @@
     "zavrsna_potvrda_naslov": "Final decision on the task",
     "zavrsna_potvrda_tekst": "A final decision has been made on your completion of the task “{zadatak}”. See it on the task page.",
     "zadruzni_dodela_naslov": "The cooperative has assigned you a unit",
-    "zadruzni_dodela_tekst": "The cooperative {zadruga} has assigned you the unit “{zadatak}”. Look at it and accept it if you want to carry it out."
+    "zadruzni_dodela_tekst": "The cooperative {zadruga} has assigned you the unit “{zadatak}”. Look at it and accept it if you want to carry it out.",
+    "donacija_unapred_naslov": "Contribution recorded in advance",
+    "donacija_unapred_tekst": "{iznos} POEN has been recorded for you in advance. Within 24 hours the Foundation checks whether the payment has arrived; if it does not arrive, the recording is cancelled.",
+    "donacija_unapred_utvrdjena_naslov": "The payment has arrived",
+    "donacija_unapred_utvrdjena_tekst": "The Foundation has established that your payment has arrived. The donation is confirmed.",
+    "donacija_unapred_ponistena_naslov": "Advance donation cancelled",
+    "donacija_unapred_ponistena_tekst": "The Foundation did not establish that the payment arrived, so {iznos} POEN recorded in advance has been cancelled (Rulebook on the KOLO System, art. 17(2)(10)). You may file a complaint against the decision.",
+    "donacija_unapred_ponistena_minus_naslov": "Advance donation cancelled: your record is below zero",
+    "donacija_unapred_ponistena_minus_tekst": "The Foundation did not establish that the payment arrived, so {iznos} POEN recorded in advance has been cancelled (Rulebook on the KOLO System, art. 17(2)(10)). Your record is now {stanje} POEN; this is not a debt and is not collected, and POEN that comes in fills the negative balance first. You may file a complaint against the decision.",
+    "ogranicenje_primljenog_naslov": "Part of your record is temporarily restricted",
+    "ogranicenje_primljenog_tekst": "{iznos} POEN you received from a donor whose donation was cancelled temporarily cannot be re-registered, used or entered into ZRNO, for at most {dana} days, until the Foundation decides. You may file a complaint about the restriction.",
+    "ogranicenje_primljenog_roditelj_naslov": "Part of your child's record is temporarily restricted",
+    "ogranicenje_primljenog_roditelj_tekst": "{iznos} POEN your child received from a donor whose donation was cancelled is temporarily restricted, for at most {dana} days, until the Foundation decides.",
+    "ogranicenje_otpis_naslov": "Write-off of the amount received",
+    "ogranicenje_otpis_tekst": "The Foundation has established that you knew the payment confirmation was false or someone else's, so {iznos} POEN received from that donor has been written off (Rulebook on the KOLO System, art. 17(2)(10)). You may file a complaint against the decision.",
+    "ogranicenje_otpis_minus_naslov": "Write-off of the amount received: your record is below zero",
+    "ogranicenje_otpis_minus_tekst": "The Foundation has established that you knew the payment confirmation was false or someone else's, so {iznos} POEN received from that donor has been written off (Rulebook on the KOLO System, art. 17(2)(10)). Your record is now {stanje} POEN; this is not a debt and is not collected. You may file a complaint against the decision.",
+    "ogranicenje_prestalo_naslov": "The restriction has ended",
+    "ogranicenje_prestalo_tekst": "The restriction on {iznos} POEN has ended. Nothing has been taken from you.",
+    "pokroviteljstvo_evidentirano_naslov": "Sponsorship contribution recorded",
+    "pokroviteljstvo_evidentirano_tekst": "The noted sponsorship contribution has been recorded in the accounting period that has just begun: {bonus} POEN."
   },
   "transakcije": {
     "verifikacija": "Confirmation of member {pseudonim}",
@@ -3106,7 +3133,10 @@
     "pokroviteljstvo_dobra_otpis": "Write-off for non-performance of sponsorship in goods and services, {opis}",
     "vaucer_uzet": "Voucher: {opis} — {davalac}",
     "visestruki_nalog_otpis": "Write-off upon a finding of multiple accounts",
-    "visestruki_nalog_ponistenje": "Cancellation of the record of a closed account"
+    "visestruki_nalog_ponistenje": "Cancellation of the record of a closed account",
+    "donacija_unapred": "Contribution recorded for an advance donation: {iznos} POEN",
+    "donacija_unapred_ponistena": "Cancellation of an advance donation — receipt not established",
+    "otpis_primljenog_donacija": "Write-off of the amount received from a donor whose advance donation was cancelled"
   },
   "mejl": {
     "pozdrav": "Hello",
@@ -4255,7 +4285,7 @@
     "licno_tekst": "You can donate to the Foundation. A donation is a separate act and buys nothing within the system.",
     "licno_dugme": "Donate",
     "firma_naslov": "As a company, association or registered farm",
-    "firma_tekst": "A company, an association and the holder of a registered agricultural holding can be sponsors, in money or in goods and services. POEN is recorded for the person who submits the application, with a coefficient of 1.00, without the table of tiers, and a cash sponsor is listed on the ranking with its name and, if it has one, its logo. It gains neither promotion nor an advantage in procurement from this.",
+    "firma_tekst": "A company, an association and the holder of a registered agricultural holding can be sponsors, in money or in goods and services. POEN is recorded for the person who submits the application, for money by the sponsor's tier, under the same table as a personal donation, and a cash sponsor is listed on the ranking with its name and, if it has one, its logo. It gains neither promotion nor an advantage in procurement from this.",
     "firma_dugme": "Register a sponsor",
     "firma_lista": "Sponsor ranking",
     "firma_firme": "Companies with vouchers",

@@ -8,17 +8,13 @@ import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import Stranica from "@/components/ui/Stranica";
 import Ucitavanje from "@/components/ui/Ucitavanje";
 import NaslovStranice from "@/components/ui/NaslovStranice";
-import Segmenti from "@/components/ui/Segmenti";
-import { RACUN_FONDACIJE } from "@/lib/placanje/racun-fondacije";
 import PraznoStanje from "@/components/ui/PraznoStanje";
-import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 import { useEffect, useState } from "react";
 import { intlTag } from "@/lib/format";
 import { useTranslations, useLocale } from "next-intl";
-import IpsQrPlacanje from "./IpsQrPlacanje";
-import { MAX_KARTICNA_UPLATA_RSD } from "@/lib/donacija-pravila";
-import { dogadjaj } from "@/lib/analitika";
+import UplataDonacije from "./UplataDonacije";
+import PosaljiPotvrdu from "./PosaljiPotvrdu";
 
 interface Donacija {
   id: string;
@@ -26,7 +22,12 @@ interface Donacija {
   cumulativeRSD: number;
   level: number;
   poenEmitted: number;
-  status: "PENDING" | "CONFIRMED";
+  /** Set 5.0.9: NA_PROVERI = evidentirano unapred, prijem se proverava; PONISTENO = prijem nije utvrđen. */
+  status: "PENDING" | "NAPLACENO" | "CONFIRMED" | "NA_PROVERI" | "PONISTENO";
+  /** Poseban poziv na broj ove donacije (donacije čl. 4 st. 3); null za stare zapise. */
+  pozivNaBroj: string | null;
+  potvrdaPoslata: boolean;
+  unapred: boolean;
   javno: boolean;
   /** Ime još stoji u listi — tada se nudi povlačenje (donacije čl. 12). */
   imeObjavljeno: boolean;
@@ -67,14 +68,11 @@ interface DonacijeData {
   listaZakljucana: boolean;
   listaDonacija: JavnaDonacija[];
   rangTabela: RangRed[];
+  /** Prijem je već utvrđen do praga, pa sledeća javna donacija ide unapred (donacije čl. 6 st. 5). */
+  unapredOtvoren: boolean;
 }
 
 
-/** Prikaz računa 18 cifara u standardnom obliku 3-13-2. */
-function formatRacun(racun: string): string {
-  const c = racun.replace(/\D/g, "");
-  return c.length === 18 ? `${c.slice(0, 3)}-${c.slice(3, 16)}-${c.slice(16)}` : racun;
-}
 
 export default function DonacijeKlijent() {
   const locale = useLocale();
@@ -82,75 +80,20 @@ export default function DonacijeKlijent() {
   const tc = useTranslations("common");
   const [data, setData] = useState<DonacijeData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [kopirano, setKopirano] = useState(false);
-  const [iznosKartica, setIznosKartica] = useState("");
-  // Plaćanje karticom i IPS još nisu uključeni — podrazumevano je uplatnica.
-  const [nacin, setNacin] = useState<"ips" | "kartica" | "uplatnica">("uplatnica");
   const [javno, setJavno] = useState(true);
-  const [karticaLoading, setKarticaLoading] = useState(false);
-  const [karticaGreska, setKarticaGreska] = useState<string | null>(null);
-  // Izjava o nepovratnosti (R-01, mera M-11) — traži se PRE naplate i snima se
-  // na zapis donacije kao dokaz u sporu po osporenoj kartičnoj transakciji.
-  const [nepovratnost, setNepovratnost] = useState(false);
-  const [ishod, setIshod] = useState<"uspeh" | "neuspeh" | "greska" | null>(null);
   const [povlacenje, setPovlacenje] = useState<string | null>(null);
   const [povlacenjeGreska, setPovlacenjeGreska] = useState<string | null>(null);
+  const [potvrdaZa, setPotvrdaZa] = useState<string | null>(null);
   const { dijalog, potvrdi } = useDijalog();
   useEffect(() => {
     fetch("/api/donacije")
       .then((r) => r.json())
       .then(setData)
       .finally(() => setLoading(false));
-    const p = new URLSearchParams(window.location.search).get("placanje");
-    if (p === "uspeh" || p === "neuspeh" || p === "greska") setIshod(p);
   }, []);
 
-  async function zapocniKarticno() {
-    setKarticaGreska(null);
-    const iznos = Math.round(Number(iznosKartica));
-    if (!Number.isFinite(iznos) || iznos < 100) {
-      setKarticaGreska(t("karticno_min_iznos"));
-      return;
-    }
-    if (iznos > MAX_KARTICNA_UPLATA_RSD) {
-      setKarticaGreska(t("karticno_kapa", { max: MAX_KARTICNA_UPLATA_RSD.toLocaleString(intlTag(locale)) }));
-      return;
-    }
-    if (!nepovratnost) {
-      setKarticaGreska(t("karticno_nepovratnost_obavezna"));
-      return;
-    }
-    setKarticaLoading(true);
-    try {
-      const r = await fetch("/api/donacije/placanje/zapocni", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ iznosRSD: iznos, javno, nepovratnost: true }),
-      });
-      const j = await r.json();
-      if (!r.ok) {
-        setKarticaGreska(j.error ?? t("karticno_nije_moguce"));
-        return;
-      }
-      // Bez iznosa i bez javnosti donacije.
-      dogadjaj("donacija_zapoceta", { kanal: "kartica" });
-      // Auto-submit forme ka NestPay gateway-u banke (preusmeravanje na 3D stranicu).
-      const forma = document.createElement("form");
-      forma.method = "POST";
-      forma.action = j.gatewayUrl;
-      for (const [k, v] of Object.entries(j.fields as Record<string, string>)) {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = k;
-        input.value = v;
-        forma.appendChild(input);
-      }
-      document.body.appendChild(forma);
-      forma.submit();
-    } catch {
-      setKarticaGreska(t("karticno_greska_komunikacije"));
-      setKarticaLoading(false);
-    }
+  function osvezi() {
+    fetch("/api/donacije").then((r) => r.json()).then(setData).catch(() => {});
   }
 
   // Povlačenje imena iz liste (donacije čl. 12). Jednosmerno — ime se briše iz
@@ -179,15 +122,6 @@ export default function DonacijeKlijent() {
 
   const sledeci = data.rangTabela.find((r) => r.nivo === data.trenutniNivo + 1);
 
-  const prikazRacuna = formatRacun(data.racun || RACUN_FONDACIJE);
-
-  function kopirajPodatke() {
-    const tekst = t("kopiraj_tekst", { racun: prikazRacuna, poziv: data!.pozivNaBroj });
-    navigator.clipboard.writeText(tekst).then(() => {
-      setKopirano(true);
-      setTimeout(() => setKopirano(false), 2000);
-    });
-  }
 
   return (
     <Stranica>
@@ -209,23 +143,13 @@ export default function DonacijeKlijent() {
         }
       />
 
-      {/* Ishod kartičnog plaćanja (povratak sa gateway-a) */}
-      {ishod === "uspeh" && (
-        <Obavestenje vrsta="uspeh">{t("placanje_uspeh")}</Obavestenje>
-      )}
-      {ishod === "neuspeh" && (
-        <Obavestenje vrsta="greska">{t("placanje_neuspeh")}</Obavestenje>
-      )}
-      {ishod === "greska" && (
-        <Obavestenje vrsta="greska">{t("placanje_greska")}</Obavestenje>
-      )}
 
       {/* Udruženje ili firma doniraju kao pokrovitelji (C2, zajednica, 24.10.2026). */}
       <p className="text-sm">
         <Link href="/postani-pokrovitelj" className="inline-flex min-h-10 items-center font-semibold text-kolo-green-700 hover:underline">{t("pokrovitelj_link")}</Link>
       </p>
 
-      {/* Vrsta donacije — javna (POEN, ime javno) ili anonimna (bez POEN); važi za IPS i karticu */}
+      {/* Vrsta donacije — javna (POEN, ime javno) ili anonimna (bez POEN). */}
       <Kartica className="space-y-2" id="uplata">
         <NaslovSekcije nivo={2}>{t("vidljivost_naslov")}</NaslovSekcije>
         <label className={`flex items-start gap-2 rounded-kontrola border p-3 cursor-pointer transition-colors ${javno ? "border-kolo-green-700/50 bg-kolo-green-100/40" : "border-kolo-border"}`}>
@@ -247,114 +171,9 @@ export default function DonacijeKlijent() {
         )}
       </Kartica>
 
-      {/* Način plaćanja (C2, uloga 1, 24.10.2026): tri načina kao jezičci, vidi se
-          samo izabrani — ranije su sva tri stajala jedan ispod drugog. Da kartica i
-          IPS još nisu uključeni kaže običan red ispod (jedno upozorenje po ekranu). */}
-      <div className="space-y-2">
-      <Segmenti
-        oznaka={t("nacin_oznaka")}
-        punaSirina
-        vrednost={nacin}
-        onPromena={setNacin}
-        opcije={[
-          { vrednost: "ips", oznaka: t("nacin_ips") },
-          { vrednost: "kartica", oznaka: t("nacin_kartica") },
-          { vrednost: "uplatnica", oznaka: t("nacin_uplatnica") },
-        ]}
-      />
-      <p className="text-sm text-kolo-muted">{t("beta_opis")}</p>
-      </div>
-
-      {/* IPS QR — instant dinarska uplata skeniranjem mobilnom bankom */}
-      {nacin === "ips" && <IpsQrPlacanje javno={javno} />}
-
-      {/* Kartično plaćanje (Banca Intesa / OTP — NestPay) */}
-      {nacin === "kartica" && (
-      <Kartica className="space-y-4">
-        <div>
-          <NaslovSekcije nivo={3}>{t("karticno_naslov")}</NaslovSekcije>
-          <p className="text-xs text-kolo-muted mt-0.5">
-            {t("karticno_opis")}
-          </p>
-        </div>
-
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <input
-              type="number"
-              inputMode="numeric"
-              min={100}
-              step={100}
-              max={MAX_KARTICNA_UPLATA_RSD}
-              value={iznosKartica}
-              onChange={(e) => setIznosKartica(e.target.value)}
-              placeholder={t("karticno_iznos_placeholder")}
-              aria-label={t("karticno_iznos_placeholder")}
-              className={`${KLASE_UNOSA} pr-12`}
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-kolo-muted">RSD</span>
-          </div>
-          <Dugme onClick={zapocniKarticno} disabled={karticaLoading} className="min-h-11">
-            {karticaLoading ? t("karticno_otvaram") : t("karticno_plati")}
-          </Dugme>
-        </div>
-        <label className="flex items-start gap-2 text-xs text-kolo-muted cursor-pointer">
-          <input
-            type="checkbox"
-            checked={nepovratnost}
-            onChange={(e) => setNepovratnost(e.target.checked)}
-            className="mt-0.5"
-          />
-          <span>{t("karticno_nepovratnost")}</span>
-        </label>
-        <p className="text-xs text-kolo-muted">
-          {t("karticno_kapa_napomena", { max: MAX_KARTICNA_UPLATA_RSD.toLocaleString(intlTag(locale)) })}
-        </p>
-        {karticaGreska && <Obavestenje vrsta="greska">{karticaGreska}</Obavestenje>}
-        {/* Čl. 3 Pravilnika o pokroviteljstvu i donacijama: doprinos se evidentira
-            isključivo onome čijim je sredstvima uplata izvršena. Kod kartice se
-            uplatilac ne vidi iz izvoda, pa izjavu daje sam donator. */}
-        <p className="text-xs text-kolo-muted">{t("karticno_sopstvena_kartica")}</p>
-      </Kartica>
-      )}
-
-      {/* Instrukcije za uplatu */}
-      {nacin === "uplatnica" && (
-      <Kartica className="space-y-4">
-        <NaslovSekcije nivo={3}>{t("instrukcije")}</NaslovSekcije>
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between">
-            <span className="text-kolo-muted">{t("primalac")}</span>
-            <span className="font-medium text-kolo-text">{t("primalac_vrednost")}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-kolo-muted">{t("racun")}</span>
-            <span className="font-mono text-kolo-text">{prikazRacuna}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-kolo-muted">{t("svrha")}</span>
-            <span className="font-medium text-kolo-text">{t("svrha_vrednost")}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-kolo-muted">{t("model")}</span>
-            <span className="font-mono text-kolo-text">97</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-kolo-muted">{t("poziv_na_broj")}</span>
-            <span className="font-mono font-semibold text-kolo-green-700">{data.pozivNaBroj}</span>
-          </div>
-        </div>
-        <Obavestenje vrsta="info">{t("vas_broj_opis")}</Obavestenje>
-        {/* Kad se upisuje POEN — isto kao kod IPS-a i kartice (mera M-4a). */}
-        {javno && <p className="text-xs text-kolo-muted">{t("uplatnica_poen")}</p>}
-        <div className="pt-2 border-t border-kolo-border">
-          <p className="text-xs text-kolo-muted mb-3">{t("napomena_uplata")}</p>
-          <Dugme punaSirina onClick={kopirajPodatke}>
-            {kopirano ? t("kopirano") : t("kopiraj_btn")}
-          </Dugme>
-        </div>
-      </Kartica>
-      )}
+      {/* Uplata (set 5.0.9): iznos, pa IPS QR ili nalog za prenos sa računa uz poseban
+          poziv na broj, pa potvrda o uplati. Kartice i gotovine nema (donacije čl. 4 st. 1). */}
+      <UplataDonacije javno={javno} unapredOtvoren={data.unapredOtvoren} onPromena={osvezi} />
 
       {/* Koeficijent dostignutog nivoa — nivo i ukupan iznos su u zaglavlju. */}
       <Kartica className="space-y-2">
@@ -442,12 +261,35 @@ export default function DonacijeKlijent() {
                     className={`text-xs font-semibold px-2 py-0.5 rounded-lg ${
                       d.status === "CONFIRMED"
                         ? "bg-kolo-green-100 text-kolo-green-700"
-                        : "bg-kolo-gold-100 text-kolo-gold-700"
+                        : d.status === "PONISTENO"
+                          ? "bg-kolo-border text-kolo-muted"
+                          : "bg-kolo-gold-100 text-kolo-gold-700"
                     }`}
                   >
-                    {d.status === "CONFIRMED" ? t("potvrdeno") : t("ceka_potvrdu")}
+                    {d.status === "CONFIRMED"
+                      ? t("potvrdeno")
+                      : d.status === "NA_PROVERI"
+                        ? t("status_na_proveri")
+                        : d.status === "PONISTENO"
+                          ? t("status_ponisteno")
+                          : d.potvrdaPoslata
+                            ? t("status_ceka_fondaciju")
+                            : t("status_ceka_uplatu")}
                   </span>
-                  {d.status === "CONFIRMED" && (
+                  {d.pozivNaBroj && d.status === "PENDING" && (
+                    <p className="text-xs text-kolo-muted mt-1 font-mono">{d.pozivNaBroj}</p>
+                  )}
+                  {d.status === "PENDING" && d.pozivNaBroj && !d.potvrdaPoslata && potvrdaZa !== d.id && (
+                    <button type="button" onClick={() => setPotvrdaZa(d.id)} className="block ml-auto min-h-9 text-xs font-semibold text-kolo-green-700 underline">
+                      {t("potvrda_dugme")}
+                    </button>
+                  )}
+                  {potvrdaZa === d.id && (
+                    <div className="mt-2 w-56 text-left">
+                      <PosaljiPotvrdu donationId={d.id} onGotovo={() => { setPotvrdaZa(null); osvezi(); }} />
+                    </div>
+                  )}
+                  {(d.status === "CONFIRMED" || d.status === "NA_PROVERI") && d.poenEmitted > 0 && (
                     <p className="text-xs text-kolo-green-700 mt-1">
                       +{d.poenEmitted.toLocaleString(intlTag(locale))} {tc("poen")}
                     </p>

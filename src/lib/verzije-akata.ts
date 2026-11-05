@@ -69,8 +69,9 @@ export const AKT_USLOVI: Akt = {
   // 5.0.0 — ceo set prenumerisan bez podčlanova; sporovi preko zadruge, prijava smrti,
   // rokovi prigovora brojem, zaštita iz ZOO čl. 265 za svako ograničenje odgovornosti.
   // 5.0.2 — čl. 14 st. 4: korisnik koji nije u Kolu uzima vaučere programa raspodele hrane.
-  verzija: "5.0.2",
-  fajl: "uslovi_koriscenja_5_0_2.md",
+  // 5.0.9 — čl. 32 st. 1 t. 9 (lažna potvrda o uplati) i čl. 40 st. 2 t. 12 (ograničenje i otpis primljenog).
+  verzija: "5.0.9",
+  fajl: "uslovi_koriscenja_5_0_9.md",
 };
 
 export const AKT_POLITIKA: Akt = {
@@ -104,8 +105,9 @@ export const AKT_POLITIKA: Akt = {
   // prijava, push, OpenStreetMap, rezervne kopije), zadružni admin, DPIA kod direktora.
   // 5.0.0 — uređena po svrsi (jedan član po obradi, rok uz obradu); Kutija želja,
   // podrška u Gornjem Kolu, spor u zadruzi, prijava smrti, revizijski dnevnik 12 meseci.
-  verzija: "5.0.0",
-  fajl: "politika_5_0_0.md",
+  // 5.0.9 — čl. 20 st. 1 (poziv na broj, potvrda o uplati) i čl. 39 (kartično plaćanje uklonjeno).
+  verzija: "5.0.9",
+  fajl: "politika_5_0_9.md",
 };
 
 /**

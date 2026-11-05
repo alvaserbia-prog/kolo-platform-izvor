@@ -19,17 +19,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     // `aprUporedjeno`: administrator potvrđuje da je naziv, MB i zastupnika
     // uporedio sa APR-om (Pravilnik čl. 31 st. 4) — beleži se samo činjenica poređenja.
     const rez = await potvrdiPrijavu(id, session.user.id, body.aprUporedjeno === true);
+    // Koeficijent nivoa pokrovitelja (donacije čl. 22 st. 1, set 5.0.8), zapisan kao „1,60".
+    const koeficijent = rez.koeficijent.toFixed(2).replace(".", ",");
+    // Set 5.0.9: potvrdom se doprinos beleži, a evidentira u narednom obračunskom periodu.
     await logAdminAkcija(session.user.id, "POKROVITELJSTVO_POTVRDJENO", id,
-      `Evidentirano ${rez.bonus.toLocaleString("sr-RS")} POEN (koeficijent 1,00)`);
+      `Zabeleženo ${rez.bonus.toLocaleString("sr-RS")} POEN (koeficijent ${koeficijent}), evidentira se u narednom obračunskom periodu`);
     await obavesti(rez.vlasnikId, {
       tip: "pokroviteljstvo_potvrdjeno",
       kljuc: rez.bonus > 0
         ? "notifikacije.pokroviteljstvo_potvrdjeno_bonus"
         : "notifikacije.pokroviteljstvo_potvrdjeno",
-      parametri: { bonus: rez.bonus },
+      parametri: { bonus: rez.bonus, koeficijent },
       naslov: "Pokroviteljstvo potvrđeno",
       tekst: rez.bonus > 0
-        ? `Doprinos pokroviteljstva je potvrđen. Evidentirano je ${rez.bonus.toLocaleString("sr-RS")} POEN, sa koeficijentom 1,00.`
+        ? `Prijem pokroviteljstva je potvrđen. Zabeleženo je ${rez.bonus.toLocaleString("sr-RS")} POEN, sa koeficijentom ${koeficijent}; evidentira se u narednom obračunskom periodu.`
         : "Doprinos pokroviteljstva je potvrđen i dodat kumulativnom doprinosu.",
       link: "/postani-pokrovitelj",
     });

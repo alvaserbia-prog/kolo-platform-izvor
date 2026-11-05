@@ -4,6 +4,7 @@ import { emitujPoen } from "./emisija";
 import { PROTOKOL_WALLET_ID } from "./zrno";
 import { smeDaSalje } from "@/lib/doprinos-pravila";
 import { jeNadoknada } from "./nadoknada";
+import { ograniceno } from "./ogranicenje-primljenog";
 import { razresiNaselje } from "@/lib/naselje";
 import { obavesti } from "@/lib/notifikacije";
 import { upisiIdentitet, procitajImePrezime } from "./identitet";
@@ -335,8 +336,10 @@ async function prepisiSaOsnovom(
   opis: string | null,
 ) {
   await prisma.$transaction(async (tx) => {
+    // Ograničen iznos (donacije čl. 6 st. 7, set 5.0.9) se ne prepisuje ni u zapis zadruge.
+    const ogr = await ograniceno(odWalletId, tx);
     const skinuto = await tx.wallet.updateMany({
-      where: { id: odWalletId, balance: { gte: iznos } },
+      where: { id: odWalletId, balance: { gte: iznos + ogr } },
       data: { balance: { decrement: iznos } },
     });
     if (skinuto.count !== 1) throw new ZadrugaGreska("Na zapisu nema dovoljno POEN-a.");

@@ -72,6 +72,10 @@ interface Props {
   cekamPotvrdjene?: { id: string; pseudonim: string }[];
   /** Rezervisano za kolektivnu nabavku. Nula = reda nema (odluka vlasnika). */
   rezervisanoNabavka?: number;
+  /** Zabeleženo novčano pokroviteljstvo koje čeka naredni obračunski period (Pravilnik čl. 37 st. 2, set 5.0.9). */
+  zabelezenPokroviteljstvo?: number;
+  /** Privremeno ograničen iznos po poništenju donacije unapred (donacije čl. 6 st. 7, set 5.0.9). */
+  ogranicenoIznos?: number;
   /** Neverifikovani sme samo da prima — dugme za upis mu se ne prikazuje. */
   smeDaSalje?: boolean;
   /**
@@ -82,7 +86,7 @@ interface Props {
   razlogZabrane?: "neverifikovan" | "ceka_roditelja";
 }
 
-export default function NovcanikKartice({ balance, pseudonim, memberHash, platiPseudonim, prefillIznos, prefillOpis, zabelezenDoprinos = 0, zabelezenGazdinstvo = 0, zabelezenePotvrdeMoje = 0, zabelezenePotvrdeTudje = 0, cekamPotvrdjene = [], rezervisanoNabavka = 0, smeDaSalje = true, razlogZabrane = "neverifikovan", maloletan = false }: Props) {
+export default function NovcanikKartice({ balance, pseudonim, memberHash, platiPseudonim, prefillIznos, prefillOpis, zabelezenDoprinos = 0, zabelezenGazdinstvo = 0, zabelezenePotvrdeMoje = 0, zabelezenePotvrdeTudje = 0, cekamPotvrdjene = [], rezervisanoNabavka = 0, zabelezenPokroviteljstvo = 0, ogranicenoIznos = 0, smeDaSalje = true, razlogZabrane = "neverifikovan", maloletan = false }: Props) {
   const locale = useLocale();
   const router = useRouter();
   const t = useTranslations("novcanik");
@@ -114,7 +118,9 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
   const cekaFondaciju = zabelezenDoprinos;
   const cekaTebe = zabelezenePotvrdeMoje + zabelezenGazdinstvo;
   const cekaDruge = zabelezenePotvrdeTudje;
-  const zabelezenoUkupno = cekaFondaciju + cekaTebe + cekaDruge;
+  // Ne čeka se ničiji potez, nego kraj obračunskog perioda (Pravilnik čl. 37 st. 2).
+  const cekaPeriod = zabelezenPokroviteljstvo;
+  const zabelezenoUkupno = cekaFondaciju + cekaTebe + cekaDruge + cekaPeriod;
 
   return (
     <>
@@ -201,6 +207,24 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             kao negativno stanje jer nije dug: Fondacija po njoj nema potraživanje i
             ne može je naplatiti. Razmena dobara i usluga se njome ne ograničava —
             ograničen je samo upis POENA drugome, dok zapis ne pređe nulu. */}
+        {/* Privremeno ograničen iznos (donacije čl. 6 st. 7, set 5.0.9): ostaje u zapisu,
+            ali se ne prepisuje, ne koristi u projektu i ne upisuje u ZRNO, najduže 7 dana. */}
+        {ogranicenoIznos > 0 && !uNadoknadi && (
+          <Obavestenje
+            vrsta="upozorenje"
+            naslov={
+              <span className="flex items-baseline justify-between gap-3">
+                <span>{t("ograniceno_naslov")}</span>
+                <span className="text-lg font-bold tabular-nums">
+                  {ogranicenoIznos.toLocaleString(intlTag(locale))} {tc("poen")}
+                </span>
+              </span>
+            }
+          >
+            <p>{t("ograniceno_opis")}</p>
+          </Obavestenje>
+        )}
+
         {uNadoknadi && (
           <Obavestenje
             vrsta="upozorenje"
@@ -304,6 +328,18 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                       </p>
                     </div>
                     <p className="text-sm text-kolo-muted mt-1">{t("ceka_fondaciju_opis")}</p>
+                  </div>
+                )}
+
+                {cekaPeriod > 0 && (
+                  <div>
+                    <div className="flex items-baseline justify-between gap-3">
+                      <p className="text-sm font-semibold text-kolo-text">{t("ceka_period")}</p>
+                      <p className="text-sm font-bold tabular-nums text-kolo-text">
+                        {cekaPeriod.toLocaleString(intlTag(locale))} {tc("poen")}
+                      </p>
+                    </div>
+                    <p className="text-sm text-kolo-muted mt-1">{t("ceka_period_opis")}</p>
                   </div>
                 )}
 

@@ -34,7 +34,6 @@
  * pravila o „najnižoj ceni iz javnih izvora" više nema.
  */
 
-import { KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA } from "@/lib/donacija-pravila";
 import {
   poenaPoVauceruHrane, procitajOdgovoreHrane, koeficijentIzOdgovora,
   type OdgovoriHrane, type Kategorija, type VrstaHrane,
@@ -257,10 +256,13 @@ export function otpisPriRaskidu(poenEvidentirano: number, brojVaucera: number, u
 // ─── Koeficijent i broj POEN-a (čl. 33, nabavke čl. 31) ─────────────────────
 
 /**
- * Čl. 33 st. 2 — koeficijent evidencije pokroviteljstva (čl. 22): uvek 1,00. Ne
- * zavisi od novčanog kumulativa pokrovitelja ni od pravnog oblika davaoca.
+ * Čl. 33 st. 2 — koeficijent evidencije pokroviteljstva dobrima i uslugama (čl. 22 st. 2):
+ * 1,00, osim hrane (čl. 22 st. 4). Ne zavisi od novčanog kumulativa ni od nivoa pokrovitelja
+ * ni od pravnog oblika davaoca, jer vrednost dobara i usluga utvrđuje davalac iz sopstvenog
+ * cenovnika (čl. 29). 🔴 Od seta 5.0.8 nije više isto što i novac: novčano pokroviteljstvo
+ * ide po nivou pokrovitelja (`donacija-pravila.ts`), dobra ostaju na 1,00.
  */
-export const KOEFICIJENT_DOBARA = KOEFICIJENT_EVIDENCIJE_POKROVITELJSTVA;
+export const KOEFICIJENT_DOBARA = 1.0;
 
 /** Čl. 33 st. 2 — broj evidentiranih POEN-a = vrednost × koeficijent (ceo broj). */
 export function poenZaUgovor(vrednostRsd: number, koeficijent: number): number {

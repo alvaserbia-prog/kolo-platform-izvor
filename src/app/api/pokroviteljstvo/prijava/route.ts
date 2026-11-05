@@ -8,6 +8,8 @@ import { upisSpremanZaPrijavu, funkcijaZaUgovor } from "@/lib/protokol/upis-pokr
 import { FUNKCIJA_NOSIOCA_GAZDINSTVA } from "@/lib/pokroviteljstvo-dobrima-pravila";
 import { imeNaloga, ishodUpisa, PORUKA_DRUGO_IME } from "@/lib/protokol/identitet";
 import { VrstaDonacije } from "@/generated/prisma/client";
+import { dohvatiIpsConfig, pozivNaBrojZaPrijavu, prikazPozivNaBroj } from "@/lib/placanje/ips-qr";
+import { RACUN_FONDACIJE } from "@/lib/placanje/racun-fondacije";
 
 // GET /api/pokroviteljstvo/prijava[?upisId=] — sopstvene prijave (po upisu, ako je dat)
 export async function GET(req: NextRequest) {
@@ -37,6 +39,9 @@ export async function GET(req: NextRequest) {
       potpisanoAt: true,
       potvrdjenoAt: true,
       createdAt: true,
+      // Set 5.0.9 (donacije čl. 20 st. 2): poseban poziv na broj i potvrda o uplati.
+      pozivBroj: true,
+      potvrdaPoslataAt: true,
     },
   });
 
@@ -47,7 +52,12 @@ export async function GET(req: NextRequest) {
       potpisanoAt: p.potpisanoAt?.toISOString() ?? null,
       potvrdjenoAt: p.potvrdjenoAt?.toISOString() ?? null,
       createdAt: p.createdAt.toISOString(),
+      pozivBroj: undefined,
+      pozivNaBroj: p.vrstaDonacije === "NOVAC" ? prikazPozivNaBroj(pozivNaBrojZaPrijavu(p.pozivBroj)) : null,
+      potvrdaPoslata: p.potvrdaPoslataAt !== null,
+      potvrdaPoslataAt: undefined,
     })),
+    racun: (dohvatiIpsConfig()?.racun ?? RACUN_FONDACIJE).replace(/^(\d{3})(\d{13})(\d{2})$/, "$1-$2-$3"),
   });
 }
 

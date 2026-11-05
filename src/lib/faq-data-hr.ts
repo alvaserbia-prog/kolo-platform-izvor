@@ -393,7 +393,7 @@ Veći saldo ne daje razmjerno veću moć. U Gornjem Kolu glasa se po kvadratnom 
       {
         id: 23,
         pitanje: `Kako funkcionira donacija Fondaciji i koliko POENA dobivam?`,
-        odgovor: `Donirati može svatko tko ima korisnički račun, i prije ulaska u Kolo: uplatom u dinarima na račun Fondacije, karticom ili IPS QR kodom.
+        odgovor: `Donirati može svaka punoljetna osoba koja ima korisnički račun, i prije ulaska u Kolo, najmanje 1.000 dinara po donaciji. Uplaćuje se samo s tvog bankovnog računa: skeniranjem IPS QR koda u mobilnom bankarstvu ili nalogom za prijenos, uz poziv na broj koji stranica dodijeli toj donaciji. Gotovina i platna kartica ne primaju se. Nakon uplate pošalješ potvrdu o uplati (snimku zaslona, PDF iz aplikacije banke ili ovjereni nalog).
 
 Kad Fondacija utvrdi primitak uplate, Protokol ti automatski upisuje POEN: iznos donacije pomnožen koeficijentom evidencije donacija. Koeficijent je 1,00 i raste za 0,10 na svakom pragu ukupnog iznosa tvojih donacija (5.000, 10.000, 20.000, 50.000 dinara i dalje, do 5.000.000 dinara). Najviša je razina 11, s koeficijentom 2,00. Kad donacijom prijeđeš prag, novi koeficijent vrijedi za cijelu tu donaciju, a dosegnuta razina ostaje trajno. To nije obračunski koeficijent ZRNA.
 
@@ -401,12 +401,14 @@ Koeficijent raste jer veći pojedinačan doprinos ima veće značenje za zajedni
 
 Ime i prezime javnog donatora stoji na popisu donacija, uz iznos i datum, bez pseudonima. Anonimna donacija stoji samo iznosom i datumom i po njoj se POEN ne upisuje. Kupnja i prodaja POENA među korisnicima zabranjena je Uvjetima korištenja.
 
+Kad ti je Fondacija već utvrdila primitak javnih donacija od najmanje 1.000 dinara, doprinos po novoj javnoj donaciji evidentira se odmah, čim stranica prihvati potvrdu o uplati, s oznakom „Na provjeri”; tako najviše jednom dnevno. Fondacija u roku od 24 sata provjerava je li uplata stigla. Ako nije, evidentiranje se poništava, i kada tvoj zapis time ode u minus. Lažna ili tuđa potvrda vodi u isključenje, a ono što si nakon toga prepisao drugima privremeno se ograničava kod njih dok Fondacija ne odluči.
+
 Donacija je nepovratna. Pokriva troškove rada Fondacije, a višak ide u kolektivne nabave.`,
       },
       {
         id: 74,
         pitanje: `U kojoj valuti doniram, mogu li poslati eure iz inozemstva?`,
-        odgovor: `Možeš, donacija se daje uplatom na račun Fondacije, u dinarima ili u drugoj valuti, dakle i eurima iz inozemstva. Plaćanje karticom i IPS QR kodom kroz platformu radi samo u dinarima.
+        odgovor: `Možeš, donacija se daje prijenosom s tvog bankovnog računa na račun Fondacije, u dinarima ili u drugoj valuti, dakle i eurima iz inozemstva. IPS QR kod radi samo u dinarima, iz domaćeg mobilnog bankarstva. Platna kartica ne prima se.
 
 POEN se upisuje po istim pravilima kao za svaku donaciju: iznos × koeficijent evidencije donacija, koji raste s kumulativnim iznosom do najviše 2,00 (podrobno u pitanju o donacijama). Iznos u stranoj valuti računa se u dinarskoj protuvrijednosti.
 
@@ -417,7 +419,7 @@ Fondacija na zahtjev izdaje potvrdu o donaciji u skladu sa zakonom.`,
         pitanje: `Što su Pokrovitelji i koja je razlika u odnosu na donaciju?`,
         odgovor: `Pokrovitelji su tvrtke, obrtnici, udruge i nositelji registriranih poljoprivrednih gospodarstava koji podupiru rad Fondacije novcem ili dobrima i uslugama.
 
-Pokrovitelj nema vlastiti korisnički račun: POEN se upisuje na račun onoga tko je pokrovitelja upisao i podnio prijavu (zakonskog zastupnika, vlasnika ili ovlaštene osobe), odnosno samog obrtnika ili nositelja gospodarstva. Za novčano pokroviteljstvo nije potrebno biti u Kolu, a prijavu pokroviteljstva dobrima i uslugama podnosi samo sudionik. Upisuje se samo njemu, i kad tvrtka ima više vlasnika. Koeficijent je 1,00 i za novac i za dobra i usluge, bez obzira na iznos: tablica razina vrijedi samo za osobne donacije, jer pokrovitelj nema vlastiti zapis, pa se doprinos upisuje onome tko je podnio prijavu. Zbroj donacija tvrtke, odnosno gospodarstva, vodi se odvojeno od tvojih osobnih donacija i ne podiže tvoju razinu. Najmanja prijava je 10.000 RSD.
+Pokrovitelj nema vlastiti korisnički račun: POEN se upisuje na račun onoga tko je pokrovitelja upisao i podnio prijavu (zakonskog zastupnika, vlasnika ili ovlaštene osobe), odnosno samog obrtnika ili nositelja gospodarstva. Za novčano pokroviteljstvo nije potrebno biti u Kolu, a prijavu pokroviteljstva dobrima i uslugama podnosi samo sudionik. Upisuje se samo njemu, i kad tvrtka ima više vlasnika. Za novac koeficijent određuje razina pokrovitelja, po istoj tablici kao za osobne donacije (iz pitanja o donacijama), ali nad zbrojem svih novčanih donacija tog pokrovitelja, bez obzira na pravni oblik. Zbroj donacija tvrtke, odnosno gospodarstva, vodi se odvojeno od tvojih osobnih donacija: ne podiže tvoju osobnu razinu, a tvoje osobne donacije ne podižu razinu pokrovitelja. Za dobra i usluge koeficijent je 1,00, jer vrijednost dobara i usluga određuje sam davatelj iz svog cjenika; iznimka je hrana, kod koje koeficijent ovisi o načinu proizvodnje. Najmanja prijava je 10.000 RSD.
 
 Tvrtka ne može imati korisnički račun i ne dobiva POEN: račun se otvara na čovjeka, a stvarnost čovjeka potvrđuje drugi čovjek. Vlasnik tvrtke može imati svoj račun kao fizička osoba, neovisno o pokroviteljstvu.
 
@@ -962,7 +964,7 @@ Fondacija ne pruža porezni ni pravni savjet. Ako primaš mirovinu ili neko soci
         pitanje: `Je li Fondacija obveznik propisa o sprječavanju pranja novca (AML/KYC) i identificira li donatore?`,
         odgovor: `Fondacija nije financijska institucija i ne posluje novcem korisnika. POEN nije novac, a razmjena među korisnicima nije platna transakcija. Po svojoj djelatnosti Fondacija nije među obveznicima koje propisi o sprječavanju pranja novca i financiranja terorizma nabrajaju.
 
-Donacije se ipak ne primaju anonimno. Primaju se kroz bankovni sustav (uplatom na račun Fondacije ili karticom) s računa čiji je vlasnik identificiran, pa identifikaciju uplatitelja i provjeru podrijetla sredstava provodi banka po svojim propisima. Pokrovitelji su pravne osobe i obrtnici koji se identificiraju ugovorom.
+Donacije se ipak ne primaju anonimno. Primaju se kroz bankovni sustav (prijenosom na račun Fondacije) s računa čiji je vlasnik identificiran, pa identifikaciju uplatitelja i provjeru podrijetla sredstava provodi banka po svojim propisima. Pokrovitelji su pravne osobe i obrtnici koji se identificiraju ugovorom.
 
 Podatke o donacijama Fondacija čuva u skladu s propisima o financijskom izvještavanju i čini ih dostupnima nadležnim tijelima (uključujući Poresku upravu i Upravu za sprečavanje pranja novca) kad to zakon nalaže.`,
       },

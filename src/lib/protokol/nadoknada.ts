@@ -17,10 +17,10 @@
  * Zero-sum ostaje očuvan: svaki poništeni POEN ima tačan protivzapis Protokola, a
  * prenos nepokrivenog dela na verifikatora je običan prenos između dva zapisa.
  *
- * ─── Svi osnovi negativnog zapisa (Pravilnik čl. 17 st. 2, set 4.8.4) ────────
+ * ─── Svi osnovi negativnog zapisa (Pravilnik čl. 17 st. 2, set 5.0.9) ────────
  * Funkcije `jeNadoknada` / `iznosNadoknade` / `raspolozivo` ispod NE razlikuju
  * osnov: minus JESTE nadoknada, bez obzira odakle je došao. Osnovi su (lista je
- * iscrpna i zatvorena; deveti se ne uvodi bez izmene tog člana):
+ * iscrpna i zatvorena; jedanaesti se ne uvodi bez izmene tog člana):
  *   1. nadoknada po čl. 36 dokaza stvarnosti (poništena lažna verifikacija) — ovaj fajl;
  *   2. poništen prepis po prijavi razmene (`PONISTENJE_PREPISA`);
  *   3. otpis doprinosa iz dečjeg prostora (`OTPIS_PRIJATELJSTVO`, punoletstvo);
@@ -30,7 +30,10 @@
  *   7. otpis po neizvršenju pokroviteljstva dobrima i uslugama
  *      (`OTPIS_POKROVITELJ_DOBRA`, donacije čl. 35) — `protokol/pokroviteljstvo-dobrima.ts`;
  *   8. otpis neto prepisa sa ugašenog naloga po utvrđenju višestrukog naloga
- *      (`OTPIS_VISESTRUKI_NALOG`, dokaz stvarnosti čl. 14) — `protokol/visestruki-nalog.ts`.
+ *      (`OTPIS_VISESTRUKI_NALOG`, dokaz stvarnosti čl. 14) — `protokol/visestruki-nalog.ts`;
+ *   9. otpis po preuzimanju nepreuzetih delova u programu raspodele hrane (nabavke čl. 46);
+ *  10. poništenje donacije unapred i otpis kod primaoca koji je znao (`PONISTENJE_DONACIJE`,
+ *      `OTPIS_PRIMLJENOG_DONACIJA`, donacije čl. 6; set 5.0.9) — `protokol/donacija-unapred.ts`.
  */
 
 export type PodelaTereta = {

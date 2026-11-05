@@ -24,9 +24,9 @@ const r2Host = (() => {
 // (object-src, base-uri, frame-ancestors) bez rušenja postojećeg toka. Domeni za
 // skripte/connect prate analitiku (GA, Vercel) iz `Analitika.tsx`.
 //
-// `form-action` NIJE naveden namerno — kartično plaćanje (NestPay) radi POST
-// auto-submit ka eksternom gateway-u banke; `form-action` nema fallback na
-// `default-src`, pa izostavljanje znači da se taj POST ne blokira.
+// `form-action` nije naveden. Do seta 5.0.9 je to bilo zbog kartičnog plaćanja
+// (NestPay POST ka gateway-u banke), koje je uklonjeno; uvođenje direktive je
+// zasebna odluka, jer bi mogla da preseče postojeće forme (OAuth).
 const CSP = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -64,7 +64,9 @@ const SECURITY_HEADERS = [
 ];
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["bcryptjs"],
+  // pdfjs-dist i tesseract.js čitaju potvrdu o uplati na serveru (donacije čl. 6 st. 4, set 5.0.9);
+  // ne pakuju se, jer nose wasm i worker fajlove koje bundler ne zna da prenese.
+  serverExternalPackages: ["bcryptjs", "pdfjs-dist", "tesseract.js"],
   // OG slika oglasa (`/pijaca/[id]/opengraph-image`) čita Inter .woff sa diska u
   // Node runtime-u (Prisma ne radi na edge-u) — obezbedi da fontovi uđu u
   // serverless bundle.
@@ -72,6 +74,18 @@ const nextConfig: NextConfig = {
     "/pijaca/**": ["./src/app/_fonts/*.woff"],
     // Tekstovi objavljenih odluka (`src/lib/odluke-fondacije.ts`) čitaju se sa diska.
     "/odluke/**": ["./odluke-fondacije/*.md"],
+    // Čitanje potvrde o uplati (set 5.0.9): wasm i worker fajlove tesseract.js i pdfjs-dist
+    // učitava dinamičkom putanjom, pa ih praćenje fajlova samo ne nalazi.
+    "/api/donacije/potvrda": [
+      "./node_modules/tesseract.js/**",
+      "./node_modules/tesseract.js-core/**",
+      "./node_modules/pdfjs-dist/legacy/build/**",
+    ],
+    "/api/pokroviteljstvo/prijava/*/potvrda": [
+      "./node_modules/tesseract.js/**",
+      "./node_modules/tesseract.js-core/**",
+      "./node_modules/pdfjs-dist/legacy/build/**",
+    ],
   },
   images: {
     // AVIF/WebP za manju isporuku slika (Next image optimizacija).

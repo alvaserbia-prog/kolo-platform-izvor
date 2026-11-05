@@ -393,7 +393,7 @@ What you can check. The total amount recorded, the number of steps carried out a
       {
         id: 23,
         pitanje: `How does a donation to the Foundation work and how much POEN do I get?`,
-        odgovor: `Anyone with an account can donate, even before joining the Kolo: by payment in dinars to the Foundation's account, by card or by IPS QR code.
+        odgovor: `Any adult with an account can donate, even before joining the Kolo, at least 1,000 dinars per donation. Payment is made only from your own account: by scanning the IPS QR code in mobile banking or by a transfer order, with the reference number the site assigns to that donation. Cash and payment cards are not accepted. After paying, you send a payment confirmation (a screenshot, a PDF from your banking app, or a stamped order).
 
 When the Foundation establishes receipt of the payment, the Protocol automatically enters POEN for you: the donation amount multiplied by the donation recording coefficient. The coefficient is 1.00 and rises by 0.10 at each threshold of the total amount of your donations (5,000, 10,000, 20,000, 50,000 dinars and so on, up to 5,000,000 dinars). The highest is level 11, with a coefficient of 2.00. When a donation takes you past a threshold, the new coefficient applies to that whole donation, and the level reached is kept permanently. This is not the ZRNO accounting coefficient.
 
@@ -401,12 +401,14 @@ The coefficient rises because a larger individual contribution matters more to t
 
 The first and last name of a public donor is shown in the list of donations, with the amount and date, without the pseudonym. An anonymous donation is shown only by amount and date, and no POEN is entered for it. Buying and selling POEN between users is prohibited by the Terms of Use.
 
+Once the Foundation has already established receipt of your public donations of at least 1,000 dinars, the contribution for a new public donation is recorded immediately, as soon as the site accepts the payment confirmation, marked “Under review”; this happens at most once a day. Within 24 hours the Foundation checks whether the payment has arrived. If it has not, the recording is cancelled, even when this takes your record below zero. A false or someone else's confirmation leads to exclusion, and what you re-registered to others after that is temporarily restricted with them until the Foundation decides.
+
 A donation is non-refundable. It covers the Foundation's running costs, and any surplus goes to collective procurements.`,
       },
       {
         id: 74,
         pitanje: `In what currency do I donate — can I send euros from abroad?`,
-        odgovor: `You can — a donation is made by payment into the Foundation's account, in dinars or in another currency, so euros from abroad as well. Card payment and the IPS QR code through the platform work in dinars only.
+        odgovor: `You can — a donation is made by a transfer from your account to the Foundation's account, in dinars or in another currency, so euros from abroad as well. The IPS QR code works only in dinars, from domestic mobile banking. Payment cards are not accepted.
 
 POEN is recorded under the same rules as for any donation: the amount × the donation recording coefficient, which rises with the cumulative amount up to at most 2.00 (in detail in the question about donations). An amount in a foreign currency is counted at its dinar equivalent.
 
@@ -417,7 +419,7 @@ On request, the Foundation issues a confirmation of the donation in accordance w
         pitanje: `What are Sponsors and how do they differ from a donation?`,
         odgovor: `Sponsors are companies, sole traders, associations and holders of registered agricultural holdings who support the Foundation's work with money or with goods and services.
 
-A sponsor has no account of its own: POEN is entered to the account of the person who registered the sponsor and submitted the application (the legal representative, owner or authorised person), or of the sole trader or farm holder themselves. Cash sponsorship does not require being in the Kolo, while an application for sponsorship with goods and services can be submitted only by a participant. POEN is entered only for that person, even when the company has several owners. The coefficient is 1.00 for both money and goods and services, regardless of the amount: the table of tiers applies only to personal donations, because the sponsor has no record of its own, so the contribution is entered for the person who submitted the application. The total of the company's or farm's donations is kept separately from your personal donations and does not raise your tier. The minimum application is 10,000 RSD.
+A sponsor has no account of its own: POEN is entered to the account of the person who registered the sponsor and submitted the application (the legal representative, owner or authorised person), or of the sole trader or farm holder themselves. Cash sponsorship does not require being in the Kolo, while an application for sponsorship with goods and services can be submitted only by a participant. POEN is entered only for that person, even when the company has several owners. For money, the coefficient is set by the sponsor's tier, under the same table as for personal donations (see the question about donations), but applied to the total of all monetary donations of that sponsor, regardless of its legal form. The total of the company's or farm's donations is kept separately from your personal donations: it does not raise your personal tier, and your personal donations do not raise the sponsor's tier. For goods and services the coefficient is 1.00, because the value of the goods and services is set by the giver from its own price list; the exception is food, where the coefficient depends on the method of production. The minimum application is 10,000 RSD.
 
 A company cannot have an account and does not get POEN: an account is opened for a person, and a person's reality is confirmed by another person. The owner of a company can have their own account as a private individual, independently of the sponsorship.
 
@@ -962,7 +964,7 @@ The Foundation provides neither tax nor legal advice. If you receive a pension o
         pitanje: `Is the Foundation subject to anti-money-laundering rules (AML/KYC), and does it identify donors?`,
         odgovor: `The Foundation is not a financial institution and does not handle users' money — POEN is not money, and an exchange between users is not a payment transaction. By its activity the Foundation is not among the obliged entities listed in the regulations on the prevention of money laundering and the financing of terrorism.
 
-Donations are nevertheless not accepted anonymously. They are received through the banking system — by payment into the Foundation's account or by card — from an account whose holder is identified, so the identification of the payer and the check on the origin of funds are carried out by the bank under its own rules. Sponsors are legal entities and sole traders identified by contract.
+Donations are nevertheless not accepted anonymously. They are received through the banking system — by transfer into the Foundation's account — from an account whose holder is identified, so the identification of the payer and the check on the origin of funds are carried out by the bank under its own rules. Sponsors are legal entities and sole traders identified by contract.
 
 The Foundation keeps the data on donations in accordance with financial reporting regulations and makes it available to the competent authorities — including the Tax Administration and the Administration for the Prevention of Money Laundering — where the law so requires.`,
       },

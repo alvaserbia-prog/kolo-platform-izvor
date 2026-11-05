@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { nivoZaKumulativ, tabelaZaPrikaz } from "@/lib/protokol/donacija";
 import { dohvatiIpsConfig, pozivNaBrojZaClana, prikazPozivNaBroj } from "@/lib/placanje/ips-qr";
+import { PRAG_DONACIJE_UNAPRED_RSD } from "@/lib/donacija-unapred-pravila";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -35,6 +36,10 @@ export async function GET() {
           donatorIme: true,
           imePovucenoAt: true,
           createdAt: true,
+          // Set 5.0.9: poseban poziv na broj, potvrda o uplati, donacija unapred.
+          referenceNumber: true,
+          potvrdaPoslataAt: true,
+          unapred: true,
           // Ne salje se ceo tekst ugovora u listu — samo da li postoji, pa
           // ekran zna da li da ponudi link (cl. 5b).
           ugovorTekst: true,
@@ -120,11 +125,18 @@ export async function GET() {
       poenEmitted: d.poenEmitted,
       status: d.status,
       javno: d.javno,
-      imeObjavljeno: d.javno && d.donatorIme !== null,
+      imeObjavljeno: d.status === "CONFIRMED" && d.javno && d.donatorIme !== null,
       imePovuceno: d.imePovucenoAt !== null,
       imaUgovor: d.ugovorTekst !== null,
       createdAt: d.createdAt.toISOString(),
+      // Poziv na broj ove donacije (donacije čl. 4 st. 3) — samo zapisi sa posebnim brojem.
+      pozivNaBroj: d.referenceNumber && d.referenceNumber.replace(/\D/g, "").length === 12 ? prikazPozivNaBroj(d.referenceNumber) : null,
+      potvrdaPoslata: d.potvrdaPoslataAt !== null,
+      unapred: d.unapred,
     })),
+    // Da li je donatoru prijem već utvrđen do praga (donacije čl. 6 st. 5) — samo za
+    // objašnjenje na ekranu šta se dešava posle slanja potvrde.
+    unapredOtvoren: totalRSD >= PRAG_DONACIJE_UNAPRED_RSD,
     // Nepotvrđenom članu lista ne stiže prazna nego ZAKLJUČANA — prazan spisak bi
     // rekao da donacija nema, što nije isto.
     listaZakljucana: dete,

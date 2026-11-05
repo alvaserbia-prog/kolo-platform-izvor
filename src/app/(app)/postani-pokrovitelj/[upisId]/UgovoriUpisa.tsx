@@ -12,6 +12,7 @@ import Dugme, { klaseDugmeta } from "@/components/ui/Dugme";
 import Obavestenje from "@/components/ui/Obavestenje";
 import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
+import PosaljiPotvrdu from "@/app/(app)/donacije/PosaljiPotvrdu";
 
 /**
  * Ugovori pokrovitelja (tab „Ugovori"): novčane prijave (donacije čl. 19–20) i ugovori
@@ -29,6 +30,9 @@ type NovcanaPrijava = {
   status: "CEKA_POTPIS" | "POTPISANA" | "POTVRDJENA" | "ODBIJENA";
   odbijenoRazlog: string | null;
   createdAt: string;
+  /** Set 5.0.9 (donacije čl. 20 st. 2): poseban poziv na broj prijave i da li je potvrda poslata. */
+  pozivNaBroj: string | null;
+  potvrdaPoslata: boolean;
 };
 
 type UgovorDobra = {
@@ -57,6 +61,7 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
   const tp = useTranslations("postaniPokrovitelj");
   const locale = useLocale();
   const [novcane, setNovcane] = useState<NovcanaPrijava[]>([]);
+  const [racun, setRacun] = useState<string>("");
   const [dobra, setDobra] = useState<UgovorDobra[]>([]);
   const [ucitava, setUcitava] = useState(true);
   const [otvoren, setOtvoren] = useState<string | null>(null);
@@ -72,7 +77,11 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
         fetch(`/api/pokroviteljstvo/prijava?upisId=${encodeURIComponent(upisId)}`, { cache: "no-store" }),
         fetch(`/api/pokroviteljstvo/dobra?upisId=${encodeURIComponent(upisId)}`, { cache: "no-store" }),
       ]);
-      if (rn.ok) setNovcane((await rn.json()).prijave ?? []);
+      if (rn.ok) {
+        const j = await rn.json();
+        setNovcane(j.prijave ?? []);
+        setRacun(j.racun ?? "");
+      }
       if (rd.ok) setDobra((await rd.json()).ugovori ?? []);
     } finally {
       setUcitava(false);
@@ -211,6 +220,23 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
                 <pre className="text-xs text-kolo-text whitespace-pre-wrap font-sans bg-kolo-bg rounded-kontrola p-4">{n.ugovorTekst}</pre>
               )}
               {n.status === "CEKA_POTPIS" && potpisOtvoren === n.id && potpisBlok(n.id, n.ugovorTekst, "prijava")}
+              {/* Set 5.0.9 (donacije čl. 20 st. 2–3): uplata sa računa pokrovitelja uz poseban poziv
+                  na broj, pa potvrda o uplati. Doprinos se evidentira u narednom obračunskom
+                  periodu posle utvrđenja prijema — nikad unapred. */}
+              {n.status === "POTPISANA" && n.pozivNaBroj && (
+                <div className="space-y-2 border-t border-kolo-border pt-3 text-sm">
+                  <p className="font-semibold text-kolo-text">{tp("uplata_naslov")}</p>
+                  <p className="text-xs text-kolo-muted">{tp("uplata_opis")}</p>
+                  <p className="font-mono text-xs text-kolo-text">
+                    {tp("uplata_podaci", { racun, iznos: rsd(n.vrednostRsd), poziv: n.pozivNaBroj })}
+                  </p>
+                  {n.potvrdaPoslata ? (
+                    <p className="text-xs font-semibold text-kolo-green-700">{tp("uplata_potvrda_poslata")}</p>
+                  ) : (
+                    <PosaljiPotvrdu donationId={n.id} url={`/api/pokroviteljstvo/prijava/${n.id}/potvrda`} onGotovo={ucitaj} />
+                  )}
+                </div>
+              )}
             </Kartica>
           ))
         )}

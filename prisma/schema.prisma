@@ -163,6 +163,14 @@ enum TransactionType {
   /// t. 8; dokaz stvarnosti čl. 14; registar 2026-10, N4-M3). Korisnik → Protokol;
   /// zapis SME u minus. Nikad `TRANSFER`.
   OTPIS_VISESTRUKI_NALOG
+  /// Poništenje donacije unapred kad Fondacija ne utvrdi prijem (Pravilnik čl. 17 st. 2
+  /// t. 10, donacije čl. 6 st. 6; set 5.0.9). Protivzapis emisije: zapis donatora sme u
+  /// minus, Protokolov minus se smanjuje, opticaj opada. Nikad `TRANSFER`.
+  PONISTENJE_DONACIJE
+  /// Otpis iznosa primljenog od donatora čija je donacija unapred poništena, primaocu za
+  /// koga Fondacija utvrdi da je znao (Pravilnik čl. 17 st. 2 t. 10, donacije čl. 6 st. 8).
+  /// Sme u minus. Pošten primalac ga nikad ne dobija.
+  OTPIS_PRIMLJENOG_DONACIJA
 }
 
 enum TipKorisnika {
@@ -300,6 +308,13 @@ enum DonationStatus {
   // odluka uz R-01, ne privremeno rešenje.
   NAPLACENO
   CONFIRMED
+  // Donacija unapred (donacije čl. 6 st. 5–6, set 5.0.9): doprinos je evidentiran po
+  // prihvaćenoj potvrdi o uplati, a Fondacija prijem još nije utvrdila. Prelazi u
+  // CONFIRMED utvrđenjem prijema ili u PONISTENO.
+  NA_PROVERI
+  // Donacija unapred čiji prijem Fondacija nije utvrdila: doprinos je poništen
+  // protivzapisom `PONISTENJE_DONACIJE` (Pravilnik čl. 17 st. 2 t. 10). Istorija ostaje.
+  PONISTENO
 }
 
 enum VrstaDonacije {
@@ -425,64 +440,64 @@ enum OglasPrijavaStatus {
 // ─── Modeli ───────────────────────────────────────────────────────────────────
 
 model User {
-  id                     String       @id @default(uuid())
-  email                  String?      @unique
-  passwordHash           String?
-  oauthProvider          String?
-  oauthId                String?
-  oauthPending           Boolean      @default(false)
-  pseudonim              String       @unique
+  id                      String       @id @default(uuid())
+  email                   String?      @unique
+  passwordHash            String?
+  oauthProvider           String?
+  oauthId                 String?
+  oauthPending            Boolean      @default(false)
+  pseudonim               String       @unique
   // Pseudonim u malim slovima — jedini ključ po kome se pseudonim traži i po kome
   // se čuva jedinstvenost. Bez ovoga bi "Marko" i "marko" bila dva različita naloga
   // (Postgres `@unique` je osetljiv na veličinu slova), što je i rupa za imitaciju i
   // dvosmislenost otkad adresa profila glasi `/profil/<pseudonim>`. Prikazuje se
   // uvek `pseudonim` (sa velikim slovima kako ga je korisnik upisao).
   // Održava se ISKLJUČIVO preko `src/lib/pseudonim.ts` — ne upisivati ručno.
-  pseudonimLower         String       @unique
+  pseudonimLower          String       @unique
   // Trajni donatorski broj člana — osnova poziva na broj (model 97) za uplate
   // (IPS QR + klasična uplatnica). Redni broj po datumu registracije (backfill u
   // migraciji), novi nalozi dobijaju sledeći iz sekvence. Ostaje i posle
   // anonimizacije naloga (neidentifikujući, kao i interni id).
-  donatorskiBroj         Int          @unique @default(autoincrement())
-  status                 UserStatus   @default(ACTIVE)
-  suspendedAt            DateTime?
-  suspendedReason        String?
-  verified               Boolean      @default(false)
-  verifiedAt             DateTime?
-  tipKorisnika           TipKorisnika @default(NEVERIFIKOVAN)
-  admin                  AdminNivo    @default(NONE)
+  donatorskiBroj          Int          @unique @default(autoincrement())
+  status                  UserStatus   @default(ACTIVE)
+  suspendedAt             DateTime?
+  suspendedReason         String?
+  verified                Boolean      @default(false)
+  verifiedAt              DateTime?
+  tipKorisnika            TipKorisnika @default(NEVERIFIKOVAN)
+  admin                   AdminNivo    @default(NONE)
   /// Zadruga za koju radi nalog sa nivoom `ZADRUGA` (zadruge čl. 15). Kod drugih nivoa prazno.
-  adminZadrugaId         String?
-  adminZadruga           Krug?        @relation("ZadruzniAdmini", fields: [adminZadrugaId], references: [id])
+  adminZadrugaId          String?
+  adminZadruga            Krug?        @relation("ZadruzniAdmini", fields: [adminZadrugaId], references: [id])
   // Oznaka početnog nosioca ZRNA (osnivač). Zaseban marker pored tipKorisnika —
   // status NOSILAC_ZRNA može steći i običan korisnik upisom ZRNA, pa nije pouzdan
   // pokazatelj osnivača. Osnivač NE sme da verifikuje drugog osnivača (anti-malverzacija).
-  jeOsnivac              Boolean      @default(false)
-  indeksStvarnosti       Int          @default(0)
+  jeOsnivac               Boolean      @default(false)
+  indeksStvarnosti        Int          @default(0)
   /// Član je POTVRĐEN (član Kola, Pravilnik čl. 28; set 4.8.2). Null = korisnik ili
   /// član bez potvrde (Pravilnik čl. 28 st. 3). Keš izveden iz grafa (veza vrste POTVRDA ili
   /// uvođenje sa živom `PotvrdaClana`; osnivač uvek). 🔴 Upisuje ga ISKLJUČIVO
   /// `preracunajStatusNaloga()` u `src/lib/protokol/status.ts` (izuzeci: migracija,
   /// seed, skripta prelaza, `reset-korisnika.ts`). Brana `status-ucesnika-izvor.test.ts`.
-  potvrdjenAt            DateTime?
-  slotoviPotroseni       Int          @default(0)
+  potvrdjenAt             DateTime?
+  slotoviPotroseni        Int          @default(0)
   // Upravni odbor je utvrdio da iza naloga ne stoji stvarna osoba, ili da nalog nije
   // jedinstven (dokaz stvarnosti 4.2.0, čl. 18). Takav nalog nikoga ne može poznavati,
   // pa padaju SVE verifikacije koje ga dodiruju — i primljene i obavljene (čl. 20).
   // Kaskada se time zaustavlja na prvom nalogu koji NIJE ovako označen: stvaran čovek
   // gubi samo vezu ka lažnom nalogu, a sopstvene verifikacije zadržava.
-  utvrdjenNepostojeci    DateTime?
-  pocetnaEmisijaIzvrsena Boolean      @default(false)
-  pseudonimChangedAt     DateTime?
+  utvrdjenNepostojeci     DateTime?
+  pocetnaEmisijaIzvrsena  Boolean      @default(false)
+  pseudonimChangedAt      DateTime?
   /// Trenutak kad je pseudonim zamenjen oznakom koja ni posredno ne upućuje na lice
   /// (Pravilnik čl. 55 st. 3, Politika čl. 11 st. 8 i čl. 42 st. 6: 10 godina od prestanka statusa;
   /// `protokol/anonimizacija.ts`, mesečno iz `cron/gdpr-cistenje`). Numerička istorija ostaje.
   pseudonimAnonimizovanAt DateTime?
   // "Viđeno" vremena za sidebar badge-eve: badge broji samo stavke novije od ovog
   // trenutka. Postavlja se kad korisnik otvori odgovarajući tab → badge ide na 0.
-  vidjenoNovcanikAt      DateTime?
-  vidjenoPijacaAt        DateTime?
-  vidjenoPocetnaAt       DateTime?
+  vidjenoNovcanikAt       DateTime?
+  vidjenoPijacaAt         DateTime?
+  vidjenoPocetnaAt        DateTime?
   // Kad je čovek prvi put video vodič `/dobrodosli`. Dok je NULL, prva prijava
   // vodi na vodič — isto što registracija radi odmah po otvaranju naloga.
   // Do sada je „prvi prolaz" živeo samo u `sessionStorage` pregledača, pa vodič
@@ -490,7 +505,7 @@ model User {
   // dan registracije (server ne može da dopre do memorije pregledača).
   // Zatečeni nalozi su u migraciji popunjeni tekućim vremenom — vodič im se ne
   // otvara naknadno.
-  vodicVidjenAt          DateTime?
+  vodicVidjenAt           DateTime?
 
   // 🔴 Ukinuto setom 4.8.2 (potvrda uplatom i registrom ne postoji) — kolona ostaje
   // prazna i NE ČITA SE; uklanja se uz bump na 5.0.
@@ -2123,8 +2138,89 @@ model DonationRecord {
   // u sporu po osporenoj transakciji. Null = nije kartični tok ili istorijski zapis.
   nepovratnostPotvrdjenaAt DateTime?
 
+  // ── Set 5.0.9: uplata sa računa i potvrda o uplati (donacije čl. 4 i 6) ──
+  // Redni broj iz koga se gradi POSEBAN poziv na broj za ovu donaciju (čl. 4 st. 3):
+  // model 97 nad "1" + broj dopunjen na 9 cifara (`pozivNaBrojZaDonaciju`). Stari zapisi
+  // nose trajni broj člana u `referenceNumber` i on se ne dira.
+  pozivBroj             Int                     @unique @default(autoincrement())
+  // Donacija evidentirana unapred (čl. 6 st. 5). Ostaje `true` i posle utvrđenja ili poništenja.
+  unapred               Boolean                 @default(false)
+  // Trenutak evidentiranja unapred — od njega se broje prepisi donatora za ograničenje (čl. 6 st. 7).
+  evidentiranoUnapredAt DateTime?
+  // Potvrda o uplati (čl. 6 st. 4): trenutak prihvatanja i podaci pročitani iz nje.
+  // Sama slika živi u `PotvrdaUplate` i briše se odlukom; ovo ostaje uz zapis.
+  potvrdaPoslataAt      DateTime?
+  // SHA-256 sadržaja prihvaćene potvrde — jedna potvrda, jedna uplata (čl. 6 st. 4).
+  potvrdaHash           String?                 @unique
+  potvrdaIznosRSD       Decimal?                @db.Decimal(12, 2)
+  potvrdaDatum          DateTime?
+  potvrdaRacun          String?
+  potvrdaPoziv          String?
+  potvrdaPlatilac       String?
+  // Poništenje donacije unapred (čl. 6 st. 6).
+  ponistenoAt           DateTime?
+  ponistenoById         String?
+  ponistenoRazlog       String?
+  // Fondacija je pri poništenju utvrdila osnov sumnje da je potvrda lažna ili tuđa (čl. 6 st. 7).
+  sumnjaLaznaPotvrda    Boolean                 @default(false)
+  potvrda               PotvrdaUplate?
+  ogranicenja           OgranicenjePrimljenog[]
+
   @@index([status, createdAt])
   @@index([uplatilacKljuc])
+}
+
+/// Potvrda o uplati koju je dostavio donator, odnosno podnosilac prijave pokroviteljstva
+/// (donacije čl. 6 st. 4, čl. 20 st. 2; set 5.0.9). Čuva se U BAZI (EU), ne na R2 — slika
+/// nosi ime i račun platioca, a R2 je prenos van EU. Vidi je samo administratorski tim.
+/// 🔴 Red se BRIŠE utvrđenjem prijema, odnosno poništenjem ili odbijanjem (Registar radnji
+/// obrade br. 5); pročitani podaci ostaju na zapisu donacije, odnosno prijave.
+model PotvrdaUplate {
+  id         String              @id @default(uuid())
+  donationId String?             @unique
+  donation   DonationRecord?     @relation(fields: [donationId], references: [id], onDelete: Cascade)
+  prijavaId  String?             @unique
+  prijava    PokroviteljPrijava? @relation(fields: [prijavaId], references: [id], onDelete: Cascade)
+  sadrzaj    Bytes
+  mime       String
+  velicina   Int
+  createdAt  DateTime            @default(now())
+}
+
+enum StatusOgranicenja {
+  AKTIVNO
+  PRESTALO
+  OTPISANO
+}
+
+/// Ograničenje iznosa koji je primalac dobio prepisom od donatora čija je donacija unapred
+/// poništena uz osnov sumnje da je potvrda lažna ili tuđa (donacije čl. 6 st. 7–8, Pravilnik
+/// čl. 36 st. 6; set 5.0.9). Iznos ostaje u zapisu, ali se ne može prepisati, iskoristiti u
+/// projektu ni upisati u ZRNO (`ograniceno()` u `protokol/ogranicenje-primljenog.ts`).
+/// Traje do odluke Fondacije, najduže 7 dana (`rokDo`); posle roka ne važi ni bez upisa PRESTALO.
+/// 🔴 Jednokratno, samo za taj slučaj i samo za prepise od donatora posle evidentiranja
+/// unapred — nije praćenje prepisa.
+model OgranicenjePrimljenog {
+  id         String            @id @default(uuid())
+  donationId String
+  donation   DonationRecord    @relation(fields: [donationId], references: [id])
+  userId     String
+  walletId   String
+  /// Ukupno primljeno od donatora od evidentiranja unapred do poništenja.
+  primljeno  Int
+  /// Ograničeno: primljeno, najviše do stanja zapisa u trenutku ograničenja (čl. 6 st. 7).
+  iznos      Int
+  rokDo      DateTime
+  status     StatusOgranicenja @default(AKTIVNO)
+  odlukaAt   DateTime?
+  odlukaById String?
+  /// Otpisano po čl. 6 st. 8 (ceo primljeni iznos), kad je odluka „znao je".
+  otpisano   Int               @default(0)
+  createdAt  DateTime          @default(now())
+
+  @@unique([donationId, userId])
+  @@index([walletId, status])
+  @@index([status, rokDo])
 }
 
 // ─── Pokrovitelji ─────────────────────────────────────────────────────────────
@@ -2226,6 +2322,17 @@ model PokroviteljPrijava {
   odbijenoRazlog      String?
   createdAt           DateTime                 @default(now())
   updatedAt           DateTime                 @updatedAt
+  // Set 5.0.9 (donacije čl. 20 st. 2): poseban poziv na broj prijave ("2" + broj na 9
+  // cifara, model 97) i potvrda o uplati, kao kod donacije (čl. 6 st. 4).
+  pozivBroj           Int                      @unique @default(autoincrement())
+  potvrdaPoslataAt    DateTime?
+  potvrdaHash         String?                  @unique
+  potvrdaIznosRSD     Decimal?                 @db.Decimal(12, 2)
+  potvrdaDatum        DateTime?
+  potvrdaRacun        String?
+  potvrdaPoziv        String?
+  potvrdaPlatilac     String?
+  potvrda             PotvrdaUplate?
 
   @@index([podnosilacId])
   @@index([status])
@@ -2302,8 +2409,8 @@ model UgovorDobra {
   /// Dodatna mesta predaje, odnosno pružanja (donacije čl. 28 st. 2 t. 5, set 5.0.6):
   /// paralelni nizovi naselja i adresa, uz `mesto`/`adresaPredaje` kao prvo mesto.
   /// Imalac bira mesto među njima (nabavke čl. 32). Čita se kroz `mestaPredaje()`.
-  dodatnaMestaPredaje  String[] @default([])
-  dodatneAdresePredaje String[] @default([])
+  dodatnaMestaPredaje       String[]               @default([])
+  dodatneAdresePredaje      String[]               @default([])
   /// Logotip davaoca (donacije čl. 26 st. 2): uz naziv na rang-listi „Dobra i
   /// usluge", na vaučerima i uz ponudu vaučera. Nije obavezan; javni URL na R2.
   /// 🔴 Bez veze ka internet stranici davaoca (čl. 26 st. 3).
@@ -2654,6 +2761,10 @@ model PokroviteljBonusEmisija {
   nivo          Int
   bonusPoen     Int
   transactionId String?
+  /// Set 5.0.9 (Pravilnik čl. 37 st. 2, donacije čl. 20 st. 3): novčano pokroviteljstvo se
+  /// utvrđenjem prijema BELEŽI, a Protokol ga evidentira u narednom obračunskom periodu
+  /// (noćni obračun, `evidentirajZabelezenoPokroviteljstvo`). `true` dok čeka; zatečeni redovi `false`.
+  cekaPeriod    Boolean     @default(false)
   createdAt     DateTime    @default(now())
 
   @@index([pokroviteljId])

@@ -403,7 +403,7 @@ Mit ellenőrizhetsz. A bejegyzett teljes összeg, a megtett lépések száma és
       {
         id: 23,
         pitanje: `Hogyan működik az adomány az Alapítványnak, és mennyi POEN-t kapok?`,
-        odgovor: `Bárki adományozhat, akinek fiókja van, akár a Kolóba lépés előtt is: dinárbefizetéssel az Alapítvány számlájára, kártyával vagy IPS QR-kóddal.
+        odgovor: `Bármely nagykorú adományozhat, akinek fiókja van, akár a Kolóba lépés előtt is, adományonként legalább 1000 dinárt. Befizetni csak a saját számládról lehet: az IPS QR-kód beolvasásával a mobilbankban vagy átutalási megbízással, azzal a hivatkozási számmal, amelyet az oldal az adott adományhoz rendel. Készpénzt és bankkártyát nem fogadunk el. A befizetés után elküldöd a befizetési igazolást (képernyőképet, PDF-et a bank alkalmazásából vagy lepecsételt megbízást).
 
 Amikor az Alapítvány megállapítja a befizetés beérkezését, a Protokoll automatikusan POEN-t jegyez be neked: az adomány összegét megszorozva az adományok nyilvántartási együtthatójával. Az együttható 1,00, és adományaid teljes összegének minden küszöbénél (5000, 10 000, 20 000, 50 000 dinár és tovább, 5 000 000 dinárig) 0,10-dal nő. A legmagasabb a 11. szint, 2,00-es együtthatóval. Ha egy adománnyal átlépsz egy küszöböt, az új együttható az egész adományra érvényes, az elért szint pedig véglegesen megmarad. Ez nem a ZRNO elszámolási együtthatója.
 
@@ -411,12 +411,14 @@ Az együttható azért nő, mert a nagyobb egyedi hozzájárulás nagyobb jelent
 
 A nyilvános adományozó vezeték- és utóneve az adományok listájában szerepel az összeggel és a dátummal, álnév nélkül. A névtelen adomány csak összeggel és dátummal jelenik meg, és utána nem jár POEN. A POEN felhasználók közötti adásvételét a Felhasználási feltételek tiltják.
 
+Ha az Alapítvány már megállapította nálad legalább 1000 dinárnyi nyilvános adomány beérkezését, az új nyilvános adomány utáni hozzájárulás azonnal bejegyzésre kerül, amint az oldal elfogadja a befizetési igazolást, „Ellenőrzés alatt” jelzéssel; így legfeljebb naponta egyszer. Az Alapítvány 24 órán belül ellenőrzi, hogy a befizetés beérkezett-e. Ha nem, a bejegyzést törlik, akkor is, ha a bejegyzésed ezzel mínuszba kerül. A hamis vagy másé igazolás kizáráshoz vezet, és amit ezután másoknak átírtál, az náluk ideiglenesen korlátozva lesz, amíg az Alapítvány nem dönt.
+
 Az adomány visszafordíthatatlan. Az Alapítvány működési költségeit fedezi, a többlet pedig közösségi beszerzésekre megy.`,
       },
       {
         id: 74,
         pitanje: `Milyen pénznemben adományozok — küldhetek eurót külföldről?`,
-        odgovor: `Küldhetsz — az adomány az Alapítvány számlájára történő befizetéssel adható, dinárban vagy más pénznemben, tehát euróban is külföldről. A platformon keresztüli bankkártyás fizetés és az IPS QR-kód csak dinárban működik.
+        odgovor: `Küldhetsz — az adomány a saját számládról az Alapítvány számlájára történő átutalással adható, dinárban vagy más pénznemben, tehát euróban is külföldről. Az IPS QR-kód csak dinárban működik, hazai mobilbankból. Bankkártyát nem fogadunk el.
 
 A POEN ugyanazok szerint a szabályok szerint rögzül, mint bármely adománynál: összeg × az adományok nyilvántartási koefficiense, amely a halmozott összeggel legfeljebb 2,00-ig nő (részletesen az adományokról szóló kérdésben). A külföldi pénznemben lévő összeg a dináregyenértéken számít.
 
@@ -427,7 +429,7 @@ Kérésre az Alapítvány a törvénnyel összhangban igazolást állít ki az a
         pitanje: `Kik a Pártfogók, és miben különbözik ez az adománytól?`,
         odgovor: `A pártfogók cégek, egyéni vállalkozók, egyesületek és bejegyzett mezőgazdasági gazdaságok vezetői, akik pénzzel vagy javakkal és szolgáltatásokkal támogatják az Alapítvány munkáját.
 
-A pártfogónak nincs saját fiókja: a POEN annak a fiókjára kerül, aki a pártfogót bejegyezte és a bejelentést benyújtotta (a törvényes képviselő, a tulajdonos vagy a meghatalmazott), illetve magának az egyéni vállalkozónak vagy a gazdaság vezetőjének. Pénzbeli pártfogáshoz nem kell a Kolóban lenni, a javakkal és szolgáltatásokkal való pártfogásra pedig csak résztvevő nyújthat be bejelentést. A POEN csak neki kerül bejegyzésre, akkor is, ha a cégnek több tulajdonosa van. Az együttható 1,00 pénz, illetve javak és szolgáltatások esetén is, az összegtől függetlenül: a szinttáblázat csak a személyes adományokra vonatkozik, mert a pártfogónak nincs saját bejegyzése, így a hozzájárulás annak kerül bejegyzésre, aki a bejelentést benyújtotta. A cég, illetve a gazdaság adományainak összegét a személyes adományaidtól elkülönítve tartjuk nyilván, és nem emeli a szintedet. A legkisebb bejelentés 10 000 RSD.
+A pártfogónak nincs saját fiókja: a POEN annak a fiókjára kerül, aki a pártfogót bejegyezte és a bejelentést benyújtotta (a törvényes képviselő, a tulajdonos vagy a meghatalmazott), illetve magának az egyéni vállalkozónak vagy a gazdaság vezetőjének. Pénzbeli pártfogáshoz nem kell a Kolóban lenni, a javakkal és szolgáltatásokkal való pártfogásra pedig csak résztvevő nyújthat be bejelentést. A POEN csak neki kerül bejegyzésre, akkor is, ha a cégnek több tulajdonosa van. Pénz esetén az együtthatót a pártfogó szintje határozza meg, ugyanazon táblázat szerint, mint a személyes adományoknál (lásd az adományokról szóló kérdést), de az adott pártfogó összes pénzbeli adományának összegére számítva, jogi formától függetlenül. A cég, illetve a gazdaság adományainak összegét a személyes adományaidtól elkülönítve tartjuk nyilván: nem emeli a személyes szintedet, és a személyes adományaid sem emelik a pártfogó szintjét. Javak és szolgáltatások esetén az együttható 1,00, mert a javak és szolgáltatások értékét maga az adományozó határozza meg a saját árjegyzékéből; kivétel az élelmiszer, amelynél az együttható a termelés módjától függ. A legkisebb bejelentés 10 000 RSD.
 
 Cégnek nem lehet fiókja, és nem kap POEN-t: fiókot emberre nyitunk, egy ember valóságát pedig egy másik ember erősíti meg. A cég tulajdonosának lehet saját fiókja magánszemélyként, a pártfogástól függetlenül.
 
@@ -970,7 +972,7 @@ Az Alapítvány sem adó-, sem jogi tanácsot nem ad. Ha nyugdíjat vagy valamil
         pitanje: `Az Alapítvány a pénzmosás megelőzéséről szóló szabályok (AML/KYC) kötelezettje-e, és azonosítja-e az adományozókat?`,
         odgovor: `Az Alapítvány nem pénzügyi intézmény, és nem kezeli a felhasználók pénzét — a POEN nem pénz, a felhasználók közötti csere pedig nem pénzforgalmi művelet. Tevékenysége szerint az Alapítvány nincs azon kötelezettek között, amelyeket a pénzmosás és a terrorizmus finanszírozása megelőzéséről szóló szabályok felsorolnak.
 
-Az adományokat ettől függetlenül nem fogadjuk névtelenül. A banki rendszeren keresztül érkeznek — az Alapítvány számlájára történő befizetéssel vagy bankkártyával —, olyan számláról, amelynek tulajdonosa azonosított, így a befizető azonosítását és a pénzeszközök eredetének ellenőrzését a bank végzi a saját szabályai szerint. A patrónusok jogi személyek és egyéni vállalkozók, akiket szerződés azonosít.
+Az adományokat ettől függetlenül nem fogadjuk névtelenül. A banki rendszeren keresztül érkeznek — az Alapítvány számlájára történő átutalással —, olyan számláról, amelynek tulajdonosa azonosított, így a befizető azonosítását és a pénzeszközök eredetének ellenőrzését a bank végzi a saját szabályai szerint. A patrónusok jogi személyek és egyéni vállalkozók, akiket szerződés azonosít.
 
 Az adományok adatait az Alapítvány a pénzügyi beszámolásra vonatkozó szabályokkal összhangban őrzi, és hozzáférhetővé teszi az illetékes hatóságok — köztük az Adóhivatal és a pénzmosás megelőzéséért felelős hivatal — számára, ha a törvény ezt előírja.`,
       },

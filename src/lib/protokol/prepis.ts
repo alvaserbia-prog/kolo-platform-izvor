@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { TransactionType } from "@/generated/prisma/client";
 import { obavesti } from "@/lib/notifikacije";
+import { ograniceno } from "./ogranicenje-primljenog";
 
 /**
  * Izvršenje prepisa POEN-a između dva korisnička zapisa (Pravilnik čl. 17, 20).
@@ -26,8 +27,10 @@ export async function izvrsiPrepis(
   opis?: string | null
 ): Promise<void> {
   await prisma.$transaction(async (tx) => {
+    // Iznos ograničen po poništenju donacije unapred ne može se prepisati (donacije čl. 6 st. 7).
+    const ogr = await ograniceno(posiljac.walletId, tx);
     const skinuto = await tx.wallet.updateMany({
-      where: { id: posiljac.walletId, balance: { gte: iznos } },
+      where: { id: posiljac.walletId, balance: { gte: iznos + ogr } },
       data: { balance: { decrement: iznos } },
     });
     if (skinuto.count !== 1) {

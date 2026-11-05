@@ -24,8 +24,6 @@ export {
   koeficijentZaNivo,
   tabelaZaPrikaz,
   normalizujUplatioca,
-  MAX_KARTICNA_UPLATA_RSD,
-  MAX_KARTICNIH_UPLATA_DNEVNO,
 } from "@/lib/donacija-pravila";
 
 /**
@@ -157,6 +155,8 @@ export async function evidentirajDonaciju(
         confirmedById: options.adminId ?? null,
       },
     });
+    // Potvrda o uplati se briše odlukom o prijemu (Registar radnji obrade br. 5, set 5.0.9).
+    await prisma.potvrdaUplate.deleteMany({ where: { donationId: options.existingRecordId } });
   } else {
     await prisma.donationRecord.create({
       data: {

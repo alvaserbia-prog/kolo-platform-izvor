@@ -14,6 +14,7 @@ import { smeDaSalje as smePrepisPravilo } from "@/lib/doprinos-pravila";
 import { rezervisanoZaNabavku } from "@/lib/protokol/nabavka";
 import { dohvatiZabelezenGazdinstva } from "@/lib/protokol/gazdinstvo";
 import Stranica from "@/components/ui/Stranica";
+import { ograniceno } from "@/lib/protokol/ogranicenje-primljenog";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
 export async function generateMetadata(): Promise<Metadata> {
@@ -60,6 +61,15 @@ export default async function NovcanikPage({
     // 🔴 Za vaučere nema reda „rezervisano": POEN se poništava pri dodeli (nabavke
     // čl. 33), pa je već van stanja.
   ]);
+  // Set 5.0.9: zabeleženo pokroviteljstvo (čeka naredni obračunski period) i privremeno
+  // ograničen iznos po poništenju donacije unapred — oba zasebni redovi, nikad uz stanje.
+  const [zabelezenPokr, ogranicenoIznos] = await Promise.all([
+    prisma.pokroviteljBonusEmisija.aggregate({
+      where: { vlasnikId: session.user.id, cekaPeriod: true, transactionId: null },
+      _sum: { bonusPoen: true },
+    }),
+    wallet ? ograniceno(wallet.id) : Promise.resolve(0),
+  ]);
   const zabelezenDoprinos = zabelezenOglas;
   const maloletan = dbUser?.maloletan ?? false;
 
@@ -98,6 +108,8 @@ export default async function NovcanikPage({
         cekamPotvrdjene={maloletan ? [] : zabelezenePotvrde.cekamPotvrdjene}
         // Maloletni nalog ne učestvuje u nabavci (nabavke čl. 4), pa reda ni nema.
         rezervisanoNabavka={maloletan ? 0 : rezervisano}
+        zabelezenPokroviteljstvo={maloletan ? 0 : (zabelezenPokr._sum.bonusPoen ?? 0)}
+        ogranicenoIznos={ogranicenoIznos}
         maloletan={maloletan}
         // Korisnik koji nije u Kolu prepisuje i prima prepis (Uslovi čl. 14 st. 3);
         // da li dugme stoji, odlučuje samo `smeDaSalje`.

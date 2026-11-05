@@ -117,7 +117,8 @@ export default async function AdminPage({
       // (R-01, mera M-4a). Stoji u istom redu čekanja kao najavljena uplata.
       where: { status: { in: ["PENDING", "NAPLACENO"] } },
       include: { user: { select: { pseudonim: true } } },
-      orderBy: { createdAt: "asc" },
+      // Set 5.0.9: najave uz koje je donator poslao potvrdu o uplati idu prve.
+      orderBy: [{ potvrdaPoslataAt: { sort: "asc", nulls: "last" } }, { createdAt: "asc" }],
     }),
     prisma.prigovorNaOdluku.findMany({
       where: { status: { in: ["PENDING", "U_OBRADI"] } },
@@ -178,6 +179,7 @@ export default async function AdminPage({
         nacinUplate: d.nacinUplate, referenceNumber: d.referenceNumber,
         createdAt: d.createdAt.toISOString(),
         status: d.status, donatorIme: d.donatorIme,
+        potvrdaPoslata: d.potvrdaPoslataAt !== null,
       }))}
       otvoreniPrigovori={otvoreniPrigovori.map((p) => ({
         id: p.id, pseudonim: p.user.pseudonim, opis: p.opis, tipOdluke: p.tipOdluke,

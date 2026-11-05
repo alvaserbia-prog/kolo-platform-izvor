@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { posaljiAdminAlert } from "@/lib/adminAlert";
 import { MINIMUM_POEN_ZA_UPIS_ZRNA, najviseZaUpisZrna, upisZrnaOtvoren, PROCENAT_UPISA_ZRNA_PO_PERIODU } from "@/lib/protokol/zrno";
 import { beogradskiDan } from "@/lib/protokol/obracunski-dan";
+import { ograniceno } from "@/lib/protokol/ogranicenje-primljenog";
 
 // POST /api/zrno/upis — rezervacija upisa ZRNA (izvršava se u ponoć)
 export async function POST(req: NextRequest) {
@@ -26,7 +27,9 @@ export async function POST(req: NextRequest) {
   const kanal = await prisma.zrnoKanal.findUnique({ where: { id: "singleton" } });
   if (!upisZrnaOtvoren(kanal)) return await greska("Upis i otpis ZRNA još nisu aktivni.", 400);
 
-  const wallet = await prisma.wallet.findUnique({ where: { userId: session.user.id }, select: { balance: true } });
+  const zapis = await prisma.wallet.findUnique({ where: { userId: session.user.id }, select: { id: true, balance: true } });
+  // Ograničen iznos se ne upisuje u ZRNO (donacije čl. 6 st. 7, set 5.0.9).
+  const wallet = zapis ? { balance: zapis.balance - (await ograniceno(zapis.id)) } : null;
   if (!wallet || wallet.balance < MINIMUM_POEN_ZA_UPIS_ZRNA)
     return await greska(`Potreban minimalni balans od ${MINIMUM_POEN_ZA_UPIS_ZRNA.toLocaleString("sr-RS")} POEN.`, 400);
 

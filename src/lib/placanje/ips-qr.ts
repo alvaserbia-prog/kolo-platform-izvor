@@ -7,12 +7,13 @@
  *    (Fondacija), naziv, tačan iznos i JEDINSTVEN poziv na broj (model 97).
  *  - Donator skenira QR mobilnom bankom → instant prenos u RSD direktno na
  *    račun Fondacije (bez konverzije na našoj strani, provizija ~0).
- *  - USAGLAŠAVANJE (MVP): admin nađe priliv u bankovnom izvodu po pozivu na
+ *  - USAGLAŠAVANJE: donator šalje potvrdu o uplati; admin nađe priliv u izvodu po pozivu na
  *    broj i potvrdi PENDING zapis u admin panelu → tek tada se emituje POEN.
- *    🔴 Zapis potvrđuje ČOVEK i to se ne menja (R-01, mera M-4a): potvrda traži
- *    poređenje uplatioca iz izvoda sa nalogom (čl. 6 Pravilnika o pokroviteljstvu
- *    i donacijama). Automatsko evidentiranje po bankarskom callback-u je upravo
- *    ono što je kod kartice ukinuto — ne uvoditi ga ovde.
+ *    🔴 Prijem utvrđuje ČOVEK (donacije čl. 6 st. 3): potvrda traži poređenje
+ *    uplatioca iz izvoda sa nalogom. Izuzetak je samo donacija unapred (čl. 6 st. 5,
+ *    set 5.0.9, odluka vlasnika): POEN se evidentira po prihvaćenoj potvrdi o uplati,
+ *    a Fondacija prijem proverava u roku od 24 časa i poništava ako ne stigne. Odgovor
+ *    banke (callback) ni sada ne evidentira ništa — `protokol/donacija-unapred.ts`.
  *
  * KONFIGURACIJA (unosi se NAKNADNO kroz env, kao i NestPay):
  *  - `IPS_RACUN`          — broj računa Fondacije, 18 cifara BEZ crtica (obavezno)
@@ -32,14 +33,14 @@
  * kod" i propustiti svaki generisani string kroz zvanični NBS validator.
  */
 
-/** Donji limit donacije (RSD), isto kao kartični tok. */
-export const MIN_IPS_RSD = 100;
+/** Donji limit donacije (RSD): najmanja donacija (donacije čl. 3 st. 1, set 5.0.9). */
+export { MIN_DONACIJA_RSD as MIN_IPS_RSD } from "@/lib/donacija-unapred-pravila";
 
 /**
  * Podrazumevani gornji limit po jednoj IPS transakciji (RSD). NBS instant
  * shema ima limit po nalogu; istorijski 300.000, povremeno podizan. Držimo
  * konzervativnu podrazumevanu vrednost koja se može podići preko `IPS_MAX_RSD`.
- * Veće donacije i dalje idu klasičnom uplatom/karticom.
+ * Veće donacije idu nalogom za prenos sa računa (bez QR koda), sa istim pozivom na broj.
  */
 export const PODRAZUMEVANI_MAX_IPS_RSD = 300_000;
 
@@ -121,6 +122,22 @@ export function pozivNaBrojZaClana(donatorskiBroj: number): string {
     throw new Error("Donatorski broj mora biti pozitivan ceo broj.");
   }
   return generisiPozivNaBroj(String(donatorskiBroj));
+}
+
+/**
+ * Poseban poziv na broj ZA SVAKU DONACIJU (donacije čl. 4 st. 3, set 5.0.9): model 97 nad
+ * "1" + redni broj zapisa donacije (`DonationRecord.pozivBroj`) dopunjen na 9 cifara.
+ * Osnova ima 10 cifara, pa se ne meša sa trajnim donatorskim brojem člana (stari zapisi).
+ */
+export function pozivNaBrojZaDonaciju(pozivBroj: number): string {
+  if (!Number.isInteger(pozivBroj) || pozivBroj <= 0 || pozivBroj >= 1e9) throw new Error("Neispravan redni broj donacije.");
+  return generisiPozivNaBroj(`1${String(pozivBroj).padStart(9, "0")}`);
+}
+
+/** Poseban poziv na broj prijave novčanog pokroviteljstva (donacije čl. 20 st. 2): "2" + broj. */
+export function pozivNaBrojZaPrijavu(pozivBroj: number): string {
+  if (!Number.isInteger(pozivBroj) || pozivBroj <= 0 || pozivBroj >= 1e9) throw new Error("Neispravan redni broj prijave.");
+  return generisiPozivNaBroj(`2${String(pozivBroj).padStart(9, "0")}`);
 }
 
 /** Prikaz poziva na broj za ljude: kontrola-osnova, npr. "42-15". */

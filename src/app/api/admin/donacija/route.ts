@@ -9,6 +9,7 @@ import { logAdminAkcija } from "@/lib/audit";
 import { obavesti } from "@/lib/notifikacije";
 import { jeAdmin } from "@/lib/dozvole";
 import { rasclaniPozivNaBroj } from "@/lib/placanje/ips-qr";
+import { utvrdiPrijemUnapred, DonacijaUnapredGreska } from "@/lib/protokol/donacija-unapred";
 
 // POST — potvrdi ili ručno evidentiraj donaciju
 /**
@@ -72,6 +73,18 @@ export async function POST(req: NextRequest) {
     });
     if (!donation) return await greska("Donacija nije pronađena.", 404);
     if (donation.status === "CONFIRMED") return await greska("Donacija je već potvrđena.", 400);
+    if (donation.status === "PONISTENO") return await greska("Donacija je poništena.", 400);
+    // Donacija unapred (donacije čl. 6 st. 6, set 5.0.9): POEN je već evidentiran, pa se
+    // samo utvrđuje prijem — ugovor, uplatilac, evidencija identiteta. Bez nove emisije.
+    if (donation.status === "NA_PROVERI") {
+      try {
+        await utvrdiPrijemUnapred(session.user.id, donation.id, uplatilac);
+        return NextResponse.json({ ok: true, poenEmitted: donation.poenEmitted, unapred: true });
+      } catch (e) {
+        if (e instanceof DonacijaUnapredGreska) return await greska(e.message, e.status);
+        throw e;
+      }
+    }
     // NAPLACENO = kartična uplata je prošla kroz banku, ali POEN još nije
     // evidentiran (mera M-4a). Potvrđuje se istim putem kao najavljena uplata.
 
@@ -132,6 +145,18 @@ export async function POST(req: NextRequest) {
   // bez poziva na broj).
   if (!pseudonim && !pozivNaBroj) {
     return await greska("Poziv na broj, pseudonim ili donationId je obavezan.", 400);
+  }
+
+  // Poseban poziv na broj donacije (set 5.0.9, donacije čl. 4 st. 3): uplata pripada
+  // najavljenoj donaciji, pa se potvrđuje u redu iznad, ne kao nova (dvostruki zapis).
+  if (pozivNaBroj) {
+    let cif = String(pozivNaBroj).replace(/\D/g, "");
+    if (cif.length === 14 && cif.startsWith("97")) cif = cif.slice(2);
+    if (cif.length === 12) {
+      const najava = await prisma.donationRecord.findFirst({ where: { referenceNumber: cif }, select: { status: true } });
+      if (najava)
+        return await greska(`Ovaj poziv na broj pripada najavljenoj donaciji (stanje: ${najava.status}). Potvrdi je u listi najavljenih, odnosno u redu „Na proveri".`, 409);
+    }
   }
 
   let user;

@@ -40,6 +40,7 @@ import {
   utvrdiIzbor,
   predlogIstice,
 } from "@/lib/nabavka-pravila";
+import { ograniceno } from "./ogranicenje-primljenog";
 
 export * from "@/lib/nabavka-pravila";
 
@@ -596,8 +597,9 @@ export async function potvrdiUcesce(userId: string, nabavkaId: string, dan: Date
     throw new NabavkaGreska("Dan preuzimanja mora biti unutar objavljenog perioda preuzimanja.");
   }
 
-  const w = await prisma.wallet.findUnique({ where: { userId }, select: { balance: true } });
-  if (!w || w.balance < n.poenPoDelu) {
+  const w = await prisma.wallet.findUnique({ where: { userId }, select: { id: true, balance: true } });
+  // Ograničen iznos se ne koristi za učešće u projektu (donacije čl. 6 st. 7, set 5.0.9).
+  if (!w || w.balance - (await ograniceno(w.id)) < n.poenPoDelu) {
     throw new NabavkaGreska(`Za potvrdu je potrebno ${n.poenPoDelu} POEN.`, 409);
   }
 

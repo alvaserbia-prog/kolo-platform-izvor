@@ -70,6 +70,7 @@ import {
   rangListaDobara,
 } from "@/lib/pokroviteljstvo-dobrima-pravila";
 import { upisSpremanZaPrijavu, funkcijaZaUgovor, naRangListi } from "@/lib/upis-pokrovitelja-pravila";
+import { ograniceno } from "./ogranicenje-primljenog";
 
 export * from "@/lib/pokroviteljstvo-dobrima-pravila";
 
@@ -814,7 +815,8 @@ export async function uzmiVaucer(
       izjavaNepovezan: unos.izjavaNepovezan,
       pristanakPrikaz: unos.pristanakPrikaz,
       aktivnihVaucera: aktivnih,
-      raspolozivo: raspolozivo(w.balance) - (nab._sum.rezervisano ?? 0),
+      // Ograničen iznos se ne koristi (donacije čl. 6 st. 7, set 5.0.9).
+      raspolozivo: raspolozivo(w.balance) - (nab._sum.rezervisano ?? 0) - (await ograniceno(walletId, tx)),
       poenaPoVauceru: poenaPoV,
     });
     if (!provera.ok) throw new VaucerGreska(provera.razlog, 403);

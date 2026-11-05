@@ -6,6 +6,8 @@ import { proveriIAktivirajFazu2 } from "@/lib/protokol/faza-sistema";
 import { azurirajStalnuPonudu, zapisiDnevniSnimak } from "@/lib/protokol/pokazatelji";
 import { proveriIEvidentirajKorak } from "@/lib/protokol/osnivacki";
 import { jePonocUSrbiji } from "@/lib/protokol/obracunski-dan";
+import { evidentirajZabelezenoPokroviteljstvo } from "@/lib/protokol/pokrovitelj";
+import { zatvoriIstekla } from "@/lib/protokol/donacija-unapred";
 
 // GET /api/cron/nocna-emisija — Vercel Cron (Authorization: Bearer), zakazan u
 // 22:00 i 23:00 UTC (drugi termin kroz /api/cron/nocna-emisija/zima). Radi samo
@@ -65,6 +67,23 @@ async function nocniObracun(datum: Date, opcije: { osnivacki: boolean }) {
       }
     }
 
+    // 2a. Set 5.0.9: zabeleženo novčano pokroviteljstvo evidentira se u narednom
+    // obračunskom periodu (Pravilnik čl. 37 st. 2), i to samo na stvarnom kraju perioda;
+    // pre provere Faze 2, jer ulazi u ukupan broj. Uz to prestaju istekla ograničenja
+    // primljenog iznosa (donacije čl. 6 st. 7). Izolovano: ne sme da obori obračun.
+    let pokroviteljstvo: unknown = null;
+    if (opcije.osnivacki) {
+      try {
+        pokroviteljstvo = {
+          evidentirano: await evidentirajZabelezenoPokroviteljstvo(),
+          ogranicenjaPrestala: await zatvoriIstekla(),
+        };
+      } catch (e) {
+        console.error("[CRON] Greška pri zabeleženom pokroviteljstvu:", e);
+        pokroviteljstvo = { error: String(e) };
+      }
+    }
+
     // 3. Provera praga Faze 2 (Pravilnik čl. 41) — sekvencijalno, nakon emisija
     // jer obračun zavisi od konačnog stanja Protokola za obračunski period.
     const faza = await proveriIAktivirajFazu2();
@@ -82,7 +101,7 @@ async function nocniObracun(datum: Date, opcije: { osnivacki: boolean }) {
       pokazatelji = { error: String(e) };
     }
 
-    return NextResponse.json({ ok: true, programi, zrno, osnivacki, faza, pokazatelji });
+    return NextResponse.json({ ok: true, programi, zrno, osnivacki, pokroviteljstvo, faza, pokazatelji });
   } catch (err) {
     console.error("[CRON] Greška pri nocnoj emisiji:", err);
     return await greska("Greška pri izvršavanju emisije.", 500);

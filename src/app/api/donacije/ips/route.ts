@@ -7,10 +7,11 @@ import {
   MIN_IPS_RSD,
   ipsAktivno,
   dohvatiIpsConfig,
-  pozivNaBrojZaClana,
+  pozivNaBrojZaDonaciju,
   sklopiIpsString,
 } from "@/lib/placanje/ips-qr";
 import { PORUKA_DETE_NE_DONIRA } from "@/lib/donacija-pravila";
+import { RACUN_FONDACIJE } from "@/lib/placanje/racun-fondacije";
 
 /**
  * GET — informacije za prikaz IPS sekcije (da li je konfigurisano + javni
@@ -35,24 +36,22 @@ export async function GET() {
 }
 
 /**
- * POST — generiše dinamički IPS QR za donaciju. Poziv na broj je TRAJNI broj
- * člana (model 97 nad donatorskim brojem — isti kao za klasičnu uplatnicu);
- * kreira/ažurira PENDING najavu donacije i vraća IPS string (za QR) + podatke
- * za prikaz. POEN se NE emituje ovde — admin potvrđuje priliv po pozivu na
- * broj u admin panelu (kao i kod ručne uplate).
+ * POST — najava donacije (set 5.0.9). Svaka donacija dobija POSEBAN poziv na broj
+ * (donacije čl. 4 st. 3): model 97 nad "1" + redni broj zapisa. Vraća podatke za uplatu
+ * (primalac, račun, iznos, svrha, poziv na broj) i, kad je IPS podešen, IPS string za
+ * QR. Bez IPS-a radi nalog za prenos sa računa — isti podaci, bez QR koda.
+ * POEN se ovde NE evidentira: donator posle uplate šalje potvrdu (`/api/donacije/potvrda`).
+ *
+ * 🔴 Najava bez poslate potvrde se ponovo koristi (novi iznos, isti poziv na broj), da se
+ * ne gomilaju napušteni zapisi. Najava za koju je potvrda poslata se ne dira.
  */
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  // Donirati sme i član koga niko nije potvrdio (R-01, mera M-9).
+  // Donirati sme i korisnik koga niko nije uveo u Kolo (R-01, mera M-9).
 
   const cfg = dohvatiIpsConfig();
-  if (!cfg || !ipsAktivno()) {
-    return NextResponse.json(
-      { error: "IPS plaćanje trenutno nije konfigurisano. Koristite uplatu na račun.", nedostupno: true },
-      { status: 503 }
-    );
-  }
+  const ips = cfg && ipsAktivno() ? cfg : null;
 
   let body: { iznosRSD?: unknown; javno?: unknown };
   try {
@@ -62,15 +61,9 @@ export async function POST(req: NextRequest) {
   }
 
   const iznosRSD = Math.round(Number(body.iznosRSD));
-  if (!Number.isFinite(iznosRSD) || iznosRSD < MIN_IPS_RSD || iznosRSD > cfg.maxRSD) {
-    return NextResponse.json(
-      {
-        error: `Iznos mora biti između ${MIN_IPS_RSD.toLocaleString("sr-RS")} i ${cfg.maxRSD.toLocaleString(
-          "sr-RS"
-        )} RSD. Veće iznose uplatite klasičnom uplatom ili karticom.`,
-      },
-      { status: 400 }
-    );
+  const max = ips?.maxRSD ?? Number.MAX_SAFE_INTEGER;
+  if (!Number.isFinite(iznosRSD) || iznosRSD < MIN_IPS_RSD) {
+    return await greska(`Najmanji iznos donacije je ${MIN_IPS_RSD.toLocaleString("sr-RS")} RSD (Pravilnik o pokroviteljstvu i donacijama čl. 3).`, 400);
   }
 
   // Javna donacija (default) nosi POEN i javno ime; anonimna ne nosi POEN.
@@ -80,7 +73,6 @@ export async function POST(req: NextRequest) {
     where: { id: session.user.id },
     select: {
       id: true,
-      donatorskiBroj: true,
       maloletan: true,
       wallet: { select: { id: true } },
       podaci: { select: { punoIme: true } },
@@ -91,7 +83,7 @@ export async function POST(req: NextRequest) {
   }
   if (user.maloletan) return await greska(PORUKA_DETE_NE_DONIRA, 403);
 
-  // Javna donacija zahteva uneto ime i prezime (čl. 7 st. 1) — provera PRE generisanja.
+  // Javna donacija zahteva uneto ime i prezime (čl. 7 st. 1) — provera PRE najave.
   if (javno && !user.podaci?.punoIme?.trim()) {
     return NextResponse.json(
       {
@@ -103,46 +95,43 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Trajni poziv na broj člana (model 97 nad donatorskim brojem) — isti za sve
-  // uplate ovog korisnika, pa se priliv u izvodu uparuje direktno sa članom.
-  const pozivNaBroj = pozivNaBrojZaClana(user.donatorskiBroj);
-
-  // Jedna aktivna IPS najava po korisniku: postojeći PENDING zapis se ažurira
-  // (novi iznos/vrsta) umesto da se gomilaju napušteni zapisi. Iznos najave je
-  // ionako samo podsetnik — admin pri potvrdi upisuje iznos iz izvoda.
   const postojeca = await prisma.donationRecord.findFirst({
-    where: { userId: user.id, status: "PENDING", nacinUplate: "IPS" },
-    select: { id: true },
+    where: { userId: user.id, status: "PENDING", nacinUplate: "IPS", potvrdaPoslataAt: null, potvrdaHash: null },
+    orderBy: { createdAt: "desc" },
+    select: { id: true, pozivBroj: true },
   });
-  if (postojeca) {
-    await prisma.donationRecord.update({
-      where: { id: postojeca.id },
-      data: { amountRSD: iznosRSD, javno, referenceNumber: pozivNaBroj, createdAt: new Date() },
-    });
-  } else {
-    await prisma.donationRecord.create({
-      data: {
-        userId: user.id,
-        amountRSD: iznosRSD,
-        cumulativeRSD: 0,
-        level: 0,
-        poenEmitted: 0,
-        javno,
-        status: "PENDING",
-        nacinUplate: "IPS",
-        provajder: "IPS",
-        referenceNumber: pozivNaBroj,
-      },
-    });
-  }
+  const zapis = postojeca
+    ? await prisma.donationRecord.update({
+        where: { id: postojeca.id },
+        data: { amountRSD: iznosRSD, javno, createdAt: new Date() },
+        select: { id: true, pozivBroj: true },
+      })
+    : await prisma.donationRecord.create({
+        data: {
+          userId: user.id,
+          amountRSD: iznosRSD,
+          cumulativeRSD: 0,
+          level: 0,
+          poenEmitted: 0,
+          javno,
+          status: "PENDING",
+          nacinUplate: "IPS",
+          provajder: "IPS",
+        },
+        select: { id: true, pozivBroj: true },
+      });
+  const pozivNaBroj = pozivNaBrojZaDonaciju(zapis.pozivBroj);
+  await prisma.donationRecord.update({ where: { id: zapis.id }, data: { referenceNumber: pozivNaBroj } });
 
-  const ipsString = sklopiIpsString({ cfg, iznosRSD, pozivNaBroj });
+  // QR samo dok je iznos u granici instant plaćanja; iznad nje ide nalog za prenos.
+  const ipsString = ips && iznosRSD <= max ? sklopiIpsString({ cfg: ips, iznosRSD, pozivNaBroj }) : null;
 
   return NextResponse.json({
+    donationId: zapis.id,
     ipsString,
-    racun: cfg.racun,
-    primalac: cfg.primalac,
-    svrha: cfg.svrha,
+    racun: ips?.racun ?? RACUN_FONDACIJE,
+    primalac: ips?.primalac ?? null,
+    svrha: ips?.svrha ?? "Donacija",
     iznosRSD,
     model: "97",
     pozivNaBroj,

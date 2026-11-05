@@ -33,6 +33,9 @@ type Prijava = {
   status: "CEKA_POTPIS" | "POTPISANA" | "POTVRDJENA" | "ODBIJENA";
   odbijenoRazlog: string | null;
   createdAt: string;
+  /** Set 5.0.9: poziv na broj prijave i da li je podnosilac poslao potvrdu o uplati. */
+  pozivNaBroj?: string | null;
+  potvrdaPoslata?: boolean;
 };
 
 type Detalji = Prijava & { ugovorTekst: string };
@@ -77,7 +80,7 @@ export default function PokroviteljPrijaveTab({ onDone }: { onDone: () => void }
     });
     const d = await res.json().catch(() => ({}));
     setRadnja(null);
-    await obavesti(res.ok ? t("pokr_prijave_potvrdjeno_msg", { bonus: (d.bonus ?? 0).toLocaleString(intlTag(locale)) }) : (d.error ?? t("greska_generalna")));
+    await obavesti(res.ok ? t("pokr_prijave_potvrdjeno_msg", { bonus: (d.bonus ?? 0).toLocaleString(intlTag(locale)), koeficijent: Number(d.koeficijent ?? 1).toFixed(2).replace(".", ",") }) : (d.error ?? t("greska_generalna")));
     if (res.ok) { setDetalji(null); await refetch(); onDone(); }
   }
 
@@ -135,6 +138,12 @@ export default function PokroviteljPrijaveTab({ onDone }: { onDone: () => void }
               {/* Upis (donacije čl. 16 i 18): poređenje sa registrom je izvršeno pri odobrenju upisa. */}
               {p.upisId && p.status === "POTPISANA" && (
                 <p className="text-xs text-kolo-muted mt-0.5">{p.upisOdobren ? t("pokr_prijave_upis_odobren") : t("pokr_prijave_upis_nije_odobren")}</p>
+              )}
+              {p.pozivNaBroj && <p className="text-xs text-kolo-muted mt-0.5 font-mono">{t("pokr_prijave_poziv", { poziv: p.pozivNaBroj })}</p>}
+              {p.potvrdaPoslata && p.status === "POTPISANA" && (
+                <a href={`/api/admin/donacija/${p.id}/potvrda`} target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center text-xs font-semibold text-kolo-green-700 underline">
+                  {t("unapred_pogledaj_potvrdu")}
+                </a>
               )}
               <AdminLogotip izvor="PRIJAVA" id={p.id} url={p.logoUrl} onUklonjen={() => { void refetch(); onDone(); }} />
             </div>

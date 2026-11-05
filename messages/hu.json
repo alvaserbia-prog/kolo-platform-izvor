@@ -739,7 +739,11 @@
     "zabelezene_potvrde_tudje": "{iznos} POEN az általad adott megerősítésekért — azok első hozzájárulására vár, akiket megerősítettél",
     "zabelezen_gazdinstvo": "A gazdasági hozzájárulásod {iznos} POEN-je — a feladott hirdetésedre és a Kolóba való belépésedre vár",
     "zabelezene_vidi": "Nézd meg, kire vársz →",
-    "objavi_ponudu": "Ajánlat közzététele →"
+    "objavi_ponudu": "Ajánlat közzététele →",
+    "ceka_period": "A következő elszámolási időszakra vár",
+    "ceka_period_opis": "A pártfogás beérkezését megállapítottuk. A hozzájárulás a következő elszámolási időszakban, éjfél után kerül bejegyzésre.",
+    "ograniceno_naslov": "Ideiglenesen korlátozva",
+    "ograniceno_opis": "A bejegyzésednek ezt a részét olyan adományozótól kaptad, akinek előre nyilvántartott adományát törölték. A bejegyzéseden marad, de legfeljebb 7 napig, amíg az Alapítvány nem dönt, nem írhatod át, nem használhatod fel beszerzésben, és nem jegyezheted be ZRNO-ba. A korlátozás ellen a profilodról kifogást nyújthatsz be."
   },
   "verifikacija": {
     "page_naslov": "Megerősítés",
@@ -1236,7 +1240,6 @@
   },
   "donacije": {
     "naslov": "Adományok az Alapítványnak",
-    "beta_opis": "Egyelőre csak számlára utalással lehet adományozni, a saját hivatkozási számoddal. A kártya és az IPS QR hamarosan elérhető lesz.",
     "objasnjenje": "Az Alapítványnak tett adomány vissza nem téríthető, és semmit nem szerzel vele. A hozzájárulást rögzítjük.",
     "zaglavlje_nivo": "elért",
     "zaglavlje_ukupno": "összes adományod",
@@ -1245,12 +1248,10 @@
     "trenutni_kurs": "Jelenlegi együttható",
     "kurs_opis": "az elért szint szerint",
     "do_nivoa": "A {n}. szint eléréséig ({kurs} együttható) még:",
-    "instrukcije": "Fizetési instrukciók",
     "primalac": "Kedvezményezett:",
     "racun": "Számlaszám:",
     "svrha": "Fizetés célja:",
     "svrha_vrednost": "Adomány",
-    "napomena_uplata": "Az összeget te magad határozod meg.",
     "kopiraj_btn": "Fizetési adatok másolása",
     "kopirano": "Másolva ✓",
     "tabela_naslov": "Adományozási rang táblázat",
@@ -1262,17 +1263,6 @@
     "nema_donacija": "Még nincs rögzített adomány.",
     "potvrdeno": "Megerősítve",
     "ceka_potvrdu": "Megerősítésre vár",
-    "placanje_uspeh": "A befizetés megérkezett. A POEN akkor kerül rögzítésre, amikor az Alapítvány visszaigazolja a befizetést; az alábbi előzményekben látod majd.",
-    "placanje_neuspeh": "A fizetést nem hagyták jóvá (a bank elutasította a tranzakciót). Nem került sor terhelésre.",
-    "placanje_greska": "Hiba történt a fizetés feldolgozásakor. Ha az összeget levonták, fordulj az ügyfélszolgálathoz.",
-    "karticno_naslov": "Adományozás bankkártyával",
-    "karticno_opis": "Biztonságos fizetés a bank oldalán (3D Secure). A kártyaadatokat a platform nem tárolja.",
-    "karticno_iznos_placeholder": "Összeg",
-    "karticno_otvaram": "Megnyitás…",
-    "karticno_plati": "Adományozás kártyával",
-    "karticno_min_iznos": "Adj meg összeget (legalább 100 RSD).",
-    "karticno_nije_moguce": "A fizetés jelenleg nem érhető el.",
-    "karticno_greska_komunikacije": "Kommunikációs hiba. Próbáld újra.",
     "vidljivost_naslov": "Adomány típusa",
     "vidljivost_javna": "Nyilvános adomány (POEN kerül bejegyzésre nekem)",
     "vidljivost_javna_opis": "A vezeték- és keresztneved nyilvánosan megjelenik az adományok listáján. POEN csak nyilvános adomány után kerül bejegyzésre.",
@@ -1285,23 +1275,13 @@
     "lista_zakljucana": "Az adománylista a gyermekfiókban nem érhető el. Saját adományaidat fent látod.",
     "lista_anoniman": "Névtelen adomány",
     "lista_ime_povuceno": "A név nincs közzétéve",
-    "ips_naslov": "Adományozás IPS QR-kóddal (azonnali)",
-    "ips_opis": "Olvasd be a QR-kódot mobilbankkal — a dináros befizetés pár másodperc alatt megérkezik, platformdíj nélkül. A POEN azután kerül rögzítésre, hogy az Alapítvány visszaigazolja a beérkezést.",
-    "ips_uskoro": "Az Alapítvány IPS befizetésekhez használt számlája hamarosan megnyílik. Ez az opció automatikusan aktiválódik, amint a számla be van állítva.",
-    "ips_generisi": "QR generálása",
     "ips_generisem": "Generálás…",
-    "ips_min_iznos": "Adj meg összeget (legalább {min} RSD).",
-    "ips_limit": "IPS-befizetésenkénti maximum: {max} RSD. Nagyobb összeget kártyával vagy hagyományos átutalással fizess.",
     "ips_greska": "A QR-kód generálása jelenleg nem lehetséges.",
     "ips_skeniraj_uputstvo": "Nyisd meg a mobilbankot → „Fizetés / QR beolvasása” → olvasd be ezt a kódot. Az összeg és a hivatkozási szám már ki van töltve — csak erősítsd meg.",
     "ips_iznos_label": "Összeg:",
     "ips_poziv_na_broj": "Hivatkozási szám:",
     "ips_model": "modell",
-    "ips_napomena_potvrda": "A befizetés után az Alapítvány a hivatkozási szám alapján visszaigazolja a beérkezést, és akkor kerül rögzítésre a POEN. A hivatkozási szám már benne van a QR-kódban — ne módosítsd.",
     "ips_novi": "Új IPS befizetés",
-    "model": "Modell:",
-    "poziv_na_broj": "Hivatkozási szám:",
-    "vas_broj_opis": "Ez az állandó hivatkozási számod (97-es modell). Minden befizetésnél add meg: ez alapján ismerhető fel, hogy a befizetés a tiéd. Az elgépelt számot a bank elutasítja.",
     "rang_pojasnjenje": "A nagyobb egyszeri hozzájárulásnak nagyobb a jelentősége a közösség számára; az adományozással semmit nem szerzel.",
     "ugovor_link": "Adományozási szerződés",
     "povuci_ime": "Név visszavonása a listáról",
@@ -1311,19 +1291,42 @@
     "ugovor_stampaj": "Nyomtatás",
     "ugovor_nazad": "Vissza az adományokhoz",
     "ugovor_napomena": "A szerződés az adomány megerősítésének pillanatában készült, és azóta nem változott. A szerb eredeti az irányadó.",
-    "karticno_sopstvena_kartica": "A fizetéssel megerősíted, hogy a kártya a te nevedre szól. A hozzájárulást kizárólag annak tartjuk nyilván, akinek a pénzéből a befizetés történt.",
-    "karticno_kapa": "A kártyás befizetés legfeljebb {max} RSD lehet. Nagyobb összeghez használj banki átutalást vagy devizaátutalást.",
-    "karticno_kapa_napomena": "Kártyával {max} RSD-ig lehet fizetni. Nagyobb összeg banki átutalással (belföldről) vagy devizaátutalással (külföldről) megy.",
-    "karticno_nepovratnost": "Megerősítem, hogy az adomány vissza nem téríthető, és hogy érte árut vagy szolgáltatást nem kapok.",
-    "karticno_nepovratnost_obavezna": "Erősítsd meg, hogy az adomány vissza nem téríthető, mielőtt folytatod.",
     "nacin_oznaka": "Befizetés módja",
     "nacin_ips": "IPS QR",
-    "nacin_kartica": "Kártya",
-    "nacin_uplatnica": "Befizetési lap",
     "pokrovitelj_link": "Cég vagy egyesület nevében adományozol? Ez pártfogásnak számít →",
-    "kopiraj_tekst": "Kedvezményezett: KOLO Alapítvány\nSzámla: {racun}\nCél: Adomány\nModell: 97\nHivatkozási szám: {poziv}",
     "primalac_vrednost": "KOLO Alapítvány",
-    "uplatnica_poen": "Nyilvános adománynál a POEN akkor kerül rögzítésre, amikor az Alapítvány visszaigazolja a befizetést."
+    "min_iznos": "Az adomány legkisebb összege {min} RSD.",
+    "greska_komunikacije": "Kommunikációs hiba. Próbáld újra.",
+    "iznos_naslov": "Az adomány összege",
+    "iznos_opis": "Válassz összeget, vagy írj be másikat. Az adományt a saját számládról fizeted be.",
+    "drugi_iznos": "Más összeg",
+    "iznos_placeholder": "Legalább {min}",
+    "nastavi": "Tovább",
+    "nacin_nalog": "Átutalási megbízás",
+    "nalog_uputstvo": "A mobil- vagy netbankban, illetve a bankodban készíts átutalási megbízást a saját számládról ezekkel az adatokkal.",
+    "poziv_ne_menjaj": "A megbízásban semmit ne változtass, főleg a hivatkozási számot ne. Erről tudjuk, hogy a befizetés a tiéd. Készpénzt és bankkártyát nem fogadunk el.",
+    "kopiraj_tekst_donacija": "Kedvezményezett: KOLO Alapítvány\nSzámlaszám: {racun}\nÖsszeg: {iznos} RSD\nFizetés célja: Adomány\nModell: 97\nHivatkozási szám: {poziv}",
+    "posle_uplate_naslov": "Befizettem",
+    "posle_uplate_prva": "Amikor a bank jelzi, hogy a fizetés sikerült, küldd el az igazolást (képernyőképet vagy PDF-et a bank alkalmazásából, illetve lepecsételt megbízást). Az Alapítvány ellenőrzi, hogy a befizetés beérkezett-e, és ekkor kerül bejegyzésre a hozzájárulás.",
+    "posle_uplate_unapred": "Amikor a bank jelzi, hogy a fizetés sikerült, küldd el az igazolást (képernyőképet vagy PDF-et a bank alkalmazásából, illetve lepecsételt megbízást). Ha az igazolás adatai egyeznek, a hozzájárulás azonnal bejegyzésre kerül „Ellenőrzés alatt” jelzéssel. Az Alapítvány 24 órán belül ellenőrzi, hogy a befizetés beérkezett-e; ha nem érkezik be, a bejegyzést törlik.",
+    "posle_uplate_anonimna": "Amikor a bank jelzi, hogy a fizetés sikerült, küldd el az igazolást. A névtelen adomány után nem jár POEN.",
+    "potvrda_dugme": "Befizetési igazolás küldése",
+    "potvrda_citam": "Az igazolás beolvasása…",
+    "potvrda_uputstvo": "Az igazoláson látszania kell az összegnek, a dátumnak, a kedvezményezett számlaszámának és a hivatkozási számnak. Egy igazolás egy befizetésre érvényes. A hamis vagy másé igazolás kizáráshoz vezet.",
+    "potvrda_prevelika": "Az igazolás túl nagy (legfeljebb 5 MB).",
+    "potvrda_greska": "Az igazolást most nem lehet feldolgozni. Próbáld újra.",
+    "potvrda_unapred": "Az igazolást elfogadtuk. {poen} POEN került bejegyzésre neked „Ellenőrzés alatt” jelzéssel. Az Alapítvány 24 órán belül ellenőrzi, hogy a befizetés beérkezett-e.",
+    "potvrda_ceka_fondaciju": "Az igazolást elfogadtuk. A hozzájárulás akkor kerül bejegyzésre, amikor az Alapítvány megállapítja, hogy a befizetés beérkezett.",
+    "potvrda_odbijena_necitljivo": "Az igazolásról nem olvashatók le az adatok. Küldj élesebb képet vagy PDF-et a bank alkalmazásából.",
+    "potvrda_odbijena_iznos": "Az igazoláson nem ennek az adománynak az összege szerepel. Ellenőrizd az igazolást, és küldd el újra.",
+    "potvrda_odbijena_racun": "Az igazoláson nem a KOLO Alapítvány számlaszáma szerepel. Ellenőrizd az igazolást, és küldd el újra.",
+    "potvrda_odbijena_poziv": "Az igazoláson nem ennek az adománynak a hivatkozási száma szerepel. Ha megváltoztattad, a befizetést addig nem lehet a fiókhoz kapcsolni, amíg az Alapítvány össze nem kapcsolja.",
+    "potvrda_odbijena_datum": "Az igazoláson nem látszik a befizetés dátuma. Küldj olyan igazolást, amelyen a dátum látszik.",
+    "potvrda_odbijena_vec_koriscena": "Ezt az igazolást már elküldték egy másik befizetéshez. Egy igazolás egy befizetésre érvényes.",
+    "status_na_proveri": "Ellenőrzés alatt",
+    "status_ponisteno": "Törölve",
+    "status_ceka_fondaciju": "Az Alapítvány ellenőrzésére vár",
+    "status_ceka_uplatu": "Befizetésre vár"
   },
   "poruke": {
     "naslov": "Üzenetek",
@@ -1357,11 +1360,11 @@
     "otvoriDokument": "Dokumentum megnyitása →",
     "uslovi": {
       "naslov": "A KOLO platform felhasználási feltételei",
-      "ver": "5.0.2"
+      "ver": "5.0.9"
     },
     "privatnost": {
       "naslov": "A KOLO platform adatvédelmi szabályzata",
-      "ver": "5.0.0"
+      "ver": "5.0.9"
     },
     "statut": {
       "naslov": "A KOLO Alapítvány alapszabálya",
@@ -1369,11 +1372,11 @@
     },
     "dpia": {
       "naslov": "DPIA — Adatvédelmi hatásvizsgálat",
-      "ver": "5.0.3"
+      "ver": "5.0.9"
     },
     "radnjeObrade": {
       "naslov": "Adatkezelési tevékenységek nyilvántartása",
-      "ver": "5.0.0"
+      "ver": "5.0.9"
     },
     "rizici": {
       "naslov": "Kockázatvállalási nyilatkozat",
@@ -1381,11 +1384,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.0.7"
+      "ver": "5.0.9"
     },
     "pravilnik": {
       "naslov": "KOLO rendszer szabályzatai",
-      "ver": "5.0.7",
+      "ver": "5.0.9",
       "sviPravilnici": "← Összes szabályzat",
       "pravilnici": "Szabályzatok"
     },
@@ -1406,21 +1409,21 @@
       "odluke": "Az Alapítvány határozatai"
     },
     "meta_uslovi_title": "Felhasználási feltételek · KOLO",
-    "meta_uslovi_desc": "A KOLO platform felhasználási feltételei, 5.0.2-es verzió",
+    "meta_uslovi_desc": "A KOLO platform felhasználási feltételei, 5.0.9-es verzió",
     "meta_privatnost_title": "Adatvédelmi szabályzat · KOLO",
-    "meta_privatnost_desc": "A KOLO platform adatvédelmi szabályzata, 5.0.0-es verzió",
+    "meta_privatnost_desc": "A KOLO platform adatvédelmi szabályzata, 5.0.9-es verzió",
     "meta_statut_title": "A KOLO Alapítvány alapszabálya · KOLO",
     "meta_statut_desc": "A KOLO Alapítvány alapszabálya, 4.1-es verzió",
     "meta_dpia_title": "DPIA · KOLO",
-    "meta_dpia_desc": "Adatvédelmi hatásvizsgálat, 5.0.3-as verzió",
+    "meta_dpia_desc": "Adatvédelmi hatásvizsgálat, 5.0.9-es verzió",
     "meta_radnje_title": "Adatkezelési tevékenységek nyilvántartása · KOLO",
-    "meta_radnje_desc": "Személyes adatok kezelési tevékenységeinek nyilvántartása, 5.0.0-es verzió",
+    "meta_radnje_desc": "Személyes adatok kezelési tevékenységeinek nyilvántartása, 5.0.9-es verzió",
     "meta_rizici_title": "Kockázatvállalási nyilatkozat · KOLO",
     "meta_rizici_desc": "A KOLO rendszerben való részvétel kockázatainak elfogadásáról szóló nyilatkozat, 5.0.0-es verzió",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, 5.0.7-as verzió",
+    "meta_whitepaper_desc": "KOLO Whitepaper, 5.0.9-es verzió",
     "meta_pravilnik_title": "KOLO rendszer szabályzatai · KOLO",
-    "meta_pravilnik_desc": "A KOLO rendszer szabályzatainak indexe, 5.0.7-as verzió",
+    "meta_pravilnik_desc": "A KOLO rendszer szabályzatainak indexe, 5.0.9-es verzió",
     "rb": {
       "kolo-sistem": {
         "naziv": "Szabályzat a KOLO rendszerről",
@@ -1436,7 +1439,7 @@
       },
       "pokroviteljstvo-donacije": {
         "naziv": "Szabályzat a pártfogásról és adományokról",
-        "opis": "Hogyan kerül nyilvántartásba az adományozók és pártfogók hozzájárulása: szinttáblázat a természetes személyek adományaira, 1,00-es együttható a pártfogásra, 10.000 RSD-s pártfogási küszöb, valamint a személyes és a cég nevében tett adományok külön nyilvántartása."
+        "opis": "Hogyan kerül nyilvántartásba az adományozók és pártfogók hozzájárulása: szinttáblázat a természetes személyek adományaira és a pénzbeli pártfogásra, 1,00-es együttható javak és szolgáltatások esetén, 10.000 RSD-s pártfogási küszöb, valamint a személyes és a cég nevében tett adományok külön nyilvántartása."
       },
       "operativni": {
         "naziv": "Szabályzat a működési hozzájárulásról",
@@ -1915,7 +1918,7 @@
     "n6_opis": "Pénzt adományozol az Alapítványnak, a hozzájárulásodat pedig nyilvános szabályzat szerint POEN-ben tartjuk nyilván, adományi együtthatóval, amellyel a közösség elismeri a hozzájárulást, mert a nagyobb hozzájárulás nagyobb jelentőségű számára.\nA nyilvántartás egyirányú: a POEN nem váltható vissza dinárra, nem ad tulajdont vagy követelést az Alapítvánnyal szemben, és nem vásárol szavazatot.",
     "n6_iznos": "adományi együttható 1,00-tól felfelé",
     "n5_naslov": "Pártfogás",
-    "n5_opis": "Egy cég, egyesület vagy bejegyzett gazdaság pártfogási szerződést köt az Alapítvánnyal, pénzben vagy javakban és szolgáltatásokban. A POEN-t a bejelentést benyújtó felhasználónak tartjuk nyilván, növelés nélkül: a szinttáblázat csak a személyes adományra vonatkozik.",
+    "n5_opis": "Egy cég, egyesület vagy bejegyzett gazdaság pártfogási szerződést köt az Alapítvánnyal, pénzben vagy javakban és szolgáltatásokban. A POEN-t a bejelentést benyújtó felhasználónak tartjuk nyilván: pénz esetén a pártfogó szintje szerint, ugyanazon táblázat alapján, mint a személyes adománynál, de a pártfogó adományainak összegére számítva, javak és szolgáltatások esetén pedig 1,00-es együtthatóval.",
     "n4_naslov": "Szociális programok",
     "n4_opis": "Programok anyáknak és gondviselőknek, időseknek, különleges támogatásra és hallgatóknak, amelyekben a jóváhagyott résztvevőknek naponta POEN kerül bejegyzésre. Ez nem jogszabályi értelemben vett szociális segély, és nem befolyásolja az államnál érvényesített jogaidat.",
     "n4_iznos": "napi feljegyzés",
@@ -2250,7 +2253,7 @@
     "naslov": "Patronálás",
     "opis": "A pártfogó olyan jogi személy, egyéni vállalkozó vagy bejegyzett mezőgazdasági gazdaság, amely adományt nyújt az Alapítványnak. Az első kérelem előtt a pártfogót egyszer bejegyzed a nyilvántartásba; a bejegyzést te kezeled, az általad benyújtott kérelmek alapján járó hozzájárulás pedig a te bejegyzésedben kerül nyilvántartásba.",
     "dobra_zakljucano": "A javakkal és szolgáltatásokkal nyújtott pártfogás azoknak szól, akik a Kolóban vannak. A pártfogó bejegyzését és a pénzbeli pártfogást bármely nagykorú felhasználó elvégezheti.",
-    "nivoi_napomena": "A pártfogásnak nincsenek szintjei: az együttható 1,00 pénz, illetve javak és szolgáltatások esetén is, az összegtől függetlenül. A szinttáblázat csak a személyes adományaidra vonatkozik, a cég adományainak összegét pedig ezektől elkülönítve tartjuk nyilván, és nem emeli a szintedet.",
+    "nivoi_napomena": "A pénzbeli pártfogásnak van pártfogói szintje, ugyanazon táblázat szerint, mint a személyes adományoknál (Adományok képernyő), de a pártfogó adományainak összegére számítva. Ezt az összeget a személyes adományaidtól elkülönítve tartjuk nyilván: nem emeli a személyes szintedet, és a személyes adományaid sem emelik a pártfogó szintjét. Javak és szolgáltatások esetén az együttható 1,00, kivéve az élelmiszert.",
     "forma_naslov": "Patronálás indítása",
     "forma_opis": "A platform a bejegyzés adataiból adományozási szerződést hoz létre; a szerződést a Szerződések fülön írod alá. Amint az Alapítvány megerősíti a befizetés beérkezését, a hozzájárulás a bejegyzésedben nyilvántartásba kerül.",
     "forma_naziv_label": "A jogi személy vagy vállalkozó neve",
@@ -2442,10 +2445,14 @@
     "brisanje_potvrda": "Törlöd a pártfogó bejegyzését? A térképes megjelenítés és az utalványkínálat megszűnik, a hozzájárulások a rangsorban maradnak.",
     "brisanje_potvrda_rang": "Törlöd a pártfogó bejegyzését, és eltávolítod a rangsorból? Ez nem vonható vissza.",
     "sta_dobija_naslov": "Mit rögzítünk",
-    "sta_dobija_tekst": "Annak, aki a bejelentést benyújtja, POEN-t tartunk nyilván 1,00-es együtthatóval, szinttáblázat nélkül. A pártfogó neve, és logója, ha van, megjelenik a térképen és a pártfogók rangsorában, a javakkal és szolgáltatásokkal való pártfogásnál pedig az utalványokon is. Ez a hozzájárulás nyilvántartása, nem reklám: a pártfogó sem reklámot, sem előnyt a beszerzésben nem szerez.",
+    "sta_dobija_tekst": "Annak, aki a bejelentést benyújtja, POEN-t tartunk nyilván: pénz esetén a pártfogó szintje szerint, ugyanazon táblázat alapján, mint a személyes adománynál, javak és szolgáltatások esetén pedig 1,00-es együtthatóval, kivéve az élelmiszert. A pártfogó neve, és logója, ha van, megjelenik a térképen és a pártfogók rangsorában, a javakkal és szolgáltatásokkal való pártfogásnál pedig az utalványokon is. Ez a hozzájárulás nyilvántartása, nem reklám: a pártfogó sem reklámot, sem előnyt a beszerzésben nem szerez.",
     "mejl_kod_naslov": "Kód az adományozási szerződés aláírásához",
     "mejl_kod_telo": "Kód a pénzbeli pártfogásról szóló szerződés ({naziv}) aláírásához a KOLO platformon:",
-    "mejl_primerak_davalac": "A pénzbeli pártfogásról szóló szerződést elektronikus úton kötötték meg a KOLO platformon. Alább a szerződés nyomtatható példánya található."
+    "mejl_primerak_davalac": "A pénzbeli pártfogásról szóló szerződést elektronikus úton kötötték meg a KOLO platformon. Alább a szerződés nyomtatható példánya található.",
+    "uplata_naslov": "A pártfogás befizetése",
+    "uplata_opis": "A pártfogó számlájáról fizess, átutalási megbízással vagy az IPS QR-kód beolvasásával az üzleti netbankban, ezzel a hivatkozási számmal. A befizetés után küldd el az igazolást. A hozzájárulás a beérkezés megállapítását követő elszámolási időszakban kerül bejegyzésre.",
+    "uplata_podaci": "Számlaszám {racun} · összeg {iznos} RSD · fizetés célja: Adomány · modell 97 · hivatkozási szám {poziv}",
+    "uplata_potvrda_poslata": "A befizetési igazolást elküldted. Az Alapítvány ellenőrzi a beérkezést."
   },
   "doprinosOglasi": {
     "naslov": "Közösségi feladatok",
@@ -2803,7 +2810,7 @@
     "pokroviteljstvo_potvrdjeno_naslov": "Támogatás megerősítve",
     "pokroviteljstvo_potvrdjeno_tekst": "A támogatói hozzájárulást megerősítettük és hozzáadtuk a halmozott hozzájáruláshoz.",
     "pokroviteljstvo_potvrdjeno_bonus_naslov": "Támogatás megerősítve",
-    "pokroviteljstvo_potvrdjeno_bonus_tekst": "A pártfogási hozzájárulást megerősítettük. {bonus} POEN rögzítve, 1,00-s együtthatóval.",
+    "pokroviteljstvo_potvrdjeno_bonus_tekst": "A pártfogási hozzájárulást megerősítettük. {bonus} POEN rögzítve, {koeficijent} együtthatóval.",
     "izvrsenje_odbijeno_naslov": "Napi teljesítés elutasítva",
     "izvrsenje_odbijeno_tekst": "A napi teljesítésedet elutasították. Ezért nem kerül POEN rögzítésre (15. cikk).",
     "izvrsenje_potvrdjeno_naslov": "Teljesítés megerősítve",
@@ -3063,7 +3070,27 @@
     "zavrsna_potvrda_naslov": "Záró döntés a feladatról",
     "zavrsna_potvrda_tekst": "Záró döntés született a(z) „{zadatak}” feladat általad végzett teljesítéséről. Nézd meg a feladat oldalán.",
     "zadruzni_dodela_naslov": "A szövetkezet egységet osztott ki neked",
-    "zadruzni_dodela_tekst": "A(z) {zadruga} szövetkezet kiosztotta neked a(z) „{zadatak}” egységet. Nézd meg, és fogadd el, ha vállalod a teljesítését."
+    "zadruzni_dodela_tekst": "A(z) {zadruga} szövetkezet kiosztotta neked a(z) „{zadatak}” egységet. Nézd meg, és fogadd el, ha vállalod a teljesítését.",
+    "donacija_unapred_naslov": "A hozzájárulást előre bejegyeztük",
+    "donacija_unapred_tekst": "{iznos} POEN került bejegyzésre neked előre. Az Alapítvány 24 órán belül ellenőrzi, hogy a befizetés beérkezett-e; ha nem érkezik be, a bejegyzést törlik.",
+    "donacija_unapred_utvrdjena_naslov": "A befizetés beérkezett",
+    "donacija_unapred_utvrdjena_tekst": "Az Alapítvány megállapította, hogy a befizetésed beérkezett. Az adomány megerősítést nyert.",
+    "donacija_unapred_ponistena_naslov": "Az előre nyilvántartott adományt törölték",
+    "donacija_unapred_ponistena_tekst": "Az Alapítvány nem állapította meg, hogy a befizetés beérkezett, ezért törölték az előre bejegyzett {iznos} POEN-t (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 10. pont). A döntés ellen kifogást nyújthatsz be.",
+    "donacija_unapred_ponistena_minus_naslov": "Az előre nyilvántartott adományt törölték: a bejegyzés mínuszban van",
+    "donacija_unapred_ponistena_minus_tekst": "Az Alapítvány nem állapította meg, hogy a befizetés beérkezett, ezért törölték az előre bejegyzett {iznos} POEN-t (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 10. pont). A bejegyzésed most {stanje} POEN; ez nem tartozás, és nem hajtható be, a beérkező POEN pedig először a mínuszt tölti fel. A döntés ellen kifogást nyújthatsz be.",
+    "ogranicenje_primljenog_naslov": "A bejegyzésed egy része ideiglenesen korlátozva van",
+    "ogranicenje_primljenog_tekst": "Azt a(z) {iznos} POEN-t, amelyet olyan adományozótól kaptál, akinek adományát törölték, ideiglenesen nem írhatod át, nem használhatod fel, és nem jegyezheted be ZRNO-ba, legfeljebb {dana} napig, amíg az Alapítvány nem dönt. A korlátozás ellen kifogást nyújthatsz be.",
+    "ogranicenje_primljenog_roditelj_naslov": "A gyermek bejegyzésének egy része ideiglenesen korlátozva van",
+    "ogranicenje_primljenog_roditelj_tekst": "A gyermeknél ideiglenesen korlátozva van {iznos} POEN, amelyet olyan adományozótól kapott, akinek adományát törölték, legfeljebb {dana} napig, amíg az Alapítvány nem dönt.",
+    "ogranicenje_otpis_naslov": "A kapott összeg leírása",
+    "ogranicenje_otpis_tekst": "Az Alapítvány megállapította, hogy tudtad, hogy a befizetési igazolás hamis vagy másé, ezért leírták az ettől az adományozótól kapott {iznos} POEN-t (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 10. pont). A döntés ellen kifogást nyújthatsz be.",
+    "ogranicenje_otpis_minus_naslov": "A kapott összeg leírása: a bejegyzés mínuszban van",
+    "ogranicenje_otpis_minus_tekst": "Az Alapítvány megállapította, hogy tudtad, hogy a befizetési igazolás hamis vagy másé, ezért leírták az ettől az adományozótól kapott {iznos} POEN-t (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 10. pont). A bejegyzésed most {stanje} POEN; ez nem tartozás, és nem hajtható be. A döntés ellen kifogást nyújthatsz be.",
+    "ogranicenje_prestalo_naslov": "A korlátozás megszűnt",
+    "ogranicenje_prestalo_tekst": "A(z) {iznos} POEN korlátozása megszűnt. Semmit nem vontak el tőled.",
+    "pokroviteljstvo_evidentirano_naslov": "A pártfogás utáni hozzájárulást bejegyeztük",
+    "pokroviteljstvo_evidentirano_tekst": "A pártfogás feljegyzett hozzájárulása a most kezdődött elszámolási időszakban bejegyzésre került: {bonus} POEN."
   },
   "transakcije": {
     "verifikacija": "Tag megerősítése: {pseudonim}",
@@ -3106,7 +3133,10 @@
     "pokroviteljstvo_dobra_otpis": "Leírás a javakkal és szolgáltatásokkal történő pártfogás nem teljesítése miatt, {opis}",
     "vaucer_uzet": "Utalvány: {opis} — {davalac}",
     "visestruki_nalog_otpis": "Leírás többszörös fiók megállapítása alapján",
-    "visestruki_nalog_ponistenje": "Megszűnt fiók bejegyzésének érvénytelenítése"
+    "visestruki_nalog_ponistenje": "Megszűnt fiók bejegyzésének érvénytelenítése",
+    "donacija_unapred": "Előre nyilvántartott adomány alapján bejegyzett hozzájárulás: {iznos} POEN",
+    "donacija_unapred_ponistena": "Az előre nyilvántartott adomány törlése — a beérkezést nem állapították meg",
+    "otpis_primljenog_donacija": "Olyan adományozótól kapott összeg leírása, akinek előre nyilvántartott adományát törölték"
   },
   "mejl": {
     "pozdrav": "Üdvözlünk",
@@ -4255,7 +4285,7 @@
     "licno_tekst": "Adományozhatsz az Alapítványnak. Az adomány külön aktus, és nem vásárol semmit a rendszeren belül.",
     "licno_dugme": "Adományozás",
     "firma_naslov": "Cégként, egyesületként vagy bejegyzett gazdaságként",
-    "firma_tekst": "Cég, egyesület és bejegyzett mezőgazdasági gazdaság vezetője lehet pártfogó, pénzben vagy javakban és szolgáltatásokban. Annak, aki a bejelentést benyújtja, POEN-t tartunk nyilván 1,00-es együtthatóval, szinttáblázat nélkül, a pénzbeli pártfogó pedig névvel és, ha van, logóval szerepel a rangsorban. Ezzel sem reklámot, sem előnyt a beszerzésben nem szerez.",
+    "firma_tekst": "Cég, egyesület és bejegyzett mezőgazdasági gazdaság vezetője lehet pártfogó, pénzben vagy javakban és szolgáltatásokban. Annak, aki a bejelentést benyújtja, POEN-t tartunk nyilván, pénz esetén a pártfogó szintje szerint, ugyanazon táblázat alapján, mint a személyes adománynál, a pénzbeli pártfogó pedig névvel és, ha van, logóval szerepel a rangsorban. Ezzel sem reklámot, sem előnyt a beszerzésben nem szerez.",
     "firma_dugme": "Pártfogó bejegyzése",
     "firma_lista": "A pártfogók rangsora",
     "firma_firme": "Utalványos cégek",

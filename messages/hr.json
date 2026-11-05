@@ -739,7 +739,11 @@
     "zabelezene_potvrde_tudje": "{iznos} POENA za potvrde koje si dao — čeka prvi doprinos onih koje si potvrdio",
     "zabelezen_gazdinstvo": "Tvojih {iznos} POENA doprinosa gospodarstva — čeka tvoj objavljen oglas i ulazak u Kolo",
     "zabelezene_vidi": "Vidi koga čekaš →",
-    "objavi_ponudu": "Objavi ponudu →"
+    "objavi_ponudu": "Objavi ponudu →",
+    "ceka_period": "Čeka sljedeće obračunsko razdoblje",
+    "ceka_period_opis": "Primitak pokroviteljstva je utvrđen. Doprinos se evidentira u sljedećem obračunskom razdoblju, nakon ponoći.",
+    "ograniceno_naslov": "Privremeno ograničeno",
+    "ograniceno_opis": "Ovaj dio zapisa primio si od donatora čija je donacija unaprijed poništena. Ostaje na tvom zapisu, ali ga najdulje 7 dana, dok Zaklada ne odluči, ne možeš prepisati, iskoristiti u nabavi ni upisati u ZRNO. Na ograničenje možeš podnijeti prigovor s profila."
   },
   "verifikacija": {
     "page_naslov": "Potvrda",
@@ -1236,7 +1240,6 @@
   },
   "donacije": {
     "naslov": "Donacije Zakladi",
-    "beta_opis": "Zasad se donira samo uplatom na račun, uz tvoj poziv na broj. Kartica i IPS QR bit će uključeni uskoro.",
     "objasnjenje": "Donacija Zakladi je nepovratna i njome se ništa ne pribavlja. Doprinos se evidentira.",
     "zaglavlje_nivo": "dostignuta",
     "zaglavlje_ukupno": "ukupno doniraš",
@@ -1245,12 +1248,10 @@
     "trenutni_kurs": "Trenutačni koeficijent",
     "kurs_opis": "dostignute razine",
     "do_nivoa": "Do razine {n} (koeficijent {kurs}) još:",
-    "instrukcije": "Upute za uplatu",
     "primalac": "Primatelj:",
     "racun": "Račun:",
     "svrha": "Svrha uplate:",
     "svrha_vrednost": "Donacija",
-    "napomena_uplata": "Iznos određuješ sam.",
     "kopiraj_btn": "Kopiraj podatke za uplatu",
     "kopirano": "Kopirano ✓",
     "tabela_naslov": "Tablica rangova donacija",
@@ -1262,17 +1263,6 @@
     "nema_donacija": "Još nema evidentiranih donacija.",
     "potvrdeno": "Potvrđeno",
     "ceka_potvrdu": "Čeka potvrdu",
-    "placanje_uspeh": "Uplata je primljena. POEN se evidentira kad Zaklada potvrdi uplatu; vidjet ćeš ga u povijesti ispod.",
-    "placanje_neuspeh": "Plaćanje nije odobreno (banka je odbila transakciju). Nije evidentirana nijedna uplata.",
-    "placanje_greska": "Došlo je do greške pri obradi plaćanja. Ako je iznos naplaćen, obrati se podršci.",
-    "karticno_naslov": "Doniraj platnom karticom",
-    "karticno_opis": "Sigurno plaćanje na stranici banke (3D Secure). Podaci o kartici ne pohranjuju se na platformi.",
-    "karticno_iznos_placeholder": "Iznos",
-    "karticno_otvaram": "Otvaram…",
-    "karticno_plati": "Doniraj karticom",
-    "karticno_min_iznos": "Unesi iznos (najmanje 100 RSD).",
-    "karticno_nije_moguce": "Plaćanje trenutačno nije moguće.",
-    "karticno_greska_komunikacije": "Greška u komunikaciji. Pokušaj ponovno.",
     "vidljivost_naslov": "Vrsta donacije",
     "vidljivost_javna": "Javna donacija (upisuje mi se POEN)",
     "vidljivost_javna_opis": "Tvoje ime i prezime bit će javno prikazano u popisu donacija. Samo za javnu donaciju se upisuje POEN.",
@@ -1285,23 +1275,13 @@
     "lista_zakljucana": "Popis donacija nije dostupan u dječjem računu. Vlastite donacije vidiš iznad.",
     "lista_anoniman": "Anonimna donacija",
     "lista_ime_povuceno": "Ime nije objavljeno",
-    "ips_naslov": "Doniraj putem IPS QR koda (instant)",
-    "ips_opis": "Skeniraj QR mobilnom bankom, uplata u dinarima stiže za par sekundi, bez provizije platforme. POEN se evidentira nakon što Zaklada potvrdi priljev.",
-    "ips_uskoro": "Račun Zaklade za IPS uplate bit će otvoren uskoro. Opcija će se aktivirati automatski čim račun bude postavljen.",
-    "ips_generisi": "Generiraj QR",
     "ips_generisem": "Generiram…",
-    "ips_min_iznos": "Unesi iznos (najmanje {min} RSD).",
-    "ips_limit": "Maksimum po IPS uplati: {max} RSD. Veće iznose uplati karticom ili klasičnom uplatom.",
     "ips_greska": "Generiranje QR koda trenutačno nije moguće.",
     "ips_skeniraj_uputstvo": "Otvori mobilno bankarstvo → opcija „Plati / Skeniraj QR” → skeniraj ovaj kôd. Iznos i poziv na broj su već popunjeni, samo potvrdi.",
     "ips_iznos_label": "Iznos:",
     "ips_poziv_na_broj": "Poziv na broj:",
     "ips_model": "model",
-    "ips_napomena_potvrda": "Nakon uplate, Zaklada potvrđuje priljev po pozivu na broj i tada se evidentira POEN. Poziv na broj je već u QR kodu, ne mijenjaj ga.",
     "ips_novi": "Nova IPS uplata",
-    "model": "Model:",
-    "poziv_na_broj": "Poziv na broj:",
-    "vas_broj_opis": "Ovo je tvoj trajni poziv na broj (model 97). Navedi ga uz svaku uplatu: po njemu se uplata prepoznaje kao tvoja. Pogrešno upisan broj banka odbija.",
     "rang_pojasnjenje": "Veći pojedinačan doprinos ima veću važnost za zajednicu; donacijom se ništa ne pribavlja.",
     "ugovor_link": "Ugovor o donaciji",
     "povuci_ime": "Povuci ime s popisa",
@@ -1311,19 +1291,42 @@
     "ugovor_stampaj": "Ispiši",
     "ugovor_nazad": "Natrag na donacije",
     "ugovor_napomena": "Ugovor je sastavljen u trenutku potvrde donacije i od tada se ne mijenja. Mjerodavan je srpski izvornik.",
-    "karticno_sopstvena_kartica": "Plaćanjem potvrđuješ da kartica glasi na tvoje ime. Doprinos se evidentira isključivo onome čijim je sredstvima uplata izvršena.",
-    "karticno_kapa": "Kartična uplata ide najviše do {max} RSD. Za veći iznos koristi uplatu na račun ili deviznu doznaku.",
-    "karticno_kapa_napomena": "Karticom se uplaćuje do {max} RSD. Veći iznos ide uplatom na račun (u zemlji) ili deviznom doznakom (iz inozemstva).",
-    "karticno_nepovratnost": "Potvrđujem da je donacija nepovratna i da njome ne dobivam robu ni uslugu.",
-    "karticno_nepovratnost_obavezna": "Potvrdi da je donacija nepovratna prije nego što nastaviš.",
     "nacin_oznaka": "Način uplate",
     "nacin_ips": "IPS QR",
-    "nacin_kartica": "Kartica",
-    "nacin_uplatnica": "Uplatnica",
     "pokrovitelj_link": "Doniraš u ime tvrtke ili udruge? To ide kao pokroviteljstvo →",
-    "kopiraj_tekst": "Primatelj: KOLO Fondacija\nRačun: {racun}\nSvrha: Donacija\nModel: 97\nPoziv na broj: {poziv}",
     "primalac_vrednost": "KOLO Fondacija",
-    "uplatnica_poen": "Za javnu donaciju POEN se evidentira kad Zaklada potvrdi uplatu."
+    "min_iznos": "Najmanji iznos donacije je {min} RSD.",
+    "greska_komunikacije": "Greška u komunikaciji. Pokušaj ponovno.",
+    "iznos_naslov": "Iznos donacije",
+    "iznos_opis": "Odaberi iznos ili upiši drugi. Donacija se uplaćuje s tvog računa.",
+    "drugi_iznos": "Drugi iznos",
+    "iznos_placeholder": "Najmanje {min}",
+    "nastavi": "Nastavi",
+    "nacin_nalog": "Nalog za prijenos",
+    "nalog_uputstvo": "U mobilnom ili internetskom bankarstvu, ili u svojoj banci, napravi nalog za prijenos sa svog računa s ovim podacima.",
+    "poziv_ne_menjaj": "Ništa ne mijenjaj u nalogu, a pogotovo ne poziv na broj. Po njemu znamo da je uplata tvoja. Gotovina i platna kartica ne primaju se.",
+    "kopiraj_tekst_donacija": "Primatelj: KOLO Zaklada\nRačun: {racun}\nIznos: {iznos} RSD\nSvrha: Donacija\nModel: 97\nPoziv na broj: {poziv}",
+    "posle_uplate_naslov": "Uplatio sam",
+    "posle_uplate_prva": "Kad banka javi da je plaćanje uspjelo, pošalji potvrdu (snimku zaslona ili PDF iz aplikacije banke, odnosno ovjereni nalog). Zaklada provjerava je li uplata stigla, i tada se evidentira doprinos.",
+    "posle_uplate_unapred": "Kad banka javi da je plaćanje uspjelo, pošalji potvrdu (snimku zaslona ili PDF iz aplikacije banke, odnosno ovjereni nalog). Ako se podaci s potvrde podudaraju, doprinos se evidentira odmah, s oznakom „Na provjeri”. Zaklada u roku od 24 sata provjerava je li uplata stigla; ako ne stigne, evidentiranje se poništava.",
+    "posle_uplate_anonimna": "Kad banka javi da je plaćanje uspjelo, pošalji potvrdu. Anonimna donacija ne nosi POEN.",
+    "potvrda_dugme": "Pošalji potvrdu o uplati",
+    "potvrda_citam": "Čitam potvrdu…",
+    "potvrda_uputstvo": "Na potvrdi se trebaju vidjeti iznos, datum, račun primatelja i poziv na broj. Jedna potvrda vrijedi za jednu uplatu. Lažna ili tuđa potvrda vodi u isključenje.",
+    "potvrda_prevelika": "Potvrda je prevelika (najviše 5 MB).",
+    "potvrda_greska": "Potvrda se trenutačno ne može obraditi. Pokušaj ponovno.",
+    "potvrda_unapred": "Potvrda je prihvaćena. Evidentirano ti je {poen} POEN, s oznakom „Na provjeri”. Zaklada u roku od 24 sata provjerava je li uplata stigla.",
+    "potvrda_ceka_fondaciju": "Potvrda je prihvaćena. Doprinos se evidentira kad Zaklada utvrdi da je uplata stigla.",
+    "potvrda_odbijena_necitljivo": "S potvrde se ne mogu pročitati podaci. Pošalji jasniju snimku ili PDF iz aplikacije banke.",
+    "potvrda_odbijena_iznos": "Na potvrdi nije iznos ove donacije. Provjeri potvrdu i pošalji je ponovno.",
+    "potvrda_odbijena_racun": "Na potvrdi nije račun KOLO Zaklade. Provjeri potvrdu i pošalji je ponovno.",
+    "potvrda_odbijena_poziv": "Na potvrdi nije poziv na broj ove donacije. Ako si ga promijenio, uplata se ne može povezati s korisničkim računom dok je Zaklada ne poveže.",
+    "potvrda_odbijena_datum": "Na potvrdi se ne vidi datum uplate. Pošalji potvrdu na kojoj se vidi datum.",
+    "potvrda_odbijena_vec_koriscena": "Ova potvrda već je poslana za drugu uplatu. Jedna potvrda vrijedi za jednu uplatu.",
+    "status_na_proveri": "Na provjeri",
+    "status_ponisteno": "Poništeno",
+    "status_ceka_fondaciju": "Čeka provjeru Zaklade",
+    "status_ceka_uplatu": "Čeka uplatu"
   },
   "poruke": {
     "naslov": "Poruke",
@@ -1357,11 +1360,11 @@
     "otvoriDokument": "Otvori dokument →",
     "uslovi": {
       "naslov": "Uvjeti korištenja KOLO platforme",
-      "ver": "5.0.2"
+      "ver": "5.0.9"
     },
     "privatnost": {
       "naslov": "Politika privatnosti KOLO platforme",
-      "ver": "5.0.0"
+      "ver": "5.0.9"
     },
     "statut": {
       "naslov": "Statut KOLO Zaklade",
@@ -1369,11 +1372,11 @@
     },
     "dpia": {
       "naslov": "DPIA. Procjena učinka na zaštitu osobnih podataka",
-      "ver": "5.0.3"
+      "ver": "5.0.9"
     },
     "radnjeObrade": {
       "naslov": "Registar radnji obrade osobnih podataka",
-      "ver": "5.0.0"
+      "ver": "5.0.9"
     },
     "rizici": {
       "naslov": "Izjava o prihvaćanju rizika",
@@ -1381,11 +1384,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.0.7"
+      "ver": "5.0.9"
     },
     "pravilnik": {
       "naslov": "Pravilnici KOLO sustava",
-      "ver": "5.0.7",
+      "ver": "5.0.9",
       "sviPravilnici": "← Svi pravilnici",
       "pravilnici": "Pravilnici"
     },
@@ -1406,21 +1409,21 @@
       "odluke": "Odluke Zaklade"
     },
     "meta_uslovi_title": "Uvjeti korištenja · KOLO",
-    "meta_uslovi_desc": "Uvjeti korištenja KOLO platforme, verzija 5.0.2",
+    "meta_uslovi_desc": "Uvjeti korištenja KOLO platforme, verzija 5.0.9",
     "meta_privatnost_title": "Politika privatnosti · KOLO",
-    "meta_privatnost_desc": "Politika privatnosti KOLO platforme, verzija 5.0.0",
+    "meta_privatnost_desc": "Politika privatnosti KOLO platforme, verzija 5.0.9",
     "meta_statut_title": "Statut KOLO Zaklade · KOLO",
     "meta_statut_desc": "Statut KOLO Zaklade, verzija 4.1",
     "meta_dpia_title": "DPIA · KOLO",
-    "meta_dpia_desc": "Procjena učinka na zaštitu osobnih podataka, verzija 5.0.3",
+    "meta_dpia_desc": "Procjena učinka na zaštitu osobnih podataka, verzija 5.0.9",
     "meta_radnje_title": "Registar radnji obrade · KOLO",
-    "meta_radnje_desc": "Registar radnji obrade osobnih podataka, verzija 5.0.0",
+    "meta_radnje_desc": "Registar radnji obrade osobnih podataka, verzija 5.0.9",
     "meta_rizici_title": "Izjava o prihvaćanju rizika · KOLO",
     "meta_rizici_desc": "Izjava o prihvaćanju rizika sudjelovanja u KOLO sustavu, verzija 5.0.0",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, verzija 5.0.7",
+    "meta_whitepaper_desc": "KOLO Whitepaper, verzija 5.0.9",
     "meta_pravilnik_title": "Pravilnici KOLO sustava · KOLO",
-    "meta_pravilnik_desc": "Indeks pravilnika KOLO sustava, verzija 5.0.7",
+    "meta_pravilnik_desc": "Indeks pravilnika KOLO sustava, verzija 5.0.9",
     "rb": {
       "kolo-sistem": {
         "naziv": "Pravilnik o KOLO sustavu",
@@ -1436,7 +1439,7 @@
       },
       "pokroviteljstvo-donacije": {
         "naziv": "Pravilnik o pokroviteljstvu i donacijama",
-        "opis": "Kako se evidentira doprinos donatora i pokrovitelja: tablica razina za donacije fizičkih osoba, koeficijent 1,00 za pokroviteljstvo, prag pokroviteljstva od 10.000 RSD i odvojena evidencija osobnih donacija i donacija tvrtke."
+        "opis": "Kako se evidentira doprinos donatora i pokrovitelja: tablica razina za donacije fizičkih osoba i za novčano pokroviteljstvo, koeficijent 1,00 za dobra i usluge, prag pokroviteljstva od 10.000 RSD i odvojena evidencija osobnih donacija i donacija tvrtke."
       },
       "operativni": {
         "naziv": "Pravilnik o operativnom doprinosu",
@@ -1915,7 +1918,7 @@
     "n6_opis": "Doniraš novac Zakladi, a tvoj se doprinos po javnom pravilniku evidentira u POENIMA, uz koeficijent donacije kojim zajednica uvažava doprinos, jer veći doprinos za nju ima veće značenje.\nEvidencija je jednosmjerna: POEN se ne vraća u dinare, ne daje vlasništvo ni potraživanje prema Zakladi i ne kupuje glasove.",
     "n6_iznos": "koeficijent donacije od 1,00 naviše",
     "n5_naslov": "Pokroviteljstvo",
-    "n5_opis": "Tvrtka, udruga ili registrirano gospodarstvo potpisuje sa Zakladom ugovor o pokroviteljstvu, u novcu ili u dobrima i uslugama. POEN se evidentira korisniku koji je podnio prijavu, bez uvećanja: tablica razina vrijedi samo za osobnu donaciju.",
+    "n5_opis": "Tvrtka, udruga ili registrirano gospodarstvo potpisuje sa Zakladom ugovor o pokroviteljstvu, u novcu ili u dobrima i uslugama. POEN se evidentira korisniku koji je podnio prijavu: za novac po razini pokrovitelja, po istoj tablici kao osobna donacija, ali nad zbrojem donacija pokrovitelja, a za dobra i usluge s koeficijentom 1,00.",
     "n4_naslov": "Socijalni programi",
     "n4_opis": "Programi za majke i skrbnike, starije, posebnu potporu i studente, u kojima se odobrenim sudionicima POEN upisuje svakoga dana. Ovo nije socijalna pomoć u smislu propisa i ne utječe na prava koja ostvaruješ kod države.",
     "n4_iznos": "dnevna evidencija",
@@ -2250,7 +2253,7 @@
     "naslov": "Pokroviteljstvo",
     "opis": "Pokrovitelj je pravna osoba, obrtnik ili registrirano poljoprivredno gospodarstvo koje donira Zakladi. Prije prve prijave pokrovitelja jednom upisuješ u evidenciju; upis vodiš ti, a doprinos po prijavama koje podneseš evidentira se u tvom zapisu.",
     "dobra_zakljucano": "Pokroviteljstvo dobrima i uslugama koristi tko je u Kolu. Upis i novčano pokroviteljstvo može svaki punoljetni korisnik.",
-    "nivoi_napomena": "Pokroviteljstvo nema razine: koeficijent je 1,00 i za novac i za dobra i usluge, bez obzira na iznos. Tablica razina vrijedi samo za tvoje osobne donacije, a zbroj donacija tvrtke vodi se odvojeno od njih i ne podiže tvoju razinu.",
+    "nivoi_napomena": "Novčano pokroviteljstvo ima razinu pokrovitelja, po istoj tablici kao osobne donacije (zaslon Donacije), ali nad zbrojem donacija pokrovitelja. Taj zbroj vodi se odvojeno od tvojih osobnih donacija: ne podiže tvoju osobnu razinu, a tvoje osobne donacije ne podižu razinu pokrovitelja. Za dobra i usluge koeficijent je 1,00, osim za hranu.",
     "forma_naslov": "Pokreni pokroviteljstvo",
     "forma_opis": "Platforma generira ugovor o donaciji iz podataka upisa; ugovor potpisuješ u kartici Ugovori. Kad Zaklada potvrdi primitak uplate, doprinos se evidentira u tvom zapisu.",
     "forma_naziv_label": "Naziv pravne osobe ili poduzetnika",
@@ -2442,10 +2445,14 @@
     "brisanje_potvrda": "Obrisati upis pokrovitelja? Prikaz na karti i ponuda vaučera prestaju, a doprinosi ostaju na rang-listi.",
     "brisanje_potvrda_rang": "Obrisati upis pokrovitelja i ukloniti ga s rang-liste? Ovo se ne može poništiti.",
     "sta_dobija_naslov": "Što se evidentira",
-    "sta_dobija_tekst": "Onome tko podnese prijavu evidentira se POEN, s koeficijentom 1,00, bez tablice razina. Naziv pokrovitelja, i logotip ako ga ima, stoji na karti i na rang-listi pokrovitelja, a kod pokroviteljstva dobrima i uslugama i na vaučerima. To je evidencija doprinosa, ne reklama: promociju ni prednost u nabavi pokrovitelj ne stječe.",
+    "sta_dobija_tekst": "Onome tko podnese prijavu evidentira se POEN: za novac po razini pokrovitelja, po istoj tablici kao osobna donacija, a za dobra i usluge s koeficijentom 1,00, osim za hranu. Naziv pokrovitelja, i logotip ako ga ima, stoji na karti i na rang-listi pokrovitelja, a kod pokroviteljstva dobrima i uslugama i na vaučerima. To je evidencija doprinosa, ne reklama: promociju ni prednost u nabavi pokrovitelj ne stječe.",
     "mejl_kod_naslov": "Kod za potpis ugovora o donaciji",
     "mejl_kod_telo": "Kod za potpis ugovora o novčanom pokroviteljstvu ({naziv}) na platformi KOLO:",
-    "mejl_primerak_davalac": "Ugovor o novčanom pokroviteljstvu sklopljen je elektroničkim putem na platformi KOLO. U nastavku je primjerak ugovora za ispis."
+    "mejl_primerak_davalac": "Ugovor o novčanom pokroviteljstvu sklopljen je elektroničkim putem na platformi KOLO. U nastavku je primjerak ugovora za ispis.",
+    "uplata_naslov": "Uplata pokroviteljstva",
+    "uplata_opis": "Uplati s računa pokrovitelja, nalogom za prijenos ili skeniranjem IPS QR koda u poslovnom internetskom bankarstvu, uz ovaj poziv na broj. Nakon uplate pošalji potvrdu. Doprinos se evidentira u sljedećem obračunskom razdoblju nakon utvrđivanja primitka.",
+    "uplata_podaci": "Račun {racun} · iznos {iznos} RSD · svrha: Donacija · model 97 · poziv na broj {poziv}",
+    "uplata_potvrda_poslata": "Potvrda o uplati je poslana. Zaklada provjerava primitak."
   },
   "doprinosOglasi": {
     "naslov": "Zadaci zajednice",
@@ -2803,7 +2810,7 @@
     "pokroviteljstvo_potvrdjeno_naslov": "Pokroviteljstvo potvrđeno",
     "pokroviteljstvo_potvrdjeno_tekst": "Doprinos pokroviteljstva je potvrđen i dodat kumulativnom doprinosu.",
     "pokroviteljstvo_potvrdjeno_bonus_naslov": "Pokroviteljstvo potvrđeno",
-    "pokroviteljstvo_potvrdjeno_bonus_tekst": "Doprinos pokroviteljstva je potvrđen. Evidentirano je {bonus} POENA, s koeficijentom 1,00.",
+    "pokroviteljstvo_potvrdjeno_bonus_tekst": "Doprinos pokroviteljstva je potvrđen. Evidentirano je {bonus} POENA, s koeficijentom {koeficijent}.",
     "izvrsenje_odbijeno_naslov": "Dnevno izvršenje odbijeno",
     "izvrsenje_odbijeno_tekst": "Tvoje dnevno izvršenje je odbijeno. Za to izvršenje se ne evidentira POEN (čl. 15).",
     "izvrsenje_potvrdjeno_naslov": "Izvršenje potvrđeno",
@@ -3063,7 +3070,27 @@
     "zavrsna_potvrda_naslov": "Završna odluka o zadatku",
     "zavrsna_potvrda_tekst": "Donesena je završna odluka o tvom izvršenju zadatka „{zadatak}”. Pogledaj je na stranici zadatka.",
     "zadruzni_dodela_naslov": "Zadruga ti je dodijelila cjelinu",
-    "zadruzni_dodela_tekst": "Zadruga {zadruga} ti je dodijelila cjelinu „{zadatak}”. Pogledaj je i prihvati ako je želiš izvršiti."
+    "zadruzni_dodela_tekst": "Zadruga {zadruga} ti je dodijelila cjelinu „{zadatak}”. Pogledaj je i prihvati ako je želiš izvršiti.",
+    "donacija_unapred_naslov": "Doprinos je evidentiran unaprijed",
+    "donacija_unapred_tekst": "Evidentirano ti je {iznos} POEN unaprijed. Zaklada u roku od 24 sata provjerava je li uplata stigla; ako ne stigne, evidentiranje se poništava.",
+    "donacija_unapred_utvrdjena_naslov": "Uplata je stigla",
+    "donacija_unapred_utvrdjena_tekst": "Zaklada je utvrdila da je tvoja uplata stigla. Donacija je potvrđena.",
+    "donacija_unapred_ponistena_naslov": "Donacija unaprijed je poništena",
+    "donacija_unapred_ponistena_tekst": "Zaklada nije utvrdila da je uplata stigla, pa je poništeno {iznos} POEN evidentiranih unaprijed (Pravilnik o KOLO sustavu čl. 17 st. 2 t. 10). Na odluku možeš podnijeti prigovor.",
+    "donacija_unapred_ponistena_minus_naslov": "Donacija unaprijed je poništena: zapis je u minusu",
+    "donacija_unapred_ponistena_minus_tekst": "Zaklada nije utvrdila da je uplata stigla, pa je poništeno {iznos} POEN evidentiranih unaprijed (Pravilnik o KOLO sustavu čl. 17 st. 2 t. 10). Tvoj zapis sada je {stanje} POEN; to nije dug i ne naplaćuje se, a POEN koji pristigne prvo popunjava minus. Na odluku možeš podnijeti prigovor.",
+    "ogranicenje_primljenog_naslov": "Dio tvog zapisa privremeno je ograničen",
+    "ogranicenje_primljenog_tekst": "{iznos} POEN koje si primio od donatora čija je donacija poništena privremeno ne možeš prepisati, iskoristiti ni upisati u ZRNO, najdulje {dana} dana, dok Zaklada ne odluči. Na ograničenje možeš podnijeti prigovor.",
+    "ogranicenje_primljenog_roditelj_naslov": "Djetetu je dio zapisa privremeno ograničen",
+    "ogranicenje_primljenog_roditelj_tekst": "Djetetu je privremeno ograničeno {iznos} POEN primljenih od donatora čija je donacija poništena, najdulje {dana} dana, dok Zaklada ne odluči.",
+    "ogranicenje_otpis_naslov": "Otpis primljenog iznosa",
+    "ogranicenje_otpis_tekst": "Zaklada je utvrdila da si znao da je potvrda o uplati lažna ili tuđa, pa je otpisano {iznos} POEN primljenih od tog donatora (Pravilnik o KOLO sustavu čl. 17 st. 2 t. 10). Na odluku možeš podnijeti prigovor.",
+    "ogranicenje_otpis_minus_naslov": "Otpis primljenog iznosa: zapis je u minusu",
+    "ogranicenje_otpis_minus_tekst": "Zaklada je utvrdila da si znao da je potvrda o uplati lažna ili tuđa, pa je otpisano {iznos} POEN primljenih od tog donatora (Pravilnik o KOLO sustavu čl. 17 st. 2 t. 10). Tvoj zapis sada je {stanje} POEN; to nije dug i ne naplaćuje se. Na odluku možeš podnijeti prigovor.",
+    "ogranicenje_prestalo_naslov": "Ograničenje je prestalo",
+    "ogranicenje_prestalo_tekst": "Ograničenje {iznos} POEN je prestalo. Ništa ti nije oduzeto.",
+    "pokroviteljstvo_evidentirano_naslov": "Doprinos pokroviteljstva je evidentiran",
+    "pokroviteljstvo_evidentirano_tekst": "Zabilježen doprinos pokroviteljstva evidentiran je u obračunskom razdoblju koje je počelo: {bonus} POEN."
   },
   "transakcije": {
     "verifikacija": "Potvrda člana {pseudonim}",
@@ -3106,7 +3133,10 @@
     "pokroviteljstvo_dobra_otpis": "Otpis zbog neizvršenja pokroviteljstva dobrima i uslugama, {opis}",
     "vaucer_uzet": "Vaučer: {opis} — {davalac}",
     "visestruki_nalog_otpis": "Otpis po utvrđenju višestrukog računa",
-    "visestruki_nalog_ponistenje": "Poništenje zapisa ugašenog računa"
+    "visestruki_nalog_ponistenje": "Poništenje zapisa ugašenog računa",
+    "donacija_unapred": "Evidentiran doprinos po donaciji unaprijed: {iznos} POEN",
+    "donacija_unapred_ponistena": "Poništenje donacije unaprijed — primitak nije utvrđen",
+    "otpis_primljenog_donacija": "Otpis iznosa primljenog od donatora čija je donacija unaprijed poništena"
   },
   "mejl": {
     "pozdrav": "Pozdrav",
@@ -4255,7 +4285,7 @@
     "licno_tekst": "Možeš donirati Zakladi. Donacija je zaseban čin i njome se ne kupuje ništa unutar sustava.",
     "licno_dugme": "Doniraj",
     "firma_naslov": "Kao tvrtka, udruga ili registrirano gospodarstvo",
-    "firma_tekst": "Tvrtka, udruga i nositelj registriranog poljoprivrednog gospodarstva mogu biti pokrovitelji, u novcu ili u dobrima i uslugama. Onome tko podnese prijavu evidentira se POEN, s koeficijentom 1,00, bez tablice razina, a pokrovitelj u novcu navodi se na rang-listi nazivom i, ako ga ima, logotipom. Promociju ni prednost u nabavi time ne stječe.",
+    "firma_tekst": "Tvrtka, udruga i nositelj registriranog poljoprivrednog gospodarstva mogu biti pokrovitelji, u novcu ili u dobrima i uslugama. Onome tko podnese prijavu evidentira se POEN, za novac po razini pokrovitelja, po istoj tablici kao osobna donacija, a pokrovitelj u novcu navodi se na rang-listi nazivom i, ako ga ima, logotipom. Promociju ni prednost u nabavi time ne stječe.",
     "firma_dugme": "Upiši pokrovitelja",
     "firma_lista": "Rang-lista pokrovitelja",
     "firma_firme": "Tvrtke s vaučerima",

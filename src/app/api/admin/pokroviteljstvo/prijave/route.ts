@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { jeAdmin } from "@/lib/dozvole";
 import { upisOdobrenZaPotvrdu } from "@/lib/upis-pokrovitelja-pravila";
+import { pozivNaBrojZaPrijavu } from "@/lib/placanje/ips-qr";
 
 // GET /api/admin/pokroviteljstvo/prijave — sve prijave pokroviteljstva
 export async function GET() {
@@ -43,6 +44,9 @@ export async function GET() {
       vrednostRsd: Number(p.vrednostRsd),
       logoUrl: p.logoUrl,
       status: p.status,
+      // Set 5.0.9 (donacije čl. 20 st. 2): poziv na broj i potvrda o uplati.
+      pozivNaBroj: p.vrstaDonacije === "NOVAC" ? pozivNaBrojZaPrijavu(p.pozivBroj) : null,
+      potvrdaPoslata: p.potvrdaPoslataAt !== null,
       odbijenoRazlog: p.odbijenoRazlog,
       createdAt: p.createdAt.toISOString(),
     }))
