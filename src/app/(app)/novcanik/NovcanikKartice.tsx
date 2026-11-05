@@ -125,65 +125,64 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
   return (
     <>
       <div className="space-y-3">
-        {/* Zeleno zaglavlje POEN-a (odluka vlasnika 02.11.2026): kartica stanja JESTE
-            zaglavlje stranice — ista tamnozelena ploča kao na Vaučerima
-            (`NaslovStranice varijanta="istaknuto"`), bez vidljivog naslova „POEN" iznad.
-            Gore krupno „Na tvom zapisu" i broj, ispod puna bela dugmad.
+        {/* Kartica stanja POEN-a (odluka vlasnika 05.11.2026): stari raspored — dugmad
+            levo jedno ispod drugog, stanje veliko desno — ali SVA dugmad puna bela
+            (providna „Skeniraj" i „Moj QR" izgledala su kao isključena). Zeleno zaglavlje
+            (istaknuta varijanta `NaslovStranice`) POEN zato ne koristi; jedini h1
+            stranice je za čitač ekrana.
 
-            🟢 Ploča je zelena SVIMA (odluka vlasnika, 13.10.2026). Ostaje ono što nosi
+            🟢 Kartica je zelena SVIMA (odluka vlasnika, 13.10.2026). Ostaje ono što nosi
             pravilo: ko ne sme da prepisuje (dete koje nije dete Kola, nalog u nadoknadi)
-            na velikom broju vidi koliko SME da prepiše, dakle nulu, pod naslovom
+            na velikom broju vidi koliko SME da prepiše, dakle nulu, uz oznaku
             „Raspoloživo za prepis", a koliko mu je stvarno evidentirano stoji u redu
-            „Na tvom zapisu" odmah ispod ploče. Dugme za prepis i skener mu se ne prikazuju.
+            „Na tvom zapisu" odmah ispod. Dugme za prepis i skener mu se ne prikazuju.
 
-            🔴 Pun ton ploče je `bg-kolo-green-900`, a prelaz ide preko njega (`bg-linear-*`,
-            nikad stara klasa `gradient-to`, koja daje `in oklab` bez rezerve — ploča je
-            ostajala bela, sa belim slovima). Brana: `novcanik-kartica-izvor.test.ts`.
+            🔴 Pun ton je `bg-kolo-green-700`, a prelaz ide preko njega (`bg-linear-*`, nikad
+            stara klasa `gradient-to`, koja daje `in oklab` bez rezerve — kartica je ostajala
+            bela, sa belim slovima). Brana: `novcanik-kartica-izvor.test.ts`.
 
             🟢 „Moj QR" OSTAJE i takvom nalogu, i to namerno: takav nalog sme da PRIMA,
-            a QR je način da mu se prepiše POEN za prodato dobro. To mu je ujedno i put do
-            potvrde (Pravilnik čl. 38). Skener se sklanja jer vodi u suprotnom smeru — u
-            obrazac za prepis DRUGOME. */}
-        <NaslovStranice
-          varijanta="istaknuto"
-          naslov={
-            <>
-              {/* Jedini h1 stranice; čitač ekrana čuje i ime ekrana. */}
-              <span className="sr-only">{tc("poen")}: </span>
-              {smeDaPrepisuje ? t("na_zapisu_naslov") : t("raspolozivo_naslov")}
-            </>
-          }
-          opis={t("zaglavlje_opis")}
-        >
-          <p className="text-4xl font-bold tracking-tight tabular-nums break-words sm:text-5xl">
-            {(smeDaSalje ? raspolozivo(balance) : 0).toLocaleString(intlTag(locale))}
-            <span className="ml-2 text-lg font-semibold text-white/85">{tc("poen")}</span>
-          </p>
-
-          {/* Objašnjenje stoji UZ broj, u istoj ploči — bez njega nula izgleda kao da je
-              nešto nestalo. Punoletnom bez prepisa (nalog u nadoknadi) razlog kaže red
-              „Nadoknada" ispod ploče. */}
-          {!smeDaSalje && razlogZabrane === "ceka_roditelja" && (
-            <p className="mt-2 text-sm text-white/85">{t("ceka_roditelja")}</p>
-          )}
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            {smeDaPrepisuje && (
-              <button type="button" onClick={() => setShowSend(true)} className={KLASE_BELOG_DUGMETA}>
-                {t("posalji_poen")}
+            a QR je način da mu se prepiše POEN za prodato dobro (put do potvrde, Pravilnik
+            čl. 38). Skener se sklanja jer vodi u suprotnom smeru — u obrazac za prepis DRUGOME. */}
+        <NaslovStranice naslov={tc("poen")} skriven />
+        <div className="bg-kolo-green-700 bg-linear-to-br from-kolo-green-700 to-kolo-green-500 rounded-kartica p-6 text-white shadow-lg">
+          <div className="flex items-center justify-between gap-4">
+            {/* LEVO — dugmad jedno ispod drugog, sva puna bela */}
+            <div className="flex shrink-0 flex-col gap-3">
+              {smeDaPrepisuje && (
+                <button type="button" onClick={() => setShowSend(true)} className={KLASE_BELOG_DUGMETA}>
+                  {t("posalji_poen")}
+                </button>
+              )}
+              {/* Skener otvara obrazac za prepis, pa ga ne vidi ko ne sme da prepisuje. */}
+              {smeDaPrepisuje && (
+                <button type="button" onClick={() => setShowSkener(true)} className={KLASE_BELOG_DUGMETA}>
+                  {t("skeniraj_dugme")}
+                </button>
+              )}
+              <button type="button" onClick={() => setShowQR(true)} className={KLASE_BELOG_DUGMETA}>
+                {t("moj_qr")}
               </button>
-            )}
-            {/* Skener otvara obrazac za prepis, pa ga ne vidi ko ne sme da prepisuje. */}
-            {smeDaPrepisuje && (
-              <button type="button" onClick={() => setShowSkener(true)} className={KLASE_BELOG_DUGMETA}>
-                {t("skeniraj_dugme")}
-              </button>
-            )}
-            <button type="button" onClick={() => setShowQR(true)} className={KLASE_BELOG_DUGMETA}>
-              {t("moj_qr")}
-            </button>
+            </div>
+
+            {/* DESNO — stanje veliko */}
+            <div className="min-w-0 text-right">
+              <p className="break-words text-4xl font-bold tracking-tight tabular-nums sm:text-5xl">
+                {(smeDaSalje ? raspolozivo(balance) : 0).toLocaleString(intlTag(locale))}
+              </p>
+              <p className="mt-0.5 text-lg text-white/85">{tc("poen")}</p>
+              {/* Bez ove oznake veliki broj se i dalje čita kao „stanje računa". */}
+              {!smeDaSalje && <p className="mt-0.5 text-sm text-white/85">{t("raspolozivo_naslov")}</p>}
+            </div>
           </div>
-        </NaslovStranice>
+
+          {/* Objašnjenje stoji UZ broj, u istoj kartici — bez njega nula izgleda kao da je
+              nešto nestalo. Punoletnom bez prepisa (nalog u nadoknadi) razlog kaže red
+              „Nadoknada" ispod kartice. */}
+          {!smeDaSalje && razlogZabrane === "ceka_roditelja" && (
+            <p className="mt-4 text-sm text-white/85">{t("ceka_roditelja")}</p>
+          )}
+        </div>
 
         {/* Forma za prepis POEN-a stoji ODMAH ispod kartice sa stanjem, a iznad
             redova sa zabeleženim doprinosom i potvrdama. Razlog je redosled
