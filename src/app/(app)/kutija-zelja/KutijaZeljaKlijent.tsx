@@ -69,7 +69,7 @@ export default function KutijaZeljaKlijent({ otvorena }: { otvorena: boolean }) 
 
   if (!otvorena) {
     return (
-      <div className="mx-auto max-w-2xl space-y-5">
+      <div className="max-w-uska w-full space-y-5">
         <h1 className="text-center text-3xl font-extrabold text-deca-slezova-600">{t("naslov")}</h1>
         <section className="rounded-3xl border-4 border-deca-narandza-400 bg-white p-6 text-center">
           <p className="text-base text-kolo-text">{t("zatvoreno")}</p>
@@ -133,7 +133,7 @@ export default function KutijaZeljaKlijent({ otvorena }: { otvorena: boolean }) 
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="max-w-uska w-full space-y-5">
       {dijalog}
       <h1 className="text-center text-3xl font-extrabold text-deca-slezova-600 sm:text-4xl">{t("naslov")}</h1>
       <p className="text-center text-base text-kolo-text">{t("uvod")}</p>

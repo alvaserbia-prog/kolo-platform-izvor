@@ -148,7 +148,7 @@ export default function DecjaPocetna({
    */
   if (cekaRoditelja) {
     return (
-      <div className="mx-auto max-w-2xl space-y-5">
+      <div className="max-w-uska w-full space-y-5">
         <SareniNaslov tekst={t("pozdrav", { pseudonim })} />
         <section className="rounded-3xl border-4 border-deca-narandza-400 bg-white p-6 text-center shadow-sm">
           <h2 className="mt-2 text-xl font-extrabold text-deca-korala-600">{t("ceka_naslov")}</h2>
@@ -173,7 +173,7 @@ export default function DecjaPocetna({
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-5">
+    <div className="max-w-siroka w-full space-y-5">
       <SareniNaslov tekst={t("pozdrav", { pseudonim })} />
 
       {/* Dete sa roditeljem: status i na šta se čeka (deca čl. 5 st. 4). */}

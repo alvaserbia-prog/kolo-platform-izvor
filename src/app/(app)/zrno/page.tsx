@@ -17,8 +17,8 @@ import {
 import { ucitajStatus } from "@/lib/protokol/status";
 import { beogradskiDan } from "@/lib/protokol/obracunski-dan";
 import { dohvatiPredlogeZaPrikaz } from "@/lib/protokol/glasanje";
-import { dohvatiFazuStatus, PRAG_FAZE_2_POEN } from "@/lib/protokol/faza-sistema";
-import { smePodnetiPredlog, vidiPseudonimeGornjegKola } from "@/lib/gornje-kolo-pravila";
+import { PRAG_FAZE_2_POEN } from "@/lib/protokol/faza-sistema";
+import { vidiPseudonimeGornjegKola } from "@/lib/gornje-kolo-pravila";
 import ZrnoKlijent from "./ZrnoKlijent";
 
 // Naslov kartice pregledača (iza „ — KOLO" iz korenskog šablona); tekst iz prevoda.
@@ -51,7 +51,8 @@ export default async function ZrnoPage() {
     poslednjiKoeficijent(),
     // Predlozi Gornjeg Kola — isti prikaz kao `GET /api/glasanje` (zatvara istekle i
     // utvrđuje ishod pre čitanja; Pravilnik o Gornjem Kolu čl. 10 st. 4, 11 st. 2, 19).
-    // Pseudonime vide samo učesnici (čl. 9 st. 3, 10 st. 5).
+    // Pseudonime vide samo učesnici (čl. 9 st. 3, 10 st. 5). Spisak je na `/glasanje`;
+    // ovde se broje samo predlozi u glasanju na kojima gledalac još nije glasao.
     ucitajStatus(session.user.id).then((s) =>
       dohvatiPredlogeZaPrikaz(session.user.id, vidiPseudonimeGornjegKola(s), now),
     ),
@@ -61,8 +62,6 @@ export default async function ZrnoPage() {
   const jePrimalacPodrske =
     (await prisma.programEnrollment.count({ where: { userId: session.user.id, status: "ACTIVE", type: { not: "PED" } } })) > 0;
 
-  // U Fazi 1 Gornje Kolo ne postoji (Pravilnik čl. 41–42): predlog se ne nudi.
-  const faza2 = (await dohvatiFazuStatus()).faza === "FAZA_2";
   const slobodno = stanje?.slobodno ?? 0;
   const aktivno = stanje?.aktivno ?? 0;
   // Glasačka moć ima samo čuvar Kola (Pravilnik čl. 29, 43).
@@ -77,9 +76,9 @@ export default async function ZrnoPage() {
       poenBalans={wallet?.balance ?? 0}
       koeficijent={koeficijent}
       kanalAktivan={kanal?.isActive ?? false}
-      isVerified={session.user.verified}
       polozaj={polozajZrna(st, slobodno + aktivno)}
       jeBezPotvrde={st === "CLAN_BEZ_POTVRDE"}
+      jeClanKolaBezZrna={st === "CLAN_KOLA"}
       smeUpis={smeUpisatiZrno(st)}
       smeOtpis={smeOtpisatiZrno(st)}
       smeAktivirati={smeAktiviratiZrno(st)}
@@ -96,8 +95,7 @@ export default async function ZrnoPage() {
         imaZakazano: delegacija.imaZakazano,
         zakazaniPseudonim: delegacija.zakazaniDelegat?.pseudonim ?? null,
       } : null}
-      predlozi={predlozi}
-      smePredloziti={faza2 && smePodnetiPredlog(st)}
+      cekaGlas={predlozi.filter((p) => p.faza === "U_TOKU" && p.mojGlas === null && p.mojIzbor === null).length}
     />
   );
 }

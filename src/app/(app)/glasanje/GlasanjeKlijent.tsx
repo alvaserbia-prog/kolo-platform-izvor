@@ -38,18 +38,16 @@ export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc, smePredlozi
 
   return (
     <div className="space-y-6">
-      {/* Glasanje je deo stranice ZRNO (grupa „Glas u Gornjem Kolu"), pa naslov nije
-          naslov stranice nego podnaslov u toj grupi (C2, urednik, 24.10.2026). */}
+      {/* Sopstvena stranica `/glasanje` (05.11.2026): naslov je naslov stranice, ovde
+          samo registar, broj glasova i nov predlog. */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <NaslovSekcije nivo={3}>{t("naslov")}</NaslovSekcije>
-
           <div className="flex flex-wrap items-center gap-3">
             <Link href="/glasanje/registar" className="inline-flex min-h-9 items-center text-sm text-kolo-green-700 hover:underline">
               {t("registar_link")}
             </Link>
             {mojaGlasackaMoc > 0 && (
               <span className="text-xs bg-kolo-gold-100 text-kolo-gold-700 border border-kolo-gold-600 px-3 py-1.5 rounded-kontrola font-medium">
-                {t("glasova_badge", { count: mojaGlasackaMoc })}
+                {t("glasova_badge_n", { n: mojaGlasackaMoc })}
               </span>
             )}
             {smePredloziti && (
@@ -60,8 +58,7 @@ export default function GlasanjeKlijent({ predlozi, mojaGlasackaMoc, smePredlozi
           </div>
       </div>
 
-      {/* Ko glasa — informacija, ne upozorenje, i bez linka na isti ekran (glasanje je
-          deo stranice ZRNO; odluka vlasnika 02.11.2026). */}
+      {/* Ko glasa — informacija, ne upozorenje. */}
       {mojaGlasackaMoc === 0 && <p className="text-sm text-kolo-muted">{t("nema_zrna")}</p>}
 
       {showNovi && (

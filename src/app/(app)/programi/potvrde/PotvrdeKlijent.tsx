@@ -29,7 +29,7 @@ export default function PotvrdeKlijent({ stavke }: { stavke: Stavka[] }) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-6 space-y-5">
+    <div className="max-w-uska w-full py-6 space-y-5">
       <NaslovStranice naslov={t("potvrde_naslov")} opis={t("potvrde_opis")} />
 
       {lista.length === 0 ? (

@@ -113,7 +113,7 @@ export default function ProgramiKlijent({ programi, pedAktivan, brojAktivnih, is
 
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-uska w-full space-y-6 pb-16">
       {dijalog}
       <NaslovStranice
         naslov={t("naslov")}

@@ -43,3 +43,18 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ ok: true, poruka: "Zahtev primljen. Zaključavanje se izvršava u ponoć." });
 }
+
+// DELETE /api/zrno/zakljucaj — povlačenje današnjeg zahteva (aktiviranje) pre ponoći (05.11.2026).
+// Zahtev još nije izvršen, pa se ništa ne poništava u evidenciji: status prelazi u
+// CANCELLED, kao kad ga Protokol otkaže. 🔴 Samo zahtev sa DANAŠNJIM datumom — noćna
+// obrada izvršava zahteve do prethodnog dana, pa se povlačenje nikad ne sudara sa njom.
+export async function DELETE() {
+  const session = await getServerSession(authOptions);
+  if (!session) return await greska("Nije prijavljen.", 401);
+  const r = await prisma.zrnoStatusZahtev.updateMany({
+    where: { userId: session.user.id, date: beogradskiDan(), status: "PENDING", akcija: "ZAKLJUCAJ" },
+    data: { status: "CANCELLED" },
+  });
+  if (r.count === 0) return await greska("Nema zahteva koji se danas može povući.", 404);
+  return NextResponse.json({ ok: true, poruka: "Zahtev je povučen." });
+}

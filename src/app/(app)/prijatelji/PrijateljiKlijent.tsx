@@ -148,7 +148,7 @@ export default function PrijateljiKlijent() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="max-w-uska w-full space-y-5">
       {dijalog}
       {/* Umesto indeksa stvarnosti — broj prijatelja. */}
       <section className="broj-kartica rounded-3xl border-4 border-deca-slezova-400 bg-white p-6 text-center shadow-sm">

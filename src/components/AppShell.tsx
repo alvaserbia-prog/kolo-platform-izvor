@@ -119,7 +119,12 @@ export default function AppShell({ verified, isAdmin, jeNadzornik, children }: A
         />
         <main id="sadrzaj" tabIndex={-1} className="flex-1 min-w-0 outline-none">
           <div className="px-4 py-5 md:px-8 md:py-6">
-            {children}
+            {/* Okvir sadržaja (05.11.2026): nijedna stranica ne prelazi široku meru
+                (64rem), a uska stoji uz levu ivicu okvira, pa se ivica sadržaja ne
+                pomera pri prelazu između stranica. Admin radi sa tabelama i nema okvir. */}
+            <div className={pathname.startsWith("/admin") ? "" : "mx-auto w-full max-w-siroka"}>
+              {children}
+            </div>
           </div>
           <AppFooter />
         </main>

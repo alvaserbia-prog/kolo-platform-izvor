@@ -32,7 +32,7 @@ export default async function MapaPage() {
   const [gazdinstva, pokrovitelji] = await Promise.all([gazdinstvaZaMapu(), pokroviteljiZaMapu()]);
 
   return (
-    <div className="max-w-[1000px] mx-auto pb-16 space-y-4">
+    <div className="max-w-siroka mx-auto w-full pb-16 space-y-4">
       <NaslovStranice naslov={t("naslov")} opis={t("uvod")} />
       <MapaZajednicka tacke={sastaviTacke(gazdinstva, pokrovitelji)} prijavljen={!!session} />
       <p className="text-xs text-kolo-muted">{tg("mapa_napomena")}</p>

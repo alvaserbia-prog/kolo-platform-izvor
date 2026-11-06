@@ -35,9 +35,9 @@ export default async function RegistarOdlukaPage() {
   const odluke = await dohvatiRegistarOdluka(vidiPseudonimeGornjegKola(await ucitajStatus(session.user.id)));
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-uska w-full space-y-6 pb-16">
       <NaslovStranice
-        nazad={{ href: "/zrno", oznaka: t("registar_nazad") }}
+        nazad={{ href: "/glasanje", oznaka: t("registar_nazad") }}
         naslov={t("registar_naslov")}
         opis={t("registar_opis")}
       />

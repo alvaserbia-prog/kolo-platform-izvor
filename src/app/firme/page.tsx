@@ -37,7 +37,7 @@ export default async function FirmePage() {
   const smeUpis = !!session && session.user.verified;
 
   return (
-    <div className="max-w-[1000px] mx-auto pb-16 space-y-6">
+    <div className="max-w-siroka mx-auto w-full pb-16 space-y-6">
       <NaslovStranice naslov={t("naslov")} opis={t("uvod")} />
 
       {smeUpis && (
