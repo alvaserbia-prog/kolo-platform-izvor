@@ -648,7 +648,7 @@ function FazaSekcija({ opticaj }: { opticaj: number }) {
             <span>
               {ts("rast_opticaja_trenutno")}{" "}
               <strong className="text-kolo-text">
-                {opticaj.toLocaleString(intlTag(locale))} {tc("poen")}
+                {tc("poen_n", { n: opticaj })}
               </strong>
             </span>
             <span className="font-medium text-kolo-green-700">
@@ -816,7 +816,7 @@ function PregledSekcija({
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm text-kolo-text">{r.label}</span>
                   <span className="text-sm font-bold text-kolo-text">
-                    {r.poen.toLocaleString(intlTag(locale))} {tc("poen")}
+                    {tc("poen_n", { n: r.poen })}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-kolo-muted">
@@ -874,7 +874,7 @@ function PregledSekcija({
           <p className="text-xs text-kolo-muted mt-4">
             {t("emisija_danas")}{" "}
             <strong className="text-kolo-text">
-              {danasEmitovano.toLocaleString(intlTag(locale))} {tc("poen")}
+              {tc("poen_n", { n: danasEmitovano })}
             </strong>
           </p>
         </div>

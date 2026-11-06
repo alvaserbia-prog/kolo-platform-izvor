@@ -301,7 +301,9 @@
     "detalji": "Detalji →",
     "pretrazi_clanove": "Pretraži korisnike…",
     "mesto_iz_spiska": "Izaberi mesto iz ponuđenog spiska naselja, upiši samo jedno mesto.",
-    "kako_u_kolo": "Kako da uđem u Kolo"
+    "kako_u_kolo": "Kako da uđem u Kolo",
+    "poen_n": "{n, plural, one {# POEN} other {# POENA}}",
+    "poen_iznos": "{n, plural, one {<broj>#</broj> POEN} other {<broj>#</broj> POENA}}"
   },
   "status": {
     "vise_o_statusu": "Šta to znači",
@@ -1064,10 +1066,10 @@
     "upis_bez_potvrde_napomena": "Upisom ZRNA ne postaješ čuvar Kola. Upisano ZRNO moći ćeš da aktiviraš kad te član Kola potvrdi; do tada ga možeš otpisati.",
     "gornje_kolo_objasnjenje": "Gornje Kolo čine čuvari Kola sa aktivnim ZRNOM. Predlog može podneti svaki učesnik; o predlogu koji podrži bar jedan čuvar Kola Gornje Kolo glasa, a odluke upućuje Upravnom odboru Fondacije.",
     "glasova_n": "{n, plural, one {glas u Gornjem Kolu} few {glasa u Gornjem Kolu} other {glasova u Gornjem Kolu}}",
-    "glasova_nosi": "{n, plural, one {glas} few {glasa} other {glasova}} · nosi {pseudonim}",
+    "glasova_nosi": "{n, plural, one {glas · nosi {pseudonim}} few {glasa · nosi {pseudonim}} other {glasova · nosi {pseudonim}}}",
     "koeficijent_danas": "Obračunski koeficijent danas: {koef}. Nije cena.",
     "do_ponoci": "Do ponoći",
-    "ceka_upis": "Upis: {iznos} POENA",
+    "ceka_upis": "Upis: {iznos, plural, one {# POEN} other {# POENA}}",
     "ceka_otpis": "Otpis: {kolicina} ZRNA",
     "ceka_aktiviranje": "Aktiviranje: {kolicina} ZRNA",
     "ceka_vracanje": "Vraćanje u slobodno: {kolicina} ZRNA",
@@ -1080,8 +1082,8 @@
     "radnja_aktiviraj": "Aktiviraj",
     "radnja_vrati": "Vrati u slobodno",
     "upis_oznaka": "Koliko POENA upisuješ",
-    "upis_dugme_n": "Upiši {n} POENA",
-    "upis_pregled": "Iz tvog zapisa skida se oko {poen} POENA, a upisuje se oko {zrna} ZRNA. Tačan broj određuje obračunski koeficijent u ponoć.",
+    "upis_dugme_n": "Upiši {n, plural, one {# POEN} other {# POENA}}",
+    "upis_pregled": "Iz tvog zapisa skida se oko {poen, plural, one {# POEN} other {# POENA}}, a upisuje se oko {zrna} ZRNA. Tačan broj određuje obračunski koeficijent u ponoć.",
     "upis_pregled_nula": "Iznos je manji od obračunskog koeficijenta, pa se ne bi upisalo nijedno ZRNO.",
     "upis_ispod_minimuma": "Za upis ZRNA treba najmanje {min} POENA u zapisu, a imaš {imas}.",
     "upis_vec_danas": "Danas već imaš zahtev za upis. Vidiš ga gore, pod „Do ponoći“, i tamo ga možeš povući.",
@@ -1108,7 +1110,7 @@
     "upisi_pseudonim": "Upiši pseudonim čuvara Kola.",
     "otpis_oznaka": "Koliko ZRNA otpisuješ",
     "otpis_opis_novi": "Otpisom se slobodno ZRNO briše iz tvog zapisa, a u zapis se upisuje POEN po obračunskom koeficijentu u ponoć. Koeficijent se menja u oba smera.",
-    "otpis_pregled": "Briše se {zrna} ZRNA, a upisuje se oko {poen} POENA po današnjem koeficijentu. Tačan broj određuje koeficijent u ponoć.",
+    "otpis_pregled": "Briše se {zrna} ZRNA, a upisuje se oko {poen, plural, one {# POEN} other {# POENA}} po današnjem koeficijentu. Tačan broj određuje koeficijent u ponoć.",
     "otpis_dugme_n": "Otpiši {n} ZRNA",
     "otpis_vec_danas": "Danas već imaš zahtev za otpis. Vidiš ga gore, pod „Do ponoći“, i tamo ga možeš povući."
   },

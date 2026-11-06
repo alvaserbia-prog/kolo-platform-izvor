@@ -301,7 +301,9 @@
     "detalji": "Details →",
     "pretrazi_clanove": "Search users…",
     "mesto_iz_spiska": "Choose a place from the offered list of settlements — enter only one place.",
-    "kako_u_kolo": "How do I get into the Kolo"
+    "kako_u_kolo": "How do I get into the Kolo",
+    "poen_n": "{n, plural, other {# POEN}}",
+    "poen_iznos": "{n, plural, other {<broj>#</broj> POEN}}"
   },
   "status": {
     "naslov": "Your status",
@@ -1064,10 +1066,10 @@
     "upis_bez_potvrde_napomena": "Entering ZRNO does not make you a Kolo keeper. You will be able to activate entered ZRNO once a Kolo member confirms you; until then you can write it off.",
     "gornje_kolo_objasnjenje": "The Upper Kolo consists of Kolo keepers with active ZRNO. Any participant can submit a proposal; the Upper Kolo votes on a proposal supported by at least one Kolo keeper, and refers its decisions to the Foundation's Management Board.",
     "glasova_n": "{n, plural, one {vote in the Upper Kolo} other {votes in the Upper Kolo}}",
-    "glasova_nosi": "{n, plural, one {vote} other {votes}} · held by {pseudonim}",
+    "glasova_nosi": "{n, plural, one {vote · held by {pseudonim}} other {votes · held by {pseudonim}}}",
     "koeficijent_danas": "Accounting coefficient today: {koef}. It is not a price.",
     "do_ponoci": "Until midnight",
-    "ceka_upis": "Recording: {iznos} POEN",
+    "ceka_upis": "Recording: {iznos, plural, other {# POEN}}",
     "ceka_otpis": "Write-off: {kolicina} ZRNO",
     "ceka_aktiviranje": "Activation: {kolicina} ZRNO",
     "ceka_vracanje": "Return to unlocked: {kolicina} ZRNO",
@@ -1080,8 +1082,8 @@
     "radnja_aktiviraj": "Activate",
     "radnja_vrati": "Return to unlocked",
     "upis_oznaka": "How much POEN you record",
-    "upis_dugme_n": "Record {n} POEN",
-    "upis_pregled": "About {poen} POEN is taken from your record, and about {zrna} ZRNO is recorded. The exact number is set by the accounting coefficient at midnight.",
+    "upis_dugme_n": "Record {n, plural, other {# POEN}}",
+    "upis_pregled": "About {poen, plural, other {# POEN}} is taken from your record and about {zrna} ZRNO is recorded. The exact number is set by the accounting coefficient at midnight.",
     "upis_pregled_nula": "The amount is smaller than the accounting coefficient, so no ZRNO would be recorded.",
     "upis_ispod_minimuma": "To record ZRNO you need at least {min} POEN in your record, and you have {imas}.",
     "upis_vec_danas": "You already have a recording request today. You can see it above, under “Until midnight”, and withdraw it there.",
@@ -1108,7 +1110,7 @@
     "upisi_pseudonim": "Enter the Kolo keeper's pseudonym.",
     "otpis_oznaka": "How much ZRNO you write off",
     "otpis_opis_novi": "A write-off removes unlocked ZRNO from your record, and POEN is recorded in your record at the accounting coefficient at midnight. The coefficient changes in both directions.",
-    "otpis_pregled": "{zrna} ZRNO is removed, and about {poen} POEN is recorded at today's coefficient. The exact number is set by the coefficient at midnight.",
+    "otpis_pregled": "{zrna} ZRNO is deleted, and about {poen, plural, other {# POEN}} is recorded at today’s coefficient. The exact number is set by the coefficient at midnight.",
     "otpis_dugme_n": "Write off {n} ZRNO",
     "otpis_vec_danas": "You already have a write-off request today. You can see it above, under “Until midnight”, and withdraw it there."
   },

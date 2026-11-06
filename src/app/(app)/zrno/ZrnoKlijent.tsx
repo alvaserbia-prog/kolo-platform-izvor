@@ -150,7 +150,7 @@ function DoPonoci({ upisZahtev, otpisZahtev, statusZahtevi, onRefresh }: Props &
 
   const stavke: { kljuc: string; tekst: string; putanja: string }[] = [];
   if (upisZahtev?.status === "PENDING")
-    stavke.push({ kljuc: "upis", tekst: t("ceka_upis", { iznos: broj(upisZahtev.poenIznos) }), putanja: "/api/zrno/upis" });
+    stavke.push({ kljuc: "upis", tekst: t("ceka_upis", { iznos: upisZahtev.poenIznos }), putanja: "/api/zrno/upis" });
   if (otpisZahtev?.status === "PENDING")
     stavke.push({ kljuc: "otpis", tekst: t("ceka_otpis", { kolicina: broj(otpisZahtev.kolicina) }), putanja: "/api/zrno/otpis" });
   const zbir = (akcija: string) => statusZahtevi.filter((z) => z.akcija === akcija).reduce((s, z) => s + z.kolicina, 0);
@@ -237,10 +237,10 @@ function PromenaZrna(props: Props & { onRefresh: () => void }) {
     else {
       maks = maxUpis;
       oznaka = t("upis_oznaka");
-      dugme = n > 0 ? t("upis_dugme_n", { n: broj(n) }) : t("upis_dugme");
+      dugme = n > 0 ? t("upis_dugme_n", { n }) : t("upis_dugme");
       putanja = "/api/zrno/upis";
       telo = { poenIznos: n };
-      if (n > 0) pregled = upisZrna > 0 ? t("upis_pregled", { poen: broj(upisPoen), zrna: broj(upisZrna) }) : t("upis_pregled_nula");
+      if (n > 0) pregled = upisZrna > 0 ? t("upis_pregled", { poen: upisPoen, zrna: broj(upisZrna) }) : t("upis_pregled_nula");
     }
   } else if (radnja === "aktiviraj") {
     if (jeBezPotvrde) sadrzaj = <ZakljucanModul poruka={t("zakljucano_bez_potvrde")} dugme={t("zakljucano_bez_potvrde_dugme")} />;
@@ -443,7 +443,7 @@ function OtpisSekcija({ slobodno, koeficijent, otpisZahtev, onRefresh }: Props &
   const [loading, setLoading] = useState(false);
   const [poruka, setPoruka] = useState<{ text: string; ok: boolean } | null>(null);
   const n = Math.floor(Number(kolicina) || 0);
-  const pregled = n > 0 ? t("otpis_pregled", { zrna: broj(Math.min(n, slobodno)), poen: broj(Math.floor(Math.min(n, slobodno) * koeficijent)) }) : null;
+  const pregled = n > 0 ? t("otpis_pregled", { zrna: broj(Math.min(n, slobodno)), poen: Math.floor(Math.min(n, slobodno) * koeficijent) }) : null;
 
   async function posalji() {
     setPoruka(null);

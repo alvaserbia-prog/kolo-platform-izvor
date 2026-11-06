@@ -598,7 +598,7 @@ export default function ProfilKlijent({ user, praceneKategorije, maloletan = fal
             )}
             <div className="flex justify-between">
               <dt className="text-kolo-muted">{t("poen_stanje_label")}</dt>
-              <dd className="font-bold text-kolo-green-700">{user.balance.toLocaleString()} {tc("poen")}</dd>
+              <dd className="font-bold text-kolo-green-700">{tc("poen_n", { n: user.balance })}</dd>
             </div>
             {user.punoIme && (
               <div className="flex justify-between">

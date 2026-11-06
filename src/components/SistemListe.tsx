@@ -269,7 +269,7 @@ const ClanRed = memo(function ClanRed({
             )}
           </div>
           <span className="text-sm font-bold text-kolo-text">
-            {c.balance.toLocaleString(intlTag(locale))} {tc("poen")}
+            {tc("poen_n", { n: c.balance })}
           </span>
         </div>
         <div className="flex items-center gap-3 text-xs text-kolo-muted">

@@ -291,7 +291,7 @@ export default function DonacijeKlijent() {
                   )}
                   {(d.status === "CONFIRMED" || d.status === "NA_PROVERI") && d.poenEmitted > 0 && (
                     <p className="text-xs text-kolo-green-700 mt-1">
-                      +{d.poenEmitted.toLocaleString(intlTag(locale))} {tc("poen")}
+                      +{tc("poen_n", { n: d.poenEmitted })}
                     </p>
                   )}
                   {/* Ugovor o donaciji (donacije čl. 14) — samo za zapise koji ga imaju;

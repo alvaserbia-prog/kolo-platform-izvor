@@ -117,18 +117,20 @@ function BalansHeader() {
   const t = useTranslations("header");
   // Balans dolazi iz keširanog /api/me (React Query) — osvežava ga `balans-updated`
   // event preko useMeEventBridge (montiran u AppShell). Bez zasebnog fetch-a.
+  const tc = useTranslations("common");
   const { data: me } = useMe();
   const balans = me?.balance ?? null;
 
   return (
     <span className="text-white/60 text-sm hidden sm:inline-flex items-center gap-1">
-      <span className="font-semibold text-white text-sm">
-        {/* Negativan zapis (nadoknada, dokaz stvarnosti čl. 36) se u zaglavlju prikazuje kao 0 —
-            raspoloživo je nula, a sama nadoknada ima svoj red u Novčaniku. */}
-        {balans === null ? "..." : raspolozivo(balans).toLocaleString(intlTag(locale))}
-      </span>
+      {/* Negativan zapis (nadoknada, dokaz stvarnosti čl. 36) se u zaglavlju prikazuje kao 0 —
+          raspoloživo je nula, a sama nadoknada ima svoj red u Novčaniku. Broj i jedinica
+          iz jedne poruke, da jedinica prati broj (1 POEN, 5 POENA, 81 POEN). */}
       <Pojam
-        termin="POEN"
+        termin={balans === null ? "..." : tc.rich("poen_iznos", {
+          n: raspolozivo(balans),
+          broj: (c) => <span className="font-semibold text-white text-sm">{c}</span>,
+        })}
         objasnjenje={t("poen_objasnjenje")}
       />
     </span>

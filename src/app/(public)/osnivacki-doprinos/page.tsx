@@ -87,11 +87,11 @@ export default async function OsnivackiDoprinosPage() {
             </div>
             <div>
               <div className="text-xs text-kolo-muted">{t("evidentirano")}</div>
-              <div className="font-semibold text-kolo-text">{fmt(status.ukupnoEvidentirano)} {tc("poen")}</div>
+              <div className="font-semibold text-kolo-text">{tc("poen_n", { n: status.ukupnoEvidentirano })}</div>
             </div>
             <div>
               <div className="text-xs text-kolo-muted">{t("preostalo")}</div>
-              <div className="font-semibold text-kolo-text">{fmt(status.preostalo)} {tc("poen")}</div>
+              <div className="font-semibold text-kolo-text">{tc("poen_n", { n: status.preostalo })}</div>
             </div>
             <div>
               <div className="text-xs text-kolo-muted">{t("iskorisceno")}</div>
@@ -157,7 +157,7 @@ export default async function OsnivackiDoprinosPage() {
                   <tr key={k.brojKoraka} className="border-b border-kolo-border last:border-0">
                     <td className="px-3 sm:px-6 py-3 text-kolo-text">{k.brojKoraka}/{ITERATION_LIMIT}</td>
                     <td className="px-3 sm:px-6 py-3 text-kolo-muted">{fmt(k.prag)}</td>
-                    <td className="px-3 sm:px-6 py-3 text-kolo-muted">{fmt(k.iznosKoraka)} {tc("poen")}</td>
+                    <td className="px-3 sm:px-6 py-3 text-kolo-muted">{tc("poen_n", { n: k.iznosKoraka })}</td>
                     <td className="px-3 sm:px-6 py-3 text-kolo-muted whitespace-nowrap">
                       {new Date(k.createdAt).toLocaleDateString(
                         intlTag(locale),

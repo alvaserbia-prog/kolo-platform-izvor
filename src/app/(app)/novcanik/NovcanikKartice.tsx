@@ -167,10 +167,13 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
 
             {/* DESNO — stanje veliko */}
             <div className="min-w-0 text-right">
-              <p className="break-words text-4xl font-bold tracking-tight tabular-nums sm:text-5xl">
-                {(smeDaSalje ? raspolozivo(balance) : 0).toLocaleString(intlTag(locale))}
+              {/* Broj i jedinica iz jedne poruke, da jedinica prati broj (1 POEN, 5 POENA, 81 POEN). */}
+              <p className="mt-0.5 text-lg text-white/85">
+                {tc.rich("poen_iznos", {
+                  n: (smeDaSalje ? raspolozivo(balance) : 0),
+                  broj: (c) => <span className="block break-words text-4xl font-bold tracking-tight tabular-nums text-white sm:text-5xl">{c}</span>,
+                })}
               </p>
-              <p className="mt-0.5 text-lg text-white/85">{tc("poen")}</p>
               {/* Bez ove oznake veliki broj se i dalje čita kao „stanje računa". */}
               {!smeDaSalje && <p className="mt-0.5 text-sm text-white/85">{t("raspolozivo_naslov")}</p>}
             </div>
@@ -215,7 +218,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
               <span className="flex items-baseline justify-between gap-3">
                 <span>{t("ograniceno_naslov")}</span>
                 <span className="text-lg font-bold tabular-nums">
-                  {ogranicenoIznos.toLocaleString(intlTag(locale))} {tc("poen")}
+                  {tc("poen_n", { n: ogranicenoIznos })}
                 </span>
               </span>
             }
@@ -231,7 +234,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
               <span className="flex items-baseline justify-between gap-3">
                 <span>{t("nadoknada_naslov")}</span>
                 <span className="text-lg font-bold tabular-nums">
-                  {iznosNadoknade(balance).toLocaleString(intlTag(locale))} {tc("poen")}
+                  {tc("poen_n", { n: iznosNadoknade(balance) })}
                 </span>
               </span>
             }
@@ -254,7 +257,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-sm font-semibold text-kolo-text">{t("na_zapisu_naslov")}</p>
               <p className="text-lg font-bold tabular-nums text-kolo-green-700">
-                {raspolozivo(balance).toLocaleString(intlTag(locale))} {tc("poen")}
+                {tc("poen_n", { n: raspolozivo(balance) })}
               </p>
             </div>
             {razlogZabrane === "ceka_roditelja" && (
@@ -312,7 +315,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                 </svg>
               </span>
               <span className="text-lg font-bold tabular-nums text-kolo-green-700">
-                {zabelezenoUkupno.toLocaleString(intlTag(locale))} {tc("poen")}
+                {tc("poen_n", { n: zabelezenoUkupno })}
               </span>
             </button>
 
@@ -323,7 +326,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                     <div className="flex items-baseline justify-between gap-3">
                       <p className="text-sm font-semibold text-kolo-text">{t("ceka_fondaciju")}</p>
                       <p className="text-sm font-bold tabular-nums text-kolo-text">
-                        {cekaFondaciju.toLocaleString(intlTag(locale))} {tc("poen")}
+                        {tc("poen_n", { n: cekaFondaciju })}
                       </p>
                     </div>
                     <p className="text-sm text-kolo-muted mt-1">{t("ceka_fondaciju_opis")}</p>
@@ -335,7 +338,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                     <div className="flex items-baseline justify-between gap-3">
                       <p className="text-sm font-semibold text-kolo-text">{t("ceka_period")}</p>
                       <p className="text-sm font-bold tabular-nums text-kolo-text">
-                        {cekaPeriod.toLocaleString(intlTag(locale))} {tc("poen")}
+                        {tc("poen_n", { n: cekaPeriod })}
                       </p>
                     </div>
                     <p className="text-sm text-kolo-muted mt-1">{t("ceka_period_opis")}</p>
@@ -347,7 +350,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                     <div className="flex items-baseline justify-between gap-3">
                       <p className="text-sm font-semibold text-kolo-text">{t("ceka_tebe")}</p>
                       <p className="text-sm font-bold tabular-nums text-kolo-text">
-                        {cekaTebe.toLocaleString(intlTag(locale))} {tc("poen")}
+                        {tc("poen_n", { n: cekaTebe })}
                       </p>
                     </div>
                     {zabelezenePotvrdeMoje > 0 && (
@@ -379,7 +382,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
                         {t("zabelezene_potvrde_naslov")}
                       </p>
                       <p className="text-sm font-bold tabular-nums text-kolo-text">
-                        {cekaDruge.toLocaleString(intlTag(locale))} {tc("poen")}
+                        {tc("poen_n", { n: cekaDruge })}
                       </p>
                     </div>
                     {zabelezenePotvrdeTudje > 0 && (
@@ -419,7 +422,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-sm font-semibold text-kolo-text">{t("rezervisano_nabavka")}</p>
               <p className="text-lg font-bold tabular-nums text-kolo-green-700">
-                {rezervisanoNabavka.toLocaleString(intlTag(locale))} {tc("poen")}
+                {tc("poen_n", { n: rezervisanoNabavka })}
               </p>
             </div>
             <p className="text-sm text-kolo-muted mt-1">{t("rezervisano_nabavka_opis")}</p>

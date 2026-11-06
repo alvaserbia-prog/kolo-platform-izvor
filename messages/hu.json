@@ -301,7 +301,9 @@
     "detalji": "Részletek →",
     "pretrazi_clanove": "Felhasználók keresése…",
     "mesto_iz_spiska": "Válassz egy települést a felkínált listából — csak egy helyet adj meg.",
-    "kako_u_kolo": "Hogyan kerülök be a Kolóba"
+    "kako_u_kolo": "Hogyan kerülök be a Kolóba",
+    "poen_n": "{n, plural, other {# POEN}}",
+    "poen_iznos": "{n, plural, other {<broj>#</broj> POEN}}"
   },
   "status": {
     "naslov": "A státuszod",
@@ -1064,10 +1066,10 @@
     "upis_bez_potvrde_napomena": "A ZRNO bejegyzésével nem válsz Kolo-őrzővé. A bejegyzett ZRNO-t akkor aktiválhatod, amikor egy Kolo-tag megerősít; addig leírhatod.",
     "gornje_kolo_objasnjenje": "A Felső Kolót az aktív ZRNO-val rendelkező Kolo-őrzők alkotják. Javaslatot bármely résztvevő benyújthat; arról a javaslatról, amelyet legalább egy Kolo-őrző támogat, a Felső Kolo szavaz, a döntéseket pedig az Alapítvány Igazgatótanácsához terjeszti.",
     "glasova_n": "{n, plural, one {szavazat a Felső Kolóban} other {szavazat a Felső Kolóban}}",
-    "glasova_nosi": "{n, plural, one {szavazat} other {szavazat}} · nála van: {pseudonim}",
+    "glasova_nosi": "{n, plural, other {szavazat · {pseudonim} viszi}}",
     "koeficijent_danas": "Elszámolási együttható ma: {koef}. Nem ár.",
     "do_ponoci": "Éjfélig",
-    "ceka_upis": "Bejegyzés: {iznos} POEN",
+    "ceka_upis": "Bejegyzés: {iznos, plural, other {# POEN}}",
     "ceka_otpis": "Leírás: {kolicina} ZRNO",
     "ceka_aktiviranje": "Aktiválás: {kolicina} ZRNO",
     "ceka_vracanje": "Vissza szabad állapotba: {kolicina} ZRNO",
@@ -1080,8 +1082,8 @@
     "radnja_aktiviraj": "Aktiválás",
     "radnja_vrati": "Vissza szabad állapotba",
     "upis_oznaka": "Mennyi POEN-t jegyzel be",
-    "upis_dugme_n": "{n} POEN bejegyzése",
-    "upis_pregled": "A bejegyzésedből kb. {poen} POEN kerül levonásra, és kb. {zrna} ZRNO kerül bejegyzésre. A pontos számot az éjféli elszámolási együttható határozza meg.",
+    "upis_dugme_n": "{n, plural, other {# POEN}} bejegyzése",
+    "upis_pregled": "A bejegyzésedből körülbelül {poen, plural, other {# POEN}} kerül le, és körülbelül {zrna} ZRNO kerül bejegyzésre. A pontos számot az éjféli elszámolási együttható határozza meg.",
     "upis_pregled_nula": "Az összeg kisebb az elszámolási együtthatónál, így egyetlen ZRNO sem kerülne bejegyzésre.",
     "upis_ispod_minimuma": "A ZRNO bejegyzéséhez legalább {min} POEN kell a bejegyzésedben, neked pedig {imas} van.",
     "upis_vec_danas": "Ma már van bejegyzési kérelmed. Fent látod, az „Éjfélig” részben, és ott vissza is vonhatod.",
@@ -1108,7 +1110,7 @@
     "upisi_pseudonim": "Írd be a Kolo-őrző álnevét.",
     "otpis_oznaka": "Mennyi ZRNO-t írsz le",
     "otpis_opis_novi": "Leírással a szabad ZRNO törlődik a bejegyzésedből, a bejegyzésedbe pedig POEN kerül az éjféli elszámolási együttható szerint. Az együttható mindkét irányba változik.",
-    "otpis_pregled": "{zrna} ZRNO törlődik, és a mai együttható szerint kb. {poen} POEN kerül bejegyzésre. A pontos számot az éjféli együttható határozza meg.",
+    "otpis_pregled": "{zrna} ZRNO törlődik, és körülbelül {poen, plural, other {# POEN}} kerül bejegyzésre a mai együttható szerint. A pontos számot az éjféli együttható határozza meg.",
     "otpis_dugme_n": "{n} ZRNO leírása",
     "otpis_vec_danas": "Ma már van leírási kérelmed. Fent látod, az „Éjfélig” részben, és ott vissza is vonhatod."
   },
