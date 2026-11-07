@@ -1383,7 +1383,7 @@
     "otvoriDokument": "Open document →",
     "uslovi": {
       "naslov": "Terms of Use of the KOLO Platform",
-      "ver": "5.0.9"
+      "ver": "5.1.0"
     },
     "privatnost": {
       "naslov": "Privacy Policy of the KOLO Platform",
@@ -1407,11 +1407,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.0.9"
+      "ver": "5.1.0"
     },
     "pravilnik": {
       "naslov": "KOLO System Rulebooks",
-      "ver": "5.0.9",
+      "ver": "5.1.0",
       "sviPravilnici": "← All rulebooks",
       "pravilnici": "Rulebooks"
     },
@@ -1432,7 +1432,7 @@
       "odluke": "Foundation decisions"
     },
     "meta_uslovi_title": "Terms of Use · KOLO",
-    "meta_uslovi_desc": "Terms of Use of the KOLO Platform, version 5.0.9",
+    "meta_uslovi_desc": "Terms of Use of the KOLO Platform, version 5.1.0",
     "meta_privatnost_title": "Privacy Policy · KOLO",
     "meta_privatnost_desc": "Privacy Policy of the KOLO Platform, version 5.0.9",
     "meta_statut_title": "Statute of the KOLO Foundation · KOLO",
@@ -1444,9 +1444,9 @@
     "meta_rizici_title": "Risk Acceptance Statement · KOLO",
     "meta_rizici_desc": "Risk acceptance statement for participation in the KOLO system, version 5.0.0",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.0.9",
+    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.1.0",
     "meta_pravilnik_title": "KOLO System Rulebooks · KOLO",
-    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.0.9",
+    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.1.0",
     "rb": {
       "kolo-sistem": {
         "naziv": "Rulebook on the KOLO System",
@@ -4182,7 +4182,7 @@
     "detalj_mesta": "Where the goods are handed over or the service is provided",
     "detalj_napomena": "A voucher is for a specific good or service, is kept under your pseudonym and cannot be transferred. You receive the good or service directly from the sponsor.",
     "tacka_ponistenje": "The number of POEN for the voucher is cancelled in your record as soon as you take it.",
-    "tacka_najvise_dva": "You can hold at most two unused vouchers at a time.",
+    "tacka_najvise_dva": "You can hold at most two unused vouchers at a time, and at most one from the same agreement. Once you use it, you can take the next one.",
     "uzmi_zakljucano": "Tick both boxes to take the voucher."
   },
   "kontakt": {

@@ -278,11 +278,13 @@ A project that is not a collective procurement, an allocation of vouchers or sup
 
 (2) A participant may at any one time have at most two unused vouchers.
 
+(3) From the same agreement a participant may at any one time have at most one unused voucher. Once they use it, or once the voucher ceases, they may take the next one.
+
 ### Article 31 — Number of POEN per voucher
 
 (1) The number of POEN annulled per voucher equals the number of POEN that would have been recorded under the agreement without the increase by the recording coefficient, divided by the number of vouchers and rounded to the nearest whole number. Where the object of the voucher is food, the number of POEN also includes the increase by the food recording coefficient (Article 22 paragraph 4 of the Rulebook on Sponsorship and Donations).
 
-(2) The number of POEN per voucher is derived from the entry recorded under the agreement, and not from a ratio of POEN to money. It is not the price of the good or service and does not express their value. No dinar value is published alongside it; the value of the agreement is published in the report under Article 37 paragraph 2.
+(2) The number of POEN per voucher is derived from the entry recorded under the agreement, in which the value of the goods and services from the giver's price list was taken as the measure of the extent of the contribution (Article 16 paragraph 4 point 4 of the Rulebook on the KOLO System). It is not the price of the good or service and does not express their value. No dinar value is published alongside it; the value of the agreement is published in the report under Article 37 paragraph 2.
 
 ### Article 32 — Availability of vouchers
 

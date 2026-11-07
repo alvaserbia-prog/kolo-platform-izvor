@@ -70,8 +70,10 @@ export const AKT_USLOVI: Akt = {
   // rokovi prigovora brojem, zaštita iz ZOO čl. 265 za svako ograničenje odgovornosti.
   // 5.0.2 — čl. 14 st. 4: korisnik koji nije u Kolu uzima vaučere programa raspodele hrane.
   // 5.0.9 — čl. 32 st. 1 t. 9 (lažna potvrda o uplati) i čl. 40 st. 2 t. 12 (ograničenje i otpis primljenog).
-  verzija: "5.0.9",
-  fajl: "uslovi_koriscenja_5_0_9.md",
+  // 5.1.0 — čl. 21 st. 3 (dinarski iznos kao jednosmerna mera obima doprinosa, bez poricanja)
+  // i čl. 28 st. 4 (povreda zabrane prometa POEN-a utvrđuje se po prijavi, prepisi se ne prate).
+  verzija: "5.1.0",
+  fajl: "uslovi_koriscenja_5_1_0.md",
 };
 
 export const AKT_POLITIKA: Akt = {

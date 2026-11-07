@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -8,6 +8,15 @@ import { posaljiEmailKorisniku } from "@/lib/email";
 import { smeDaKomunicira, ucitajUcesnika } from "@/lib/protokol/deca";
 import { PORUKA_RASKINUTO, raskinutoIzmedju, suPrijatelji } from "@/lib/protokol/prijateljstva";
 import { obavesti } from "@/lib/notifikacije";
+
+/** Posao posle odgovora: `after()` drži funkciju živom dok se ne završi; van zahteva (test) odmah. */
+function zakaziPosle(posao: () => Promise<unknown>): void {
+  try {
+    after(posao);
+  } catch {
+    void posao();
+  }
+}
 
 async function getKonv(konvId: string, meId: string) {
   const k = await prisma.konverzacija.findUnique({ where: { id: konvId } });
@@ -197,7 +206,9 @@ export async function POST(
   // Email primaocu — samo za PRVU nepročitanu poruku u nizu. Dok primalac ne
   // otvori konverzaciju, dalje poruke ne šalju mejl (inače bi razgovor od deset
   // poruka poslao deset mejlova). Kad pročita, sledeća poruka opet šalje.
-  void (async () => {
+  // Ide kroz `after()`, kao push: goli `void (async …)` serverless funkcija zamrzne
+  // čim se vrati odgovor, pa mejl tiho ne ode (poruke od 02.11.2026 bez odgovora).
+  zakaziPosle(async () => {
     try {
       const neprocitane = await prisma.poruka.count({
         where: {
@@ -217,13 +228,13 @@ export async function POST(
     } catch (err) {
       console.error("[poruke] Email obaveštenje nije poslato:", err);
     }
-  })();
+  });
 
   // Modul Deca, deca čl. 19 st. 3: roditelj se obaveštava SAMO pri prvom javljanju u
   // novom razgovoru sa punoletnim licem. Svaka poruka bi značila da roditelj prati
   // ritam prepiske, a on je ni ne čita — ono što mu treba je da zna da je razgovor
   // uopšte počeo. Ne baca i ne blokira odgovor.
-  void obavestiRoditeljeONovomRazgovoru(konvId, session.user.id, jaUcesnik, drugiUcesnik);
+  zakaziPosle(() => obavestiRoditeljeONovomRazgovoru(konvId, session.user.id, jaUcesnik, drugiUcesnik));
 
   return NextResponse.json({
     id: poruka.id,

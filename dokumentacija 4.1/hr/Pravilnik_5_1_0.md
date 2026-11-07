@@ -242,7 +242,7 @@
 
 3) ne otkupljuje se i ne konvertira (članak 11.), pa iz njega ne postoji izlaz u novcu;
 
-4) Zaklada ne utvrđuje njegovu cijenu i ne nudi ga na tržištu: ne objavljuje odnos POEN-a prema dinaru ni prema bilo kojoj drugoj valuti i nijedan takav odnos ne primjenjuje ni u jednom svom postupku. Iznos u oglasu određuje korisnik sam (Uvjeti korištenja); ako pritom pođe od vrijednosti izražene u novcu, to je njegova procjena koja ne obvezuje ni Zakladu ni drugu stranu;
+4) Zaklada ne utvrđuje njegovu cijenu, ne nudi ga na tržištu i ne objavljuje vrijednost POEN-a izraženu u dinarima ni u bilo kojoj drugoj valuti. Kada se doprinos daje u novcu ili u dobrima i uslugama čija je vrijednost izražena u dinarima, pravila kanala evidentiranja uzimaju taj iznos kao mjeru opsega već učinjenog doprinosa (Pravilnik o pokroviteljstvu i donacijama). Ta mjera nije cijena po kojoj se POEN pribavlja, ne daje pravo na novac ni na drugu vrijednost izvan sustava i ne određuje iznos u POEN-ima u razmjeni među korisnicima. Iz iste mjere, preko upisa, proizlazi i broj POEN-a koji se poništava pri raspodjeli vaučera iz pokroviteljstva dobrima i uslugama (stavak 5.). Iznos u oglasu određuje korisnik sam (Uvjeti korištenja); ako pritom pođe od vrijednosti izražene u novcu, to je njegova procjena koja ne obvezuje ni Zakladu ni drugu stranu;
 
 5) ne postoji izvan evidencije Protokola i ne može se prenijeti na zapis koji Protokol ne vodi;
 
@@ -266,9 +266,9 @@
 
 5) iz zapisa POEN-a nema isplate, otkupa ni konverzije (članak 11.);
 
-6) osoba koja nema zapis u evidenciji Protokola POEN ne prima, a ni davatelj vaučera iz pokroviteljstva dobrima i uslugama ne prima POEN: on izvršava vlastiti ugovor sa Zakladom u korist trećih osoba. Osoba koja u programu raspodjele hrane pruža uslugu POEN ne prima od imatelja vaučera; doprinos joj evidentira Protokol (članak 37. stavak 4.).
+6) osoba koja nema zapis u evidenciji Protokola POEN ne prima, a ni davatelj vaučera iz pokroviteljstva dobrima i uslugama ne prima POEN od imatelja vaučera: on izvršava vlastiti ugovor sa Zakladom u korist trećih osoba, a doprinos po tom ugovoru evidentira se pri potpisu u zapisu korisnika koji je podnio prijavu, jer je potpisom nastala obveza davatelja (Pravilnik o pokroviteljstvu i donacijama). Osoba koja u programu raspodjele hrane pruža uslugu POEN ne prima od imatelja vaučera; doprinos joj evidentira Protokol (članak 37. stavak 4.).
 
-(8) Svojstva iz prethodnih stavaka imaju posljedicu i u odnosu na pojam prihoda korisnika. Upisom POEN-a korisnik ne prima ni novac ni stvar; ništa ne prelazi iz imovine Zaklade u imovinu korisnika, a nastali zapis ne može se unovčiti, ustupiti kao potraživanje niti naplatiti. Prepis zapisa drugom korisniku povodom razmjene nije ustupanje: zapis nije potraživanje, nego Protokol ažurira evidenciju. Zaklada po osnovi upisa ne vrši isplatu ni po kojoj osnovi. Ne utvrđuje niti objavljuje vrijednost POEN-a izraženu u novcu i nijedan takav odnos ne primjenjuje, pa se iznos izražen u novcu po toj osnovi ne utvrđuje.
+(8) Svojstva iz prethodnih stavaka imaju posljedicu i u odnosu na pojam prihoda korisnika. Upisom POEN-a korisnik ne prima ni novac ni stvar; ništa ne prelazi iz imovine Zaklade u imovinu korisnika, a nastali zapis ne može se unovčiti, ustupiti kao potraživanje niti naplatiti. Prepis zapisa drugom korisniku povodom razmjene nije ustupanje: zapis nije potraživanje, nego Protokol ažurira evidenciju. Zaklada po osnovi upisa ne vrši isplatu ni po kojoj osnovi. Ne utvrđuje niti objavljuje vrijednost POEN-a izraženu u novcu; dinarski iznos iz stavka 4. točke 4. mjeri samo opseg učinjenog doprinosa i ne izražava vrijednost nastalog zapisa, pa se iznos izražen u novcu po osnovi upisa ne utvrđuje.
 
 ### Članak 17. — Pravilo nultog zbroja i negativan zapis
 

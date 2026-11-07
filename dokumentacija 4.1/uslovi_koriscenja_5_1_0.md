@@ -186,7 +186,7 @@ Punoletni korisnik može imati status korisnika, člana bez potvrde, člana Kola
 
 (2) Ako korisnik pri određivanju iznosa pođe od vrednosti izražene u novcu, to je njegova sopstvena procena. Ona važi samo za taj oglas, ne obavezuje drugu stranu i nije odnos koji Fondacija utvrđuje, objavljuje ili primenjuje.
 
-(3) Fondacija nijedan odnos POEN-a prema novcu ne primenjuje ni u jednom svom postupku: po njemu ne evidentira doprinos, ne utvrđuje nijedan iznos propisan pravilnicima i ne određuje broj POEN-a u projektima i kolektivnim nabavkama. Iznosi koje pravilnici propisuju izraženi su u POEN-ima i ne izvode se iz dinara.
+(3) Fondacija ne utvrđuje vrednost POEN-a u novcu i ne primenjuje nijedan odnos po kome bi se POEN menjao za novac ili novac za POEN. Iznos izražen u dinarima ulazi u njene postupke samo kao mera obima doprinosa u novcu, odnosno u dobrima i uslugama, pri njegovom evidentiranju, po pravilima Pravilnika o pokroviteljstvu i donacijama (član 16 stav 4 tačka 4 Pravilnika o KOLO sistemu). Iznosi koje pravilnici propisuju za druge kanale izraženi su u POEN-ima i ne izvode se iz dinara, a broj POEN-a po delu u kolektivnoj nabavci ne izvodi se iz cene dobra.
 
 (4) Procena iz stava 2 nije garancija konvertibilnosti, ne predstavlja kurs u smislu propisa o platnim uslugama i ne menja pravnu prirodu POEN-a utvrđenu Pravilnikom. Fondacija nikakvu vrednost POEN-a ne garantuje i ne održava.
 
@@ -262,7 +262,7 @@ Punoletni korisnik može imati status korisnika, člana bez potvrde, člana Kola
 
 (3) Korisniku je zabranjeno i da nudi, kupuje, prodaje ili posreduje u prometu POEN-a ili ZRNA za novac ili drugu vrednost van sistema. Takav promet protivan je principu nekonvertibilnosti (član 11 Pravilnika o KOLO sistemu), po kome se nijedna obračunska jedinica sistema ne može konvertovati u sredstvo sa vrednošću van sistema, neposredno ni posredno.
 
-(4) Posao iz stava 3 sklapa se u celini van Platforme. Fondacija u njemu ne posreduje, ne evidentira ga i ne pruža zaštitu nijednoj strani, a korisnik koji POEN pribavi na taj način ne stiče nivo donacija niti pomera koeficijent evidencije iz Pravilnika o pokroviteljstvu i donacijama. Na korisnika koji postupi protivno stavu 3 primenjuju se mere iz članova 31 i 32.
+(4) Posao iz stava 3 sklapa se u celini van Platforme. Fondacija u njemu ne posreduje, ne evidentira ga i ne pruža zaštitu nijednoj strani, a korisnik koji POEN pribavi na taj način ne stiče nivo donacija niti pomera koeficijent evidencije iz Pravilnika o pokroviteljstvu i donacijama. Na korisnika koji postupi protivno stavu 3 primenjuju se mere iz članova 31 i 32. Fondacija takvu povredu utvrđuje po prijavi korisnika ili kada za nju na drugi način sazna; prepise POEN-a radi toga ne prati. Odluku o povredi beleži.
 
 (5) Korisniku je zabranjeno i da ustupi, iznajmi ili proda pristup svom nalogu, kao i da koristi tuđi nalog. Nalog je vezan za lice koje ga je otvorilo, a kod učesnika za lice čija je stvarnost utvrđena u lancu potvrda, i nije prenosiv. Ustupanjem naloga prenose se i zapisi u njemu, uključujući upisano ZRNO, koje se po Pravilniku ne može preneti; zabrana iz ovog stava sprečava da se ta neprenosivost zaobiđe. Na korisnika koji postupi protivno ovom stavu primenjuju se mere iz članova 31 i 32.
 

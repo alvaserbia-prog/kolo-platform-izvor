@@ -278,11 +278,13 @@ Az a projekt, amely nem kollektív beszerzés, nem utalványelosztás és nem a 
 
 (2) Egy résztvevőnek egyidejűleg legfeljebb két fel nem használt utalványa lehet.
 
+(3) Ugyanabból a szerződésből egy résztvevőnek egyidejűleg legfeljebb egy fel nem használt utalványa lehet. Ha azt felhasználja, vagy ha az utalvány megszűnik, felvehet egy következőt.
+
 ### 31. cikk — Az utalványonkénti POEN-szám
 
 (1) Az utalványonként érvénytelenített POEN száma megegyezik azzal a POEN-számmal, amely a szerződés alapján a nyilvántartási együttható szerinti növelés nélkül került volna nyilvántartásba, elosztva az utalványok számával és a legközelebbi egész számra kerekítve. Ha az utalvány tárgya élelmiszer, a POEN-szám az élelmiszer nyilvántartási együtthatója szerinti növelést is magában foglalja (a pártfogásról és adományokról szóló szabályzat 22. cikkének (4) bekezdése).
 
-(2) Az utalványonkénti POEN-szám a szerződés alapján nyilvántartásba vett bejegyzésből vezethető le, nem pedig a POEN pénzhez viszonyított arányából. Nem az áru vagy a szolgáltatás ára, és nem fejezi ki azok értékét. Mellette dinárban kifejezett érték nem kerül közzétételre; a szerződés értéke a 37. cikk (2) bekezdése szerinti jelentésben kerül közzétételre.
+(2) Az utalványonkénti POEN-szám a szerződés alapján nyilvántartásba vett bejegyzésből vezethető le, amelyben a juttató árjegyzéke szerinti áruk és szolgáltatások értékét a hozzájárulás terjedelmének mértékéül vették (a KOLO rendszerről szóló szabályzat 16. cikk (4) bekezdés 4. pont). Nem az áru vagy a szolgáltatás ára, és nem fejezi ki azok értékét. Mellette dinárban kifejezett érték nem kerül közzétételre; a szerződés értéke a 37. cikk (2) bekezdése szerinti jelentésben kerül közzétételre.
 
 ### 32. cikk — Az utalványok elérhetősége
 

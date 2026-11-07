@@ -1383,7 +1383,7 @@
     "otvoriDokument": "Dokumentum megnyitása →",
     "uslovi": {
       "naslov": "A KOLO platform felhasználási feltételei",
-      "ver": "5.0.9"
+      "ver": "5.1.0"
     },
     "privatnost": {
       "naslov": "A KOLO platform adatvédelmi szabályzata",
@@ -1407,11 +1407,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.0.9"
+      "ver": "5.1.0"
     },
     "pravilnik": {
       "naslov": "KOLO rendszer szabályzatai",
-      "ver": "5.0.9",
+      "ver": "5.1.0",
       "sviPravilnici": "← Összes szabályzat",
       "pravilnici": "Szabályzatok"
     },
@@ -1432,7 +1432,7 @@
       "odluke": "Az Alapítvány határozatai"
     },
     "meta_uslovi_title": "Felhasználási feltételek · KOLO",
-    "meta_uslovi_desc": "A KOLO platform felhasználási feltételei, 5.0.9-es verzió",
+    "meta_uslovi_desc": "A KOLO platform felhasználási feltételei, 5.1.0-es verzió",
     "meta_privatnost_title": "Adatvédelmi szabályzat · KOLO",
     "meta_privatnost_desc": "A KOLO platform adatvédelmi szabályzata, 5.0.9-es verzió",
     "meta_statut_title": "A KOLO Alapítvány alapszabálya · KOLO",
@@ -1444,9 +1444,9 @@
     "meta_rizici_title": "Kockázatvállalási nyilatkozat · KOLO",
     "meta_rizici_desc": "A KOLO rendszerben való részvétel kockázatainak elfogadásáról szóló nyilatkozat, 5.0.0-es verzió",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, 5.0.9-es verzió",
+    "meta_whitepaper_desc": "KOLO Whitepaper, 5.1.0-es verzió",
     "meta_pravilnik_title": "KOLO rendszer szabályzatai · KOLO",
-    "meta_pravilnik_desc": "A KOLO rendszer szabályzatainak indexe, 5.0.9-es verzió",
+    "meta_pravilnik_desc": "A KOLO rendszer szabályzatainak indexe, 5.1.0-es verzió",
     "rb": {
       "kolo-sistem": {
         "naziv": "Szabályzat a KOLO rendszerről",
@@ -4182,7 +4182,7 @@
     "detalj_mesta": "Hol adják át a terméket, illetve nyújtják a szolgáltatást",
     "detalj_napomena": "Az utalvány meghatározott termékre vagy szolgáltatásra szól, az álneved alatt tartják nyilván, és nem ruházható át. A terméket, illetve szolgáltatást közvetlenül a pártfogótól kapod.",
     "tacka_ponistenje": "Az utalványhoz tartozó POEN a nyilvántartásodban azonnal törlődik, amint elveszed.",
-    "tacka_najvise_dva": "Egyszerre legfeljebb két fel nem használt utalványod lehet.",
+    "tacka_najvise_dva": "Egyszerre legfeljebb két fel nem használt utalványod lehet, ugyanabból a szerződésből pedig legfeljebb egy. Ha felhasználtad, felveheted a következőt.",
     "uzmi_zakljucano": "Jelöld be mindkét négyzetet az utalvány elvételéhez."
   },
   "kontakt": {

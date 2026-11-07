@@ -278,11 +278,13 @@ Projekt koji nije kolektivna nabava, raspodjela vaučera ni potpora zadruzi po �
 
 (2) Sudionik može istodobno imati najviše dva neiskorištena vaučera.
 
+(3) Iz istog ugovora sudionik istodobno može imati najviše jedan neiskorišten vaučer. Kada ga iskoristi, ili kada vaučer prestane, može uzeti sljedeći.
+
 ### Članak 31. — Broj POEN-a po vaučeru
 
 (1) Broj POEN-a koji se poništava po vaučeru jednak je broju POEN-a koji bi po ugovoru bio evidentiran bez uvećanja po koeficijentu evidencije, podijeljenom brojem vaučera i zaokruženom na najbliži cijeli broj. Kada je predmet vaučera hrana, broj POEN-a obuhvaća i uvećanje po koeficijentu evidencije hrane (članak 22. stavak 4. Pravilnika o pokroviteljstvu i donacijama).
 
-(2) Broj POEN-a po vaučeru izvodi se iz upisa evidentiranog po ugovoru, a ne iz odnosa POEN-a prema novcu. On nije cijena dobra ni usluge i ne izražava njihovu vrijednost. Uz njega se ne objavljuje dinarska vrijednost; vrijednost ugovora objavljuje se u izvješću iz članka 37. stavka 2.
+(2) Broj POEN-a po vaučeru izvodi se iz upisa evidentiranog po ugovoru, u kojem je vrijednost dobara i usluga iz cjenika davatelja uzeta kao mjera opsega doprinosa (članak 16. stavak 4. točka 4. Pravilnika o KOLO sustavu). On nije cijena dobra ni usluge i ne izražava njihovu vrijednost. Uz njega se ne objavljuje dinarska vrijednost; vrijednost ugovora objavljuje se u izvješću iz članka 37. stavka 2.
 
 ### Članak 32. — Dostupnost vaučera
 

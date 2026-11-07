@@ -98,9 +98,11 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // primaocu podrške se dnevni iznos programa ne evidentira).
   // 5.0.9 — čl. 17 st. 2 t. 10 (poništenje donacije unapred, deseti osnov), čl. 36 st. 2, 3
   // i nov st. 6 (donacija unapred, ograničenje primljenog), čl. 37 st. 2 (pokroviteljstvo u narednom periodu).
+  // 5.1.0 — čl. 16 st. 4 t. 4 i st. 8: dinarski iznos je jednosmerna mera obima doprinosa
+  // (bez poricanja); st. 7 t. 6: davalac ne prima POEN od imaoca, doprinos podnosiocu pri potpisu.
   "kolo-sistem": {
-    fajl: "Pravilnik_5_0_9.md",
-    verzija: "5.0.9",
+    fajl: "Pravilnik_5_1_0.md",
+    verzija: "5.1.0",
   },
   // 4.4.6 — čl. 12 st. 4 više ne prenosi nadležnost za opšte akte na Gornje Kolo
   // (akt nižeg ranga to ne može po sopstvenom čl. 8 st. 2); nov st. 6.
@@ -263,8 +265,10 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 4.8.4 — U2: zadruga upisana u sistem nije dobavljač (čl. 3).
   // 5.0.7 — čl. 40 st. 1: podaci o hrani iz prijave (donacije čl. 28 st. 2 t. 6).
     // 5.0.6 — čl. 32 st. 1 i 3: više mesta predaje; imalac bira mesto.
-    fajl: "projekti_nabavke_5_0_7.md",
-    verzija: "5.0.7",
+    // 5.1.0 — čl. 30 st. 3 (najviše jedan neiskorišćen vaučer iz istog ugovora) i
+    // čl. 31 st. 2 (broj POEN-a po vaučeru: vrednost iz cenovnika kao mera obima doprinosa).
+    fajl: "projekti_nabavke_5_1_0.md",
+    verzija: "5.1.0",
   },
   // Nov akt uz set 4.7.0 — osnov u čl. 56 Pravilnika o KOLO sistemu. Krug i
   // zadruga su isti kolektivni oblik; zapis, pragovi rasta (svaki jednom), osnovi

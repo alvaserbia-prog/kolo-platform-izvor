@@ -1383,7 +1383,7 @@
     "otvoriDokument": "Otvori dokument →",
     "uslovi": {
       "naslov": "Uvjeti korištenja KOLO platforme",
-      "ver": "5.0.9"
+      "ver": "5.1.0"
     },
     "privatnost": {
       "naslov": "Politika privatnosti KOLO platforme",
@@ -1407,11 +1407,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.0.9"
+      "ver": "5.1.0"
     },
     "pravilnik": {
       "naslov": "Pravilnici KOLO sustava",
-      "ver": "5.0.9",
+      "ver": "5.1.0",
       "sviPravilnici": "← Svi pravilnici",
       "pravilnici": "Pravilnici"
     },
@@ -1432,7 +1432,7 @@
       "odluke": "Odluke Zaklade"
     },
     "meta_uslovi_title": "Uvjeti korištenja · KOLO",
-    "meta_uslovi_desc": "Uvjeti korištenja KOLO platforme, verzija 5.0.9",
+    "meta_uslovi_desc": "Uvjeti korištenja KOLO platforme, verzija 5.1.0",
     "meta_privatnost_title": "Politika privatnosti · KOLO",
     "meta_privatnost_desc": "Politika privatnosti KOLO platforme, verzija 5.0.9",
     "meta_statut_title": "Statut KOLO Zaklade · KOLO",
@@ -1444,9 +1444,9 @@
     "meta_rizici_title": "Izjava o prihvaćanju rizika · KOLO",
     "meta_rizici_desc": "Izjava o prihvaćanju rizika sudjelovanja u KOLO sustavu, verzija 5.0.0",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, verzija 5.0.9",
+    "meta_whitepaper_desc": "KOLO Whitepaper, verzija 5.1.0",
     "meta_pravilnik_title": "Pravilnici KOLO sustava · KOLO",
-    "meta_pravilnik_desc": "Indeks pravilnika KOLO sustava, verzija 5.0.9",
+    "meta_pravilnik_desc": "Indeks pravilnika KOLO sustava, verzija 5.1.0",
     "rb": {
       "kolo-sistem": {
         "naziv": "Pravilnik o KOLO sustavu",
@@ -4182,7 +4182,7 @@
     "detalj_mesta": "Gdje se dobro predaje, odnosno usluga pruža",
     "detalj_napomena": "Vaučer glasi na točno određeno dobro ili uslugu, vodi se pod tvojim pseudonimom i ne može se prenijeti. Dobro, odnosno uslugu primaš neposredno od pokrovitelja.",
     "tacka_ponistenje": "Broj POEN-a za vaučer poništava se u tvom zapisu čim ga uzmeš.",
-    "tacka_najvise_dva": "Istodobno možeš imati najviše dva neiskorištena vaučera.",
+    "tacka_najvise_dva": "Istodobno možeš imati najviše dva neiskorištena vaučera, a iz istog ugovora najviše jedan. Kad ga iskoristiš, možeš uzeti sljedeći.",
     "uzmi_zakljucano": "Označi oba polja da bi uzeo vaučer."
   },
   "kontakt": {

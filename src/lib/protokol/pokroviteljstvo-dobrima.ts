@@ -757,7 +757,7 @@ async function posaljiPrimerakUgovora(p: {
  *     istog korisnika ne mogu oba da prođu proveru „najviše dva" ni proveru POEN-a;
  *  2. uslovi se proveravaju nad zaključanim stanjem (`smeUzetiVaucer`): korisnik
  *     iz čl. 4 nabavki, nije podnosilac, izjava i PRISTANAK dati, najviše dva
- *     neiskorišćena vaučera, dovoljno raspoloživih POEN-a (stanje − rezervacije
+ *     neiskorišćena vaučera i najviše jedan iz istog ugovora, dovoljno raspoloživih POEN-a (stanje − rezervacije
  *     nabavke) — zapis ne ide u minus;
  *  3. slobodan vaučer se uzima uz `FOR UPDATE SKIP LOCKED` i uslovnim upisom
  *     (`status: "SLOBODAN"`), pa dva korisnika ne mogu uzeti isti vaučer;
@@ -802,10 +802,12 @@ export async function uzmiVaucer(
       throw new VaucerGreska("Vaučeri ovog ugovora nisu dostupni.", 404);
     const poenaPoV = u.poenaPoVauceru ?? poenaPoVauceru(Number(u.vrednostRsd), u.brojVaucera);
 
-    const [w, nab, aktivnih] = await Promise.all([
+    const [w, nab, aktivnih, aktivnihIzUgovora] = await Promise.all([
       tx.wallet.findUniqueOrThrow({ where: { id: walletId }, select: { balance: true } }),
       tx.nabavkaPrijava.aggregate({ where: { userId, status: "POTVRDIO" }, _sum: { rezervisano: true } }),
       tx.vaucer.count({ where: { imalacId: userId, status: "DODELJEN" } }),
+      // Nabavke čl. 30 st. 3 (set 5.1.0): najviše jedan neiskorišćen iz istog ugovora.
+      tx.vaucer.count({ where: { imalacId: userId, ugovorId, status: "DODELJEN" } }),
     ]);
     const provera = smeUzetiVaucer({
       ...korisnik,
@@ -815,6 +817,7 @@ export async function uzmiVaucer(
       izjavaNepovezan: unos.izjavaNepovezan,
       pristanakPrikaz: unos.pristanakPrikaz,
       aktivnihVaucera: aktivnih,
+      aktivnihIzUgovora,
       // Ograničen iznos se ne koristi (donacije čl. 6 st. 7, set 5.0.9).
       raspolozivo: raspolozivo(w.balance) - (nab._sum.rezervisano ?? 0) - (await ograniceno(walletId, tx)),
       poenaPoVauceru: poenaPoV,

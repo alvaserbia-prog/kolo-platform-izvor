@@ -62,6 +62,14 @@ export const ROK_VAZENJA_MESECI = 12;
 /** Nabavke čl. 30 st. 2 — najviše dva uzeta, a neiskorišćena vaučera po korisniku. */
 export const MAX_AKTIVNIH_VAUCERA_PO_CLANU = 2;
 
+/**
+ * Nabavke čl. 30 st. 3 (set 5.1.0) — iz istog ugovora najviše jedan uzet, a
+ * neiskorišćen vaučer po korisniku; kad ga iskoristi ili vaučer prestane, sme
+ * sledeći. Roba jednog davaoca tako ide na više ljudi. Važi isto za svakoga,
+ * bez obzira na nivo donacija i poreklo POEN-a (to se ne obeležava).
+ */
+export const MAX_AKTIVNIH_IZ_UGOVORA = 1;
+
 /** Brava na unos: najviše vaučera po ugovoru (protiv omaške u kucanju). */
 export const MAX_VAUCERA_PO_UGOVORU = 500;
 
@@ -328,6 +336,7 @@ export function vaziDoOd(izdato: Date, meseci: number = ROK_VAZENJA_MESECI): Dat
  *  - dao je izjavu o nepovezanosti I pristanak na prikaz zapisa o poništenju uz
  *    pseudonim (čl. 33 st. 1) — bez njih se vaučer ne može uzeti;
  *  - nema već dva uzeta, a neiskorišćena vaučera (čl. 30 st. 2);
+ *  - nema već uzet, a neiskorišćen vaučer iz ISTOG ugovora (čl. 30 st. 3);
  *  - ima dovoljno raspoloživih POEN-a (čl. 33 st. 4) — zapis ne ide u minus.
  *
  * Servis istu proveru ponavlja UNUTAR transakcije, nad zaključanim zapisom.
@@ -338,6 +347,7 @@ export function smeUzetiVaucer(u: UcesnikProvera & {
   izjavaNepovezan: boolean;
   pristanakPrikaz: boolean;
   aktivnihVaucera: number;
+  aktivnihIzUgovora: number;
   raspolozivo: number;
   poenaPoVauceru: number;
 }): IshodProvere {
@@ -354,6 +364,11 @@ export function smeUzetiVaucer(u: UcesnikProvera & {
     return { ok: false, razlog: "Bez pristanka na prikaz zapisa uz pseudonim vaučer se ne može uzeti." };
   if (u.aktivnihVaucera >= MAX_AKTIVNIH_VAUCERA_PO_CLANU)
     return { ok: false, razlog: "Istovremeno možeš imati najviše dva neiskorišćena vaučera." };
+  if (u.aktivnihIzUgovora >= MAX_AKTIVNIH_IZ_UGOVORA)
+    return {
+      ok: false,
+      razlog: "Iz ovog ugovora već imaš neiskorišćen vaučer. Sledeći možeš da uzmeš kad ga iskoristiš.",
+    };
   if (!(u.poenaPoVauceru > 0) || u.raspolozivo < u.poenaPoVauceru)
     return { ok: false, razlog: "Nemaš dovoljno POEN-a za ovaj vaučer." };
   return { ok: true };

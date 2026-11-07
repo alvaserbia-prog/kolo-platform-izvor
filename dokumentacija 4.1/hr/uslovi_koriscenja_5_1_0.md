@@ -188,7 +188,7 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 (2) Ako korisnik pri određivanju iznosa pođe od vrijednosti izražene u novcu, to je njegova vlastita procjena. Ona vrijedi samo za taj oglas, ne obvezuje drugu stranu i nije odnos koji Zaklada utvrđuje, objavljuje ili primjenjuje.
 
-(3) Zaklada nijedan odnos POEN-a prema novcu ne primjenjuje ni u jednom svom postupku: po njemu ne evidentira doprinos, ne utvrđuje nijedan iznos propisan pravilnicima i ne određuje broj POEN-a u projektima i kolektivnim nabavama. Iznosi koje pravilnici propisuju izraženi su u POEN-ima i ne izvode se iz dinara.
+(3) Zaklada ne utvrđuje vrijednost POEN-a u novcu i ne primjenjuje nijedan odnos po kojem bi se POEN mijenjao za novac ili novac za POEN. Iznos izražen u dinarima ulazi u njezine postupke samo kao mjera opsega doprinosa u novcu, odnosno u dobrima i uslugama, pri njegovu evidentiranju, po pravilima Pravilnika o pokroviteljstvu i donacijama (članak 16. stavak 4. točka 4. Pravilnika o KOLO sustavu). Iznosi koje pravilnici propisuju za druge kanale izraženi su u POEN-ima i ne izvode se iz dinara, a broj POEN-a po dijelu u kolektivnoj nabavi ne izvodi se iz cijene dobra.
 
 (4) Procjena iz stavka 2. nije jamstvo konvertibilnosti, ne predstavlja tečaj u smislu propisa o platnim uslugama i ne mijenja pravnu prirodu POEN-a utvrđenu Pravilnikom. Zaklada nikakvu vrijednost POEN-a ne jamči i ne održava.
 
@@ -264,7 +264,7 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 (3) Korisniku je zabranjeno i nuditi, kupovati, prodavati POEN ili ZRNO te posredovati u njihovu prometu za novac ili drugu vrijednost izvan sustava. Takav je promet protivan načelu nekonvertibilnosti (članak 11. Pravilnika o KOLO sustavu), prema kojem se nijedna obračunska jedinica sustava ne može konvertirati u sredstvo s vrijednošću izvan sustava, neposredno ni posredno.
 
-(4) Posao iz stavka 3. sklapa se u cijelosti izvan Platforme. Zaklada u njemu ne posreduje, ne evidentira ga i ne pruža zaštitu nijednoj strani, a korisnik koji POEN pribavi na taj način ne stječe razinu donacija niti pomiče koeficijent evidencije iz Pravilnika o pokroviteljstvu i donacijama. Na korisnika koji postupi protivno stavku 3. primjenjuju se mjere iz članaka 31. i 32.
+(4) Posao iz stavka 3. sklapa se u cijelosti izvan Platforme. Zaklada u njemu ne posreduje, ne evidentira ga i ne pruža zaštitu nijednoj strani, a korisnik koji POEN pribavi na taj način ne stječe razinu donacija niti pomiče koeficijent evidencije iz Pravilnika o pokroviteljstvu i donacijama. Na korisnika koji postupi protivno stavku 3. primjenjuju se mjere iz članaka 31. i 32. Zaklada takvu povredu utvrđuje po prijavi korisnika ili kada za nju na drugi način sazna; prepise POEN-a radi toga ne prati. Odluku o povredi bilježi.
 
 (5) Korisniku je zabranjeno i ustupiti, iznajmiti ili prodati pristup svojem računu, kao i koristiti tuđi račun. Račun je vezan uz osobu koja ga je otvorila, a kod sudionika uz osobu čija je stvarnost utvrđena u lancu potvrda, i nije prenosiv. Ustupanjem računa prenose se i zapisi u njemu, uključujući upisano ZRNO, koje se prema Pravilniku ne može prenijeti; zabrana iz ovoga stavka sprječava da se ta neprenosivost zaobiđe. Na korisnika koji postupi protivno ovome stavku primjenjuju se mjere iz članaka 31. i 32.
 
