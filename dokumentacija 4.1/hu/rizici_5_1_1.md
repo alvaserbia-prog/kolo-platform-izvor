@@ -46,7 +46,7 @@
 
 (2) Az elszámolási együttható a nyilvántartásba vett POEN-ek teljes számával változik, és nőhet is, csökkenhet is; nincs eleve a növekedésre rendelve. A Protokoll a nyilvántartásból automatikusan és mérlegelés nélkül számítja ki; egyetlen személy sem irányítja és nem ígéri. A ZRNO beírása és leírása nem mozdítja el az elszámolási együtthatót.
 
-(3) A ZRNO nem eszközök befektetésével szerezhető meg, hanem a résztvevő bejegyzésében már nyilvántartásba vett hozzájárulásból kerül beírásra. Annak a résztvevőnek a helyzetében bekövetkező változás, akinek ZRNO-t írtak be, nem hozam, és nem garantált: a leíráskor kevesebb POEN-t is kaphat, mint amennyit a beírásra fordított. A ZRNO beírásakor és leírásakor érvényes elszámolási együttható közötti különbség abból a képletből ered, amelyet a Protokoll mérlegelés nélkül alkalmaz, és mindkét irányban keletkezhet; egyetlen szereplő sem fizeti ki és nem szavatolja. A helyzet változása kizárólag POEN-ben, a rendszeren kívül értékkel nem bíró nyilvántartási bejegyzésekben jelenik meg.
+(3) A ZRNO nem eszközök befektetésével szerezhető meg, hanem a résztvevő bejegyzésében már nyilvántartásba vett hozzájárulásból kerül beírásra. Az elszámolási együttható egyformán függ a saját és a mások hozzájárulásától, és nőhet is, csökkenhet is, így a résztvevő a szabad ZRNO leírásakor kevesebb POEN-t is kaphat, mint amennyit a beírásra fordított. A különbözetet egyetlen szereplő sem fizeti ki és nem szavatolja; kizárólag POEN-ben jelenik meg, amely nem konvertálható pénzre, és nem hagyhatja el a nyilvántartást.
 
 ### 6. cikk — A ZRNO és az Alapítvány dináreszközei
 
@@ -142,7 +142,7 @@ A Platformon való regisztrációval a felhasználó kijelenti:
 
 3) hogy megérti, hogy a rendszerben való részvétel nem befektetés, és hogy nincs pénzügyi hozamra vonatkozó várakozás;
 
-4) hogy megérti, hogy az elszámolási együttható csökkenhet, és hogy a beírt ZRNO-ból eredő helyzetváltozás nem hozam;
+4) hogy megérti, hogy az elszámolási együttható valamennyi résztvevő hozzájárulásától függ, csökkenhet, és hogy a szabad ZRNO leírása kevesebb POEN-t is eredményezhet, mint amennyit a beírásra fordítottak;
 
 5) hogy megérti, hogy az Alapítványnak nyújtott adományok visszafordíthatatlanok;
 

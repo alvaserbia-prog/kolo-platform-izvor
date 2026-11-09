@@ -306,7 +306,7 @@ Ko upisuje. ZRNO upisuje učesnik: član Kola i član bez potvrde. Član Kola up
 
 Kako daje glas. Samo čuvar Kola upisano ZRNO aktivira (zaključava), i tek aktivno ZRNO nosi glasačku moć. Glas može da delegira samo čuvar Kola, i to samo drugom čuvaru Kola. Glas ne raste pravolinijski: broj glasova je kvadratni koren broja aktivnih ZRNA, pa ko ima sto puta više ZRNA ima deset puta više glasova, a ne sto. Tako niko ne može da preuzme odlučivanje gomilanjem.
 
-Šta ZRNO nije. Nije udeo, nije akcija, nije digitalna imovina, nije finansijski instrument. Ne nosi kamatu ni dividendu, niko ti po njemu ništa ne isplaćuje, i ne prepisuje se drugom korisniku. Ono pokazuje tvoj položaj u zajednici, ne koliko ti ona duguje.`,
+Šta ZRNO ne može. Ne pretvara se u novac, ne prepisuje se drugom korisniku, ne nasleđuje se i niko ga ne otkupljuje. Ne nosi kamatu ni dividendu i niko ti po njemu ništa ne isplaćuje. Ono pokazuje tvoj položaj u zajednici, ne koliko ti ona duguje.`,
       },
       {
         id: 5,
@@ -357,7 +357,7 @@ Zaključavanje nije staking. Upisano ZRNO zaključavaš samo zato da bi se obra�
 
 Otpis ne vraća isti broj POENA, i to ti kažemo otvoreno. Otpis ide po koeficijentu koji važi u tom trenutku, a koeficijent se do tada mogao promeniti — u oba smera. Raste kad se u sistemu upišu novi POENI kroz kanale doprinosa. Pada kad se POENI ponište — kad neko ugasi nalog, kad se POEN poništi preuzimanjem iz kolektivne nabavke ili kad se raskine prijateljstvo u dečjem prostoru.
 
-Tvoj sopstveni upis i otpis ga ne pomeraju. Pri upisu se istovremeno umanjuju i broj POENA u opticaju i broj raspoloživih ZRNA, pa količnik ostaje isti. Zato ovde nema ni trgovanja ni pravog trenutka za ulazak i izlazak: razlika, ako je bude, aritmetička je posledica onoga što je ceo sistem u međuvremenu zabeležio. Niko je ne obećava, niko je ne garantuje i nijedno lice je ne isplaćuje.
+Tvoj sopstveni upis i otpis ga ne pomeraju. Pri upisu se istovremeno umanjuju i broj POENA u opticaju i broj raspoloživih ZRNA, pa količnik ostaje isti. Pomera ga doprinos svih, tvoj i tuđi podjednako. Konkretno: ako ZRNO upišeš dok je koeficijent niži, a slobodno ga otpišeš kad je viši, dobićeš više POENA nego što si utrošio, a ako je u međuvremenu pao, dobićeš manje. Niko to ne obećava, niko ne garantuje i nijedno lice ne isplaćuje.
 
 Ali to nije prihod. Razlika postoji isključivo u POENIMA, koji nemaju vrednost van sistema, ne menjaju se za dinare i ne mogu izaći iz Protokola. Nemaš dobit ni prihod u novcu, imaš drugačiji zapis u evidenciji doprinosa. Zato ZRNO ne upisuješ zato što bi ti se to isplatilo, nego zato što hoćeš glas u odlukama.`,
       },

@@ -1403,15 +1403,15 @@
     },
     "rizici": {
       "naslov": "Izjava o prihvaćanju rizika",
-      "ver": "5.0.0"
+      "ver": "5.1.1"
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.1.0"
+      "ver": "5.1.1"
     },
     "pravilnik": {
       "naslov": "Pravilnici KOLO sustava",
-      "ver": "5.1.0",
+      "ver": "5.1.1",
       "sviPravilnici": "← Svi pravilnici",
       "pravilnici": "Pravilnici"
     },
@@ -1442,11 +1442,11 @@
     "meta_radnje_title": "Registar radnji obrade · KOLO",
     "meta_radnje_desc": "Registar radnji obrade osobnih podataka, verzija 5.0.9",
     "meta_rizici_title": "Izjava o prihvaćanju rizika · KOLO",
-    "meta_rizici_desc": "Izjava o prihvaćanju rizika sudjelovanja u KOLO sustavu, verzija 5.0.0",
+    "meta_rizici_desc": "Izjava o prihvaćanju rizika sudjelovanja u KOLO sustavu, verzija 5.1.1",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, verzija 5.1.0",
+    "meta_whitepaper_desc": "KOLO Whitepaper, verzija 5.1.1",
     "meta_pravilnik_title": "Pravilnici KOLO sustava · KOLO",
-    "meta_pravilnik_desc": "Indeks pravilnika KOLO sustava, verzija 5.1.0",
+    "meta_pravilnik_desc": "Indeks pravilnika KOLO sustava, verzija 5.1.1",
     "rb": {
       "kolo-sistem": {
         "naziv": "Pravilnik o KOLO sustavu",
@@ -1841,7 +1841,7 @@
     "zasto5_naslov": "Nema nasljeđivanja ni prava na imovinu",
     "zasto5_tekst": "Zapisi POEN-a i ZRNA ne prenose se i ne nasljeđuju kao imovinska prava (čl. 12) i ne predstavljaju potraživanje prema Zakladi.",
     "zasto6_naslov": "Koeficijent nije tečaj",
-    "zasto6_tekst": "Obračunski koeficijent je odnos ukupnog broja evidentiranih POENA i broja ZRNA raspoloživih za upis. Izračunava ga Protokol automatski i bez diskrecije. Nije cijena, nije tečaj i nije indeks performansi, i ne izražava vrijednost ZRNA ni POENA izvan sustava (čl. 25). Promjena položaja čuvara Kola nije prinos i nije zajamčena (čl. 27).",
+    "zasto6_tekst": "Obračunski koeficijent je odnos ukupnog broja evidentiranih POENA i broja ZRNA raspoloživih za upis. Izračunava ga Protokol automatski i bez diskrecije. Nije cijena, nije tečaj i nije indeks performansi, i ne izražava vrijednost ZRNA ni POENA izvan sustava (čl. 25). Koeficijent jednako ovisi o vlastitom i o tuđem doprinosu i može rasti i padati; razlika pri otpisu ZRNA postoji samo u POENIMA, koji se ne konvertiraju u novac (čl. 25 i 27).",
     "propisi_naslov": "Zašto ne potpada pod te propise",
     "propisi_uvod": "Kvalifikacija ne počiva na izjavi nego na tome da POEN i ZRNO ne ispunjavaju zakonske definicije. Ispod je provjera po svakom propisu.",
     "zdi_naslov": "Zakon o digitalnoj imovini",
@@ -1854,7 +1854,7 @@
     "sporno_uvod": "Dvije stvari u mehanici same traže odgovor. Obje su razmotrene i obje imaju izričito obrazloženje.",
     "sporno1_naslov": "Od donacije do ZRNA",
     "sporno2_naslov": "Razlika u koeficijentu između upisa i otpisa",
-    "sporno2_tekst": "Tko upiše ZRNO pri jednom koeficijentu, a otpiše ga pri drugom, dobiva drugačiji broj POENA nego što je upisom utrošio, jer koeficijent raste od novih zapisa POENA, a pada od njihova poništenja. Četiri stvari razbijaju čitanje te razlike kao prinosa: dobiveni POEN nema vrijednost izvan sustava, jer se ne može se konvertirati, iznijeti ni unovčiti; promjena koeficijenta nije zajamčena i ovisi o stanju evidencije cijele zajednice, a ne o naporu trećih osoba; vlastiti upis i otpis koeficijent ne pomiču, jer se pri upisu istodobno umanjuju i broj POENA u optjecaju i broj raspoloživih ZRNA, pa nema ni trgovanja ni pravog trenutka; i ne postoji izdavatelj koji rast obećava ni institucija koja razliku isplaćuje. Uz to, tko želi glas mora aktivirati ZRNO i time gubi mogućnost otpisa, pa se pasivno držanje i upravljanje isključuju.",
+    "sporno2_tekst": "Tko upiše ZRNO pri jednom koeficijentu, a otpiše ga pri drugom, dobiva drugačiji broj POENA nego što je upisom utrošio, jer koeficijent raste od novih zapisa POENA, a pada od njihova poništenja. U te zapise ulazi doprinos svih, vlastiti i tuđi podjednako, po istim pravilima. Četiri stvari koje u njoj nedostaju razbijaju čitanje te razlike kao prinosa: dobiveni POEN nema vrijednost izvan sustava, jer se ne može konvertirati, iznijeti ni unovčiti; ZRNO se ne prenosi i nema tržište, pa se položaj ne može prodati; promjena koeficijenta nije zajamčena, vlastiti upis i otpis koeficijent ne pomiču, a nijedna ga osoba ne određuje, ne cilja ni ne obećava; i ne postoji izdavatelj koji rast obećava ni institucija koja razliku isplaćuje. Uz to, tko želi glas mora aktivirati ZRNO i time gubi mogućnost otpisa, pa se pasivno držanje i upravljanje isključuju.",
     "principi_naslov": "Nekonvertibilnost nosi sve ostalo",
     "principi_tekst": "Svi gornji argumenti počivaju na tome da POEN nema vrijednost izvan sustava, a to stoji samo dok ne postoji mehanizam konverzije. Zato je nekonvertibilnost prvi od četiri principa na kojima počiva pravna pozicija (čl. 10), uz odsutnost imovinskog prava nad zapisima, nepovratnost donacija i minimizaciju podataka. Ta četiri principa strukturni su limiti: ne mogu se izmijeniti ni ukinuti nijednom upravljačkom odlukom, uključujući odluku Gornjeg Kola. Povreda bilo kojeg od njih mijenja pravnu prirodu sustava.",
     "fondacija_naslov": "Zaklada KOLO",

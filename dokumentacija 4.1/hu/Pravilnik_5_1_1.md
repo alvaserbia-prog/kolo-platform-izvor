@@ -76,7 +76,7 @@
 
 6) **automatikus nyilvántartásba vétel**: a POEN nyilvántartásba vétele a Protokoll automatikus aktusaként, amely a rendszer szabályai szerint, bármely szereplő mérlegelési döntése nélkül hajtódik végre;
 
-7) **ZRNO**: a rendszer belső elszámolási egysége, amellyel a Protokoll nyilvántartásában a résztvevő közjóban elfoglalt helyzete kerül nyilvántartásba;
+7) **ZRNO**: bejegyzés a Protokoll nyilvántartásában, egy az összesen 1.000.000 közül, amelyet a résztvevő nyilvántartásba vett POEN-ek felhasználásával, az elszámolási együttható szerint ír be; az aktivált ZRNO szavazatot ad a Felső Kolóban, a szabad ZRNO pedig leírható, POEN-nek az elszámolási együttható szerinti nyilvántartásba vétele mellett;
 
 8) **elszámolási együttható**: a nyilvántartásba vett POEN-ek teljes számának és a Protokollban beírásra rendelkezésre álló ZRNO-k számának számszerű aránya;
 
@@ -364,7 +364,7 @@
 
 ### 21. cikk — ZRNO
 
-(1) A ZRNO által nyilvántartott helyzet a résztvevő hozzájárulásából ered, és szavazatot ad neki a rendszer szabályairól való döntéshozatalban. A ZRNO nem minősül üzletrésznek, részvénynek, értékpapírnak, kollektív befektetési egységnek, befektetési szerződésnek, digitális vagyonnak vagy digitális tokennek, mert semmilyen vagyoni jogot nem képvisel, és nem hordoz osztalékot, kamatot, hozamot vagy a felszámolási maradványhoz való jogot.
+(1) A ZRNO kétféleképpen szolgálhat, amelyek kölcsönösen kizárják egymást: aktiválva szavazatot ad a Kolo-őrzőnek a rendszer szabályairól való döntéshozatalban (43. cikk), szabadon pedig leírható, POEN-nek a leírás időszakában érvényes elszámolási együttható szerinti nyilvántartásba vétele mellett (23. cikk). Ezen túl a ZRNO-nak nincs joghatása: nem képvisel vagyoni jogot, nem hordoz osztalékot, kamatot vagy a felszámolási maradványhoz való jogot, nem váltható pénzre és nem ruházható át (11., 12. és 24. cikk).
 
 (2) A ZRNO-k teljes száma 1.000.000, és sem nem növelhető, sem nem csökkenthető. Minden pillanatban a ZRNO-k egy része a résztvevőknél van beírva, másik része pedig a Protokollban beírásra rendelkezésre áll; a beírt és a rendelkezésre álló ZRNO-k összege mindig egyenlő a teljes számmal.
 
@@ -392,7 +392,7 @@
 
 (3) A leíráskor a Protokoll a ZRNO-t leíró résztvevő javára a folyó elszámolási időszakra érvényes elszámolási együttható szerint POEN-t vesz nyilvántartásba. Az a Kolo-őrző, akinek ZRNO-ja teljes egészében leírásra került, Kolo-taggá válik.
 
-(4) A beírás és a leírás pillanatában érvényes elszámolási együttható közötti különbség nem hozam. Abból a képletből ered, amelyet a Protokoll mérlegelés nélkül alkalmaz, mindkét irányban keletkezhet, és egyetlen szereplő sem fizeti ki és nem szavatolja. A leírással nyilvántartásba vett POEN-ek ugyanolyan jogállással bírnak, mint minden más POEN.
+(4) A leírással nyilvántartásba vett POEN-ek száma a leírás időszakában érvényes elszámolási együtthatótól függ, és nagyobb vagy kisebb lehet, mint a beírásra fordított szám. Aki a ZRNO-t alacsonyabb együtthatónál írta be, és magasabbnál írja le, több POEN-t kap, mint amennyit felhasznált; fordított esetben kevesebbet kap. A különbözetet egyetlen szereplő sem fizeti ki és nem szavatolja; az csak POEN-ekben létezik, amelyeket nem vásárolnak vissza, és nem konvertálnak dinárra vagy más fizetési eszközre (11. cikk). A leírással nyilvántartásba vett POEN-ek ugyanolyan jogállással bírnak, mint minden más POEN.
 
 (5) A ZRNO állapotai közötti átmenetek és azok hatálya az elszámolási időszak végén állnak be.
 
@@ -404,7 +404,7 @@ A ZRNO nem ruházható át másik felhasználóra, sem önmagában, sem a fiókk
 
 (1) Az elszámolási együttható megmutatja, hány POEN szükséges egy ZRNO beírásához az adott elszámolási időszakban. A Protokoll számítja ki, automatikusan és mérlegelés nélkül.
 
-(2) Az elszámolási együttható a nyilvántartásba vett POEN-ek teljes számával változik: az új POEN-bejegyzések beírása felfelé, a nyilvántartásba vett POEN-ek érvénytelenítése lefelé mozdítja el. Az együttható nem eleve növekedésre rendelt.
+(2) Az elszámolási együttható egyenlő a nyilvántartásba vett POEN-ek teljes számának és a beírásra rendelkezésre álló ZRNO-k számának hányadosával. A nyilvántartásba vett POEN-ek teljes számát valamennyi résztvevő azonos szabályok szerint nyilvántartásba vett hozzájárulásai alkotják, így az együttható egyformán függ a saját és a mások hozzájárulásától. Ha egy elszámolási időszakban több új bejegyzést vesznek nyilvántartásba, mint amennyit érvénytelenítenek, az együttható nő, ha pedig az érvénytelenítés több, csökken. Az együttható nem eleve növekedésre rendelt.
 
 (3) A ZRNO beírása és leírása nem mozdítja el az elszámolási együtthatót. Beíráskor a Protokollban rendelkezésre álló ZRNO-k száma mellett ugyanolyan arányban csökken a nyilvántartásba vett POEN-ek teljes száma is, mivel a beírásra fordított POEN-ek visszakerülnek a Protokollhoz; leíráskor mindkét mennyiség ugyanolyan arányban növekszik. A Kolo-őrző sem saját beírásával, sem saját leírásával nem tudja elmozdítani az együtthatót. A felhasználók közötti áru- és szolgáltatáscsere nem változtatja meg az együtthatót.
 
@@ -416,17 +416,19 @@ Az elszámolási időszak 24 óráig tart, szerbiai idő szerint éjféltől éj
 
 ### 27. cikk — A Kolo-őrző helyzete nem befektetés
 
-(1) A Kolo-őrző helyzete nem minősül befektetésnek. Ez a megállapítás nem az egység nevén és nem azon a kijelentésen alapul, hogy a ZRNO nem befektetési eszköz, hanem azon, hogy hiányoznak belőle azok az elemek, amelyek a befektetést befektetéssé teszik:
+(1) A Kolo-őrző helyzete nem minősül befektetésnek. Ez a megállapítás nem az egység nevén és nem azon az állításon alapul, hogy az együttható nem függ másoktól, mert függ (25. cikk), hanem azon, hogy a Kolo-őrző helyzetéből hiányoznak azok az elemek, amelyek a befektetést befektetéssé teszik:
 
-1) a ZRNO nem eszközök befektetésével szerezhető meg: a résztvevő bejegyzésében már nyilvántartásba vett hozzájárulásból íródik be; az Alapítvány a ZRNO-t nem adja el, nem kínálja és nem állapít meg rá árat, a beírás nem ellenszolgáltatás, és a ZRNO-nak nincs ára (24. cikk);
+1) nincs eszközráfordítás: a ZRNO a résztvevő bejegyzésében már nyilvántartásba vett hozzájárulásból íródik be; az Alapítvány a ZRNO-t nem adja el, nem kínálja és nem állapít meg rá árat, a beírás pedig nem ellenszolgáltatás (24. cikk);
 
-2) nincs olyan hozam, amelyet realizálni lehetne: a helyzet változása kizárólag POEN-ekben jelenik meg, amelyeknek nincs a rendszeren kívüli értékük, és sem közvetlenül, sem közvetve nem vásárolják vissza és nem konvertálják (11. cikk), így az elszámolási együttható különbözete nem hagyhatja el a Protokoll nyilvántartását;
+2) nincs kilépés a nyilvántartásból: sem a ZRNO-t, sem a POEN-t nem vásárolják vissza, és nem konvertálják dinárra vagy más fizetési eszközre, sem közvetlenül, sem közvetve, és az Alapítvány a nyilvántartásból semmit nem fizet ki (11. cikk); a leírással nyilvántartásba vett POEN, mint bármely más, csak a felhasználók közötti áru- és szolgáltatáscserében és az Alapítvány projektjeiben való részvételre használható, így az elszámolási együttható különbözete nem hagyhatja el a Protokollt;
 
-3) nincs más személynek a Kolo-őrző javára irányuló ráfordítása: az elszámolási együttható a nyilvántartás két összegének hányadosa, amelyet a Protokoll automatikusan és mérlegelés nélkül számít ki (25. cikk); senki sem kezeli és nem ígéri, a Kolo-őrző pedig sem saját beírásával, sem saját leírásával nem mozdítja el;
+3) nincs piac: a ZRNO nem ruházható át, nem öröklődik és nincs ára (12. és 24. cikk), így a helyzet nem adható el;
 
-4) a Kolo-őrző nincs elválasztva az irányítástól: az aktivált ZRNO-ból ered a szavazat a Felső Kolóban (43. cikk), így a Kolo-őrző maga vesz részt a rendszer szabályainak megállapításában. Aki szavazatot akar, annak aktiválnia kell a ZRNO-t, és ezzel lemond a leírásról, amíg vissza nem helyezi szabad állapotba (44. cikk); az irányítási funkció és az elszámolási rugalmasság kölcsönösen kizárják egymást.
+4) nincs olyan személy, aki hasznot hozna létre a Kolo-őrző számára: mások hozzájárulása ugyanazon szabályok szerint jön létre, mint a sajátja, és a hozzájáruló saját részvétele érdekében; az elszámolási együtthatót a Protokoll automatikusan és mérlegelés nélkül számítja ki (25. cikk), sem az Alapítvány, sem más személy nem határozza meg, nem célozza és nem ígéri, a Kolo-őrző pedig sem saját beírásával, sem leírásával nem mozdítja el;
 
-(2) Arra a megerősítés nélküli tagra, akinek ZRNO van beírva, az (1) bekezdés 1–3. pontja vonatkozik: a szabad ZRNO-t leírhatja, de nem irányít általa, szavazatot pedig nem befektetéssel, hanem megerősítéssel szerez, amely nem szerezhető meg eszközökkel, és nem függ a beírt ZRNO mennyiségétől. Az a felhasználó, akinek ZRNO van beírva, de már nincs a Kolóban, a ZRNO-t tartja, de nem írja le (29. cikk).
+5) a Kolo-őrző nincs elválasztva az irányítástól: az aktivált ZRNO-ból ered a szavazat a Felső Kolóban (43. cikk), így a Kolo-őrző maga vesz részt a rendszer szabályainak megállapításában. Aki szavazatot akar, annak aktiválnia kell a ZRNO-t, és ezzel lemond a leírásról, amíg vissza nem helyezi szabad állapotba (44. cikk), a beírás pedig elszámolási időszakonként a saját nyilvántartásba vett POEN-ek 1%-ára korlátozott (22. cikk).
+
+(2) Arra a megerősítés nélküli tagra, akinek ZRNO van beírva, az (1) bekezdés 1–4. pontja vonatkozik: a szabad ZRNO-t leírhatja, de nem irányít általa, szavazatot pedig nem befektetéssel, hanem megerősítéssel szerez, amely nem szerezhető meg eszközökkel, és nem függ a beírt ZRNO mennyiségétől. Az a felhasználó, akinek ZRNO van beírva, de már nincs a Kolóban, a ZRNO-t tartja, de nem írja le (29. cikk).
 
 ## VI — Felhasználói jogállások, valóságbizonyíték és a jogállás megszűnése
 

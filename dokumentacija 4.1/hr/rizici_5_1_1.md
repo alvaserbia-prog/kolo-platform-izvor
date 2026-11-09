@@ -46,7 +46,7 @@
 
 (2) Obračunski se koeficijent mijenja s ukupnim brojem evidentiranih POEN-a i može rasti i padati; nije predodređen da raste. Izračunava ga Protokol iz evidencije, automatski i bez diskrecije; nijedna osoba njime ne upravlja niti ga obećava. Upis i otpis ZRNA ne pomiču obračunski koeficijent.
 
-(3) ZRNO se ne pribavlja ulaganjem sredstava, nego se upisuje iz doprinosa već evidentiranog u zapisu sudionika. Promjena položaja sudionika kojemu je upisano ZRNO nije prinos i nije zajamčena: pri otpisu može dobiti i manje POEN-a nego što je utrošio na upis. Razlika između obračunskog koeficijenta u trenutku upisa ZRNA i u trenutku otpisa proizlazi iz formule koju Protokol primjenjuje bez diskrecije i može nastati u oba smjera; nijedan akter je ne isplaćuje niti jamči. Promjena položaja iskazuje se isključivo u POEN-ima, zapisima u evidenciji bez vrijednosti izvan sustava.
+(3) ZRNO se ne pribavlja ulaganjem sredstava, nego se upisuje iz doprinosa već evidentiranog u zapisu sudionika. Obračunski koeficijent jednako ovisi o vlastitom i o tuđem doprinosu i može rasti i padati, pa sudionik pri otpisu slobodnog ZRNA može dobiti i manje POEN-a nego što je utrošio na upis. Razliku nijedan akter ne isplaćuje niti jamči; iskazuje se isključivo u POEN-ima, koji se ne konvertiraju u novac i ne mogu napustiti evidenciju.
 
 ### Članak 6. — ZRNO i dinarska sredstva Zaklade
 
@@ -142,7 +142,7 @@ Registracijom na Platformi korisnik izjavljuje:
 
 3) da razumije da sudjelovanje u sustavu nije ulaganje i da ne postoji očekivanje financijskog prinosa;
 
-4) da razumije da obračunski koeficijent može pasti i da promjena položaja iz upisanog ZRNA nije prinos;
+4) da razumije da obračunski koeficijent ovisi o doprinosu svih sudionika, da može pasti i da otpis slobodnog ZRNA može dati i manje POEN-a nego što je utrošeno na upis;
 
 5) da razumije da su donacije Zakladi nepovratne;
 

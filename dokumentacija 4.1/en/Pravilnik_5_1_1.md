@@ -76,7 +76,7 @@
 
 6) **automatic recording**: the recording of POEN as an automatic act of the Protocol executed pursuant to the system rules, without a discretionary decision by any actor;
 
-7) **ZRNO**: the internal accounting unit of the system by which a participant's position in the common good is recorded in the Protocol's ledger;
+7) **ZRNO**: a record in the Protocol's ledger, one of a total of 1,000,000, which a participant inscribes by using recorded POEN pursuant to the accounting coefficient; activated ZRNO gives a vote in the Upper Kolo, while free ZRNO may be written off, with POEN being recorded pursuant to the accounting coefficient;
 
 8) **accounting coefficient**: the numerical ratio of the total number of recorded POEN to the number of ZRNO available for inscription in the Protocol;
 
@@ -364,7 +364,7 @@
 
 ### Article 21 — ZRNO
 
-(1) The position that ZRNO records arises from the participant's contribution and gives them a vote in decisions about system rules. ZRNO does not represent a share, a stock, a security, a collective investment unit, an investment contract, digital assets or a digital token, because it does not represent any property right, and carries no dividend, interest, return or right to liquidation proceeds.
+(1) ZRNO serves in one of two mutually exclusive ways: when activated, it gives a Kolo keeper a vote in decisions about system rules (Article 43), and when free, it may be written off, with POEN being recorded pursuant to the accounting coefficient applicable in the period of write-off (Article 23). Beyond that, ZRNO has no effect: it does not represent a property right, carries no dividend, interest or right to liquidation proceeds, is not converted into money and is not transferred (Articles 11, 12 and 24).
 
 (2) The total number of ZRNO is 1,000,000 and can be neither increased nor decreased. At any given time, one part of the ZRNO is inscribed with participants and another part is available for inscription in the Protocol; the sum of inscribed and available ZRNO always equals the total number.
 
@@ -392,7 +392,7 @@
 
 (3) Upon write-off, the Protocol records POEN to the participant writing off the ZRNO pursuant to the accounting coefficient applicable for the current accounting period. A Kolo keeper whose ZRNO has been entirely written off becomes a Kolo member.
 
-(4) The difference between the accounting coefficient at the time of inscription and at the time of write-off is not a return. It arises from a formula that the Protocol applies without discretion, it may arise in either direction, and no actor pays it out or guarantees it. POEN recorded upon write-off have the same status as all other POEN.
+(4) The number of POEN recorded upon write-off depends on the accounting coefficient in the period of write-off and may be greater or smaller than the number used for inscription. Whoever inscribed ZRNO at a lower coefficient and writes it off at a higher one receives more POEN than they used; in the opposite case, they receive fewer. No actor pays out or guarantees the difference; it exists only in POEN, which are neither redeemed nor converted into dinars or any other means of payment (Article 11). POEN recorded upon write-off have the same status as all other POEN.
 
 (5) Transitions between ZRNO states and their effects occur at the end of the accounting period.
 
@@ -404,7 +404,7 @@ ZRNO is not transferred to another user, neither on its own nor together with th
 
 (1) The accounting coefficient indicates how many POEN are needed to inscribe one ZRNO in a given accounting period. It is calculated by the Protocol, automatically and without discretion.
 
-(2) The accounting coefficient changes with the total number of recorded POEN: the inscription of new POEN records shifts it upward, and the annulment of recorded POEN shifts it downward. The coefficient is not predetermined to rise.
+(2) The accounting coefficient equals the quotient of the total number of recorded POEN and the number of ZRNO available for inscription. The total number of recorded POEN consists of the contributions of all participants, recorded under the same rules, so the coefficient depends equally on one's own and on others' contribution. When more new records are recorded than annulled in an accounting period, the coefficient rises, and when annulments prevail, it falls. The coefficient is not predetermined to rise.
 
 (3) The inscription and write-off of ZRNO do not shift the accounting coefficient. Upon inscription, alongside the number of ZRNO available in the Protocol, the total number of recorded POEN is reduced in the same proportion, because the POEN used for the inscription return to the Protocol; upon write-off, both quantities increase in the same ratio. A Kolo keeper cannot shift the coefficient by their own inscription or write-off. The exchange of goods and services between users does not change the coefficient.
 
@@ -416,17 +416,19 @@ The accounting period lasts 24 hours, from midnight to midnight, Serbian time. A
 
 ### Article 27 — The position of a Kolo keeper is not an investment
 
-(1) The position of a Kolo keeper does not constitute an investment. That assessment rests neither on the name of the unit nor on a declaration that ZRNO is not an investment instrument, but on the absence in it of the elements that make an investment an investment:
+(1) The position of a Kolo keeper does not constitute an investment. That assessment rests neither on the name of the unit nor on a claim that the coefficient does not depend on others, because it does (Article 25), but on the absence in the position of a Kolo keeper of the elements that make an investment an investment:
 
-1) ZRNO is not acquired by investing funds: it is inscribed from a contribution already recorded in the participant's record; the Foundation does not sell ZRNO, does not offer it and does not set a price for it, inscription is not a counter-performance, and no price of ZRNO exists (Article 24);
+1) there is no stake of funds: ZRNO is inscribed from a contribution already recorded in the participant's record; the Foundation does not sell ZRNO, does not offer it and does not set a price for it, and inscription is not a counter-performance (Article 24);
 
-2) there is no return that could be realised: a change in position is expressed exclusively in POEN, which have no value outside the system and are neither redeemed nor converted, directly or indirectly (Article 11), so the difference in the accounting coefficient cannot leave the Protocol's ledger;
+2) there is no exit from the ledger: neither ZRNO nor POEN is redeemed or converted into dinars or any other means of payment, directly or indirectly, and the Foundation pays out nothing from the ledger (Article 11); POEN recorded upon write-off is used, like any other POEN, only in the exchange of goods and services between users and for participation in the Foundation's projects, so the difference in the accounting coefficient cannot leave the Protocol;
 
-3) there is no effort of another person directed at creating a benefit for the Kolo keeper: the accounting coefficient is the quotient of two sums from the ledger, which the Protocol calculates automatically and without discretion (Article 25); no person manages it or promises it, and the Kolo keeper does not shift it either by their own inscription or by their own write-off;
+3) there is no market: ZRNO is not transferred, not inherited and has no price (Articles 12 and 24), so the position cannot be sold;
 
-4) the Kolo keeper is not separated from governance: the vote in the Upper Kolo arises from activated ZRNO (Article 43), so the Kolo keeper takes part in establishing the rules of the system themselves. Whoever wants a vote must activate ZRNO and thereby forgo write-off until it is returned to the free state (Article 44); the governance function and accounting flexibility are mutually exclusive.
+4) there is no person creating a benefit for the Kolo keeper: the contribution of others arises under the same rules as one's own and for the sake of the contributor's own participation; the accounting coefficient is calculated by the Protocol automatically and without discretion (Article 25), neither the Foundation nor any other person sets it, targets it or promises it, and the Kolo keeper does not shift it either by their own inscription or by write-off;
 
-(2) Points 1–3 of paragraph 1 apply to a member without confirmation to whom ZRNO is inscribed: they may write off free ZRNO, but do not govern through it, and they acquire a vote not through a stake but through confirmation, which is not obtained with funds and does not depend on the number of inscribed ZRNO. A user to whom ZRNO is inscribed but who is no longer in the Kolo holds the ZRNO but does not write it off (Article 29).
+5) the Kolo keeper is not separated from governance: the vote in the Upper Kolo arises from activated ZRNO (Article 43), so the Kolo keeper takes part in establishing the rules of the system themselves. Whoever wants a vote must activate ZRNO and thereby forgo write-off until it is returned to the free state (Article 44), and inscription is limited to 1% of one's own recorded POEN per accounting period (Article 22).
+
+(2) Points 1–4 of paragraph 1 apply to a member without confirmation to whom ZRNO is inscribed: they may write off free ZRNO, but do not govern through it, and they acquire a vote not through a stake but through confirmation, which is not obtained with funds and does not depend on the number of inscribed ZRNO. A user to whom ZRNO is inscribed but who is no longer in the Kolo holds the ZRNO but does not write it off (Article 29).
 
 ## VI — User Statuses, Proof of Reality and Termination of Status
 

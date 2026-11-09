@@ -1403,15 +1403,15 @@
     },
     "rizici": {
       "naslov": "Kockázatvállalási nyilatkozat",
-      "ver": "5.0.0"
+      "ver": "5.1.1"
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.1.0"
+      "ver": "5.1.1"
     },
     "pravilnik": {
       "naslov": "KOLO rendszer szabályzatai",
-      "ver": "5.1.0",
+      "ver": "5.1.1",
       "sviPravilnici": "← Összes szabályzat",
       "pravilnici": "Szabályzatok"
     },
@@ -1442,11 +1442,11 @@
     "meta_radnje_title": "Adatkezelési tevékenységek nyilvántartása · KOLO",
     "meta_radnje_desc": "Személyes adatok kezelési tevékenységeinek nyilvántartása, 5.0.9-es verzió",
     "meta_rizici_title": "Kockázatvállalási nyilatkozat · KOLO",
-    "meta_rizici_desc": "A KOLO rendszerben való részvétel kockázatainak elfogadásáról szóló nyilatkozat, 5.0.0-es verzió",
+    "meta_rizici_desc": "A KOLO rendszerben való részvétel kockázatainak elfogadásáról szóló nyilatkozat, 5.1.1-es verzió",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, 5.1.0-es verzió",
+    "meta_whitepaper_desc": "KOLO Whitepaper, 5.1.1-es verzió",
     "meta_pravilnik_title": "KOLO rendszer szabályzatai · KOLO",
-    "meta_pravilnik_desc": "A KOLO rendszer szabályzatainak indexe, 5.1.0-es verzió",
+    "meta_pravilnik_desc": "A KOLO rendszer szabályzatainak indexe, 5.1.1-es verzió",
     "rb": {
       "kolo-sistem": {
         "naziv": "Szabályzat a KOLO rendszerről",
@@ -1841,7 +1841,7 @@
     "zasto5_naslov": "Nincs öröklés és nincs vagyoni igény",
     "zasto5_tekst": "A POEN- és ZRNO-bejegyzések vagyoni jogként nem ruházhatók át és nem örökölhetők (12. cikk), és nem jelentenek követelést az Alapítvánnyal szemben.",
     "zasto6_naslov": "Az együttható nem árfolyam",
-    "zasto6_tekst": "Az elszámolási együttható a rögzített POEN teljes számának és a beírásra rendelkezésre álló ZRNO számának aránya. A Protokoll automatikusan és mérlegelés nélkül számítja. Nem ár, nem árfolyam és nem teljesítménymutató, és nem fejezi ki a ZRNO vagy a POEN rendszeren kívüli értékét (25. cikk). A Kolo-őrző helyzetének változása nem hozam és nem garantált (27. cikk).",
+    "zasto6_tekst": "Az elszámolási együttható a rögzített POEN teljes számának és a beírásra rendelkezésre álló ZRNO számának aránya. A Protokoll automatikusan és mérlegelés nélkül számítja. Nem ár, nem árfolyam és nem teljesítménymutató, és nem fejezi ki a ZRNO vagy a POEN rendszeren kívüli értékét (25. cikk). Az együttható egyformán függ a saját és a mások hozzájárulásától, nőhet és csökkenhet; a ZRNO leírásakor keletkező különbözet csak POEN-ben létezik, amely nem váltható pénzre (25. és 27. cikk).",
     "propisi_naslov": "Miért nem esik e jogszabályok hatálya alá",
     "propisi_uvod": "A minősítés nem nyilatkozaton alapul, hanem azon, hogy a POEN és a ZRNO nem felel meg a törvényi meghatározásoknak. Alább a vizsgálat jogszabályonként.",
     "zdi_naslov": "A digitális vagyonról szóló törvény",
@@ -1854,7 +1854,7 @@
     "sporno_uvod": "A mechanika két eleme maga hívja ki a kérdést. Mindkettőt megvizsgáltuk, és mindkettőre van kifejezett válasz.",
     "sporno1_naslov": "Az adománytól a ZRNO-ig",
     "sporno2_naslov": "Az együttható különbözete a beírás és a leírás között",
-    "sporno2_tekst": "Aki egy együtthatónál írja be a ZRNO-t és egy másiknál írja le, más számú POEN-t kap, mint amennyit a beíráskor felhasznált, mivel az együttható az új POEN-bejegyzésektől nő és azok megsemmisítésétől csökken. Négy dolog dönti meg e különbözet hozamként való olvasatát: a kapott POEN-nek a rendszeren kívül nincs értéke, mert nem váltható, nem vihető ki és nem tehető pénzzé; az együttható változása nem garantált, és az egész közösség nyilvántartásának állapotától függ, nem harmadik felek erőfeszítésétől; a saját beírás és leírás nem mozdítja el az együtthatót, mert beíráskor egyszerre csökken a forgalomban lévő POEN-ek és a rendelkezésre álló ZRNO-k száma is, így nincs sem kereskedés, sem megfelelő pillanat; és nincs kibocsátó, aki emelkedést ígérne, sem intézmény, amely a különbözetet kifizetné. Ezen felül aki szavazatot akar, annak aktiválnia kell a ZRNO-t, és ezzel elveszíti a leírás lehetőségét, így a passzív tartás és az irányítás kizárják egymást.",
+    "sporno2_tekst": "Aki egy együtthatónál írja be a ZRNO-t és egy másiknál írja le, más számú POEN-t kap, mint amennyit a beíráskor felhasznált, mivel az együttható az új POEN-bejegyzésektől nő és azok megsemmisítésétől csökken. Ezekbe a bejegyzésekbe mindenki hozzájárulása beletartozik, a saját és a másoké egyformán, ugyanazon szabályok szerint. Négy dolog, amely e különbözetből hiányzik, dönti meg hozamként való olvasatát: a kapott POEN-nek a rendszeren kívül nincs értéke, mert nem váltható, nem vihető ki és nem tehető pénzzé; a ZRNO nem ruházható át és nincs piaca, így a helyzet nem adható el; az együttható változása nem garantált, a saját beírás és leírás nem mozdítja el az együtthatót, és senki nem határozza meg, nem tűzi ki célul és nem ígéri; és nincs kibocsátó, aki emelkedést ígérne, sem intézmény, amely a különbözetet kifizetné. Ezen felül aki szavazatot akar, annak aktiválnia kell a ZRNO-t, és ezzel elveszíti a leírás lehetőségét, így a passzív tartás és az irányítás kizárják egymást.",
     "principi_naslov": "Mindent a nem-átválthatóság tart",
     "principi_tekst": "A fenti érvek mind azon nyugszanak, hogy a POEN-nek a rendszeren kívül nincs értéke — ez pedig csak addig áll, amíg nincs átváltási mechanizmus. Ezért a nem-átválthatóság az első a négy alapelv közül, amelyeken a jogi helyzet nyugszik (10. cikk), a bejegyzések feletti tulajdonjog hiánya, az adományok visszafordíthatatlansága és az adattakarékosság mellett. E négy alapelv szerkezeti korlát: semmilyen kormányzási döntéssel nem módosítható és nem szüntethető meg, a Felső Kolo döntésével sem. Bármelyik megsértése megváltoztatja a rendszer jogi természetét.",
     "fondacija_naslov": "KOLO Alapítvány",

@@ -100,9 +100,12 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // i nov st. 6 (donacija unapred, ograničenje primljenog), čl. 37 st. 2 (pokroviteljstvo u narednom periodu).
   // 5.1.0 — čl. 16 st. 4 t. 4 i st. 8: dinarski iznos je jednosmerna mera obima doprinosa
   // (bez poricanja); st. 7 t. 6: davalac ne prima POEN od imaoca, doprinos podnosiocu pri potpisu.
+  // 5.1.1 — ZRNO precizno: definicija (čl. 2 t. 7, čl. 21 st. 1), razlika pri otpisu u oba
+  // smera (čl. 23 st. 4), koeficijent jednako zavisi od sopstvenog i tuđeg doprinosa (čl. 25
+  // st. 2), čl. 27 bez tvrdnje da nema napora drugog lica — nekonvertibilnost, bez tržišta.
   "kolo-sistem": {
-    fajl: "Pravilnik_5_1_0.md",
-    verzija: "5.1.0",
+    fajl: "Pravilnik_5_1_1.md",
+    verzija: "5.1.1",
   },
   // 4.4.6 — čl. 12 st. 4 više ne prenosi nadležnost za opšte akte na Gornje Kolo
   // (akt nižeg ranga to ne može po sopstvenom čl. 8 st. 2); nov st. 6.

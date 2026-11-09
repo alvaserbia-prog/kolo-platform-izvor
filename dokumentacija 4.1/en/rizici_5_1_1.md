@@ -46,7 +46,7 @@
 
 (2) The accounting coefficient changes with the total number of recorded POEN and may rise and fall; it is not predetermined to rise. It is calculated by the Protocol from the ledger, automatically and without discretion; no person controls it or promises it. ZRNO inscription and write-off do not move the accounting coefficient.
 
-(3) ZRNO is not acquired by investing funds, but is inscribed from contribution already recorded in the participant's record. A change in the position of a participant to whom ZRNO is inscribed is not a return and is not guaranteed: upon write-off they may receive fewer POEN than they used for the inscription. The difference between the accounting coefficient at the time of ZRNO inscription and at the time of write-off derives from a formula that the Protocol applies without discretion and may arise in either direction; no actor pays or guarantees it. A change in position is expressed solely in POEN, records in the ledger with no value outside the system.
+(3) ZRNO is not acquired by investing funds, but is inscribed from contribution already recorded in the participant's record. The accounting coefficient depends equally on one's own and on others' contribution and may rise and fall, so upon write-off of free ZRNO a participant may receive fewer POEN than they used for the inscription. No actor pays or guarantees the difference; it is expressed solely in POEN, which are not converted into money and cannot leave the ledger.
 
 ### Article 6 — ZRNO and the Foundation's dinar funds
 
@@ -142,7 +142,7 @@ By registering on the Platform, the user declares:
 
 3) that they understand that participation in the system is not an investment and that there is no expectation of financial return;
 
-4) that they understand that the accounting coefficient may fall and that a change in position from inscribed ZRNO is not a return;
+4) that they understand that the accounting coefficient depends on the contribution of all participants, that it may fall and that the write-off of free ZRNO may yield fewer POEN than were used for the inscription;
 
 5) that they understand that donations to the Foundation are non-refundable;
 

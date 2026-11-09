@@ -223,7 +223,7 @@ Zapis POEN-a poništava se i kada ga korisnik iskoristi za sudjelovanje u projek
 
 ## ZRNO: položaj i glas
 
-ZRNO bilježi položaj sudionika u zajedničkom dobru. Iz aktiviranog ZRNA proizlazi glas u Gornjem Kolu. Ukupan broj ZRNA je nepromjenjiv; u svakom trenutku dio je upisan kod sudionika, a dio je raspoloživ za upis u Protokolu.
+ZRNO je zapis u evidenciji Protokola, jedan od ukupno 1.000.000. Sudionik ga upisuje evidentiranim POEN-ima, po obračunskom koeficijentu. Upisano ZRNO služi na jedan od dvaju načina: aktivirano daje glas u Gornjem Kolu, a slobodno se može otpisati, uz evidentiranje POEN-a po koeficijentu koji tada vrijedi. Izvan toga nema učinka. Ukupan broj ZRNA je nepromjenjiv; u svakom trenutku dio je upisan kod sudionika, a dio je raspoloživ za upis u Protokolu.
 
 ZRNO se upisuje iz doprinosa već evidentiranog u zapisu sudionika, svejedno je li zapis nastao kroz kanal doprinosa ili razmjenom. Upis inicira sudionik, a Protokol provjerava uvjete i izvršava ga; nitko ga ne odobrava ni ne odbija. Upisom član Kola postaje čuvar Kola. Član bez potvrde može upisati ZRNO, ali ga ne aktivira dok ne bude potvrđen. Korisnik koji nije u Kolu ZRNO ne upisuje. Maloljetni korisnik ga ne upisuje do punoljetnosti.
 
@@ -241,11 +241,11 @@ Koeficijent pomiču samo promjene ukupnog broja evidentiranih POEN-a. Kad Protok
 
 Upis i otpis ZRNA također ne pomiču koeficijent, i to je posljedica same formule, a ne pravila koje bi se moglo izmijeniti. Pri upisu se broj raspoloživih ZRNA umanjuje, ali se u istom razmjeru umanjuje i ukupan broj POEN-a, jer se POEN-i utrošeni na upis vraćaju Protokolu; pri otpisu obje veličine rastu po istom odnosu. Čuvar Kola ne može svojim upisom ni otpisom pomaknuti koeficijent u svoju korist.
 
-U zbroj o kojem koeficijent ovisi ulazi doprinos svih, pa i vlastiti. Nitko ne radi da bi čuvaru Kola stvorio korist, nitko koeficijent ne određuje ni ne obećava, a iz njega ne nastaje ni profit, ni isplata, ni potraživanje; ZRNO se ne može ni prodati.
+U zbroj o kojem koeficijent ovisi ulaze doprinosi svih sudionika, evidentirani po istim pravilima, pa koeficijent jednako ovisi o vlastitom i o tuđem doprinosu. Nitko ne doprinosi da bi čuvaru Kola stvorio korist: svatko doprinosi radi vlastitog sudjelovanja. Koeficijent nitko ne određuje, ne cilja ni ne obećava, a iz njega ne nastaje ni novac, ni isplata, ni potraživanje; ZRNO se ne može ni prodati.
 
 Koeficijent je administrativna veličina: nije cijena, jer ne postoji tržište; nije tečaj, jer ne postoji konverzija; nije pokazatelj uspjeha, jer ne govori radi li sustav dobro. Ne izražava vrijednost ZRNA ni POEN-a izvan sustava.
 
-Tko je ZRNO upisao ranije, upisao ga je uz manje evidentiranih POEN-a nego što bi to bilo potrebno kasnije, ako je koeficijent u međuvremenu porastao. To je posljedica formule, a ne poticaj za stjecanje položaja: broj POEN-a potreban za upis izračunava Protokol iz stanja evidencije, nijedna odluka ne nagrađuje rano sudjelovanje i nitko ne obećava da će taj broj kasnije biti veći.
+Tko je ZRNO upisao pri nižem koeficijentu, utrošio je manje POEN-a nego što bi utrošio pri višem, a ako slobodno ZRNO otpiše pri višem koeficijentu, evidentira mu se više POEN-a nego što je utrošio. Ako je koeficijent u međuvremenu pao, evidentira mu se manje. To je posljedica formule, a ne poticaj za stjecanje položaja: nijedna odluka ne nagrađuje rano sudjelovanje i nitko ne obećava da će koeficijent rasti.
 
 Upis je ograničen i po obračunskom razdoblju: sudionik u jednom razdoblju može na upis utrošiti samo mali dio svojeg zapisa. Raspoloživa ZRNA zato se ne mogu naglo preuzeti, a kasniji sudionici zadržavaju pristup.
 
@@ -454,7 +454,7 @@ Onaj tko potvrđuje motiviran je dvostruko: potvrda je doprinos cjelovitosti sus
 
 Čuvar Kola ima poticaje svakog korisnika i sudjelovanje u upravljanju. Budući da i sam u sustavu razmjenjuje, ima interes da sustav bude dobro vođen.
 
-Čuvar Kola može slobodno ZRNO i otpisati, uz evidentiranje POEN-a po obračunskom koeficijentu koji tada vrijedi. Ta mogućnost nije poticaj: razlika prema broju POEN-a utrošenom pri upisu može nastati u oba smjera, nitko je ne obećava, a vlastiti upis i otpis koeficijent ne pomiču. Razlika postoji samo u POEN-ima, koji ne mogu napustiti sustav. Tko želi glas, mora aktivirati ZRNO i time se odriče otpisa, pa obje stvari ne može imati istodobno.
+Čuvar Kola može slobodno ZRNO i otpisati, uz evidentiranje POEN-a po obračunskom koeficijentu koji tada vrijedi. Razlika prema broju POEN-a utrošenom pri upisu može nastati u oba smjera, nitko je ne obećava, a vlastiti upis i otpis koeficijent ne pomiču. Razlika postoji samo u POEN-ima, koji se koriste samo u razmjeni unutar sustava i ne mogu ga napustiti. Tko želi glas, mora aktivirati ZRNO i time se odriče otpisa, pa obje stvari ne može imati istodobno.
 
 ## Razmjena i evidencija
 
@@ -529,7 +529,7 @@ Upisom POEN-a korisnik ne prima ni novac ni stvar. Ništa ne prelazi iz imovine 
 
 ## ZRNO nije ulaganje
 
-U položaju čuvara Kola nedostaju elementi koji ulaganje čine ulaganjem. ZRNO se ne pribavlja ulaganjem sredstava, nego se upisuje iz doprinosa već evidentiranog u zapisu, pa i onoga evidentiranog po donaciji, kako je opisano u poglavlju 10; i taj doprinos do ZRNA vodi samo kroz upis, kao svaki drugi. Zaklada ga ne prodaje, ne nudi i ne utvrđuje mu cijenu. Ne postoji prinos koji bi se mogao ostvariti: promjena položaja iskazuje se samo u POEN-ima, koji ne mogu napustiti sustav. Ne postoji napor druge osobe usmjeren na stvaranje koristi za čuvara Kola: obračunski koeficijent količnik je dvaju zbrojeva iz evidencije koji Protokol izračunava bez diskrecije, nijedna osoba njime ne upravlja niti ga obećava, a čuvar Kola ga ne pomiče ni vlastitim upisom ni otpisom. I čuvar Kola nije odvojen od upravljanja: iz aktiviranog ZRNA proizlazi njegov glas. Za člana bez potvrde kojem je upisano ZRNO vrijede prva tri razloga; glas ne stječe ulogom, nego potvrdom, koja se ne pribavlja sredstvima.
+U položaju čuvara Kola nedostaju elementi koji ulaganje čine ulaganjem, i to se ne tvrdi time što bi koeficijent bio neovisan o drugima: ovisi, jer ga čine doprinosi svih. Nema uloga sredstava: ZRNO se upisuje iz doprinosa već evidentiranog u zapisu, pa i onoga evidentiranog po donaciji, kako je opisano u poglavlju 10, a Zaklada ga ne prodaje, ne nudi i ne utvrđuje mu cijenu. Nema izlaza iz evidencije: ni ZRNO ni POEN ne konvertiraju se u novac, Zaklada ih ne otkupljuje i ništa ne isplaćuje, a POEN dobiven otpisom koristi se samo u razmjeni unutar sustava. Nema tržišta: ZRNO se ne prenosi, ne nasljeđuje i nema cijenu. Nema osobe koja stvara korist za čuvara Kola: tuđi doprinos nastaje po istim pravilima kao vlastiti i radi vlastitog sudjelovanja, a koeficijent izračunava Protokol bez diskrecije i nitko ga ne cilja ni ne obećava. I čuvar Kola nije odvojen od upravljanja: iz aktiviranog ZRNA proizlazi njegov glas, a tko glasa, ne može otpisati. Za člana bez potvrde kojem je upisano ZRNO vrijede prva četiri razloga; glas ne stječe ulogom, nego potvrdom, koja se ne pribavlja sredstvima.
 
 ZRNO nije ni digitalni token: ne predstavlja nikakvo imovinsko pravo u digitalnom obliku: ni pravo na novac, ni na stvar, ni na dio prihoda ili imovine.
 

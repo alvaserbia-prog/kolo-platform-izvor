@@ -302,7 +302,7 @@ Ki jegyezhet. ZRNO-t résztvevő jegyez: a Kolo-tag és a megerősítés nélkü
 
 Hogyan ad szavazatot. Csak a Kolo-őrző aktiválja (zárolja) a jegyzett ZRNO-t, és csak az aktív ZRNO hordoz szavazóerőt. A szavazatot csak Kolo-őrző ruházhatja át, és csak egy másik Kolo-őrzőre. A szavazat nem lineárisan nő: a szavazatok száma az aktív ZRNO-k számának négyzetgyöke, így akinek százszor több ZRNO-ja van, annak tízszer több szavazata van, nem százszor. Így senki sem veheti át a döntéshozatalt felhalmozással.
 
-Mi nem a ZRNO. Nem üzletrész, nem részvény, nem digitális eszköz, nem pénzügyi eszköz. Nem hoz kamatot vagy osztalékot, senki nem fizet neked utána semmit, és nem írható át másik tagra. Azt mutatja, milyen helyzetben vagy a közösségben, nem azt, hogy az mennyivel tartozik neked.`,
+Mire nem képes a ZRNO. Nem váltható pénzre, nem írható át másik tagra, nem örökölhető, és senki nem vásárolja vissza. Nem hoz kamatot vagy osztalékot, és senki nem fizet neked utána semmit. Azt mutatja, milyen helyzetben vagy a közösségben, nem azt, hogy az mennyivel tartozik neked.`,
       },
       {
         id: 5,
@@ -352,7 +352,7 @@ A lezárás nem staking. A bejegyzett ZRNO-t csak azért zárod le, hogy a szava
 
 A leírás nem ugyanannyi POEN-t ad vissza — ezt is nyíltan megmondjuk. A leírás az adott pillanatban érvényes koefficiens szerint történik, a koefficiens pedig addigra mindkét irányban megváltozhatott. Nő, amikor a rendszerben új POEN-eket jegyeznek be a hozzájárulás csatornáin keresztül. Csökken, amikor POEN-eket megsemmisítenek — amikor valaki megszünteti a fiókját, amikor a POEN a közösségi beszerzésből való átvétellel megsemmisül, vagy amikor a gyermektérben felbomlik egy barátság.
 
-A saját bejegyzésed és leírásod nem mozdítja el. Bejegyzéskor egyszerre csökken a forgalomban lévő POEN-ek száma és a rendelkezésre álló ZRNO-k száma is, így a hányados változatlan marad. Ezért itt nincs sem kereskedés, sem megfelelő pillanat a belépésre és a kilépésre: a különbözet, ha van, annak számtani következménye, amit az egész rendszer időközben rögzített. Senki nem ígéri, senki nem szavatolja, és senki nem fizeti ki.
+A saját bejegyzésed és leírásod nem mozdítja el. Bejegyzéskor egyszerre csökken a forgalomban lévő POEN-ek száma és a rendelkezésre álló ZRNO-k száma is, így a hányados változatlan marad. Mindenki hozzájárulása mozdítja el, a tiéd és másoké egyformán. Konkrétan: ha a ZRNO-t alacsonyabb együtthatónál jegyzed be, és a szabad ZRNO-t magasabbnál írod le, több POEN-t kapsz, mint amennyit felhasználtál, ha pedig időközben csökkent, kevesebbet. Senki nem ígéri, senki nem szavatolja, és senki nem fizeti ki.
 
 De ez nem jövedelem. A különbözet kizárólag POEN-ben áll fenn, amelynek a rendszeren kívül nincs értéke, nem váltható dinárra, és nem hagyhatja el a Protokollt. Nincs nyereséged és nincs pénzbeli jövedelmed — más bejegyzésed van a hozzájárulások nyilvántartásában. Ezért a ZRNO-t nem azért jegyzed be, mert megéri, hanem mert szavad akar lenni a döntésekben.`,
       },

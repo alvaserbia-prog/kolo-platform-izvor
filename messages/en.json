@@ -1403,15 +1403,15 @@
     },
     "rizici": {
       "naslov": "Risk Acceptance Statement",
-      "ver": "5.0.0"
+      "ver": "5.1.1"
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.1.0"
+      "ver": "5.1.1"
     },
     "pravilnik": {
       "naslov": "KOLO System Rulebooks",
-      "ver": "5.1.0",
+      "ver": "5.1.1",
       "sviPravilnici": "← All rulebooks",
       "pravilnici": "Rulebooks"
     },
@@ -1442,11 +1442,11 @@
     "meta_radnje_title": "Records of Processing Activities · KOLO",
     "meta_radnje_desc": "Records of Processing Activities of Personal Data, version 5.0.9",
     "meta_rizici_title": "Risk Acceptance Statement · KOLO",
-    "meta_rizici_desc": "Risk acceptance statement for participation in the KOLO system, version 5.0.0",
+    "meta_rizici_desc": "Risk acceptance statement for participation in the KOLO system, version 5.1.1",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.1.0",
+    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.1.1",
     "meta_pravilnik_title": "KOLO System Rulebooks · KOLO",
-    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.1.0",
+    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.1.1",
     "rb": {
       "kolo-sistem": {
         "naziv": "Rulebook on the KOLO System",
@@ -1841,7 +1841,7 @@
     "zasto5_naslov": "No inheritance, no claim on assets",
     "zasto5_tekst": "POEN and ZRNO entries are not transferred and not inherited as property rights (art. 12), and constitute no claim against the Foundation.",
     "zasto6_naslov": "The coefficient is not an exchange rate",
-    "zasto6_tekst": "The accounting coefficient is the ratio between the total POEN recorded and the ZRNO available to be recorded. The Protocol computes it automatically and without discretion. It is not a price, not an exchange rate and not a performance index, and it expresses no value of ZRNO or POEN outside the system (art. 25). A change in a Kolo keeper's standing is not a yield and is not guaranteed (art. 27).",
+    "zasto6_tekst": "The accounting coefficient is the ratio between the total POEN recorded and the ZRNO available to be recorded. The Protocol computes it automatically and without discretion. It is not a price, not an exchange rate and not a performance index, and it expresses no value of ZRNO or POEN outside the system (art. 25). The coefficient depends equally on one's own and on others' contribution and may rise and fall; the difference upon writing off ZRNO exists only in POEN, which are not converted into money (art. 25 and 27).",
     "propisi_naslov": "Why it falls outside those statutes",
     "propisi_uvod": "The qualification does not rest on a declaration but on POEN and ZRNO failing the statutory definitions. Below is the test against each statute.",
     "zdi_naslov": "Digital Assets Act",
@@ -1854,7 +1854,7 @@
     "sporno_uvod": "Two features of the mechanics invite the question themselves. Both have been examined and both have an explicit answer.",
     "sporno1_naslov": "From donation to ZRNO",
     "sporno2_naslov": "The difference in the coefficient between recording and write-off",
-    "sporno2_tekst": "Someone who records ZRNO at one coefficient and writes it off at another receives a different number of POEN than they used when recording, because the coefficient rises with new POEN records and falls when they are annulled. Four things break the reading of that difference as a yield: the POEN received has no value outside the system, as it cannot be converted, taken out or cashed in; a change of the coefficient is not guaranteed and depends on the state of the whole community's ledger, not on the efforts of third parties; one's own recording and write-off do not shift the coefficient, because upon recording both the number of POEN in circulation and the number of available ZRNO fall at the same time, so there is neither trading nor a right moment; and there is no issuer promising a rise nor an institution paying the difference. On top of that, whoever wants a vote must activate their ZRNO and thereby loses the option of writing off, so passive holding and governance exclude each other.",
+    "sporno2_tekst": "Someone who records ZRNO at one coefficient and writes it off at another receives a different number of POEN than they used when recording, because the coefficient rises with new POEN records and falls when they are annulled. Everyone's contribution enters those records, one's own and others' alike, under the same rules. Four things missing from that difference break its reading as a yield: the POEN received has no value outside the system, as it cannot be converted, taken out or cashed in; ZRNO is not transferred and has no market, so the standing cannot be sold; a change of the coefficient is not guaranteed, one's own recording and write-off do not shift the coefficient, and no person sets, targets or promises it; and there is no issuer promising a rise nor an institution paying the difference. On top of that, whoever wants a vote must activate their ZRNO and thereby loses the option of writing off, so passive holding and governance exclude each other.",
     "principi_naslov": "Non-convertibility carries the rest",
     "principi_tekst": "Every argument above rests on POEN having no value outside the system — and that holds only as long as no conversion mechanism exists. Non-convertibility is therefore the first of the four principles the legal position rests on (art. 10), together with the absence of property rights over the entries, the non-refundability of donations, and data minimisation. Those four are structural limits: they cannot be amended or abolished by any governance decision, including a decision of the Upper Circle. Breaching any of them changes the legal nature of the system.",
     "fondacija_naslov": "KOLO Foundation",

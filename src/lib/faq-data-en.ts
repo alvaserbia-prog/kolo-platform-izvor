@@ -291,7 +291,7 @@ Who records it. ZRNO is recorded by a participant: a Kolo member or a member wit
 
 How it gives you a vote. Only a Kolo keeper activates (locks) recorded ZRNO, and only active ZRNO carries voting power. Only a Kolo keeper can delegate the vote, and only to another Kolo keeper. The vote does not grow in a straight line: the number of votes is the square root of the number of active ZRNO, so someone with a hundred times more ZRNO has ten times more votes, not a hundred. That way no one can take over decision-making by accumulating.
 
-What ZRNO is not. It is not a share, not a stock, not digital assets, not a financial instrument. It bears no interest and no dividend, no one pays you anything on account of it, and it is not re-registered to another user. It shows your standing in the community, not how much it owes you.`,
+What ZRNO cannot do. It is not converted into money, it is not re-registered to another user, it is not inherited and no one buys it back. It bears no interest and no dividend, and no one pays you anything on account of it. It shows your standing in the community, not how much it owes you.`,
       },
       {
         id: 5,
@@ -342,7 +342,7 @@ Locking is not staking. You lock recorded ZRNO only so that your vote can be cou
 
 Writing off does not return the same number of POEN — and we say that plainly. A write-off goes at the coefficient in force at that moment, and by then the coefficient may have changed — in either direction. It rises when new POEN are recorded in the system through the channels of contribution. It falls when POEN are annulled — when someone closes their account, when POEN is annulled on collection from a collective procurement, or when a friendship in the children's space is ended.
 
-Your own recording and write-off do not shift it. Upon recording, both the number of POEN in circulation and the number of available ZRNO fall at the same time, so the quotient stays the same. So there is no trading here and no right moment to enter or exit: the difference, if there is one, is an arithmetic consequence of what the whole system has recorded in the meantime. No one promises it, no one guarantees it, and no person pays it out.
+Your own recording and write-off do not shift it. Upon recording, both the number of POEN in circulation and the number of available ZRNO fall at the same time, so the quotient stays the same. It is moved by everyone's contribution, yours and others' alike. Concretely: if you record ZRNO while the coefficient is lower and write off free ZRNO when it is higher, you will receive more POEN than you used, and if it has fallen in the meantime, you will receive fewer. No one promises it, no one guarantees it, and no person pays it out.
 
 But that is not income. The difference exists solely in POEN, which has no value outside the system, is not exchanged for money and cannot leave the Protocol. You have no profit and no income in money — you have a different record in the ledger of contributions. So you do not record ZRNO because it pays off, but because you want a say in decisions.`,
       },

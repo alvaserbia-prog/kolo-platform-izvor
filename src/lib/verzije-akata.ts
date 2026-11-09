@@ -123,8 +123,10 @@ export const AKT_POLITIKA: Akt = {
  */
 export const AKT_RIZICI: Akt = {
   // 5.0.0 — prvi put uz kvačicu za Uslove pri registraciji i u gejtu.
-  verzija: "5.0.0",
-  fajl: "rizici_5_0_0.md",
+  // 5.1.1 — čl. 5 st. 3 i čl. 7 t. 4: koeficijent jednako zavisi od sopstvenog i tuđeg
+  // doprinosa; otpis slobodnog ZRNA može dati i manje POEN-a nego što je utrošeno.
+  verzija: "5.1.1",
+  fajl: "rizici_5_1_1.md",
 };
 
 /**
