@@ -384,11 +384,11 @@ A farmolásnak nincs értelme:
 
 Mit rögzít. A platform létrejötte előtt végzett munkát: a rendszer megtervezését, a szabályok megírását, a jogi és szervezési előkészítést, a dokumentáció elkészítését. Ezen felül az Alapítvány számlájának megnyitásáig felmerült összes pénzügyi és egyéb költséget — ezeket az alapítók személyesen viselték, mert az Alapítvány akkor még nem is létezett olyan alanyként, amely fizetni tudna. Mindez akkor történt, amikor még nem volt hol rögzíteni, ezért utólag rögzítik, mint bármely más hozzájárulást.
 
-Ugyanaz a státusz, mint bármely más POEN-é. Nem átváltható, a rendszeren kívül nincs értéke, nem keletkeztet követelést az Alapítvánnyal szemben. A költségeket nem térítik meg: az alapítók egyetlen dinárt sem kaptak vissza abból, amit befektettek, csak egy bejegyzést ugyanabban a nyilvántartásban, amelyben minden más hozzájárulást is rögzítenek.
+Ugyanaz a státusz, mint bármely más POEN-é. Nem átváltható, a rendszeren kívül nincs értéke, nem keletkeztet követelést az Alapítvánnyal szemben. A költségeket nem térítik meg: az alapítók egyetlen dinárt sem kaptak vissza abból, amit ráfordítottak, csak egy bejegyzést ugyanabban a nyilvántartásban, amelyben minden más hozzájárulást is rögzítenek.
 
 Öt alapító van, és a kör zárt. Őket az Alapítvány belső aktusa előre meghatározta, és semmilyen későbbi döntés nem bővítheti ezt a kört.
 
-Az ütem nem önkényes. Egy 24.000 POEN-es lépés csak akkor rögzül, amikor a rendszerben lévő POEN teljes mennyisége a következő 100.000-rel nő, és ebbe a küszöbbe maga az alapítói bejegyzés is beleszámít. Ez azt jelenti, hogy amíg a csatorna működik, az alapítói hozzájárulás minden újonnan bejegyzett POEN 24%-át teszi ki. Amikor a csatorna 2.400.000-ig kiürül, a rendszer 10.000.000 POEN-nel nőtt, és a csatorna véglegesen és visszavonhatatlanul bezárul. Ettől kezdve az alapítók részesedése csak csökken, mert a rendszer tovább nő, a csatorna pedig már nem működik.
+Az ütem nem önkényes. Egy 24.000 POEN-es lépés csak akkor rögzül, amikor a rendszerben lévő POEN teljes mennyisége a következő 100.000-rel nő, és ebbe a küszöbbe maga az alapítói bejegyzés is beleszámít. Amikor a csatorna 2.400.000-ig kiürül, a rendszer 10.000.000 POEN-nel nőtt, és a csatorna véglegesen és visszavonhatatlanul bezárul. Ettől kezdve az alapítók részesedése csak csökken, mert a rendszer tovább nő, a csatorna pedig már nem működik.
 
 A nagyobb egyenleg nem ad arányosan nagyobb hatalmat. A Felső Kolóban négyzetgyök szerint szavaznak: a szavazatok száma az aktív ZRNO-k számának négyzetgyöke. Akinek százszor több ZRNO-ja van, annak tízszer több szavazata van, nem százszor, így a legnagyobb POEN-egyenleg sem ad ellenőrzést a döntések felett.
 
@@ -407,7 +407,7 @@ Mit ellenőrizhetsz. A bejegyzett teljes összeg, a megtett lépések száma és
 
 Amikor az Alapítvány megállapítja a befizetés beérkezését, a Protokoll automatikusan POEN-t jegyez be neked: az adomány összegét megszorozva az adományok nyilvántartási együtthatójával. Az együttható 1,00, és adományaid teljes összegének minden küszöbénél (5000, 10 000, 20 000, 50 000 dinár és tovább, 5 000 000 dinárig) 0,10-dal nő. A legmagasabb a 11. szint, 2,00-es együtthatóval. Ha egy adománnyal átlépsz egy küszöböt, az új együttható az egész adományra érvényes, az elért szint pedig véglegesen megmarad. Ez nem a ZRNO elszámolási együtthatója.
 
-Az együttható azért nő, mert a nagyobb egyedi hozzájárulás nagyobb jelentőségű a közösség számára: egyszerre fedez egy szükségletet. Ez nem kedvezmény, mert adománnyal semmit sem vásárolsz, és semmilyen jogot nem szerzel az Alapítvánnyal szemben.
+Az együttható azért nő, mert a nagyobb összesített hozzájárulás nagyobb jelentőségű a közösség számára: a közösség konkrét szükségleteit fedezi. Ez nem kedvezmény, mert adománnyal semmit sem vásárolsz, és semmilyen jogot nem szerzel az Alapítvánnyal szemben.
 
 A nyilvános adományozó vezeték- és utóneve az adományok listájában szerepel az összeggel és a dátummal, álnév nélkül. A névtelen adomány csak összeggel és dátummal jelenik meg, és utána nem jár POEN. A POEN felhasználók közötti adásvételét a Felhasználási feltételek tiltják.
 

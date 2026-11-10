@@ -17,7 +17,8 @@
  * i NE briše se (Politika čl. 42 st. 5). Nova vrsta ide ovde samo kad njen opis
  * sadrži podatak o ličnosti.
  */
-export const TIPOVI_OPISA_SA_PODATKOM_O_LICNOSTI = ["PONISTENJE_VAUCER", "ISPRAVKA_VAUCER"] as const;
+// Set 5.1.2: i vaučer programa raspodele hrane, odnosno lanca (nabavke čl. 43 st. 4, shodno čl. 33).
+export const TIPOVI_OPISA_SA_PODATKOM_O_LICNOSTI = ["PONISTENJE_VAUCER", "ISPRAVKA_VAUCER", "PONISTENJE_VAUCER_LANAC", "ISPRAVKA_VAUCER_LANAC"] as const;
 
 /**
  * Prijava lažnog roditeljstva koju je podneo nalog čiji status prestaje

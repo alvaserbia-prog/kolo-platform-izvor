@@ -45,6 +45,9 @@ export async function GET(req: NextRequest) {
       id: true, naziv: true, vrsta: true, opis: true, brojVaucera: true, vrednostRsd: true, podnosilacId: true,
       mesto: true, adresaPredaje: true, dodatnaMestaPredaje: true, dodatneAdresePredaje: true, logoUrl: true, status: true, odbijenoRazlog: true, ugovorTekst: true, potpisanoAt: true,
       kontrolniBroj: true, vaziDo: true, createdAt: true, potpisKodIstice: true,
+      // Set 5.1.3 (donacije čl. 29 st. 1): javna provera cene — bilten i cene pijaca.
+      stipsCena: true, stipsKategorija: true, stipsJedinica: true, stipsBiltenBroj: true, stipsBiltenUrl: true,
+      stipsDatumObjave: true, stipsPijace: true,
     },
   });
   const ids = ugovori.map((u) => u.id);
@@ -67,6 +70,9 @@ export async function GET(req: NextRequest) {
         // Potpisuje samo podnosilac prijave (čl. 32 st. 1).
         mojPotpis: podnosilacId === session.user.id,
         vrednostRsd: Number(u.vrednostRsd),
+        stipsCena: u.stipsCena == null ? null : Number(u.stipsCena),
+        stipsDatumObjave: u.stipsDatumObjave?.toISOString() ?? null,
+        stipsPijace: (u.stipsPijace as { pijaca: string; cena: number }[] | null) ?? null,
         potpisanoAt: u.potpisanoAt?.toISOString() ?? null,
         vaziDo: u.vaziDo?.toISOString() ?? null,
         createdAt: u.createdAt.toISOString(),
@@ -86,8 +92,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije prijavljen.", 401);
-  if (!session.user.verified)
-    return await greska("Samo verifikovani korisnici mogu pokrenuti pokroviteljstvo.", 403);
+  // Pripadnost Kolu proverava servis uz upis (čl. 28 st. 1, set 5.1.2): korisnik koji nije u
+  // Kolu podnosi prijavu kao zakonski zastupnik, preduzetnik ili nosilac gazdinstva iz upisa.
 
   const fd = await req.formData().catch(() => null);
   if (!fd) return await greska("Neispravan zahtev.", 400);
@@ -115,6 +121,10 @@ export async function POST(req: NextRequest) {
     dodatna.push({ mesto: m, adresa: dodatneAdrese[i] });
   }
   polja.dodatnaMestaPredaje = dodatna;
+  // Tačne tačke mesta predaje, za prvo i svako dodatno mesto istim redom (prazno = centar naselja).
+  const tackeLat = fd.getAll("tackaLat");
+  const tackeLng = fd.getAll("tackaLng");
+  polja.tackePredaje = tackeLat.map((lat, i) => ({ lat, lng: tackeLng[i] }));
 
   const provera = procitajPredmetDobra(polja);
   if (!provera.ok) return await greska(provera.razlog, 400);

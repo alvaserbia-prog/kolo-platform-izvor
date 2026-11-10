@@ -11,7 +11,7 @@ import { imaUlazZaPotvrde, pregledZaPotvrdu } from "@/lib/protokol/operativni-po
 export async function GET(_req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || !(await imaUlazZaPotvrde(session.user.id))) return await greska("Pristup odbijen.", 403);
-  const { prijave } = await pregledZaPotvrdu();
+  const { prijave } = await pregledZaPotvrdu(session.user.id);
   return NextResponse.json({
     prijave: prijave.map((p) => ({
       id: p.id,

@@ -7,6 +7,7 @@ import { klaseDugmeta } from "@/components/ui/Dugme";
 import Kartica from "@/components/ui/Kartica";
 import { getTranslations, getLocale } from "next-intl/server";
 import { javnaRangListaDobara } from "@/lib/protokol/pokroviteljstvo-dobrima";
+import { javniSpisakPartnera } from "@/lib/protokol/partnerstvo";
 import LogotipPokrovitelja from "@/components/LogotipPokrovitelja";
 import type { Metadata } from "next";
 
@@ -29,7 +30,8 @@ export default async function PokroviteljiPage() {
   // iznos u dinarima — 🔴 broj POEN-a, adresa, MB, PIB i BPG se ne objavljuju
   // (čl. 25), a logotip nije link (čl. 26 st. 3).
   // Obrisan upis ostaje na rang-listi; uklanja se samo na zahtev (čl. 18 st. 4).
-  const [pokrovitelji, dobra] = await Promise.all([javnaRangListaNovca(), javnaRangListaDobara()]);
+  // Spisak partnera (čl. 44 st. 2, set 5.1.2): samo naziv i logotip — bez vrednosti i bez POEN-a.
+  const [pokrovitelji, dobra, partneri] = await Promise.all([javnaRangListaNovca(), javnaRangListaDobara(), javniSpisakPartnera()]);
   const rsd = (n: number) => `${n.toLocaleString(intlTag(locale))} RSD`;
 
   return (
@@ -55,7 +57,12 @@ export default async function PokroviteljiPage() {
             >
               <div className="min-w-0 flex items-center gap-3">
                 <LogotipPokrovitelja url={p.logoUrl} />
-                <div className="font-semibold text-kolo-text">{p.naziv}</div>
+                <div className="min-w-0">
+                  <div className="font-semibold text-kolo-text">{p.naziv}</div>
+                  {/* Donacija bez upisa u evidenciju pokrovitelja (donacije čl. 17 st. 4,
+                      čl. 25 st. 1): uz naziv stoji oznaka da POEN nije evidentiran. */}
+                  {p.bezPoena && <div className="text-xs text-kolo-muted">{t("bez_poena")}</div>}
+                </div>
               </div>
               {/* Bez nivoa: pokrovitelj ga nema (donacije čl. 22, set 5.0.0, izmena 28.10.2026). */}
               <div className="shrink-0 text-right text-sm font-semibold text-kolo-green-700">
@@ -87,6 +94,24 @@ export default async function PokroviteljiPage() {
             </div>
           ))}
         </div>
+      )}
+
+      {partneri.length > 0 && (
+        <>
+          <h2 className="text-xl font-semibold text-kolo-text mt-8 mb-1">{t("partneri_naslov")}</h2>
+          <p className="text-sm text-kolo-muted mb-3">{t("partneri_opis")}</p>
+          <div className="space-y-3">
+            {partneri.map((p, i) => (
+              <div
+                key={`${i}-${p.naziv}`}
+                className="bg-kolo-surface border border-kolo-border rounded-kartica shadow-kartica px-5 py-4 flex items-center gap-3"
+              >
+                <LogotipPokrovitelja url={p.logoUrl} />
+                <div className="font-semibold text-kolo-text">{p.naziv}</div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       <div className="mt-8 p-5 bg-kolo-gold-50 border border-kolo-gold-200 rounded-kartica">

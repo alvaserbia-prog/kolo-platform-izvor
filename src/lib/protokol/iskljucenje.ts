@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { logAdminAkcija } from "@/lib/audit";
 import { jeSuperadmin } from "@/lib/dozvole";
 import { ugasiOznakeNaloga, poslediceIzlaskaNaloga } from "./izlaz-naloga";
+import { sacuvajNegativanZapisPriPrestanku } from "./negativan-zapis-prestanak";
 
 /**
  * Isključenje korisnika iz sistema (Uslovi čl. 32): prestanak statusa odlukom
@@ -36,6 +37,9 @@ export async function iskljuciKorisnika(adminId: string, userId: string, razlog:
         suspendedReason: razlog || "Isključenje (Pravilnik čl. 32)",
       },
     });
+    // 🔴 Negativan zapis pri isključenju (Pravilnik čl. 33 st. 7): PRE brisanja imena u
+    // `ugasiOznakeNaloga` čuva se odvojeno, sa iznosom, mestom i brojem, pet godina.
+    await sacuvajNegativanZapisPriPrestanku(tx, userId, "ISKLJUCENJE");
     return ugasiOznakeNaloga(tx, userId);
   });
   await poslediceIzlaskaNaloga(userId, izlaz);

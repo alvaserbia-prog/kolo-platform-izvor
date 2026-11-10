@@ -378,7 +378,7 @@ The same status as any other POEN. Non-convertible, without value outside the sy
 
 There are five founders and the circle is closed. They were determined in advance by an internal act of the Foundation, and no later decision can widen that circle.
 
-The pace is not arbitrary. One step of 24,000 POEN is recorded only once the total amount of POEN in the system grows by another 100,000 — and the founding record itself counts towards that threshold. It means that while the channel lasts, the founding contribution makes up 24% of every newly recorded POEN. By the time the channel is exhausted at 2,400,000, the system has grown by 10,000,000 POEN and the channel closes permanently and irrevocably. From then on the founders' share only falls, because the system keeps growing while the channel no longer works.
+The pace is not arbitrary. One step of 24,000 POEN is recorded only once the total amount of POEN in the system grows by another 100,000 — and the founding record itself counts towards that threshold. When the channel is exhausted at 2,400,000, the system has grown by 10,000,000 POEN and the channel closes permanently and irrevocably. From then on the founders' share only falls, because the system keeps growing while the channel no longer works.
 
 A larger balance does not give proportionally more power. The Upper Kolo uses square-root voting: the number of votes is the square root of the number of active ZRNO. Someone with a hundred times more ZRNO has ten times more votes, not a hundred — so even the largest POEN balance gives no control over decisions.
 
@@ -397,7 +397,7 @@ What you can check. The total amount recorded, the number of steps carried out a
 
 When the Foundation establishes receipt of the payment, the Protocol automatically enters POEN for you: the donation amount multiplied by the donation recording coefficient. The coefficient is 1.00 and rises by 0.10 at each threshold of the total amount of your donations (5,000, 10,000, 20,000, 50,000 dinars and so on, up to 5,000,000 dinars). The highest is level 11, with a coefficient of 2.00. When a donation takes you past a threshold, the new coefficient applies to that whole donation, and the level reached is kept permanently. This is not the ZRNO accounting coefficient.
 
-The coefficient rises because a larger individual contribution matters more to the community: it meets a need all at once. It is not a discount, because a donation buys nothing and gives no right against the Foundation.
+The coefficient rises because a larger total contribution matters more to the community: it meets the community's concrete needs. It is not a discount, because a donation buys nothing and acquires no right against the Foundation.
 
 The first and last name of a public donor is shown in the list of donations, with the amount and date, without the pseudonym. An anonymous donation is shown only by amount and date, and no POEN is entered for it. Buying and selling POEN between users is prohibited by the Terms of Use.
 

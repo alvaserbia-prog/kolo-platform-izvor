@@ -393,7 +393,7 @@ Isti status kao svaki drugi POEN. Nekonvertibilan, bez vrednosti van sistema, be
 
 Osnivača je pet i krug je zatvoren. Utvrđeni su unapred internim aktom Fondacije i nijedna kasnija odluka ne može proširiti taj krug.
 
-Tempo nije proizvoljan. Jedan korak od 24.000 POENA upisuje se tek kad ukupan broj POENA u sistemu poraste za narednih 100.000, a u taj prag ulazi i sam osnivački upis. To znači da dok kanal traje, osnivački doprinos čini 24% svakog novoupisanog POENA. Kad se kanal isprazni na 2.400.000, sistem je porastao za 10.000.000 POENA i kanal se trajno i neopozivo zatvara. Odatle nadalje udeo osnivača samo pada, jer sistem nastavlja da raste a kanal više ne radi.
+Tempo nije proizvoljan. Jedan korak od 24.000 POENA upisuje se tek kad ukupan broj POENA u sistemu poraste za narednih 100.000, a u taj prag ulazi i sam osnivački upis. Kad se kanal isprazni na 2.400.000, sistem je porastao za 10.000.000 POENA i kanal se trajno i neopozivo zatvara. Odatle nadalje udeo osnivača samo pada, jer sistem nastavlja da raste a kanal više ne radi.
 
 Veći saldo ne daje srazmerno veću moć. U Gornjem Kolu se glasa po kvadratnom korenu: broj glasova je kvadratni koren broja aktivnih ZRNA. Ko ima sto puta više ZRNA ima deset puta više glasova, a ne sto, pa ni najveći saldo POENA ne daje kontrolu nad odlukama.
 
@@ -412,7 +412,7 @@ Veći saldo ne daje srazmerno veću moć. U Gornjem Kolu se glasa po kvadratnom 
 
 Kad Fondacija utvrdi prijem uplate, Protokol ti automatski upisuje POEN: iznos donacije pomnožen koeficijentom evidencije donacija. Koeficijent je 1,00 i raste za 0,10 na svakom pragu ukupnog iznosa tvojih donacija (5.000, 10.000, 20.000, 50.000 dinara i dalje, do 5.000.000 dinara). Najviši je nivo 11, sa koeficijentom 2,00. Kad donacijom pređeš prag, novi koeficijent važi za celu tu donaciju, a dostignuti nivo ostaje trajno. To nije obračunski koeficijent ZRNA.
 
-Koeficijent raste jer veći pojedinačan doprinos ima veći značaj za zajednicu: njime se potreba podmiri odjednom. To nije popust, jer se donacijom ništa ne kupuje i ne stiče se nikakvo pravo prema Fondaciji.
+Koeficijent raste jer veći ukupan doprinos ima veći značaj za zajednicu: njime se podmiruju njene konkretne potrebe. To nije popust, jer se donacijom ništa ne kupuje i ne stiče se nikakvo pravo prema Fondaciji.
 
 Ime i prezime javnog donatora stoji u listi donacija, uz iznos i datum, bez pseudonima. Anonimna donacija stoji samo iznosom i datumom i po njoj se POEN ne upisuje. Kupovina i prodaja POENA među korisnicima zabranjena je Uslovima korišćenja.
 

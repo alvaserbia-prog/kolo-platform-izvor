@@ -9,6 +9,7 @@ import { POEN_NADZORNIK, POEN_VERIFIKATOR } from "@/lib/protokol/dokaz-stvarnost
 import { gdePseudonim, poljaPseudonima } from "@/lib/pseudonim";
 import { smeDaSalje } from "@/lib/doprinos-pravila";
 import { ugasiOznakeNaloga, poslediceIzlaskaNaloga } from "@/lib/protokol/izlaz-naloga";
+import { sacuvajNegativanZapisPriPrestanku } from "@/lib/protokol/negativan-zapis-prestanak";
 
 const PROTOKOL_WALLET_ID = "banka-singleton";
 
@@ -231,7 +232,8 @@ export async function DELETE(req: NextRequest) {
   // Negativan zapis (nadoknada, čl. 36 Pravilnika o dokazu stvarnosti) se NAMERNO
   // ne dira: po čl. 33 st. 2 Pravilnika o KOLO sistemu ne poništava se prestankom
   // statusa i ne prelazi na Protokol. Kad bi se poništio, istupanje iz sistema bi
-  // brisalo nadoknadu, a teret bi pao na sve ostale korisnike.
+  // brisalo nadoknadu, a teret bi pao na sve ostale korisnike. Uz to se ime, mesto i
+  // broj čuvaju pet godina radi prenosa na nov nalog istog lica (čl. 33 st. 7) — korak 5.
   if (balans > 0) {
     if (primalacPseudonim && smeDaPrenese) {
       // Prenesi zadatom korisniku
@@ -343,6 +345,11 @@ export async function DELETE(req: NextRequest) {
 
   // --- 5. Anonimizuj i deaktiviraj u jednoj transakciji ---
   const izlaz = await prisma.$transaction(async (tx) => {
+    // 🔴 Negativan zapis pri istupanju (Pravilnik čl. 33 st. 7, Uslovi čl. 33 st. 3):
+    // PRE nego što se ispod obrišu mesto i broj, a u `ugasiOznakeNaloga` ime, čuvaju se
+    // odvojeno, sa iznosom, pet godina. Brisanje naloga u minusu se ne zabranjuje.
+    await sacuvajNegativanZapisPriPrestanku(tx, userId, "ISTUPANJE");
+
     // Obriši aktivne autentifikacione i verifikacione tokene
     await tx.verifikacijaToken.deleteMany({ where: { korisnikId: userId } });
     await tx.passwordResetToken.deleteMany({ where: { userId } });

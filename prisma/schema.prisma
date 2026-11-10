@@ -171,6 +171,43 @@ enum TransactionType {
   /// koga Fondacija utvrdi da je znao (Pravilnik čl. 17 st. 2 t. 10, donacije čl. 6 st. 8).
   /// Sme u minus. Pošten primalac ga nikad ne dobija.
   OTPIS_PRIMLJENOG_DONACIJA
+  /// Poništenje doprinosa evidentiranog po javnoj donaciji kada donator zatraži da se ona
+  /// prevede u anonimnu (Pravilnik čl. 17 st. 2 t. 11, donacije čl. 12 st. 1; set 5.1.2).
+  /// Protivzapis emisije: zapis donatora sme u minus, opticaj opada. Nikad `TRANSFER`.
+  PONISTENJE_ANONIMNA_DONACIJA
+  /// Prenos negativnog zapisa sa prestalog (pseudonimizovanog) naloga na nov nalog istog
+  /// lica — dvanaesti osnov negativnog zapisa (Pravilnik čl. 17 st. 2 t. 12, čl. 33 st. 7;
+  /// set 5.1.2). Nov nalog → prestali nalog, jednim zapisom: protivzapis na prestalom
+  /// (dovodi ga na nulu) i isti iznos u minus na novom. Protokol se ne dira, ukupan broj
+  /// POEN-a se ne menja. Nikad `TRANSFER`.
+  PRENOS_NEGATIVNOG_ZAPISA
+  /// Partnerstvo (Pravilnik o pokroviteljstvu i donacijama Glava VI, čl. 43; Pravilnik o KOLO
+  /// sistemu čl. 19 st. 1 t. 4 i čl. 37 st. 5; set 5.1.2). Doprinos u visini vrednosti
+  /// izvršenog dela usluge partnera Fondaciji, sa koeficijentom 1,00, evidentiran u narednom
+  /// obračunskom periodu u zapisu podnosioca prijave. Sopstveni tip: brojači ne smeju da
+  /// mešaju partnerstvo sa novcem ni sa vaučerima. 🔴 Partnerstvo NIJE osnov negativnog
+  /// zapisa (čl. 17 st. 2), pa evidentiran doprinos nema protivzapis po prestanku.
+  EMISIJA_PARTNERSTVO
+  /// Program raspodele hrane (nabavke Glava X; Pravilnik čl. 37 st. 4, čl. 39 st. 5): doprinos
+  /// gazdinstva pri predaji (čl. 41) i doprinos za uslugu objekta po izvršenju (čl. 42 st. 3).
+  /// Evidentira se odmah, ne beleži se. Sopstveni tip, da brojači ne mešaju program sa
+  /// pokroviteljstvom dobrima ni sa jednokratnim doprinosom gazdinstva (`EMISIJA_GAZDINSTVO`).
+  EMISIJA_PROGRAM_HRANE
+  /// Lanac proizvodnje i distribucije (nabavke Glava XI, čl. 51): doprinos davaoca sirovine,
+  /// partnera i dodatak za distribuciju. Beleži se, a Protokol evidentira u narednom
+  /// obračunskom periodu (noćni obračun).
+  EMISIJA_LANAC
+  /// Poništenje POEN-a pri uzimanju vaučera programa raspodele hrane ili lanca (nabavke
+  /// čl. 43 st. 4, čl. 52; Pravilnik čl. 18), i poništenje iz zapisa objekta za nepreuzet deo
+  /// preko granice iz čl. 46 st. 2. Korisnik → Protokol; zapis ne ide u minus.
+  PONISTENJE_VAUCER_LANAC
+  /// Ispravka poništenja kad hrana nije ispravna, a zamene iz druge partije iste vrste nema
+  /// (nabavke čl. 45, čl. 35; Pravilnik čl. 18 st. 5). Protokol → korisnik.
+  ISPRAVKA_VAUCER_LANAC
+  /// Otpis po preuzimanju nepreuzetih delova u programu raspodele hrane — deveti osnov
+  /// negativnog zapisa (Pravilnik čl. 17 st. 2 t. 9; nabavke čl. 46 st. 2). Samo za deo bez
+  /// uzetog vaučera, najviše do doprinosa za uslugu na toj partiji. Zapis SME u minus.
+  OTPIS_NEPREUZETO_PROGRAM
 }
 
 enum TipKorisnika {
@@ -630,6 +667,7 @@ model User {
   zapisiPristanka                  ZapisPristanka[]
   osnivacZapis                     Osnivac?                       @relation("Osnivac")
   kreiraniTroskovi                 FondacijaTrosak[]              @relation("KreiraoTrosak")
+  kreiraneDonacijeBezNaloga        DonacijaBezNaloga[]            @relation("KreiraoDonacijuBezNaloga")
   wallet                           Wallet?
   podaci                           UserPodaci?
   donations                        DonationRecord[]
@@ -694,6 +732,8 @@ model User {
   vauceriPotvrdjeni                Vaucer[]                       @relation("PotvrdilacVaucera")
   zaposleniDavaoca                 DavalacZaposleni[]             @relation("DavalacZaposleniDavalac")
   upisiPokrovitelja                UpisPokrovitelja[]             @relation("VlasnikUpisa")
+  partnerstva                      Partnerstvo[]                  @relation("PodnosilacPartnerstva")
+  pripremePokroviteljstva          PripremaPokroviteljstva[]      @relation("KorisnikPripreme")
   zaposlenKodDavaoca               DavalacZaposleni[]             @relation("DavalacZaposleniZaposleni")
   prijaveRaspodele                 PrijavaRaspodele[]
   prijavljeniBagovi                Bug[]                          @relation("PrijaviocBaga")
@@ -954,6 +994,10 @@ model PotvrdaPostojanjaDeteta {
   roditelj        User                    @relation("PostojanjeRoditelj", fields: [roditeljId], references: [id], onDelete: Cascade)
   /// Null kod prelaznih (ZATECENA, OSNIVAC_PRELAZNA).
   trazenoAt       DateTime?
+  /// Trenutak kad je roditelj pri podnošenju zahteva pristao da se uz zahtev prikažu
+  /// pseudonim i uzrast deteta (deca čl. 13 st. 2, set 5.1.2). Zatečeni zahtevi ostaju
+  /// `null` i prikazuju samo pseudonim roditelja — ne popunjava se retroaktivno.
+  prikazPristanakAt DateTime?
   izvor           IzvorPotvrdePostojanja?
   potvrdioId      String?
   potvrdio        User?                   @relation("PostojanjePotvrdio", fields: [potvrdioId], references: [id], onDelete: SetNull)
@@ -1712,6 +1756,9 @@ model DoprinosOglas {
   /// Kvalifikacioni filter (čl. 5 t. 10, čl. 9 st. 3) i njegovo obrazloženje — oba ili nijedno.
   kvalifikacioniUslov        String?
   kvalifikacioniObrazlozenje String?
+  /// Zadružna celina: prijava samo za zadrugare zadruge `krugId` (operativni čl. 9 st. 3;
+  /// zadruge čl. 17 st. 2; set 5.1.2). Obrazloženje uslova je u `kvalifikacioniObrazlozenje`.
+  samoZadrugari              Boolean              @default(false)
   /// Obrazloženje odluke UO kojom je zadatak posle objave prebačen u režim odobravanja (čl. 12 st. 2).
   odobravanjeObrazlozenje    String?
   /// Povlačenje zadatka (čl. 8): obrazloženje je javno kad je zadatak u izvršenju.
@@ -2163,6 +2210,11 @@ model DonationRecord {
   ponistenoRazlog       String?
   // Fondacija je pri poništenju utvrdila osnov sumnje da je potvrda lažna ili tuđa (čl. 6 st. 7).
   sumnjaLaznaPotvrda    Boolean                 @default(false)
+  // Javna donacija prevedena u anonimnu na zahtev donatora (donacije čl. 12 st. 1, set 5.1.2):
+  // `javno` postaje false, ime se briše, a doprinos se poništava protivzapisom
+  // `PONISTENJE_ANONIMNA_DONACIJA`. `poenEmitted`, `level` i `cumulativeRSD` ostaju kao
+  // istorija (snimak trenutka evidentiranja). Prestanak statusa ovo polje NE upisuje.
+  prevedenaUAnonimnuAt  DateTime?
   potvrda               PotvrdaUplate?
   ogranicenja           OgranicenjePrimljenog[]
 
@@ -2476,6 +2528,31 @@ model UgovorDobra {
   naredniDozvoljenAt        DateTime?
   naredniDozvolioId         String?
   naredniDozvolaRazlog      String?
+  /// Set 5.1.2 (donacije čl. 33 st. 1, Pravilnik čl. 37 st. 1): zaključenjem ugovora doprinos se
+  /// BELEŽI (`cekaPeriod`), a Protokol ga evidentira u narednom obračunskom periodu (noćni
+  /// obračun, `evidentirajZabelezenoPokroviteljstvoDobrima`). Raskid pre evidentiranja poništava
+  /// zabeleženo bez otpisa. Zatečeni (već evidentirani) ugovori ostaju `false` sa `emisijaTxId`.
+  cekaPeriod                Boolean                @default(false)
+  /// Set 5.1.2/5.1.3 (donacije čl. 29 st. 1): kad je predmet poljoprivredni proizvod za koji STIPS
+  /// objavljuje cenu, cena po jedinici je cena za Republiku Srbiju — prosek dominantnih cena pijaca
+  /// iz poslednjeg biltena (`cenaStipsZa`). Fondacija pri prihvatanju bira kategoriju; cena se snima
+  /// uz ugovor (izvor cene). `null` = cenovnik. `cenaPoJedinici` ostaje cena iz cenovnika (snimak prijave).
+  stipsCena                 Decimal?               @db.Decimal(12, 2)
+  stipsKategorija           String?
+  stipsDatumObjave          DateTime?
+  stipsUnetaAt              DateTime?
+  stipsUneoId               String?
+  /// Set 5.1.3 — snimak izvora STIPS cene (donacije čl. 29 st. 1): bilten (id, broj, link),
+  /// jedinica mere i cene pijaca iz kojih je prosek izračunat (`[{pijaca, cena}]`). Snima se pri
+  /// primeni i ne računa ponovo; `stipsDatumObjave` nosi datum biltena. Zatečeni redovi `null`.
+  stipsBiltenId             String?
+  stipsBiltenBroj           String?
+  stipsBiltenUrl            String?
+  stipsJedinica             String?
+  stipsPijace               Json?
+  /// Tačne tačke mesta predaje, odnosno pružanja na mapi: niz paralelan sa `mestaPredaje()`
+  /// (`{lat, lng}` ili `null`). Bez tačke se prikazuje centar naselja. Zatečeni redovi `null`.
+  tackePredaje              Json?
   createdAt                 DateTime               @default(now())
   updatedAt                 DateTime               @updatedAt
 
@@ -2709,12 +2786,215 @@ model UpisPokrovitelja {
   zaposleni    DavalacZaposleni[]
   zabrane      ZabranaDavaoca[]
   pokrovitelji Pokrovitelj[]
+  partnerstva  Partnerstvo[]
 
   @@index([vlasnikUserId])
   @@index([status])
   @@index([maticniBroj])
   @@index([bpg])
   @@index([pib])
+}
+
+/// Stanje partnerstva (Pravilnik o pokroviteljstvu i donacijama čl. 41–43).
+enum PartnerstvoStatus {
+  /// Prijava čeka odluku direktora (čl. 41 st. 3).
+  NA_PREGLEDU
+  /// Prijava prihvaćena: ugovor zaključen i snimljen (čl. 42 st. 1), usluga se izvršava.
+  PRIHVACENO
+  /// Prijava odbijena obrazloženom odlukom (čl. 41 st. 3) ili povučena.
+  ODBIJENO
+  /// Partnerstvo prestalo; zabeležen, a neevidentiran doprinos je poništen.
+  PRESTALO
+}
+
+/// Stanje prijavljenog izvršenog dela (čl. 43).
+enum IzvrsenjePartnerstvaStatus {
+  /// Zastupnik je prijavio izvršen deo; čeka potvrdu direktora ili ovlašćenog lica.
+  PRIJAVLJENO
+  /// Izvršenje potvrđeno: doprinos je ZABELEŽEN i čeka naredni obračunski period.
+  ZABELEZENO
+  /// Protokol je doprinos evidentirao (`emisijaTxId`). 🔴 Ne otpisuje se.
+  EVIDENTIRANO
+  /// Izvršenje nije potvrđeno (razlog obavezan) — doprinos se ne beleži.
+  ODBIJENO
+  /// Zabeleženo, a neevidentirano, poništeno prestankom partnerstva (bez transakcije).
+  PONISTENO
+}
+
+/// Partnerstvo (Pravilnik o pokroviteljstvu i donacijama Glava VI, čl. 40–45; set 5.1.2):
+/// partner (pravno lice, preduzetnik ili nosilac registrovanog gazdinstva) Fondaciji bez
+/// naknade pruža uslugu ili ustupa prostor, opremu ili druga sredstva na korišćenje.
+/// Prijavu podnosi lice koje vodi upis (čl. 41 st. 1); podaci o partneru su SNIMAK upisa.
+/// Prihvatanjem nastaje ugovor sa snimljenim tekstom (čl. 42 st. 1, pravilo 11).
+/// 🔴 Ugovor ne sadrži broj POEN-a; vrednost nije ograničena (čl. 42 st. 2).
+model Partnerstvo {
+  id                        String            @id @default(uuid())
+  upisId                    String
+  upis                      UpisPokrovitelja  @relation(fields: [upisId], references: [id])
+  podnosilacId              String
+  podnosilac                User              @relation("PodnosilacPartnerstva", fields: [podnosilacId], references: [id])
+  // ── Snimak upisa (čl. 41 st. 1)
+  vrstaDavaoca              VrstaDavaoca
+  naziv                     String
+  pib                       String?
+  maticniBroj               String?
+  adresaSedista             String?
+  bpg                       String?
+  zastupnikImePrezime       String
+  zastupnikFunkcija         String
+  odnosPremaDavaocu         OdnosPremaDavaocu
+  kontaktEmail              String
+  kontaktTelefon            String
+  logoUrl                   String?
+  izjavaOvlascenjeAt        DateTime?
+  potvrdaEvidentiranjaAt    DateTime?
+  potvrdaEvidentiranjaTekst String?
+  // ── Prijava (čl. 41 st. 2)
+  /// Opis usluge, odnosno ustupanja.
+  opis                      String
+  /// Jedinica mere obima (čas, komad, mesec korišćenja…).
+  jedinicaMere              String
+  /// Cena po jedinici koju partner primenjuje u prometu (iz cenovnika). Fondacija je
+  /// ne procenjuje, ne upoređuje i ne određuje (čl. 42 st. 2).
+  cenaPoJedinici            Decimal           @db.Decimal(12, 2)
+  /// Predviđeni obim u jedinicama — gornja granica zbira potvrđenih izvršenja.
+  obim                      Decimal           @db.Decimal(12, 2)
+  /// obim × cenaPoJedinici (čl. 42 st. 2). Snima se pri prijavi; nije ograničena.
+  vrednostRsd               Decimal           @db.Decimal(14, 2)
+  rokIzvrsenja              DateTime
+  /// Da li partner u izvršenju obrađuje podatke o ličnosti korisnika (čl. 42 st. 3).
+  obradaPodataka            Boolean           @default(false)
+  /// Ugovor o obradi zabeležen — uslov prve potvrde izvršenja kad je `obradaPodataka`.
+  dpaZabelezenAt            DateTime?
+  dpaZabelezioId            String?
+  /// Izjava podnosioca pri prijavi: ovlašćenje i prihvatanje uslova ugovora o partnerstvu.
+  izjavaPodnosiocaAt        DateTime
+  status                    PartnerstvoStatus @default(NA_PREGLEDU)
+  odlucioId                 String?
+  odlucenoAt                DateTime?
+  odbijenoRazlog            String?
+  /// Izjava direktora pri prihvatanju da partner nije dobavljač kome Fondacija plaća za
+  /// istu vrstu usluge (čl. 45 st. 1).
+  dobavljacIzjavaAt         DateTime?
+  /// 🔴 Snimljen tekst ugovora (čl. 42 st. 1) — ne generiše se ponovo pri čitanju.
+  ugovorTekst               String?
+  kontrolniBroj             String?
+  zakljucenoAt              DateTime?
+  /// Lice koje direktor ovlasti da potvrđuje izvršenje (čl. 43 st. 1). Ne sme biti
+  /// podnosilac ni lice povezano sa partnerom (čl. 43 st. 2).
+  ovlascenoLiceId           String?
+  prestaloAt                DateTime?
+  prestanakRazlog           String?
+  prestanakId               String?
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @updatedAt
+
+  dokazi    DokazPartnerstva[]
+  izvrsenja IzvrsenjePartnerstva[]
+
+  @@index([podnosilacId])
+  @@index([upisId, status])
+  @@index([status])
+  @@index([maticniBroj])
+  @@index([ovlascenoLiceId])
+}
+
+/// Fotografija cenovnika uz prijavu partnerstva (čl. 41 st. 2). 🔴 Čuva se u bazi i
+/// vidi je SAMO administratorski tim (ruta pod `/api/admin/`).
+model DokazPartnerstva {
+  id            String      @id @default(uuid())
+  partnerstvoId String
+  partnerstvo   Partnerstvo @relation(fields: [partnerstvoId], references: [id], onDelete: Cascade)
+  nazivFajla    String
+  contentType   String
+  velicina      Int
+  sadrzaj       Bytes
+  createdAt     DateTime    @default(now())
+
+  @@index([partnerstvoId])
+}
+
+/// Prijavljen izvršen deo partnerstva (čl. 43). Potvrdom se doprinos BELEŽI (`poen`,
+/// snimak `Math.round(obim × cena × 1,00)`), a noćni obračun narednog perioda ga
+/// EVIDENTIRA podnosiocu prijave (`EMISIJA_PARTNERSTVO`, `emisijaTxId`).
+model IzvrsenjePartnerstva {
+  id             String                     @id @default(uuid())
+  partnerstvoId  String
+  partnerstvo    Partnerstvo                @relation(fields: [partnerstvoId], references: [id])
+  prijavioId     String
+  obim           Decimal                    @db.Decimal(12, 2)
+  opis           String
+  status         IzvrsenjePartnerstvaStatus @default(PRIJAVLJENO)
+  potvrdioId     String?
+  potvrdjenoAt   DateTime?
+  odbijenoRazlog String?
+  /// Snimak zabeleženog doprinosa pri potvrdi. 🔴 Ne računa se ponovo.
+  poen           Int?
+  emisijaTxId    String?
+  evidentiranoAt DateTime?
+  ponistenoAt    DateTime?
+  createdAt      DateTime                   @default(now())
+
+  @@index([partnerstvoId, status])
+  @@index([status, potvrdjenoAt])
+}
+
+/// Upis i prijava pokroviteljstva koje priprema Fondacija (donacije čl. 16 st. 6, čl. 17 st. 4,
+/// čl. 18 st. 2; set 5.1.2). Pripremljeno NIJE upis ni prijava: tek kad lice iz upisa
+/// (`korisnikId`, nalog koji već postoji) sa sopstvenog naloga prihvati, nastaju upis i
+/// prijava kao da ih je sam podneo, i upis od tada vodi on. 🔴 Lice koje je pripremilo
+/// (`pripremioId`) ne zastupa pokrovitelja, ne prihvata umesto njega i ne dobija POEN.
+/// Odbijanjem se red briše.
+model PripremaPokroviteljstva {
+  id              String   @id @default(uuid())
+  korisnikId      String
+  korisnik        User     @relation("KorisnikPripreme", fields: [korisnikId], references: [id], onDelete: Cascade)
+  pripremioId     String
+  /// Podaci upisa (polja koja čita `procitajUpis`, bez izjava korisnika) i mesto za mapu.
+  /// `null` kad se priprema samo prijava iz postojećeg upisa (`postojeciUpisId`).
+  upisPodaci      Json?
+  mapaMesto       String?
+  /// Priprema samo prijave za pokrovitelja koji već ima živ upis: prihvata je lice koje vodi
+  /// taj upis (čl. 16 st. 6). Kad je postavljeno, `upisPodaci` je `null` i upis se ne pravi.
+  postojeciUpisId String?
+  logoUrl         String?
+  /// Fondacija je pri pripremi uporedila naziv, MB i zastupnika sa registrom (čl. 18 st. 1).
+  aprUporedjenAt  DateTime?
+  /// `NOVAC` | `DOBRA` | `null` (samo upis).
+  vrstaPrijave    String?
+  vrednostRsd     Decimal? @db.Decimal(12, 2)
+  /// Polja prijave dobara (koja čita `procitajPredmetDobra`) i mesto predaje.
+  predmetDobra    Json?
+  mestoPredaje    String?
+  /// Prihvatanje je završeno (upis, odobrenje i prijava su nastali). Do tada priprema pamti
+  /// dokle je stigla (`upisId`, `odobrenoAt`, `prijavaId`), pa ponovni klik nastavlja.
+  prihvacenoAt    DateTime?
+  /// Prihvatanje je u toku (zaključavanje protiv dva istovremena klika; zastareva posle 2 min).
+  prihvatanjeAt   DateTime?
+  upisId          String?
+  /// Upis iz pripreme je odobren poređenjem koje je Fondacija izvršila pri pripremi.
+  odobrenoAt      DateTime?
+  prijavaId       String?
+  createdAt       DateTime @default(now())
+
+  cenovnici PripremaCenovnik[]
+
+  @@index([korisnikId])
+}
+
+/// Fotografija cenovnika uz pripremljenu prijavu dobara — kao `DokazCeneDobra`, vidi je
+/// samo administratorski tim i korisnik kome je pripremljeno; briše se sa pripremom.
+model PripremaCenovnik {
+  id          String                  @id @default(uuid())
+  pripremaId  String
+  priprema    PripremaPokroviteljstva @relation(fields: [pripremaId], references: [id], onDelete: Cascade)
+  nazivFajla  String
+  contentType String
+  velicina    Int
+  sadrzaj     Bytes
+  createdAt   DateTime                @default(now())
+
+  @@index([pripremaId])
 }
 
 /// 🔴 Napušteno (set 4.7.8, 20.10.2026): prijava na raspodelu u krugovima više ne
@@ -3055,6 +3335,25 @@ model FondacijaTrosak {
 
   @@index([datum])
   @@index([kategorija, datum])
+}
+
+/// Donacija novca pravnog lica, preduzetnika ili gazdinstva čiji zastupnik nema nalog
+/// (donacije čl. 17 st. 4, čl. 25 st. 1; Pravilnik čl. 36 st. 5; set 5.1.2). Bez upisa u
+/// evidenciju pokrovitelja i 🔴 BEZ POEN-a: ne vezuje se ni za jedan zapis u Protokolu.
+/// Unosi je superadmin posle utvrđenja prijema; naziv i iznos idu na rang-listu
+/// pokrovitelja u deo novčanog doprinosa, uz oznaku da POEN nije evidentiran.
+/// `uklonjenoAt` = unos povučen kao greška (red ostaje, ne prikazuje se).
+model DonacijaBezNaloga {
+  id          String    @id @default(uuid())
+  naziv       String
+  iznosRSD    Decimal   @db.Decimal(12, 2)
+  datum       DateTime  @db.Date
+  kreiraoId   String
+  kreirao     User      @relation("KreiraoDonacijuBezNaloga", fields: [kreiraoId], references: [id])
+  uklonjenoAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([uklonjenoAt])
 }
 
 model SistemskiVeto {
@@ -4206,4 +4505,397 @@ model OdgovorNaZelju {
   odgovorioId String?
   odgovorio   User?       @relation("ZeljaOdgovorio", fields: [odgovorioId], references: [id], onDelete: SetNull)
   createdAt   DateTime    @default(now())
+}
+
+/// Negativan zapis pri prestanku statusa (Pravilnik čl. 33 st. 7, Uslovi čl. 33 st. 3,
+/// Politika čl. 42 st. 7, Registar radnji obrade br. 29; set 5.1.2). Jedan red po
+/// prestalom nalogu čiji je zapis u trenutku prestanka statusa istupanjem ili
+/// isključenjem bio negativan; upisuje se PRE brisanja podataka, u transakciji izlaza.
+///
+/// 🔴 Čuva se odvojeno od evidencije doprinosa i od evidencije identiteta (zato nema
+/// relacije ka `User`), pet godina od prestanka (`istice`), odnosno do prenosa; tada
+/// se red briše. Vidi ga samo superadmin; ne ide u GDPR izvoz, audit log ni obaveštenje.
+/// Poređenje sa novim nalozima ništa ne blokira (`negativan-zapis-prestanak.ts`).
+model NegativanZapisPrestanak {
+  id           String   @id @default(uuid())
+  /// Interni identifikator prestalog naloga (red `User` ostaje, pseudonimizovan).
+  prestaliId   String   @unique
+  /// Pseudonim prestalog naloga u trenutku prestanka, pre pseudonimizacije.
+  pseudonim    String
+  /// Iznos negativnog zapisa u trenutku prestanka, kao pozitivan broj.
+  iznos        Int
+  /// ISTUPANJE ili ISKLJUCENJE (smrt i nepostojeći nalog ne čuvaju red).
+  osnov        String
+  prestanakAt  DateTime
+  /// Prestanak + 5 godina; posle toga red briše noćni cron.
+  istice       DateTime
+  /// Ime i prezime iz evidencije identiteta, ako je bilo upisano.
+  imePrezime   String?
+  /// Mesto i broj telefona sa profila, ako su bili upisani.
+  mesto        String?
+  telefon      String?
+
+  @@index([istice])
+}
+
+/// Odluka o prenosu negativnog zapisa na nov nalog (Pravilnik čl. 33 st. 7, Registar br. 29:
+/// „odluka o prenosu"). Bez imena i broja — samo nalozi, iznos, obrazloženje i zapis.
+model PrenosNegativnogZapisa {
+  id                 String   @id @default(uuid())
+  prestaliId         String
+  prestaliPseudonim  String
+  noviId             String
+  iznos              Int
+  obrazlozenje       String
+  utvrdioId          String
+  utvrdjenoAt        DateTime @default(now())
+  transakcijaId      String
+
+  @@index([noviId])
+}
+
+
+/// STIPS bilten (set 5.1.3; donacije čl. 29 st. 1, nabavke čl. 40 st. 3): nedeljni bilten
+/// Sistema tržišnih informacija poljoprivrede Srbije. Pronalazi ga cron `/api/cron/stips`;
+/// dominantne cene po pijaci unosi administratorski tim iz PDF-a (brojevi nisu izvučivi kao tekst).
+model StipsBilten {
+  id          String   @id @default(uuid())
+  /// `ZIVA_STOKA` (živa stoka, žitarice i stočna hrana) ili `VOCE_POVRCE`.
+  vrsta       String
+  /// Broj biltena, npr. „44/2026”.
+  broj        String
+  /// Datum objave (ako se ne zna, dan kad je bilten pronađen).
+  datumObjave DateTime
+  /// Stranica dokumenta na STIPS-u i PDF.
+  url         String
+  pdfUrl      String?
+  pronadjenAt DateTime @default(now())
+
+  cene StipsCena[]
+
+  @@unique([vrsta, broj])
+  @@index([datumObjave])
+}
+
+/// Dominantna cena jedne pijace za jednu kategoriju u jednom biltenu. Prosek za Republiku
+/// Srbiju se NE čuva — računa se iz ovih redova (`prosekStips`), a uz ugovor ide snimak.
+model StipsCena {
+  id         String      @id @default(uuid())
+  biltenId   String
+  bilten     StipsBilten @relation(fields: [biltenId], references: [id], onDelete: Cascade)
+  kategorija String
+  /// Jedinica mere iz biltena, npr. „din/kg”.
+  jedinica   String
+  pijaca     String
+  cena       Decimal     @db.Decimal(12, 2)
+  uneoId     String
+  unetoAt    DateTime    @default(now())
+
+  @@unique([biltenId, kategorija, pijaca])
+  @@index([kategorija])
+}
+
+// ─── Program raspodele hrane i lanac proizvodnje i distribucije (set 5.1.2) ──
+//
+// Jedan motor (nabavke Glave X i XI): program raspodele hrane je lanac sa dve karike
+// (gazdinstvo → objekat), uređen Glavom X; lanac (Glava XI) ima davaoca sirovine i niz
+// partnera, po odluci UO (Faza 1), odnosno Gornjeg Kola (Faza 2). Čista pravila:
+// `src/lib/lanac-pravila.ts`; servis: `src/lib/protokol/lanac.ts`.
+// 🔴 Korisnici se vezuju golim id-jem (bez relacije na `User`), kao `NegativanZapisPrestanak`.
+
+/// Vrsta: program raspodele hrane (Glava X) ili lanac (Glava XI).
+enum VrstaLanca {
+  PROGRAM_HRANE
+  LANAC
+}
+
+/// PRIPREMA (ugovori, odnosno odluka upisana, čeka se predaja) → VAUCERI_IZDATI → ZATVOREN;
+/// PRESTAO = hrana nije ispravna (nabavke čl. 45).
+enum StatusLanca {
+  PRIPREMA
+  VAUCERI_IZDATI
+  ZATVOREN
+  PRESTAO
+}
+
+/// Uloga karike: davalac sirovine (u programu gazdinstvo), partner (prerada, čuvanje, prevoz)
+/// i poslednji — partner koji robu izdaje korisnicima (u programu objekat).
+enum UlogaKarike {
+  DAVALAC_SIROVINE
+  PARTNER
+  POSLEDNJI
+}
+
+enum UlogaPrijaveLanca {
+  GAZDINSTVO
+  OBJEKAT
+}
+
+enum StatusPrijaveLanca {
+  NA_PREGLEDU
+  PRIHVACENA
+  ODBIJENA
+  POVUCENA
+}
+
+enum OsnovDoprinosaLanca {
+  SIROVINA
+  USLUGA
+  DISTRIBUCIJA
+}
+
+enum StatusDoprinosaLanca {
+  ZABELEZEN
+  EVIDENTIRAN
+  PONISTEN
+}
+
+/// SLOBODAN → DODELJEN (uzet, POEN poništen) → ISKORISCEN | ISTEKAO; PRENET = prenet na drugu
+/// partiju iste vrste (čl. 45); PRESTAO = partija prestala; NEPREUZET = deo bez uzetog vaučera
+/// koji je preuzeo objekat ili ga je Fondacija predala (čl. 46).
+enum StatusLanacVaucera {
+  SLOBODAN
+  DODELJEN
+  ISKORISCEN
+  ISTEKAO
+  PRENET
+  PRESTAO
+  NEPREUZET
+}
+
+enum OrganOdlukeLanca {
+  UPRAVNI_ODBOR
+  GORNJE_KOLO
+}
+
+/// Javni poziv gazdinstvima i objektima (nabavke čl. 39).
+model LanacPoziv {
+  id            String         @id @default(uuid())
+  naziv         String
+  opis          String
+  /// Uslovi za čuvanje i rok obrade objavljeni u pozivu (čl. 39 st. 2).
+  uslovi        String
+  rokObradeDana Int
+  objavioId     String
+  objavljenAt   DateTime       @default(now())
+  zatvorenAt    DateTime?
+  prijave       LanacPrijava[]
+  lanci         Lanac[]
+}
+
+/// Prijava gazdinstva iz RPG-a, odnosno objekta, na javni poziv (čl. 39 st. 2).
+model LanacPrijava {
+  id               String             @id @default(uuid())
+  pozivId          String
+  poziv            LanacPoziv         @relation(fields: [pozivId], references: [id])
+  uloga            UlogaPrijaveLanca
+  /// Nosilac gazdinstva, odnosno lice sa nalogom koje deluje u ime objekta.
+  userId           String
+  naziv            String
+  /// Naselje iz šifarnika (`razresiNaselje`) — za izbor najbližeg objekta (čl. 39 st. 3).
+  mesto            String
+  adresa           String?
+  /// Gazdinstvo: broj iz Registra poljoprivrednih gazdinstava.
+  bpg              String?
+  /// Objekat: broj upisa, odnosno odobrenja po propisima o bezbednosti hrane.
+  brojOdobrenja    String?
+  /// Gazdinstvo: odgovori o proizvodnji (donacije čl. 28 st. 2 t. 6), izvedena kategorija i
+  /// koeficijent; Fondacija ih utvrđuje pri zaključenju ugovora o donaciji (čl. 22 st. 5).
+  hranaOdgovori    Json?
+  hranaKategorija  String?
+  hranaKoeficijent Decimal?           @db.Decimal(4, 2)
+  /// Cena po jedinici iz cenovnika gazdinstva — samo kad STIPS cene nema (čl. 40 st. 3).
+  cenovnikCena     Decimal?           @db.Decimal(12, 2)
+  /// Objekat: usluga iz cenovnika (čl. 42 st. 3).
+  uslugaOpis       String?
+  uslugaJedinica   String?
+  uslugaCena       Decimal?           @db.Decimal(12, 2)
+  /// Fotografija, odnosno primerak cenovnika (javni URL).
+  cenovnikUrl      String?
+  /// Objekat je zadruga — doprinos se evidentira u zapisu zadruge (Pravilnik čl. 37 st. 4).
+  /// Postavlja Fondacija pri prihvatanju.
+  zadrugaId        String?
+  izjavaAt         DateTime
+  izjavaTekst      String
+  status           StatusPrijaveLanca @default(NA_PREGLEDU)
+  odlucioId        String?
+  odlukaAt         DateTime?
+  razlogOdbijanja  String?
+  createdAt        DateTime           @default(now())
+
+  @@index([pozivId, uloga, status])
+  @@index([userId])
+}
+
+/// Partija programa, odnosno jedan lanac. 🔴 Zapis odluke o lancu (organ, broj, datum,
+/// tekst) snima se jednom i posle se ne menja.
+model Lanac {
+  id                     String            @id @default(uuid())
+  vrsta                  VrstaLanca
+  pozivId                String?
+  poziv                  LanacPoziv?       @relation(fields: [pozivId], references: [id])
+  /// Roba koja se raspodeljuje (opis partije).
+  naziv                  String
+  /// Vrsta hrane (`hrana-pravila.ts`) — za zamenu partijom iste vrste (čl. 45). `null` = nije hrana.
+  vrstaHrane             String?
+  /// Kategorija za koju se traži STIPS cena (čl. 40 st. 3).
+  stipsKategorija        String?
+  jedinica               String            @default("kg")
+  brojVaucera            Int
+  kolicinaPoVauceru      String
+  /// Lanac: koeficijent sirovine iz odluke (čl. 49 t. 2). Program: koeficijent hrane
+  /// gazdinstva, snimljen pri zaključenju ugovora.
+  koeficijentSirovine    Decimal?          @db.Decimal(4, 2)
+  /// Lanac: dodatak za distribuciju u procentu vrednosti izdate robe (čl. 49 t. 7).
+  dodatakDistribucijePct Decimal?          @db.Decimal(5, 2)
+  odlukaOrgan            OrganOdlukeLanca?
+  odlukaBroj             String?
+  odlukaDatum            DateTime?
+  odlukaTekst            String?
+  odlukaUpisaoId         String?
+  odlukaUpisanaAt        DateTime?
+  status                 StatusLanca       @default(PRIPREMA)
+  objavljenAt            DateTime?
+  /// Broj POEN-a po vaučeru (čl. 43 st. 2, čl. 52 st. 1) — snima se pri izdavanju vaučera.
+  poenaPoVauceru         Int?
+  vauceriIzdatiAt        DateTime?
+  /// Objekat je označio da je hrana spremna (čl. 44 st. 1) — od tada teče rok preuzimanja.
+  spremnoAt              DateTime?
+  neispravnoAt           DateTime?
+  neispravnoRazlog       String?
+  zatvorenAt             DateTime?
+  kreiraoId              String
+  createdAt              DateTime          @default(now())
+  karike                 LanacKarika[]
+  predaje                LanacPredaja[]
+  doprinosi              LanacDoprinos[]
+  vauceri                LanacVaucer[]
+
+  @@index([vrsta, status])
+}
+
+/// Karika lanca: korisnik u čijem zapisu se evidentira doprinos (nosilac gazdinstva,
+/// podnosilac prijave, lice koje deluje u ime objekta), odnosno zadruga.
+model LanacKarika {
+  id                    String      @id @default(uuid())
+  lanacId               String
+  lanac                 Lanac       @relation(fields: [lanacId], references: [id])
+  redniBroj             Int
+  uloga                 UlogaKarike
+  prijavaId             String?
+  userId                String
+  zadrugaId             String?
+  naziv                 String
+  mestoPredaje          String
+  adresaPredaje         String?
+  uslugaOpis            String?
+  jedinica              String?
+  /// Cena po jedinici iz cenovnika (usluga partnera, objekta; kod davaoca sirovine cena iz
+  /// cenovnika kad STIPS cene nema).
+  cenaPoJedinici        Decimal?    @db.Decimal(12, 2)
+  /// Lanac: obim usluge iz odluke. Program: obim usluge objekta iz zapisnika o primopredaji.
+  obim                  Decimal?    @db.Decimal(12, 2)
+  koeficijent           Decimal     @db.Decimal(4, 2)
+  izdajeKorisnicima     Boolean     @default(false)
+  /// Snimljen tekst ugovora (o donaciji, o usluzi, o partnerstvu) — ne generiše se ponovo.
+  ugovorTekst           String?
+  ugovorPrihvacenAt     DateTime?
+  izvrsenoPrijavljenoAt DateTime?
+  izvrsenjeUtvrdioId    String?
+  izvrsenjeUtvrdjenoAt  DateTime?
+  createdAt             DateTime    @default(now())
+
+  @@unique([lanacId, redniBroj])
+  @@index([userId])
+}
+
+/// Zapisnik o primopredaji (čl. 40 st. 2, čl. 50 st. 2). 🔴 Snimak cene (STIPS ili cenovnik)
+/// čuva se uz predaju i ne računa se ponovo.
+model LanacPredaja {
+  id                 String    @id @default(uuid())
+  lanacId            String
+  lanac              Lanac     @relation(fields: [lanacId], references: [id])
+  odKarikaId         String
+  doKarikaId         String
+  /// Masa sa vage objekta, odnosno količina u jedinici lanca.
+  kolicina           Decimal   @db.Decimal(12, 3)
+  oznakeZivotinja    String?
+  /// Program: obim usluge objekta na partiji (cenovnik × obim, čl. 42 st. 3).
+  obimUsluge         Decimal?  @db.Decimal(12, 2)
+  predaoId           String
+  primioId           String
+  zabelezenoAt       DateTime  @default(now())
+  predaoPotvrdioAt   DateTime?
+  /// "STIPS" ili "CENOVNIK" — samo za predaju sirovine.
+  cenaIzvor          String?
+  cenaPoJedinici     Decimal?  @db.Decimal(12, 2)
+  vrednostRsd        Decimal?  @db.Decimal(12, 2)
+  stipsKategorija    String?
+  stipsBiltenId      String?
+  stipsSnimak        Json?
+  potvrdaFondacijeAt DateTime?
+  potvrdioId         String?
+
+  @@index([lanacId])
+}
+
+/// Doprinos karike: beležen, odnosno evidentiran, sa vrednošću u dinarima kao merom obima.
+model LanacDoprinos {
+  id            String               @id @default(uuid())
+  lanacId       String
+  lanac         Lanac                @relation(fields: [lanacId], references: [id])
+  karikaId      String
+  osnov         OsnovDoprinosaLanca
+  walletId      String
+  userId        String?
+  zadrugaId     String?
+  vrednostRsd   Decimal              @db.Decimal(12, 2)
+  koeficijent   Decimal              @db.Decimal(4, 2)
+  iznos         Int
+  status        StatusDoprinosaLanca @default(ZABELEZEN)
+  zabelezenAt   DateTime             @default(now())
+  evidentiranAt DateTime?
+  emisijaTxId   String?
+
+  @@index([status, zabelezenAt])
+  @@index([lanacId])
+  @@index([karikaId])
+}
+
+/// Vaučer programa, odnosno lanca (nabavke čl. 43–46, 52).
+model LanacVaucer {
+  id                   String             @id @default(uuid())
+  lanacId              String
+  lanac                Lanac              @relation(fields: [lanacId], references: [id])
+  kod                  String             @unique
+  status               StatusLanacVaucera @default(SLOBODAN)
+  imalacId             String?
+  dodeljenAt           DateTime?
+  /// Snimak broja POEN-a poništenog pri uzimanju — za ispravku po čl. 45.
+  ponisteno            Int                @default(0)
+  ponistenjeTxId       String?
+  izjavaNepovezanAt    DateTime?
+  pristanakPrikazAt    DateTime?
+  pristanakPrikazTekst String?
+  pristanakPovucenAt   DateTime?
+  iskoriscenAt         DateTime?
+  potvrdioId           String?
+  /// Lanac: Fondacija je utvrdila da je roba po vaučeru izdata (dodatak za distribuciju).
+  izdavanjeUtvrdjenoAt DateTime?
+  istekaoAt            DateTime?
+  prestaoAt            DateTime?
+  ispravkaTxId         String?
+  /// Vaučer sa neispravne partije sa koga je imalac prenet na ovaj (čl. 45).
+  prenetIzId           String?
+  /// Nepreuzet deo (čl. 46): "OBJEKAT" (preuzeo objekat) ili "USTANOVA" (predat kroz program
+  /// podrške ili ustanovi socijalne zaštite).
+  nepreuzetIshod       String?
+  nepreuzetAt          DateTime?
+  /// Otpis po devetom osnovu dodeljen ovom delu (samo deo bez uzetog vaučera).
+  otpisano             Int?
+  otpisTxId            String?
+  createdAt            DateTime           @default(now())
+
+  @@index([lanacId, status])
+  @@index([imalacId, status])
 }

@@ -53,7 +53,8 @@ export const TIP_PO_USLOVU: Record<UslovPotvrde, TransactionType> = {
  * emisije, da se brojači ne mešaju sa novcem — ali je isti trag učešća.
  */
 export const DODATNI_TIPOVI_PO_USLOVU: Partial<Record<UslovPotvrde, TransactionType[]>> = {
-  POKROVITELJSTVO: [TransactionType.EMISIJA_POKROVITELJ_DOBRA],
+  // Set 5.1.2: partnerstvo je oblik pokroviteljstva (donacije čl. 40 st. 1).
+  POKROVITELJSTVO: [TransactionType.EMISIJA_POKROVITELJ_DOBRA, TransactionType.EMISIJA_PARTNERSTVO],
 };
 
 /** Trag učešća korisnika — jedan upit nad istorijom njegovog zapisa. */

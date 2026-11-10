@@ -22,6 +22,8 @@ export interface CekanjePokrovitelja {
   prijave: number;
   /** Prijava pokroviteljstva dobrima i uslugama čeka pregled (donacije čl. 29 st. 2). */
   dobra: number;
+  /** Prijava partnerstva čeka odluku direktora, odnosno izvršenje čeka potvrdu (donacije čl. 41, 43). */
+  partnerstvo: number;
 }
 
 export interface CekanjeAdmina {
@@ -47,7 +49,7 @@ export interface CekanjeAdmina {
 export async function brojeviCekanjaAdmina(jeSuperadmin: boolean): Promise<CekanjeAdmina> {
   const [
     donacije, programi, oglasPrijave, oglasEvidencije,
-    upisi, izmene, prijave, dobra,
+    upisi, izmene, prijave, dobra, partnerstvaNaPregledu, izvrsenjaPartnerstva,
     prigovori, pijaca, prviOglasi, razmene,
     gazdinstvaPrijave, gazdinstvaPristupanja, nabavke, zelje,
     nadzor, predmeti, prijaveRoditeljstva,
@@ -61,6 +63,8 @@ export async function brojeviCekanjaAdmina(jeSuperadmin: boolean): Promise<Cekan
     prisma.upisPokrovitelja.count({ where: { izmenaPodnetaAt: { not: null }, obrisanAt: null } }),
     prisma.pokroviteljPrijava.count({ where: { status: "POTPISANA" } }),
     prisma.ugovorDobra.count({ where: { status: "NA_PREGLEDU" } }),
+    prisma.partnerstvo.count({ where: { status: "NA_PREGLEDU" } }),
+    prisma.izvrsenjePartnerstva.count({ where: { status: "PRIJAVLJENO", partnerstvo: { status: "PRIHVACENO" } } }),
     prisma.prigovorNaOdluku.count({ where: { status: { in: ["PENDING", "U_OBRADI"] } } }),
     // Prijavljeni oglasi na Pijaci — red čekanja za moderaciju (Uslovi čl. 29).
     prisma.prijavaOglasa.count({ where: { status: "OTVORENA" } }),
@@ -81,12 +85,13 @@ export async function brojeviCekanjaAdmina(jeSuperadmin: boolean): Promise<Cekan
     jeSuperadmin ? prisma.prijavaRoditeljstva.count({ where: { status: "OTVORENA" } }) : Promise.resolve(0),
   ]);
 
-  const pokroviteljiPo = { upisi, izmene, prijave, dobra };
+  const partnerstvo = partnerstvaNaPregledu + izvrsenjaPartnerstva;
+  const pokroviteljiPo = { upisi, izmene, prijave, dobra, partnerstvo };
   return {
     donacije,
     programi,
     ped: oglasPrijave + oglasEvidencije,
-    pokrovitelji: upisi + izmene + prijave + dobra,
+    pokrovitelji: upisi + izmene + prijave + dobra + partnerstvo,
     pokroviteljiPo,
     prigovori,
     pijaca,

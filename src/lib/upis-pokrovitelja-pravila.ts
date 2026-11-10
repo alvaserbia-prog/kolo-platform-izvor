@@ -23,6 +23,7 @@
  */
 
 import { procitajImePrezime } from "@/lib/identitet-pravila";
+import { mestaPredaje, tackaMestaPredaje } from "@/lib/mesta-pravila";
 import { lokacijaUSrbiji } from "@/lib/gazdinstvo-pravila";
 import {
   ODNOS_U_UGOVORU,
@@ -198,6 +199,17 @@ export function procitajUpis(
 }
 
 /**
+ * Da li lice uz upis daje izjavu o ovlašćenju (čl. 17 st. 1) — za neproverene podatke upisa
+ * (npr. upis koji je pripremila Fondacija, čl. 16 st. 6). Gazdinstvo: ne.
+ */
+export function trebaIzjavaOvlascenjaUpisa(b: Record<string, unknown>): boolean {
+  if (b.vrsta === "GAZDINSTVO") return false;
+  const oblik = jePravniOblik(b.pravniOblik) ? b.pravniOblik : null;
+  if (!odnosDozvoljen("FIRMA", b.odnosPremaDavaocu, oblik)) return false;
+  return trebaIzjavaOvlascenja(b.odnosPremaDavaocu, oblik);
+}
+
+/**
  * Ključevi teksta izjave o ovlašćenju i potvrde o evidentiranju (čl. 17) —
  * isti za ekran i za tekst koji server snima: kod oblika bez vlasnika podnosilac
  * obaveštava organe i članove, kod članskih oblika ovlašćuje ga organ.
@@ -229,7 +241,42 @@ export type UpisZaPrijavu = {
   pib: string | null;
   adresaSedista: string | null;
   bpg: string | null;
+  /** Poređenje sa registrom (čl. 18 st. 1) i odluka o upisu — za prijavu dobara bez učešća. */
+  aprProveraAt?: Date | null;
+  odlukaAt?: Date | null;
 };
+
+/**
+ * Odnosi upisani u registar (donacije čl. 28 st. 1, set 5.1.2): zakonski zastupnik,
+ * preduzetnik i nosilac gazdinstva. Lice sa tim odnosom, čije je ime Fondacija uporedila
+ * sa registrom (čl. 18 st. 1), prijavu pokroviteljstva dobrima i uslugama podnosi i kad
+ * nije učesnik (Uslovi čl. 14 st. 4). Ostali odnosi (vlasnik, stvarni vlasnik, ovlašćeno
+ * lice…) nisu upisani u registar kao zastupnik — prijavu dobara podnose samo kao učesnici.
+ */
+export const ODNOSI_IZ_REGISTRA: readonly OdnosPremaDavaocu[] = ["ZASTUPNIK", "PREDUZETNIK", "NOSILAC_GAZDINSTVA"];
+
+/**
+ * Sme li korisnik koji nije učesnik da podnese prijavu dobara iz ovog upisa (čl. 28 st. 1):
+ * odnos iz registra i upis odobren posle poređenja sa registrom (gazdinstvo — odobren).
+ */
+export function smePrijavuDobaraBezUcesca(u: {
+  vrsta: VrstaDavaoca;
+  status: StatusUpisa;
+  odnosPremaDavaocu: OdnosPremaDavaocu | null;
+  aprProveraAt?: Date | null;
+  odlukaAt?: Date | null;
+}): boolean {
+  if (u.status !== "ODOBREN" || !u.odnosPremaDavaocu) return false;
+  if (!ODNOSI_IZ_REGISTRA.includes(u.odnosPremaDavaocu)) return false;
+  if (u.vrsta === "GAZDINSTVO" && u.odnosPremaDavaocu !== "NOSILAC_GAZDINSTVA") return false;
+  return upisOdobrenZaPotvrdu({ vrsta: u.vrsta, status: u.status, aprProveraAt: u.aprProveraAt ?? null, odlukaAt: u.odlukaAt ?? null });
+}
+
+export const PORUKA_PARTNERSTVO_SAMO_UCESNIK =
+  "Prijavu partnerstva podnosi učesnik, a korisnik koji nije u Kolu samo kao zakonski zastupnik, preduzetnik ili nosilac gazdinstva iz odobrenog upisa.";
+
+export const PORUKA_DOBRA_SAMO_UCESNIK =
+  "Prijavu pokroviteljstva dobrima i uslugama podnosi učesnik, a korisnik koji nije u Kolu samo kao zakonski zastupnik, preduzetnik ili nosilac gazdinstva iz odobrenog upisa.";
 
 /**
  * Sme li korisnik da podnese prijavu iz upisa (čl. 18 st. 3–4, čl. 19 st. 1, čl. 28
@@ -243,7 +290,14 @@ export type UpisZaPrijavu = {
  */
 export function upisSpremanZaPrijavu(
   u: UpisZaPrijavu,
-  p: { userId: string; vrstaPrijave: "NOVAC" | "DOBRA"; naListiZabrane: boolean },
+  p: {
+    userId: string;
+    /** Set 5.1.2: partnerstvo (donacije čl. 41 st. 1) — pod uslovima iz čl. 28 st. 1, kao dobra. */
+    vrstaPrijave: "NOVAC" | "DOBRA" | "PARTNERSTVO";
+    naListiZabrane: boolean;
+    /** Da li je podnosilac učesnik (u Kolu). Izostavljeno = ne proverava se ovde. */
+    ucesnik?: boolean;
+  },
 ): IshodProvere {
   if (u.vlasnikUserId !== p.userId) return { ok: false, razlog: "Prijavu podnosi korisnik koji vodi upis pokrovitelja." };
   if (u.obrisanAt) return { ok: false, razlog: "Upis pokrovitelja je obrisan." };
@@ -257,8 +311,15 @@ export function upisSpremanZaPrijavu(
   const nedostaje =
     !u.imePrezime || !u.odnosPremaDavaocu || !u.naziv ||
     (u.vrsta === "FIRMA" ? !u.maticniBroj || !u.pib || !u.adresaSedista : !u.bpg) ||
-    (p.vrstaPrijave === "DOBRA" && (!u.kontaktEmail || !u.kontaktTelefon));
+    (p.vrstaPrijave !== "NOVAC" && (!u.kontaktEmail || !u.kontaktTelefon));
   if (nedostaje) return { ok: false, razlog: "Upis nema sve podatke potrebne za ugovor — dopuni ih u podacima pokrovitelja." };
+  // Čl. 28 st. 1 (set 5.1.2): korisnik koji nije u Kolu — samo kao lice iz registra.
+  if (p.vrstaPrijave === "DOBRA" && p.ucesnik === false && !smePrijavuDobaraBezUcesca(u))
+    return { ok: false, razlog: PORUKA_DOBRA_SAMO_UCESNIK };
+  // Donacije čl. 41 st. 1 (set 5.1.2): prijavu partnerstva podnosi lice koje vodi upis, pod
+  // uslovima iz čl. 28 st. 1. Lista zabrane (čl. 35 st. 5) se odnosi samo na dobra.
+  if (p.vrstaPrijave === "PARTNERSTVO" && p.ucesnik === false && !smePrijavuDobaraBezUcesca(u))
+    return { ok: false, razlog: PORUKA_PARTNERSTVO_SAMO_UCESNIK };
   return { ok: true };
 }
 
@@ -461,6 +522,63 @@ export function javniPrikazUpisa(u: {
     lat: u.mapaLat,
     lng: u.mapaLng,
   };
+}
+
+/** Tačka mesta predaje, odnosno pružanja (čl. 18 st. 4, čl. 26 st. 2; set 5.1.2). */
+export type TackaPredaje = TackaPokrovitelja & { upisId: string };
+
+/**
+ * Mesta predaje, odnosno pružanja na mapi (čl. 16 st. 2 t. 3, čl. 18 st. 4, čl. 26 st. 2;
+ * set 5.1.2): pokrovitelj dobrima i uslugama prikazuje se i na mestima iz ugovora, dok ima
+ * vaučere koji važe. Ugovor ulazi samo ako ima bar jedan neiskorišćen vaučer koji važi
+ * (`jeNeiskoriscenVaucer`). Tačka nosi samo naziv, logotip, mesto i adresu predaje —
+ * 🔴 ništa drugo. Mesto koje se poklapa sa adresom iz upisa i ponovljena mesta se preskaču.
+ * Tačka je tačna kad ju je davalac postavio na mapi (`UgovorDobra.tackePredaje`); inače
+ * koordinate daje pozivalac (`koordinateZaMesto` — centar naselja).
+ */
+export function tackePredaje(
+  upis: {
+    id: string; status: StatusUpisa; obrisanAt: Date | null; naziv: string; logoUrl: string | null;
+    mapaMesto: string | null; mapaAdresa: string | null;
+  },
+  ugovori: {
+    status: string; vaziDo: Date | null; mesto: string; adresaPredaje: string | null;
+    dodatnaMestaPredaje: string[]; dodatneAdresePredaje: string[];
+    /** Tačne tačke mesta (paralelno sa `mestaPredaje()`); bez tačke — centar naselja. */
+    tackePredaje?: unknown;
+    vauceri: { status: string }[];
+  }[],
+  koordinate: (mesto: string) => readonly [number, number] | null,
+  sada: Date,
+): TackaPredaje[] {
+  if (upis.status !== "ODOBREN" || upis.obrisanAt) return [];
+  const kljuc = (m: string, a: string | null) => `${m.trim().toLowerCase()}|${(a ?? "").trim().toLowerCase()}`;
+  const vidjeno = new Set<string>();
+  if (upis.mapaMesto) vidjeno.add(kljuc(upis.mapaMesto, upis.mapaAdresa));
+  const izlaz: TackaPredaje[] = [];
+  for (const u of ugovori) {
+    const vazi = u.vauceri.some((v) => jeNeiskoriscenVaucer({ status: v.status, ugovor: { status: u.status, vaziDo: u.vaziDo } }, sada));
+    if (!vazi) continue;
+    for (const [i, m] of mestaPredaje(u).entries()) {
+      const k = kljuc(m.mesto, m.adresa);
+      if (vidjeno.has(k)) continue;
+      vidjeno.add(k);
+      const tacna = tackaMestaPredaje(u.tackePredaje, i);
+      const c = tacna ? ([tacna.lat, tacna.lng] as const) : koordinate(m.mesto);
+      if (!c) continue;
+      izlaz.push({
+        id: `${upis.id}~${izlaz.length + 1}`,
+        upisId: upis.id,
+        naziv: upis.naziv,
+        logoUrl: upis.logoUrl,
+        mesto: m.mesto,
+        adresa: m.adresa,
+        lat: c[0],
+        lng: c[1],
+      });
+    }
+  }
+  return izlaz;
 }
 
 /**

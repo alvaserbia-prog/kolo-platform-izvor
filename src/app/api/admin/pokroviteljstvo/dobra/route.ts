@@ -84,7 +84,18 @@ export async function GET() {
       vaziDo: u.vaziDo?.toISOString() ?? null,
       koeficijent: u.koeficijent == null ? null : Number(u.koeficijent),
       poenEvidentirano: u.poenEvidentirano,
+      // Set 5.1.2: zabeleženo, a još neevidentirano (donacije čl. 33 st. 1).
+      zabelezeno: u.status === "POTPISAN" && u.cekaPeriod && !u.emisijaTxId,
       poenaPoVauceru: u.poenaPoVauceru,
+      // Set 5.1.2 (čl. 29 st. 1): izvor cene — STIPS, ako je primenjena.
+      stipsCena: u.stipsCena == null ? null : Number(u.stipsCena),
+      stipsKategorija: u.stipsKategorija,
+      stipsDatumObjave: u.stipsDatumObjave?.toISOString() ?? null,
+      // Set 5.1.3: bilten i cene pijaca iz kojih je prosek izračunat (snimak uz ugovor).
+      stipsBiltenBroj: u.stipsBiltenBroj,
+      stipsBiltenUrl: u.stipsBiltenUrl,
+      stipsJedinica: u.stipsJedinica,
+      stipsPijace: (u.stipsPijace as { pijaca: string; cena: number }[] | null) ?? null,
       naredniDozvoljenAt: u.naredniDozvoljenAt?.toISOString() ?? null,
       naredniDozvolaRazlog: u.naredniDozvolaRazlog,
       createdAt: u.createdAt.toISOString(),

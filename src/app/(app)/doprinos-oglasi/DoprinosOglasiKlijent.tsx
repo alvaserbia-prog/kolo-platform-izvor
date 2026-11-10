@@ -112,7 +112,8 @@ function OglasKartica({ oglas, isVerified, prijavaStatusBadge, sourceLabel }: {
   // 🔴 Brze prijave sa kartice VIŠE NEMA. Od seta 4.4.4 svaka prijava traži plan
   // izvršenja (operativni čl. 10) i potvrđenu izjavu o pravnoj prirodi (čl. 10 st. 1 t. 3), pa
   // se prijava podnosi isključivo sa stranice zadatka, gde se oboje vidi i unosi.
-  const mozePrijaviti = isVerified && !oglas.mojaPrijava && !oglas.zadruzni;
+  // Na celinu zadruge prijava ide istim tokom kao na svaki zadatak (operativni čl. 23 st. 2).
+  const mozePrijaviti = isVerified && !oglas.mojaPrijava;
 
   return (
     <Kartica padding="nema" className="overflow-hidden">

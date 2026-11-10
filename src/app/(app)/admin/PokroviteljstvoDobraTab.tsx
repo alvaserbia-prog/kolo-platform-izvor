@@ -74,7 +74,15 @@ type Ugovor = {
   kontrolniBroj: string | null;
   koeficijent: number | null;
   poenEvidentirano: number | null;
+  zabelezeno: boolean;
   poenaPoVauceru: number | null;
+  stipsCena: number | null;
+  stipsKategorija: string | null;
+  stipsDatumObjave: string | null;
+  stipsBiltenBroj: string | null;
+  stipsBiltenUrl: string | null;
+  stipsJedinica: string | null;
+  stipsPijace: { pijaca: string; cena: number }[] | null;
   hranaOdgovori: Record<string, unknown> | null;
   hranaKategorija: string | null;
   hranaKoeficijent: number | null;
@@ -97,7 +105,15 @@ type Zabrana = {
   skidanjeRazlog: string | null;
 };
 
-export default function PokroviteljstvoDobraTab({ onDone }: { onDone?: () => void }) {
+/**
+ * STIPS cena uz prihvatanje (donacije čl. 29 st. 1, set 5.1.3): superadmin bira samo kategoriju;
+ * cenu, bilten i cene pijaca povlači sistem iz evidencije biltena (Pokrovitelji → STIPS).
+ */
+type StipsUnos = { stips: boolean; kategorija: string };
+const STIPS_PRAZNO: StipsUnos = { stips: false, kategorija: "" };
+type StipsPregled = { cena: number; jedinica: string; biltenBroj: string; biltenUrl: string; datumObjave: string; pijace: { pijaca: string; cena: number }[] } | null;
+
+export default function PokroviteljstvoDobraTab({ onDone, superadmin = false }: { onDone?: () => void; superadmin?: boolean }) {
   const t = useTranslations("admin");
   const locale = useLocale();
   const { data: ugovori = [], isLoading, refetch } = useQuery({
@@ -118,6 +134,28 @@ export default function PokroviteljstvoDobraTab({ onDone }: { onDone?: () => voi
   });
   const [radi, setRadi] = useState<string | null>(null);
   const [otvoren, setOtvoren] = useState<string | null>(null);
+  const [stipsUnos, setStipsUnos] = useState<Record<string, StipsUnos>>({});
+  const stipsZa = (id: string) => stipsUnos[id] ?? STIPS_PRAZNO;
+  const postaviStips = (id: string, izmena: Partial<StipsUnos>) =>
+    setStipsUnos((s) => ({ ...s, [id]: { ...(s[id] ?? STIPS_PRAZNO), ...izmena } }));
+  const { data: stipsKategorije = [] } = useQuery({
+    queryKey: ["admin-stips-kategorije"],
+    enabled: superadmin,
+    queryFn: async (): Promise<string[]> => {
+      const r = await fetch("/api/admin/stips");
+      if (!r.ok) return [];
+      return (await r.json()).kategorije ?? [];
+    },
+  });
+  // Pregled cene koja bi se primenila (poslednji bilten sa cenom za kategoriju).
+  const [stipsPregled, setStipsPregled] = useState<Record<string, StipsPregled>>({});
+  async function izaberiKategoriju(id: string, kategorija: string) {
+    postaviStips(id, { kategorija });
+    if (!kategorija) return;
+    const r = await fetch(`/api/admin/stips/cena?kategorija=${encodeURIComponent(kategorija)}`);
+    const d = await r.json().catch(() => ({}));
+    setStipsPregled((s) => ({ ...s, [id]: r.ok ? d.cena ?? null : null }));
+  }
   const { dijalog, unesi, obavesti } = useDijalog();
 
   const broj = (n: number) => n.toLocaleString(intlTag(locale));
@@ -314,10 +352,52 @@ export default function PokroviteljstvoDobraTab({ onDone }: { onDone?: () => voi
                 <p className="text-xs text-kolo-muted">{u.upisOdobren ? t("dobra_upis_odobren") : t("dobra_upis_nije_odobren")}</p>
                 {u.hranaOdgovori && <p className="text-xs text-kolo-muted">{t("dobra_hrana_proveri")}</p>}
                 {u.podnosilacPotpisaoAt && <p className="text-xs text-kolo-muted">{t("dobra_potpisao_podnosilac")}</p>}
+                {superadmin && (
+                  <div className="space-y-2 rounded-kontrola bg-kolo-bg p-3">
+                    <label className="flex items-center gap-2 text-xs text-kolo-text">
+                      <input
+                        type="checkbox"
+                        checked={stipsZa(u.id).stips}
+                        onChange={(e) => postaviStips(u.id, { stips: e.target.checked })}
+                      />
+                      {t("dobra_stips_oznaka")}
+                    </label>
+                    {stipsZa(u.id).stips && (
+                      <div className="space-y-2">
+                        <label className="text-xs text-kolo-muted space-y-1 block">
+                          <span className="block">{t("dobra_stips_kategorija")}</span>
+                          <select value={stipsZa(u.id).kategorija} onChange={(e) => void izaberiKategoriju(u.id, e.target.value)}
+                            className="w-full rounded-kontrola border border-kolo-border px-2 py-1 text-sm text-kolo-text">
+                            <option value="">—</option>
+                            {stipsKategorije.map((k) => <option key={k} value={k}>{k}</option>)}
+                          </select>
+                        </label>
+                        {stipsZa(u.id).kategorija && (
+                          stipsPregled[u.id] ? (
+                            <p className="text-xs text-kolo-text">
+                              {t("dobra_stips_pregled", {
+                                cena: broj(stipsPregled[u.id]!.cena), jedinica: stipsPregled[u.id]!.jedinica,
+                                bilten: stipsPregled[u.id]!.biltenBroj, datum: datum(stipsPregled[u.id]!.datumObjave),
+                              })}{" "}
+                              {stipsPregled[u.id]!.pijace.map((p) => `${p.pijaca} ${broj(p.cena)}`).join(", ")}
+                            </p>
+                          ) : (
+                            <p className="text-xs text-kolo-danger">{t("dobra_stips_nema_cene")}</p>
+                          )
+                        )}
+                        <p className="text-xs text-kolo-muted">{t("dobra_stips_napomena")}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="flex gap-2">
                   <button
                     disabled={!u.upisOdobren || !imaCenovnik || radi === u.id}
-                    onClick={() => radnja(u.id, `/api/admin/pokroviteljstvo/dobra/${u.id}/prihvati`)}
+                    onClick={() => {
+                      const st = stipsZa(u.id);
+                      return radnja(u.id, `/api/admin/pokroviteljstvo/dobra/${u.id}/prihvati`,
+                        st.stips ? { stips: true, stipsKategorija: st.kategorija } : undefined);
+                    }}
                     className={klaseDugmeta({ varijanta: "primarno", velicina: "sm" })}
                   >
                     {t("dobra_prihvati")}
@@ -343,12 +423,26 @@ export default function PokroviteljstvoDobraTab({ onDone }: { onDone?: () => voi
             {(u.status === "POTPISAN" || u.status === "RASKINUT") && (
               <div className="space-y-2 border-t border-kolo-border pt-2">
                 <p className="text-xs text-kolo-muted">
-                  {t("dobra_evidentirano", {
+                  {t(u.zabelezeno ? "dobra_zabelezeno" : "dobra_evidentirano", {
                     poen: broj(u.poenEvidentirano ?? 0),
                     koef: (u.koeficijent ?? 1).toFixed(2),
                     vazi: datum(u.vaziDo),
                   })}
                 </p>
+                {u.stipsCena != null && (
+                  <p className="text-xs text-kolo-muted">
+                    {t("dobra_stips_primenjena", {
+                      cena: broj(u.stipsCena), kategorija: u.stipsKategorija ?? "", datum: datum(u.stipsDatumObjave),
+                      cenovnik: broj(u.cenaPoJedinici), bilten: u.stipsBiltenBroj ?? "—",
+                    })}
+                    {u.stipsPijace && u.stipsPijace.length > 0 && (
+                      <> {u.stipsPijace.map((p) => `${p.pijaca} ${broj(p.cena)}`).join(", ")}</>
+                    )}
+                    {u.stipsBiltenUrl && (
+                      <> · <a href={u.stipsBiltenUrl} target="_blank" rel="noopener noreferrer" className="underline">{t("stips_stranica")}</a></>
+                    )}
+                  </p>
+                )}
                 {u.status === "POTPISAN" && (
                   u.naredniDozvoljenAt ? (
                     <p className="text-xs text-kolo-muted">

@@ -7,7 +7,10 @@ import { azurirajStalnuPonudu, zapisiDnevniSnimak } from "@/lib/protokol/pokazat
 import { proveriIEvidentirajKorak } from "@/lib/protokol/osnivacki";
 import { jePonocUSrbiji } from "@/lib/protokol/obracunski-dan";
 import { evidentirajZabelezenoPokroviteljstvo } from "@/lib/protokol/pokrovitelj";
+import { evidentirajZabelezenoPokroviteljstvoDobrima } from "@/lib/protokol/pokroviteljstvo-dobrima";
+import { evidentirajZabelezenoPartnerstvo } from "@/lib/protokol/partnerstvo";
 import { zatvoriIstekla } from "@/lib/protokol/donacija-unapred";
+import { evidentirajZabelezenoLanac } from "@/lib/protokol/lanac";
 
 // GET /api/cron/nocna-emisija — Vercel Cron (Authorization: Bearer), zakazan u
 // 22:00 i 23:00 UTC (drugi termin kroz /api/cron/nocna-emisija/zima). Radi samo
@@ -67,8 +70,9 @@ async function nocniObracun(datum: Date, opcije: { osnivacki: boolean }) {
       }
     }
 
-    // 2a. Set 5.0.9: zabeleženo novčano pokroviteljstvo evidentira se u narednom
-    // obračunskom periodu (Pravilnik čl. 37 st. 2), i to samo na stvarnom kraju perioda;
+    // 2a. Set 5.0.9: zabeleženo novčano pokroviteljstvo (od seta 5.1.2 i dobrima i uslugama)
+    // evidentira se u narednom obračunskom periodu (Pravilnik čl. 37 st. 1–2), i to samo na
+    // stvarnom kraju perioda;
     // pre provere Faze 2, jer ulazi u ukupan broj. Uz to prestaju istekla ograničenja
     // primljenog iznosa (donacije čl. 6 st. 7). Izolovano: ne sme da obori obračun.
     let pokroviteljstvo: unknown = null;
@@ -76,6 +80,12 @@ async function nocniObracun(datum: Date, opcije: { osnivacki: boolean }) {
       try {
         pokroviteljstvo = {
           evidentirano: await evidentirajZabelezenoPokroviteljstvo(),
+          // Set 5.1.2 (donacije čl. 33 st. 1): i pokroviteljstvo dobrima i uslugama.
+          evidentiranoDobra: await evidentirajZabelezenoPokroviteljstvoDobrima(),
+          // Set 5.1.2 (donacije čl. 43 st. 1, Pravilnik čl. 37 st. 5): i potvrđeno izvršenje partnerstva.
+          evidentiranoPartnerstvo: await evidentirajZabelezenoPartnerstvo(),
+          // Set 5.1.2 (nabavke čl. 51 st. 1): beležen doprinos u lancu proizvodnje i distribucije.
+          evidentiranoLanac: await evidentirajZabelezenoLanac(),
           ogranicenjaPrestala: await zatvoriIstekla(),
         };
       } catch (e) {

@@ -15,6 +15,7 @@ import { prisma } from "@/lib/prisma";
 import { emitujPoen } from "./emisija";
 import { TransactionType } from "@/generated/prisma/client";
 import { prestaoStatus } from "@/lib/status-ucesnika-pravila";
+import { osnivacSmePrijavu } from "@/lib/operativni-pravila";
 import {
   ITERATION_LIMIT,
   GORNJA_GRANICA,
@@ -248,4 +249,18 @@ export async function proveriIEvidentirajKorak(): Promise<{
       ? `Evidentirano ${evidentirano} korak(a). Trenutni broj koraka: ${trenutniKoraci}/${ITERATION_LIMIT}.`
       : "Nije dostignut nijedan novi prag.",
   };
+}
+
+/**
+ * Osnivač u smislu Pravilnika o osnivačkom doprinosu (lice sa udelom u odluci o
+ * raspodeli, red u `Osnivac`) ne prijavljuje se za izvršenje operativnog zadatka ni
+ * organizacione celine zadruge dok se kanal ne zatvori (osnivački čl. 3 st. 5,
+ * operativni čl. 9 st. 4; set 5.1.2). Vraća `true` kad je prijava zatvorena.
+ * 🔴 Ne meša se sa `User.jeOsnivac` (početni čuvar Kola) — merodavna je odluka o raspodeli.
+ */
+export async function osnivacBezPrijave(userId: string): Promise<boolean> {
+  const osnivac = await prisma.osnivac.findUnique({ where: { userId }, select: { id: true } });
+  if (!osnivac) return false;
+  const kanal = await dohvatiIliKreirajKanal();
+  return !osnivacSmePrijavu({ osnivacDoprinosa: true, kanalZatvoren: kanal.zatvoren });
 }

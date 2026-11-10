@@ -5,10 +5,14 @@ import { imeNaloga, ishodUpisa, upisiIdentitet, PORUKA_DRUGO_IME } from "./ident
 import { ponudiSpisak, pokroviteljstvoVodiNaSpisak } from "./zahtev-razgovor";
 import { VrstaDonacije } from "@/generated/prisma/client";
 import { poenZaPokroviteljstvo } from "@/lib/donacija-pravila";
-import { naRangListi, kljucNovcanogPokrovitelja, upisOdobrenZaPotvrdu } from "@/lib/upis-pokrovitelja-pravila";
-import type { VrstaDavaoca } from "@/lib/pokroviteljstvo-dobrima-pravila";
+import {
+  naRangListi, kljucNovcanogPokrovitelja, upisOdobrenZaPotvrdu, upisSpremanZaPrijavu, funkcijaZaUgovor,
+} from "@/lib/upis-pokrovitelja-pravila";
+import { FUNKCIJA_NOSIOCA_GAZDINSTVA, type VrstaDavaoca } from "@/lib/pokroviteljstvo-dobrima-pravila";
+import { MINIMUM_PRIJAVE_POKROVITELJSTVA as MINIMUM_PRIJAVE } from "@/lib/donacija-pravila";
 import { FONDACIJA } from "@/lib/donacija-ugovor";
 import { obavesti } from "@/lib/notifikacije";
+import { rangListaBezNaloga } from "./donacija-bez-naloga";
 
 // Koeficijentni model, pragovi i minimum prijave žive u `donacija-pravila.ts`
 // (bez Prisme, jer ih uvozi i ekran u pretraživaču). Ovde se re-eksportuju, pa
@@ -154,6 +158,74 @@ export async function evidentirajZabelezenoPokroviteljstvo(doTrenutka: Date = ne
     await probajEvidentiratiPotvrde(r.vlasnikId);
   }
   return evidentirano;
+}
+
+/** Greška prijave novčanog pokroviteljstva — poruka i HTTP status za rutu. */
+export class PrijavaPokroviteljstvaGreska extends Error {
+  status: number;
+  constructor(poruka: string, status = 400) {
+    super(poruka);
+    this.status = status;
+  }
+}
+
+/**
+ * Prijava novčanog pokroviteljstva (donacije čl. 19) iz ODOBRENOG upisa (čl. 18 st. 3):
+ * podaci o pokrovitelju i zastupniku su snimak upisa; ugovor se generiše iz njih. Poziva je
+ * ruta `POST /api/pokroviteljstvo/prijava` i prihvatanje prijave koju je pripremila Fondacija
+ * (čl. 16 st. 6, čl. 19 st. 1) — tada je podnosilac lice koje je prihvatilo, kao da je samo podnelo.
+ * Verifikacija nije uslov (čl. 16 st. 1); maloletni nalog prijavu ne podnosi.
+ */
+export async function podnesiNovcanuPrijavu(userId: string, upisId: string, vrednostRsd: number): Promise<{ id: string }> {
+  const podnosilac = await prisma.user.findUnique({ where: { id: userId }, select: { maloletan: true } });
+  if (!podnosilac || podnosilac.maloletan)
+    throw new PrijavaPokroviteljstvaGreska("Prijavu pokroviteljstva ne može podneti maloletni korisnik.", 403);
+  if (!vrednostRsd || isNaN(vrednostRsd) || vrednostRsd <= 0)
+    throw new PrijavaPokroviteljstvaGreska("Vrednost donacije mora biti pozitivna.", 400);
+  if (vrednostRsd < MINIMUM_PRIJAVE)
+    throw new PrijavaPokroviteljstvaGreska(
+      `Najmanji iznos pokroviteljstva je ${MINIMUM_PRIJAVE.toLocaleString("sr-RS")} RSD.`,
+      400,
+    );
+
+  // 🔴 Upis je uslov prijave (čl. 18 st. 3, čl. 19 st. 1): odobren, neobrisan, vodi ga podnosilac.
+  const upis = upisId ? await prisma.upisPokrovitelja.findUnique({ where: { id: upisId } }) : null;
+  if (!upis) throw new PrijavaPokroviteljstvaGreska("Prijava se podnosi iz upisa pokrovitelja u evidenciju.", 400);
+  const spreman = upisSpremanZaPrijavu(upis, { userId, vrstaPrijave: "NOVAC", naListiZabrane: false });
+  if (!spreman.ok) throw new PrijavaPokroviteljstvaGreska(spreman.razlog, upis.vlasnikUserId === userId ? 409 : 403);
+
+  // Jedan nalog, jedno ime (Pravilnik čl. 31 st. 3): ime iz upisa mora biti ime
+  // uz ovaj nalog, ako je upisano. Upis u evidenciju identiteta ide pri potvrdi prijema.
+  const zastupnikImePrezime = upis.imePrezime!;
+  if (ishodUpisa(await imeNaloga(userId), zastupnikImePrezime) === "RAZLIKUJE_SE")
+    throw new PrijavaPokroviteljstvaGreska(PORUKA_DRUGO_IME, 409);
+
+  const gazdinstvo = upis.vrsta === "GAZDINSTVO";
+  const podaci = {
+    vrstaDavaoca: upis.vrsta,
+    naziv: upis.naziv,
+    pib: gazdinstvo ? null : upis.pib!,
+    maticniBroj: gazdinstvo ? null : upis.maticniBroj!,
+    adresaSedista: gazdinstvo ? null : upis.adresaSedista!,
+    bpg: gazdinstvo ? upis.bpg! : null,
+    zastupnikImePrezime,
+    zastupnikFunkcija: gazdinstvo ? FUNKCIJA_NOSIOCA_GAZDINSTVA : funkcijaZaUgovor(upis),
+  };
+  const vrstaDonacije: VrstaDonacije = "NOVAC";
+  const ugovorTekst = generisiUgovorTekst({ ...podaci, vrstaDonacije, vrednostRsd });
+
+  return prisma.pokroviteljPrijava.create({
+    data: {
+      podnosilacId: userId,
+      upisId: upis.id,
+      ...podaci,
+      vrstaDonacije,
+      vrednostRsd,
+      logoUrl: upis.logoUrl,
+      ugovorTekst,
+    },
+    select: { id: true },
+  });
 }
 
 /**
@@ -389,26 +461,45 @@ export async function odbijPrijavu(prijavaId: string, adminId: string, razlog: s
  * (čl. 18 st. 4). 🔴 Samo naziv, logotip i iznos u dinarima — bez nivoa (čl. 25 st. 1
  * ga ne objavljuje i od seta 5.0.8, kad pokrovitelj ponovo ima nivo), POEN-a,
  * PIB-a, MB-a, sedišta i podnosioca.
+ *
+ * Set 5.1.2 (čl. 17 st. 4, čl. 25 st. 1): u isti deo ulaze i pravna lica, preduzetnici
+ * i gazdinstva koji su dali donaciju novca bez upisa u evidenciju pokrovitelja
+ * (`DonacijaBezNaloga`), uz oznaku `bezPoena` — po toj donaciji POEN nije evidentiran.
+ * Red je po iznosu, zajedno sa pokroviteljima.
  */
 export async function javnaRangListaNovca() {
-  const redovi = await prisma.pokrovitelj.findMany({
-    where: { status: "ACTIVE" },
-    select: {
-      id: true,
-      naziv: true,
-      logoUrl: true,
-      rsdKumulativ: true,
-      createdAt: true,
-      upis: { select: { naziv: true, logoUrl: true, uklonjenSaRangListeAt: true } },
-    },
-    orderBy: { rsdKumulativ: "desc" },
-  });
-  return redovi
+  const [redovi, bezNaloga] = await Promise.all([
+    prisma.pokrovitelj.findMany({
+      where: { status: "ACTIVE" },
+      select: {
+        id: true,
+        naziv: true,
+        logoUrl: true,
+        rsdKumulativ: true,
+        createdAt: true,
+        upis: { select: { naziv: true, logoUrl: true, uklonjenSaRangListeAt: true } },
+      },
+      orderBy: { rsdKumulativ: "desc" },
+    }),
+    rangListaBezNaloga(),
+  ]);
+  const pokrovitelji = redovi
     .filter((p) => naRangListi(p.upis))
     .map(({ upis, ...p }) => ({
       ...p,
       naziv: upis?.naziv ?? p.naziv,
       logoUrl: upis ? upis.logoUrl : p.logoUrl,
       rsdKumulativ: Number(p.rsdKumulativ),
+      bezPoena: false,
     }));
+  // Donacija bez upisa u evidenciju pokrovitelja: samo naziv i iznos, bez logotipa.
+  const bez = bezNaloga.map((b, i) => ({
+    id: `bez-naloga-${i}`,
+    naziv: b.naziv,
+    logoUrl: null as string | null,
+    rsdKumulativ: b.rsd,
+    createdAt: null as Date | null,
+    bezPoena: true,
+  }));
+  return [...pokrovitelji, ...bez].sort((a, b) => b.rsdKumulativ - a.rsdKumulativ);
 }

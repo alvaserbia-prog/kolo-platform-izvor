@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
   MIN_LOZINKA,
+  PRIJATELJSTVO_POEN,
   UZRAST_SA_ODRASLIMA,
   danaDoIsteka,
   type NaStaSeCeka,
@@ -379,7 +380,7 @@ function BrisanjeNaloga({
         </button>
       ) : (
         <div className="mt-3 space-y-3">
-          <p className="text-sm text-kolo-text">{t("brisanje_posledica")}</p>
+          <p className="text-sm text-kolo-text">{t("brisanje_posledica_prijatelji", { iznos: PRIJATELJSTVO_POEN })}</p>
           <label className="block text-sm">
             <span className="font-medium text-kolo-text">{t("brisanje_otkucaj", { pseudonim })}</span>
             <input
@@ -606,12 +607,19 @@ function PotvrdaPostojanja({ dete }: { dete: Dete }) {
   const router = useRouter();
   const [radi, setRadi] = useState(false);
   const [greska, setGreska] = useState<string | null>(null);
+  // Pristanak na prikaz pseudonima i uzrasta deteta uz zahtev (čl. 13 st. 2) — obavezan.
+  const [pristanak, setPristanak] = useState(false);
 
   async function zatrazi() {
-    setRadi(true);
     setGreska(null);
+    if (!pristanak) { setGreska(t("postojanje_fali_pristanak")); return; }
+    setRadi(true);
     try {
-      const res = await fetch(`/api/deca/${dete.id}/potvrda-postojanja`, { method: "POST" });
+      const res = await fetch(`/api/deca/${dete.id}/potvrda-postojanja`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pristanak: true }),
+      });
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.error ?? t("greska_slanje"));
       router.refresh();
@@ -646,6 +654,15 @@ function PotvrdaPostojanja({ dete }: { dete: Dete }) {
         (dete.smeTrazitiPotvrdu ? (
           <>
             <p className="mt-2 text-sm text-kolo-text">{t("postojanje_opis")}</p>
+            <label className="mt-3 flex items-start gap-2 text-sm text-kolo-text">
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={pristanak}
+                onChange={(e) => setPristanak(e.target.checked)}
+              />
+              <span>{t("postojanje_pristanak", { pseudonim: dete.pseudonim })}</span>
+            </label>
             <button
               type="button"
               disabled={radi}

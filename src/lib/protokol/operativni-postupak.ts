@@ -3,12 +3,18 @@ import { Prisma } from "@/generated/prisma/client";
 import { obavesti } from "@/lib/notifikacije";
 import { logAdminAkcija } from "@/lib/audit";
 import { gdePseudonim } from "@/lib/pseudonim";
+import { jeZadruzniAdmin } from "@/lib/dozvole";
+import { osnivacBezPrijave } from "./osnivacki";
 import { jeCuvar, jeVerifikovan, ucitajStatus } from "./status";
 import { beogradskiDan } from "./obracunski-dan";
 import { generisiIzjavuIzvrsioca } from "@/lib/operativni-izjava";
 import { poenPoCelini, proveriCelineZadatka } from "@/lib/operativni-celine-pravila";
 import {
+  imaUlazZaPotvrdeLica,
+  ispunjavaUslovZadrugara,
   kljucZivePrijave,
+  proveriUslovZadrugara,
+  PORUKA_OSNIVAC_PRIJAVA,
   proveriOdlukuOCelinama,
   proveriPrimedbu,
   proveriZadatak,
@@ -26,6 +32,7 @@ import {
   PARAMETAR_PRAG_ODOBRAVANJA,
   PARAMETRI_UO,
   type LiceKojePotvrdjuje,
+  type VrstaZadatka,
 } from "@/lib/operativni-pravila";
 import {
   najveciDnevniIznos,
@@ -42,7 +49,13 @@ export * from "@/lib/operativni-pravila";
  *
  * Jedan ulaz za prijavu, odluke lica koje potvrđuje, odustanak, završnu potvrdu,
  * primedbu i zadružni doprinos — i za ekran Potvrde zadataka (čuvari Kola i lice
- * koje UO ovlasti) i za stare admin rute, koje samo prosleđuju ovamo.
+ * koje UO ovlasti; za celine zadruge zadrugari te zadruge i lice koje zadruga
+ * ovlasti) i za stare admin rute, koje samo prosleđuju ovamo.
+ *
+ * 🔴 Zadružni doprinos je JEDAN postupak sa operativnim (čl. 23, set 5.1.2): celinu
+ * objavljuje zadruga, učesnici se sami prijavljuju istim tokom (`podnesiPrijavu`), a
+ * izvršioca niko ne dodeljuje. Dodela celine (`dodeliCelinu`/`prihvatiDodelu`) je
+ * ukinuta i ne vraća se (brana `zadruzni-jedan-postupak-izvor.test.ts`).
  *
  * 🔴 Potvrda NE emituje POEN: potvrđeno izvršenje (APPROVED) ulazi u raspodelu
  * noćnog obračuna (čl. 19, 21, 22; `izvrsiNocnuEmisiju`). Ovde se samo menjaju
@@ -97,40 +110,47 @@ export async function upisiParametar(superadminId: string, p: { kljuc: unknown; 
 
 // ── Lice koje potvrđuje (čl. 13) ─────────────────────────────────────────────
 
-/** Čuvar Kola i/ili živo ovlašćenje UO. */
+/**
+ * Čuvar Kola i/ili živo ovlašćenje UO, i zadruge čije celine lice potvrđuje:
+ * zadruge u kojima je zadrugar koji je učesnik i zadruga za koju je lice koje zadruga
+ * ovlasti (zadružni admin; čl. 13 st. 1, 23 st. 5; zadruge čl. 17 st. 5).
+ */
 export async function ucitajLicePotvrde(userId: string): Promise<LiceKojePotvrdjuje> {
-  const [status, ovl] = await Promise.all([
+  const [status, ovl, clanstva, u] = await Promise.all([
     ucitajStatus(userId),
     prisma.operativnoOvlascenje.findUnique({ where: { userId }, select: { izuzetakPredlagaca: true, opozvanoAt: true } }),
+    prisma.krugClanstvo.findMany({
+      where: { userId, ...USLOV_ZADRUGARA_UCESNIKA, krug: { zadruga: true, prestanakAt: null } },
+      select: { krugId: true },
+    }),
+    prisma.user.findUnique({ where: { id: userId }, select: { admin: true, adminZadrugaId: true, deaktiviranAt: true } }),
   ]);
+  const zadruge = new Set(clanstva.map((c) => c.krugId));
+  if (u && !u.deaktiviranAt && jeZadruzniAdmin(u) && u.adminZadrugaId) zadruge.add(u.adminZadrugaId);
   return {
     id: userId,
     jeCuvar: status != null && jeCuvar(status),
     ovlascenje: ovl && !ovl.opozvanoAt ? { izuzetakPredlagaca: ovl.izuzetakPredlagaca } : null,
+    zadruge: [...zadruge],
   };
 }
 
 /** Da li korisnik uopšte ima ulaz na ekran Potvrde zadataka. */
 export async function imaUlazZaPotvrde(userId: string): Promise<boolean> {
-  return smePotvrdjivati(await ucitajLicePotvrde(userId));
+  return imaUlazZaPotvrdeLica(await ucitajLicePotvrde(userId));
 }
 
-type OglasZaSukob = { createdById: string; source: string; zadruzni: boolean; krugId: string | null; obustavljenoAt: Date | null };
+type OglasZaSukob = VrstaZadatka & { createdById: string; source: string; obustavljenoAt: Date | null };
 
 /** Baca grešku ako lice ne sme da odlučuje u ovom predmetu (čl. 13, 18 st. 2, 23 st. 5). */
-async function proveriLice(lice: LiceKojePotvrdjuje, oglas: OglasZaSukob, izvrsilacId: string, dodelioId: string | null) {
-  if (!smePotvrdjivati(lice, oglas.zadruzni)) {
+async function proveriLice(lice: LiceKojePotvrdjuje, oglas: OglasZaSukob, izvrsilacId: string) {
+  if (!smePotvrdjivati(lice, oglas)) {
     throw new OperativniGreska(
       oglas.zadruzni
-        ? "Izvršenje zadružnog doprinosa potvrđuje samo čuvar Kola (čl. 23 st. 5)."
+        ? "Izvršenje celine zadruge potvrđuju zadrugari te zadruge i lice koje zadruga ovlasti (čl. 23 st. 5)."
         : "Odlučuju čuvari Kola i lice koje Upravni odbor ovlasti (čl. 13 st. 1).",
       403,
     );
-  }
-  let radiUImeZadruge = false;
-  if (oglas.zadruzni && oglas.krugId) {
-    const u = await prisma.user.findUnique({ where: { id: lice.id }, select: { adminZadrugaId: true } });
-    radiUImeZadruge = u?.adminZadrugaId === oglas.krugId;
   }
   const razlog = sukobInteresa({
     licaId: lice.id,
@@ -139,8 +159,6 @@ async function proveriLice(lice: LiceKojePotvrdjuje, oglas: OglasZaSukob, izvrsi
     izvorFondacija: oglas.source === "FONDACIJA",
     izuzetakPredlagaca: lice.ovlascenje?.izuzetakPredlagaca ?? false,
     zadruzni: oglas.zadruzni,
-    dodelioId,
-    radiUImeZadruge,
   });
   if (razlog) throw new OperativniGreska(razlog, 403);
 }
@@ -203,6 +221,11 @@ export async function proveriObjavu(u: UnosObjave) {
  * odobravanjem čeka izričito odobrenje plana (čl. 12 st. 3). Posle odbijanja ili
  * odustanka podnosi se nova (izmenjena) prijava — stara ostaje u istoriji sa svojim
  * obrazloženjem (čl. 12 st. 4, 25 st. 2 t. 3).
+ *
+ * Isti tok važi i za organizacionu celinu zadruge (čl. 23 st. 2): izvršioca niko ne
+ * dodeljuje, a uslov „samo zadrugari ove zadruge” proverava server. 🔴 Osnivač u
+ * smislu Pravilnika o osnivačkom doprinosu se ne prijavljuje dok kanal nije zatvoren
+ * (čl. 9 st. 4; osnivački čl. 3 st. 5).
  */
 export async function podnesiPrijavu(
   userId: string,
@@ -214,11 +237,18 @@ export async function podnesiPrijavu(
   const plan = tekst(p.planIzvrsenja);
   if (plan.length < 10) throw new OperativniGreska("Plan izvršenja je obavezan (najmanje 10 znakova).");
   if (p.izjavaPotvrdjena !== true) throw new OperativniGreska("Potrebna je potvrda izjave o pravnoj prirodi operativnog doprinosa.");
+  if (await osnivacBezPrijave(userId)) throw new OperativniGreska(PORUKA_OSNIVAC_PRIJAVA, 403);
 
   const oglas = await prisma.doprinosOglas.findUnique({ where: { id: oglasId } });
   if (!oglas) throw new OperativniGreska("Zadatak nije pronađen.", 404);
-  if (oglas.zadruzni) throw new OperativniGreska("Izvršioca zadružnog doprinosa određuje zadruga; prijava se ne podnosi (čl. 23 st. 2).", 400);
   if (oglas.status !== "ACTIVE") throw new OperativniGreska("Zadatak više nije otvoren.");
+  if (oglas.zadruzni) {
+    const z = oglas.krugId ? await prisma.krug.findUnique({ where: { id: oglas.krugId } }) : null;
+    if (!z || z.prestanakAt || zapisZamrznut(z)) throw new OperativniGreska("Zadruga ne evidentira zadružni doprinos.", 409);
+    const jeZadrugar = (await prisma.krugClanstvo.count({ where: { krugId: z.id, userId, ...USLOV_ZADRUGARA_UCESNIKA } })) > 0;
+    if (!ispunjavaUslovZadrugara({ samoZadrugari: oglas.samoZadrugari, jeZadrugar }))
+      throw new OperativniGreska("Za ovu celinu prijavljuju se samo zadrugari zadruge koja ju je objavila (čl. 9 st. 3).", 403);
+  }
   if (oglas.deadline && new Date() > oglas.deadline) throw new OperativniGreska("Rok za prijavu je istekao.");
   const ispunjenost = tekst(p.ispunjenostUslova);
   if (oglas.kvalifikacioniUslov && ispunjenost.length < MIN_OBRAZLOZENJA)
@@ -268,7 +298,7 @@ export async function odluciOPrijavi(liceId: string, prijavaId: string, p: { odo
   if (!prijava) throw new OperativniGreska("Prijava nije pronađena.", 404);
   if (prijava.status !== "PENDING") throw new OperativniGreska("Prijava nije na čekanju.");
   const lice = await ucitajLicePotvrde(liceId);
-  await proveriLice(lice, prijava.oglas, prijava.userId, prijava.dodelioId);
+  await proveriLice(lice, prijava.oglas, prijava.userId);
   const razlog = tekst(p.razlog);
 
   if (!p.odobri) {
@@ -335,12 +365,12 @@ export async function odluciOCelinama(liceId: string, evidencijaId: string, p: {
   if (!odl.ok) throw new OperativniGreska(odl.greska);
   const ev = await prisma.oglasEvidencija.findUnique({
     where: { id: evidencijaId },
-    include: { oglas: true, prijava: { select: { dodelioId: true } } },
+    include: { oglas: true },
   });
   if (!ev) throw new OperativniGreska("Izvršenje nije pronađeno.", 404);
   if (ev.status !== "PENDING") throw new OperativniGreska("Izvršenje nije na čekanju.");
   const lice = await ucitajLicePotvrde(liceId);
-  await proveriLice(lice, ev.oglas, ev.userId, ev.prijava.dodelioId);
+  await proveriLice(lice, ev.oglas, ev.userId);
   proveriObustavu(ev.oglas);
   const sada = new Date();
 
@@ -472,7 +502,7 @@ export async function zavrsnaPotvrda(liceId: string, prijavaId: string, p: { odl
   if (!prijava.zavrsetakAt) throw new OperativniGreska("Izvršilac još nije prijavio završetak (čl. 16 st. 1).");
   if (prijava.zavrsnaOdluka) throw new OperativniGreska("O izvršenju je već završno odlučeno.");
   const lice = await ucitajLicePotvrde(liceId);
-  await proveriLice(lice, prijava.oglas, prijava.userId, prijava.dodelioId);
+  await proveriLice(lice, prijava.oglas, prijava.userId);
   proveriObustavu(prijava.oglas);
   if (prijava.oglas.zadruzni) {
     // Zadružni doprinos ide samo po potvrđenoj celini sa opisom urađenog posla (zadruge
@@ -576,14 +606,14 @@ export async function podnesiPrimedbu(
 
 /** Izjašnjavanje lica koje potvrđuje o primedbi (čl. 18 st. 2), u roku od 7 dana. */
 export async function odluciOPrimedbi(liceId: string, primedbaId: string, p: { odluka: unknown }) {
-  const pr = await prisma.operativnaPrimedba.findUnique({ where: { id: primedbaId }, include: { oglas: true, prijava: { select: { userId: true, dodelioId: true } } } });
+  const pr = await prisma.operativnaPrimedba.findUnique({ where: { id: primedbaId }, include: { oglas: true, prijava: { select: { userId: true } } } });
   if (!pr) throw new OperativniGreska("Primedba nije pronađena.", 404);
   if (pr.odluka) throw new OperativniGreska("O primedbi je već odlučeno.");
   const odluka = tekst(p.odluka);
   if (odluka.length < MIN_OBRAZLOZENJA) throw new OperativniGreska("Izjašnjenje o primedbi se obrazlaže.");
   const lice = await ucitajLicePotvrde(liceId);
   if (pr.autorId === liceId) throw new OperativniGreska("Ne odlučuješ o sopstvenoj primedbi.", 403);
-  await proveriLice(lice, pr.oglas, pr.prijava?.userId ?? "", pr.prijava?.dodelioId ?? null);
+  await proveriLice(lice, pr.oglas, pr.prijava?.userId ?? "");
   await prisma.operativnaPrimedba.update({ where: { id: primedbaId }, data: { odluka, odlukaAt: new Date(), odlukaById: liceId } });
 }
 
@@ -671,23 +701,33 @@ export async function opozoviOvlascenje(superadminId: string, userId: string) {
 // ── Zadružni doprinos (operativni čl. 23; zadruge čl. 17) ─────────────────────
 
 /**
- * Objava celine zadružnog doprinosa — Fondacija u ime zajednice, po predlogu
- * zadruge (čl. 23 st. 2). Predloženi POEN za celinu određuje zadruga (st. 3).
+ * Objava organizacione celine zadruge (čl. 4 st. 4, 23 st. 2; zadruge čl. 17 st. 2):
+ * celinu objavljuje zadruga — lice koje zadruga ovlasti (zadružni admin svoje zadruge)
+ * ili administratorski tim u ime zadruge; kapiju drži ruta (`smeRaditiZaZadrugu`).
+ * Predloženi POEN za celinu određuje zadruga (st. 3). Prijem je po redosledu ili sa
+ * odobravanjem, kao za svaki zadatak (čl. 11, 12), a zadruga sme obrazloženim uslovom
+ * ograničiti prijavu na svoje zadrugare (čl. 9 st. 3). 🔴 Izvršioca niko ne dodeljuje.
  * 🔴 Dok UO ne utvrdi iznos jedinice, zadružni doprinos se ne objavljuje.
  */
-export async function objaviZadruzniZadatak(adminId: string, krugId: string, u: UnosObjave) {
+export async function objaviZadruzniZadatak(
+  objavioId: string,
+  krugId: string,
+  u: UnosObjave & { samoZadrugari?: unknown; samoZadrugariObrazlozenje?: unknown },
+) {
   const z = await prisma.krug.findUnique({ where: { id: krugId } });
   if (!z || !z.zadruga) throw new OperativniGreska("Zadruga ne postoji.", 404);
   if (z.prestanakAt || z.status !== "ACTIVE") throw new OperativniGreska("Učešće zadruge je prestalo.", 409);
   if (zapisZamrznut(z)) throw new OperativniGreska("Od otkaza ugovora, odnosno pokretanja brisanja, zadružni doprinos se ne evidentira (zadruge čl. 22 st. 2).", 409);
   if ((await vazeciParametar(PARAMETAR_IZNOS_JEDINICE)) == null)
     throw new OperativniGreska("Iznos jedinice zadružnog doprinosa još nije utvrđen odlukom Upravnog odbora; zadružni doprinos se ne objavljuje.", 409);
-  const o = await proveriObjavu({ ...u, saOdobravanjem: false, kvalifikacioniUslov: null });
+  const uslov = proveriUslovZadrugara({ samoZadrugari: u.samoZadrugari, obrazlozenje: u.samoZadrugariObrazlozenje });
+  if (!uslov.ok) throw new OperativniGreska(uslov.greska);
+  const o = await proveriObjavu({ ...u, kvalifikacioniUslov: null });
   const oglas = await prisma.doprinosOglas.create({
     data: {
       title: o.title,
       description: o.description,
-      source: "FONDACIJA",
+      source: "KRUG",
       zadruzni: true,
       krugId,
       predlozeniPoen: o.celine.predlozeniPoen,
@@ -695,87 +735,41 @@ export async function objaviZadruzniZadatak(adminId: string, krugId: string, u: 
       opisCeline: o.celine.opisCeline,
       procenaObima: o.celine.procenaObima,
       obrazlozenje: o.ostalo.obrazlozenje,
-      saOdobravanjem: false,
+      saOdobravanjem: o.saOdobravanjem,
+      samoZadrugari: uslov.samoZadrugari,
+      kvalifikacioniObrazlozenje: uslov.obrazlozenje,
       positions: o.positions,
       deadline: o.ostalo.deadline,
       rokIzvrsenja: o.ostalo.rokIzvrsenja,
-      createdById: adminId,
+      createdById: objavioId,
     },
   });
-  await logAdminAkcija(adminId, "ZADRUZNI_DOPRINOS_OBJAVLJEN", oglas.id, `${z.name}: ${o.title} (${o.celine.brojCelina} × ${o.celine.poenPoCelini} POEN)`);
+  await logAdminAkcija(objavioId, "ZADRUZNI_DOPRINOS_OBJAVLJEN", oglas.id, `${z.name}: ${o.title} (${o.celine.brojCelina} × ${o.celine.poenPoCelini} POEN)`);
   return { id: oglas.id };
-}
-
-/**
- * Dodela celine izvršiocu — određuje je zadruga, a upisuje lice koje radi u ime
- * zadruge ili administratorski tim (čl. 23 st. 2; zadruge čl. 15, 17 st. 2).
- * Izvršilac je zadrugar te zadruge koji je učesnik. Izvršilac dodelu prihvata
- * izjavom (čl. 24 st. 2 t. 3 — preuzimanje je dobrovoljno).
- */
-export async function dodeliCelinu(sprovodilacId: string, krugId: string, oglasId: string, pseudonim: unknown) {
-  const oglas = await prisma.doprinosOglas.findUnique({ where: { id: oglasId } });
-  if (!oglas || !oglas.zadruzni || oglas.krugId !== krugId) throw new OperativniGreska("Zadatak zadruge nije pronađen.", 404);
-  if (oglas.status !== "ACTIVE") throw new OperativniGreska("Zadatak više nije otvoren.");
-  const z = await prisma.krug.findUnique({ where: { id: krugId } });
-  if (!z || z.prestanakAt || zapisZamrznut(z)) throw new OperativniGreska("Zadruga ne evidentira zadružni doprinos.", 409);
-  if (typeof pseudonim !== "string" || !pseudonim.trim()) throw new OperativniGreska("Unesi pseudonim zadrugara.");
-  const u = await prisma.user.findFirst({ where: gdePseudonim(pseudonim.trim()), select: { id: true } });
-  if (!u) throw new OperativniGreska("Korisnik sa tim pseudonimom ne postoji.", 404);
-  const clanstvo = await prisma.krugClanstvo.findFirst({ where: { krugId, userId: u.id, ...USLOV_ZADRUGARA_UCESNIKA } });
-  if (!clanstvo) throw new OperativniGreska("Izvršilac je zadrugar ove zadruge koji je učesnik (zadruge čl. 6 st. 1, 7).", 403);
-  if (u.id === sprovodilacId) throw new OperativniGreska("Ne dodeljuješ celinu sebi.", 403);
-  try {
-    await prisma.$transaction(
-      async (tx) => {
-        const sve = await tx.oglasPrijava.findMany({ where: { oglasId }, select: { status: true, odustaoAt: true } });
-        if (sve.filter((x) => x.status === "PENDING" || zauzimaMesto(x)).length >= oglas.positions)
-          throw new OperativniGreska("Sva mesta na ovom zadatku su dodeljena.");
-        await tx.oglasPrijava.create({
-          data: { oglasId, userId: u.id, status: "PENDING", dodelioId: sprovodilacId, aktivanKljuc: kljucZivePrijave(oglasId, u.id) },
-        });
-      },
-      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
-    );
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && (e.code === "P2002" || e.code === "P2034"))
-      throw new OperativniGreska("Ovom zadrugaru je celina već dodeljena.", 409);
-    throw e;
-  }
-  await obavesti(u.id, {
-    tip: "info",
-    kljuc: "notifikacije.zadruzni_dodela",
-    parametri: { zadatak: oglas.title, zadruga: z.name },
-    naslov: "Zadruga ti je dodelila celinu",
-    tekst: `Zadruga ${z.name} ti je dodelila celinu „${oglas.title}". Pogledaj je i prihvati ako želiš da je izvršiš.`,
-    link: `/doprinos-oglasi/${oglasId}`,
-  });
-}
-
-/** Izvršilac prihvata dodeljenu celinu izjavom o pravnoj prirodi (čl. 10 st. 1 t. 3, shodno). */
-export async function prihvatiDodelu(userId: string, oglasId: string, p: { izjavaPotvrdjena: unknown; planIzvrsenja?: unknown }) {
-  const prijava = await zivaPrijava(oglasId, userId);
-  if (!prijava || !prijava.dodelioId || prijava.status !== "PENDING") throw new OperativniGreska("Nemaš dodeljenu celinu na ovom zadatku.", 404);
-  if (p.izjavaPotvrdjena !== true) throw new OperativniGreska("Potrebna je potvrda izjave o pravnoj prirodi operativnog doprinosa.");
-  const oglas = await prisma.doprinosOglas.findUniqueOrThrow({ where: { id: oglasId } });
-  await prisma.oglasPrijava.update({
-    where: { id: prijava.id },
-    data: {
-      status: "APPROVED",
-      approvedAt: new Date(),
-      izjavaTekst: generisiIzjavuIzvrsioca({ nazivZadatka: oglas.title, predlozeniPoen: oglas.predlozeniPoen }),
-      izjavaAt: new Date(),
-      planIzvrsenja: tekst(p.planIzvrsenja) || null,
-    },
-  });
 }
 
 // ── Pregled za lice koje potvrđuje (čl. 13; rokovi čl. 12, 15, 16, 18) ────────
 
-/** Sve što čeka izjašnjavanje, sa pseudonimima (lice koje potvrđuje je učesnik). */
-export async function pregledZaPotvrdu() {
+/**
+ * Uslov nad zadatkom za ono što lice vidi na ekranu Potvrde zadataka: opšti zadaci
+ * ako potvrđuje opšte (čuvar Kola, ovlašćenje UO), celine zadruga čije celine
+ * potvrđuje (čl. 13 st. 1, 23 st. 5).
+ */
+function zadaciLica(lice: LiceKojePotvrdjuje): Prisma.DoprinosOglasWhereInput {
+  const ili: Prisma.DoprinosOglasWhereInput[] = [];
+  if (smePotvrdjivati(lice)) ili.push({ zadruzni: false });
+  const zadruge = [...(lice.zadruge ?? [])];
+  if (zadruge.length > 0) ili.push({ zadruzni: true, krugId: { in: zadruge } });
+  return ili.length > 0 ? { OR: ili } : { id: "__nijedan__" };
+}
+
+/** Sve što čeka izjašnjavanje lica, sa pseudonimima (lice koje potvrđuje je učesnik). */
+export async function pregledZaPotvrdu(liceId: string) {
+  const oglas = zadaciLica(await ucitajLicePotvrde(liceId));
   const [prijave, izvrsenja, zavrsne, primedbe] = await Promise.all([
     prisma.oglasPrijava.findMany({
-      where: { status: "PENDING", dodelioId: null },
+      // Zatečene dodele (do seta 5.1.2) nisu prijave o kojima lice odlučuje.
+      where: { status: "PENDING", dodelioId: null, oglas },
       orderBy: { createdAt: "asc" },
       select: {
         id: true,
@@ -788,7 +782,7 @@ export async function pregledZaPotvrdu() {
       },
     }),
     prisma.oglasEvidencija.findMany({
-      where: { status: "PENDING" },
+      where: { status: "PENDING", oglas },
       orderBy: { createdAt: "asc" },
       select: {
         id: true,
@@ -804,7 +798,7 @@ export async function pregledZaPotvrdu() {
       },
     }),
     prisma.oglasPrijava.findMany({
-      where: { status: "APPROVED", odustaoAt: null, zavrsnaOdluka: null, zavrsetakAt: { not: null } },
+      where: { status: "APPROVED", odustaoAt: null, zavrsnaOdluka: null, zavrsetakAt: { not: null }, oglas },
       orderBy: { zavrsetakAt: "asc" },
       select: {
         id: true,
@@ -814,7 +808,7 @@ export async function pregledZaPotvrdu() {
       },
     }),
     prisma.operativnaPrimedba.findMany({
-      where: { odluka: null },
+      where: { odluka: null, oglas },
       orderBy: { createdAt: "asc" },
       select: { id: true, predmet: true, tekst: true, createdAt: true, oglas: { select: { id: true, title: true } } },
     }),

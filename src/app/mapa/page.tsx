@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { sesija } from "@/lib/sesija";
 import { gazdinstvaZaMapu } from "@/lib/protokol/gazdinstvo";
-import { pokroviteljiZaMapu } from "@/lib/protokol/upis-pokrovitelja";
+import { pokroviteljiZaMapu, mestaPredajeZaMapu } from "@/lib/protokol/upis-pokrovitelja";
 import { sastaviTacke } from "@/lib/mapa-pravila";
 import MapaZajednicka from "../gazdinstva/MapaZajednicka";
 import NaslovStranice from "@/components/ui/NaslovStranice";
@@ -29,12 +29,16 @@ export default async function MapaPage() {
   const t = await getTranslations("mapa");
   const tg = await getTranslations("gazdinstva");
 
-  const [gazdinstva, pokrovitelji] = await Promise.all([gazdinstvaZaMapu(), pokroviteljiZaMapu()]);
+  // Pokrovitelj na adresi iz upisa dok je upisan, a pokrovitelj dobrima i uslugama i na
+  // mestima predaje dok ima vaučere koji važe (donacije čl. 18 st. 4, set 5.1.2).
+  const [gazdinstva, pokrovitelji, mestaPredaje] = await Promise.all([
+    gazdinstvaZaMapu(), pokroviteljiZaMapu(), mestaPredajeZaMapu(),
+  ]);
 
   return (
     <div className="max-w-siroka mx-auto w-full pb-16 space-y-4">
       <NaslovStranice naslov={t("naslov")} opis={t("uvod")} />
-      <MapaZajednicka tacke={sastaviTacke(gazdinstva, pokrovitelji)} prijavljen={!!session} />
+      <MapaZajednicka tacke={sastaviTacke(gazdinstva, [...pokrovitelji, ...mestaPredaje])} prijavljen={!!session} />
       <p className="text-xs text-kolo-muted">{tg("mapa_napomena")}</p>
       <p className="text-sm">
         <Link href="/gazdinstva" className="font-medium text-kolo-green-700 hover:underline">

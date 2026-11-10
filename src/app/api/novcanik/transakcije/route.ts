@@ -28,10 +28,18 @@ const TIP_LABELA: Record<string, string> = {
   EMISIJA_GAZDINSTVO: "Doprinos gazdinstva",
   OTPIS_GAZDINSTVO: "Otpis doprinosa gazdinstva",
   EMISIJA_POKROVITELJ_DOBRA: "Pokroviteljstvo dobrima i uslugama",
+  EMISIJA_PARTNERSTVO: "Partnerstvo",
   PONISTENJE_VAUCER: "Vaučer",
   ISPRAVKA_VAUCER: "Ispravka evidencije — vaučer",
   OTPIS_POKROVITELJ_DOBRA: "Otpis po neizvršenju vaučera",
   OTPIS_VISESTRUKI_NALOG: "Otpis po utvrđenju višestrukog naloga",
+  PONISTENJE_ANONIMNA_DONACIJA: "Poništenje po donaciji prevedenoj u anonimnu",
+  PRENOS_NEGATIVNOG_ZAPISA: "Prenos negativnog zapisa sa prestalog naloga",
+  EMISIJA_PROGRAM_HRANE: "Program raspodele hrane",
+  EMISIJA_LANAC: "Lanac proizvodnje i distribucije",
+  PONISTENJE_VAUCER_LANAC: "Vaučer programa",
+  ISPRAVKA_VAUCER_LANAC: "Ispravka evidencije — vaučer programa",
+  OTPIS_NEPREUZETO_PROGRAM: "Otpis po preuzimanju nepreuzetih delova",
 };
 
 export async function GET(req: NextRequest) {

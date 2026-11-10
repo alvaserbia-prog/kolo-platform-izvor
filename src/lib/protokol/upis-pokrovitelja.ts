@@ -30,8 +30,10 @@ import {
   smeObrisatiUpis,
   javniPrikazUpisa,
   jeNeiskoriscenVaucer,
+  tackePredaje,
   type TackaPokrovitelja,
 } from "@/lib/upis-pokrovitelja-pravila";
+import { koordinateZaMesto } from "@/lib/udaljenost";
 
 export * from "@/lib/upis-pokrovitelja-pravila";
 
@@ -59,7 +61,7 @@ const ZIV = { obrisanAt: null, status: { not: "ODBIJEN" as const } };
  * matičnom broju i PIB-u, gazdinstvo po BPG-u. Bazu drži i delimičan jedinstveni
  * indeks (MB, BPG); ova provera daje razumljivu poruku.
  */
-async function vecUpisan(p: { maticniBroj?: string | null; pib?: string | null; bpg?: string | null }, izuzmi?: string) {
+export async function vecUpisan(p: { maticniBroj?: string | null; pib?: string | null; bpg?: string | null }, izuzmi?: string) {
   const ili = [
     ...(p.maticniBroj ? [{ maticniBroj: p.maticniBroj }] : []),
     ...(p.pib ? [{ pib: p.pib }] : []),
@@ -77,7 +79,7 @@ function jeDvostrukiKljuc(e: unknown): boolean {
   return typeof e === "object" && e !== null && (e as { code?: unknown }).code === "P2002";
 }
 
-const PORUKA_VEC_UPISAN = "Ovaj pokrovitelj je već upisan u evidenciju. Upis vodi korisnik koji ga je izvršio.";
+export const PORUKA_VEC_UPISAN = "Ovaj pokrovitelj je već upisan u evidenciju. Upis vodi korisnik koji ga je izvršio.";
 
 /** Lista zabrane (čl. 35 st. 5) — vezuje se za upis. */
 export async function upisNaListiZabrane(upisId: string): Promise<boolean> {
@@ -124,7 +126,8 @@ export async function upisiPokrovitelja(
   if (korisnik.maloletan) throw new UpisGreska("Upis pokrovitelja ne vrši maloletni korisnik.", 403);
   // 🔴 Potvrda stvarnosti NIJE uslov za upis (set 4.8.0): novčano pokroviteljstvo je
   // jedan od dva puta kojim nov član postaje potvrđen (dokaz stvarnosti čl. 8 st. 1 t. 3).
-  // Pokroviteljstvo dobrima i uslugama i dalje traži potvrdu (ruta `dobra`).
+  // Prijavu dobara korisnik koji nije u Kolu podnosi samo kao lice iz registra (čl. 28 st. 1,
+  // set 5.1.2; `upisSpremanZaPrijavu`).
 
   // Adresa elektronske pošte za kontakt (donacije čl. 16 st. 2 t. 2) se ne traži u formi:
   // uzima se adresa naloga, upisana pri registraciji; kasnije se menja u „Podaci" upisa.
@@ -296,6 +299,11 @@ export async function obrisiUpis(id: string, userId: string, ukloniSaRangListe: 
       where: { upisId: id, status: { in: ["NA_PREGLEDU", "CEKA_POTPIS"] } },
       data: { status: "ODBIJEN", odbijenoRazlog: "Upis pokrovitelja je obrisan.", potpisKodHash: null, potpisKodIstice: null },
     });
+    // Set 5.1.2: prijava partnerstva koja čeka odluku (donacije čl. 41) — prihvaćeno partnerstvo traje.
+    await tx.partnerstvo.updateMany({
+      where: { upisId: id, status: "NA_PREGLEDU" },
+      data: { status: "ODBIJENO", odbijenoRazlog: "Upis pokrovitelja je obrisan." },
+    });
     await tx.pokroviteljPrijava.updateMany({
       where: { upisId: id, status: "CEKA_POTPIS" },
       data: { status: "ODBIJENA", odbijenoRazlog: "Upis pokrovitelja je obrisan." },
@@ -319,6 +327,10 @@ export async function ukloniUpisSaRangListe(id: string, userId: string) {
 
 /** Gašenje naloga: upisi koji se smeju obrisati se brišu (prestaje prikaz na mapi). Ne baca. */
 export async function obrisiUpisePriGasenjuNaloga(userId: string) {
+  // Pripremljen, a neprihvaćen upis (čl. 16 st. 6, set 5.1.2) se briše sa nalogom.
+  await prisma.pripremaPokroviteljstva
+    .deleteMany({ where: { korisnikId: userId, prihvacenoAt: null } })
+    .catch((e) => console.error("[upis-pokrovitelja] brisanje pripremljenog upisa nije uspelo", userId, e));
   try {
     const upisi = await prisma.upisPokrovitelja.findMany({
       where: { vlasnikUserId: userId, obrisanAt: null },
@@ -492,6 +504,8 @@ export async function odbijIzmenuUpisa(id: string, adminId: string, razlog: stri
 // ─── Mapa (čl. 26 st. 2; gazdinstva čl. 19) ─────────────────────────────────
 
 export type TackaPokroviteljaSaVaucerima = TackaPokrovitelja & {
+  /** Upis kome tačka pripada — kod mesta predaje id tačke nije id upisa (set 5.1.2). */
+  upisId?: string;
   /** Broj slobodnih vaučera važećih ugovora — 🔴 nikad POEN ni dinari. */
   vauceri: number;
   /** Gazdinstvo iz modula gazdinstava sa kojim je upis povezan (spaja se u jednu tačku). */
@@ -531,6 +545,37 @@ export async function pokroviteljiZaMapu(): Promise<TackaPokroviteljaSaVaucerima
       gazdinstvoId: u.gazdinstvoId,
       vrsta: u.vrsta,
     });
+  }
+  return izlaz;
+}
+
+/**
+ * Mesta predaje, odnosno pružanja pokrovitelja dobrima i uslugama za javnu mapu (čl. 18
+ * st. 4, čl. 26 st. 2; set 5.1.2): dok ima vaučere koji važe. Uz tačku isti broj slobodnih
+ * vaučera kao uz adresu iz upisa. Gazdinstvo se ne spaja — tačka je mesto predaje, ne gazdinstvo.
+ */
+export async function mestaPredajeZaMapu(): Promise<TackaPokroviteljaSaVaucerima[]> {
+  const sada = new Date();
+  const upisi = await prisma.upisPokrovitelja.findMany({
+    where: { status: "ODOBREN", obrisanAt: null, ugovori: { some: { status: "POTPISAN", vaziDo: { gt: sada } } } },
+    select: {
+      id: true, vrsta: true, status: true, obrisanAt: true, naziv: true, logoUrl: true, mapaMesto: true, mapaAdresa: true,
+      ugovori: {
+        where: { status: "POTPISAN", vaziDo: { gt: sada } },
+        select: {
+          status: true, vaziDo: true, mesto: true, adresaPredaje: true, dodatnaMestaPredaje: true, dodatneAdresePredaje: true,
+          tackePredaje: true,
+          vauceri: { where: { status: { in: ["SLOBODAN", "DODELJEN"] } }, select: { status: true } },
+        },
+      },
+    },
+  });
+  const izlaz: TackaPokroviteljaSaVaucerima[] = [];
+  for (const u of upisi) {
+    const slobodno = u.ugovori.reduce((n, g) => n + g.vauceri.filter((v) => v.status === "SLOBODAN").length, 0);
+    for (const t of tackePredaje(u, u.ugovori, koordinateZaMesto, sada)) {
+      izlaz.push({ ...t, vauceri: slobodno, gazdinstvoId: null, vrsta: u.vrsta });
+    }
   }
   return izlaz;
 }

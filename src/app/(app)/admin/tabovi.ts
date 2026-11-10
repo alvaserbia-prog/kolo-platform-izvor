@@ -21,5 +21,7 @@
 // odobrenja zbog lažne izjave (Pravilnik o gazdinstvima čl. 7, 9 i 20).
 // „kutija-zelja" = pregled predloga dece pre prikaza i odgovor Fondacije
 // (whitepaper 5.0, pogl. 7). Pregled sadržaja, kao „pijaca"; autor se ne vidi.
-export const ADMIN_TABOVI = ["dashboard", "programi", "ped", "pokrovitelji", "donacije", "prigovori", "korisnici", "pijaca", "prvi-oglasi", "potvrde", "razmene", "nabavke", "zadruge", "gazdinstva", "emisija", "osnivaci", "vesti", "obavestenja", "politika", "audit", "aktivnost", "levak", "nadzor", "odluke", "kutija-zelja"] as const;
+// „lanci" = program raspodele hrane i lanac proizvodnje i distribucije (nabavke Glave X i XI):
+// poziv, prijave, partije, upis odluke o lancu (samo superadmin), potvrde karika, izveštaj.
+export const ADMIN_TABOVI = ["dashboard", "programi", "ped", "pokrovitelji", "donacije", "prigovori", "korisnici", "pijaca", "prvi-oglasi", "potvrde", "razmene", "nabavke", "lanci", "zadruge", "gazdinstva", "emisija", "osnivaci", "vesti", "obavestenja", "politika", "audit", "aktivnost", "levak", "nadzor", "odluke", "kutija-zelja"] as const;
 export type Tab = (typeof ADMIN_TABOVI)[number];

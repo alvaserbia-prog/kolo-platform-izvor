@@ -32,6 +32,7 @@ import StatKartica from "@/components/ui/StatKartica";
 import Lampica from "@/components/ui/Lampica";
 import type { CekanjeAdmina, CekanjePokrovitelja } from "@/lib/admin-cekanje";
 import DonacijeUnapredRed from "./DonacijeUnapredRed";
+import DonacijeBezNalogaRed from "./DonacijeBezNalogaRed";
 
 // Teški tabovi iz zasebnih fajlova — lazy-load (smanjuje početni admin bundle).
 // Svi su `export default`, pa dynamic koristi default export direktno.
@@ -39,6 +40,9 @@ const OsnivaciTab = dynamic(() => import("./OsnivaciTab"), { ssr: false });
 const PokroviteljPrijaveTab = dynamic(() => import("./PokroviteljPrijaveTab"), { ssr: false });
 const PokroviteljstvoDobraTab = dynamic(() => import("./PokroviteljstvoDobraTab"), { ssr: false });
 const PokroviteljUpisiTab = dynamic(() => import("./PokroviteljUpisiTab"), { ssr: false });
+const PokroviteljPripremaTab = dynamic(() => import("./PokroviteljPripremaTab"), { ssr: false });
+const StipsTab = dynamic(() => import("./StipsTab"), { ssr: false });
+const PokroviteljPartnerstvoTab = dynamic(() => import("./PokroviteljPartnerstvoTab"), { ssr: false });
 const NadzorTab = dynamic(() => import("./NadzorTab"), { ssr: false });
 const AktivnostTab = dynamic(() => import("./AktivnostTab"), { ssr: false });
 const LevakTab = dynamic(() => import("./LevakTab"), { ssr: false });
@@ -49,6 +53,7 @@ const PrviOglasiTab = dynamic(() => import("./PrviOglasiTab"), { ssr: false });
 const PotvrdeTab = dynamic(() => import("./PotvrdeTab"), { ssr: false });
 const RazmeneTab = dynamic(() => import("./RazmeneTab"), { ssr: false });
 const NabavkeTab = dynamic(() => import("./NabavkeTab"), { ssr: false });
+const LanciTab = dynamic(() => import("./LanciTab"), { ssr: false });
 const ZadrugeTab = dynamic(() => import("./ZadrugeTab"), { ssr: false });
 const GazdinstvaTab = dynamic(() => import("./GazdinstvaTab"), { ssr: false });
 const OdlukeTab = dynamic(() => import("./OdlukeTab"), { ssr: false });
@@ -354,6 +359,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
     potvrde: t("tab_potvrde"),
     razmene: t("tab_razmene"),
     nabavke: t("tab_nabavke"),
+    lanci: t("tab_lanci"),
     zadruge: t("tab_zadruge"),
     gazdinstva: t("tab_gazdinstva"),
     emisija: t("tab_emisija"),
@@ -381,7 +387,7 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
     { kljuc: "pregled", oznaka: t("grupa_pregled"), tabovi: ["dashboard"] },
     { kljuc: "clanovi", oznaka: t("grupa_clanovi"), tabovi: ["korisnici", "potvrde", "osnivaci"] },
     { kljuc: "pijaca", oznaka: t("grupa_pijaca"), tabovi: ["pijaca", "prvi-oglasi", "razmene", "gazdinstva"] },
-    { kljuc: "novac", oznaka: t("grupa_novac"), tabovi: ["donacije", "pokrovitelji", "programi", "ped", "nabavke", "zadruge"] },
+    { kljuc: "novac", oznaka: t("grupa_novac"), tabovi: ["donacije", "pokrovitelji", "programi", "ped", "nabavke", "lanci", "zadruge"] },
     { kljuc: "provere", oznaka: t("grupa_provere"), tabovi: ["prigovori", "nadzor", "odluke", "kutija-zelja"] },
     { kljuc: "sistem", oznaka: t("grupa_sistem"), tabovi: ["vesti", "obavestenja", "politika", "audit", "aktivnost", "levak"] },
   ] as Grupa[])
@@ -508,12 +514,15 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
           cekanje={cekanje.pokroviteljiPo}
           verifikovaniKorisnici={verifikovaniKorisnici}
           krugovi={krugoviLista2}
+          superadmin={viewerJeSuperadmin}
           onDone={() => router.refresh()}
         />
       )}
 
       {/* Donacije */}
       {tab === "donacije" && <DonacijeTab donacije={pendingDonacije} onDone={() => router.refresh()} />}
+      {/* Donacije pravnih lica bez naloga — bez POEN-a, na rang-listi (donacije čl. 17 st. 4, set 5.1.2). */}
+      {tab === "donacije" && <DonacijeBezNalogaRed />}
 
       {/* Prigovori */}
       {tab === "prigovori" && <PrigovoriTab prigovori={otvoreniPrigovori} onDone={() => router.refresh()} />}
@@ -544,6 +553,8 @@ export default function AdminKlijent({ users, opticaj, adminProgrami, adminPed, 
 
       {/* Nabavke — sprovođenje kolektivne nabavke (Pravilnik čl. 47). */}
       {tab === "nabavke" && <NabavkeTab onDone={() => router.refresh()} />}
+      {/* Program raspodele hrane i lanac (nabavke Glave X i XI). */}
+      {tab === "lanci" && <LanciTab jeSuperadmin={viewerJeSuperadmin} />}
       {tab === "zadruge" && <ZadrugeTab />}
       {tab === "gazdinstva" && <GazdinstvaTab jeSuperadmin={viewerJeSuperadmin} onDone={() => router.refresh()} />}
 
@@ -2562,9 +2573,12 @@ function AdminPokroviteljiTab({
   cekanje,
   verifikovaniKorisnici,
   krugovi,
+  superadmin,
   onDone,
 }: {
   pokrovitelji: PokroviteljItem[];
+  /** Priprema upisa i prijave (donacije čl. 16 st. 6) i STIPS cena (čl. 29 st. 1) — samo superadmin. */
+  superadmin: boolean;
   /** Žuti krug po pod-tabu: upisi (i izmene), prijave, dobra — isti račun kao zbir na tabu. */
   cekanje: CekanjePokrovitelja;
   verifikovaniKorisnici: { id: string; pseudonim: string }[];
@@ -2575,8 +2589,8 @@ function AdminPokroviteljiTab({
   const t = useTranslations("admin");
   // Otvara se pod-tab u kome nešto čeka radnju — inače potvrda prijave ostaje skrivena
   // iza podrazumevanih „Upisa" (prijava vlasnika, 01.11.2026).
-  const [subTab, setSubTab] = useState<"upisi" | "lista" | "prijave" | "dobra" | "novi">(() =>
-    cekanje.upisi + cekanje.izmene > 0 ? "upisi" : cekanje.prijave > 0 ? "prijave" : cekanje.dobra > 0 ? "dobra" : "upisi",
+  const [subTab, setSubTab] = useState<"upisi" | "lista" | "prijave" | "dobra" | "partnerstvo" | "priprema" | "stips" | "novi">(() =>
+    cekanje.upisi + cekanje.izmene > 0 ? "upisi" : cekanje.prijave > 0 ? "prijave" : cekanje.dobra > 0 ? "dobra" : cekanje.partnerstvo > 0 ? "partnerstvo" : "upisi",
   );
   const [loading, setLoading] = useState(false);
   const [poruka, setPoruka] = useState<{ text: string; ok: boolean } | null>(null);
@@ -2627,7 +2641,7 @@ function AdminPokroviteljiTab({
       <div className="flex flex-wrap items-center gap-2">
         {/* Pod-tab „doprinos" (ručni upis novčanog doprinosa) je ukinut setom 5.0: novčano
             pokroviteljstvo ide samo kroz prijavu, a POEN podnosiocu (donacije čl. 19–20, 23). */}
-        {(["upisi", "lista", "prijave", "dobra", "novi"] as const).map((s) => (
+        {(["upisi", "lista", "prijave", "dobra", "partnerstvo", ...(superadmin ? (["priprema"] as const) : []), "stips", "novi"] as const).map((s) => (
           <button
             key={s}
             onClick={() => { setSubTab(s); setPoruka(null); }}
@@ -2636,8 +2650,8 @@ function AdminPokroviteljiTab({
               subTab === s ? "bg-kolo-green-700 text-white" : "bg-kolo-bg text-kolo-muted hover:bg-kolo-border"
             }`}
           >
-            {s === "upisi" ? t("pokrovitelji_tab_upisi") : s === "lista" ? t("pokrovitelji_tab_lista", { count: pokrovitelji.length }) : s === "prijave" ? t("pokrovitelji_tab_prijave") : s === "dobra" ? t("pokrovitelji_tab_dobra") : t("pokrovitelji_tab_novi")}
-            <Lampica broj={s === "upisi" ? cekanje.upisi + cekanje.izmene : s === "prijave" ? cekanje.prijave : s === "dobra" ? cekanje.dobra : 0} />
+            {s === "upisi" ? t("pokrovitelji_tab_upisi") : s === "lista" ? t("pokrovitelji_tab_lista", { count: pokrovitelji.length }) : s === "prijave" ? t("pokrovitelji_tab_prijave") : s === "dobra" ? t("pokrovitelji_tab_dobra") : s === "partnerstvo" ? t("pokrovitelji_tab_partnerstvo") : s === "priprema" ? t("pokrovitelji_tab_priprema") : s === "stips" ? t("pokrovitelji_tab_stips") : t("pokrovitelji_tab_novi")}
+            <Lampica broj={s === "upisi" ? cekanje.upisi + cekanje.izmene : s === "prijave" ? cekanje.prijave : s === "dobra" ? cekanje.dobra : s === "partnerstvo" ? cekanje.partnerstvo : 0} />
           </button>
         ))}
       </div>
@@ -2649,7 +2663,13 @@ function AdminPokroviteljiTab({
       {/* Upis u evidenciju pokrovitelja (donacije čl. 16 i 18) — poređenje sa registrom. */}
       {subTab === "upisi" && <PokroviteljUpisiTab onDone={onDone} />}
       {subTab === "prijave" && <PokroviteljPrijaveTab onDone={onDone} />}
-      {subTab === "dobra" && <PokroviteljstvoDobraTab onDone={onDone} />}
+      {subTab === "dobra" && <PokroviteljstvoDobraTab onDone={onDone} superadmin={superadmin} />}
+      {/* Partnerstvo (donacije Glava VI, set 5.1.2) — odluke samo direktor. */}
+      {subTab === "partnerstvo" && <PokroviteljPartnerstvoTab onDone={onDone} superadmin={superadmin} />}
+      {/* Priprema upisa i prijave od strane Fondacije (donacije čl. 16 st. 6, set 5.1.2). */}
+      {subTab === "priprema" && superadmin && <PokroviteljPripremaTab onDone={onDone} />}
+      {/* STIPS bilteni i dominantne cene pijaca (donacije čl. 29 st. 1, set 5.1.3). */}
+      {subTab === "stips" && <StipsTab />}
 
       {subTab === "lista" && (
         <div className="space-y-2">

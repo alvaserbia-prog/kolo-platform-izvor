@@ -68,7 +68,15 @@ import {
   ROK_VAZENJA_MESECI,
   FUNKCIJA_NOSIOCA_GAZDINSTVA,
   rangListaDobara,
+  stanjeEvidencijeDobra,
+  vrednostUgovora,
+  uGranicamaVrednosti,
+  MIN_VREDNOST_UGOVORA_RSD,
+  MAX_VREDNOST_UGOVORA_RSD,
 } from "@/lib/pokroviteljstvo-dobrima-pravila";
+import type { StipsIzracun } from "@/lib/stips-pravila";
+import { ZAOKRUZIVANJE_STIPS } from "@/lib/stips-bilten-pravila";
+import type { VrstaHrane, Kategorija } from "@/lib/hrana-pravila";
 import { upisSpremanZaPrijavu, funkcijaZaUgovor, naRangListi } from "@/lib/upis-pokrovitelja-pravila";
 import { ograniceno } from "./ogranicenje-primljenog";
 
@@ -216,7 +224,9 @@ export async function podnesiPrijavu(
     select: { verified: true, maloletan: true, deaktiviranAt: true },
   });
   if (!korisnik || korisnik.deaktiviranAt) throw new VaucerGreska("Korisnik nije pronađen.", 404);
-  if (!korisnik.verified) throw new VaucerGreska("Samo verifikovani korisnici mogu pokrenuti pokroviteljstvo.", 403);
+  // 🔴 Pripadnost Kolu se proverava uz upis (čl. 28 st. 1, set 5.1.2): korisnik koji nije u
+  // Kolu podnosi prijavu samo kao zakonski zastupnik, preduzetnik ili nosilac gazdinstva iz
+  // odobrenog upisa (`upisSpremanZaPrijavu`, `ucesnik`).
   if (korisnik.maloletan) throw new VaucerGreska("Prijavu pokroviteljstva ne može podneti maloletni korisnik.", 403);
 
   // 🔴 Upis je uslov prijave (čl. 18 st. 3, čl. 28 st. 1).
@@ -235,7 +245,9 @@ export async function podnesiPrijavu(
     }),
     aktivnaZabrana(upis.id, kljuc),
   ]);
-  const spreman = upisSpremanZaPrijavu(upis, { userId, vrstaPrijave: "DOBRA", naListiZabrane: !!zabrana });
+  const spreman = upisSpremanZaPrijavu(upis, {
+    userId, vrstaPrijave: "DOBRA", naListiZabrane: !!zabrana, ucesnik: korisnik.verified,
+  });
   if (!spreman.ok) throw new VaucerGreska(spreman.razlog, upis.vlasnikUserId === userId ? 409 : 403);
 
   // Jedan nalog, jedno ime (Pravilnik čl. 31 st. 3).
@@ -286,6 +298,10 @@ export async function podnesiPrijavu(
       adresaPredaje: podaci.adresaPredaje,
       dodatnaMestaPredaje: podaci.dodatnaMestaPredaje.map((m) => m.mesto),
       dodatneAdresePredaje: podaci.dodatnaMestaPredaje.map((m) => m.adresa),
+      // Tačne tačke mesta predaje (bez njih mapa prikazuje centar naselja).
+      tackePredaje: podaci.tackePredaje.some(Boolean)
+        ? (podaci.tackePredaje as unknown as Prisma.InputJsonValue)
+        : undefined,
       logoUrl: upis.logoUrl,
       izjavaPropisiAt: sada,
       // Set 5.0.5 — hrana: odgovori davaoca (snimak), kategorija i koeficijent koje sistem
@@ -352,7 +368,12 @@ export async function podnesiPrijavu(
  * zaključuje: izdaju se vaučeri i Protokol evidentira POEN (čl. 33).
  * Zatečene prijave bez potpisa podnosioca idu starim tokom: generiše se ugovor i čeka potpis.
  */
-export async function prihvatiPrijavu(id: string, adminId: string, requestOrigin?: string) {
+export async function prihvatiPrijavu(
+  id: string,
+  adminId: string,
+  requestOrigin?: string,
+  stips: StipsIzracun | null = null,
+) {
   const u = await prisma.ugovorDobra.findUnique({
     where: { id },
     include: {
@@ -375,6 +396,76 @@ export async function prihvatiPrijavu(id: string, adminId: string, requestOrigin
   // Za firmu se beleži samo DA je poređenje sa registrom izvršeno — pri odobrenju
   // upisa (čl. 18 st. 1); gazdinstvo se ne poredi sa APR-om.
   const aprUporedjenAt = gazdinstvo ? null : u.upis.aprProveraAt;
+
+  // Set 5.1.3 (čl. 29 st. 1) — STIPS cena: vrednost se računa po ceni za Republiku Srbiju iz
+  // poslednjeg biltena (prosek dominantnih cena pijaca, `cenaStipsZa`), a ne po cenovniku. Pošto
+  // se time menja vrednost iz ugovora koji je podnosilac potpisao, ugovor se generiše ponovo (sa
+  // biltenom i cenama pijaca) i čeka ponovni potpis podnosioca; Fondacija je prijavu već
+  // prihvatila (`pregledanoAt`), pa je ugovor zaključen tim potpisom (`potpisiUgovorDobra` →
+  // `realizujUgovorDobra`). Snimak izvora (bilten, pijace) ide uz ugovor i ne računa se ponovo.
+  if (stips) {
+    const vrednostStips = vrednostUgovora(u.brojVaucera, stips.cena);
+    if (!uGranicamaVrednosti(vrednostStips))
+      throw new VaucerGreska(
+        `Po STIPS ceni vrednost ugovora iznosi ${vrednostStips.toLocaleString("sr-RS")} RSD, a mora biti od ${MIN_VREDNOST_UGOVORA_RSD.toLocaleString("sr-RS")} do ${MAX_VREDNOST_UGOVORA_RSD.toLocaleString("sr-RS")} RSD — odbij prijavu uz obrazloženje.`,
+        409,
+      );
+    const tekstStips = generisiUgovorDobraTekst({
+      vrstaDavaoca: u.vrstaDavaoca,
+      bpg: u.bpg,
+      naziv: u.naziv,
+      pib: u.pib,
+      maticniBroj: u.maticniBroj,
+      adresaSedista: u.adresaSedista,
+      zastupnikImePrezime: u.zastupnikImePrezime,
+      zastupnikFunkcija: gazdinstvo ? FUNKCIJA_NOSIOCA_GAZDINSTVA : u.zastupnikFunkcija,
+      odnosPremaDavaocu: u.odnosPremaDavaocu,
+      kontaktEmail: u.kontaktEmail,
+      kontaktTelefon: u.kontaktTelefon,
+      vrsta: u.vrsta,
+      opis: u.opis,
+      brojVaucera: u.brojVaucera,
+      cenaPoJedinici: stips.cena,
+      vrednostRsd: vrednostStips,
+      mesto: u.mesto,
+      adresaPredaje: u.adresaPredaje,
+      dodatnaMestaPredaje: u.dodatnaMestaPredaje,
+      dodatneAdresePredaje: u.dodatneAdresePredaje,
+      datum: sada,
+      hrana: u.hranaOdgovori && u.hranaKategorija
+        ? { vrsta: (u.hranaOdgovori as { vrsta: VrstaHrane }).vrsta, kategorija: u.hranaKategorija as Kategorija }
+        : null,
+      stips: {
+        kategorija: stips.kategorija, jedinica: stips.jedinica, biltenBroj: stips.biltenBroj, biltenUrl: stips.biltenUrl,
+        datumObjave: stips.datumObjave, pijace: stips.pijace,
+      },
+    });
+    const r = await prisma.ugovorDobra.updateMany({
+      where: { id, status: "NA_PREGLEDU" },
+      data: {
+        status: "CEKA_POTPIS", ugovorTekst: tekstStips, vrednostRsd: vrednostStips,
+        stipsCena: stips.cena, stipsKategorija: stips.kategorija, stipsDatumObjave: stips.datumObjave,
+        stipsUnetaAt: sada, stipsUneoId: adminId,
+        // Snimak izvora (pravilo 11): bilten i cene pijaca iz kojih je prosek izračunat.
+        stipsBiltenId: stips.biltenId, stipsBiltenBroj: stips.biltenBroj, stipsBiltenUrl: stips.biltenUrl,
+        stipsJedinica: stips.jedinica, stipsPijace: stips.pijace as unknown as Prisma.InputJsonValue,
+        podnosilacPotpisaoAt: null, kontrolniBroj: null, potpisKodHash: null, potpisKodIstice: null,
+        pregledaoId: adminId, pregledanoAt: sada, aprUporedjenAt,
+      },
+    });
+    if (r.count === 0) throw new VaucerGreska("Prijava je već obrađena.", 409);
+    await logAdminAkcija(adminId, "POKROVITELJSTVO_DOBRA_PRIHVACENO", id,
+      `vaučera ${u.brojVaucera}, STIPS cena ${stips.cena} (${stips.kategorija}, bilten ${stips.biltenBroj}, pijaca ${stips.pijace.length}); ugovor čeka ponovni potpis`);
+    await obavesti(u.podnosilacId, {
+      tip: "pokroviteljstvo_dobra",
+      kljuc: "notifikacije.pokroviteljstvo_dobra_stips",
+      naslov: "Prijava prihvaćena po STIPS ceni — ugovor čeka ponovni potpis",
+      parametri: { opis: u.opis, bilten: stips.biltenBroj },
+      tekst: `Fondacija je prihvatila prijavu „${u.opis}“ po ceni za Republiku Srbiju iz STIPS biltena br. ${stips.biltenBroj} — proseku dominantnih cena pijaca, ${ZAOKRUZIVANJE_STIPS}. Vrednost ugovora je izmenjena, pa ugovor čeka tvoj ponovni potpis; potpisom je zaključen.`,
+      link: "/vauceri/davalac",
+    });
+    return null;
+  }
 
   if (u.podnosilacPotpisaoAt && u.ugovorTekst) {
     const ishod = await realizujUgovorDobra(
@@ -511,8 +602,8 @@ export async function posaljiKodZaPotpis(id: string, userId: string) {
  *
  * U jednoj transakciji: ugovor prelazi u POTPISAN, beleže se vreme zaključenja i
  * kontrolni broj snimljenog teksta, briše se heš koda, izdaju se vaučeri (SLOBODAN,
- * odmah dostupni — nabavke čl. 32) i snimaju koeficijent i broj POEN-a. Posle nje,
- * VAN transakcije, `emitujPoen()` evidentira POEN podnosiocu prijave, a primerak
+ * odmah dostupni — nabavke čl. 32) i snimaju koeficijent i broj POEN-a; doprinos se
+ * beleži, a evidentira ga noćni obračun narednog obračunskog perioda (set 5.1.2). Primerak
  * ugovora ide davaocu (kontakt mejl) i podnosiocu.
  *
  * 🔴 Koeficijent se čita iz `Pokrovitelj.rsdKumulativ` po PIB-u, odnosno BPG-u
@@ -573,7 +664,8 @@ export async function potpisiUgovorDobra(
 
 /**
  * Zaključenje ugovora (čl. 32–33): ugovor prelazi u POTPISAN, izdaju se vaučeri, snimaju
- * koeficijent i broj POEN-a, a VAN transakcije `emitujPoen()` evidentira POEN podnosiocu.
+ * koeficijent i broj POEN-a, a doprinos se BELEŽI (`cekaPeriod`); evidentira ga noćni
+ * obračun narednog obračunskog perioda (set 5.1.2, donacije čl. 33 st. 1).
  * Poziva se iz prihvatanja prijave (set 5.0.5) ili iz potpisa zatečenog ugovora.
  */
 async function realizujUgovorDobra(
@@ -611,13 +703,16 @@ async function realizujUgovorDobra(
   const vaziDo = vaziDoOd(sada, ROK_VAZENJA_MESECI);
   const kontrolniBroj = kontrolniBrojTeksta(u.ugovorTekst);
 
+  // 🔴 Set 5.1.2 (donacije čl. 33 st. 1, čl. 34 st. 2; Pravilnik čl. 37 st. 1): zaključenjem
+  // ugovora doprinos se BELEŽI (`cekaPeriod`), a Protokol ga evidentira u narednom obračunskom
+  // periodu — noćni obračun, `evidentirajZabelezenoPokroviteljstvoDobrima`. Ovde nema emisije.
   await prisma.$transaction(async (tx) => {
     const r = await tx.ugovorDobra.updateMany({
       where: { id, status: statusPre, ...dodatniUslov },
       data: {
         status: "POTPISAN", potpisanoAt: sada, kontrolniBroj, vaziDo, koeficijent, poenEvidentirano: poen,
         poenaPoVauceru: poPoVauceru, rokVazenjaMeseci: ROK_VAZENJA_MESECI,
-        potpisKodHash: null, potpisKodIstice: null,
+        potpisKodHash: null, potpisKodIstice: null, cekaPeriod: poen > 0,
         ...(pregled ? { pregledaoId: pregled.adminId, pregledanoAt: sada, aprUporedjenAt: pregled.aprUporedjenAt } : {}),
       },
     });
@@ -627,47 +722,18 @@ async function realizujUgovorDobra(
     await tx.vaucer.createMany({ data: [...kodovi].map((kod) => ({ ugovorId: id, kod })) });
   });
 
-  // Van transakcije — emitujPoen otvara sopstvenu.
-  let transakcijaId: string;
-  try {
-    const { transaction } = await emitujPoen(
-      podnosilac.wallet.id,
-      poen,
-      TransactionType.EMISIJA_POKROVITELJ_DOBRA,
-      `Evidentiran doprinos po pokroviteljstvu dobrima i uslugama: ${poen.toLocaleString("sr-RS")} POEN`,
-      { kljuc: "transakcije.pokroviteljstvo_dobra", parametri: { iznos: poen } },
-    );
-    transakcijaId = transaction.id;
-  } catch (e) {
-    // Vraćanje u stanje pre potpisa: vaučeri koje još niko nije uzeo se brišu.
-    await prisma.$transaction(async (tx) => {
-      await tx.vaucer.deleteMany({ where: { ugovorId: id, status: "SLOBODAN" } });
-      await tx.ugovorDobra.update({
-        where: { id },
-        data: {
-          status: statusPre, potpisanoAt: null, vaziDo: null, koeficijent: null,
-          poenEvidentirano: null, poenaPoVauceru: null,
-          ...(statusPre === "CEKA_POTPIS" ? { kontrolniBroj: null } : { pregledaoId: null, pregledanoAt: null }),
-        },
-      });
-    });
-    throw e;
-  }
-  await prisma.ugovorDobra.update({ where: { id }, data: { emisijaTxId: transakcijaId } });
-
-  // Evidencija identiteta (čl. 28 st. 4, Pravilnik čl. 31 st. 2) — ishod je proveren gore.
+  // Evidencija identiteta (čl. 28 st. 4, Pravilnik čl. 31 st. 2) — kad Fondacija utvrdi da je
+  // ugovor zaključen; ishod je proveren gore.
   await upisiIdentitet(userId, u.zastupnikImePrezime, "POKROVITELJSTVO").catch((e) =>
     console.error("[pokroviteljstvo-dobra] upis u evidenciju identiteta nije uspeo", { id, e }),
   );
-  // Pokroviteljstvo je trag učešća (dokaz stvarnosti čl. 19). Ne baca.
-  await probajEvidentiratiPotvrde(userId);
 
   await obavesti(userId, {
     tip: "pokroviteljstvo_dobra",
-    kljuc: "notifikacije.pokroviteljstvo_dobra_potpisano",
+    kljuc: "notifikacije.pokroviteljstvo_dobra_zakljuceno",
     parametri: { poen, broj: u.brojVaucera },
-    naslov: "Ugovor potpisan, vaučeri izdati",
-    tekst: `Ugovor je potpisan i izdato je ${u.brojVaucera} vaučera. Evidentirano je ${poen.toLocaleString("sr-RS")} POEN.`,
+    naslov: "Ugovor zaključen, vaučeri izdati",
+    tekst: `Ugovor je zaključen i izdato je ${u.brojVaucera} vaučera. Zabeleženo je ${poen.toLocaleString("sr-RS")} POEN; doprinos se evidentira u narednom obračunskom periodu.`,
     link: "/vauceri/davalac",
   });
 
@@ -683,6 +749,63 @@ async function realizujUgovorDobra(
   });
 
   return { poen, koeficijent, brojVaucera: u.brojVaucera, kontrolniBroj };
+}
+
+/**
+ * Noćni obračun (donacije čl. 33 st. 1, čl. 34 st. 2; Pravilnik čl. 37 st. 1; set 5.1.2):
+ * zabeležen doprinos po ugovoru o pokroviteljstvu dobrima i uslugama zaključenom pre
+ * početka ovog obračunskog perioda evidentira se sada, u zapisu podnosioca prijave.
+ * Ugovor raskinut pre evidentiranja nije POTPISAN i ne evidentira se (zabeleženo je
+ * poništeno raskidom). Emisija ide jedna po jedna, van transakcije (pravilo 8); red se
+ * preuzima uslovnim upisom, pa dva prolaza ne emituju dvaput.
+ */
+export async function evidentirajZabelezenoPokroviteljstvoDobrima(doTrenutka: Date = new Date()): Promise<number> {
+  const redovi = await prisma.ugovorDobra.findMany({
+    where: { status: "POTPISAN", cekaPeriod: true, emisijaTxId: null, potpisanoAt: { lt: doTrenutka } },
+    select: { id: true, podnosilacId: true, poenEvidentirano: true },
+    orderBy: { potpisanoAt: "asc" },
+  });
+  let evidentirano = 0;
+  for (const r of redovi) {
+    const poen = r.poenEvidentirano ?? 0;
+    const preuzet = await prisma.ugovorDobra.updateMany({
+      where: { id: r.id, status: "POTPISAN", cekaPeriod: true, emisijaTxId: null },
+      data: { cekaPeriod: false },
+    });
+    if (preuzet.count !== 1) continue;
+    if (poen <= 0) continue;
+    const w = await prisma.wallet.findUnique({ where: { userId: r.podnosilacId }, select: { id: true } });
+    if (!w) {
+      await prisma.ugovorDobra.updateMany({ where: { id: r.id, status: "POTPISAN" }, data: { cekaPeriod: true } });
+      continue;
+    }
+    try {
+      const { transaction } = await emitujPoen(
+        w.id,
+        poen,
+        TransactionType.EMISIJA_POKROVITELJ_DOBRA,
+        `Evidentiran doprinos po pokroviteljstvu dobrima i uslugama: ${poen.toLocaleString("sr-RS")} POEN`,
+        { kljuc: "transakcije.pokroviteljstvo_dobra", parametri: { iznos: poen } },
+      );
+      await prisma.ugovorDobra.update({ where: { id: r.id }, data: { emisijaTxId: transaction.id } });
+      evidentirano++;
+    } catch (e) {
+      console.error("[pokroviteljstvo-dobra] evidentiranje zabeleženog nije uspelo", { id: r.id, e });
+      await prisma.ugovorDobra.updateMany({ where: { id: r.id, status: "POTPISAN" }, data: { cekaPeriod: true } });
+      continue;
+    }
+    await obavesti(r.podnosilacId, {
+      tip: "pokroviteljstvo_dobra",
+      kljuc: "notifikacije.pokroviteljstvo_dobra_evidentirano",
+      parametri: { poen },
+      naslov: "Doprinos pokroviteljstva dobrima i uslugama je evidentiran",
+      tekst: `Zabeležen doprinos po ugovoru o pokroviteljstvu dobrima i uslugama evidentiran je u obračunskom periodu koji je počeo: ${poen.toLocaleString("sr-RS")} POEN.`,
+      link: "/novcanik",
+    }).catch(() => {});
+    // Pokroviteljstvo je trag učešća (dokaz stvarnosti čl. 19). Ne baca.
+    await probajEvidentiratiPotvrde(r.podnosilacId);
+  }
+  return evidentirano;
 }
 
 /** Zaglavlje primerka: „Zaključeno elektronski na Platformi KOLO, dana …, u … časova, kontrolni broj …". */
@@ -802,10 +925,13 @@ export async function uzmiVaucer(
       throw new VaucerGreska("Vaučeri ovog ugovora nisu dostupni.", 404);
     const poenaPoV = u.poenaPoVauceru ?? poenaPoVauceru(Number(u.vrednostRsd), u.brojVaucera);
 
-    const [w, nab, aktivnih, aktivnihIzUgovora] = await Promise.all([
+    const [w, nab, aktivnihDobra, aktivnihLanca, aktivnihIzUgovora] = await Promise.all([
       tx.wallet.findUniqueOrThrow({ where: { id: walletId }, select: { balance: true } }),
       tx.nabavkaPrijava.aggregate({ where: { userId, status: "POTVRDIO" }, _sum: { rezervisano: true } }),
       tx.vaucer.count({ where: { imalacId: userId, status: "DODELJEN" } }),
+      // Nabavke čl. 43 st. 3 (set 5.1.2): u granicu od dva ulaze i vaučeri programa raspodele
+      // hrane i lanca (`protokol/lanac.ts`).
+      tx.lanacVaucer.count({ where: { imalacId: userId, status: "DODELJEN" } }),
       // Nabavke čl. 30 st. 3 (set 5.1.0): najviše jedan neiskorišćen iz istog ugovora.
       tx.vaucer.count({ where: { imalacId: userId, ugovorId, status: "DODELJEN" } }),
     ]);
@@ -816,7 +942,7 @@ export async function uzmiVaucer(
       podnosilacId: u.upis?.vlasnikUserId === userId ? userId : u.podnosilacId,
       izjavaNepovezan: unos.izjavaNepovezan,
       pristanakPrikaz: unos.pristanakPrikaz,
-      aktivnihVaucera: aktivnih,
+      aktivnihVaucera: aktivnihDobra + aktivnihLanca,
       aktivnihIzUgovora,
       // Ograničen iznos se ne koristi (donacije čl. 6 st. 7, set 5.0.9).
       raspolozivo: raspolozivo(w.balance) - (nab._sum.rezervisano ?? 0) - (await ograniceno(walletId, tx)),
@@ -1297,7 +1423,7 @@ export async function raskiniUgovorDobra(
     where: { id: ugovorId },
     select: {
       id: true, status: true, podnosilacId: true, opis: true, brojVaucera: true, poenEvidentirano: true,
-      vrstaDavaoca: true, maticniBroj: true, bpg: true, naziv: true, upisId: true,
+      cekaPeriod: true, emisijaTxId: true, vrstaDavaoca: true, maticniBroj: true, bpg: true, naziv: true, upisId: true,
       podnosilac: { select: { wallet: { select: { id: true } } } },
       vauceri: { select: { id: true, status: true, imalacId: true, ponisteno: true, pristanakPovucenAt: true } },
     },
@@ -1317,9 +1443,16 @@ export async function raskiniUgovorDobra(
   const podWalletId = u.podnosilac.wallet?.id;
   if (!podWalletId) throw new VaucerGreska("Podnosilac nema zapis u Protokolu.", 500);
 
+  // 🔴 Set 5.1.2 (donacije čl. 33 st. 1): ugovor raskinut pre evidentiranja — zabeleženo se
+  // poništava bez otpisa (uslovnim upisom `cekaPeriod` u transakciji ispod, pa ga noćni
+  // obračun više ne vidi). Evidentiranje u toku (noćni obračun je preuzeo red) čeka se.
+  const stanjeEvidencije = stanjeEvidencijeDobra(u);
+  if (stanjeEvidencije === "U_TOKU")
+    throw new VaucerGreska("Doprinos po ovom ugovoru se upravo evidentira — pokušaj ponovo za minut.", 409);
+  const evidentiran = stanjeEvidencije === "EVIDENTIRAN" ? (u.poenEvidentirano ?? 0) : 0;
   const uRaskidu = u.vauceri.filter((v) => ulaziURaskid(v, vp.id));
-  const poVauceru = otpisPoVauceru(u.poenEvidentirano ?? 0, u.brojVaucera);
-  const otpis = otpisPriRaskidu(u.poenEvidentirano ?? 0, u.brojVaucera, uRaskidu.length);
+  const poVauceru = otpisPoVauceru(evidentiran, u.brojVaucera);
+  const otpis = otpisPriRaskidu(evidentiran, u.brojVaucera, uRaskidu.length);
   const zaIspravku = uRaskidu.filter((v) => v.imalacId && v.ponisteno > 0);
   const imaoci = await prisma.wallet.findMany({
     where: { userId: { in: zaIspravku.map((v) => v.imalacId!) } },
@@ -1335,8 +1468,11 @@ export async function raskiniUgovorDobra(
     // po novčaniku proveru radi `upisiPar`.
     const snimak = await snimiZbir(tx, []);
     const r = await tx.ugovorDobra.updateMany({
-      where: { id: u.id, status: "POTPISAN" },
-      data: { status: "RASKINUT", raskinutoAt: sada, raskidObrazlozenje: razlog, raskinuoId: adminId, raskidOtpis: otpis },
+      where: { id: u.id, status: "POTPISAN", cekaPeriod: u.cekaPeriod, emisijaTxId: u.emisijaTxId },
+      data: {
+        status: "RASKINUT", raskinutoAt: sada, raskidObrazlozenje: razlog, raskinuoId: adminId, raskidOtpis: otpis,
+        cekaPeriod: false,
+      },
     });
     if (r.count !== 1) throw new VaucerGreska("Ugovor je u međuvremenu promenio stanje.", 409);
 
@@ -1409,7 +1545,19 @@ export async function raskiniUgovorDobra(
   const stanje = await prisma.wallet.findUnique({ where: { id: podWalletId }, select: { balance: true } });
   try {
     const uMinusu = (stanje?.balance ?? 0) < 0;
-    await obavesti(u.podnosilacId, {
+    if (stanjeEvidencije === "ZABELEZEN") {
+      await obavesti(u.podnosilacId, {
+        tip: "pokroviteljstvo_dobra",
+        kljuc: "notifikacije.pokroviteljstvo_dobra_raskid_ponisteno",
+        parametri: { opis, zabelezeno: u.poenEvidentirano ?? 0, broj: uRaskidu.length, obrazlozenje: razlog },
+        naslov: "Ugovor o vaučerima je raskinut",
+        tekst:
+          `Fondacija je po prigovoru utvrdila da obaveza iz ugovora „${opis}" nije izvršena i ugovor je raskinut. ` +
+          `Vaučeri koji nisu iskorišćeni (${uRaskidu.length}) su prestali. Zabeležen doprinos po ugovoru (${u.poenEvidentirano ?? 0} POEN) ` +
+          `nije bio evidentiran i poništen je, bez otpisa. Davalac je upisan na listu zabrane i ne može zaključiti nov ugovor o pokroviteljstvu dobrima i uslugama dok ga Fondacija sa liste ne skine. Obrazloženje: ${razlog}`,
+        link: "/vauceri/davalac",
+      });
+    } else await obavesti(u.podnosilacId, {
       tip: "pokroviteljstvo_dobra",
       kljuc: uMinusu ? "notifikacije.pokroviteljstvo_dobra_raskid_zabrana_minus" : "notifikacije.pokroviteljstvo_dobra_raskid_zabrana",
       parametri: { opis, poen: otpis, broj: uRaskidu.length, stanje: stanje?.balance ?? 0, obrazlozenje: razlog },
@@ -1440,7 +1588,7 @@ export async function raskiniUgovorDobra(
   }
 
   await logAdminAkcija(adminId, "UGOVOR_DOBRA_RASKID", u.id,
-    `vaučera u raskidu ${uRaskidu.length}, otpis ${otpis} POEN, ispravki ${ispravljeno.length}; prigovor ${prigovor.id}; lista zabrane; razlog: ${razlog}`);
+    `vaučera u raskidu ${uRaskidu.length}, otpis ${otpis} POEN${stanjeEvidencije === "ZABELEZEN" ? " (zabeleženo poništeno pre evidentiranja)" : ""}, ispravki ${ispravljeno.length}; prigovor ${prigovor.id}; lista zabrane; razlog: ${razlog}`);
   return { otpis, uRaskidu: uRaskidu.length, ispravki: ispravljeno.length };
 }
 

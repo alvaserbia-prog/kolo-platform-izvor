@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { jeVerifikovan, ucitajStatus } from "@/lib/protokol/status";
 import { statusZadatka, zauzimaMesto } from "@/lib/operativni-pravila";
 import { iskoriscenostLimita, podaciZadatkaZaUcesnike } from "@/lib/protokol/operativni-postupak";
+import { osnivacBezPrijave } from "@/lib/protokol/osnivacki";
 import OglasDetalj from "./OglasDetalj";
 import ZadatakZaUcesnike from "./ZadatakZaUcesnike";
 
@@ -84,6 +85,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
           odobravanjeObrazlozenje: oglas.odobravanjeObrazlozenje,
           kvalifikacioniUslov: oglas.kvalifikacioniUslov,
           kvalifikacioniObrazlozenje: oglas.kvalifikacioniObrazlozenje,
+          samoZadrugari: oglas.samoZadrugari,
           positions: oglas.positions,
           deadline: oglas.deadline?.toISOString() ?? null,
           rokIzvrsenja: oglas.rokIzvrsenja?.toISOString() ?? null,
@@ -123,6 +125,7 @@ export default async function OglasPage({ params }: { params: Promise<{ id: stri
           })),
         }}
         isVerified={ucesnik}
+        osnivacBezPrijave={ucesnik && (await osnivacBezPrijave(session.user.id))}
       />
       {zaUcesnike && <ZadatakZaUcesnike oglasId={oglas.id} aktivan={oglas.status === "ACTIVE"} podaci={zaUcesnike} />}
     </div>

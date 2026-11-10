@@ -8,6 +8,8 @@ import ProveraVaucera from "@/components/pokroviteljstvo/ProveraVaucera";
 import type { OdnosPremaDavaocu } from "@/lib/pokroviteljstvo-dobrima-pravila";
 import NovcanaPrijava from "../NovcanaPrijava";
 import PrijavaDobra from "../PrijavaDobra";
+import PrijavaPartnerstva from "../PrijavaPartnerstva";
+import PartnerstvoUpisa from "./PartnerstvoUpisa";
 import UgovoriUpisa, { IskorisceniVauceri } from "./UgovoriUpisa";
 import ZaposleniUpisa from "./ZaposleniUpisa";
 import PodaciUpisa from "./PodaciUpisa";
@@ -44,9 +46,9 @@ export type UpisZaProfil = {
   izmenaOdbijenaRazlog: string | null;
 };
 
-type KodNespremnosti = "NIJE_ODOBREN" | "ZABRANA" | "NEPOTPUN";
-type Tab = "ugovori" | "vauceri" | "zaposleni" | "podaci";
-const TABOVI: Tab[] = ["ugovori", "vauceri", "zaposleni", "podaci"];
+type KodNespremnosti = "NIJE_ODOBREN" | "ZABRANA" | "NEPOTPUN" | "NIJE_UCESNIK";
+type Tab = "ugovori" | "partnerstvo" | "vauceri" | "zaposleni" | "podaci";
+const TABOVI: Tab[] = ["ugovori", "partnerstvo", "vauceri", "zaposleni", "podaci"];
 
 /**
  * Stranica pokrovitelja — upis (donacije čl. 16) koji korisnik vodi.
@@ -61,19 +63,23 @@ export default function UpisProfil({
   naListiZabrane,
   novac,
   dobra,
+  partnerstvo,
 }: {
   upis: UpisZaProfil;
   naListiZabrane: boolean;
   novac: KodNespremnosti | null;
   dobra: KodNespremnosti | null;
+  /** Set 5.1.2 — prijava partnerstva (donacije čl. 41 st. 1). */
+  partnerstvo: KodNespremnosti | null;
 }) {
   const t = useTranslations("postaniPokrovitelj");
   const sp = useSearchParams();
   const pocetni = TABOVI.includes(sp.get("tab") as Tab) ? (sp.get("tab") as Tab) : "ugovori";
   const [tab, setTab] = useState<Tab>(pocetni);
-  const [panel, setPanel] = useState<"novac" | "dobra" | null>(null);
+  const [panel, setPanel] = useState<"novac" | "dobra" | "partnerstvo" | null>(null);
   const [osvezi, setOsvezi] = useState(0);
   const posle = useCallback(() => { setPanel(null); setTab("ugovori"); setOsvezi((n) => n + 1); }, []);
+  const poslePartnerstva = useCallback(() => { setPanel(null); setTab("partnerstvo"); setOsvezi((n) => n + 1); }, []);
 
   const STATUS: Record<UpisZaProfil["status"], string> = {
     NA_PROVERI: t("upis_status_na_proveri"),
@@ -84,9 +90,11 @@ export default function UpisProfil({
     NIJE_ODOBREN: t("razlog_nije_odobren"),
     ZABRANA: t("razlog_zabrana"),
     NEPOTPUN: t("razlog_nepotpun"),
+    NIJE_UCESNIK: t("razlog_nije_ucesnik"),
   };
   const NASLOV_TABA: Record<Tab, string> = {
     ugovori: t("tab_ugovori"),
+    partnerstvo: t("tab_partnerstvo"),
     vauceri: t("tab_vauceri"),
     zaposleni: t("tab_zaposleni"),
     podaci: t("tab_podaci"),
@@ -121,6 +129,9 @@ export default function UpisProfil({
         <Dugme varijanta="sekundarno" onClick={() => setPanel(panel === "dobra" ? null : "dobra")} disabled={!!dobra}>
           {t("doniraj_dobra")}
         </Dugme>
+        <Dugme varijanta="sekundarno" onClick={() => setPanel(panel === "partnerstvo" ? null : "partnerstvo")} disabled={!!partnerstvo}>
+          {t("partnerstvo_dugme")}
+        </Dugme>
       </div>
       {(novac || dobra) && (
         <p className="text-xs text-kolo-muted">
@@ -129,6 +140,7 @@ export default function UpisProfil({
       )}
 
       {panel === "novac" && !novac && <NovcanaPrijava upisId={upis.id} onPoslato={posle} />}
+      {panel === "partnerstvo" && !partnerstvo && <PrijavaPartnerstva upisId={upis.id} onPoslato={poslePartnerstva} />}
       {panel === "dobra" && !dobra && <PrijavaDobra upisId={upis.id} mesto={upis.mapaMesto} adresa={upis.mapaAdresa} onPoslato={posle} />}
 
       <nav className="overflow-x-auto">
@@ -141,6 +153,7 @@ export default function UpisProfil({
       </nav>
 
       {tab === "ugovori" && <UgovoriUpisa key={osvezi} upisId={upis.id} />}
+      {tab === "partnerstvo" && <PartnerstvoUpisa key={osvezi} upisId={upis.id} />}
       {tab === "vauceri" && (
         <div className="space-y-4">
           <ProveraVaucera onRealizovano={() => setOsvezi((n) => n + 1)} />

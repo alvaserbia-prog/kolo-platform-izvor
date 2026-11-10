@@ -72,8 +72,8 @@ export const AKT_USLOVI: Akt = {
   // 5.0.9 — čl. 32 st. 1 t. 9 (lažna potvrda o uplati) i čl. 40 st. 2 t. 12 (ograničenje i otpis primljenog).
   // 5.1.0 — čl. 21 st. 3 (dinarski iznos kao jednosmerna mera obima doprinosa, bez poricanja)
   // i čl. 28 st. 4 (povreda zabrane prometa POEN-a utvrđuje se po prijavi, prepisi se ne prate).
-  verzija: "5.1.0",
-  fajl: "uslovi_koriscenja_5_1_0.md",
+  verzija: "5.1.2",
+  fajl: "uslovi_koriscenja_5_1_2.md",
 };
 
 export const AKT_POLITIKA: Akt = {
@@ -108,8 +108,8 @@ export const AKT_POLITIKA: Akt = {
   // 5.0.0 — uređena po svrsi (jedan član po obradi, rok uz obradu); Kutija želja,
   // podrška u Gornjem Kolu, spor u zadruzi, prijava smrti, revizijski dnevnik 12 meseci.
   // 5.0.9 — čl. 20 st. 1 (poziv na broj, potvrda o uplati) i čl. 39 (kartično plaćanje uklonjeno).
-  verzija: "5.0.9",
-  fajl: "politika_5_0_9.md",
+  verzija: "5.1.2",
+  fajl: "politika_5_1_2.md",
 };
 
 /**
@@ -125,8 +125,8 @@ export const AKT_RIZICI: Akt = {
   // 5.0.0 — prvi put uz kvačicu za Uslove pri registraciji i u gejtu.
   // 5.1.1 — čl. 5 st. 3 i čl. 7 t. 4: koeficijent jednako zavisi od sopstvenog i tuđeg
   // doprinosa; otpis slobodnog ZRNA može dati i manje POEN-a nego što je utrošeno.
-  verzija: "5.1.1",
-  fajl: "rizici_5_1_1.md",
+  verzija: "5.1.2",
+  fajl: "rizici_5_1_2.md",
 };
 
 /**

@@ -5,9 +5,12 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { mojiUpisi } from "@/lib/protokol/upis-pokrovitelja";
 import { davaociZaposlenog } from "@/lib/protokol/pokroviteljstvo-dobrima";
+import { pripremeKorisnika } from "@/lib/protokol/priprema-pokroviteljstva";
 import LogotipPokrovitelja from "@/components/LogotipPokrovitelja";
 import ProveraVaucera from "@/components/pokroviteljstvo/ProveraVaucera";
 import UkloniSaRangListe from "./UkloniSaRangListe";
+import PotvrdePartnerstva from "./PotvrdePartnerstva";
+import { izvrsenjaZaOvlascenog } from "@/lib/protokol/partnerstvo";
 import Kartica from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
 import NaslovStranice from "@/components/ui/NaslovStranice";
@@ -32,12 +35,17 @@ export default async function PokroviteljstvoPage() {
   if (!session) redirect("/login");
   const t = await getTranslations("postaniPokrovitelj");
 
-  const [upisi, davaoci] = await Promise.all([mojiUpisi(session.user.id), davaociZaposlenog(session.user.id)]);
+  const [upisi, davaoci, pripreme, izvrsenjaZaPotvrdu] = await Promise.all([
+    mojiUpisi(session.user.id), davaociZaposlenog(session.user.id), pripremeKorisnika(session.user.id),
+    // Set 5.1.2 — izvršenja partnerstva koja potvrđuje lice koje je direktor ovlastio (donacije čl. 43 st. 1).
+    izvrsenjaZaOvlascenog(session.user.id),
+  ]);
   const zivi = upisi.filter((u) => !u.obrisanAt);
   const obrisani = upisi.filter((u) => u.obrisanAt);
   // Maloletni korisnik upis ne vrši (čl. 16 st. 1). Potvrda stvarnosti nije uslov
   // (set 4.8.0): novčano pokroviteljstvo i samo potvrđuje podnosioca (dokaz
-  // stvarnosti čl. 8 st. 1 t. 3); dobra i usluge i dalje traže potvrdu (ruta `dobra`).
+  // stvarnosti čl. 8 st. 1 t. 3); prijavu dobara korisnik koji nije u Kolu podnosi samo kao
+  // lice iz registra (čl. 28 st. 1, set 5.1.2).
   const smeUpis = !session.user.maloletan;
 
   const STATUS: Record<string, string> = {
@@ -49,6 +57,21 @@ export default async function PokroviteljstvoPage() {
   return (
     <Stranica>
       <NaslovStranice naslov={t("naslov")} opis={t("opis")} />
+      {/* Upis koji je pripremila Fondacija (donacije čl. 16 st. 6, set 5.1.2) čeka prihvatanje. */}
+      {pripreme.length > 0 && (
+        <Kartica as="section" className="space-y-2">
+          <NaslovSekcije opis={t("priprema_spisak_opis")}>{t("priprema_spisak_naslov")}</NaslovSekcije>
+          <ul className="space-y-2">
+            {pripreme.map((p) => (
+              <li key={p.id}>
+                <Link href={`/postani-pokrovitelj/priprema/${p.id}`} className="flex min-h-10 items-center text-sm font-medium text-kolo-text hover:underline">
+                  {p.naziv}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Kartica>
+      )}
       {/* Prvo radnja (odluka vlasnika 02.11.2026): upis odmah ispod uvoda. */}
       {smeUpis && (
         <Link href="/postani-pokrovitelj/upis" className={klaseDugmeta()}>
@@ -72,8 +95,8 @@ export default async function PokroviteljstvoPage() {
         </Kartica>
       </div>
 
-      {/* Novčano pokroviteljstvo nikad nije zaključano; zaključano je samo
-          pokroviteljstvo dobrima i uslugama (ruta `dobra` traži da je u Kolu). */}
+      {/* Novčano pokroviteljstvo nikad nije zaključano; prijavu dobara korisnik koji nije u
+          Kolu podnosi samo kao lice iz registra (donacije čl. 28 st. 1, set 5.1.2). */}
       {!session.user.verified && !session.user.maloletan && (
         <ZakljucanModul poruka={t("dobra_zakljucano")} />
       )}
@@ -121,6 +144,8 @@ export default async function PokroviteljstvoPage() {
           </div>
         )}
       </section>
+
+      {izvrsenjaZaPotvrdu.length > 0 && <PotvrdePartnerstva izvrsenja={izvrsenjaZaPotvrdu} />}
 
       {davaoci.length > 0 && (
         <section className="space-y-3">

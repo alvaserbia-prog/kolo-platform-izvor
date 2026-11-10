@@ -68,6 +68,10 @@
     {
       "path": "/api/cron/gazdinstva",
       "schedule": "15 4 * * *"
+    },
+    {
+      "path": "/api/cron/stips",
+      "schedule": "40 6 * * *"
     }
   ]
 }

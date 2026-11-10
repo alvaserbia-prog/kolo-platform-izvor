@@ -8,9 +8,10 @@
  * ukinut setom 4.8.2 — postojanje deteta potvrđuje član Kola (deca čl. 13).
  *
  * Dva odvojena odeljka, namerno razdvojena jer su to dve različite odluke:
- *  1. VENTIL — ručni upis za pojedinačnu potvrdu, uz obavezan razlog. Postoji zbog
- *     ljudi koje četiri uslova ne pokrivaju: onaj ko samo kupuje, stariji član na
- *     programu podrške. Bez njega bi njima i njihovim potvrđivačima POEN čekao zauvek.
+ *  1. SPISAK POTVRDA KOJE ČEKAJU PRVI DOPRINOS — samo pregled. 🔴 Ručni upis po oceni
+ *     Fondacije (bivši dokaz stvarnosti čl. 19 st. 7) je UKINUT setom 5.1.2: zabeleženi
+ *     doprinos upisuje se samo kad je uslov iz čl. 19 st. 2 ispunjen. Ne vraćati dugme
+ *     ni rutu (brana `upis-po-oceni-ukinut-izvor.test.ts`).
  *  2. USKLAĐIVANJE ZATEČENIH — jednokratna prelazna radnja, u dva koraka
  *     (Izračunaj → Sprovedi), gde se broj POENA iz pregleda otkucava rukom.
  *  3. UKLANJANJE PAROVA — čisti istoriju od para „emisija pa povlačenje" koji je
@@ -28,6 +29,7 @@ import Pseudonim from "@/components/Pseudonim";
 import { profilHref } from "@/lib/profil-link";
 import Link from "next/link";
 import VisestrukiNalozi from "./VisestrukiNalozi";
+import NegativniZapisi from "./NegativniZapisi";
 import NaslovSekcije from "@/components/ui/NaslovSekcije";
 import { klaseKartice } from "@/components/ui/Kartica";
 import { klaseDugmeta } from "@/components/ui/Dugme";
@@ -170,8 +172,6 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
   const [poenVerifikator, setPoenVerifikator] = useState(1000);
   const [ucitava, setUcitava] = useState(true);
   const [greska, setGreska] = useState("");
-  const [radiId, setRadiId] = useState<string | null>(null);
-  const [razlozi, setRazlozi] = useState<Record<string, string>>({});
 
   const [pregled, setPregled] = useState<Pregled | null>(null);
   const [potvrdaBroja, setPotvrdaBroja] = useState("");
@@ -209,31 +209,6 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
   useEffect(() => {
     void ucitaj();
   }, [ucitaj]);
-
-  async function upisi(id: string) {
-    const razlog = (razlozi[id] ?? "").trim();
-    if (razlog.length < 10) {
-      setGreska("Razlog je obavezan i mora imati najmanje 10 znakova.");
-      return;
-    }
-    setRadiId(id);
-    setGreska("");
-    try {
-      const res = await fetch(`/api/admin/potvrde-na-cekanju/${id}/upisi`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ razlog }),
-      });
-      const d = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(d?.error ?? "Upis nije uspeo.");
-      await ucitaj();
-      onDone?.();
-    } catch (e) {
-      setGreska(e instanceof Error ? e.message : "Greška.");
-    } finally {
-      setRadiId(null);
-    }
-  }
 
   async function izracunaj() {
     setRadiUskladjivanje(true);
@@ -380,8 +355,9 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
 
       {/* ── Mogući višestruki nalozi (dokaz stvarnosti čl. 13, 14; set 4.8.4) ── */}
       {jeSuperadmin && <VisestrukiNalozi />}
+      {jeSuperadmin && <NegativniZapisi />}
 
-      {/* ── Ventil ─────────────────────────────────────────────────────────── */}
+      {/* ── Potvrde koje čekaju prvi doprinos (samo pregled) ────────────────── */}
       <section className="space-y-3">
         <NaslovSekcije>{t("potvrde_naslov")}</NaslovSekcije>
         <p className="text-sm text-kolo-muted">{t("potvrde_opis")}</p>
@@ -404,21 +380,6 @@ export default function PotvrdeTab({ jeSuperadmin, onDone }: { jeSuperadmin: boo
                   </Link>{" "}
                   · {new Date(v.vremenskiZig).toLocaleDateString("sr-RS")} · čeka {broj(poenVerifikator)} + {broj(poenVerifikator)} POENA
                 </p>
-                <textarea
-                  className={KLASE_UNOSA + " mt-2"}
-                  rows={2}
-                  placeholder={t("potvrde_razlog")} aria-label={t("potvrde_razlog")}
-                  value={razlozi[v.id] ?? ""}
-                  onChange={(e) => setRazlozi((r) => ({ ...r, [v.id]: e.target.value }))}
-                />
-                <button
-                  type="button"
-                  className={klaseDugmeta() + " mt-2"}
-                  disabled={radiId === v.id}
-                  onClick={() => void upisi(v.id)}
-                >
-                  {t("potvrde_upisi")}
-                </button>
               </li>
             ))}
           </ul>

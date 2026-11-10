@@ -32,9 +32,10 @@ export async function GET() {
           poenEmitted: true,
           status: true,
           javno: true,
-          // Da li ime još stoji u listi — ekran po tome nudi povlačenje (čl. 12).
+          // Da li ime još stoji u listi i da li je donacija prevedena u anonimnu (čl. 12).
           donatorIme: true,
           imePovucenoAt: true,
+          prevedenaUAnonimnuAt: true,
           createdAt: true,
           // Set 5.0.9: poseban poziv na broj, potvrda o uplati, donacija unapred.
           referenceNumber: true,
@@ -126,7 +127,12 @@ export async function GET() {
       status: d.status,
       javno: d.javno,
       imeObjavljeno: d.status === "CONFIRMED" && d.javno && d.donatorIme !== null,
-      imePovuceno: d.imePovucenoAt !== null,
+      // Prevođenje u anonimnu (donacije čl. 12 st. 1, set 5.1.2) nudi se za svaku
+      // potvrđenu javnu donaciju — i za zatečenu kojoj je ime ranije povučeno po
+      // starom pravilu, jer po njoj POEN i dalje stoji.
+      smePrevestiUAnonimnu: d.status === "CONFIRMED" && d.javno,
+      prevedenaUAnonimnu: d.prevedenaUAnonimnuAt !== null,
+      imePovuceno: d.javno && d.imePovucenoAt !== null,
       imaUgovor: d.ugovorTekst !== null,
       createdAt: d.createdAt.toISOString(),
       // Poziv na broj ove donacije (donacije čl. 4 st. 3) — samo zapisi sa posebnim brojem.

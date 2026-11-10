@@ -20,7 +20,8 @@ import { granicePrethodnogMeseca } from "./obracunski-dan";
 export interface FondacijaSaldo {
   ukupanPriliv: number;        // RSD
   donacije: number;            // RSD (potvrdjene)
-  pokroviteljstvo: number;     // RSD
+  pokroviteljstvo: number;     // RSD (uključuje donacije pravnih lica bez naloga, donacije čl. 17 st. 4)
+  donacijeBezNaloga: number;   // RSD (deo `pokroviteljstvo`: donacije bez upisa u evidenciju pokrovitelja, bez POEN-a)
   ukupanOdliv: number;         // RSD (operativni troskovi + projekti)
   operativniOdliv: number;     // RSD (samo FondacijaTrosak)
   projektniOdliv: number;      // RSD (samo ProjekatTrosak — kolektivne nabavke)
@@ -28,7 +29,7 @@ export interface FondacijaSaldo {
 }
 
 export async function dohvatiSaldoFondacije(): Promise<FondacijaSaldo> {
-  const [donacijeAgg, pokroviteljstvoAgg, troskoviAgg, projektiAgg] = await Promise.all([
+  const [donacijeAgg, pokroviteljstvoAgg, troskoviAgg, projektiAgg, bezNalogaAgg] = await Promise.all([
     prisma.donationRecord.aggregate({
       where: { status: "CONFIRMED" },
       _sum: { amountRSD: true },
@@ -42,10 +43,17 @@ export async function dohvatiSaldoFondacije(): Promise<FondacijaSaldo> {
     prisma.projekatTrosak.aggregate({
       _sum: { iznosRSD: true },
     }),
+    // Donacija pravnog lica bez naloga (donacije čl. 17 st. 4, set 5.1.2) — priliv
+    // Fondacije koji ide na rang-listu pokrovitelja, pa se broji uz pokroviteljstvo.
+    prisma.donacijaBezNaloga.aggregate({
+      where: { uklonjenoAt: null },
+      _sum: { iznosRSD: true },
+    }),
   ]);
 
   const donacije = Number(donacijeAgg._sum.amountRSD ?? 0);
-  const pokroviteljstvo = Number(pokroviteljstvoAgg._sum.rsdIznos ?? 0);
+  const donacijeBezNaloga = Number(bezNalogaAgg._sum.iznosRSD ?? 0);
+  const pokroviteljstvo = Number(pokroviteljstvoAgg._sum.rsdIznos ?? 0) + donacijeBezNaloga;
   const operativniOdliv = Number(troskoviAgg._sum.iznosRSD ?? 0);
   const projektniOdliv = Number(projektiAgg._sum.iznosRSD ?? 0);
   const ukupanOdliv = operativniOdliv + projektniOdliv;
@@ -55,6 +63,7 @@ export async function dohvatiSaldoFondacije(): Promise<FondacijaSaldo> {
     ukupanPriliv,
     donacije,
     pokroviteljstvo,
+    donacijeBezNaloga,
     ukupanOdliv,
     operativniOdliv,
     projektniOdliv,

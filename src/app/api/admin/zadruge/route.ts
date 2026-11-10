@@ -96,7 +96,8 @@ export async function GET() {
         mesta: o.positions,
         predlozeniPoen: o.predlozeniPoen,
         brojCelina: o.brojCelina,
-        izvrsioci: o.prijave.map((p) => ({ pseudonim: p.user.pseudonim, prihvatio: p.status === "APPROVED" })),
+        // Izvršioci su se sami prijavili (operativni čl. 23 st. 2); PENDING = prijava čeka odobrenje.
+        izvrsioci: o.prijave.map((p) => ({ pseudonim: p.user.pseudonim, primljen: p.status === "APPROVED" })),
       })),
       zapis: z.wallet?.balance ?? 0,
       pragovi: z.bonusLogs.map((b) => ({ clanovi: b.threshold, poen: b.amount, at: b.createdAt.toISOString() })),

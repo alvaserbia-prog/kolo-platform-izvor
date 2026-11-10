@@ -22,6 +22,12 @@
  * poziva (čuva se dok postoji nalog pozvanog, dokaz stvarnosti čl. 10 st. 4). Negativan zapis
  * ovde ne nastaje — otpis pri istupanju iz gazdinstva ide kroz `prestanakGazdinstva`
  * (šesti osnov, Pravilnik čl. 17 st. 2 t. 6).
+ *
+ * 🔴 Negativan zapis pri istupanju i isključenju (Pravilnik čl. 33 st. 7, set 5.1.2):
+ * ime, mesto i broj čuva `sacuvajNegativanZapisPriPrestanku`
+ * (`negativan-zapis-prestanak.ts`), koju izlaz zove u istoj transakciji PRE ovog
+ * modula, jer korak 5 ispod briše ime. Nepostojeći nalog (dokaz stvarnosti čl. 32)
+ * red ne čuva — iza njega nema lica na koje bi se zapis preneo.
  */
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/generated/prisma/client";
@@ -244,6 +250,8 @@ export async function poslediceIzlaskaNaloga(userId: string, izlaz: IzlazNaloga)
   const { obrisiUpisePriGasenjuNaloga } = await import("./upis-pokrovitelja");
   await istupiPriGasenjuNaloga(userId);
   await oslobodiPriGasenjuNaloga(userId);
+  const { oslobodiVaucereLancaPriGasenjuNaloga } = await import("./lanac");
+  await oslobodiVaucereLancaPriGasenjuNaloga(userId);
   await opozoviZaposlenePriGasenjuNaloga(userId);
   await obrisiUpisePriGasenjuNaloga(userId);
 

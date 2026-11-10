@@ -7,15 +7,17 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import Kartica from "@/components/ui/Kartica";
 import NaslovSekcije from "@/components/ui/NaslovSekcije";
 
-type Zahtev = { id: string; roditelj: string; trazeno: string | null };
+type Zahtev = { id: string; roditelj: string; trazeno: string | null; dete: string | null; uzrast: number | null };
 
 /**
  * Zahtevi za potvrdu postojanja deteta — na stranici Potvrde, sidro
  * `#postojanje-deteta` (Pravilnik o učešću dece čl. 13 st. 2–6; set 4.8.2).
  *
  * Bez propova. Vidi ga SAMO član Kola ili osnivač: ruta drugima vraća 403, pa se
- * komponenta tada ne crta. 🔴 Svaki zahtev nosi ISKLJUČIVO pseudonim roditelja —
- * ni pseudonim, ni uzrast, ni pol, ni školu deteta (čl. 13 st. 2). Sopstveni zahtevi
+ * komponenta tada ne crta. Zahtev nosi pseudonim roditelja i, kad je roditelj na to
+ * pristao pri podnošenju, pseudonim i uzrast deteta (čl. 13 st. 2, set 5.1.2); 🔴 pol
+ * i škola deteta se nikad ne prikazuju. Zatečeni zahtevi bez pristanka nose samo
+ * pseudonim roditelja. Sopstveni zahtevi
  * i zahtevi za decu kojoj je posmatrač roditelj se ne prikazuju (drugi roditelj
  * potvrdu ne daje, st. 4).
  *
@@ -80,7 +82,13 @@ export default function ZahteviPostojanjaDeteta() {
         <ul className="mt-3 space-y-3">
           {zahtevi.map((z) => (
             <li key={z.id} className="rounded-kontrola bg-kolo-bg p-4">
-              <p className="text-sm text-kolo-text">{t("zahtevi_stavka", { pseudonim: z.roditelj })}</p>
+              <p className="text-sm text-kolo-text">
+                {z.dete
+                  ? z.uzrast !== null
+                    ? t("zahtevi_stavka_dete", { pseudonim: z.roditelj, dete: z.dete, uzrast: z.uzrast })
+                    : t("zahtevi_stavka_dete_bez_uzrasta", { pseudonim: z.roditelj, dete: z.dete })
+                  : t("zahtevi_stavka", { pseudonim: z.roditelj })}
+              </p>
               <label className="mt-2 flex items-start gap-2 text-sm text-kolo-text">
                 <input
                   type="checkbox"

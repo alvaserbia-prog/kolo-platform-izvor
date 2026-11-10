@@ -66,3 +66,41 @@ export function procitajDodatnaMesta(
   }
   return rezultat.slice(0, Math.max(0, max - 1));
 }
+
+/** Tačna tačka mesta predaje, odnosno pružanja na mapi. */
+export type TackaMesta = { lat: number; lng: number };
+
+/**
+ * Tačke mesta predaje (niz paralelan sa `mestaPredaje()`): svaka je `{lat, lng}` u Srbiji ili
+ * `null` (tada mapa prikazuje centar naselja). Tačka nije obavezna. `null` kao ishod = tačka
+ * je uneta, ali nije u Srbiji ili nije broj — to je greška unosa, ne izostavljena tačka.
+ */
+export function procitajTackePredaje(
+  unos: unknown,
+  brojMesta: number,
+  uSrbiji: (lat: number, lng: number) => boolean,
+): (TackaMesta | null)[] | null {
+  const niz = Array.isArray(unos) ? unos : [];
+  const izlaz: (TackaMesta | null)[] = [];
+  for (let i = 0; i < brojMesta; i++) {
+    const t = niz[i] as { lat?: unknown; lng?: unknown } | null | undefined;
+    const prazno = (v: unknown) => v === undefined || v === null || v === "";
+    if (!t || (prazno(t.lat) && prazno(t.lng))) {
+      izlaz.push(null);
+      continue;
+    }
+    const lat = Number(t.lat);
+    const lng = Number(t.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || !uSrbiji(lat, lng)) return null;
+    izlaz.push({ lat, lng });
+  }
+  return izlaz;
+}
+
+/** Tačka i-tog mesta predaje iz snimljenog niza (zatečeni ugovor `null` → nema tačke). */
+export function tackaMestaPredaje(tacke: unknown, i: number): TackaMesta | null {
+  if (!Array.isArray(tacke)) return null;
+  const t = tacke[i] as { lat?: unknown; lng?: unknown } | null | undefined;
+  if (!t || typeof t.lat !== "number" || typeof t.lng !== "number") return null;
+  return Number.isFinite(t.lat) && Number.isFinite(t.lng) ? { lat: t.lat, lng: t.lng } : null;
+}

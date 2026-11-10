@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";
 import { obradiNabavke } from "@/lib/protokol/nabavka";
 import { obradiVaucere } from "@/lib/protokol/pokroviteljstvo-dobrima";
+import { obradiVaucereLanca } from "@/lib/protokol/lanac";
 
 /**
  * GET /api/cron/nabavke
@@ -33,5 +34,7 @@ export async function GET(req: NextRequest) {
 
   const izvestaj = await obradiNabavke();
   const vauceri = await obradiVaucere();
-  return NextResponse.json({ ok: true, ...izvestaj, vauceraIsteklo: vauceri.isteklo });
+  // Program raspodele hrane i lanac (nabavke čl. 44 st. 3, čl. 52 st. 2): istek uzetih vaučera.
+  const vauceriLanca = await obradiVaucereLanca();
+  return NextResponse.json({ ok: true, ...izvestaj, vauceraIsteklo: vauceri.isteklo, vauceraLancaIsteklo: vauceriLanca.isteklo });
 }

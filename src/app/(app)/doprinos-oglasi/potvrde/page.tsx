@@ -21,14 +21,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * Potvrde zadataka — ulaz za čuvare Kola i lice koje UO ovlasti (operativni 5.0
- * čl. 13 st. 1; #51). Sve što čeka izjašnjavanje, sa rokom iz akta (čl. 12 st. 3,
+ * čl. 13 st. 1; #51), a za celine zadruge za zadrugare te zadruge i lice koje zadruga
+ * ovlasti (čl. 23 st. 5, set 5.1.2). Sve što čeka izjašnjavanje, sa rokom iz akta (čl. 12 st. 3,
  * 15 st. 2, 16 st. 1, 18 st. 2). Rok samo određuje red; dejstva nema.
  */
 export default async function PotvrdePage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
   if (!(await imaUlazZaPotvrde(session.user.id))) redirect("/doprinos-oglasi");
-  const p = await pregledZaPotvrdu();
+  const p = await pregledZaPotvrdu(session.user.id);
   const iso = (d: Date) => d.toISOString();
   return (
     <PotvrdeZadataka

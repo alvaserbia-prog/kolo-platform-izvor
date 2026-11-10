@@ -24,6 +24,7 @@ import PraznoStanje from "@/components/ui/PraznoStanje";
 import { useDijalog } from "@/components/ui/Dijalog";
 import Ucitavanje from "@/components/ui/Ucitavanje";
 import ZakljucanModul from "@/components/ui/ZakljucanModul";
+import VauceriPrograma from "@/components/lanac/VauceriPrograma";
 
 // Isti QR kao „Moj QR" na ekranu POEN — učitava se lenjo.
 const QRCodeSVG = dynamic(() => import("qrcode.react").then((m) => m.QRCodeSVG), { ssr: false });
@@ -383,6 +384,9 @@ export default function VauceriKlijent({ mojaLokacija = null }: { mojaLokacija?:
           <p className="text-sm text-kolo-muted">{t("moji_napomena")}</p>
         </section>
       )}
+
+      {/* Program raspodele hrane i lanac (nabavke Glave X i XI) — isti ekran, zasebna sekcija. */}
+      <VauceriPrograma />
 
       <p className="text-sm text-kolo-muted">
         <Link href="/postani-pokrovitelj" className="inline-flex min-h-10 items-center font-medium text-kolo-green-700 underline">{t("davalac_link")}</Link>

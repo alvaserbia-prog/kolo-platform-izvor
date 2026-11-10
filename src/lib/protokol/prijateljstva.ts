@@ -28,6 +28,7 @@
 import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { TransactionType } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
 import { emitujPoen } from "./emisija";
 import { obavesti } from "@/lib/notifikacije";
 import { IZBOR_UCESNIKA, ucesnikIzReda } from "./deca";
@@ -355,9 +356,18 @@ export async function osveziPrijateljstvaDece(roditeljId: string): Promise<numbe
  * To bi bila beskonačna kasa iz jednog jedinog prijateljstva. Sa minusom ciklus daje
  * tačno nulu, pa je i obnavljanje para bezopasno.
  */
-async function otpisiPoen(korisnikId: string, iznos: number, opis: string, kljuc: string, parametri: Record<string, string | number>) {
+async function otpisiPoen(
+  korisnikId: string,
+  iznos: number,
+  opis: string,
+  kljuc: string,
+  parametri: Record<string, string | number>,
+  spoljnaTx?: Prisma.TransactionClient,
+) {
   if (iznos <= 0) return;
-  await prisma.$transaction(async (tx) => {
+  // Uz `spoljnaTx` otpis ide u transakciju pozivaoca (brisanje naloga deteta, čl. 36):
+  // otpis prijateljima i brisanje naloga uspevaju ili padaju zajedno.
+  const izvrsi = async (tx: Prisma.TransactionClient) => {
     const w = await tx.wallet.findUnique({ where: { userId: korisnikId }, select: { id: true } });
     if (!w) throw new Error(`Korisnik ${korisnikId} nema zapis u Protokolu.`);
     await tx.wallet.update({ where: { id: w.id }, data: { balance: { decrement: iznos } } });
@@ -376,7 +386,9 @@ async function otpisiPoen(korisnikId: string, iznos: number, opis: string, kljuc
         opisParametri: parametri,
       },
     });
-  });
+  };
+  if (spoljnaTx) await izvrsi(spoljnaTx);
+  else await prisma.$transaction(izvrsi);
 }
 
 /**
@@ -471,17 +483,27 @@ export async function raskiniPrijateljstvo(korisnikId: string, prijateljstvoId: 
  * Otpis pri prelasku u punoletstvo (čl. 35 st. 2). Otpisuje SAMO drugoj strani —
  * detetu koje postaje punoletno se otpisuje zbirno, u jednom zapisu, pa se ne
  * meša sa ovim.
+ *
+ * 🔴 Ista funkcija i isti tip (`OTPIS_PRIJATELJSTVO`) važe i pri brisanju naloga
+ * deteta (čl. 36 st. 2, set 5.1.2: „kao pri punoletstvu"); tada `osnov` je
+ * `"brisanje"`, a otpis ide u transakciju brisanja. Zapis sme u minus (Pravilnik
+ * čl. 17 st. 2 t. 3).
  */
 export async function otpisiPrijateljuPriPunoletstvu(
   prijateljId: string,
-  punoletniPseudonim: string
+  punoletniPseudonim: string,
+  opcije?: { osnov?: "punoletstvo" | "brisanje"; tx?: Prisma.TransactionClient },
 ) {
+  const brisanje = opcije?.osnov === "brisanje";
   await otpisiPoen(
     prijateljId,
     PRIJATELJSTVO_POEN,
-    `Prijatelj ${punoletniPseudonim} je postao punoletan`,
-    "transakcije.prijateljstvo_punoletstvo",
-    { pseudonim: punoletniPseudonim }
+    brisanje
+      ? `Nalog prijatelja ${punoletniPseudonim} je obrisan`
+      : `Prijatelj ${punoletniPseudonim} je postao punoletan`,
+    brisanje ? "transakcije.prijateljstvo_brisanje_deteta" : "transakcije.prijateljstvo_punoletstvo",
+    { pseudonim: punoletniPseudonim },
+    opcije?.tx,
   );
 }
 

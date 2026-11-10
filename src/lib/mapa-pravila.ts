@@ -38,7 +38,8 @@ export type TackaMape = {
 };
 
 /**
- * Sastavlja tačke mape. Pokrovitelj upisan iz gazdinstva (upis vezan za gazdinstvo
+ * Sastavlja tačke mape. Pokrovitelj dobrima i uslugama ima i tačke mesta predaje
+ * (donacije čl. 18 st. 4, set 5.1.2), sa sopstvenim id-jem i `upisId`. Pokrovitelj upisan iz gazdinstva (upis vezan za gazdinstvo
  * koje je na mapi) ne dobija drugu tačku na istom mestu: njegovi vaučeri idu uz
  * tačku gazdinstva.
  */
@@ -54,6 +55,8 @@ export function sastaviTacke(
     lng: number;
     vauceri: number;
     gazdinstvoId: string | null;
+    /** Mesto predaje (set 5.1.2): id tačke nije id upisa. */
+    upisId?: string;
   }[],
 ): TackaMape[] {
   const naMapi = new Set(gazdinstva.map((g) => g.id));
@@ -87,7 +90,7 @@ export function sastaviTacke(
         lng: p.lng,
         logoUrl: p.logoUrl,
         domace: false,
-        upisId: p.id,
+        upisId: p.upisId ?? p.id,
         vauceri: p.vauceri,
       })),
   ];

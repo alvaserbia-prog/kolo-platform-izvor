@@ -65,7 +65,7 @@ export type Vidljivost = "SVI" | "UCESNIK" | "ADMIN";
 
 export type SifraPokazatelja =
   | "Z1" | "Z2" | "Z3" | "Z4" | "Z5" | "Z6" | "Z7" | "Z8" | "Z9" | "Z10" | "Z11"
-  | "K1" | "K2" | "K3" | "K4" | "K4D" | "K5" | "K6" | "K7" | "K8" | "K9" | "K10";
+  | "K1" | "K2" | "K4" | "K4D" | "K5" | "K6" | "K7" | "K8" | "K9" | "K10";
 
 export type DefinicijaPokazatelja = {
   sifra: SifraPokazatelja;
@@ -110,8 +110,6 @@ export const POKAZATELJI: readonly DefinicijaPokazatelja[] = [
   { sifra: "K1", grupa: "KONCENTRACIJA", jedinica: "PROCENAT", smernica: { smer: "MANJE", zeleno: 40, zuto: 60 }, vidi: "SVI" },
   /** K2: deo opticaja u zapisima osnivača. */
   { sifra: "K2", grupa: "KONCENTRACIJA", jedinica: "PROCENAT", smernica: { smer: "MANJE", zeleno: 25, zuto: 33 }, vidi: "SVI" },
-  /** K3: osnivački doprinos (kanal) u ukupnom broju POEN-a. */
-  { sifra: "K3", grupa: "KONCENTRACIJA", jedinica: "PROCENAT", smernica: { smer: "MANJE", zeleno: 25, zuto: 30 }, vidi: "SVI" },
   /** K4: najveći deo jednog kanala (bez dinarskih) u ukupnom broju POEN-a. */
   { sifra: "K4", grupa: "KONCENTRACIJA", jedinica: "PROCENAT", smernica: { smer: "MANJE", zeleno: 40, zuto: 60 }, vidi: "SVI" },
   /** K4D: deo POEN-a iz donacija i pokroviteljstva — tačno samo admin (odluka 2a). */

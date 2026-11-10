@@ -184,25 +184,44 @@ export type LiceKojePotvrdjuje = {
   jeCuvar: boolean;
   /** Živo ovlašćenje UO (`OperativnoOvlascenje` bez opoziva). */
   ovlascenje: { izuzetakPredlagaca: boolean } | null;
+  /**
+   * Zadruge čije organizacione celine lice potvrđuje (čl. 13 st. 1, 23 st. 5; zadruge
+   * čl. 17 st. 5): one u kojima je zadrugar koji je učesnik i ona za koju je lice koje
+   * zadruga ovlasti (zadružni admin, `User.adminZadrugaId`).
+   */
+  zadruge?: readonly string[];
 };
 
+/** Zadatak u meri u kojoj određuje ko potvrđuje: opšti ili celina jedne zadruge. */
+export type VrstaZadatka = { zadruzni: boolean; krugId: string | null };
+
 /**
- * Čl. 13 st. 1 — izvršenje potvrđuju čuvari Kola i lice koje UO ovlasti. 🔴 Admin
- * nivo sam po sebi nije osnov: kolona `admin` je alat operative, ne ovlašćenje UO.
- * Čl. 23 st. 5 — zadružni doprinos potvrđuje SAMO čuvar Kola.
+ * Čl. 13 st. 1 — izvršenje zadatka potvrđuju čuvari Kola i lice koje UO ovlasti.
+ * 🔴 Admin nivo sam po sebi nije osnov: kolona `admin` je alat operative, ne
+ * ovlašćenje UO.
+ *
+ * 🔴 Organizacionu celinu zadruge (čl. 23 st. 5, set 5.1.2) potvrđuju SAMO zadrugari te
+ * zadruge i lice koje zadruga ovlasti — čuvar Kola i lice koje ovlasti UO nisu
+ * potvrđivači zadružne celine.
  */
-export function smePotvrdjivati(l: LiceKojePotvrdjuje, zadruzni = false): boolean {
-  if (zadruzni) return l.jeCuvar;
+export function smePotvrdjivati(l: LiceKojePotvrdjuje, zadatak?: VrstaZadatka | null): boolean {
+  if (zadatak?.zadruzni) return zadatak.krugId != null && (l.zadruge ?? []).includes(zadatak.krugId);
   return l.jeCuvar || l.ovlascenje != null;
+}
+
+/** Ulaz na ekran Potvrde zadataka: potvrđuje opšte zadatke ili celine bar jedne zadruge. */
+export function imaUlazZaPotvrdeLica(l: LiceKojePotvrdjuje): boolean {
+  return smePotvrdjivati(l) || (l.zadruge ?? []).length > 0;
 }
 
 /**
  * Čl. 13 st. 3–4 i čl. 23 st. 5 — sukob interesa. Vraća razlog ili `null`.
- *  - izvršilac istog zadatka nikad (bez izuzetka);
+ *  - izvršilac istog zadatka nikad (bez izuzetka) — ni zadrugar ni lice koje zadruga
+ *    ovlasti ne potvrđuje celinu koju je sam izvršio;
  *  - lice koje je zadatak objavilo ne, osim lica koje UO za to izričito ovlasti dok
  *    zadatke objavljuje Fondacija (st. 4) — 🔴 superadmin NIJE izuzet po nivou;
- *  - kod zadružnog doprinosa ni lice koje je celinu dodelilo ni lice koje radi u ime
- *    te zadruge.
+ *  - organizacionu celinu objavljuje zadruga, pa zabrana za predlagača ne isključuje
+ *    zadrugare ni lice koje zadruga ovlasti (st. 4, set 5.1.2).
  */
 export function sukobInteresa(p: {
   licaId: string;
@@ -211,17 +230,47 @@ export function sukobInteresa(p: {
   izvorFondacija: boolean;
   izuzetakPredlagaca: boolean;
   zadruzni?: boolean;
-  dodelioId?: string | null;
-  radiUImeZadruge?: boolean;
 }): string | null {
   if (p.licaId === p.izvrsilacId) return "Ne možeš odlučivati o sopstvenoj prijavi ni sopstvenom izvršenju (čl. 13 st. 3).";
-  if (p.zadruzni) {
-    if (p.dodelioId && p.licaId === p.dodelioId) return "Lice koje je celinu dodelilo ne potvrđuje njeno izvršenje (čl. 23 st. 5).";
-    if (p.radiUImeZadruge) return "Lice koje radi u ime zadruge ne potvrđuje zadružni doprinos (čl. 23 st. 5).";
-  }
-  if (p.licaId === p.predlagacId && !(p.izvorFondacija && p.izuzetakPredlagaca && !p.zadruzni))
+  if (p.zadruzni) return null;
+  if (p.licaId === p.predlagacId && !(p.izvorFondacija && p.izuzetakPredlagaca))
     return "Lice koje je zadatak objavilo ne potvrđuje na njemu (čl. 13 st. 4).";
   return null;
+}
+
+// ── Ko se prijavljuje (čl. 9) ────────────────────────────────────────────────
+
+/**
+ * Čl. 9 st. 4 (osnivački čl. 3 st. 5, set 5.1.2) — osnivač u smislu Pravilnika o
+ * osnivačkom doprinosu (lice sa udelom u odluci o raspodeli) ne prijavljuje se za
+ * izvršenje zadatka, uključujući organizacionu celinu zadruge, dok kanal osnivačkog
+ * doprinosa nije zatvoren. 🔴 To nije `jeOsnivac` (početni čuvar Kola), nego red u
+ * odluci o raspodeli (`Osnivac`).
+ */
+export function osnivacSmePrijavu(p: { osnivacDoprinosa: boolean; kanalZatvoren: boolean }): boolean {
+  return !p.osnivacDoprinosa || p.kanalZatvoren;
+}
+
+export const PORUKA_OSNIVAC_PRIJAVA =
+  "Osnivač se ne prijavljuje za izvršenje zadatka dok se kanal osnivačkog doprinosa ne zatvori (čl. 9 st. 4).";
+
+/**
+ * Čl. 9 st. 3 — zadruga sme obrazloženim kvalifikacionim uslovom ograničiti prijavu
+ * za svoju celinu na svoje zadrugare. Bez obrazloženja uslov se ne postavlja.
+ */
+export function proveriUslovZadrugara(p: { samoZadrugari: unknown; obrazlozenje: unknown }):
+  | { ok: true; samoZadrugari: boolean; obrazlozenje: string | null }
+  | { ok: false; greska: string } {
+  if (p.samoZadrugari !== true) return { ok: true, samoZadrugari: false, obrazlozenje: null };
+  const o = tekst(p.obrazlozenje);
+  if (o.length < MIN_OBRAZLOZENJA)
+    return { ok: false, greska: "Uslov „samo zadrugari ove zadruge” mora biti obrazložen (čl. 9 st. 3)." };
+  return { ok: true, samoZadrugari: true, obrazlozenje: o };
+}
+
+/** Prijava na celinu sa uslovom „samo zadrugari” prima se samo od zadrugara te zadruge. */
+export function ispunjavaUslovZadrugara(p: { samoZadrugari: boolean; jeZadrugar: boolean }): boolean {
+  return !p.samoZadrugari || p.jeZadrugar;
 }
 
 // ── Izjašnjavanje o celinama (čl. 15 st. 2) ──────────────────────────────────

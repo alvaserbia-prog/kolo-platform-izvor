@@ -29,8 +29,12 @@ interface Donacija {
   potvrdaPoslata: boolean;
   unapred: boolean;
   javno: boolean;
-  /** Ime još stoji u listi — tada se nudi povlačenje (donacije čl. 12). */
+  /** Ime još stoji u listi. */
   imeObjavljeno: boolean;
+  /** Potvrđena javna donacija — nudi se prevođenje u anonimnu (donacije čl. 12, set 5.1.2). */
+  smePrevestiUAnonimnu: boolean;
+  prevedenaUAnonimnu: boolean;
+  /** Zatečena javna donacija kojoj je ime povučeno po pravilu pre seta 5.1.2. */
   imePovuceno: boolean;
   imaUgovor: boolean;
   createdAt: string;
@@ -96,13 +100,24 @@ export default function DonacijeKlijent() {
     fetch("/api/donacije").then((r) => r.json()).then(setData).catch(() => {});
   }
 
-  // Povlačenje imena iz liste (donacije čl. 12). Jednosmerno — ime se briše iz
-  // zapisa, pa se pre slanja traži potvrda.
-  async function povuciIme(id: string) {
-    if (!(await potvrdi({ poruka: t("povuci_ime_potvrda"), opasno: true }))) return;
+  // Prevođenje javne donacije u anonimnu (donacije čl. 12, set 5.1.2). Jednosmerno:
+  // ime se briše iz zapisa, a doprinos po toj donaciji se poništava, i u minus
+  // (Pravilnik čl. 17 st. 2 t. 11). Pre potvrde ekran kaže tačan broj POEN-a koji se
+  // poništava i stanje zapisa posle toga — broj daje server (pregled), ne ekran.
+  async function prevediUAnonimnu(id: string) {
     setPovlacenje(id);
     setPovlacenjeGreska(null);
     try {
+      const pr = await fetch(`/api/donacije/${id}/povuci-ime`);
+      if (!pr.ok) {
+        setPovlacenjeGreska(id);
+        return;
+      }
+      const pregled: { ponistava: number; stanjePosle: number; nivoPosle: number } = await pr.json();
+      const poruka =
+        t("anonimna_potvrda", { iznos: pregled.ponistava.toLocaleString(intlTag(locale)), nivo: pregled.nivoPosle }) +
+        (pregled.stanjePosle < 0 ? " " + t("anonimna_potvrda_minus", { stanje: pregled.stanjePosle.toLocaleString(intlTag(locale)) }) : "");
+      if (!(await potvrdi({ poruka, opasno: true }))) return;
       const r = await fetch(`/api/donacije/${id}/povuci-ime`, { method: "POST" });
       if (!r.ok) {
         setPovlacenjeGreska(id);
@@ -289,7 +304,7 @@ export default function DonacijeKlijent() {
                       <PosaljiPotvrdu donationId={d.id} onGotovo={() => { setPotvrdaZa(null); osvezi(); }} />
                     </div>
                   )}
-                  {(d.status === "CONFIRMED" || d.status === "NA_PROVERI") && d.poenEmitted > 0 && (
+                  {(d.status === "CONFIRMED" || d.status === "NA_PROVERI") && d.poenEmitted > 0 && !d.prevedenaUAnonimnu && (
                     <p className="text-xs text-kolo-green-700 mt-1">
                       +{tc("poen_n", { n: d.poenEmitted })}
                     </p>
@@ -304,21 +319,23 @@ export default function DonacijeKlijent() {
                       {t("ugovor_link")}
                     </a>
                   )}
-                  {d.imeObjavljeno && (
+                  {d.smePrevestiUAnonimnu && (
                     <button
                       type="button"
-                      onClick={() => povuciIme(d.id)}
+                      onClick={() => prevediUAnonimnu(d.id)}
                       disabled={povlacenje === d.id}
                       className="block ml-auto min-h-9 text-xs text-kolo-muted underline hover:text-kolo-text disabled:opacity-50"
                     >
-                      {t("povuci_ime")}
+                      {t("prevedi_u_anonimnu")}
                     </button>
                   )}
-                  {d.imePovuceno && (
+                  {d.prevedenaUAnonimnu ? (
+                    <p className="text-xs text-kolo-muted mt-1">{t("prevedena_u_anonimnu")}</p>
+                  ) : d.imePovuceno ? (
                     <p className="text-xs text-kolo-muted mt-1">{t("ime_povuceno")}</p>
-                  )}
+                  ) : null}
                   {povlacenjeGreska === d.id && (
-                    <p className="text-xs text-kolo-danger mt-1">{t("povuci_ime_greska")}</p>
+                    <p className="text-xs text-kolo-danger mt-1">{t("anonimna_greska")}</p>
                   )}
                 </div>
               </div>

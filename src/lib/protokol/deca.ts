@@ -39,6 +39,7 @@ import {
   statusUcesnika,
 } from "@/lib/status-ucesnika-pravila";
 import {
+  PRIJATELJSTVO_POEN,
   PORUKA_CEKA_RODITELJA,
   UZRAST_SA_ODRASLIMA,
   granicaDatumaZaUzrast,
@@ -642,7 +643,23 @@ export async function obrisiDecjiNalog(
   osnov: string
 ) {
   const { obrisiKutijuZelja } = await import("./kutija-zelja");
-  await prisma.$transaction(async (tx) => {
+  const { otpisiPrijateljuPriPunoletstvu } = await import("./prijateljstva");
+  const pogodjeni = await prisma.$transaction(async (tx) => {
+    // ── Otpis prijateljima (čl. 36 st. 2, Pravilnik čl. 17 st. 2 t. 3; set 5.1.2) ──
+    // Svakom prijatelju se poništava po 500 evidentiranih po tom prijateljstvu, kao pri
+    // punoletstvu (čl. 35 st. 2): ista funkcija, isti tip, i kad zapis ode u minus.
+    // Broje se samo živa isplaćena prijateljstva — raskinuta su već otpisana, a braća i
+    // sestre i prijateljstva na čekanju nikad nisu nosila POEN (`poenEvidentiran`).
+    // Detetu se ne otpisuje posebno: ceo njegov zapis se poništava ispod.
+    const isplacena = await tx.prijateljstvo.findMany({
+      where: { OR: [{ aId: deteId }, { bId: deteId }], raskinutAt: null, poenEvidentiran: true },
+      select: { aId: true, bId: true },
+    });
+    const prijatelji = isplacena.map((p) => (p.aId === deteId ? p.bId : p.aId));
+    for (const prijateljId of prijatelji) {
+      await otpisiPrijateljuPriPunoletstvu(prijateljId, pseudonim, { osnov: "brisanje", tx });
+    }
+
     const w = await tx.wallet.findUnique({ where: { userId: deteId } });
     const balans = w?.balance ?? 0;
     // 🔴 `increment: balans` pokriva i NEGATIVNO stanje. Dečji zapis sme u minus
@@ -680,9 +697,8 @@ export async function obrisiDecjiNalog(
     // se brišu. Potvrde postojanja (čl. 13) padaju kaskadno sa vezom roditelja ispod.
     await tx.roditeljstvoPotvrda.deleteMany({ where: { deteId, status: "CEKA" } });
 
-    // Prijateljstva se brišu bez otpisa: POEN je upravo poništen u celini, pa bi
-    // otpis po prijateljstvu isti iznos oduzeo dvaput. Druga strana zadržava svojih
-    // 500 — nije ona ta koja odlazi.
+    // Prijateljstva prestaju. Detetov deo je u poništenju celog zapisa iznad, a
+    // prijateljima je otpisano na početku transakcije (čl. 36 st. 2).
     await tx.prijateljstvo.deleteMany({ where: { OR: [{ aId: deteId }, { bId: deteId }] } });
     await tx.prijateljToken.deleteMany({ where: { korisnikId: deteId } });
     // Kutija želja: predlozi deteta (sa podrškama i odgovorima) i podrške koje je
@@ -712,9 +728,23 @@ export async function obrisiDecjiNalog(
         deaktiviranAt: new Date(),
       },
     });
+    return prijatelji;
   });
 
-  return { ok: true, pseudonim };
+  // Svaki pogođeni dobija obaveštenje sa iznosom (Pravilnik čl. 17 st. 3; pravilo 3:
+  // minus se nikad ne pojavljuje bez reči). Van transakcije i bez bacanja.
+  for (const prijateljId of pogodjeni) {
+    await obavesti(prijateljId, {
+      tip: "brisanje_deteta_otpis_prijatelj",
+      kljuc: "notifikacije.brisanje_deteta_otpis_prijatelj",
+      parametri: { pseudonim, iznos: PRIJATELJSTVO_POEN },
+      naslov: "Prijateljstvo je zatvoreno",
+      tekst: `Nalog prijatelja ${pseudonim} je obrisan. Vaše prijateljstvo je zatvoreno i otpisano ti je ${PRIJATELJSTVO_POEN} POENA.`,
+      link: "/prijatelji",
+    }).catch(() => {});
+  }
+
+  return { ok: true, pseudonim, otpisanoPrijateljima: pogodjeni.length };
 }
 
 // ── Izjava roditelja i potvrda postojanja deteta (čl. 12–13, set 4.8.2) ──────────
@@ -846,11 +876,15 @@ export async function javiDaZatraziPotvrdu(roditeljId: string): Promise<number> 
  * Obaveštenje (otvoreno pitanje 10 specifikacije prelaza): verifikatorima koji su
  * roditelja POTVRDILI (veza vrste POTVRDA) i članovima Kola koji su ga potvrdili kao
  * člana bez potvrde — ako su danas član Kola ili osnivač i nisu drugi roditelj istog
- * deteta. 🔴 Obaveštenje nosi ISKLJUČIVO pseudonim roditelja (čl. 13 st. 2) — bez
- * pseudonima, uzrasta, pola i škole deteta. Svi članovi Kola zahtev vide na
- * stranici Potvrde; masovno obaveštavanje se ne radi.
+ * deteta. Svi članovi Kola zahtev vide na stranici Potvrde; masovno obaveštavanje
+ * se ne radi.
+ *
+ * 🔴 Pristanak na prikaz (čl. 13 st. 2, set 5.1.2): roditelj pri podnošenju pristaje
+ * da se uz zahtev prikažu pseudonim i uzrast deteta — obavezna kućica, beleži se
+ * trenutak (`prikazPristanakAt`). Bez pristanka zahtev se ne podnosi. Pol i škola
+ * deteta se nikad ne navode.
  */
-export async function zatraziPotvrduPostojanja(roditeljId: string, deteId: string) {
+export async function zatraziPotvrduPostojanja(roditeljId: string, deteId: string, pristanakNaPrikaz: boolean) {
   const [roditelj, veza] = await Promise.all([
     prisma.user.findUnique({ where: { id: roditeljId }, select: IZBOR_POLOZAJA }),
     prisma.roditeljstvo.findUnique({
@@ -858,7 +892,7 @@ export async function zatraziPotvrduPostojanja(roditeljId: string, deteId: strin
       select: {
         id: true,
         zaustavljenaAt: true,
-        dete: { select: { maloletan: true, deaktiviranAt: true } },
+        dete: { select: { maloletan: true, deaktiviranAt: true, pseudonim: true, datumRodjenja: true } },
       },
     }),
   ]);
@@ -869,6 +903,7 @@ export async function zatraziPotvrduPostojanja(roditeljId: string, deteId: strin
     throw new DecaGreska("Nalog nije pronađen.", 404);
   }
   if (!potvrdjenIzPolja(roditelj)) throw new DecaGreska(PORUKA_POTVRDU_TRAZI_CLAN_KOLA, 403);
+  if (pristanakNaPrikaz !== true) throw new DecaGreska(PORUKA_PRISTANAK_NA_PRIKAZ, 400);
 
   const postojeci = await prisma.potvrdaPostojanjaDeteta.findUnique({
     where: { aktivnaKljuc: veza.id },
@@ -884,6 +919,7 @@ export async function zatraziPotvrduPostojanja(roditeljId: string, deteId: strin
         deteId,
         roditeljId,
         trazenoAt: new Date(),
+        prikazPristanakAt: new Date(),
         aktivnaKljuc: veza.id,
       },
       select: { id: true },
@@ -901,12 +937,29 @@ export async function zatraziPotvrduPostojanja(roditeljId: string, deteId: strin
     throw e;
   }
 
-  await javiMogucimPotvrdiocima(roditeljId, deteId, roditelj.pseudonim);
+  const godine = veza.dete.datumRodjenja ? uzrast(veza.dete.datumRodjenja, beogradskiDan()) : null;
+  await javiMogucimPotvrdiocima(roditeljId, deteId, roditelj.pseudonim, {
+    pseudonim: veza.dete.pseudonim,
+    godine,
+  });
   return { id: zahtevId, vecPostoji: false, potvrdjeno: false };
 }
 
-/** Obaveštenje o zahtevu — samo pseudonim roditelja (čl. 13 st. 2). Ne baca. */
-async function javiMogucimPotvrdiocima(roditeljId: string, deteId: string, roditeljPseudonim: string) {
+/** Poruka kad roditelj nije označio pristanak na prikaz (čl. 13 st. 2). */
+export const PORUKA_PRISTANAK_NA_PRIKAZ =
+  "Za zahtev je potreban pristanak da se prikažu pseudonim i uzrast deteta.";
+
+/**
+ * Obaveštenje o zahtevu (čl. 13 st. 2): pseudonim roditelja, navod da traži potvrdu
+ * da ima dete, i pseudonim i uzrast deteta, na koje je roditelj pristao pri
+ * podnošenju. 🔴 Pol i škola deteta se ne navode. Ne baca.
+ */
+async function javiMogucimPotvrdiocima(
+  roditeljId: string,
+  deteId: string,
+  roditeljPseudonim: string,
+  dete: { pseudonim: string; godine: number | null },
+) {
   try {
     const [veze, potvrdeClana, roditeljiDeteta] = await Promise.all([
       prisma.verifikacionaVeza.findMany({
@@ -933,10 +986,14 @@ async function javiMogucimPotvrdiocima(roditeljId: string, deteId: string, rodit
       if (k.deaktiviranAt || k.status !== UserStatus.ACTIVE || !potvrdjenIzPolja(k)) continue;
       await obavesti(k.id, {
         tip: "postojanje_zahtev",
-        kljuc: "notifikacije.postojanje_zahtev",
-        parametri: { pseudonim: roditeljPseudonim },
+        // Nov ključ (set 5.1.2): zatečena obaveštenja sa ključem `postojanje_zahtev`
+        // nose samo pseudonim roditelja i moraju i dalje da se prikazuju.
+        kljuc: dete.godine !== null ? "notifikacije.postojanje_zahtev_dete" : "notifikacije.postojanje_zahtev_dete_bez_uzrasta",
+        parametri: dete.godine !== null
+          ? { pseudonim: roditeljPseudonim, dete: dete.pseudonim, godine: dete.godine }
+          : { pseudonim: roditeljPseudonim, dete: dete.pseudonim },
         naslov: "Zahtev za potvrdu da član ima dete",
-        tekst: `${roditeljPseudonim} traži potvrdu da ima dete. Ako ga lično znaš, zahtev je na stranici Potvrde.`,
+        tekst: `${roditeljPseudonim} traži potvrdu da ima dete (${dete.pseudonim}${dete.godine !== null ? `, ${dete.godine} god.` : ""}). Ako ga lično znaš, zahtev je na stranici Potvrde.`,
         link: "/verifikacija#postojanje-deteta",
         email: false,
       }).catch(() => {});
@@ -952,8 +1009,10 @@ async function javiMogucimPotvrdiocima(roditeljId: string, deteId: string, rodit
  * dete dobijaju prazan spisak — ruta vraća 403).
  *
  * 🔴 Ne prikazuju se sopstveni zahtevi ni zahtevi za decu kojoj je posmatrač
- * roditelj (drugi roditelj potvrdu ne daje, čl. 13 st. 3). Odgovor nosi ISKLJUČIVO
- * pseudonim roditelja — ni pseudonim, ni uzrast, ni pol, ni školu deteta.
+ * roditelj (drugi roditelj potvrdu ne daje, čl. 13 st. 3). Odgovor nosi pseudonim
+ * roditelja i, samo kad je roditelj pri podnošenju pristao (`prikazPristanakAt`,
+ * set 5.1.2), pseudonim i uzrast deteta. Zatečeni zahtevi bez pristanka nose samo
+ * pseudonim roditelja. 🔴 Pol i škola deteta se nikad ne vraćaju.
  */
 export async function zahteviPostojanjaZaPotvrdu(posmatracId: string) {
   const posmatrac = await prisma.user.findUnique({ where: { id: posmatracId }, select: IZBOR_POLOZAJA });
@@ -978,14 +1037,22 @@ export async function zahteviPostojanjaZaPotvrdu(posmatracId: string) {
     select: {
       id: true,
       trazenoAt: true,
+      prikazPristanakAt: true,
       roditelj: { select: { pseudonim: true } },
+      dete: { select: { pseudonim: true, datumRodjenja: true } },
     },
   });
-  return redovi.map((r) => ({
-    id: r.id,
-    roditelj: r.roditelj.pseudonim,
-    trazeno: r.trazenoAt?.toISOString() ?? null,
-  }));
+  const danas = beogradskiDan();
+  return redovi.map((r) => {
+    const prikaz = r.prikazPristanakAt !== null;
+    return {
+      id: r.id,
+      roditelj: r.roditelj.pseudonim,
+      trazeno: r.trazenoAt?.toISOString() ?? null,
+      dete: prikaz ? r.dete.pseudonim : null,
+      uzrast: prikaz && r.dete.datumRodjenja ? uzrast(r.dete.datumRodjenja, danas) : null,
+    };
+  });
 }
 
 /**

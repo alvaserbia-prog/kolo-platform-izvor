@@ -51,6 +51,14 @@ type UgovorDobra = {
   kontrolniBroj: string | null;
   mojPotpis: boolean;
   vauceri: { slobodno: number; dodeljeno: number; iskorisceno: number; isteklo: number };
+  /** Set 5.1.3 — cena iz STIPS biltena (donacije čl. 29 st. 1): bilten i cene pijaca za proveru. */
+  stipsCena: number | null;
+  stipsKategorija: string | null;
+  stipsJedinica: string | null;
+  stipsBiltenBroj: string | null;
+  stipsBiltenUrl: string | null;
+  stipsDatumObjave: string | null;
+  stipsPijace: { pijaca: string; cena: number }[] | null;
 };
 
 type Potpis = { procitao: boolean; ovlascen: boolean; saglasan: boolean; kod: string; kodPoslat: boolean };
@@ -254,6 +262,18 @@ export default function UgovoriUpisa({ upisId }: { upisId: string }) {
                   <p className="font-semibold text-kolo-text">{u.opis}</p>
                   <p className="text-sm text-kolo-muted">{u.mestaPrikaz.join("; ")}</p>
                   <p className="text-sm text-kolo-muted">{t("ugovor_vrednost", { broj: u.brojVaucera, vrednost: rsd(u.vrednostRsd) })}</p>
+                  {u.stipsCena != null && u.stipsBiltenBroj && (
+                    <p className="text-xs text-kolo-muted">
+                      {tp("dobra_stips_izvor", {
+                        cena: rsd(u.stipsCena), jedinica: u.stipsJedinica ?? "", kategorija: u.stipsKategorija ?? "",
+                        bilten: u.stipsBiltenBroj, datum: datum(u.stipsDatumObjave),
+                      })}{" "}
+                      {(u.stipsPijace ?? []).map((p) => `${p.pijaca} ${rsd(p.cena)}`).join(", ")}
+                      {u.stipsBiltenUrl && (
+                        <> · <a href={u.stipsBiltenUrl} target="_blank" rel="noopener noreferrer" className="underline">{tp("dobra_stips_bilten_link")}</a></>
+                      )}
+                    </p>
+                  )}
                   {u.status === "POTPISAN" && (
                     <p className="text-xs text-kolo-muted">
                       {t("ugovor_stanje_vaucera", u.vauceri)} · {t("vazi_do", { datum: datum(u.vaziDo) })}

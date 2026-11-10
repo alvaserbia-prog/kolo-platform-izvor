@@ -8,12 +8,13 @@ import { imaUlazZaPotvrde, pregledZaPotvrdu } from "@/lib/protokol/operativni-po
  * GET /api/doprinos-oglasi/potvrde — sve što čeka izjašnjavanje lica koje potvrđuje
  * (operativni 5.0 čl. 12, 15, 16, 18): prijave u zadacima sa odobravanjem,
  * izvršenja celina, završne potvrde i primedbe. Ulaz imaju čuvari Kola i lice koje
- * UO ovlasti (čl. 13 st. 1) — ne admin nivo kao takav.
+ * UO ovlasti (čl. 13 st. 1) — ne admin nivo kao takav — a za celine zadruge zadrugari
+ * te zadruge i lice koje zadruga ovlasti (čl. 23 st. 5); svako vidi samo svoje.
  */
 export async function GET(_req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return await greska("Nije autorizovano.", 401);
   if (!(await imaUlazZaPotvrde(session.user.id)))
     return await greska("Izvršenje potvrđuju čuvari Kola i lice koje Upravni odbor ovlasti.", 403);
-  return NextResponse.json(await pregledZaPotvrdu());
+  return NextResponse.json(await pregledZaPotvrdu(session.user.id));
 }

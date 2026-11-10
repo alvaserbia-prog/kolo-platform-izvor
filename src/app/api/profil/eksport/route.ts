@@ -3,6 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { eksportLanca } from "@/lib/protokol/lanac";
 import { izvozKutijeZelja } from "@/lib/protokol/kutija-zelja";
 
 /**
@@ -51,6 +52,7 @@ export async function GET() {
     kutijaZelja,
     praceneKategorije,
     zahteviZaPrepis,
+    partnerstva,
   ] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
@@ -251,6 +253,9 @@ export async function GET() {
         brojVaucera: true, cenaPoJedinici: true, vrednostRsd: true, mesto: true, adresaPredaje: true, dodatnaMestaPredaje: true, dodatneAdresePredaje: true,
         status: true, ugovorTekst: true, potpisanoAt: true, vaziDo: true, poenEvidentirano: true, createdAt: true,
         raskinutoAt: true, raskidObrazlozenje: true, raskidOtpis: true,
+        // Set 5.1.2: zabeleženo do narednog perioda (čl. 33 st. 1) i izvor cene (STIPS, čl. 29 st. 1).
+        cekaPeriod: true, stipsCena: true, stipsKategorija: true, stipsDatumObjave: true,
+        stipsBiltenBroj: true, stipsBiltenUrl: true, stipsJedinica: true, stipsPijace: true, tackePredaje: true,
       },
       orderBy: { createdAt: "desc" },
     }),
@@ -351,6 +356,26 @@ export async function GET() {
       },
       orderBy: { createdAt: "desc" },
     }),
+    // Partnerstvo (donacije Glava VI, set 5.1.2) — prijava sa snimkom upisa, izjave, snimljen
+    // tekst ugovora, izvršenja i zabeležen/evidentiran doprinos po njima. Fotografija cenovnika
+    // se ne izvozi: to je cenovnik partnera, ne podatak podnosioca.
+    prisma.partnerstvo.findMany({
+      where: { podnosilacId: userId },
+      select: {
+        vrstaDavaoca: true, naziv: true, pib: true, maticniBroj: true, adresaSedista: true, bpg: true,
+        zastupnikImePrezime: true, zastupnikFunkcija: true, odnosPremaDavaocu: true,
+        kontaktEmail: true, kontaktTelefon: true, izjavaOvlascenjeAt: true,
+        potvrdaEvidentiranjaAt: true, potvrdaEvidentiranjaTekst: true, izjavaPodnosiocaAt: true,
+        opis: true, jedinicaMere: true, cenaPoJedinici: true, obim: true, vrednostRsd: true, rokIzvrsenja: true,
+        obradaPodataka: true, dpaZabelezenAt: true, status: true, odbijenoRazlog: true,
+        ugovorTekst: true, kontrolniBroj: true, zakljucenoAt: true, prestaloAt: true, prestanakRazlog: true, createdAt: true,
+        izvrsenja: {
+          orderBy: { createdAt: "desc" },
+          select: { obim: true, opis: true, status: true, odbijenoRazlog: true, poen: true, potvrdjenoAt: true, evidentiranoAt: true, ponistenoAt: true, createdAt: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
   ]);
 
   const eksport = {
@@ -392,8 +417,26 @@ export async function GET() {
     })),
     gazdinstva: clanstvaGazdinstva,
     upisiPokrovitelja,
+    // Set 5.1.2: upis i prijava koje je za korisnika pripremila Fondacija (donacije čl. 16 st. 6),
+    // bez fotografija cenovnika i bez toga ko je od administratora pripremio.
+    pripremePokroviteljstva: await prisma.pripremaPokroviteljstva.findMany({
+      where: { korisnikId: userId },
+      select: {
+        upisPodaci: true, postojeciUpisId: true, mapaMesto: true, vrstaPrijave: true, vrednostRsd: true, predmetDobra: true,
+        mestoPredaje: true, prihvacenoAt: true, createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    partnerstvo: partnerstva.map((p) => ({
+      ...p,
+      cenaPoJedinici: Number(p.cenaPoJedinici),
+      obim: Number(p.obim),
+      vrednostRsd: Number(p.vrednostRsd),
+      izvrsenja: p.izvrsenja.map((i) => ({ ...i, obim: Number(i.obim) })),
+    })),
     pokroviteljstvoDobrima: ugovoriDobra.map((u) => ({
       ...u,
+      stipsCena: u.stipsCena == null ? null : Number(u.stipsCena),
       cenaPoJedinici: Number(u.cenaPoJedinici),
       vrednostRsd: Number(u.vrednostRsd),
       izvori: u.izvori.map((i) => ({ ...i, cena: Number(i.cena) })),
@@ -418,6 +461,9 @@ export async function GET() {
     kutijaZelja,
     praceneKategorije,
     zahteviZaPrepis: zahteviZaPrepis.map(({ primalac, ...z }) => ({ ...z, primalac: primalac.pseudonim })),
+    // Set 5.1.2 — program raspodele hrane i lanac (nabavke Glave X i XI): prijave na poziv,
+    // karike sa snimljenim ugovorom, zapisnici u kojima je korisnik predao ili primio robu, vaučeri.
+    programRaspodeleHrane: await eksportLanca(userId),
   };
 
   return new NextResponse(JSON.stringify(eksport, null, 2), {

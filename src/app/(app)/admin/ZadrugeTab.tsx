@@ -10,7 +10,7 @@ import { KLASE_UNOSA } from "@/components/ui/Polje";
 import { useDijalog } from "@/components/ui/Dijalog";
 
 type Zadrugar = { clanstvoId: string; userId: string; pseudonim: string; imePrezime: string | null; telefon: string | null; od: string; miruje: boolean };
-type ZadatakZadruge = { id: string; naziv: string; status: string; mesta: number; predlozeniPoen: number; brojCelina: number | null; izvrsioci: { pseudonim: string; prihvatio: boolean }[] };
+type ZadatakZadruge = { id: string; naziv: string; status: string; mesta: number; predlozeniPoen: number; brojCelina: number | null; izvrsioci: { pseudonim: string; primljen: boolean }[] };
 type Zadruga = {
   id: string;
   naziv: string;
@@ -44,8 +44,9 @@ const poen = (n: number) => `${n.toLocaleString("sr-RS")} POEN`;
  *
  * Zadruge 5.0: zadrugar koji nije učesnik miruje (čl. 6 st. 1); od otkaza ugovora,
  * odnosno pokretanja brisanja, zapis je zamrznut (čl. 22 st. 2); zadružni doprinos
- * (čl. 17; operativni čl. 23) objavljuje Fondacija po predlogu zadruge, a izvršioce
- * dodeljuje zadruga. Upis kruga kao zadruge je brisan u setu 5.0.
+ * (čl. 17; operativni čl. 23) objavljuje zadruga — zadružni admin ili administratorski
+ * tim u ime zadruge — a učesnici se na celinu sami prijavljuju (set 5.1.2: dodele
+ * nema). Upis kruga kao zadruge je brisan u setu 5.0.
  *
  * Zadružni admin (U2) vidi ovaj isti ekran na `/admin/zadruga`, samo za svoju
  * zadrugu (`samoSvoja` iz rute): bez upisa zadruge, prestanka i izdavanja drugoj
@@ -63,9 +64,8 @@ export default function ZadrugeTab() {
   const { dijalog, potvrdi } = useDijalog();
 
   const [nova, setNova] = useState({ naziv: "", lokalitet: "", maticniBroj: "", pib: "", adresa: "", ugovorAt: "" });
-  const prazanZadatak = { title: "", description: "", opisCeline: "", procenaObima: "", poenPoCelini: "", brojCelina: "", obrazlozenje: "", positions: "1", deadline: "", rokIzvrsenja: "" };
+  const prazanZadatak = { title: "", description: "", opisCeline: "", procenaObima: "", poenPoCelini: "", brojCelina: "", obrazlozenje: "", positions: "1", deadline: "", rokIzvrsenja: "", saOdobravanjem: false, samoZadrugari: false, samoZadrugariObrazlozenje: "" };
   const [zadatak, setZadatak] = useState(prazanZadatak);
-  const [dodela, setDodela] = useState<Record<string, string>>({});
   const [osnovZamrzavanja, setOsnovZamrzavanja] = useState("OTKAZ_UGOVORA");
   const [zadrugar, setZadrugar] = useState({ pseudonim: "", imePrezime: "", pristanak: false });
   const [zapis, setZapis] = useState({ osnov: "PRIJEM", pseudonim: "", primalacZadrugaId: "", iznos: "", opis: "" });
@@ -246,26 +246,13 @@ export default function ZadrugeTab() {
                       <li key={o.id} className="rounded-kontrola bg-kolo-bg px-3 py-2">
                         <p className="font-medium">{o.naziv} <span className="text-xs text-kolo-muted">· {o.status === "ACTIVE" ? t("ped_oglas_aktivan") : t("ped_oglas_zatvoren")} · {o.brojCelina ?? "—"} × {o.brojCelina ? poen(Math.floor(o.predlozeniPoen / o.brojCelina)) : "—"}</span></p>
                         <p className="text-xs text-kolo-muted">
-                          {o.izvrsioci.length === 0 ? t("zad_zd_bez_izvrsilaca") : o.izvrsioci.map((i) => `${i.pseudonim}${i.prihvatio ? "" : ` (${t("zad_zd_ceka_prihvatanje")})`}`).join(", ")}
+                          {o.izvrsioci.length === 0 ? t("zad_zd_bez_izvrsilaca") : o.izvrsioci.map((i) => `${i.pseudonim}${i.primljen ? "" : ` (${t("zad_zd_ceka_odobrenje")})`}`).join(", ")}
                         </p>
-                        {o.status === "ACTIVE" && !z.zamrznutoAt && o.izvrsioci.length < o.mesta && (
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            <input className={polje + " max-w-xs"} placeholder={t("zad_pseudonim")} aria-label={t("zad_pseudonim")} value={dodela[o.id] ?? ""}
-                              onChange={(e) => setDodela({ ...dodela, [o.id]: e.target.value })} />
-                            <button disabled={radi} className={klaseDugmeta({ velicina: "sm" })}
-                              onClick={async () => {
-                                if (await posalji(`/api/admin/zadruge/${z.id}/zadruzni/${o.id}/dodela`, { pseudonim: dodela[o.id] ?? "" }))
-                                  setDodela({ ...dodela, [o.id]: "" });
-                              }}>
-                              {t("zad_zd_dodeli")}
-                            </button>
-                          </div>
-                        )}
                       </li>
                     ))}
                   </ul>
                 )}
-                {!samoSvoja && !z.zamrznutoAt && (iznosJedinice == null ? (
+                {!z.zamrznutoAt && (iznosJedinice == null ? (
                   <p className="mt-2 text-xs text-kolo-muted">{t("zad_jedinica_nije_utvrdjena")}</p>
                 ) : (
                   <div className="mt-3 space-y-2">
@@ -286,6 +273,23 @@ export default function ZadrugeTab() {
                         </label>
                       ))}
                     </div>
+                    {/* Prijem po redosledu ili sa odobravanjem (operativni čl. 11, 12) i uslov
+                        „samo zadrugari ove zadruge" uz obrazloženje (čl. 9 st. 3). */}
+                    <label className="flex items-start gap-2 text-sm text-kolo-text">
+                      <input type="checkbox" className="mt-0.5" checked={zadatak.saOdobravanjem}
+                        onChange={(e) => setZadatak({ ...zadatak, saOdobravanjem: e.target.checked })} />
+                      <span>{t("zad_zd_saOdobravanjem")}</span>
+                    </label>
+                    <label className="flex items-start gap-2 text-sm text-kolo-text">
+                      <input type="checkbox" className="mt-0.5" checked={zadatak.samoZadrugari}
+                        onChange={(e) => setZadatak({ ...zadatak, samoZadrugari: e.target.checked })} />
+                      <span>{t("zad_zd_samoZadrugari")}</span>
+                    </label>
+                    {zadatak.samoZadrugari && (
+                      <input className={polje} placeholder={t("zad_zd_samoZadrugariObrazlozenje")} aria-label={t("zad_zd_samoZadrugariObrazlozenje")}
+                        value={zadatak.samoZadrugariObrazlozenje}
+                        onChange={(e) => setZadatak({ ...zadatak, samoZadrugariObrazlozenje: e.target.value })} />
+                    )}
                     <button disabled={radi} className={dugme}
                       onClick={async () => {
                         if (await posalji(`/api/admin/zadruge/${z.id}/zadruzni`, zadatak)) setZadatak(prazanZadatak);

@@ -1,3 +1,4 @@
+import { zabelezenoPartnerstvo } from "@/lib/protokol/partnerstvo";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
@@ -63,11 +64,18 @@ export default async function NovcanikPage({
   ]);
   // Set 5.0.9: zabeleženo pokroviteljstvo (čeka naredni obračunski period) i privremeno
   // ograničen iznos po poništenju donacije unapred — oba zasebni redovi, nikad uz stanje.
-  const [zabelezenPokr, ogranicenoIznos] = await Promise.all([
+  // Set 5.1.2: i doprinos po zaključenom ugovoru o pokroviteljstvu dobrima i uslugama (donacije čl. 33).
+  // Set 5.1.2: i doprinos po potvrđenom izvršenju partnerstva (donacije čl. 43 st. 1).
+  const [zabelezenPokr, zabelezenDobra, zabelezenPartnerstvo, ogranicenoIznos] = await Promise.all([
     prisma.pokroviteljBonusEmisija.aggregate({
       where: { vlasnikId: session.user.id, cekaPeriod: true, transactionId: null },
       _sum: { bonusPoen: true },
     }),
+    prisma.ugovorDobra.aggregate({
+      where: { podnosilacId: session.user.id, status: "POTPISAN", cekaPeriod: true, emisijaTxId: null },
+      _sum: { poenEvidentirano: true },
+    }),
+    zabelezenoPartnerstvo(session.user.id),
     wallet ? ograniceno(wallet.id) : Promise.resolve(0),
   ]);
   const zabelezenDoprinos = zabelezenOglas;
@@ -108,7 +116,7 @@ export default async function NovcanikPage({
         cekamPotvrdjene={maloletan ? [] : zabelezenePotvrde.cekamPotvrdjene}
         // Maloletni nalog ne učestvuje u nabavci (nabavke čl. 4), pa reda ni nema.
         rezervisanoNabavka={maloletan ? 0 : rezervisano}
-        zabelezenPokroviteljstvo={maloletan ? 0 : (zabelezenPokr._sum.bonusPoen ?? 0)}
+        zabelezenPokroviteljstvo={maloletan ? 0 : (zabelezenPokr._sum.bonusPoen ?? 0) + (zabelezenDobra._sum.poenEvidentirano ?? 0) + zabelezenPartnerstvo}
         ogranicenoIznos={ogranicenoIznos}
         maloletan={maloletan}
         // Korisnik koji nije u Kolu prepisuje i prima prepis (Uslovi čl. 14 st. 3);

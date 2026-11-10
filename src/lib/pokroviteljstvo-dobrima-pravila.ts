@@ -40,7 +40,9 @@ import {
 } from "@/lib/hrana-pravila";
 import { smeUcestvovati, type UcesnikProvera } from "@/lib/nabavka-pravila";
 import { FONDACIJA } from "@/lib/donacija-ugovor";
-import { MAX_MESTA_PREDAJE, mestaPredaje, prikazMestaPredaje } from "@/lib/mesta-pravila";
+import { MAX_MESTA_PREDAJE, mestaPredaje, prikazMestaPredaje, procitajTackePredaje, type TackaMesta } from "@/lib/mesta-pravila";
+import { lokacijaUSrbiji } from "@/lib/gazdinstvo-pravila";
+import { ZAOKRUZIVANJE_STIPS } from "@/lib/stips-bilten-pravila";
 
 // ─── Konstante iz akta ────────────────────────────────────────────────────────
 
@@ -189,6 +191,45 @@ export function vrednostUgovora(brojVaucera: number, cenaPoJedinici: number): nu
   return Math.round(brojVaucera * cenaPoJedinici * 100) / 100;
 }
 
+/**
+ * STIPS cena (čl. 29 st. 1, set 5.1.3): kad je predmet poljoprivredni proizvod za koji Sistem
+ * tržišnih informacija poljoprivrede Srbije (STIPS) objavljuje cenu, cena po jedinici je cena
+ * za Republiku Srbiju — aritmetički prosek dominantnih cena svih pijaca koje su u poslednjem
+ * biltenu objavile cenu za tu kategoriju, zaokružen kao u biltenu (`prosekStips`) — a ne cena iz
+ * cenovnika. 🔴 Fondacija pri prihvatanju bira samo KATEGORIJU; cenu, bilten i cene pijaca
+ * sistem povlači iz evidencije biltena (`cenaStipsZa`), pa proizvoljna cena mimo biltena ne
+ * može da se unese. Izvor (bilten i cene pijaca) se snima uz ugovor.
+ */
+export function procitajStipsKategoriju(
+  b: Record<string, unknown> | null | undefined,
+): { ok: true; kategorija: string | null } | { ok: false; razlog: string } {
+  if (!b || b.stips !== true) return { ok: true, kategorija: null };
+  const kategorija = typeof b.stipsKategorija === "string" ? b.stipsKategorija.trim() : "";
+  if (kategorija.length < 2 || kategorija.length > 120)
+    return { ok: false, razlog: "Izaberi kategoriju proizvoda iz STIPS biltena." };
+  return { ok: true, kategorija };
+}
+
+/** Izvor STIPS cene kako ga navodi ugovor: bilten (broj, datum, link) i cene pijaca. */
+export type StipsUgovor = {
+  kategorija: string;
+  jedinica: string;
+  biltenBroj: string;
+  biltenUrl: string;
+  datumObjave: Date;
+  pijace: { pijaca: string; cena: number }[];
+};
+
+/** Rečenica o izvoru cene (ugovor i ekran): bilten, zaokruživanje i cene pijaca. */
+export function izvorStipsCene(s: StipsUgovor, datum: (d: Date) => string = (d) => d.toLocaleDateString("sr-RS")): string {
+  const pijace = s.pijace.map((p) => `${p.pijaca} ${p.cena.toLocaleString("sr-RS")}`).join(", ");
+  return (
+    `cena za Republiku Srbiju za kategoriju „${s.kategorija}” (${s.jedinica}) je aritmetički prosek dominantnih cena ` +
+    `pijaca iz biltena Sistema tržišnih informacija poljoprivrede Srbije br. ${s.biltenBroj} od ${datum(s.datumObjave)} ` +
+    `(${s.biltenUrl}), ${ZAOKRUZIVANJE_STIPS}; cene pijaca: ${pijace}`
+  );
+}
+
 /** Čl. 29 st. 3 — vrednost ugovora mora biti između 10.000 i 50.000 RSD. */
 export function uGranicamaVrednosti(vrednostRsd: number): boolean {
   return (
@@ -254,6 +295,23 @@ export function ulaziURaskid(v: { id: string; status: string }, vaucerPrigovoraI
   if (v.status === "NEIZVRSEN") return false;
   if (v.status === "ISKORISCEN") return v.id === vaucerPrigovoraId;
   return true;
+}
+
+/**
+ * Stanje evidencije doprinosa po ugovoru (set 5.1.2, donacije čl. 33 st. 1): zaključenjem se
+ * doprinos BELEŽI (`cekaPeriod`), a evidentira u narednom obračunskom periodu (`emisijaTxId`).
+ * `U_TOKU` — noćni obračun je preuzeo red, a emisija još nije upisana. Ugovor bez POEN-a
+ * (zatečeni, odnosno nula) je `EVIDENTIRAN` — nema šta da se poništi ni otpiše.
+ * Raskid zabeleženog poništava bez otpisa; raskid evidentiranog otpisuje (čl. 35 st. 2).
+ */
+export function stanjeEvidencijeDobra(u: {
+  cekaPeriod: boolean;
+  emisijaTxId: string | null;
+  poenEvidentirano: number | null;
+}): "ZABELEZEN" | "U_TOKU" | "EVIDENTIRAN" {
+  if (u.emisijaTxId) return "EVIDENTIRAN";
+  if (u.cekaPeriod) return "ZABELEZEN";
+  return (u.poenEvidentirano ?? 0) > 0 ? "U_TOKU" : "EVIDENTIRAN";
 }
 
 /** Čl. 35 st. 2 — ukupan otpis pri raskidu: otpis po vaučeru × broj vaučera koji ulaze u raskid. */
@@ -509,6 +567,11 @@ export type PredmetPrijaveDobra = {
    */
   dodatnaMestaPredaje: { mesto: string; adresa: string }[];
   /**
+   * Tačne tačke mesta predaje na mapi, paralelno sa prvim i dodatnim mestima (`null` = centar
+   * naselja). Nisu obavezne.
+   */
+  tackePredaje: (TackaMesta | null)[];
+  /**
    * Set 5.0.7 — kad je predmet hrana (čl. 28 st. 2 t. 6): odgovori davaoca i kategorija i
    * koeficijent koje sistem iz njih izvodi (čl. 22 st. 4–8). 🔴 Davalac ih ne bira i ne vidi;
    * Fondacija ih utvrđuje prihvatanjem prijave (čl. 22 st. 5). `null` = nije hrana.
@@ -596,6 +659,9 @@ export function procitajPredmetDobra(
     dodatnaMestaPredaje.push({ mesto, adresa: adr });
   }
 
+  const tackePredaje = procitajTackePredaje(b.tackePredaje, 1 + dodatnaMestaPredaje.length, lokacijaUSrbiji);
+  if (!tackePredaje) return { ok: false, razlog: "Tačka mesta predaje mora biti na mapi Srbije." };
+
   // Čl. 28 st. 3 — izjava o propisima.
   if (!daJe(b.izjavaPropisi))
     return { ok: false, razlog: "Potrebna je izjava da davalac ispunjava propise za promet tog dobra, odnosno pružanje te usluge." };
@@ -614,7 +680,7 @@ export function procitajPredmetDobra(
 
   return {
     ok: true,
-    podaci: { vrsta, opis, brojVaucera, cenaPoJedinici, vrednostRsd, rokVazenjaMeseci: ROK_VAZENJA_MESECI, adresaPredaje: adresa, dodatnaMestaPredaje, hrana },
+    podaci: { vrsta, opis, brojVaucera, cenaPoJedinici, vrednostRsd, rokVazenjaMeseci: ROK_VAZENJA_MESECI, adresaPredaje: adresa, dodatnaMestaPredaje, tackePredaje, hrana },
   };
 }
 
@@ -679,6 +745,8 @@ export function generisiUgovorDobraTekst(p: {
   datum: Date;
   /** Set 5.0.5 — vrsta i poreklo hrane (čl. 22 st. 5); `null` = nije hrana. */
   hrana?: { vrsta: VrstaHrane; kategorija: Kategorija } | null;
+  /** Set 5.1.3 — STIPS cena (čl. 29 st. 1); tada je `cenaPoJedinici` ta cena. `null` = cenovnik. */
+  stips?: StipsUgovor | null;
 }): string {
   const rsd = (n: number) => n.toLocaleString("sr-RS", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const gazdinstvo = p.vrstaDavaoca === "GAZDINSTVO";
@@ -716,9 +784,11 @@ export function generisiUgovorDobraTekst(p: {
         ? ` Predmet je hrana (${HRANA_U_UGOVORU.vrsta[p.hrana.vrsta]}); poreklo, koje Fondacija utvrđuje prihvatanjem prijave na osnovu podataka Davaoca: ${HRANA_U_UGOVORU.kategorija[p.hrana.kategorija]}.`
         : ""),
     `Član 2. Davalac izdaje ${p.brojVaucera} vaučera; svaki vaučer glasi na ${p.vrsta === "DOBRO" ? "jedno tačno određeno dobro" : "jednu tačno određenu uslugu"} iz člana 1, a ne na novčani iznos. ` +
-      `Vrednost donacije iznosi ${rsd(p.vrednostRsd)} dinara (${p.brojVaucera} × ${rsd(p.cenaPoJedinici)} dinara, prema ceni koju Davalac primenjuje u prometu).`,
+      (p.stips
+        ? `Vrednost donacije iznosi ${rsd(p.vrednostRsd)} dinara (${p.brojVaucera} × ${rsd(p.cenaPoJedinici)} dinara; ${izvorStipsCene(p.stips)}).`
+        : `Vrednost donacije iznosi ${rsd(p.vrednostRsd)} dinara (${p.brojVaucera} × ${rsd(p.cenaPoJedinici)} dinara, prema ceni koju Davalac primenjuje u prometu).`),
     `Član 3. Vaučeri važe jednu godinu od izdavanja. ${mestoClan}`,
-    "Član 4. Donacija je dobrovoljna i bez naknade. Davalac njome ne stiče potraživanje prema Fondaciji niti bilo koju prednost u postupcima Fondacije.",
+    "Član 4. Donacija je dobrovoljna i bez naknade. Davalac njome ne stiče potraživanje prema Fondaciji niti bilo koju prednost u postupcima Fondacije. Doprinos koji se povodom ovog ugovora evidentira po pravilima KOLO sistema ne određuje se ovim ugovorom; taj upis nije protivčinidba za donaciju i ni Davalac ni podnosilac prijave na njega nemaju potraživanje.",
     `Član 5. Davalac se obavezuje da do isteka roka važenja vaučera drži dobra raspoloživa, odnosno obezbedi termine, i da ${predmet} da u istom kvalitetu kao drugim licima.`,
     "Član 6. Lice kome je vaučer izdat stiče sopstveno pravo da od Davaoca zahteva predaju dobra, odnosno pružanje usluge. Fondacija ne stiče svojinu ni državinu dobara, ne pruža usluge i ne odgovara za ispunjenje obaveze Davaoca. Za kvalitet, nedostatke i bezbednost Davalac odgovara imaocu vaučera neposredno.",
     "Član 7. Davalac se obavezuje da pri predaji dobra, odnosno pružanju usluge izda račun propisan za taj promet, kada je propisan.",

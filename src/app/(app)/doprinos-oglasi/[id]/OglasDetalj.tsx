@@ -20,7 +20,7 @@ interface MojaPrijava {
   /** Živa prijava (na čekanju ili primljena, bez odustanka i završne odluke). */
   ziva: boolean;
   odustao: boolean;
-  /** Zadružni doprinos: celinu je dodelila zadruga (operativni čl. 23 st. 2). */
+  /** Zatečena dodela celine (do seta 5.1.2; dodela je ukinuta, operativni čl. 23 st. 2). */
   dodeljena: boolean;
   zavrsetakAt: string | null;
   zavrsnaOdluka: string | null;
@@ -58,6 +58,8 @@ interface OglasData {
   odobravanjeObrazlozenje: string | null;
   kvalifikacioniUslov: string | null;
   kvalifikacioniObrazlozenje: string | null;
+  /** Celina zadruge samo za njene zadrugare (čl. 9 st. 3). */
+  samoZadrugari: boolean;
   positions: number;
   deadline: string | null;
   rokIzvrsenja: string | null;
@@ -78,7 +80,16 @@ const sourceCls: Record<string, string> = {
   PROJEKAT: "bg-purple-50 text-purple-700",
 };
 
-export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; isVerified: boolean }) {
+export default function OglasDetalj({
+  oglas,
+  isVerified,
+  osnivacBezPrijave = false,
+}: {
+  oglas: OglasData;
+  isVerified: boolean;
+  /** Osnivač iz odluke o raspodeli dok kanal osnivačkog doprinosa nije zatvoren (čl. 9 st. 4). */
+  osnivacBezPrijave?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("doprinosOglasi");
   const router = useRouter();
@@ -93,10 +104,10 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
   const moja = oglas.mojaPrijava;
   const ziva = moja?.ziva ?? false;
   // Posle odbijanja ili odustanka podnosi se izmenjena prijava (operativni 5.0 čl. 12
-  // st. 4, 17). Zadružni doprinos nema prijave — izvršioca određuje zadruga (čl. 23).
-  const mozePrijaviti = isVerified && aktivan && !ziva && !oglas.zadruzni;
+  // st. 4, 17). Na celinu zadruge prijava ide istim tokom (čl. 23 st. 2, set 5.1.2);
+  // osnivač iz odluke o raspodeli se ne prijavljuje dok kanal nije zatvoren (čl. 9 st. 4).
+  const mozePrijaviti = isVerified && aktivan && !ziva && !osnivacBezPrijave;
   const imaPrimljenuPrijavu = ziva && moja?.status === "APPROVED";
-  const cekaPrihvatanje = ziva && moja?.status === "PENDING" && moja.dodeljena;
   const radi = imaPrimljenuPrijavu && !moja?.zavrsetakAt && !moja?.zavrsnaOdluka;
 
   async function radnja(putanja: string, telo?: unknown) {
@@ -226,6 +237,12 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
             {oglas.kvalifikacioniObrazlozenje && <p className="mt-1 text-xs">{oglas.kvalifikacioniObrazlozenje}</p>}
           </div>
         )}
+        {oglas.samoZadrugari && (
+          <div className="bg-kolo-bg rounded-kontrola p-3 text-sm text-kolo-muted">
+            <p><span className="font-semibold text-kolo-text">{t("uslov_label")}: </span>{t("samo_zadrugari", { zadruga: oglas.krugName ?? "" })}</p>
+            {oglas.kvalifikacioniObrazlozenje && <p className="mt-1 text-xs">{oglas.kvalifikacioniObrazlozenje}</p>}
+          </div>
+        )}
         {oglas.odobravanjeObrazlozenje && <Obavestenje vrsta="info">{t("odobravanje_odluka", { obrazlozenje: oglas.odobravanjeObrazlozenje })}</Obavestenje>}
         {oglas.povucenoObrazlozenje && <Obavestenje vrsta="upozorenje">{t("povuceno_obrazlozenje", { obrazlozenje: oglas.povucenoObrazlozenje })}</Obavestenje>}
         {oglas.obustavljeno && <Obavestenje vrsta="upozorenje">{t("obustavljeno")}</Obavestenje>}
@@ -240,7 +257,7 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
             {oglas.mojaPrijava.status === "APPROVED" && t("status_primljen_izvršilac")}
             {oglas.mojaPrijava.status === "PENDING" && (oglas.mojaPrijava.dodeljena ? t("status_dodela_ceka") : t("status_prijava_ceka"))}
             {oglas.mojaPrijava.status === "REJECTED" && (
-              <span>{t("status_prijava_odbijena")}{oglas.mojaPrijava.rejectionReason ? ` ${t("razlog")}: ${oglas.mojaPrijava.rejectionReason}` : ""} {aktivan && !oglas.zadruzni ? t("izmenjena_prijava") : ""}</span>
+              <span>{t("status_prijava_odbijena")}{oglas.mojaPrijava.rejectionReason ? ` ${t("razlog")}: ${oglas.mojaPrijava.rejectionReason}` : ""} {aktivan ? t("izmenjena_prijava") : ""}</span>
             )}
           </Obavestenje>
         )}
@@ -252,22 +269,10 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
           </Obavestenje>
         )}
 
-        {/* Prihvatanje dodeljene celine zadružnog doprinosa (čl. 23 st. 2; čl. 24 st. 2 t. 3). */}
-        {cekaPrihvatanje && (
-          <div className="rounded-kontrola bg-kolo-bg p-4 space-y-3">
-            <p className="text-xs font-semibold text-kolo-muted">{t("izjava_naslov")}</p>
-            <p className="text-xs text-kolo-muted whitespace-pre-line leading-relaxed">
-              {generisiIzjavuIzvrsioca({ nazivZadatka: oglas.title, predlozeniPoen: oglas.predlozeniPoen })}
-            </p>
-            <label className="flex items-start gap-2 cursor-pointer">
-              <input type="checkbox" checked={izjava} onChange={(e) => setIzjava(e.target.checked)} className="mt-0.5 accent-kolo-green-700" />
-              <span className="text-xs text-kolo-text">{t("izjava_potvrda")}</span>
-            </label>
-            <div className="flex flex-wrap gap-2">
-              <Dugme onClick={() => radnja(`/api/doprinos-oglasi/${oglas.id}/prihvati`, { izjavaPotvrdjena: true })} disabled={!izjava}>{t("prihvati_dodelu")}</Dugme>
-              <Dugme varijanta="sekundarno" onClick={() => radnja(`/api/doprinos-oglasi/${oglas.id}/odustani`)}>{t("odbij_dodelu")}</Dugme>
-            </div>
-          </div>
+        {/* Zatečena dodela (do seta 5.1.2): dodela je ukinuta, pa izvršilac od nje odustaje
+            i, ako želi, podnosi prijavu (operativni čl. 17, 23 st. 2). */}
+        {ziva && moja?.status === "PENDING" && moja.dodeljena && aktivan && (
+          <Dugme varijanta="sekundarno" onClick={() => radnja(`/api/doprinos-oglasi/${oglas.id}/odustani`)}>{t("odustani")}</Dugme>
         )}
 
         {/* Izvršilac: prijava završetka (čl. 16 st. 1) i odustanak (čl. 17). */}
@@ -296,6 +301,9 @@ export default function OglasDetalj({ oglas, isVerified }: { oglas: OglasData; i
         <div className="pt-1 space-y-3">
           {!isVerified && aktivan && (
             <Obavestenje vrsta="upozorenje">{t("potreban_indeks")}</Obavestenje>
+          )}
+          {isVerified && aktivan && !ziva && osnivacBezPrijave && (
+            <Obavestenje vrsta="info">{t("osnivac_bez_prijave")}</Obavestenje>
           )}
           {mozePrijaviti && mestaPopunjena && (
             <p className="text-sm text-kolo-muted">{t("mesta_popunjena")}</p>

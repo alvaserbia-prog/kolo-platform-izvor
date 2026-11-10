@@ -155,10 +155,18 @@ export default function JavniProfilPage() {
     EMISIJA_GAZDINSTVO: t("trx_gazdinstvo"),
     OTPIS_GAZDINSTVO: t("trx_otpis_gazdinstva"),
     EMISIJA_POKROVITELJ_DOBRA: t("trx_pokroviteljstvo_dobra"),
+    EMISIJA_PARTNERSTVO: t("trx_partnerstvo"),
     PONISTENJE_VAUCER: t("trx_vaucer"),
     ISPRAVKA_VAUCER: t("trx_ispravka_vaucera"),
     OTPIS_POKROVITELJ_DOBRA: t("trx_otpis_pokroviteljstva_dobra"),
     OTPIS_VISESTRUKI_NALOG: t("trx_otpis_visestrukog_naloga"),
+    PONISTENJE_ANONIMNA_DONACIJA: t("trx_anonimna_donacija"),
+    PRENOS_NEGATIVNOG_ZAPISA: t("trx_prenos_negativnog_zapisa"),
+    EMISIJA_PROGRAM_HRANE: t("trx_program_hrane"),
+    EMISIJA_LANAC: t("trx_lanac"),
+    PONISTENJE_VAUCER_LANAC: t("trx_vaucer_programa"),
+    ISPRAVKA_VAUCER_LANAC: t("trx_ispravka_vaucera_programa"),
+    OTPIS_NEPREUZETO_PROGRAM: t("trx_otpis_nepreuzeto"),
   };
 
   const [ucitavamJos, setUcitavamJos] = useState(false);

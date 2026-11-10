@@ -12,9 +12,8 @@ import { POEN_VERIFIKATOR, POEN_VERIFIKOVANI } from "@/lib/protokol/dokaz-stvarn
  *
  * Spisak potvrda čiji POEN čeka trag stvarnog učešća (dokaz stvarnosti čl. 19 st. 2).
  *
- * Tab postoji zbog VENTILA: ima ljudi koji doprinose a nikad neće objaviti ponudu ni
- * donirati — onaj ko samo kupuje, stariji član na programu podrške. Bez ručnog upisa
- * njima i njihovim potvrđivačima POEN ne bi stigao nikad.
+ * Samo pregled. 🔴 Ručni upis po oceni Fondacije (bivši čl. 19 st. 7) ukinut je setom
+ * 5.1.2 — ruta `[id]/upisi` ne postoji i ne vraća se.
  */
 export async function GET() {
   const session = await getServerSession(authOptions);

@@ -47,7 +47,7 @@ const PROTOKOL_WALLET_ID = "banka-singleton";
 const DAN_MS = 24 * 3600 * 1000;
 
 /** Zašto je lampica siva. */
-export type RazlogSivog = "PREMALO" | "FAZA_1" | "NEMA_PODATAKA" | "KANAL_NIJE_POCEO";
+export type RazlogSivog = "PREMALO" | "FAZA_1" | "NEMA_PODATAKA";
 
 export type StanjePokazatelja = DefinicijaPokazatelja & {
   vrednost: number | null;
@@ -60,7 +60,8 @@ export type StanjePokazatelja = DefinicijaPokazatelja & {
 const ZIV_PUNOLETAN = { ...USLOV_CLANA_U_SPISKU, maloletan: false } as const;
 /** Tipovi upisa kroz kanal doprinosa (Protokol → zapis); otpis ZRNA i ispravke nisu kanal. */
 const KANALI_UPISA = Object.values(TransactionType).filter((t) => t.startsWith("EMISIJA_"));
-const DINARSKI_KANALI = new Set(["EMISIJA_DONACIJA", "EMISIJA_POKROVITELJ", "EMISIJA_POKROVITELJ_DOBRA"]);
+// Set 5.1.2: partnerstvo, program raspodele hrane i lanac mere doprinos vrednošću u dinarima (donacije čl. 42, nabavke čl. 40 st. 3, 51 st. 2).
+const DINARSKI_KANALI = new Set(["EMISIJA_DONACIJA", "EMISIJA_POKROVITELJ", "EMISIJA_POKROVITELJ_DOBRA", "EMISIJA_PARTNERSTVO", "EMISIJA_PROGRAM_HRANE", "EMISIJA_LANAC"]);
 
 type Rezultat = { vrednost: number | null; razlog?: RazlogSivog; detalj?: Record<string, number> };
 const sivo = (razlog: RazlogSivog): Rezultat => ({ vrednost: null, razlog });
@@ -266,20 +267,9 @@ async function racunaj(trazeno: Set<SifraPokazatelja>, sada: Date): Promise<Map<
     out.set("K2", { vrednost: iskaziAkoDovoljno(osnivacki.length, procenat(zbirOsnivaca, ukupno)), razlog: "PREMALO" });
   }
 
-  // ── K3: osnivački kanal ────────────────────────────────────────────────────
-  if (trazeno.has("K3")) {
-    const [kanal, protokol] = await Promise.all([
-      prisma.osnivackiKanal.findUnique({ where: { id: "singleton" }, select: { ukupnoEvidentirano: true, brojKoraka: true } }),
-      prisma.wallet.findUnique({ where: { id: PROTOKOL_WALLET_ID }, select: { balance: true } }),
-    ]);
-    const opticaj = Math.abs(protokol?.balance ?? 0);
-    out.set(
-      "K3",
-      !kanal || kanal.brojKoraka === 0
-        ? sivo("KANAL_NIJE_POCEO")
-        : { vrednost: procenat(kanal.ukupnoEvidentirano, opticaj), detalj: { koraka: kanal.brojKoraka } },
-    );
-  }
+  // 🔴 K3 (udeo osnivačkog doprinosa u ukupnom broju POEN-a) je uklonjen (set 5.1.2):
+  // javni podaci o osnivačkom kanalu ostaju na `/sistem`, ali se ne iskazuju kao
+  // pokazatelj koncentracije. Ne vraćati bez naloga vlasnika.
 
   // ── K4, K4D: sastav evidentiranog doprinosa po kanalu (bruto upis) ─────────
   if (trazeno.has("K4") || trazeno.has("K4D")) {
