@@ -17,7 +17,6 @@ import {
   zabeleziPredaju,
   potvrdiPredaju,
   oznaciSpremno,
-  preuzmiNepreuzeteDelove,
   proveriKodLanca,
   potvrdiPreuzimanje,
   odgovorNaGreskuLanca,
@@ -94,10 +93,6 @@ export async function POST(req: NextRequest) {
       case "spremno":
         await oznaciSpremno(ja, id);
         return NextResponse.json({ ok: true });
-      case "nepreuzeti": {
-        const r = await preuzmiNepreuzeteDelove(ja, id);
-        return NextResponse.json({ ok: true, delova: r.delovaPreuzeto, ostaje: r.delovaOstaje, istekli: r.istekliPreuzeto });
-      }
       case "proveri-kod":
         return NextResponse.json(await proveriKodLanca(ja, String(b.kod ?? "")));
       case "potvrdi-preuzimanje": {

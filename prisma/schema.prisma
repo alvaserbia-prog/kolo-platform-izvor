@@ -204,9 +204,11 @@ enum TransactionType {
   /// Ispravka poništenja kad hrana nije ispravna, a zamene iz druge partije iste vrste nema
   /// (nabavke čl. 45, čl. 35; Pravilnik čl. 18 st. 5). Protokol → korisnik.
   ISPRAVKA_VAUCER_LANAC
-  /// Otpis po preuzimanju nepreuzetih delova u programu raspodele hrane — deveti osnov
-  /// negativnog zapisa (Pravilnik čl. 17 st. 2 t. 9; nabavke čl. 46 st. 2). Samo za deo bez
-  /// uzetog vaučera, najviše do doprinosa za uslugu na toj partiji. Zapis SME u minus.
+  /// Otpis po preuzimanju nepreuzetih delova u programu raspodele hrane i (set 5.1.4) u
+  /// lancu proizvodnje i distribucije — deveti osnov negativnog zapisa (Pravilnik čl. 17 st. 2
+  /// t. 9; nabavke čl. 46 st. 2 i čl. 52 st. 4). Samo za deo bez uzetog vaučera, najviše do
+  /// doprinosa za uslugu objekta na toj partiji, odnosno do doprinosa poslednjeg partnera po
+  /// tom lancu (usluga i dodatak za distribuciju). Zapis SME u minus. Ime ostaje (pravilo 12).
   OTPIS_NEPREUZETO_PROGRAM
 }
 
@@ -742,6 +744,7 @@ model User {
   predlogNabavke                   PredlogNabavke?
   naziviDobara                     NazivDobra[]                   @relation("KreiraoNaziv")
   nabavkaPrijave                   NabavkaPrijava[]
+  nabavkaDodatniDelovi             NabavkaDodatniDeo[]
   projekatTroskovi                 ProjekatTrosak[]               @relation("KreiraoProjekatTrosak")
   createdAt                        DateTime                       @default(now())
   updatedAt                        DateTime                       @updatedAt
@@ -4035,6 +4038,19 @@ enum NabavkaPrijavaStatus {
   NIJE_PREUZEO // potvrdio, ali nije došao upisanog dana
 }
 
+/// Dodatni deo u dopunskom roku (nabavke čl. 26, set 5.1.4): ZATRAZEN → DODELJEN (POEN
+/// rezervisan, kod) → PREUZEO (POEN poništen, `OTPIS_NABAVKA`) | OSLOBODJEN (istekao dopunski
+/// rok, rezervacija oslobođena); ODUSTAO = korisnik povukao zahtev ili deo; NIJE_DODELJEN =
+/// zahtev zatvoren bez dodele (nema dovoljno POEN-a, odnosno nema više delova do kraja roka).
+enum NabavkaDodatniStatus {
+  ZATRAZEN
+  DODELJEN
+  PREUZEO
+  OSLOBODJEN
+  ODUSTAO
+  NIJE_DODELJEN
+}
+
 /// Jedna kolektivna nabavka, od izbora predmeta do preuzimanja.
 /// Svi brojevi kalkulacije se SNIMAJU na zapis u trenutku objave (čl. 18 st. 3:
 /// kalkulacija se posle objave ne menja). Bez snimka bi se prikazana kalkulacija
@@ -4080,12 +4096,20 @@ model Nabavka {
   redUtvrdjenAt  DateTime?
   placenoAt      DateTime?
   placenoRSD     Decimal?  @db.Decimal(12, 2)
+  /// Čl. 23 — broj nabavljenih delova (potvrđeni delovi u trenutku plaćanja). Snimak iz
+  /// seta 5.1.4; zatečene nabavke ostaju `null` (pravilo 11), a broj se tada izvodi
+  /// (`nabavljenihDelova` u `nabavka-pravila.ts`).
+  nabavljenoDelova Int?
+  /// Čl. 26 (set 5.1.4) — dopunski rok je otvoren i preuzimaoci su obavešteni. Sam rok se
+  /// ne snima: računa se iz `preuzimanjeDo` (`krajDopunskogRoka`).
+  dopunskiOtvorenAt DateTime?
   zavrsenoAt     DateTime?
   obustavljenoAt DateTime?
   obustavaRazlog String?
 
   ponude  NabavkaPonuda[]
   prijave NabavkaPrijava[]
+  dodatniDelovi NabavkaDodatniDeo[]
   trosak  ProjekatTrosak?
 
   createdAt DateTime @default(now())
@@ -4093,6 +4117,30 @@ model Nabavka {
 
   @@index([status, createdAt])
   @@index([nazivId])
+}
+
+/// Dodatni deo iz nepreuzetih delova u dopunskom roku (nabavke čl. 26, set 5.1.4). Dodeljuje
+/// se po redu iz čl. 20, po jedan po korisniku u svakom krugu. Kod vidi samo korisnik;
+/// dobavljaču ide samo spisak kodova (čl. 24 st. 3).
+model NabavkaDodatniDeo {
+  id          String               @id @default(uuid())
+  nabavkaId   String
+  nabavka     Nabavka              @relation(fields: [nabavkaId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status      NabavkaDodatniStatus @default(ZATRAZEN)
+  /// Krug dodele u kome je deo dodeljen (1, 2, …).
+  krug        Int?
+  /// Rezervisan POEN do preuzimanja, odnosno do isteka dopunskog roka (čl. 21 st. 3 shodno).
+  rezervisano Int                  @default(0)
+  kod         String?              @unique
+  zatrazenoAt DateTime             @default(now())
+  dodeljenoAt DateTime?
+  preuzetoAt  DateTime?
+  zatvorenoAt DateTime?
+
+  @@index([nabavkaId, status])
+  @@index([userId, status])
 }
 
 /// Prikupljena ponuda (čl. 14). Objavljuju se SVE, i one koje nisu izabrane —
@@ -4887,8 +4935,10 @@ model LanacVaucer {
   ispravkaTxId         String?
   /// Vaučer sa neispravne partije sa koga je imalac prenet na ovaj (čl. 45).
   prenetIzId           String?
-  /// Nepreuzet deo (čl. 46): "OBJEKAT" (preuzeo objekat) ili "USTANOVA" (predat kroz program
-  /// podrške ili ustanovi socijalne zaštite).
+  /// Nepreuzet deo (čl. 46, 52 st. 3–6): "OBJEKAT" (preuzeo objekat, program),
+  /// "POSLEDNJI_PARTNER" (preuzeo poslednji partner, lanac; set 5.1.4) ili "USTANOVA" (ostatak
+  /// koji ni uz poništenje iz zapisa nije preuzet, predat kroz program podrške ili ustanovi
+  /// socijalne zaštite; zatečeni zapisi lanca nose "USTANOVA" i za ceo nepreuzet deo).
   nepreuzetIshod       String?
   nepreuzetAt          DateTime?
   /// Otpis po devetom osnovu dodeljen ovom delu (samo deo bez uzetog vaučera).

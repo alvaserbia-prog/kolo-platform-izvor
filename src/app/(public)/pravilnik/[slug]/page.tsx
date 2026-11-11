@@ -103,9 +103,11 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 5.1.1 — ZRNO precizno: definicija (čl. 2 t. 7, čl. 21 st. 1), razlika pri otpisu u oba
   // smera (čl. 23 st. 4), koeficijent jednako zavisi od sopstvenog i tuđeg doprinosa (čl. 25
   // st. 2), čl. 27 bez tvrdnje da nema napora drugog lica — nekonvertibilnost, bez tržišta.
+  // 5.1.4 — čl. 17 st. 2 t. 9: deveti osnov obuhvata i poslednjeg partnera u lancu
+  // proizvodnje i distribucije (nabavke čl. 46 i 52); osnova je i dalje dvanaest.
   "kolo-sistem": {
-    fajl: "Pravilnik_5_1_2.md",
-    verzija: "5.1.2",
+    fajl: "Pravilnik_5_1_4.md",
+    verzija: "5.1.4",
   },
   // 4.4.6 — čl. 12 st. 4 više ne prenosi nadležnost za opšte akte na Gornje Kolo
   // (akt nižeg ranga to ne može po sopstvenom čl. 8 st. 2); nov st. 6.
@@ -273,8 +275,10 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
     // 5.1.0 — čl. 30 st. 3 (najviše jedan neiskorišćen vaučer iz istog ugovora) i
     // čl. 31 st. 2 (broj POEN-a po vaučeru: vrednost iz cenovnika kao mera obima doprinosa).
     // 5.1.3 — čl. 40 st. 3: vrednost predatog po ceni za Republiku Srbiju iz donacija čl. 29 st. 1.
-    fajl: "projekti_nabavke_5_1_3.md",
-    verzija: "5.1.3",
+    // 5.1.4 — nepreuzeti delovi: čl. 26 (dopunski rok od 3 dana, dodatni delovi po redu),
+    // čl. 18, 23, 24; čl. 46 st. 1 (objekat preuzima); čl. 52 st. 3–6 (poslednji partner u lancu).
+    fajl: "projekti_nabavke_5_1_4.md",
+    verzija: "5.1.4",
   },
   // Nov akt uz set 4.7.0 — osnov u čl. 56 Pravilnika o KOLO sistemu. Krug i
   // zadruga su isti kolektivni oblik; zapis, pragovi rasta (svaki jednom), osnovi

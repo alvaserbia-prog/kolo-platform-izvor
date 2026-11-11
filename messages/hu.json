@@ -1401,7 +1401,7 @@
     },
     "dpia": {
       "naslov": "DPIA — Adatvédelmi hatásvizsgálat",
-      "ver": "5.1.2"
+      "ver": "5.1.4"
     },
     "radnjeObrade": {
       "naslov": "Adatkezelési tevékenységek nyilvántartása",
@@ -1413,11 +1413,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.1.2"
+      "ver": "5.1.4"
     },
     "pravilnik": {
       "naslov": "KOLO rendszer szabályzatai",
-      "ver": "5.1.3",
+      "ver": "5.1.4",
       "sviPravilnici": "← Összes szabályzat",
       "pravilnici": "Szabályzatok"
     },
@@ -1444,15 +1444,15 @@
     "meta_statut_title": "A KOLO Alapítvány alapszabálya · KOLO",
     "meta_statut_desc": "A KOLO Alapítvány alapszabálya, 4.1-es verzió",
     "meta_dpia_title": "DPIA · KOLO",
-    "meta_dpia_desc": "Adatvédelmi hatásvizsgálat, 5.1.2-es verzió",
+    "meta_dpia_desc": "Adatvédelmi hatásvizsgálat, 5.1.4-es verzió",
     "meta_radnje_title": "Adatkezelési tevékenységek nyilvántartása · KOLO",
     "meta_radnje_desc": "Személyes adatok kezelési tevékenységeinek nyilvántartása, 5.1.2-es verzió",
     "meta_rizici_title": "Kockázatvállalási nyilatkozat · KOLO",
     "meta_rizici_desc": "A KOLO rendszerben való részvétel kockázatainak elfogadásáról szóló nyilatkozat, 5.1.2-es verzió",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, 5.1.2-es verzió",
+    "meta_whitepaper_desc": "KOLO Whitepaper, 5.1.4-es verzió",
     "meta_pravilnik_title": "KOLO rendszer szabályzatai · KOLO",
-    "meta_pravilnik_desc": "A KOLO rendszer szabályzatainak indexe, 5.1.3-es verzió",
+    "meta_pravilnik_desc": "A KOLO rendszer szabályzatainak indexe, 5.1.4-es verzió",
     "rb": {
       "kolo-sistem": {
         "naziv": "Szabályzat a KOLO rendszerről",
@@ -3034,6 +3034,14 @@
     "nabavka_poziv_tekst": "„{dobro}” beszerzés: a részedért átvételkor {poen} POEN-t törölnek. Erősítsd meg az átvételi nap kiválasztásával.",
     "nabavka_preuzeto_naslov": "A rész átvéve",
     "nabavka_preuzeto_tekst": "Átvetted a részedet a „{dobro}” beszerzésből. {poen} POEN érvénytelenítésre került. Ha a részt nem vetted át, vagy hibás, {dana} napod van kifogást benyújtani a profilodról.",
+    "nabavka_dopunski_naslov": "Át nem vett részek maradtak",
+    "nabavka_dopunski_tekst": "A(z) „{dobro}” beszerzésben át nem vett részek maradtak: {delova}. {do}-ig kérhetsz egy további részt; a részeket a beszerzés sorrendje szerint osztják ki, minden körben egyet.",
+    "nabavka_dodatni_dodeljen_naslov": "További részt kaptál",
+    "nabavka_dodatni_dodeljen_tekst": "„{dobro}” beszerzés: további részt osztottak ki neked. {poen} POEN lefoglalásra került, amely átvételkor érvénytelenítésre kerül. Vedd át a beszerzés oldalán található kóddal {do}-ig.",
+    "nabavka_dodatni_bez_poena_naslov": "A további részt nem osztották ki",
+    "nabavka_dodatni_bez_poena_tekst": "„{dobro}” beszerzés: a további részhez {poen} POEN szükséges, amellyel rendelkezel, ezért a részt nem osztották ki. A kérést megismételheted.",
+    "nabavka_dodatni_preuzet_naslov": "A további rész átvéve",
+    "nabavka_dodatni_preuzet_tekst": "Átvettél egy további részt a(z) „{dobro}” beszerzésből. {poen} POEN érvénytelenítésre került.",
     "zahtev_potvrda_spoljni_naslov": "Új kérés vár a válaszodra",
     "zahtev_potvrda_spoljni_tekst": "Valaki olyan Kolo-tagként nevezett meg, aki személyesen ismeri. Nyisd meg a KOLO-t a kérés megtekintéséhez.",
     "program_pristanak_povucen_naslov": "Hozzájárulás visszavonva",
@@ -3271,7 +3279,11 @@
     "lanac_otpis_naslov": "Leírás az át nem vett részek átvétele alapján",
     "lanac_otpis_tekst": "A(z) „{naziv}” tétel át nem vett részeinek átvétele alapján {poen} POEN leírásra került (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 9. pontja; a projektekről és a kollektív beszerzésekről szóló szabályzat 46. cikke).",
     "lanac_otpis_minus_naslov": "A leírással a bejegyzés negatívvá vált",
-    "lanac_otpis_minus_tekst": "A(z) „{naziv}” tétel át nem vett részeinek átvétele alapján {poen} POEN leírásra került (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 9. pontja; a projektekről és a kollektív beszerzésekről szóló szabályzat 46. cikke). A bejegyzésed most negatív ({stanje} POEN); a beérkező POEN először ezt az összeget tölti fel."
+    "lanac_otpis_minus_tekst": "A(z) „{naziv}” tétel át nem vett részeinek átvétele alapján {poen} POEN leírásra került (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 9. pontja; a projektekről és a kollektív beszerzésekről szóló szabályzat 46. cikke). A bejegyzésed most negatív ({stanje} POEN); a beérkező POEN először ezt az összeget tölti fel.",
+    "lanac_nepreuzeto_naslov": "Az át nem vett részeket átvették",
+    "lanac_nepreuzeto_tekst": "A határidő lejártával átvették a(z) „{naziv}” át nem vett részeit: {delova} (a projektekről és a kollektív beszerzésekről szóló szabályzat {clan}. cikke). {otpis} POEN leírásra került a kilencedik jogcím alapján (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 9. pontja), a bejegyzésből {ponisteno} POEN érvénytelenítésre került, a feljegyzett hozzájárulásból pedig {zabelezeno} POEN-t érvénytelenítettek.",
+    "lanac_nepreuzeto_minus_naslov": "A leírással a bejegyzés negatívvá vált",
+    "lanac_nepreuzeto_minus_tekst": "A határidő lejártával átvették a(z) „{naziv}” át nem vett részeit: {delova} (a projektekről és a kollektív beszerzésekről szóló szabályzat {clan}. cikke). {otpis} POEN leírásra került a kilencedik jogcím alapján (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 9. pontja), a bejegyzésből {ponisteno} POEN érvénytelenítésre került, a feljegyzett hozzájárulásból pedig {zabelezeno} POEN-t érvénytelenítettek. A bejegyzésed most negatív ({stanje} POEN); a beérkező POEN először ezt az összeget tölti fel."
   },
   "transakcije": {
     "verifikacija": "Tag megerősítése: {pseudonim}",
@@ -3295,6 +3307,7 @@
     "prevod_u_maloletni_otpis": "A csatornákon bejegyzett POEN visszavonása (a fiók gyerekfiókká vált)",
     "prevod_u_maloletni_potvrda": "Megszűnt megerősítésből származó POEN visszavonása ({pseudonim} gyerekfiókká vált)",
     "nabavka": "Kollektív beszerzés — {dobro}",
+    "nabavka_dodatni": "Kollektív beszerzés, {dobro} (további rész)",
     "nabavka_ispravka": "Nyilvántartás helyesbítése, kollektív beszerzés {dobro}",
     "zrno_upis": "{zrna} ZRNO bejegyzése {koeficijent} együttható szerint",
     "zrno_otpis": "{zrna} ZRNO leírása {koeficijent} együttható szerint",
@@ -3330,7 +3343,9 @@
     "vaucer_lanca_uzet": "Programutalvány: {naziv}",
     "vaucer_lanca_ispravka": "Nyilvántartás helyesbítése — programutalvány: {naziv}",
     "otpis_nepreuzeto": "Leírás az át nem vett részek átvétele alapján az élelmiszer-elosztási programban: {naziv}",
-    "nepreuzeto_ponistenje": "Érvénytelenítés az át nem vett részekért az élelmiszer-elosztási programban: {naziv}"
+    "nepreuzeto_ponistenje": "Érvénytelenítés az át nem vett részekért az élelmiszer-elosztási programban: {naziv}",
+    "otpis_nepreuzeto_lanac": "Leírás az át nem vett részek átvétele alapján a termelési és elosztási láncban: {naziv}",
+    "nepreuzeto_ponistenje_lanac": "Érvénytelenítés az át nem vett részekért a termelési és elosztási láncban: {naziv}"
   },
   "mejl": {
     "pozdrav": "Üdvözlünk",
@@ -4165,6 +4180,16 @@
     "kod_uputstvo": "Mutasd fel ezt a kódot a szállítónál. A POEN az átvételkor kerül érvénytelenítésre, nem korábban.",
     "rezervisano": "Lefoglalva: {poen} POEN",
     "preuzeto": "Átvetted a részedet. {poen} POEN törlésre került.",
+    "dopunski_opis": "Pótlólagos határidő van érvényben {do}-ig. Át nem vett részek száma: {delova}. Kérhetsz egy további részt; a részeket a beszerzés sorrendje szerint osztják ki, minden körben egyet, és mindegyikért átvételkor {poen} POEN érvénytelenítésre kerül.",
+    "dopunski_zatrazi": "További rész kérése",
+    "dopunski_zahtev_ceka": "A kérésed a következő körben való kiosztásra vár.",
+    "dopunski_povuci": "Kérés visszavonása",
+    "dopunski_dodeljen": "További részt osztottak ki neked. Vedd át a szállítónál a pótlólagos határidő végéig, ezzel a kóddal:",
+    "dopunski_odustani": "Lemondok a további részről",
+    "dopunski_preuzet": "A további rész átvéve.",
+    "dopunski_oslobodjen": "A további részt nem vették át a pótlólagos határidő végéig. A lefoglalt POEN felszabadult.",
+    "dopunski_nije_dodeljen": "A további részt nem osztották ki.",
+    "dopunski_odustao": "Lemondtál a további részről.",
     "kalkulacija": "Kalkuláció",
     "k_saldo": "Az Alapítvány egyenlege",
     "k_rezerva": "Működési tartalék",
@@ -4179,6 +4204,7 @@
     "k_placeno": "A szállítónak kifizetve",
     "k_mesto": "Az átvétel helye",
     "k_period": "Átvételi időszak",
+    "k_dopunski": "Pótlólagos határidő (át nem vett részek)",
     "k_obrazlozenje": "A részenkénti POEN mennyiségét a beszerzési döntés határozta meg: {obrazlozenje}",
     "paritet_napomena": "A részenkénti POEN mennyiségét a beszerzést elindító döntés határozza meg; ez nem a jószág ára, és nem abból vezetik le. A POEN nem jut el a szállítóhoz: az árut az Alapítvány dinárért vásárolja, a POEN-t pedig a felhasznált részvétel nyilvántartásaként törlik.",
     "ponude": "Begyűjtött ajánlatok",
@@ -4630,9 +4656,8 @@
     "izvrseno_prijavljeno": "A teljesítést bejelentetted; az Alapítvány megállapítja.",
     "spremno": "Az élelmiszer átvehető",
     "spremno_oznaceno": "Megjelölted, hogy az élelmiszer átvehető; az utalványok birtokosait értesítettük.",
-    "nepreuzeti": "Át nem vett részek átvétele",
-    "nepreuzeti_preuzeti": "Az át nem vett részeket átvetted.",
-    "nepreuzeti_napomena": "Az olyan rész után, amelynek utalványát senki nem vette fel, az utalványonkénti POEN-szám leírásra kerül, legfeljebb az adott tételen nyújtott szolgáltatásért járó hozzájárulás mértékéig, akkor is, ha a bejegyzés negatívvá válik; az olyan rész után, amelynek utalványát felvették, majd lejárt, nincs leírás.",
+    "nepreuzeti_napomena": "A határidő lejártával az át nem vett részeket a létesítmény veszi át — automatikusan, az éjszakai elszámolás során. Az olyan rész után, amelynek utalványát senki nem vette fel, az utalványonkénti POEN-szám leírásra kerül, legfeljebb az adott tételen nyújtott szolgáltatásért járó hozzájárulás mértékéig, akkor is, ha a bejegyzés negatívvá válik; e határon túl a részt a bejegyzésből történő érvénytelenítéssel veszik át, negatív bejegyzés nélkül. Az olyan rész után, amelynek utalványát felvették, majd lejárt, nincs leírás.",
+    "nepreuzeti_napomena_lanac": "A határidő lejártával az át nem vett részeket az utolsó partner veszi át — automatikusan, az éjszakai elszámolás során. Az olyan rész után, amelynek utalványát senki nem vette fel, először érvénytelenítésre kerül a láncban feljegyzett, de még nyilvántartásba nem vett hozzájárulásod, majd az utalványonkénti POEN-szám leírásra kerül, legfeljebb a nyilvántartott hozzájárulás mértékéig (a szolgáltatás és az elosztási pótlék), akkor is, ha a bejegyzés negatívvá válik; e határon túl a részt a bejegyzésből történő érvénytelenítéssel veszik át, negatív bejegyzés nélkül. Az olyan rész után, amelynek utalványát felvették, majd lejárt, nincs leírás.",
     "zapisnik_za_potvrdu": "Az átadás-átvételi jegyzőkönyv a megerősítésedre vár: {kolicina} {jedinica}.",
     "zapisnik_oznake": "Az állatok jelölései: {oznake}",
     "predaja_potvrdjena": "Az átadást megerősítetted.",

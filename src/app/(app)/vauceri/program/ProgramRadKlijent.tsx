@@ -30,7 +30,7 @@ type Karika = {
   ugovorPrihvacenAt: string | null;
   izvrsenoPrijavljenoAt: string | null;
   izvrsenjeUtvrdjenoAt: string | null;
-  lanac: { id: string; vrsta: "PROGRAM_HRANE" | "LANAC"; naziv: string; status: string; spremno: boolean; vrstaHrane: string | null; jedinica: string; nepreuzetiMogu: boolean };
+  lanac: { id: string; vrsta: "PROGRAM_HRANE" | "LANAC"; naziv: string; status: string; spremno: boolean; vrstaHrane: string | null; jedinica: string; nepreuzetiCekaju: boolean };
   mozeBeleziPredaju: boolean;
   prvaPredaja: boolean;
   zaPotvrdu: { id: string; kolicina: number; oznakeZivotinja: string | null; obimUsluge: number | null }[];
@@ -144,11 +144,8 @@ export default function ProgramRadKlijent() {
                   {k.uloga === "POSLEDNJI" && k.lanac.status === "VAUCERI_IZDATI" && !k.lanac.spremno && (
                     <Dugme velicina="sm" disabled={radi} onClick={() => posalji({ radnja: "spremno", id: k.lanac.id }, t("spremno_oznaceno"))}>{t("spremno")}</Dugme>
                   )}
-                  {k.lanac.nepreuzetiMogu && (
-                    <Dugme velicina="sm" varijanta="sekundarno" disabled={radi} onClick={() => posalji({ radnja: "nepreuzeti", id: k.lanac.id }, t("nepreuzeti_preuzeti"))}>{t("nepreuzeti")}</Dugme>
-                  )}
                 </div>
-                {k.lanac.nepreuzetiMogu && <p className="text-xs text-kolo-muted">{t("nepreuzeti_napomena")}</p>}
+                {k.lanac.nepreuzetiCekaju && <p className="text-xs text-kolo-muted">{t(k.lanac.vrsta === "LANAC" ? "nepreuzeti_napomena_lanac" : "nepreuzeti_napomena")}</p>}
                 {k.zaPotvrdu.map((z) => (
                   <div key={z.id} className="space-y-1 rounded-kontrola bg-kolo-bg px-3 py-2 text-sm">
                     <p>{t("zapisnik_za_potvrdu", { kolicina: z.kolicina.toLocaleString(intlTag(locale)), jedinica: k.lanac.jedinica })}</p>

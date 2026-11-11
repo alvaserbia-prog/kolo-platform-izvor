@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { greska } from "@/lib/greska-api";
 import { obradiNabavke } from "@/lib/protokol/nabavka";
 import { obradiVaucere } from "@/lib/protokol/pokroviteljstvo-dobrima";
-import { obradiVaucereLanca } from "@/lib/protokol/lanac";
+import { obradiVaucereLanca, obradiNepreuzeteDelove } from "@/lib/protokol/lanac";
 
 /**
  * GET /api/cron/nabavke
@@ -13,12 +13,16 @@ import { obradiVaucereLanca } from "@/lib/protokol/lanac";
  *   2. istekli pozivi → mesto se oslobađa;
  *   3. potvrđeni koji nisu došli svog dana → mesto se oslobađa;
  *   4. oslobođena mesta → poziv ide sledećem u redu;
- *   5. istekao period preuzimanja → nabavka se zatvara i brišu se predlozi te reči;
+ *   5. istekao period preuzimanja → dopunski rok od 3 dana (čl. 26, set 5.1.4): preuzimaoci
+ *      se obaveštavaju, pa u svakom prolazu jedan krug dodele dodatnih delova; istekom
+ *      dopunskog roka nabavka se zatvara, rezervacije se oslobađaju i brišu se predlozi te reči;
  *   6. predlozi stariji od dvanaest meseci se brišu;
  *   7. istekli vaučeri iz pokroviteljstva dobrima i uslugama prestaju (status
  *      ISTEKAO). 🔴 Poništenje izvršeno pri uzimanju se NE ispravlja i POEN se ne
  *      vraća (nabavke čl. 34 st. 4) — rezervacije kod vaučera nema od seta 4.7.8.
- *      Raspodela je projekat iste vrste, pa ide istim noćnim poslom.
+ *      Raspodela je projekat iste vrste, pa ide istim noćnim poslom;
+ *   8. program raspodele hrane i lanac: po isteku roka nepreuzete delove AUTOMATSKI
+ *      preuzima objekat, odnosno poslednji partner (nabavke čl. 46 i 52 st. 3–4, set 5.1.4).
  *
  * 🔴 Bez ovog posla mehanizam stoji: poziv istekne a niko ga ne obori, mesto se ne
  * oslobodi i sledeći u redu nikad ne dobije priliku. Rolanje poziva je jedina stvar
@@ -36,5 +40,13 @@ export async function GET(req: NextRequest) {
   const vauceri = await obradiVaucere();
   // Program raspodele hrane i lanac (nabavke čl. 44 st. 3, čl. 52 st. 2): istek uzetih vaučera.
   const vauceriLanca = await obradiVaucereLanca();
-  return NextResponse.json({ ok: true, ...izvestaj, vauceraIsteklo: vauceri.isteklo, vauceraLancaIsteklo: vauceriLanca.isteklo });
+  // Nabavke čl. 46 i 52 st. 3–4 (set 5.1.4): posle isteka vaučera, nepreuzeto preuzima objekat, odnosno poslednji partner.
+  const nepreuzeti = await obradiNepreuzeteDelove();
+  return NextResponse.json({
+    ok: true,
+    ...izvestaj,
+    vauceraIsteklo: vauceri.isteklo,
+    vauceraLancaIsteklo: vauceriLanca.isteklo,
+    nepreuzetihPartija: nepreuzeti.partija,
+  });
 }

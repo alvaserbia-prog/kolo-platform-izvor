@@ -21,6 +21,16 @@ type Moja = {
   rezervisano: number;
   pozvanAt: string | null;
 };
+/** Dopunski rok (nabavke čl. 26, set 5.1.4) — računa ga server iz perioda preuzimanja. */
+type Dopunski = {
+  od: string;
+  do: string;
+  traje: boolean;
+  slobodnih: number;
+  otvorenZahtev: boolean;
+  mozeZatraziti: boolean;
+  delovi: { id: string; status: string; kod: string | null; rezervisano: number }[];
+};
 type Detalj = {
   id: string;
   naziv: string;
@@ -35,6 +45,7 @@ type Detalj = {
   mestoPreuzimanja: string | null;
   preuzimanjeOd: string | null;
   preuzimanjeDo: string | null;
+  dopunski: Dopunski | null;
   prijaveDo: string | null;
   obustavaRazlog: string | null;
   brojPrijava: number;
@@ -104,6 +115,9 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
 
   const dani = daniPerioda(n.preuzimanjeOd, n.preuzimanjeDo);
   const m = n.moja;
+  const dop = n.dopunski;
+  // Poslednji dan dopunskog roka: kraj roka je ponoć kojom počinje sledeći dan.
+  const dopDo = dop ? new Date(new Date(dop.do).getTime() - 1).toISOString() : null;
 
   return (
     <Stranica>
@@ -186,6 +200,48 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
         )}
 
         {m?.status === "PREUZEO" && <p className="text-sm font-medium">{t("preuzeto", { poen: poen(n.poenPoDelu) })}</p>}
+
+        {/* ── Dopunski rok (čl. 26, set 5.1.4) ─────────────────────────────── */}
+        {m?.status === "PREUZEO" && dop && (dop.traje || dop.delovi.length > 0) && (
+          <div className="mt-3 space-y-2">
+            {dop.traje && (
+              <p className="text-sm">
+                {t("dopunski_opis", { do: dan(dopDo), delova: dop.slobodnih, poen: poen(n.poenPoDelu) })}
+              </p>
+            )}
+            {dop.delovi.map((d) => (
+              <div key={d.id} className="space-y-1 text-sm">
+                {d.status === "ZATRAZEN" && (
+                  <>
+                    <p>{t("dopunski_zahtev_ceka")}</p>
+                    <Dugme varijanta="sekundarno" velicina="sm" onClick={() => posalji("dodatni", { radnja: "odustani", deoId: d.id })} disabled={radi}>
+                      {t("dopunski_povuci")}
+                    </Dugme>
+                  </>
+                )}
+                {d.status === "DODELJEN" && (
+                  <>
+                    <p className="font-medium">{t("dopunski_dodeljen")}</p>
+                    <p className="inline-block rounded-kontrola bg-kolo-surface px-4 py-2 font-mono text-lg font-bold tracking-wider">{d.kod}</p>
+                    <p>{t("rezervisano", { poen: poen(d.rezervisano) })}</p>
+                    <Dugme varijanta="sekundarno" velicina="sm" onClick={() => posalji("dodatni", { radnja: "odustani", deoId: d.id })} disabled={radi}>
+                      {t("dopunski_odustani")}
+                    </Dugme>
+                  </>
+                )}
+                {d.status === "PREUZEO" && <p>{t("dopunski_preuzet")}</p>}
+                {d.status === "OSLOBODJEN" && <p className="text-kolo-muted">{t("dopunski_oslobodjen")}</p>}
+                {d.status === "NIJE_DODELJEN" && <p className="text-kolo-muted">{t("dopunski_nije_dodeljen")}</p>}
+                {d.status === "ODUSTAO" && <p className="text-kolo-muted">{t("dopunski_odustao")}</p>}
+              </div>
+            ))}
+            {dop.mozeZatraziti && (
+              <Dugme punaSirina onClick={() => posalji("dodatni", { radnja: "zatrazi" })} disabled={radi}>
+                {t("dopunski_zatrazi")}
+              </Dugme>
+            )}
+          </div>
+        )}
         {m && ["ODUSTAO", "ISTEKAO", "NIJE_PREUZEO"].includes(m.status) && (
           <p className="text-sm">{t(`moja_${m.status}` as never)}</p>
         )}
@@ -212,6 +268,9 @@ export default function NabavkaDetaljKlijent({ id }: { id: string }) {
               [t("k_ukupno_poena"), poen(n.ukupnoPoena)],
               [t("k_mesto"), n.mestoPreuzimanja ?? "—"],
               [t("k_period"), `${dan(n.preuzimanjeOd)} – ${dan(n.preuzimanjeDo)}`],
+              // Čl. 18 st. 1 t. 4 (set 5.1.4) — kalkulacija objavljuje i dopunski rok; računa se iz
+              // perioda preuzimanja, pa se snimljena kalkulacija zatečenih nabavki ne menja.
+              ...(dop ? [[t("k_dopunski"), `${dan(dop.od)} – ${dan(dopDo)}`]] : []),
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between gap-3 py-1.5">
                 <dt className="text-kolo-muted">{k}</dt>

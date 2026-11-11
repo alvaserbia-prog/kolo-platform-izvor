@@ -14,9 +14,13 @@
  *
  * 🔴 Broj POEN-a po vaučeru izvodi se iz zbira evidentiranih doprinosa (čl. 43 st. 2, čl. 52 st. 1):
  *    nije cena, uz njega se nikad ne prikazuje dinarska vrednost i nigde ne piše 1:1 (R-01).
- * 🔴 Deveti osnov negativnog zapisa važi SAMO za deo programa bez uzetog vaučera i najviše do
- *    doprinosa za uslugu na toj partiji (čl. 46 st. 2). Lanac nema otpisa: nepreuzete delove
- *    Fondacija predaje kroz program podrške ili ustanovi (čl. 52 st. 2) — trinaesti osnov se ne uvodi.
+ * 🔴 Deveti osnov negativnog zapisa (Pravilnik čl. 17 st. 2 t. 9, set 5.1.4) važi SAMO za deo
+ *    bez uzetog vaučera: u programu najviše do doprinosa za uslugu objekta na toj partiji
+ *    (čl. 46 st. 2), u lancu najviše do doprinosa poslednjeg partnera po tom lancu — usluga i
+ *    dodatak za distribuciju (čl. 52 st. 4). Nepreuzete delove po isteku roka PREUZIMA objekat,
+ *    odnosno poslednji partner — automatski, bez mogućnosti odbijanja; Fondacija predaje samo
+ *    ostatak koji ni uz poništenje iz zapisa nije mogao biti preuzet (čl. 46 st. 4, čl. 52 st. 6).
+ *    Trinaesti osnov se ne uvodi.
  * 🔴 Ugovori ne sadrže broj POEN-a ni koeficijent evidencije (čl. 40 st. 4; donacije čl. 31 st. 3).
  */
 import {
@@ -294,6 +298,64 @@ export function otpisNepreuzetihDelova(p: {
     vecOtpisano: p.vecOtpisano,
     raspolozivo: Math.max(0, p.raspolozivo - potrosenoOtpisom),
   });
+}
+
+/**
+ * Preuzimanje nepreuzetih delova po isteku roka — program (čl. 46, objekat) i lanac (čl. 52
+ * st. 3–6, poslednji partner); JEDNA funkcija za oba, obmotava `otpisNepreuzetihDelova`.
+ *
+ * Za deo bez uzetog vaučera pokriva se broj POEN-a po vaučeru, redom:
+ *  1) iz ZABELEŽENOG, a još neevidentiranog doprinosa tog lica po toj partiji, odnosno lancu
+ *     (lanac: usluga i dodatak za distribuciju koji čekaju naredni obračunski period) — taj
+ *     deo se samo poništava, bez transakcije, jer POEN još nije u zapisu (tumačenje uz odluku
+ *     vlasnika 10.11.2026: doprinos koji bi tek bio evidentiran ne evidentira se, umesto da
+ *     se prvo evidentira pa otpiše);
+ *  2) otpisom iz EVIDENTIRANOG doprinosa, umanjenog za već otpisano — deveti osnov, SME u minus;
+ *  3) preko te granice poništenjem iz zapisa koji lice ima, BEZ minusa; deo koji se ni tako ne
+ *     pokrije ostaje (Fondacija ga predaje po čl. 46 st. 4, odnosno čl. 52 st. 6).
+ * Zapis zadruge ne ide u minus: korak 2 je za njega nula.
+ */
+export function preuzimanjeNepreuzetihDelova(p: {
+  delovaBezVaucera: number;
+  poenaPoVauceru: number;
+  zabelezeno: number;
+  evidentirano: number;
+  vecOtpisano: number;
+  raspolozivo: number;
+  zapisZadruge: boolean;
+}): {
+  zabelezenoPonisteno: number;
+  otpis: number;
+  ponistenje: number;
+  delovaPreuzeto: number;
+  delovaOstaje: number;
+  poDelu: { zabelezeno: number; otpis: number }[];
+} {
+  const c = Math.max(0, Math.trunc(p.poenaPoVauceru));
+  const delova = Math.max(0, Math.trunc(p.delovaBezVaucera));
+  const z = Math.max(0, Math.trunc(p.zabelezeno));
+  const e = p.zapisZadruge ? 0 : Math.max(0, p.evidentirano - p.vecOtpisano);
+  // Zabeleženo se troši pre otpisa i ne dira stanje, pa se raspoloživom vraća onoliko koliko
+  // unutrašnja funkcija pripiše „otpisu" a zapravo je pokriveno iz zabeleženog.
+  const izZabelezenog = Math.min(z, delova * c);
+  const o = otpisNepreuzetihDelova({
+    delovaBezVaucera: delova,
+    poenaPoVauceru: c,
+    doprinosZaUsluguNaPartiji: z + e,
+    vecOtpisano: 0,
+    raspolozivo: p.raspolozivo + izZabelezenog,
+    zapisZadruge: false,
+  });
+  const zabelezenoPonisteno = Math.min(z, o.otpis);
+  const otpis = o.otpis - zabelezenoPonisteno;
+  const slobodno = rasporediOtpis(o.otpis, o.delovaPreuzeto, c);
+  let ostZ = zabelezenoPonisteno;
+  const poDelu = slobodno.map((x) => {
+    const iz = Math.min(ostZ, x);
+    ostZ -= iz;
+    return { zabelezeno: iz, otpis: x - iz };
+  });
+  return { zabelezenoPonisteno, otpis, ponistenje: o.ponistenje, delovaPreuzeto: o.delovaPreuzeto, delovaOstaje: o.delovaOstaje, poDelu };
 }
 
 /** Raspodela ukupnog otpisa po delovima (redom, svaki deo najviše broj POEN-a po vaučeru). */

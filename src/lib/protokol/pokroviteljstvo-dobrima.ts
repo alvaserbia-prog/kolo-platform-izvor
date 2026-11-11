@@ -79,6 +79,7 @@ import { ZAOKRUZIVANJE_STIPS } from "@/lib/stips-bilten-pravila";
 import type { VrstaHrane, Kategorija } from "@/lib/hrana-pravila";
 import { upisSpremanZaPrijavu, funkcijaZaUgovor, naRangListi } from "@/lib/upis-pokrovitelja-pravila";
 import { ograniceno } from "./ogranicenje-primljenog";
+import { rezervisanoZaNabavku } from "./nabavka";
 
 export * from "@/lib/pokroviteljstvo-dobrima-pravila";
 
@@ -927,7 +928,7 @@ export async function uzmiVaucer(
 
     const [w, nab, aktivnihDobra, aktivnihLanca, aktivnihIzUgovora] = await Promise.all([
       tx.wallet.findUniqueOrThrow({ where: { id: walletId }, select: { balance: true } }),
-      tx.nabavkaPrijava.aggregate({ where: { userId, status: "POTVRDIO" }, _sum: { rezervisano: true } }),
+      rezervisanoZaNabavku(userId, tx),
       tx.vaucer.count({ where: { imalacId: userId, status: "DODELJEN" } }),
       // Nabavke čl. 43 st. 3 (set 5.1.2): u granicu od dva ulaze i vaučeri programa raspodele
       // hrane i lanca (`protokol/lanac.ts`).
@@ -945,7 +946,7 @@ export async function uzmiVaucer(
       aktivnihVaucera: aktivnihDobra + aktivnihLanca,
       aktivnihIzUgovora,
       // Ograničen iznos se ne koristi (donacije čl. 6 st. 7, set 5.0.9).
-      raspolozivo: raspolozivo(w.balance) - (nab._sum.rezervisano ?? 0) - (await ograniceno(walletId, tx)),
+      raspolozivo: raspolozivo(w.balance) - nab - (await ograniceno(walletId, tx)),
       poenaPoVauceru: poenaPoV,
     });
     if (!provera.ok) throw new VaucerGreska(provera.razlog, 403);

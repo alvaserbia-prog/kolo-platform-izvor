@@ -3,6 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { stanjeDopunskogRoka } from "@/lib/protokol/nabavka";
 
 /**
  * GET /api/nabavke/[id]
@@ -35,7 +36,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   // Učesnik = u Kolu (verifikovan), nikad dete (Pravilnik čl. 2, 56).
   const ucesnik = !!session.user.verified && session.user.maloletan !== true;
 
-  const [moja, brojPrijava, preuzeli] = await Promise.all([
+  const [moja, brojPrijava, preuzeli, dopunski] = await Promise.all([
     prisma.nabavkaPrijava.findUnique({
       where: { nabavkaId_userId: { nabavkaId: id, userId: session.user.id } },
       select: {
@@ -55,6 +56,9 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
           select: { mesto: true, user: { select: { pseudonim: true } } },
         })
       : Promise.resolve([]),
+    // Čl. 26 (set 5.1.4) — dopunski rok se računa iz perioda preuzimanja; kod dodatnog dela
+    // vraća se samo vlasniku.
+    stanjeDopunskogRoka(id, session.user.id),
   ]);
 
   return NextResponse.json({
@@ -71,6 +75,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     mestoPreuzimanja: n.mestoPreuzimanja,
     preuzimanjeOd: n.preuzimanjeOd?.toISOString() ?? null,
     preuzimanjeDo: n.preuzimanjeDo?.toISOString() ?? null,
+    dopunski,
     prijaveDo: n.prijaveDo?.toISOString() ?? null,
     objavljenoAt: n.objavljenoAt?.toISOString() ?? null,
     obustavaRazlog: n.obustavaRazlog,

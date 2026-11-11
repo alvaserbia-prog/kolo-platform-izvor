@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { greska } from "@/lib/greska-api";
 import { izvrsiNocnuEmisiju } from "@/lib/protokol/programi";
 import { izvrsiZrnoOperacije } from "@/lib/protokol/zrno";
@@ -11,6 +11,7 @@ import { evidentirajZabelezenoPokroviteljstvoDobrima } from "@/lib/protokol/pokr
 import { evidentirajZabelezenoPartnerstvo } from "@/lib/protokol/partnerstvo";
 import { zatvoriIstekla } from "@/lib/protokol/donacija-unapred";
 import { evidentirajZabelezenoLanac } from "@/lib/protokol/lanac";
+import { pokreniNocniNiz, osnovaNiza } from "@/lib/nocni-niz";
 
 // GET /api/cron/nocna-emisija — Vercel Cron (Authorization: Bearer), zakazan u
 // 22:00 i 23:00 UTC (drugi termin kroz /api/cron/nocna-emisija/zima). Radi samo
@@ -25,7 +26,12 @@ export async function GET(req: NextRequest) {
   if (!jePonocUSrbiji(datum)) {
     return NextResponse.json({ ok: true, preskoceno: "nije ponoć po srpskom vremenu" });
   }
-  return await nocniObracun(datum, { osnivacki: true });
+  const odgovor = await nocniObracun(datum, { osnivacki: true });
+  // Ponoćni niz (odluka vlasnika 11.11.2026): posle zatvaranja perioda ostali poslovi
+  // obračunskog dana idu REDOM, svaki kao zaseban poziv (`nocni-niz-pravila.ts`).
+  // Pokreće se i kad obračun vrati grešku — koraci su nezavisni i idempotentni.
+  after(() => pokreniNocniNiz(osnovaNiza(req.url)));
+  return odgovor;
 }
 
 // POST /api/cron/nocna-emisija — manuelni poziv (x-cron-secret), bez provere sata.

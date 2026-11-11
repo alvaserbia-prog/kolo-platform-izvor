@@ -168,7 +168,7 @@ Projekat koji nije kolektivna nabavka, raspodela vaučera ni podrška zadruzi po
 
 3) ukupan broj POEN-a koji se poništava;
 
-4) mesto i period preuzimanja.
+4) mesto, period preuzimanja i dopunski rok (član 26).
 
 (2) Dinarska strana nabavke ne objavljuje se uz kalkulaciju (član 37 stav 2).
 
@@ -218,11 +218,13 @@ Projekat koji nije kolektivna nabavka, raspodela vaučera ni podrška zadruzi po
 
 (2) Ako je broj potvrđenih delova manji od broja delova iz kalkulacije, nabavlja se manje jedinica i plaća se srazmerno manji iznos. Veličina dela se ne menja.
 
+(3) Dodatni delovi iz člana 26 deo su nabavljenih delova i ne povećavaju broj delova koji se nabavlja.
+
 ### Član 24 — Preuzimanje
 
 (1) Korisnik preuzima svoj deo neposredno kod dobavljača, u danu koji je upisao, uz kod za preuzimanje. Kod za preuzimanje vidi samo korisnik.
 
-(2) Period preuzimanja iznosi 3 dana i objavljuje se kalkulacijom.
+(2) Period preuzimanja iznosi 3 dana i objavljuje se kalkulacijom, zajedno sa dopunskim rokom iz člana 26.
 
 (3) Fondacija dobavljaču dostavlja isključivo spisak kodova za preuzimanje. Pseudonimi i drugi podaci o korisnicima se dobavljaču ne dostavljaju.
 
@@ -238,9 +240,13 @@ Projekat koji nije kolektivna nabavka, raspodela vaučera ni podrška zadruzi po
 
 ### Član 26 — Nepreuzeti delovi
 
-(1) Delovi koji do isteka perioda preuzimanja ne budu preuzeti ulaze u narednu nabavku kao dodatne jedinice.
+(1) Po isteku perioda preuzimanja otvara se dopunski rok od 3 dana. U dopunskom roku nepreuzeti delovi nude se korisnicima koji su u toj nabavci preuzeli deo, da preuzmu dodatni deo.
 
-(2) Nepreuzeti delovi se ne prodaju. Fondacija ih ustupa isključivo bez naknade, u skladu sa članom 3.
+(2) Dodatni delovi dodeljuju se korisnicima koji su ih zatražili, po redu iz člana 20, po jedan deo po korisniku u svakom krugu, dok ima delova i zahteva. Korisnik tako može preuzeti dva ili više delova.
+
+(3) Za svaki dodatni deo pri preuzimanju se poništava broj POEN-a po delu, po članu 25; zapis ne prelazi u negativnu vrednost. Na rezervaciju, oslobađanje i preuzimanje dodatnog dela shodno se primenjuju članovi 21, 22 i 24, s tim što dan preuzimanja pada unutar dopunskog roka.
+
+(4) Delovi koji ni do isteka dopunskog roka ne budu preuzeti ulaze u narednu nabavku kao dodatne jedinice ili ih Fondacija ustupa isključivo bez naknade, u skladu sa članom 3. Nepreuzeti delovi se ne prodaju.
 
 ## VI — Odnos prema dobavljaču i nedostatak dobra
 
@@ -414,7 +420,7 @@ Kada hrana nije ispravna, vaučer se prenosi na drugu partiju iste vrste. Ako ta
 
 ### Član 46 — Nepreuzeti delovi
 
-(1) Po isteku roka objekat može da preuzme nepreuzete delove. Za deo čiji je vaučer uzet i istekao otpis se ne vrši, jer je broj POEN-a za taj deo već poništen.
+(1) Po isteku roka objekat preuzima nepreuzete delove. Za deo čiji je vaučer uzet i istekao otpis se ne vrši, jer je broj POEN-a za taj deo već poništen.
 
 (2) Za deo za koji vaučer nije uzet, licu u čijem zapisu je evidentiran doprinos za uslugu na toj partiji otpisuje se broj POEN-a po vaučeru, najviše do visine tog doprinosa, i kada zapis time postane negativan (član 17 stav 2 tačka 9 Pravilnika o KOLO sistemu). To lice se o otpisu obaveštava, uz osnov i iznos. Preko te granice objekat deo preuzima samo uz poništenje iz zapisa koji ima, bez negativnog zapisa.
 
@@ -474,7 +480,15 @@ Odluka o lancu utvrđuje:
 
 (1) Broj POEN-a po vaučeru jednak je zbiru doprinosa koji se za lanac evidentiraju po članu 51, podeljenom brojem vaučera i zaokruženom na najbliži ceo broj. Fondacija ga ne utvrđuje kao cenu, uz njega ne objavljuje dinarsku vrednost, roba se njime ne plaća, a poništeni POEN niko ne prima.
 
-(2) Na uzimanje vaučera, preuzimanje i zamenu shodno se primenjuju članovi 43 do 45. Delove koje niko ne preuzme Fondacija predaje kroz program podrške ili ustanovi socijalne zaštite i ne prodaje ih.
+(2) Na uzimanje vaučera, preuzimanje i zamenu shodno se primenjuju članovi 43 do 45.
+
+(3) Po isteku roka nepreuzete delove preuzima poslednji partner u lancu, koji robu izdaje korisnicima. Za deo čiji je vaučer uzet i istekao otpis se ne vrši, jer je broj POEN-a za taj deo već poništen.
+
+(4) Za deo za koji vaučer nije uzet, licu u čijem zapisu je evidentiran doprinos poslednjeg partnera po tom lancu (usluga i dodatak za distribuciju) otpisuje se broj POEN-a po vaučeru, najviše do visine tog doprinosa, i kada zapis time postane negativan (član 17 stav 2 tačka 9 Pravilnika o KOLO sistemu). To lice se o otpisu obaveštava, uz osnov i iznos. Preko te granice poslednji partner deo preuzima samo uz poništenje iz zapisa koji ima, bez negativnog zapisa.
+
+(5) Preuzete delove poslednji partner sme da proda u svoje ime, uz propisan račun.
+
+(6) Delove koje poslednji partner ne preuzme Fondacija predaje kroz program podrške ili ustanovi socijalne zaštite i ne prodaje ih.
 
 ## XII — Završne odredbe
 

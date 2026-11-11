@@ -1401,7 +1401,7 @@
     },
     "dpia": {
       "naslov": "Data Protection Impact Assessment (DPIA)",
-      "ver": "5.1.2"
+      "ver": "5.1.4"
     },
     "radnjeObrade": {
       "naslov": "Records of Processing Activities of Personal Data",
@@ -1413,11 +1413,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.1.2"
+      "ver": "5.1.4"
     },
     "pravilnik": {
       "naslov": "KOLO System Rulebooks",
-      "ver": "5.1.3",
+      "ver": "5.1.4",
       "sviPravilnici": "← All rulebooks",
       "pravilnici": "Rulebooks"
     },
@@ -1444,15 +1444,15 @@
     "meta_statut_title": "Statute of the KOLO Foundation · KOLO",
     "meta_statut_desc": "Statute of the KOLO Foundation, version 4.1",
     "meta_dpia_title": "DPIA · KOLO",
-    "meta_dpia_desc": "Data Protection Impact Assessment, version 5.1.2",
+    "meta_dpia_desc": "Data Protection Impact Assessment, version 5.1.4",
     "meta_radnje_title": "Records of Processing Activities · KOLO",
     "meta_radnje_desc": "Records of Processing Activities of Personal Data, version 5.1.2",
     "meta_rizici_title": "Risk Acceptance Statement · KOLO",
     "meta_rizici_desc": "Risk acceptance statement for participation in the KOLO system, version 5.1.2",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.1.2",
+    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.1.4",
     "meta_pravilnik_title": "KOLO System Rulebooks · KOLO",
-    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.1.3",
+    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.1.4",
     "rb": {
       "kolo-sistem": {
         "naziv": "Rulebook on the KOLO System",
@@ -3034,6 +3034,14 @@
     "nabavka_poziv_tekst": "Procurement “{dobro}”: {poen} POEN is annulled for your share on collection. Confirm by choosing a collection day.",
     "nabavka_preuzeto_naslov": "Share collected",
     "nabavka_preuzeto_tekst": "You collected your share from the “{dobro}” procurement. {poen} POEN was annulled. If you did not collect the share, or it is defective, you have {dana} days to lodge a complaint from your profile.",
+    "nabavka_dopunski_naslov": "Uncollected shares remain",
+    "nabavka_dopunski_tekst": "Uncollected shares remain in the “{dobro}” procurement: {delova}. Until {do} you can request an additional share; shares are allocated in the order of the procurement, one per round.",
+    "nabavka_dodatni_dodeljen_naslov": "You have been allocated an additional share",
+    "nabavka_dodatni_dodeljen_tekst": "Procurement “{dobro}”: you have been allocated an additional share. {poen} POEN has been reserved and is annulled on collection. Collect it with the code from the procurement page by {do}.",
+    "nabavka_dodatni_bez_poena_naslov": "The additional share was not allocated",
+    "nabavka_dodatni_bez_poena_tekst": "Procurement “{dobro}”: the additional share requires {poen} POEN at your disposal, so the share was not allocated. You can repeat the request.",
+    "nabavka_dodatni_preuzet_naslov": "The additional share has been collected",
+    "nabavka_dodatni_preuzet_tekst": "You collected an additional share from the “{dobro}” procurement. {poen} POEN was annulled.",
     "zahtev_potvrda_spoljni_naslov": "A new request awaits your answer",
     "zahtev_potvrda_spoljni_tekst": "Someone has named you as a Kolo member who knows them personally. Open KOLO to see the request.",
     "program_pristanak_povucen_naslov": "Consent withdrawn",
@@ -3271,7 +3279,11 @@
     "lanac_otpis_naslov": "Write-off upon taking over uncollected portions",
     "lanac_otpis_tekst": "Upon taking over the uncollected portions of the batch “{naziv}”, {poen} POEN has been written off (Rulebook on the KOLO System, Art. 17 para. 2 item 9; Rulebook on Projects and Collective Procurement, Art. 46).",
     "lanac_otpis_minus_naslov": "Your record has become negative through a write-off",
-    "lanac_otpis_minus_tekst": "Upon taking over the uncollected portions of the batch “{naziv}”, {poen} POEN has been written off (Rulebook on the KOLO System, Art. 17 para. 2 item 9; Rulebook on Projects and Collective Procurement, Art. 46). Your record is now negative ({stanje} POEN); POEN that comes in fills that amount first."
+    "lanac_otpis_minus_tekst": "Upon taking over the uncollected portions of the batch “{naziv}”, {poen} POEN has been written off (Rulebook on the KOLO System, Art. 17 para. 2 item 9; Rulebook on Projects and Collective Procurement, Art. 46). Your record is now negative ({stanje} POEN); POEN that comes in fills that amount first.",
+    "lanac_nepreuzeto_naslov": "Uncollected portions have been taken over",
+    "lanac_nepreuzeto_tekst": "After the deadline, uncollected portions from “{naziv}” were taken over: {delova} (Rulebook on Projects and Collective Procurement, Art. {clan}). {otpis} POEN was written off under the ninth ground (Rulebook on the KOLO System, Art. 17 para. 2 item 9), {ponisteno} POEN was cancelled from the record, and {zabelezeno} POEN of the noted contribution was cancelled.",
+    "lanac_nepreuzeto_minus_naslov": "Your record has become negative through a write-off",
+    "lanac_nepreuzeto_minus_tekst": "After the deadline, uncollected portions from “{naziv}” were taken over: {delova} (Rulebook on Projects and Collective Procurement, Art. {clan}). {otpis} POEN was written off under the ninth ground (Rulebook on the KOLO System, Art. 17 para. 2 item 9), {ponisteno} POEN was cancelled from the record, and {zabelezeno} POEN of the noted contribution was cancelled. Your record is now negative ({stanje} POEN); POEN that comes in fills that amount first."
   },
   "transakcije": {
     "verifikacija": "Confirmation of member {pseudonim}",
@@ -3295,6 +3307,7 @@
     "prevod_u_maloletni_otpis": "Reversal of POEN recorded through the channels (account converted to a child account)",
     "prevod_u_maloletni_potvrda": "Reversal of POEN from a lapsed confirmation ({pseudonim} converted to a child account)",
     "nabavka": "Collective procurement — {dobro}",
+    "nabavka_dodatni": "Collective procurement, {dobro} (additional share)",
     "nabavka_ispravka": "Ledger correction, collective procurement {dobro}",
     "zrno_upis": "Recording of {zrna} ZRNO at coefficient {koeficijent}",
     "zrno_otpis": "Write-off of {zrna} ZRNO at coefficient {koeficijent}",
@@ -3330,7 +3343,9 @@
     "vaucer_lanca_uzet": "Programme voucher: {naziv}",
     "vaucer_lanca_ispravka": "Ledger correction — programme voucher: {naziv}",
     "otpis_nepreuzeto": "Write-off upon taking over uncollected portions in the food distribution programme: {naziv}",
-    "nepreuzeto_ponistenje": "Cancellation for uncollected portions in the food distribution programme: {naziv}"
+    "nepreuzeto_ponistenje": "Cancellation for uncollected portions in the food distribution programme: {naziv}",
+    "otpis_nepreuzeto_lanac": "Write-off upon taking over uncollected portions in the production and distribution chain: {naziv}",
+    "nepreuzeto_ponistenje_lanac": "Cancellation for uncollected portions in the production and distribution chain: {naziv}"
   },
   "mejl": {
     "pozdrav": "Hello",
@@ -4165,6 +4180,16 @@
     "kod_uputstvo": "Show this code at the supplier. POEN is annulled upon collection, not before.",
     "rezervisano": "Reserved: {poen} POEN",
     "preuzeto": "You have collected your share. {poen} POEN was annulled.",
+    "dopunski_opis": "A supplementary period runs until {do}. Uncollected shares remaining: {delova}. You can request an additional share; shares are allocated in the order of the procurement, one per round, and {poen} POEN is annulled for each on collection.",
+    "dopunski_zatrazi": "Request an additional share",
+    "dopunski_zahtev_ceka": "Your request is awaiting allocation in the next round.",
+    "dopunski_povuci": "Withdraw the request",
+    "dopunski_dodeljen": "You have been allocated an additional share. Collect it at the supplier by the end of the supplementary period, with the code:",
+    "dopunski_odustani": "Give up the additional share",
+    "dopunski_preuzet": "The additional share has been collected.",
+    "dopunski_oslobodjen": "The additional share was not collected by the end of the supplementary period. The reserved POEN has been released.",
+    "dopunski_nije_dodeljen": "The additional share was not allocated.",
+    "dopunski_odustao": "You gave up the additional share.",
     "kalkulacija": "Calculation",
     "k_saldo": "Foundation balance",
     "k_rezerva": "Operating reserve",
@@ -4179,6 +4204,7 @@
     "k_placeno": "Paid to the supplier",
     "k_mesto": "Place of collection",
     "k_period": "Collection period",
+    "k_dopunski": "Supplementary period (uncollected shares)",
     "k_obrazlozenje": "The number of POEN per share was set by the procurement decision: {obrazlozenje}",
     "paritet_napomena": "The number of POEN per share is set by the decision that starts the procurement; it is not the price of the good and is not derived from it. POEN does not go to the supplier: the Foundation buys the goods with dinars, and POEN is cancelled as a record of participation used.",
     "ponude": "Collected offers",
@@ -4630,9 +4656,8 @@
     "izvrseno_prijavljeno": "Performance has been reported; the Foundation is establishing it.",
     "spremno": "The food is ready for collection",
     "spremno_oznaceno": "The food has been marked as ready; voucher holders have been notified.",
-    "nepreuzeti": "Take over uncollected portions",
-    "nepreuzeti_preuzeti": "The uncollected portions have been taken over.",
-    "nepreuzeti_napomena": "For a portion whose voucher no one took, the number of POEN per voucher is written off, up to the contribution for the service on that batch, even if the record becomes negative; for a portion whose voucher was taken and expired, there is no write-off.",
+    "nepreuzeti_napomena": "After the deadline, uncollected portions are taken over by the facility — automatically, in the nightly settlement. For a portion whose voucher no one took, the number of POEN per voucher is written off, up to the contribution for the service on that batch, even if the record becomes negative; beyond that limit the portion is taken over with a cancellation from the record, without a negative record. For a portion whose voucher was taken and expired, there is no write-off.",
+    "nepreuzeti_napomena_lanac": "After the deadline, uncollected portions are taken over by the last partner — automatically, in the nightly settlement. For a portion whose voucher no one took, your noted but not yet recorded contribution in that chain is cancelled first, and then the number of POEN per voucher is written off, up to the recorded contribution (the service and the distribution supplement), even if the record becomes negative; beyond that limit the portion is taken over with a cancellation from the record, without a negative record. For a portion whose voucher was taken and expired, there is no write-off.",
     "zapisnik_za_potvrdu": "A handover record is awaiting your confirmation: {kolicina} {jedinica}.",
     "zapisnik_oznake": "Animal tags: {oznake}",
     "predaja_potvrdjena": "The handover has been confirmed.",

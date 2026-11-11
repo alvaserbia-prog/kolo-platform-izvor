@@ -12,8 +12,9 @@
  *   evidentira doprinos gazdinstva (čl. 41) → vaučeri izdati (čl. 43 st. 1) → korisnici uzimaju
  *   (poništenje, `PONISTENJE_VAUCER_LANAC`) → objekat označi spremno (obaveštenje, rok 15 dana)
  *   → Fondacija utvrdi izvršenje usluge → Protokol evidentira doprinos objekta (čl. 42 st. 3) →
- *   objekat potvrđuje preuzimanje kodom → istek bez ispravke → po isteku roka objekat preuzima
- *   delove bez uzetog vaučera uz otpis po DEVETOM osnovu (čl. 46) → ostatak Fondacija predaje.
+ *   objekat potvrđuje preuzimanje kodom → istek bez ispravke → po isteku roka objekat AUTOMATSKI
+ *   preuzima nepreuzete delove, uz otpis po DEVETOM osnovu za delove bez uzetog vaučera (čl. 46)
+ *   → ostatak koji ni uz poništenje iz zapisa ne može da preuzme Fondacija predaje (st. 4).
  *
  * Lanac (Glava XI):
  *   superadmin upisuje odluku UO (Faza 1), odnosno Gornjeg Kola (Faza 2) — zapis se ne menja →
@@ -21,7 +22,8 @@
  *   potvrđuje svaku kariku → doprinos se BELEŽI (sirovina pri predaji, usluga po utvrđenom
  *   izvršenju, dodatak po utvrđenom izdavanju) → Protokol ga evidentira u NAREDNOM obračunskom
  *   periodu (noćni obračun, `evidentirajZabelezenoLanac`) → posle evidentiranja sirovine vaučeri
- *   → nepreuzeto Fondacija predaje kroz program podrške ili ustanovi, BEZ otpisa.
+ *   → po isteku roka nepreuzeto AUTOMATSKI preuzima poslednji partner, uz otpis po devetom osnovu
+ *   do njegovog doprinosa po tom lancu (čl. 52 st. 3–4) → ostatak Fondacija predaje (st. 6).
  *
  * 🔴 `emitujPoen()` otvara sopstvenu transakciju i zove se VAN `$transaction` (pravilo 8).
  * 🔴 Sopstveni tipovi transakcija, nikad `TRANSFER` (pravilo 5).
@@ -36,6 +38,7 @@ import { TransactionType, Prisma as PrismaVrednosti } from "@/generated/prisma/c
 import { emitujPoen } from "./emisija";
 import { raspolozivo } from "./nadoknada";
 import { ograniceno } from "./ogranicenje-primljenog";
+import { rezervisanoZaNabavku } from "./nabavka";
 import { imeNaloga } from "./identitet";
 import { dohvatiFazuStatus } from "./faza-sistema";
 import { cenaStipsZa } from "./stips";
@@ -60,7 +63,6 @@ import {
   procitajPrijavuGazdinstva,
   procitajPrijavuObjekta,
   procitajZapisnik,
-  rasporediOtpis,
   rokZaNepreuzeteIstekao,
   smeUzetiVaucerLanca,
   stanjeVauceraLanca,
@@ -73,7 +75,7 @@ import {
   doprinosUslugeObjekta,
   doprinosUslugePartnera,
   dodatakZaIzdato,
-  otpisNepreuzetihDelova,
+  preuzimanjeNepreuzetihDelova,
   normalizujKod,
   rokPreuzimanja,
   KOEFICIJENT_PARTNERA,
@@ -871,7 +873,7 @@ export async function uzmiVaucerLanca(
     if (!l || !uzimanjeOtvoreno(l, sada) || !l.poenaPoVauceru) throw new LanacGreska("Vaučeri ove partije nisu dostupni.", 404);
     const [w, nab, jeKarika, aktivniDobra, aktivniLanac, aktivniIzPartije] = await Promise.all([
       tx.wallet.findUniqueOrThrow({ where: { id: walletId }, select: { balance: true } }),
-      tx.nabavkaPrijava.aggregate({ where: { userId, status: "POTVRDIO" }, _sum: { rezervisano: true } }),
+      rezervisanoZaNabavku(userId, tx),
       tx.lanacKarika.count({ where: { lanacId, userId } }),
       tx.vaucer.count({ where: { imalacId: userId, status: "DODELJEN" } }),
       tx.lanacVaucer.count({ where: { imalacId: userId, status: "DODELJEN" } }),
@@ -884,7 +886,7 @@ export async function uzmiVaucerLanca(
       pristanakPrikaz: unos.pristanakPrikaz,
       aktivnihUkupno: aktivniDobra + aktivniLanac,
       aktivnihIzPartije: aktivniIzPartije,
-      raspolozivo: raspolozivo(w.balance) - (nab._sum.rezervisano ?? 0) - (await ograniceno(walletId, tx)),
+      raspolozivo: raspolozivo(w.balance) - nab - (await ograniceno(walletId, tx)),
       poenaPoVauceru: l.poenaPoVauceru,
     });
     if (!provera.ok) throw new LanacGreska(provera.razlog, 403);
@@ -1113,54 +1115,94 @@ export async function oznaciNeispravno(adminId: string, lanacId: string, razlog:
   return { preneto, ispravljeno };
 }
 
-// ─── Nepreuzeti delovi (čl. 46, čl. 52 st. 2) ────────────────────────────────
+// ─── Nepreuzeti delovi (čl. 46, čl. 52 st. 3–6; set 5.1.4) ───────────────────
 
 /**
- * Program, čl. 46: po isteku roka objekat preuzima nepreuzete delove.
+ * Po isteku roka nepreuzete delove PREUZIMA objekat (program, čl. 46 st. 1), odnosno poslednji
+ * partner koji robu izdaje (lanac, čl. 52 st. 3). 🔴 Automatski, noćnim poslom
+ * (`obradiNepreuzeteDelove`, cron `/api/cron/nabavke`) — nema radnje kojom bi objekat,
+ * odnosno partner preuzimanje odbio.
  *  - Deo čiji je vaučer uzet i istekao: otpisa nema (POEN je već poništen).
- *  - Deo za koji vaučer nije uzet: licu u čijem zapisu je evidentiran doprinos za uslugu na toj
- *    partiji otpisuje se broj POEN-a po vaučeru, najviše do visine tog doprinosa (umanjeno za ono
- *    što je po ovom osnovu već otpisano), i kada zapis postane negativan — DEVETI osnov
- *    (`OTPIS_NEPREUZETO_PROGRAM`). Preko te granice deo se preuzima samo uz poništenje iz
- *    zapisa koji objekat ima (`PONISTENJE_VAUCER_LANAC`), bez minusa. Lice se obaveštava uz osnov i
- *    iznos, a o minusu posebno (pravilo 3).
- * Lanac nema ovu radnju: nepreuzete delove Fondacija predaje (`predajNepreuzeteUstanovi`).
+ *  - Deo za koji vaučer nije uzet: broj POEN-a po vaučeru pokriva se redom (pravilo
+ *    `preuzimanjeNepreuzetihDelova` u `lanac-pravila.ts`):
+ *      1) poništenjem zabeleženog, a još neevidentiranog doprinosa tog lica po toj partiji,
+ *         odnosno lancu (`LanacDoprinos` → `PONISTEN`, ostatak ide u nov red istog osnova);
+ *      2) otpisom do visine evidentiranog doprinosa — program: za uslugu objekta (čl. 46
+ *         st. 2), lanac: usluga i dodatak za distribuciju poslednjeg partnera (čl. 52 st. 4) —
+ *         i kada zapis postane negativan: DEVETI osnov (`OTPIS_NEPREUZETO_PROGRAM`);
+ *      3) preko te granice poništenjem iz zapisa koji lice ima (`PONISTENJE_VAUCER_LANAC`),
+ *         bez minusa.
+ *    Deo koji se ni tako ne pokrije ostaje; noćni posao pokušava ponovo, a Fondacija ga može
+ *    predati kroz program podrške ili ustanovi (`predajNepreuzeteUstanovi`, čl. 46 st. 4,
+ *    čl. 52 st. 6).
+ * Lice dobija obaveštenje sa brojem preuzetih delova, osnovom i iznosom, a o minusu posebno
+ * (pravilo 3).
  */
-export async function preuzmiNepreuzeteDelove(userId: string, lanacId: string) {
+export async function preuzmiNepreuzeteDelove(lanacId: string, sada = new Date()) {
   const l = await prisma.lanac.findUnique({ where: { id: lanacId } });
-  if (!l || l.vrsta !== "PROGRAM_HRANE") throw new LanacGreska("Partija programa nije pronađena.", 404);
-  const objekat = await prisma.lanacKarika.findFirst({ where: { lanacId, uloga: "POSLEDNJI" } });
-  if (!objekat || objekat.userId !== userId) throw new LanacGreska("Nepreuzete delove preuzima objekat partije.", 403);
-  const sada = new Date();
+  if (!l) throw new LanacGreska("Partija, odnosno lanac nije pronađen.", 404);
   if (l.status !== "VAUCERI_IZDATI" || !rokZaNepreuzeteIstekao(l.spremnoAt, sada)) throw new LanacGreska("Rok za preuzimanje još nije istekao.", 409);
-  const walletId = await walletKarike(objekat);
-  if (!walletId) throw new LanacGreska("Zapis objekta nije pronađen.", 409);
+  const poslednji = await prisma.lanacKarika.findFirst({ where: { lanacId, uloga: "POSLEDNJI" } });
+  if (!poslednji) throw new LanacGreska("Nema objekta, odnosno poslednjeg partnera.", 409);
+  const walletId = await walletKarike(poslednji);
+  if (!walletId) throw new LanacGreska("Zapis objekta, odnosno poslednjeg partnera nije pronađen.", 409);
+  const program = l.vrsta === "PROGRAM_HRANE";
+  // Program: doprinos za uslugu objekta (čl. 46 st. 2); lanac: usluga i dodatak za distribuciju (čl. 52 st. 4).
+  const osnovi = program ? (["USLUGA"] as const) : (["USLUGA", "DISTRIBUCIJA"] as const);
+  const ishodPreuzimanja = program ? "OBJEKAT" : "POSLEDNJI_PARTNER";
   const poenaPoV = l.poenaPoVauceru ?? 0;
+  const vrsta = program ? "u programu raspodele hrane" : "u lancu proizvodnje i distribucije";
 
   const ishod = await prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM "Wallet" WHERE id = ${walletId} FOR UPDATE`;
     // Istekli uzeti delovi — bez otpisa.
     const istekli = await tx.lanacVaucer.updateMany({
       where: { lanacId, status: "ISTEKAO", nepreuzetIshod: null },
-      data: { nepreuzetIshod: "OBJEKAT", nepreuzetAt: sada },
+      data: { nepreuzetIshod: ishodPreuzimanja, nepreuzetAt: sada },
     });
     const bezVaucera = await tx.lanacVaucer.findMany({ where: { lanacId, status: "SLOBODAN" }, orderBy: [{ createdAt: "asc" }, { id: "asc" }], select: { id: true } });
-    const [usluga, vecOtpisano, w, nab] = await Promise.all([
-      tx.lanacDoprinos.aggregate({ where: { lanacId, karikaId: objekat.id, osnov: "USLUGA", status: "EVIDENTIRAN" }, _sum: { iznos: true } }),
+    const [evidentirano, zabelezeni, vecOtpisano, w, nab] = await Promise.all([
+      tx.lanacDoprinos.aggregate({ where: { lanacId, karikaId: poslednji.id, osnov: { in: [...osnovi] }, status: "EVIDENTIRAN" }, _sum: { iznos: true } }),
+      tx.lanacDoprinos.findMany({
+        where: { lanacId, karikaId: poslednji.id, osnov: { in: [...osnovi] }, status: "ZABELEZEN", evidentiranAt: null },
+        orderBy: [{ zabelezenAt: "asc" }, { id: "asc" }],
+      }),
       tx.lanacVaucer.aggregate({ where: { lanacId }, _sum: { otpisano: true } }),
       tx.wallet.findUniqueOrThrow({ where: { id: walletId }, select: { balance: true } }),
-      objekat.zadrugaId ? Promise.resolve({ _sum: { rezervisano: 0 } }) : tx.nabavkaPrijava.aggregate({ where: { userId, status: "POTVRDIO" }, _sum: { rezervisano: true } }),
+      poslednji.zadrugaId ? Promise.resolve(0) : rezervisanoZaNabavku(poslednji.userId, tx),
     ]);
-    const o = otpisNepreuzetihDelova({
+    const o = preuzimanjeNepreuzetihDelova({
       delovaBezVaucera: bezVaucera.length,
       poenaPoVauceru: poenaPoV,
-      doprinosZaUsluguNaPartiji: usluga._sum.iznos ?? 0,
+      zabelezeno: zabelezeni.reduce((a, d) => a + d.iznos, 0),
+      evidentirano: evidentirano._sum.iznos ?? 0,
       vecOtpisano: vecOtpisano._sum.otpisano ?? 0,
-      raspolozivo: raspolozivo(w.balance) - (nab._sum.rezervisano ?? 0) - (await ograniceno(walletId, tx)),
-      zapisZadruge: !!objekat.zadrugaId,
+      raspolozivo: raspolozivo(w.balance) - nab - (await ograniceno(walletId, tx)),
+      zapisZadruge: !!poslednji.zadrugaId,
     });
     const preuzeti = bezVaucera.slice(0, o.delovaPreuzeto);
-    const poDelu = rasporediOtpis(o.otpis, preuzeti.length, poenaPoV);
+
+    // 1) Zabeleženo, a neevidentirano: poništava se do potrebnog iznosa (bez transakcije —
+    //    POEN još nije u zapisu). Red koji se delimično troši se poništava, a ostatak ide u
+    //    nov red istog osnova i istog trenutka beleženja, pa ga noćni obračun evidentira kao i do sada.
+    let zaZabelezeno = o.zabelezenoPonisteno;
+    for (const d of zabelezeni) {
+      if (zaZabelezeno <= 0) break;
+      const r = await tx.lanacDoprinos.updateMany({ where: { id: d.id, status: "ZABELEZEN", evidentiranAt: null }, data: { status: "PONISTEN" } });
+      if (r.count !== 1) throw new LanacGreska("Zabeleženi doprinos je u međuvremenu evidentiran — preuzimanje se ponavlja u narednom prolazu.", 409);
+      const uzeto = Math.min(d.iznos, zaZabelezeno);
+      zaZabelezeno -= uzeto;
+      const ostatak = d.iznos - uzeto;
+      if (ostatak > 0) {
+        await tx.lanacDoprinos.create({
+          data: {
+            lanacId: d.lanacId, karikaId: d.karikaId, osnov: d.osnov, walletId: d.walletId, userId: d.userId, zadrugaId: d.zadrugaId,
+            vrednostRsd: Math.round(((dec(d.vrednostRsd) * ostatak) / d.iznos) * 100) / 100, koeficijent: d.koeficijent, iznos: ostatak, zabelezenAt: d.zabelezenAt,
+          },
+        });
+      }
+    }
+
     let otpisTxId: string | null = null;
     if (o.otpis > 0) {
       // 🔴 Deveti osnov (Pravilnik čl. 17 st. 2 t. 9): zapis SME u minus — bez kapiranja na nulu.
@@ -1169,8 +1211,8 @@ export async function preuzmiNepreuzeteDelove(userId: string, lanacId: string) {
         toWalletId: PROTOKOL_WALLET_ID,
         iznos: o.otpis,
         type: TransactionType.OTPIS_NEPREUZETO_PROGRAM,
-        description: `Otpis po preuzimanju nepreuzetih delova u programu raspodele hrane: ${l.naziv}`,
-        opisKljuc: "transakcije.otpis_nepreuzeto",
+        description: `Otpis po preuzimanju nepreuzetih delova ${vrsta}: ${l.naziv}`,
+        opisKljuc: program ? "transakcije.otpis_nepreuzeto" : "transakcije.otpis_nepreuzeto_lanac",
         opisParametri: { naziv: l.naziv, delova: preuzeti.length },
       });
     }
@@ -1180,30 +1222,38 @@ export async function preuzmiNepreuzeteDelove(userId: string, lanacId: string) {
         toWalletId: PROTOKOL_WALLET_ID,
         iznos: o.ponistenje,
         type: TransactionType.PONISTENJE_VAUCER_LANAC,
-        description: `Poništenje za nepreuzete delove u programu raspodele hrane: ${l.naziv}`,
-        opisKljuc: "transakcije.nepreuzeto_ponistenje",
+        description: `Poništenje za nepreuzete delove ${vrsta}: ${l.naziv}`,
+        opisKljuc: program ? "transakcije.nepreuzeto_ponistenje" : "transakcije.nepreuzeto_ponistenje_lanac",
         opisParametri: { naziv: l.naziv },
       });
     }
     for (let i = 0; i < preuzeti.length; i++) {
-      await tx.lanacVaucer.update({
-        where: { id: preuzeti[i].id },
-        data: { status: "NEPREUZET", nepreuzetIshod: "OBJEKAT", nepreuzetAt: sada, otpisano: poDelu[i] || null, otpisTxId: poDelu[i] ? otpisTxId : null },
+      const otpisDela = o.poDelu[i]?.otpis ?? 0;
+      const r = await tx.lanacVaucer.updateMany({
+        where: { id: preuzeti[i].id, status: "SLOBODAN" },
+        data: { status: "NEPREUZET", nepreuzetIshod: ishodPreuzimanja, nepreuzetAt: sada, otpisano: otpisDela || null, otpisTxId: otpisDela ? otpisTxId : null },
       });
+      if (r.count !== 1) throw new LanacGreska("Deo je u međuvremenu promenio stanje — preuzimanje se ponavlja u narednom prolazu.", 409);
     }
     const stanje = await tx.wallet.findUniqueOrThrow({ where: { id: walletId }, select: { balance: true } });
     return { ...o, istekliPreuzeto: istekli.count, stanjePosle: stanje.balance };
   });
 
-  if (ishod.otpis > 0 && !objekat.zadrugaId) {
-    await obavestiTiho(userId, {
+  const delova = ishod.delovaPreuzeto + ishod.istekliPreuzeto;
+  if (delova > 0) {
+    const minus = ishod.otpis > 0 && !poslednji.zadrugaId && ishod.stanjePosle < 0;
+    const osnov = program
+      ? "Pravilnik o projektima i kolektivnim nabavkama, čl. 46"
+      : "Pravilnik o projektima i kolektivnim nabavkama, čl. 52";
+    await obavestiTiho(poslednji.userId, {
       tip: "lanac",
-      kljuc: ishod.stanjePosle < 0 ? "notifikacije.lanac_otpis_minus" : "notifikacije.lanac_otpis",
-      parametri: { naziv: l.naziv, poen: ishod.otpis, stanje: ishod.stanjePosle },
-      naslov: ishod.stanjePosle < 0 ? "Zapis je otpisom postao negativan" : "Otpis po preuzimanju nepreuzetih delova",
+      kljuc: minus ? "notifikacije.lanac_nepreuzeto_minus" : "notifikacije.lanac_nepreuzeto",
+      parametri: { naziv: l.naziv, delova, otpis: ishod.otpis, ponisteno: ishod.ponistenje, zabelezeno: ishod.zabelezenoPonisteno, stanje: ishod.stanjePosle, clan: program ? "46" : "52" },
+      naslov: minus ? "Zapis je otpisom postao negativan" : "Preuzeti su nepreuzeti delovi",
       tekst:
-        `Po preuzimanju nepreuzetih delova partije „${l.naziv}" otpisano je ${ishod.otpis} POEN (Pravilnik o KOLO sistemu, čl. 17 st. 2 t. 9; Pravilnik o projektima i kolektivnim nabavkama, čl. 46).` +
-        (ishod.stanjePosle < 0 ? ` Tvoj zapis je sada negativan (${ishod.stanjePosle} POEN); POEN koji pristigne prvo popunjava taj iznos.` : ""),
+        `Po isteku roka preuzeto je ${delova} nepreuzetih delova iz „${l.naziv}" (${osnov}). Otpisano je ${ishod.otpis} POEN po devetom osnovu (Pravilnik o KOLO sistemu, čl. 17 st. 2 t. 9)` +
+        `, poništeno iz zapisa ${ishod.ponistenje} POEN, a od zabeleženog doprinosa poništeno je ${ishod.zabelezenoPonisteno} POEN.` +
+        (minus ? ` Tvoj zapis je sada negativan (${ishod.stanjePosle} POEN); POEN koji pristigne prvo popunjava taj iznos.` : ""),
       link: "/novcanik",
     });
   }
@@ -1211,23 +1261,47 @@ export async function preuzmiNepreuzeteDelove(userId: string, lanacId: string) {
   return ishod;
 }
 
+/** Noćni posao (cron `/api/cron/nabavke`): automatsko preuzimanje nepreuzetih delova po isteku roka. */
+export async function obradiNepreuzeteDelove(sada = new Date()): Promise<{ partija: number }> {
+  const lanci = await prisma.lanac.findMany({
+    where: { status: "VAUCERI_IZDATI", spremnoAt: { not: null }, neispravnoAt: null },
+    select: { id: true, spremnoAt: true },
+  });
+  let n = 0;
+  for (const l of lanci) {
+    if (!rokZaNepreuzeteIstekao(l.spremnoAt, sada)) continue;
+    const otvoreno = await prisma.lanacVaucer.count({ where: { lanacId: l.id, OR: [{ status: "SLOBODAN" }, { status: "ISTEKAO", nepreuzetIshod: null }] } });
+    if (otvoreno === 0) {
+      await zatvoriAkoJeGotovo(l.id);
+      continue;
+    }
+    try {
+      await preuzmiNepreuzeteDelove(l.id, sada);
+      n++;
+    } catch (e) {
+      console.error("[lanac] automatsko preuzimanje nepreuzetih delova nije uspelo", l.id, e);
+    }
+  }
+  return { partija: n };
+}
+
 /**
- * Delove koje objekat ne preuzme (program, čl. 46 st. 4), odnosno koje niko ne preuzme (lanac,
- * čl. 52 st. 2), Fondacija predaje kroz program podrške ili ustanovi socijalne zaštite i ne
- * prodaje ih. 🔴 Samo evidencija — bez otpisa i bez upisa POEN-a.
+ * Ostatak koji objekat, odnosno poslednji partner nije mogao da preuzme ni uz poništenje iz
+ * zapisa koji ima (program, čl. 46 st. 4; lanac, čl. 52 st. 6), Fondacija predaje kroz program
+ * podrške ili ustanovi socijalne zaštite i ne prodaje ga. 🔴 Pre predaje se UVEK sprovodi
+ * preuzimanje (`preuzmiNepreuzeteDelove`), pa predaja nije put da se preuzimanje zaobiđe.
+ * Samo evidencija — bez otpisa i bez upisa POEN-a.
  */
 export async function predajNepreuzeteUstanovi(adminId: string, lanacId: string, napomena: string) {
   const l = await prisma.lanac.findUnique({ where: { id: lanacId } });
   if (!l) throw new LanacGreska("Lanac nije pronađen.", 404);
   const sada = new Date();
-  if (!rokZaNepreuzeteIstekao(l.spremnoAt, sada)) throw new LanacGreska("Rok za preuzimanje još nije istekao.", 409);
-  const [slobodni, istekli] = await prisma.$transaction([
-    prisma.lanacVaucer.updateMany({ where: { lanacId, status: "SLOBODAN" }, data: { status: "NEPREUZET", nepreuzetIshod: "USTANOVA", nepreuzetAt: sada } }),
-    prisma.lanacVaucer.updateMany({ where: { lanacId, status: "ISTEKAO", nepreuzetIshod: null }, data: { nepreuzetIshod: "USTANOVA", nepreuzetAt: sada } }),
-  ]);
-  await logAdminAkcija(adminId, "LANAC_NEPREUZETO_PREDATO", lanacId, `${slobodni.count + istekli.count} delova; ${napomena.trim().slice(0, 300)}`);
+  if (l.status !== "VAUCERI_IZDATI" || !rokZaNepreuzeteIstekao(l.spremnoAt, sada)) throw new LanacGreska("Rok za preuzimanje još nije istekao.", 409);
+  await preuzmiNepreuzeteDelove(lanacId, sada);
+  const slobodni = await prisma.lanacVaucer.updateMany({ where: { lanacId, status: "SLOBODAN" }, data: { status: "NEPREUZET", nepreuzetIshod: "USTANOVA", nepreuzetAt: sada } });
+  await logAdminAkcija(adminId, "LANAC_NEPREUZETO_PREDATO", lanacId, `${slobodni.count} delova; ${napomena.trim().slice(0, 300)}`);
   await zatvoriAkoJeGotovo(lanacId);
-  return { delova: slobodni.count + istekli.count };
+  return { delova: slobodni.count };
 }
 
 async function zatvoriAkoJeGotovo(lanacId: string) {
@@ -1368,7 +1442,8 @@ export async function mojRadULancu(userId: string) {
         izvrsenjeUtvrdjenoAt: k.izvrsenjeUtvrdjenoAt?.toISOString() ?? null,
         lanac: {
           id: l.id, vrsta: l.vrsta, naziv: l.naziv, status: l.status, spremno: !!l.spremnoAt, vrstaHrane: l.vrstaHrane, jedinica: l.jedinica,
-          nepreuzetiMogu: l.vrsta === "PROGRAM_HRANE" && k.uloga === "POSLEDNJI" && l.status === "VAUCERI_IZDATI" && rokZaNepreuzeteIstekao(l.spremnoAt, sada) && l._count.vauceri > 0,
+          // Nepreuzeto preuzima automatski noćni posao (čl. 46, 52 st. 3) — ekran samo obaveštava, dugmeta nema.
+          nepreuzetiCekaju: k.uloga === "POSLEDNJI" && l.status === "VAUCERI_IZDATI" && rokZaNepreuzeteIstekao(l.spremnoAt, sada) && l._count.vauceri > 0,
         },
         mozeBeleziPredaju: !!sledecaPrima && sledecaPrima.userId === userId && l.status === "PRIPREMA",
         prvaPredaja: iSledece === 0,

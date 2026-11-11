@@ -170,7 +170,7 @@ A project that is not a collective procurement, an allocation of vouchers or sup
 
 3) the total number of POEN to be annulled;
 
-4) the place and period of collection.
+4) the place, the collection period and the supplementary period (Article 26).
 
 (2) The dinar side of the procurement is not published alongside the calculation (Article 37 paragraph 2).
 
@@ -220,11 +220,13 @@ A project that is not a collective procurement, an allocation of vouchers or sup
 
 (2) If the number of confirmed shares is lower than the number of shares in the calculation, fewer units are acquired and a proportionally lower amount is paid. The size of a share does not change.
 
+(3) Additional shares under Article 26 are part of the shares acquired and do not increase the number of shares acquired.
+
 ### Article 24 — Collection
 
 (1) A user collects their share directly from the supplier, on the day they entered, using a collection code. Only the user sees the collection code.
 
-(2) The collection period is 3 days and is published with the calculation.
+(2) The collection period is 3 days and is published with the calculation, together with the supplementary period under Article 26.
 
 (3) The Foundation provides the supplier solely with a list of collection codes. Pseudonyms and other user data are not provided to the supplier.
 
@@ -240,9 +242,13 @@ A project that is not a collective procurement, an allocation of vouchers or sup
 
 ### Article 26 — Uncollected shares
 
-(1) Shares not collected by the expiry of the collection period enter the next procurement as additional units.
+(1) Upon expiry of the collection period, a supplementary period of 3 days opens. During the supplementary period, uncollected shares are offered to users who collected a share in that procurement, so that they may collect an additional share.
 
-(2) Uncollected shares are not sold. The Foundation cedes them solely without consideration, in accordance with Article 3.
+(2) Additional shares are allocated to the users who requested them, according to the order under Article 20, one share per user in each round, as long as there are shares and requests. A user may thus collect two or more shares.
+
+(3) For each additional share, the number of POEN per share is annulled upon collection, under Article 25; the record does not pass into a negative value. Articles 21, 22 and 24 apply mutatis mutandis to the reservation, release and collection of an additional share, provided that the day of collection falls within the supplementary period.
+
+(4) Shares not collected even by the expiry of the supplementary period enter the next procurement as additional units, or the Foundation cedes them solely without consideration, in accordance with Article 3. Uncollected shares are not sold.
 
 ## VI — Relationship with the supplier and defects in the good
 
@@ -416,7 +422,7 @@ Where the food is not fit for consumption, the voucher is transferred to another
 
 ### Article 46 — Uncollected shares
 
-(1) Upon expiry of the time limit, the facility may take over uncollected shares. For a share whose voucher was taken and has expired, no write-off is made, because the number of POEN for that share has already been annulled.
+(1) Upon expiry of the time limit, the facility takes over uncollected shares. For a share whose voucher was taken and has expired, no write-off is made, because the number of POEN for that share has already been annulled.
 
 (2) For a share for which no voucher was taken, the number of POEN per voucher is written off from the person in whose record the contribution for the service on that lot was recorded, at most up to the amount of that contribution, including where the record thereby becomes negative (Article 17 paragraph 2 point 9 of the Rulebook on the KOLO System). That person is notified of the write-off, together with the ground and the amount. Beyond that limit, the facility takes over a share only with an annulment from the record it holds, without a negative record.
 
@@ -476,7 +482,15 @@ The decision on the chain establishes:
 
 (1) The number of POEN per voucher equals the sum of the contributions recorded for the chain under Article 51, divided by the number of vouchers and rounded to the nearest whole number. The Foundation does not establish it as a price, publishes no dinar value alongside it, the goods are not paid for with it, and the annulled POEN is received by no one.
 
-(2) Articles 43 to 45 apply mutatis mutandis to taking a voucher, collection and replacement. Shares that no one collects are handed over by the Foundation through a support programme or to a social protection institution and are not sold.
+(2) Articles 43 to 45 apply mutatis mutandis to taking a voucher, collection and replacement.
+
+(3) Upon expiry of the time limit, uncollected shares are taken over by the last partner in the chain, who issues the goods to users. For a share whose voucher was taken and has expired, no write-off is made, because the number of POEN for that share has already been annulled.
+
+(4) For a share for which no voucher was taken, the number of POEN per voucher is written off from the person in whose record the contribution of the last partner under that chain (the service and the distribution supplement) was recorded, at most up to the amount of that contribution, including where the record thereby becomes negative (Article 17 paragraph 2 point 9 of the Rulebook on the KOLO System). That person is notified of the write-off, together with the ground and the amount. Beyond that limit, the last partner takes over a share only with an annulment from the record it holds, without a negative record.
+
+(5) The last partner may sell the shares it has taken over in its own name, with the prescribed invoice.
+
+(6) Shares that the last partner does not take over are handed over by the Foundation through a support programme or to a social protection institution and are not sold.
 
 ## XII — Final provisions
 

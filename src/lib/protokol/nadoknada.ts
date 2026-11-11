@@ -31,8 +31,10 @@
  *      (`OTPIS_POKROVITELJ_DOBRA`, donacije čl. 35) — `protokol/pokroviteljstvo-dobrima.ts`;
  *   8. otpis neto prepisa sa ugašenog naloga po utvrđenju višestrukog naloga
  *      (`OTPIS_VISESTRUKI_NALOG`, dokaz stvarnosti čl. 14) — `protokol/visestruki-nalog.ts`;
- *   9. otpis po preuzimanju nepreuzetih delova u programu raspodele hrane (`OTPIS_NEPREUZETO_PROGRAM`,
- *      nabavke čl. 46; samo deo bez uzetog vaučera, do doprinosa za uslugu) — `protokol/lanac.ts`;
+ *   9. otpis po preuzimanju nepreuzetih delova u programu raspodele hrane i u lancu proizvodnje
+ *      i distribucije (`OTPIS_NEPREUZETO_PROGRAM`, nabavke čl. 46 i čl. 52 st. 4; set 5.1.4): samo
+ *      deo bez uzetog vaučera, do doprinosa objekta za uslugu, odnosno do doprinosa poslednjeg
+ *      partnera po tom lancu — `protokol/lanac.ts`;
  *  10. poništenje donacije unapred i otpis kod primaoca koji je znao (`PONISTENJE_DONACIJE`,
  *      `OTPIS_PRIMLJENOG_DONACIJA`, donacije čl. 6; set 5.0.9) — `protokol/donacija-unapred.ts`;
  *  11. poništenje doprinosa po javnoj donaciji koju donator prevede u anonimnu

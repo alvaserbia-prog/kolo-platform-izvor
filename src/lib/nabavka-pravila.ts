@@ -10,7 +10,7 @@
  * `src/lib/protokol/nabavka.ts` sve ovo re-eksportuje, pa server ima jedan ulaz.
  *
  * Osnov: Pravilnik o projektima i kolektivnim nabavkama čl. 5, 7, 13,
- * 14, 16, 17, 19, 20, 21 i 24; Pravilnik o KOLO sistemu čl. 18 i 47.
+ * 14, 16, 17, 19, 20, 21, 24 i 26; Pravilnik o KOLO sistemu čl. 18 i 47.
  *
  * 🔴 Brojevi iz ovog fajla stoje DOSLOVNO u aktu i zaključani su testom
  * `pravni-dokumenti.test.ts`. Izmena konstante ovde bez izmene akta razilazi normu
@@ -44,6 +44,12 @@ export const ROK_POTVRDE_DANA = 3;
 
 /** Čl. 24 st. 2 — period preuzimanja, u danima. */
 export const PERIOD_PREUZIMANJA_DANA = 3;
+
+/**
+ * Čl. 26 (set 5.1.4, odluka vlasnika 10.11.2026) — dopunski rok posle isteka perioda
+ * preuzimanja, u danima: nepreuzeti delovi nude se onima koji su u toj nabavci preuzeli deo.
+ */
+export const DOPUNSKI_ROK_DANA = 3;
 
 /** Čl. 10 st. 3 — predlog se briše najkasnije po isteku toliko meseci od upisa. */
 export const ROK_PREDLOGA_MESECI = 12;
@@ -313,6 +319,110 @@ export function rokPotvrde(pozvanAt: Date): Date {
 /** Čl. 24 st. 2 — period preuzimanja traje tri dana od prvog dana preuzimanja. */
 export function krajPeriodaPreuzimanja(preuzimanjeOd: Date): Date {
   return krajDana(preuzimanjeOd, PERIOD_PREUZIMANJA_DANA - 1);
+}
+
+/**
+ * Čl. 26 (set 5.1.4) — dopunski rok počinje istekom perioda preuzimanja i traje
+ * `DOPUNSKI_ROK_DANA` obračunskih dana. 🔴 Računa se iz `preuzimanjeDo`, ne snima se: za
+ * zatečene nabavke (objavljene pre seta 5.1.4) dopunski rok teče od isteka NJIHOVOG
+ * perioda, a snimljena kalkulacija se ne dira (pravilo 11).
+ */
+export function krajDopunskogRoka(preuzimanjeDo: Date): Date {
+  return krajDana(preuzimanjeDo, DOPUNSKI_ROK_DANA - 1);
+}
+
+/** Da li u trenutku `sada` traje dopunski rok (posle perioda preuzimanja, pre njegovog kraja). */
+export function dopunskiRokTraje(preuzimanjeDo: Date | null, sada: Date): boolean {
+  if (!preuzimanjeDo) return false;
+  const t = sada.getTime();
+  return t >= preuzimanjeDo.getTime() && t < krajDopunskogRoka(preuzimanjeDo).getTime();
+}
+
+/**
+ * Čl. 23 — koliko je delova nabavljeno. Snimak se upisuje pri plaćanju (broj potvrđenih
+ * delova). Za zatečene nabavke bez snimka broj se izvodi iz plaćenog iznosa (čl. 23 st. 2:
+ * plaća se srazmerno broju delova), najviše do broja delova iz kalkulacije.
+ */
+export function nabavljenihDelova(n: {
+  snimak: number | null;
+  brojDelova: number | null;
+  placenoRSD: number | null;
+  nabavnaCena: number | null;
+  velicinaDela: number | null;
+}): number {
+  if (n.snimak != null) return Math.max(0, Math.trunc(n.snimak));
+  const max = Math.max(0, Math.trunc(n.brojDelova ?? 0));
+  if (n.placenoRSD == null || !n.nabavnaCena || !n.velicinaDela) return max;
+  const izvedeno = Math.floor(n.placenoRSD / (n.nabavnaCena * n.velicinaDela) + 1e-9);
+  return Math.max(0, Math.min(max, izvedeno));
+}
+
+/** Nepreuzeti delovi koji se u dopunskom roku još mogu dodeliti. */
+export function slobodnihDodatnihDelova(nabavljeno: number, preuzetoRedovno: number, dodatnihZauzeto: number): number {
+  return Math.max(0, nabavljeno - preuzetoRedovno - dodatnihZauzeto);
+}
+
+/**
+ * Čl. 26 (set 5.1.4) — ko sme da zatraži dodatni deo: samo korisnik koji je u toj nabavci
+ * preuzeo deo, dok traje dopunski rok, dok ima nepreuzetih delova i dok nema otvoren zahtev
+ * (zahtev se ponavlja tek posle dodele kruga). Opšti uslov učešća (čl. 4) proverava servis.
+ */
+export function smeTrazitiDodatniDeo(u: {
+  statusPrijave: string | null;
+  rokTraje: boolean;
+  slobodnih: number;
+  otvorenZahtev: boolean;
+}): { ok: true } | { ok: false; razlog: "NIJE_PREUZEO" | "ROK" | "NEMA_DELOVA" | "OTVOREN_ZAHTEV" } {
+  if (u.statusPrijave !== "PREUZEO") return { ok: false, razlog: "NIJE_PREUZEO" };
+  if (!u.rokTraje) return { ok: false, razlog: "ROK" };
+  if (u.slobodnih <= 0) return { ok: false, razlog: "NEMA_DELOVA" };
+  if (u.otvorenZahtev) return { ok: false, razlog: "OTVOREN_ZAHTEV" };
+  return { ok: true };
+}
+
+export interface ZahtevDodatnog {
+  id: string;
+  /** Mesto u redu iz čl. 20 — utvrđeno je i ne menja se. */
+  mesto: number | null;
+  zatrazenoAt: Date;
+  /** POEN kojim korisnik raspolaže (stanje − rezervisano − ograničeno). */
+  raspolozivo: number;
+}
+
+/**
+ * Jedan krug dodele dodatnih delova (čl. 26, set 5.1.4): po redu iz čl. 20, po JEDAN deo po
+ * korisniku, dok ima delova. Bez dovoljno POEN-a nema dodele (čl. 25 st. 3 — zapis ne ide u
+ * minus); takav zahtev se zatvara, a korisnik ga posle može ponoviti. Zahtevi za koje u ovom
+ * krugu nije ostalo delova čekaju sledeći krug.
+ */
+export function krugDodele(
+  zahtevi: readonly ZahtevDodatnog[],
+  slobodnih: number,
+  poenPoDelu: number,
+): { dodeljeni: string[]; bezPoena: string[]; cekaju: string[] } {
+  const red = [...zahtevi].sort((a, b) => {
+    const ma = a.mesto ?? Number.MAX_SAFE_INTEGER;
+    const mb = b.mesto ?? Number.MAX_SAFE_INTEGER;
+    if (ma !== mb) return ma - mb;
+    return a.zatrazenoAt.getTime() - b.zatrazenoAt.getTime();
+  });
+  let ostalo = Math.max(0, Math.trunc(slobodnih));
+  const dodeljeni: string[] = [];
+  const bezPoena: string[] = [];
+  const cekaju: string[] = [];
+  for (const z of red) {
+    if (ostalo <= 0) {
+      cekaju.push(z.id);
+      continue;
+    }
+    if (z.raspolozivo < poenPoDelu) {
+      bezPoena.push(z.id);
+      continue;
+    }
+    dodeljeni.push(z.id);
+    ostalo--;
+  }
+  return { dodeljeni, bezPoena, cekaju };
 }
 
 /**

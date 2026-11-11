@@ -292,7 +292,7 @@
 
 8) otpis po utvrđenju višestrukog računa: s računa koji osoba zadržava otpisuje se neto iznos prepisa s računa koji prestaje, a zapisi drugih osoba ne diraju se (Pravilnik o dokazu stvarnosti, članak 14.);
 
-9) otpis po preuzimanju nepreuzetih dijelova u programu raspodjele hrane: osobi koja u ime objekta preuzme nepreuzete dijelove za koje vaučer nije uzet otpisuje se broj POEN-a po dijelu, najviše do visine doprinosa koji joj je za uslugu na toj partiji bio evidentiran (Pravilnik o projektima i kolektivnim nabavama, članak 46.);
+9) otpis po preuzimanju nepreuzetih dijelova u programu raspodjele hrane i u lancu proizvodnje i distribucije: osobi koja u ime objekta, odnosno kao posljednji partner u lancu, preuzme nepreuzete dijelove za koje vaučer nije uzet otpisuje se broj POEN-a po dijelu, najviše do visine doprinosa koji joj je za uslugu na toj partiji, odnosno po tom lancu bio evidentiran (Pravilnik o projektima i kolektivnim nabavama, članci 46. i 52.);
 
 10) poništenje donacije unaprijed kada Zaklada ne utvrdi primitak donacije: donatoru se poništava doprinos evidentiran po toj donaciji, a primatelju prepisa od donatora za kojega Zaklada utvrdi da je znao da je potvrda o uplati lažna ili tuđa, odnosno da je u tome sudjelovao, otpisuje se iznos koji je od donatora primio od evidentiranja do poništenja (Pravilnik o pokroviteljstvu i donacijama, članak 6.);
 

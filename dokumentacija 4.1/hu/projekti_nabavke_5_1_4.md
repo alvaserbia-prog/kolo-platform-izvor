@@ -170,7 +170,7 @@ Az a projekt, amely nem kollektív beszerzés, nem utalványelosztás és nem a 
 
 3) az érvénytelenítendő POEN teljes számát;
 
-4) az átvétel helyét és az átvételi időszakot.
+4) az átvétel helyét, az átvételi időszakot és a pótlólagos határidőt (26. cikk).
 
 (2) A beszerzés dinárban kifejezett oldala nem a kalkulációval együtt kerül közzétételre (37. cikk (2) bekezdés).
 
@@ -220,11 +220,13 @@ Az a projekt, amely nem kollektív beszerzés, nem utalványelosztás és nem a 
 
 (2) Ha a megerősített részek száma kisebb a kalkulációban szereplő részszámnál, kevesebb egység kerül beszerzésre, és arányosan kisebb összeg kerül kifizetésre. A rész mérete nem változik.
 
+(3) A 26. cikk szerinti további részek a beszerzett részek közé tartoznak, és nem növelik a beszerzésre kerülő részek számát.
+
 ### 24. cikk — Átvétel
 
 (1) A felhasználó a részét közvetlenül a szállítónál veszi át, az általa bejegyzett napon, átvételi kóddal. Az átvételi kódot csak a felhasználó látja.
 
-(2) Az átvételi időszak 3 nap, és a kalkulációval kerül közzétételre.
+(2) Az átvételi időszak 3 nap, és a kalkulációval kerül közzétételre, a 26. cikk szerinti pótlólagos határidővel együtt.
 
 (3) Az Alapítvány a szállítónak kizárólag az átvételi kódok jegyzékét adja át. Álneveket és egyéb felhasználói adatokat a szállítónak nem ad át.
 
@@ -240,9 +242,13 @@ Az a projekt, amely nem kollektív beszerzés, nem utalványelosztás és nem a 
 
 ### 26. cikk — Át nem vett részek
 
-(1) Azok a részek, amelyeket az átvételi időszak lejártáig nem vesznek át, további egységként a következő beszerzésbe kerülnek.
+(1) Az átvételi időszak lejártával 3 napos pótlólagos határidő nyílik. A pótlólagos határidőben az át nem vett részeket azoknak a felhasználóknak ajánlják fel, akik az adott beszerzésben részt vettek át, hogy további részt vegyenek át.
 
-(2) Az át nem vett részek nem kerülnek eladásra. Az Alapítvány azokat kizárólag ellenszolgáltatás nélkül engedi át, a 3. cikkel összhangban.
+(2) A további részeket az azokat kérő felhasználók kapják meg, a 20. cikk szerinti sorrendben, minden körben felhasználónként egy részt, amíg van rész és kérelem. A felhasználó így két vagy több részt is átvehet.
+
+(3) Minden további rész után az átvételkor érvénytelenítésre kerül az egy részre eső POEN-szám, a 25. cikk szerint; a bejegyzés nem válik negatívvá. A további rész foglalására, felszabadítására és átvételére a 21., 22. és 24. cikket kell megfelelően alkalmazni, azzal, hogy az átvétel napja a pótlólagos határidőre esik.
+
+(4) Azok a részek, amelyeket a pótlólagos határidő lejártáig sem vesznek át, további egységként a következő beszerzésbe kerülnek, vagy az Alapítvány azokat kizárólag ellenszolgáltatás nélkül engedi át, a 3. cikkel összhangban. Az át nem vett részek nem kerülnek eladásra.
 
 ## VI — Viszony a szállítóhoz és a jószág hibája
 
@@ -416,7 +422,7 @@ Ha az élelmiszer nem megfelelő, az utalvány ugyanilyen fajtájú másik téte
 
 ### 46. cikk — Át nem vett részek
 
-(1) A határidő leteltével a létesítmény átveheti az át nem vett részeket. Az olyan rész esetében, amelynek utalványát felvették és az lejárt, leírásra nem kerül sor, mert az e részre eső POEN-szám már érvénytelenítésre került.
+(1) A határidő leteltével a létesítmény átveszi az át nem vett részeket. Az olyan rész esetében, amelynek utalványát felvették és az lejárt, leírásra nem kerül sor, mert az e részre eső POEN-szám már érvénytelenítésre került.
 
 (2) Az olyan rész esetében, amelyre utalványt nem vettek fel, attól a személytől, akinek bejegyzésében az adott tételen nyújtott szolgáltatásért járó hozzájárulás nyilvántartásba került, leírásra kerül az utalványonkénti POEN-szám, legfeljebb e hozzájárulás mértékéig, akkor is, ha a bejegyzés ezáltal negatívvá válik (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 9. pontja). Ez a személy a leírásról értesítést kap, a jogcím és az összeg megjelölésével. E határon felül a létesítmény a részt csak a meglévő bejegyzéséből történő érvénytelenítéssel, negatív bejegyzés nélkül veszi át.
 
@@ -476,7 +482,15 @@ A láncról szóló határozat megállapítja:
 
 (1) Az utalványonkénti POEN-szám megegyezik a láncra az 51. cikk szerint nyilvántartásba vett hozzájárulások összegével, elosztva az utalványok számával és a legközelebbi egész számra kerekítve. Az Alapítvány nem árként állapítja meg, mellette dinárban kifejezett értéket nem tesz közzé, az árut nem ezzel fizetik ki, az érvénytelenített POEN-t pedig senki nem kapja meg.
 
-(2) Az utalvány felvételére, az átvételre és a cserére a 43–45. cikket kell megfelelően alkalmazni. Azokat a részeket, amelyeket senki nem vesz át, az Alapítvány támogatási program keretében vagy szociális védelmi intézménynek adja át, és nem adja el.
+(2) Az utalvány felvételére, az átvételre és a cserére a 43–45. cikket kell megfelelően alkalmazni.
+
+(3) A határidő leteltével az át nem vett részeket a lánc utolsó partnere veszi át, aki az árut a felhasználóknak kiadja. Az olyan rész esetében, amelynek utalványát felvették és az lejárt, leírásra nem kerül sor, mert az e részre eső POEN-szám már érvénytelenítésre került.
+
+(4) Az olyan rész esetében, amelyre utalványt nem vettek fel, attól a személytől, akinek bejegyzésében az utolsó partnernek az adott lánc alapján járó hozzájárulása (a szolgáltatás és az elosztási pótlék) nyilvántartásba került, leírásra kerül az utalványonkénti POEN-szám, legfeljebb e hozzájárulás mértékéig, akkor is, ha a bejegyzés ezáltal negatívvá válik (a KOLO rendszerről szóló szabályzat 17. cikk (2) bekezdés 9. pontja). Ez a személy a leírásról értesítést kap, a jogcím és az összeg megjelölésével. E határon felül az utolsó partner a részt csak a meglévő bejegyzéséből történő érvénytelenítéssel, negatív bejegyzés nélkül veszi át.
+
+(5) Az átvett részeket az utolsó partner saját nevében, előírt számla kiállítása mellett értékesítheti.
+
+(6) Azokat a részeket, amelyeket az utolsó partner nem vesz át, az Alapítvány támogatási program keretében vagy szociális védelmi intézménynek adja át, és nem adja el.
 
 ## XII — Záró rendelkezések
 

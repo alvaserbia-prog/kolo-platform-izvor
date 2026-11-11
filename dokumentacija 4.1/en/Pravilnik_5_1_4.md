@@ -292,7 +292,7 @@
 
 8) write-off upon establishing a multiple account: from the account that the person retains, the net amount of re-registrations from the account that ceases is written off, while the records of other persons are not affected (Rulebook on Proof of Reality, Article 14);
 
-9) write-off upon the taking over of uncollected shares in the food distribution programme: from the person who, on behalf of the facility, takes over uncollected shares for which no voucher was taken, the number of POEN per share is written off, at most up to the amount of the contribution that was recorded to them for the service on that lot (Rulebook on Projects and Collective Procurement, Article 46);
+9) write-off upon the taking over of uncollected shares in the food distribution programme and in the production and distribution chain: from the person who, on behalf of the facility, or as the last partner in the chain, takes over uncollected shares for which no voucher was taken, the number of POEN per share is written off, at most up to the amount of the contribution that was recorded to them for the service on that lot, or under that chain (Rulebook on Projects and Collective Procurement, Articles 46 and 52);
 
 10) annulment of an advance donation when the Foundation does not establish the receipt of the donation: the contribution recorded on the basis of that donation is annulled for the donor, and from a recipient of re-registration from the donor whom the Foundation establishes to have known that the payment confirmation was false or someone else's, or to have participated in it, the amount received from the donor between the recording and the annulment is written off (Rulebook on Sponsorship and Donations, Article 6);
 

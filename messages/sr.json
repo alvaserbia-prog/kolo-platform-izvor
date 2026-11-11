@@ -1401,7 +1401,7 @@
     },
     "dpia": {
       "naslov": "DPIA. Procena uticaja na zaštitu podataka o ličnosti",
-      "ver": "5.1.2"
+      "ver": "5.1.4"
     },
     "radnjeObrade": {
       "naslov": "Registar radnji obrade podataka o ličnosti",
@@ -1413,11 +1413,11 @@
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.1.2"
+      "ver": "5.1.4"
     },
     "pravilnik": {
       "naslov": "Pravilnici KOLO sistema",
-      "ver": "5.1.3",
+      "ver": "5.1.4",
       "sviPravilnici": "← Svi pravilnici",
       "pravilnici": "Pravilnici"
     },
@@ -1444,15 +1444,15 @@
     "meta_statut_title": "Statut KOLO Fondacije · KOLO",
     "meta_statut_desc": "Statut KOLO Fondacije, verzija 4.1",
     "meta_dpia_title": "DPIA · KOLO",
-    "meta_dpia_desc": "Procena uticaja na zaštitu podataka o ličnosti, verzija 5.1.2",
+    "meta_dpia_desc": "Procena uticaja na zaštitu podataka o ličnosti, verzija 5.1.4",
     "meta_radnje_title": "Registar radnji obrade · KOLO",
     "meta_radnje_desc": "Registar radnji obrade podataka o ličnosti, verzija 5.1.2",
     "meta_rizici_title": "Izjava o prihvatanju rizika · KOLO",
     "meta_rizici_desc": "Izjava o prihvatanju rizika učešća u KOLO sistemu, verzija 5.1.2",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, verzija 5.1.2",
+    "meta_whitepaper_desc": "KOLO Whitepaper, verzija 5.1.4",
     "meta_pravilnik_title": "Pravilnici KOLO sistema · KOLO",
-    "meta_pravilnik_desc": "Indeks pravilnika KOLO sistema, verzija 5.1.3",
+    "meta_pravilnik_desc": "Indeks pravilnika KOLO sistema, verzija 5.1.4",
     "rb": {
       "kolo-sistem": {
         "naziv": "Pravilnik o KOLO sistemu",
@@ -4100,8 +4100,8 @@
     "lanac_utvrdi_izdavanje": "Utvrdi izdavanje (dodatak za distribuciju)",
     "lanac_neispravno": "Hrana nije ispravna",
     "lanac_neispravno_razlog": "Razlog (vaučeri se prenose na drugu partiju iste vrste, a ako je nema, poništenje se ispravlja)",
-    "lanac_ustanova": "Predaj nepreuzete delove",
-    "lanac_ustanova_napomena": "Kome se predaje (program podrške ili ustanova socijalne zaštite)",
+    "lanac_ustanova": "Predaj ostatak koji nije preuzet",
+    "lanac_ustanova_napomena": "Kome se predaje ostatak koji objekat, odnosno poslednji partner nije mogao da preuzme ni uz poništenje iz zapisa (program podrške ili ustanova socijalne zaštite). Pre predaje se sprovodi preuzimanje.",
     "lanac_izvestaj": "Izveštaj",
     "lanac_izvestaj_napomena": "Vrednost u dinarima objavljuje se samo u izveštaju o raspolaganju sredstvima Fondacije (nabavke čl. 37 st. 2, čl. 47), nikad uz broj POEN-a po vaučeru."
   },
@@ -4265,6 +4265,14 @@
     "nabavka_poziv_tekst": "Nabavka „{dobro}”: za tvoj deo se pri preuzimanju poništava {poen} POENA. Potvrdi izborom dana preuzimanja.",
     "nabavka_preuzeto_naslov": "Deo je preuzet",
     "nabavka_preuzeto_tekst": "Preuzeo si svoj deo iz nabavke „{dobro}”. Poništeno je {poen} POEN. Ako deo nisi preuzeo ili nije ispravan, imaš {dana} dana da podneseš prigovor sa svog profila.",
+    "nabavka_dopunski_naslov": "Ostali su nepreuzeti delovi",
+    "nabavka_dopunski_tekst": "U nabavci „{dobro}” ostalo je nepreuzetih delova: {delova}. Do {do} možeš da zatražiš dodatni deo; delovi se dodeljuju po redu iz nabavke, po jedan u svakom krugu.",
+    "nabavka_dodatni_dodeljen_naslov": "Dobio si dodatni deo",
+    "nabavka_dodatni_dodeljen_tekst": "Nabavka „{dobro}”: dodeljen ti je dodatni deo. Rezervisano je {poen} POEN, koji se poništava pri preuzimanju. Preuzmi ga uz kod sa stranice nabavke do {do}.",
+    "nabavka_dodatni_bez_poena_naslov": "Dodatni deo nije dodeljen",
+    "nabavka_dodatni_bez_poena_tekst": "Nabavka „{dobro}”: za dodatni deo je potrebno {poen} POEN kojim raspolažeš, pa deo nije dodeljen. Zahtev možeš da ponoviš.",
+    "nabavka_dodatni_preuzet_naslov": "Dodatni deo je preuzet",
+    "nabavka_dodatni_preuzet_tekst": "Preuzeo si dodatni deo iz nabavke „{dobro}”. Poništeno je {poen} POEN.",
     "zahtev_potvrda_spoljni_naslov": "Nov zahtev čeka tvoj odgovor",
     "zahtev_potvrda_spoljni_tekst": "Neko te je naveo kao člana Kola koji ga lično zna. Otvori KOLO da vidiš zahtev.",
     "program_pristanak_povucen_naslov": "Pristanak povučen",
@@ -4502,7 +4510,11 @@
     "lanac_otpis_naslov": "Otpis po preuzimanju nepreuzetih delova",
     "lanac_otpis_tekst": "Po preuzimanju nepreuzetih delova partije „{naziv}\" otpisano je {poen} POEN (Pravilnik o KOLO sistemu, čl. 17 st. 2 t. 9; Pravilnik o projektima i kolektivnim nabavkama, čl. 46).",
     "lanac_otpis_minus_naslov": "Zapis je otpisom postao negativan",
-    "lanac_otpis_minus_tekst": "Po preuzimanju nepreuzetih delova partije „{naziv}\" otpisano je {poen} POEN (Pravilnik o KOLO sistemu, čl. 17 st. 2 t. 9; Pravilnik o projektima i kolektivnim nabavkama, čl. 46). Tvoj zapis je sada negativan ({stanje} POEN); POEN koji pristigne prvo popunjava taj iznos."
+    "lanac_otpis_minus_tekst": "Po preuzimanju nepreuzetih delova partije „{naziv}\" otpisano je {poen} POEN (Pravilnik o KOLO sistemu, čl. 17 st. 2 t. 9; Pravilnik o projektima i kolektivnim nabavkama, čl. 46). Tvoj zapis je sada negativan ({stanje} POEN); POEN koji pristigne prvo popunjava taj iznos.",
+    "lanac_nepreuzeto_naslov": "Preuzeti su nepreuzeti delovi",
+    "lanac_nepreuzeto_tekst": "Po isteku roka preuzeto je {delova} nepreuzetih delova iz „{naziv}” (Pravilnik o projektima i kolektivnim nabavkama, čl. {clan}). Otpisano je {otpis} POEN po devetom osnovu (Pravilnik o KOLO sistemu, čl. 17 st. 2 t. 9), poništeno iz zapisa {ponisteno} POEN, a od zabeleženog doprinosa poništeno je {zabelezeno} POEN.",
+    "lanac_nepreuzeto_minus_naslov": "Zapis je otpisom postao negativan",
+    "lanac_nepreuzeto_minus_tekst": "Po isteku roka preuzeto je {delova} nepreuzetih delova iz „{naziv}” (Pravilnik o projektima i kolektivnim nabavkama, čl. {clan}). Otpisano je {otpis} POEN po devetom osnovu (Pravilnik o KOLO sistemu, čl. 17 st. 2 t. 9), poništeno iz zapisa {ponisteno} POEN, a od zabeleženog doprinosa poništeno je {zabelezeno} POEN. Tvoj zapis je sada negativan ({stanje} POEN); POEN koji pristigne prvo popunjava taj iznos."
   },
   "transakcije": {
     "verifikacija": "Potvrda člana {pseudonim}",
@@ -4526,6 +4538,7 @@
     "prevod_u_maloletni_otpis": "Poništenje POENA upisanih kroz kanale (nalog preveden u dečji)",
     "prevod_u_maloletni_potvrda": "Poništenje POENA iz pale potvrde ({pseudonim} preveden u dečji nalog)",
     "nabavka": "Kolektivna nabavka, {dobro}",
+    "nabavka_dodatni": "Kolektivna nabavka, {dobro} (dodatni deo)",
     "nabavka_ispravka": "Ispravka evidencije, kolektivna nabavka {dobro}",
     "zrno_upis": "Upis {zrna} ZRNA po koeficijentu {koeficijent}",
     "zrno_otpis": "Otpis {zrna} ZRNA po koeficijentu {koeficijent}",
@@ -4561,7 +4574,9 @@
     "vaucer_lanca_uzet": "Vaučer programa: {naziv}",
     "vaucer_lanca_ispravka": "Ispravka evidencije — vaučer programa: {naziv}",
     "otpis_nepreuzeto": "Otpis po preuzimanju nepreuzetih delova u programu raspodele hrane: {naziv}",
-    "nepreuzeto_ponistenje": "Poništenje za nepreuzete delove u programu raspodele hrane: {naziv}"
+    "nepreuzeto_ponistenje": "Poništenje za nepreuzete delove u programu raspodele hrane: {naziv}",
+    "otpis_nepreuzeto_lanac": "Otpis po preuzimanju nepreuzetih delova u lancu proizvodnje i distribucije: {naziv}",
+    "nepreuzeto_ponistenje_lanac": "Poništenje za nepreuzete delove u lancu proizvodnje i distribucije: {naziv}"
   },
   "mejl": {
     "pozdrav": "Pozdrav",
@@ -5396,6 +5411,16 @@
     "kod_uputstvo": "Pokaži ovaj kod kod dobavljača. POEN se poništava pri preuzimanju, ne pre.",
     "rezervisano": "Rezervisano: {poen} POENA",
     "preuzeto": "Preuzeo si svoj deo. Poništeno je {poen} POENA.",
+    "dopunski_opis": "Traje dopunski rok do {do}. Ostalo je nepreuzetih delova: {delova}. Možeš da zatražiš dodatni deo; delovi se dodeljuju po redu iz nabavke, po jedan u svakom krugu, a za svaki se pri preuzimanju poništava {poen} POEN.",
+    "dopunski_zatrazi": "Zatraži dodatni deo",
+    "dopunski_zahtev_ceka": "Tvoj zahtev čeka dodelu u sledećem krugu.",
+    "dopunski_povuci": "Povuci zahtev",
+    "dopunski_dodeljen": "Dodeljen ti je dodatni deo. Preuzmi ga kod dobavljača do kraja dopunskog roka, uz kod:",
+    "dopunski_odustani": "Odustani od dodatnog dela",
+    "dopunski_preuzet": "Dodatni deo je preuzet.",
+    "dopunski_oslobodjen": "Dodatni deo nije preuzet do kraja dopunskog roka. Rezervisan POEN je oslobođen.",
+    "dopunski_nije_dodeljen": "Dodatni deo nije dodeljen.",
+    "dopunski_odustao": "Odustao si od dodatnog dela.",
     "kalkulacija": "Kalkulacija",
     "k_saldo": "Saldo Fondacije",
     "k_rezerva": "Operativna rezerva",
@@ -5410,6 +5435,7 @@
     "k_placeno": "Plaćeno dobavljaču",
     "k_mesto": "Mesto preuzimanja",
     "k_period": "Period preuzimanja",
+    "k_dopunski": "Dopunski rok (nepreuzeti delovi)",
     "k_obrazlozenje": "Broj POENA po delu utvrdila je odluka o nabavci: {obrazlozenje}",
     "paritet_napomena": "Broj POENA po delu utvrđuje odluka kojom se nabavka pokreće; to nije cena dobra i ne izvodi se iz nje. POEN ne ide dobavljaču: robu Fondacija kupuje dinarima, a POEN se poništava kao zapis o iskorišćenom učešću.",
     "ponude": "Prikupljene ponude",
@@ -5861,9 +5887,8 @@
     "izvrseno_prijavljeno": "Izvršenje je prijavljeno; Fondacija ga utvrđuje.",
     "spremno": "Hrana je spremna za preuzimanje",
     "spremno_oznaceno": "Označeno je da je hrana spremna; imaoci vaučera su obavešteni.",
-    "nepreuzeti": "Preuzmi nepreuzete delove",
-    "nepreuzeti_preuzeti": "Nepreuzeti delovi su preuzeti.",
-    "nepreuzeti_napomena": "Za deo čiji vaučer niko nije uzeo otpisuje se broj POEN-a po vaučeru, najviše do doprinosa za uslugu na toj partiji, i kada zapis postane negativan; za deo čiji je vaučer uzet i istekao otpisa nema.",
+    "nepreuzeti_napomena": "Po isteku roka nepreuzete delove preuzima objekat — automatski, noćnim obračunom. Za deo čiji vaučer niko nije uzeo otpisuje se broj POEN-a po vaučeru, najviše do doprinosa za uslugu na toj partiji, i kada zapis postane negativan; preko te granice deo se preuzima uz poništenje iz zapisa, bez negativnog zapisa. Za deo čiji je vaučer uzet i istekao otpisa nema.",
+    "nepreuzeti_napomena_lanac": "Po isteku roka nepreuzete delove preuzima poslednji partner — automatski, noćnim obračunom. Za deo čiji vaučer niko nije uzeo prvo se poništava tvoj zabeležen, a još neevidentiran doprinos po tom lancu, pa se otpisuje broj POEN-a po vaučeru najviše do evidentiranog doprinosa (usluga i dodatak za distribuciju), i kada zapis postane negativan; preko te granice deo se preuzima uz poništenje iz zapisa, bez negativnog zapisa. Za deo čiji je vaučer uzet i istekao otpisa nema.",
     "zapisnik_za_potvrdu": "Zapisnik o primopredaji čeka tvoju potvrdu: {kolicina} {jedinica}.",
     "zapisnik_oznake": "Oznake životinja: {oznake}",
     "predaja_potvrdjena": "Predaja je potvrđena.",
