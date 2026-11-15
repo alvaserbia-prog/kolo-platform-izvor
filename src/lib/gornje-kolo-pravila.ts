@@ -77,7 +77,9 @@ export const vidiPseudonimeGornjegKola = (s: StatusUcesnika | null | undefined):
   s != null && jeVerifikovan(s);
 
 /**
- * Položaj ZRNA koji se objašnjava na ekranu (ključ u namespace-u `zrno`):
+ * Ograničenje upisanog ZRNA koje se objašnjava na ekranu (ključ u namespace-u `zrno`).
+ * Ime funkcije je interno i ostaje (pravilo 12); ZRNO nije položaj, nego zapis
+ * (Pravilnik čl. 2 t. 7; set 5.1.5):
  *  - `zamrznuto` — korisnik kome je upisano ZRNO (Pravilnik čl. 29 st. 1);
  *  - `bez_potvrde` — član bez potvrde kome je upisano ZRNO (čl. 22 st. 3);
  *  - `null` — ništa posebno (čuvar, član Kola bez ZRNA, korisnik bez ZRNA).

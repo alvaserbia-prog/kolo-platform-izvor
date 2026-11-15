@@ -174,9 +174,9 @@
 
 ### Article 11 — Non-convertibility
 
-(1) No accounting unit of the KOLO system may be converted into money, currency or any means with value outside the system, directly or indirectly.
+(1) Neither POEN nor ZRNO may be converted into money, currency or any means with value outside the system, directly or indirectly.
 
-(2) The prohibition of conversion includes indirect conversion, including the exchange of an accounting unit for vouchers, gift cards or other means with external value, that is, means that can be turned into money, transferred to a third person or used with a merchant of the holder's choice.
+(2) The prohibition of conversion includes indirect conversion, including the exchange of POEN or ZRNO for vouchers, gift cards or other means with external value, that is, means that can be turned into money, transferred to a third person or used with a merchant of the holder's choice.
 
 (3) The distribution of vouchers from sponsorship in goods and services is not indirect conversion, because the voucher lacks the elements of a means with external value referred to in paragraph 2:
 
@@ -198,7 +198,7 @@
 
 (2) POEN and ZRNO records are not transferred or inherited as property rights.
 
-(3) A recorded contribution and a recorded position do not constitute a claim against the Foundation or a basis for a property claim.
+(3) A recorded contribution and inscribed ZRNO do not constitute a claim against the Foundation or a basis for a property claim.
 
 ### Article 13 — Non-refundability of donations
 
@@ -304,7 +304,7 @@
 
 (4) No further ground for a negative record may be established, neither by this Rulebook without amending this Article, nor by any other act.
 
-(5) The exchange of goods and services moves existing POEN records and does not change their total number in the system. The total number of POEN increases through the inscription of new records via the contribution recording channels and through the correction of an annulment effected without grounds (Article 18), and decreases through the annulment of records on the grounds established by this Rulebook. There is no further ground for increasing the total number of POEN.
+(5) The exchange of goods and services moves existing POEN records and does not change their total number in the system. The total number of POEN increases through the inscription of new records via the contribution recording channels, through the recording of POEN upon the write-off of ZRNO (Article 23, paragraph 3) and through the correction of an annulment effected without grounds (Article 18), and decreases through the annulment of records on the grounds established by this Rulebook and through the reduction upon the inscription of ZRNO (Article 22, paragraph 5). There is no further ground for increasing the total number of POEN.
 
 ### Article 18 — Annulment upon use
 
@@ -372,7 +372,7 @@
 
 (2) The total number of ZRNO is 1,000,000 and can be neither increased nor decreased. At any given time, one part of the ZRNO is inscribed with participants and another part is available for inscription in the Protocol; the sum of inscribed and available ZRNO always equals the total number.
 
-(3) ZRNO is inscribed and written off exclusively by the Protocol, at the participant's request and pursuant to the system rules. A vote in the Upper Kolo arises not from inscribed but from activated ZRNO of a Kolo keeper whose reality has been confirmed (Article 43); ZRNO is not in itself a voting right, but a record of position from which that right arises.
+(3) ZRNO is inscribed and written off exclusively by the Protocol, at the participant's request and pursuant to the system rules. A vote in the Upper Kolo arises not from inscribed but from activated ZRNO of a Kolo keeper whose reality has been confirmed (Article 43); ZRNO is not in itself a voting right, but a record from which that right arises only upon activation.
 
 ### Article 22 — Inscription of ZRNO
 
@@ -420,13 +420,13 @@ The accounting period lasts 24 hours, from midnight to midnight, Serbian time. A
 
 ### Article 27 — The position of a Kolo keeper is not an investment
 
-(1) The position of a Kolo keeper does not constitute an investment. That assessment rests neither on the name of the unit nor on a claim that the coefficient does not depend on others, because it does (Article 25), but on the absence in the position of a Kolo keeper of the elements that make an investment an investment:
+(1) The position of a Kolo keeper does not constitute an investment. That assessment rests neither on the name of the record nor on a claim that the coefficient does not depend on others, because it does (Article 25), but on the absence in the position of a Kolo keeper of the elements that make an investment an investment:
 
 1) there is no stake of funds: ZRNO is inscribed from a contribution already recorded in the participant's record; the Foundation does not sell ZRNO, does not offer it and does not set a price for it, and inscription is not a counter-performance (Article 24);
 
 2) there is no exit from the ledger: neither ZRNO nor POEN is redeemed or converted into dinars or any other means of payment, directly or indirectly, and the Foundation pays out nothing from the ledger (Article 11); POEN recorded upon write-off is used, like any other POEN, only in the exchange of goods and services between users and for participation in the Foundation's projects, so the difference in the accounting coefficient cannot leave the Protocol;
 
-3) there is no market: ZRNO is not transferred, not inherited and has no price (Articles 12 and 24), so the position cannot be sold;
+3) there is no market: ZRNO is not transferred, not inherited and has no price (Articles 12 and 24), so it cannot be sold either;
 
 4) there is no person creating a benefit for the Kolo keeper: the contribution of others arises under the same rules as one's own and for the sake of the contributor's own participation; the accounting coefficient is calculated by the Protocol automatically and without discretion (Article 25), neither the Foundation nor any other person sets it, targets it or promises it, and the Kolo keeper does not shift it either by their own inscription or by write-off;
 

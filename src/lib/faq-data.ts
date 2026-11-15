@@ -298,7 +298,7 @@ Rok trajanja nije isključen zauvek: mehanizam „starenja“ POENA, koji bi pod
       {
         id: 4,
         pitanje: `Šta je ZRNO i čemu služi?`,
-        odgovor: `ZRNO je zapis odvojen od POENA. Dok POEN beleži šta si dao zajednici, ZRNO beleži tvoj položaj u njoj, i iz tog položaja proizlazi glas u odlukama o pravilima sistema.
+        odgovor: `ZRNO je zapis u evidenciji Protokola, odvojen od POENA: jedan od ukupno 1.000.000, koji upisuješ POENOM po obračunskom koeficijentu. Aktivirano ZRNO daje glas u odlukama o pravilima sistema, a slobodno možeš da otpišeš, i tada ti se po koeficijentu evidentira POEN. Van toga ZRNO nema dejstvo.
 
 Kako se stiče. ZRNO upisuješ POENOM koji već imaš. Koliko je POENA potrebno za jedno ZRNO pokazuje koeficijent. ZRNO možeš i otpisati.
 
@@ -306,7 +306,7 @@ Ko upisuje. ZRNO upisuje učesnik: član Kola i član bez potvrde. Član Kola up
 
 Kako daje glas. Samo čuvar Kola upisano ZRNO aktivira (zaključava), i tek aktivno ZRNO nosi glasačku moć. Glas može da delegira samo čuvar Kola, i to samo drugom čuvaru Kola. Glas ne raste pravolinijski: broj glasova je kvadratni koren broja aktivnih ZRNA, pa ko ima sto puta više ZRNA ima deset puta više glasova, a ne sto. Tako niko ne može da preuzme odlučivanje gomilanjem.
 
-Šta ZRNO ne može. Ne pretvara se u novac, ne prepisuje se drugom korisniku, ne nasleđuje se i niko ga ne otkupljuje. Ne nosi kamatu ni dividendu i niko ti po njemu ništa ne isplaćuje. Ono pokazuje tvoj položaj u zajednici, ne koliko ti ona duguje.`,
+Šta ZRNO ne može. Ne pretvara se u novac, ne prepisuje se drugom korisniku, ne nasleđuje se i niko ga ne otkupljuje. Ne nosi kamatu ni dividendu i niko ti po njemu ništa ne isplaćuje. Ono je zapis u evidenciji, ne potraživanje prema zajednici.`,
       },
       {
         id: 5,
@@ -351,7 +351,7 @@ Sistem može da nastavi i bez nas. Kod na kome KOLO radi je javan i objavljen na
         pitanje: `Čemu gornja granica od 1.000.000 ZRNA ako se ZRNO ne može trgovati? Postoji li staking ili prinos?`,
         odgovor: `Čemu granica. Ukupno postoji 1.000.000 ZRNA i taj broj se ne može ni povećati ni smanjiti. Zato se odlučivanje ne može razvodniti: niko ne može naknadno da napravi nova ZRNA i time obezvredi glas onih koji su već tu. Sa svakim upisom broj ZRNA raspoloživih u Protokolu opada — ali istovremeno opada i broj POENA u opticaju, jer POEN kojim je ZRNO upisano odlazi nazad Protokolu. Zato sam upis koeficijent ne pomera.
 
-ZRNO se ne trguje. Ne prepisuje se drugom korisniku i ne izlazi iz Protokola. Ono beleži tvoj položaj u zajedničkom dobru, iz kojeg proizlazi glas u Gornjem Kolu.
+ZRNO se ne trguje. Ne prepisuje se drugom korisniku i ne izlazi iz Protokola. Ono je zapis iz koga, kad ga aktiviraš, proizlazi glas u Gornjem Kolu.
 
 Zaključavanje nije staking. Upisano ZRNO zaključavaš samo zato da bi se obračunao tvoj glas, tek aktivno ZRNO nosi glasačku moć. Zaključavanje ti ne donosi ni POEN, ni kamatu, ni bilo kakvu naknadu. Koeficijent se menja isto, bez obzira na to da li ti je ZRNO zaključano ili slobodno; zaključavanjem se ne dobija ništa osim glasa.
 

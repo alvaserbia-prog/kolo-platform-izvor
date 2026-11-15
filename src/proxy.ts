@@ -64,7 +64,7 @@ export const JAVNE_RUTE = [
  */
 // `/sistem` (odluka vlasnika, 24.10.2026): kartice i zbirovi su javni, a spiskove
 // gostu stranica ni ne čita (Politika privatnosti čl. 11 st. 4).
-// `/sistem/zdravlje` (odluka vlasnika 25.10.2026): pokazatelji su zbir, javni kao `/sistem`.
+// `/sistem/zdravlje` (Kretanje pokazatelja sistema, 15.11.2026): pokazatelji su zbir, javni kao `/sistem`.
 export const JAVNE_TACNE_RUTE = ["/skole", "/zadruge", "/sistem", "/sistem/zdravlje"];
 
 /**

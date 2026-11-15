@@ -17,6 +17,7 @@ import { dnevniLimit } from "@/lib/programi-iznosi-pravila";
 import { USLOV_CLANA_U_SPISKU } from "@/lib/clanovi-spisak";
 import { zadrugeZaPrikaz } from "@/lib/protokol/zadruga";
 import SistemKlijent from "./SistemKlijent";
+import { danasnjeStanje } from "@/lib/protokol/pokazatelji";
 import { prikazStatusa } from "@/lib/status-prikaz";
 import { USLOVI_STATUSA } from "@/lib/admin-clanovi";
 import { usloviVidljivostiOglasa } from "@/lib/protokol/deca";
@@ -420,6 +421,8 @@ export default async function SistemPage({
   // ostaje potpuna — zbir agregata plus ostali kanali daju promenu opticaja.
   const programiPregled = await dnevniPregledPrograma(14);
   const zadruge = await zadrugeZaPrikaz();
+  // Pokazatelji sistema: samo zbirni brojevi, isti za gosta i za prijavljenog.
+  const pokazateljiSistema = await danasnjeStanje();
 
   const emisijeChart = emisije
     .slice(0, 14)
@@ -463,6 +466,7 @@ export default async function SistemPage({
       clanovi={clanovi}
       zadruge={zadruge}
       pokazatelji={pokazatelji}
+      pokazateljiSistema={pokazateljiSistema}
       pocetnaSekcija={pocetnaSekcija}
     />
   );

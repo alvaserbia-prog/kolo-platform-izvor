@@ -18,7 +18,7 @@
 
 (2) The Statement does not exclude or limit the Foundation's liability for damage it causes intentionally or through gross negligence (Article 37 paragraph 3 of the Terms of Use), nor the rights that belong to the user under the mandatory regulations on consumer protection and on personal data protection.
 
-## II — Nature of the system and of the accounting units
+## II — Nature of the system, POEN and ZRNO
 
 ### Article 3 — Nature of the KOLO system
 
@@ -30,11 +30,11 @@
 
 (1) POEN is an internal accounting unit by which contribution and other forms of participation in the common good are recorded in the Protocol's ledger. POEN is not money, currency, token, electronic money, means of payment, digital asset, financial instrument, or security (Article 16 of the Rulebook on the KOLO System).
 
-(2) ZRNO is an internal accounting unit by which the participant's position in the common good is recorded in the Protocol's ledger. ZRNO does not represent a share, equity, security, collective investment unit, investment contract, or digital asset. ZRNO carries no dividend, interest, return, or right to a liquidation surplus (Article 21 of the Rulebook on the KOLO System).
+(2) ZRNO is a record in the Protocol's ledger, one of a total of 1,000,000, which a participant inscribes by using recorded POEN pursuant to the accounting coefficient; activated ZRNO gives a vote in the Upper Kolo, while free ZRNO may be written off, with POEN being recorded pursuant to the accounting coefficient. ZRNO does not represent a share, equity, security, collective investment unit, investment contract, or digital asset. ZRNO carries no dividend, interest, return, or right to a liquidation surplus (Article 21 of the Rulebook on the KOLO System).
 
 (3) POEN and ZRNO have no value outside the system and cannot be converted into money, currency, or any instrument with value outside the system, directly or indirectly, including exchange for vouchers, gift cards, or other instruments with external value. A voucher from sponsorship in goods and services has none of the elements of such an instrument: it cannot be turned into money, it is issued to the account of the user who took it and is not transferred, it is issued for a specific good or service with a single giver, and it is secured by the giver under an agreement with the Foundation, the giver not receiving POEN (Article 11 of the Rulebook on the KOLO System). The Foundation does not redeem POEN or ZRNO.
 
-(4) Users have no property right over POEN and ZRNO records in the system's ledger. A POEN record is data in the common-good ledger, not an asset owned by the user. ZRNO is a record of position in the common good, not a form of property right. Records are not transferred or inherited as property rights (Article 12 of the Rulebook on the KOLO System).
+(4) Users have no property right over POEN and ZRNO records in the system's ledger. A POEN record is data in the common-good ledger, not an asset owned by the user. A ZRNO record is data in the same ledger, not a form of property right. Records are not transferred or inherited as property rights (Article 12 of the Rulebook on the KOLO System).
 
 (5) Recorded contribution does not constitute a claim against the Foundation. No monetary funds stand behind a record: the Foundation holds no funds whatsoever as cover for POEN and does not owe them to the holder of the record (Article 16 paragraph 4 point 7 of the Rulebook on the KOLO System).
 
@@ -42,7 +42,7 @@
 
 ### Article 5 — Accounting coefficient and the position of a Kolo keeper
 
-(1) The accounting coefficient (Article 25 of the Rulebook on the KOLO System) is the number of POEN for which the Protocol, in that accounting period, inscribes or writes off one ZRNO. It is a ratio of two internal units without a monetary expression; no one sells or transfers ZRNO (Article 24 of the Rulebook on the KOLO System).
+(1) The accounting coefficient (Article 25 of the Rulebook on the KOLO System) is the number of POEN for which the Protocol, in that accounting period, inscribes or writes off one ZRNO. It is a ratio of a number of POEN to a number of ZRNO, without a monetary expression; no one sells or transfers ZRNO (Article 24 of the Rulebook on the KOLO System).
 
 (2) The accounting coefficient changes with the total number of recorded POEN and may rise and fall; it is not predetermined to rise. It is calculated by the Protocol from the ledger, automatically and without discretion; neither the Foundation nor any other person determines, targets or promises it. The Foundation's decisions on the facts on which the recording of contribution depends change the total number of recorded POEN, and thereby the coefficient (Article 7 paragraph 3 of the Rulebook on the KOLO System). ZRNO inscription and write-off do not move the accounting coefficient.
 
@@ -138,7 +138,7 @@ By registering on the Platform, the user declares:
 
 1) that they have read this Statement and that the Terms of Use, the Privacy Policy, and the other acts of the KOLO system are available to them on the Platform;
 
-2) that they understand the nature of POEN and ZRNO as internal accounting units with no value outside the system;
+2) that they understand the nature of POEN and ZRNO as records in the Protocol's ledger with no value outside the system;
 
 3) that they understand that participation in the system is not an investment and that there is no expectation of financial return;
 

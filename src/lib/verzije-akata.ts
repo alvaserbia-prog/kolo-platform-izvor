@@ -72,8 +72,9 @@ export const AKT_USLOVI: Akt = {
   // 5.0.9 — čl. 32 st. 1 t. 9 (lažna potvrda o uplati) i čl. 40 st. 2 t. 12 (ograničenje i otpis primljenog).
   // 5.1.0 — čl. 21 st. 3 (dinarski iznos kao jednosmerna mera obima doprinosa, bez poricanja)
   // i čl. 28 st. 4 (povreda zabrane prometa POEN-a utvrđuje se po prijavi, prepisi se ne prate).
-  verzija: "5.1.2",
-  fajl: "uslovi_koriscenja_5_1_2.md",
+  // 5.1.5 — čl. 28 st. 3: princip nekonvertibilnosti glasi na POEN i ZRNO, ne na „obračunsku jedinicu”.
+  verzija: "5.1.5",
+  fajl: "uslovi_koriscenja_5_1_5.md",
 };
 
 export const AKT_POLITIKA: Akt = {
@@ -125,8 +126,10 @@ export const AKT_RIZICI: Akt = {
   // 5.0.0 — prvi put uz kvačicu za Uslove pri registraciji i u gejtu.
   // 5.1.1 — čl. 5 st. 3 i čl. 7 t. 4: koeficijent jednako zavisi od sopstvenog i tuđeg
   // doprinosa; otpis slobodnog ZRNA može dati i manje POEN-a nego što je utrošeno.
-  verzija: "5.1.2",
-  fajl: "rizici_5_1_2.md",
+  // 5.1.5 — čl. 4 st. 2 i 4, čl. 5 st. 1, čl. 18 t. 2: ZRNO je zapis po definiciji iz
+  // Pravilnika čl. 2 t. 7, ne „obračunska jedinica” ni „evidencija položaja”.
+  verzija: "5.1.5",
+  fajl: "rizici_5_1_5.md",
 };
 
 /**

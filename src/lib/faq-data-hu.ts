@@ -294,7 +294,7 @@ A lejárat nincs örökre kizárva: a POEN „öregedésének” mechanizmusa, a
       {
         id: 4,
         pitanje: `Mi az a ZRNO, és mire való?`,
-        odgovor: `A ZRNO a POEN-től elkülönülő bejegyzés. Míg a POEN azt rögzíti, mit adtál a közösségnek, a ZRNO a benne elfoglalt helyzetedet rögzíti, és ebből a helyzetből fakad a szavazat a rendszer szabályairól hozott döntésekben.
+        odgovor: `A ZRNO bejegyzés a Protokoll nyilvántartásában, a POEN-től elkülönülve: az összesen 1.000.000 egyike, amelyet POEN-nel jegyzel az elszámolási koefficiens szerint. Az aktivált ZRNO szavazatot ad a rendszer szabályairól hozott döntésekben, a szabad ZRNO-t pedig leírhatod, és ekkor a koefficiens szerint POEN kerül a nyilvántartásodba. Ezen kívül a ZRNO-nak nincs hatása.
 
 Hogyan szerezhető. ZRNO-t a már meglévő POEN-nel jegyzel. Hogy egy ZRNO-hoz hány POEN szükséges, azt az együttható mutatja. A ZRNO-t le is írhatod.
 
@@ -302,7 +302,7 @@ Ki jegyezhet. ZRNO-t résztvevő jegyez: a Kolo-tag és a megerősítés nélkü
 
 Hogyan ad szavazatot. Csak a Kolo-őrző aktiválja (zárolja) a jegyzett ZRNO-t, és csak az aktív ZRNO hordoz szavazóerőt. A szavazatot csak Kolo-őrző ruházhatja át, és csak egy másik Kolo-őrzőre. A szavazat nem lineárisan nő: a szavazatok száma az aktív ZRNO-k számának négyzetgyöke, így akinek százszor több ZRNO-ja van, annak tízszer több szavazata van, nem százszor. Így senki sem veheti át a döntéshozatalt felhalmozással.
 
-Mire nem képes a ZRNO. Nem váltható pénzre, nem írható át másik tagra, nem örökölhető, és senki nem vásárolja vissza. Nem hoz kamatot vagy osztalékot, és senki nem fizet neked utána semmit. Azt mutatja, milyen helyzetben vagy a közösségben, nem azt, hogy az mennyivel tartozik neked.`,
+Mire nem képes a ZRNO. Nem váltható pénzre, nem írható át másik tagra, nem örökölhető, és senki nem vásárolja vissza. Nem hoz kamatot vagy osztalékot, és senki nem fizet neked utána semmit. Bejegyzés a nyilvántartásban, nem követelés a közösséggel szemben.`,
       },
       {
         id: 5,
@@ -346,7 +346,7 @@ A rendszer nélkülünk is folytatódhat. A kód, amelyen a KOLO fut, nyilvános
         pitanje: `Mire jó az 1.000.000 ZRNO felső korlát, ha a ZRNO-val nem lehet kereskedni? Van staking vagy hozam?`,
         odgovor: `Mire jó a korlát. Összesen 1.000.000 ZRNO létezik, és ez a szám sem nem növelhető, sem nem csökkenthető. Így a döntéshozatal nem hígítható fel: senki nem hozhat létre utólag új ZRNO-t, és nem értéktelenítheti el azok szavazatát, akik már itt vannak. Minden bejegyzéssel csökken a Protokollban rendelkezésre álló ZRNO száma — de ezzel egyidejűleg csökken a forgalomban lévő POEN-ek száma is, mert a ZRNO bejegyzésére fordított POEN visszakerül a Protokollhoz. Ezért maga a bejegyzés nem mozdítja el a koefficienst.
 
-A ZRNO-val nem kereskednek. Nem írható át másik felhasználónak, és nem hagyja el a Protokollt. A közös jóban elfoglalt helyzetedet rögzíti, amelyből a Felső Kolóban való szavazatod ered.
+A ZRNO-val nem kereskednek. Nem írható át másik felhasználónak, és nem hagyja el a Protokollt. Olyan bejegyzés, amelyből — ha aktiválod — a Felső Kolóban való szavazatod ered.
 
 A lezárás nem staking. A bejegyzett ZRNO-t csak azért zárod le, hogy a szavazatod beszámítson — csak az aktív ZRNO hordoz szavazóerőt. A lezárás nem hoz neked sem POEN-t, sem kamatot, sem semmilyen díjazást. A koefficiens ugyanúgy változik, akár le van zárva a ZRNO-d, akár szabad; a lezárással a szavazaton kívül semmit nem nyersz.
 

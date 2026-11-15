@@ -307,7 +307,7 @@ function SidebarContent({
   //  - Podrži KOLO: odmah ispod Zajednice; JEDNA stavka; na stranici se bira lično (donacija) ili kao
   //    firma, udruženje ili registrovano gazdinstvo (pokroviteljstvo u novcu ili u
   //    dobrima i uslugama).
-  //  - Poverenje: put kroz Kolo — Potvrde, Nadzor (čuvari), ZRNO (položaj čuvara Kola).
+  //  - Poverenje: put kroz Kolo — Potvrde, Nadzor (čuvari), ZRNO (zapis iz koga, aktiviranog, čuvar Kola glasa).
   //    ZRNO stoji uz čuvanje, ne uz dobra i sredstva (ZRNO nije ulaganje, čl. 27).
   //  - Zajedničko dobro (padajuća): ono što zajednica radi za sebe — Zadaci, Nabavke,
   //    Programi.

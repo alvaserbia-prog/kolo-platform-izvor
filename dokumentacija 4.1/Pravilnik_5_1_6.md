@@ -172,9 +172,9 @@
 
 ### Član 11 — Nekonvertibilnost
 
-(1) Nijedna obračunska jedinica KOLO sistema ne može se konvertovati u novac, valutu ni u bilo koje sredstvo sa vrednošću van sistema, neposredno ni posredno.
+(1) Ni POEN ni ZRNO ne mogu se konvertovati u novac, valutu ni u bilo koje sredstvo sa vrednošću van sistema, neposredno ni posredno.
 
-(2) Zabrana konverzije obuhvata i posrednu konverziju, uključujući zamenu obračunske jedinice za vaučere, poklon kartice ili druga sredstva sa spoljnom vrednošću, odnosno sredstva koja se mogu unovčiti, preneti trećem licu ili iskoristiti kod trgovca po izboru imaoca.
+(2) Zabrana konverzije obuhvata i posrednu konverziju, uključujući zamenu POEN-a ili ZRNA za vaučere, poklon kartice ili druga sredstva sa spoljnom vrednošću, odnosno sredstva koja se mogu unovčiti, preneti trećem licu ili iskoristiti kod trgovca po izboru imaoca.
 
 (3) Raspodela vaučera iz pokroviteljstva dobrima i uslugama nije posredna konverzija, jer vaučeru nedostaju elementi sredstva sa spoljnom vrednošću iz stava 2:
 
@@ -196,7 +196,7 @@
 
 (2) Zapisi POEN-a i ZRNA ne prenose se i ne nasleđuju kao imovinska prava.
 
-(3) Evidentiran doprinos i evidentiran položaj ne predstavljaju potraživanje prema Fondaciji niti osnov za imovinskopravni zahtev.
+(3) Evidentiran doprinos i upisano ZRNO ne predstavljaju potraživanje prema Fondaciji niti osnov za imovinskopravni zahtev.
 
 ### Član 13 — Nepovratnost donacija
 
@@ -302,7 +302,7 @@
 
 (4) Drugi osnov za negativan zapis ne može se ustanoviti ni ovim pravilnikom bez izmene ovog člana, ni bilo kojim drugim aktom.
 
-(5) Razmena dobara i usluga premešta postojeće zapise POEN-a i ne menja njihov ukupan broj u sistemu. Ukupan broj POEN-a uvećava se upisom novih zapisa kroz kanale evidentiranja doprinosa i ispravkom poništenja izvršenog bez osnova (član 18), a umanjuje se poništenjem zapisa po osnovima utvrđenim ovim pravilnikom. Drugog osnova za uvećanje ukupnog broja POEN-a nema.
+(5) Razmena dobara i usluga premešta postojeće zapise POEN-a i ne menja njihov ukupan broj u sistemu. Ukupan broj POEN-a uvećava se upisom novih zapisa kroz kanale evidentiranja doprinosa, evidentiranjem POEN-a pri otpisu ZRNA (član 23 stav 3) i ispravkom poništenja izvršenog bez osnova (član 18), a umanjuje se poništenjem zapisa po osnovima utvrđenim ovim pravilnikom i umanjenjem pri upisu ZRNA (član 22 stav 5). Drugog osnova za uvećanje ukupnog broja POEN-a nema.
 
 ### Član 18 — Poništenje po iskorišćenju
 
@@ -370,7 +370,7 @@
 
 (2) Ukupan broj ZRNA iznosi 1.000.000 i ne može se ni povećati ni smanjiti. U svakom trenutku jedan deo ZRNA je upisan kod učesnika, a drugi deo je raspoloživ za upis u Protokolu; zbir upisanih i raspoloživih ZRNA uvek je jednak ukupnom broju.
 
-(3) ZRNO upisuje i otpisuje isključivo Protokol, na zahtev učesnika i prema pravilima sistema. Glas u Gornjem Kolu ne proizlazi iz upisanog nego iz aktiviranog ZRNA čuvara Kola, čija je stvarnost potvrđena (član 43); ZRNO samo po sebi nije pravo glasa, nego evidencija položaja iz koje to pravo proizlazi.
+(3) ZRNO upisuje i otpisuje isključivo Protokol, na zahtev učesnika i prema pravilima sistema. Glas u Gornjem Kolu ne proizlazi iz upisanog nego iz aktiviranog ZRNA čuvara Kola, čija je stvarnost potvrđena (član 43); ZRNO samo po sebi nije pravo glasa, nego zapis iz koga to pravo proizlazi tek aktiviranjem.
 
 ### Član 22 — Upis ZRNA
 
@@ -418,13 +418,13 @@ Obračunski period traje 24 časa, od ponoći do ponoći po vremenu u Srbiji. Na
 
 ### Član 27 — Položaj čuvara Kola nije ulaganje
 
-(1) Položaj čuvara Kola ne predstavlja ulaganje. Ta ocena ne počiva na nazivu jedinice ni na tvrdnji da koeficijent ne zavisi od drugih, jer zavisi (član 25), nego na tome što u položaju čuvara Kola nedostaju elementi koji ulaganje čine ulaganjem:
+(1) Položaj čuvara Kola ne predstavlja ulaganje. Ta ocena ne počiva na nazivu zapisa ni na tvrdnji da koeficijent ne zavisi od drugih, jer zavisi (član 25), nego na tome što u položaju čuvara Kola nedostaju elementi koji ulaganje čine ulaganjem:
 
 1) nema uloga sredstava: ZRNO se upisuje iz doprinosa već evidentiranog u zapisu učesnika; Fondacija ZRNO ne prodaje, ne nudi i ne utvrđuje mu cenu, a upis nije protivčinidba (član 24);
 
 2) nema izlaza iz evidencije: ni ZRNO ni POEN se ne otkupljuju i ne konvertuju u dinare ni u drugo sredstvo plaćanja, ni neposredno ni posredno, i Fondacija iz evidencije ništa ne isplaćuje (član 11); POEN evidentiran otpisom koristi se, kao i svaki drugi, samo u razmeni dobara i usluga među korisnicima i za učešće u projektima Fondacije, pa razlika u obračunskom koeficijentu ne može napustiti Protokol;
 
-3) nema tržišta: ZRNO se ne prenosi, ne nasleđuje i nema cenu (članovi 12 i 24), pa se položaj ne može prodati;
+3) nema tržišta: ZRNO se ne prenosi, ne nasleđuje i nema cenu (članovi 12 i 24), pa se ne može ni prodati;
 
 4) nema lica koje stvara korist za čuvara Kola: tuđi doprinos nastaje po istim pravilima kao sopstveni i radi sopstvenog učešća onoga ko doprinosi; obračunski koeficijent izračunava Protokol automatski i bez diskrecije (član 25), Fondacija ni bilo koje drugo lice ga ne određuje, ne cilja i ne obećava, a čuvar Kola ga ne pomera ni sopstvenim upisom ni otpisom;
 

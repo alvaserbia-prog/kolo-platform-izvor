@@ -1718,13 +1718,24 @@ model Preporuka {
   @@index([zaId])
 }
 
-/// Dnevni snimak pokazatelja zdravlja i koncentracije (`/sistem/zdravlje`; odluke
-/// vlasnika 25.10.2026). 🔴 Bez ijednog identifikatora lica: samo šifra pokazatelja,
-/// vrednost i lampica (`{ "K1": { "v": 63.4, "l": "CRVENO" }, … }`). Upisuje ga noćni
-/// obračun; ne proizvodi nikakvo dejstvo.
+/// 🔴 ISTORIJA: dnevni snimci ranijih pokazatelja zdravlja i koncentracije (Z1–Z11,
+/// K1–K10; 01.11–15.11.2026). Pokazatelji su uklonjeni odlukom vlasnika 15.11.2026,
+/// tabela se više ne piše i ne čita, a redovi se ne brišu.
 model PokazateljDan {
   date      DateTime @id @db.Date
   vrednosti Json
+  createdAt DateTime @default(now())
+}
+
+/// Dnevni snimak pokazatelja sistema (odluka vlasnika 15.11.2026): samo zbirni
+/// brojevi iz `SirovoStanje` (`src/lib/pokazatelji-pravila.ts`), bez ijednog
+/// identifikatora lica i bez broja po licu. Javno se čita kroz `/api/javno/pokazatelji`.
+/// `naknadno` = dan nije snimljen te noći, nego je izračunat iz evidencije
+/// (`scripts/popuni-pokazatelje-sistema.sql`).
+model PokazateljSistemaDan {
+  date      DateTime @id @db.Date
+  vrednosti Json
+  naknadno  Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 
@@ -4298,9 +4309,8 @@ model Gazdinstvo {
   /// Od kada gazdinstvo sme imati članove (gazd. čl. 4 st. 2, čl. 14; set 4.8.2). Postavlja se
   /// kad je podnosilac član Kola ili osnivač; monotono — pad potvrđenosti ga ne briše.
   smeClanoveOd       DateTime?
-  /// Od kada bar jedan član neprekidno ima aktivan oglas kojim nudi (pokazatelj Z5,
-  /// „stalna ponuda“; `protokol/pokazatelji.ts`). Upisuje ga noćni obračun: dan bez
-  /// ponude vraća `null`. Stanje gazdinstva, ne istorija lica.
+  /// 🔴 ISTORIJA: nosila je stanje „stalne ponude“ za raniji pokazatelj Z5, uklonjen
+  /// odlukom vlasnika 15.11.2026. Kolona se više ne piše i ne čita; ne briše se.
   ponudaNeprekidnoOd DateTime?
   /// Telefon za razgovor Fondacije sa nosiocem (gazd. čl. 5 st. 1 t. 9, čl. 8) — nosioca,
   /// odnosno podnosioca kad nosilac nema nalog. Vidi ga samo admin; briše se odlukom.

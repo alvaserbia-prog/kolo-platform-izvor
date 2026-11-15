@@ -18,7 +18,7 @@
 
 (2) A Nyilatkozat nem zárja ki és nem korlátozza az Alapítványnak a szándékosan vagy súlyos gondatlansággal okozott kárért való felelősségét (a Felhasználási feltételek 37. cikkének (3) bekezdése), sem azokat a jogokat, amelyek a felhasználót a fogyasztóvédelemre és a személyes adatok védelmére vonatkozó kógens jogszabályok alapján megilletik.
 
-## II — A rendszer és az elszámolási egységek természete
+## II — A rendszer, a POEN és a ZRNO természete
 
 ### 3. cikk — A KOLO rendszer természete
 
@@ -30,11 +30,11 @@
 
 (1) A POEN belső elszámolási egység, amellyel a Protokoll nyilvántartásában a hozzájárulás és a közjóban való részvétel egyéb formái kerülnek nyilvántartásba. A POEN nem pénz, nem valuta, nem token, nem elektronikus pénz, nem fizetési eszköz, nem digitális vagyon, nem pénzügyi eszköz és nem értékpapír (a KOLO rendszerről szóló szabályzat 16. cikke).
 
-(2) A ZRNO belső elszámolási egység, amellyel a Protokoll nyilvántartásában a résztvevő közjóban elfoglalt helyzete kerül nyilvántartásba. A ZRNO nem képvisel részesedést, részvényt, értékpapírt, kollektív befektetési egységet, befektetési szerződést vagy digitális vagyont. A ZRNO nem hordoz osztalékot, kamatot, hozamot, sem a felszámolási maradványra vonatkozó jogot (a KOLO rendszerről szóló szabályzat 21. cikke).
+(2) A ZRNO bejegyzés a Protokoll nyilvántartásában, egy az összesen 1.000.000 közül, amelyet a résztvevő nyilvántartásba vett POEN-ek felhasználásával, az elszámolási együttható szerint ír be; az aktivált ZRNO szavazatot ad a Felső Kolóban, a szabad ZRNO pedig leírható, POEN-nek az elszámolási együttható szerinti nyilvántartásba vétele mellett. A ZRNO nem képvisel részesedést, részvényt, értékpapírt, kollektív befektetési egységet, befektetési szerződést vagy digitális vagyont. A ZRNO nem hordoz osztalékot, kamatot, hozamot, sem a felszámolási maradványra vonatkozó jogot (a KOLO rendszerről szóló szabályzat 21. cikke).
 
 (3) A POEN és a ZRNO a rendszeren kívül nem bír értékkel, és nem konvertálható pénzre, valutára, sem a rendszeren kívüli értékkel bíró bármely eszközre, sem közvetlenül, sem közvetve, ideértve az utalványokra, ajándékkártyákra vagy más külső értékkel bíró eszközre való cserét. Az áruval és szolgáltatással nyújtott pártfogásból származó utalvány nem hordozza az ilyen eszköz elemeit: nem tehető pénzzé, annak a felhasználónak a fiókjára szól, aki azt átvette, és nem ruházható át, meghatározott jószágra, illetve szolgáltatásra szól egyetlen juttatónál, azt a juttató az Alapítvánnyal kötött szerződés alapján biztosítja, és POEN-t nem kap (a KOLO rendszerről szóló szabályzat 11. cikke). Az Alapítvány nem vásárolja vissza a POEN-t és a ZRNO-t.
 
-(4) A felhasználókat nem illeti meg vagyoni jog a rendszer nyilvántartásában szereplő POEN- és ZRNO-bejegyzések felett. A POEN-bejegyzés a közjó nyilvántartásában szereplő adat, nem pedig a felhasználó tulajdonában álló eszköz. A ZRNO a közjóban elfoglalt helyzet nyilvántartása, nem pedig vagyoni jog formája. A bejegyzések vagyoni jogként nem ruházhatók át és nem öröklődnek (a KOLO rendszerről szóló szabályzat 12. cikke).
+(4) A felhasználókat nem illeti meg vagyoni jog a rendszer nyilvántartásában szereplő POEN- és ZRNO-bejegyzések felett. A POEN-bejegyzés a közjó nyilvántartásában szereplő adat, nem pedig a felhasználó tulajdonában álló eszköz. A ZRNO-bejegyzés ugyanabban a nyilvántartásban szereplő adat, nem pedig vagyoni jog formája. A bejegyzések vagyoni jogként nem ruházhatók át és nem öröklődnek (a KOLO rendszerről szóló szabályzat 12. cikke).
 
 (5) A nyilvántartásba vett hozzájárulás nem jelent követelést az Alapítvánnyal szemben. A bejegyzések mögött nem állnak pénzeszközök: az Alapítvány semmilyen eszközt nem tart a POEN fedezeteként, és azzal a bejegyzés birtokosának nem tartozik (a KOLO rendszerről szóló szabályzat 16. cikke (4) bekezdésének 7. pontja).
 
@@ -42,7 +42,7 @@
 
 ### 5. cikk — Az elszámolási együttható és a Kolo-őrző helyzete
 
-(1) Az elszámolási együttható (a KOLO rendszerről szóló szabályzat 25. cikke) azon POEN-ek száma, amelyekért a Protokoll az adott elszámolási időszakban egy ZRNO-t beír, illetve leír. Ez két belső egység aránya, pénzbeli kifejezés nélkül; a ZRNO-t senki nem adja el és nem ruházza át (a KOLO rendszerről szóló szabályzat 24. cikke).
+(1) Az elszámolási együttható (a KOLO rendszerről szóló szabályzat 25. cikke) azon POEN-ek száma, amelyekért a Protokoll az adott elszámolási időszakban egy ZRNO-t beír, illetve leír. Ez a POEN-ek és a ZRNO-k számának aránya, pénzbeli kifejezés nélkül; a ZRNO-t senki nem adja el és nem ruházza át (a KOLO rendszerről szóló szabályzat 24. cikke).
 
 (2) Az elszámolási együttható a nyilvántartásba vett POEN-ek teljes számával változik, és nőhet is, csökkenhet is; nincs eleve a növekedésre rendelve. A Protokoll a nyilvántartásból automatikusan és mérlegelés nélkül számítja ki; sem az Alapítvány, sem más személy nem határozza meg, nem tűzi ki célul és nem ígéri. Az Alapítványnak azokról a tényekről hozott döntései, amelyektől a hozzájárulás nyilvántartásba vétele függ, megváltoztatják a nyilvántartásba vett POEN-ek teljes számát, és ezáltal az együtthatót is (a KOLO rendszerről szóló szabályzat 7. cikkének (3) bekezdése). A ZRNO beírása és leírása nem mozdítja el az elszámolási együtthatót.
 
@@ -138,7 +138,7 @@ A Platformon való regisztrációval a felhasználó kijelenti:
 
 1) hogy elolvasta ezt a Nyilatkozatot, és hogy a Felhasználási feltételek, az Adatvédelmi szabályzat és a KOLO rendszer többi aktusa számára a Platformon hozzáférhetők;
 
-2) hogy megérti a POEN és a ZRNO természetét mint a rendszeren kívül értékkel nem bíró belső elszámolási egységekét;
+2) hogy megérti a POEN és a ZRNO természetét mint a Protokoll nyilvántartásában szereplő, a rendszeren kívül értékkel nem bíró bejegyzésekét;
 
 3) hogy megérti, hogy a rendszerben való részvétel nem befektetés, és hogy nincs pénzügyi hozamra vonatkozó várakozás;
 

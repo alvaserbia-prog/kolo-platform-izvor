@@ -16,7 +16,7 @@
 
 (2) Izjava ne isključuje niti ograničava odgovornost Fondacije za štetu koju prouzrokuje namerno ili krajnjom nepažnjom (član 37 stav 3 Uslova korišćenja), niti prava koja korisniku pripadaju po imperativnim propisima o zaštiti potrošača i o zaštiti podataka o ličnosti.
 
-## II — Priroda sistema i obračunskih jedinica
+## II — Priroda sistema, POEN-a i ZRNA
 
 ### Član 3 — Priroda KOLO sistema
 
@@ -28,11 +28,11 @@
 
 (1) POEN je interna obračunska jedinica kojom se u evidenciji Protokola evidentira doprinos i drugi oblici učešća u zajedničkom dobru. POEN nije novac, valuta, token, elektronski novac, platno sredstvo, digitalna imovina, finansijski instrument ni hartija od vrednosti (član 16 Pravilnika o KOLO sistemu).
 
-(2) ZRNO je interna obračunska jedinica kojom se u evidenciji Protokola evidentira položaj učesnika u zajedničkom dobru. ZRNO ne predstavlja udeo, akciju, hartiju od vrednosti, jedinicu kolektivnog investiranja, investicioni ugovor ni digitalnu imovinu. ZRNO ne nosi dividendu, kamatu, prinos ni pravo na likvidacioni ostatak (član 21 Pravilnika o KOLO sistemu).
+(2) ZRNO je zapis u evidenciji Protokola, jedan od ukupno 1.000.000, koji učesnik upisuje utroškom evidentiranih POEN-a po obračunskom koeficijentu; aktivirano ZRNO daje glas u Gornjem Kolu, a slobodno se može otpisati uz evidentiranje POEN-a po obračunskom koeficijentu. ZRNO ne predstavlja udeo, akciju, hartiju od vrednosti, jedinicu kolektivnog investiranja, investicioni ugovor ni digitalnu imovinu. ZRNO ne nosi dividendu, kamatu, prinos ni pravo na likvidacioni ostatak (član 21 Pravilnika o KOLO sistemu).
 
 (3) POEN i ZRNO nemaju vrednost van sistema i ne mogu se konvertovati u novac, valutu ni u bilo koje sredstvo sa vrednošću van sistema, neposredno ni posredno, uključujući zamenu za vaučere, poklon kartice ili drugo sredstvo sa spoljnom vrednošću. Vaučer iz pokroviteljstva dobrima i uslugama nema elemente takvog sredstva: ne može se unovčiti, glasi na nalog korisnika koji ga je uzeo i ne prenosi se, glasi na određeno dobro, odnosno uslugu kod jednog davaoca, a obezbeđuje ga davalac ugovorom sa Fondacijom i POEN ne prima (član 11 Pravilnika o KOLO sistemu). Fondacija ne vrši otkup POEN-a niti ZRNA.
 
-(4) Korisnici nemaju imovinsko pravo nad zapisima POEN-a i ZRNA u evidenciji sistema. Zapis POEN-a je podatak u evidenciji zajedničkog dobra, ne sredstvo u vlasništvu korisnika. ZRNO je evidencija položaja u zajedničkom dobru, ne oblik imovinskog prava. Zapisi se ne prenose i ne nasleđuju kao imovinska prava (član 12 Pravilnika o KOLO sistemu).
+(4) Korisnici nemaju imovinsko pravo nad zapisima POEN-a i ZRNA u evidenciji sistema. Zapis POEN-a je podatak u evidenciji zajedničkog dobra, ne sredstvo u vlasništvu korisnika. Zapis ZRNA je podatak u istoj evidenciji, ne oblik imovinskog prava. Zapisi se ne prenose i ne nasleđuju kao imovinska prava (član 12 Pravilnika o KOLO sistemu).
 
 (5) Evidentiran doprinos ne predstavlja potraživanje prema Fondaciji. Iza zapisa ne stoje novčana sredstva: Fondacija ne drži nikakva sredstva kao pokriće POEN-a i ne duguje ih imaocu zapisa (član 16 stav 4 tačka 7 Pravilnika o KOLO sistemu).
 
@@ -40,7 +40,7 @@
 
 ### Član 5 — Obračunski koeficijent i položaj čuvara Kola
 
-(1) Obračunski koeficijent (član 25 Pravilnika o KOLO sistemu) je broj POEN-a za koji Protokol u tom obračunskom periodu upisuje, odnosno otpisuje jedno ZRNO. To je odnos dve interne jedinice bez novčanog izraza; ZRNO niko ne prodaje i ne prenosi (član 24 Pravilnika o KOLO sistemu).
+(1) Obračunski koeficijent (član 25 Pravilnika o KOLO sistemu) je broj POEN-a za koji Protokol u tom obračunskom periodu upisuje, odnosno otpisuje jedno ZRNO. To je odnos broja POEN-a i broja ZRNA, bez novčanog izraza; ZRNO niko ne prodaje i ne prenosi (član 24 Pravilnika o KOLO sistemu).
 
 (2) Obračunski koeficijent menja se sa ukupnim brojem evidentiranih POEN-a i može da raste i da pada; nije predodređen da raste. Izračunava ga Protokol iz evidencije, automatski i bez diskrecije; Fondacija ni drugo lice ga ne određuje, ne cilja i ne obećava. Odluke Fondacije o činjenicama od kojih zavisi evidentiranje doprinosa menjaju ukupan broj evidentiranih POEN-a, a time i koeficijent (član 7 stav 3 Pravilnika o KOLO sistemu). Upis i otpis ZRNA ne pomeraju obračunski koeficijent.
 
@@ -136,7 +136,7 @@ Registracijom na Platformi korisnik izjavljuje:
 
 1) da je pročitao ovu Izjavu i da su mu Uslovi korišćenja, Politika privatnosti i ostali akti KOLO sistema dostupni na Platformi;
 
-2) da razume prirodu POEN-a i ZRNA kao internih obračunskih jedinica bez vrednosti van sistema;
+2) da razume prirodu POEN-a i ZRNA kao zapisa u evidenciji Protokola bez vrednosti van sistema;
 
 3) da razume da učešće u sistemu nije investicija i da ne postoji očekivanje finansijskog prinosa;
 

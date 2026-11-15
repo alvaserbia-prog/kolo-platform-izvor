@@ -24,7 +24,11 @@ import { useTranslations } from "next-intl";
 import { jeDete, porukaStatusa, type StatusUcesnika } from "@/lib/status-ucesnika-pravila";
 import type { NaStaSeCeka } from "@/lib/deca-pravila";
 
-/** Položaj ZRNA koji status menja (Pravilnik čl. 22 st. 3, 29). */
+/**
+ * Ograničenje upisanog ZRNA koje nastaje zbog statusa (Pravilnik čl. 22 st. 3, 29):
+ * zamrznuto ili bez aktiviranja. Ime tipa je interno i ostaje (ZRNO nije položaj, nego
+ * zapis po Pravilniku čl. 2 t. 7; set 5.1.5).
+ */
 export type ZrnoPolozaj = "ZAMRZNUTO" | "BEZ_POTVRDE" | null;
 
 type Props = {

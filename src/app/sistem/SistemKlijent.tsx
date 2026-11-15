@@ -26,6 +26,8 @@ import { pocetnoIzAdrese } from "@/hooks/useStanjeUAdresi";
 import { profilHref } from "@/lib/profil-link";
 import { PRAG_PRVE_ZADRUGE } from "@/lib/zadruga-pravila";
 import DinarskaStranaProjekata from "./DinarskaStranaProjekata";
+import PokazateljiSistemaKartica from "@/components/PokazateljiSistemaKartica";
+import type { SirovoStanje } from "@/lib/pokazatelji-pravila";
 import LokacijeSekcija, { normalizujLokaciju, type ZadrugaNaLokaciji } from "@/components/LokacijeSekcija";
 
 interface FondTx {
@@ -115,6 +117,8 @@ interface Props {
   zadruge: ZadrugaNaLokaciji[];
   /** Pokazatelji zajednice za kartice (raspored od 24.10.2026). */
   pokazatelji: Pokazatelji;
+  /** Pokazatelji sistema (odluka vlasnika 15.11.2026): današnji zbirni brojevi za karticu na vrhu. */
+  pokazateljiSistema: { dan: string; sirovo: SirovoStanje };
 }
 
 export interface Pokazatelji {
@@ -165,6 +169,7 @@ export default function SistemKlijent({
   pocetnaSekcija,
   zadruge,
   pokazatelji: pk,
+  pokazateljiSistema,
 }: Props) {
   const locale = useLocale();
   // Adresa je merodavna i pri povratku (back) — vidi `pocetnoIzAdrese`.
@@ -217,6 +222,10 @@ export default function SistemKlijent({
           od Početne, pa čovek nije video da je promenio stranicu. Pozdrav ostaje
           samo na Početnoj. */}
       <NaslovStranice naslov={t("naslov_stranice")} opis={gost ? t("opis_gost") : t("opis_stranice")} />
+
+      {/* Pokazatelji sistema (odluka vlasnika 15.11.2026): jedna široka kartica sa
+          četiri bara, iznad svih ostalih kartica; kretanje po danima je na zasebnoj stranici. */}
+      <PokazateljiSistemaKartica dan={pokazateljiSistema.dan} sirovo={pokazateljiSistema.sirovo} vezaKretanje />
 
       {/* Bez kartice statusa (odluka vlasnika 02.11.2026): status stoji na Profilu,
           Početnoj i Potvrdama; ovde bi samo gurao brojke ispod prvog ekrana. */}
@@ -388,15 +397,6 @@ export default function SistemKlijent({
           <DinarskaStranaProjekata />
         </>
       )}
-
-      {/* Zdravlje sistema (odluka vlasnika 25.10.2026): svi pokazatelji zdravlja i
-          koncentracije sa lampicama žive na zasebnoj stranici; veza stoji na dnu
-          stranice, iznad podnožja (odluka vlasnika, isti dan). */}
-      <div className="flex justify-center border-t border-kolo-border pt-6">
-        <Link href="/sistem/zdravlje" className="inline-flex min-h-10 items-center text-sm font-medium text-kolo-green-700 hover:underline">
-          {t("zdravlje_link")} →
-        </Link>
-      </div>
     </div>
   );
 }

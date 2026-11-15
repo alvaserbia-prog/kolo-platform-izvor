@@ -105,9 +105,14 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // st. 2), čl. 27 bez tvrdnje da nema napora drugog lica — nekonvertibilnost, bez tržišta.
   // 5.1.4 — čl. 17 st. 2 t. 9: deveti osnov obuhvata i poslednjeg partnera u lancu
   // proizvodnje i distribucije (nabavke čl. 46 i 52); osnova je i dalje dvanaest.
+  // 5.1.5 — ZRNO svuda po definiciji iz čl. 2 t. 7: čl. 11 (nekonvertibilnost glasi na
+  // POEN i ZRNO), čl. 12 st. 3 („upisano ZRNO” umesto „evidentiran položaj”), čl. 21 st. 3
+  // (zapis iz koga glas proizlazi aktiviranjem), čl. 27 st. 1 (naziv zapisa; t. 3).
+  // 5.1.6 — čl. 17 st. 5: ukupan broj POEN-a uvećava se i evidentiranjem pri otpisu ZRNA
+  // (čl. 23 st. 3), a umanjuje i pri upisu ZRNA (čl. 22 st. 5); usklađeno sa čl. 23 i 25.
   "kolo-sistem": {
-    fajl: "Pravilnik_5_1_4.md",
-    verzija: "5.1.4",
+    fajl: "Pravilnik_5_1_6.md",
+    verzija: "5.1.6",
   },
   // 4.4.6 — čl. 12 st. 4 više ne prenosi nadležnost za opšte akte na Gornje Kolo
   // (akt nižeg ranga to ne može po sopstvenom čl. 8 st. 2); nov st. 6.

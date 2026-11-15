@@ -174,9 +174,9 @@
 
 ### 11. cikk — Nem konvertálhatóság
 
-(1) A KOLO rendszer egyetlen elszámolási egysége sem konvertálható pénzzé, valutává vagy bármilyen, a rendszeren kívül értékkel bíró eszközzé, sem közvetlenül, sem közvetve.
+(1) Sem a POEN, sem a ZRNO nem konvertálható pénzzé, valutává vagy bármilyen, a rendszeren kívül értékkel bíró eszközzé, sem közvetlenül, sem közvetve.
 
-(2) A konvertálás tilalma kiterjed a közvetett konvertálásra is, ideértve az elszámolási egység utalványra, ajándékkártyára vagy más, külső értékkel bíró eszközre való cseréjét, illetve olyan eszközre való cseréjét, amely pénzzé tehető, harmadik személyre átruházható vagy a birtokos által választott kereskedőnél felhasználható.
+(2) A konvertálás tilalma kiterjed a közvetett konvertálásra is, ideértve a POEN vagy a ZRNO utalványra, ajándékkártyára vagy más, külső értékkel bíró eszközre való cseréjét, illetve olyan eszközre való cseréjét, amely pénzzé tehető, harmadik személyre átruházható vagy a birtokos által választott kereskedőnél felhasználható.
 
 (3) Az áruval és szolgáltatással nyújtott pártfogásból származó utalványok elosztása nem közvetett konvertálás, mert az utalványból hiányoznak a (2) bekezdés szerinti, külső értékkel bíró eszköz elemei:
 
@@ -198,7 +198,7 @@
 
 (2) A POEN- és ZRNO-bejegyzések nem ruházhatók át és nem öröklődnek vagyoni jogként.
 
-(3) A nyilvántartásba vett hozzájárulás és a nyilvántartásba vett helyzet nem képez követelést az Alapítvánnyal szemben, és nem alapja vagyonjogi igénynek.
+(3) A nyilvántartásba vett hozzájárulás és a beírt ZRNO nem képez követelést az Alapítvánnyal szemben, és nem alapja vagyonjogi igénynek.
 
 ### 13. cikk — Az adományok visszafordíthatatlansága
 
@@ -304,7 +304,7 @@
 
 (4) A negatív bejegyzésre más jogcím nem hozható létre, sem e szabályzattal e cikk módosítása nélkül, sem bármely más aktussal.
 
-(5) Az áruk és szolgáltatások cseréje a meglévő POEN-bejegyzéseket mozgatja, és nem változtatja meg azok teljes számát a rendszerben. A POEN-ek teljes száma a hozzájárulás nyilvántartásba vételének csatornáin keresztül történő új bejegyzésekkel és a jogalap nélkül végrehajtott érvénytelenítés helyesbítésével (18. cikk) növekszik, és az e szabályzatban megállapított jogcímeken történő bejegyzés-érvénytelenítéssel csökken. A POEN-ek teljes számának növelésére más jogcím nincs.
+(5) Az áruk és szolgáltatások cseréje a meglévő POEN-bejegyzéseket mozgatja, és nem változtatja meg azok teljes számát a rendszerben. A POEN-ek teljes száma a hozzájárulás nyilvántartásba vételének csatornáin keresztül történő új bejegyzésekkel, a ZRNO leírásakor nyilvántartásba vett POEN-ekkel (23. cikk (3) bekezdés) és a jogalap nélkül végrehajtott érvénytelenítés helyesbítésével (18. cikk) növekszik, és az e szabályzatban megállapított jogcímeken történő bejegyzés-érvénytelenítéssel, valamint a ZRNO beírásakor történő csökkentéssel (22. cikk (5) bekezdés) csökken. A POEN-ek teljes számának növelésére más jogcím nincs.
 
 ### 18. cikk — Felhasználás miatti érvénytelenítés
 
@@ -372,7 +372,7 @@
 
 (2) A ZRNO-k teljes száma 1.000.000, és sem nem növelhető, sem nem csökkenthető. Minden pillanatban a ZRNO-k egy része a résztvevőknél van beírva, másik része pedig a Protokollban beírásra rendelkezésre áll; a beírt és a rendelkezésre álló ZRNO-k összege mindig egyenlő a teljes számmal.
 
-(3) A ZRNO-t kizárólag a Protokoll írja be és le, a résztvevő kérelmére és a rendszer szabályai szerint. A Felső Kolóban a szavazat nem a beírt, hanem az olyan Kolo-őrző aktivált ZRNO-jából ered, akinek valóságát megerősítették (43. cikk); a ZRNO önmagában nem szavazati jog, hanem a helyzet nyilvántartása, amelyből ez a jog ered.
+(3) A ZRNO-t kizárólag a Protokoll írja be és le, a résztvevő kérelmére és a rendszer szabályai szerint. A Felső Kolóban a szavazat nem a beírt, hanem az olyan Kolo-őrző aktivált ZRNO-jából ered, akinek valóságát megerősítették (43. cikk); a ZRNO önmagában nem szavazati jog, hanem bejegyzés, amelyből ez a jog csak aktiválással ered.
 
 ### 22. cikk — A ZRNO beírása
 
@@ -420,13 +420,13 @@ Az elszámolási időszak 24 óráig tart, szerbiai idő szerint éjféltől éj
 
 ### 27. cikk — A Kolo-őrző helyzete nem befektetés
 
-(1) A Kolo-őrző helyzete nem minősül befektetésnek. Ez a megállapítás nem az egység nevén és nem azon az állításon alapul, hogy az együttható nem függ másoktól, mert függ (25. cikk), hanem azon, hogy a Kolo-őrző helyzetéből hiányoznak azok az elemek, amelyek a befektetést befektetéssé teszik:
+(1) A Kolo-őrző helyzete nem minősül befektetésnek. Ez a megállapítás nem a bejegyzés nevén és nem azon az állításon alapul, hogy az együttható nem függ másoktól, mert függ (25. cikk), hanem azon, hogy a Kolo-őrző helyzetéből hiányoznak azok az elemek, amelyek a befektetést befektetéssé teszik:
 
 1) nincs eszközráfordítás: a ZRNO a résztvevő bejegyzésében már nyilvántartásba vett hozzájárulásból íródik be; az Alapítvány a ZRNO-t nem adja el, nem kínálja és nem állapít meg rá árat, a beírás pedig nem ellenszolgáltatás (24. cikk);
 
 2) nincs kilépés a nyilvántartásból: sem a ZRNO-t, sem a POEN-t nem vásárolják vissza, és nem konvertálják dinárra vagy más fizetési eszközre, sem közvetlenül, sem közvetve, és az Alapítvány a nyilvántartásból semmit nem fizet ki (11. cikk); a leírással nyilvántartásba vett POEN, mint bármely más, csak a felhasználók közötti áru- és szolgáltatáscserében és az Alapítvány projektjeiben való részvételre használható, így az elszámolási együttható különbözete nem hagyhatja el a Protokollt;
 
-3) nincs piac: a ZRNO nem ruházható át, nem öröklődik és nincs ára (12. és 24. cikk), így a helyzet nem adható el;
+3) nincs piac: a ZRNO nem ruházható át, nem öröklődik és nincs ára (12. és 24. cikk), így el sem adható;
 
 4) nincs olyan személy, aki hasznot hozna létre a Kolo-őrző számára: mások hozzájárulása ugyanazon szabályok szerint jön létre, mint a sajátja, és a hozzájáruló saját részvétele érdekében; az elszámolási együtthatót a Protokoll automatikusan és mérlegelés nélkül számítja ki (25. cikk), sem az Alapítvány, sem más személy nem határozza meg, nem célozza és nem ígéri, a Kolo-őrző pedig sem saját beírásával, sem leírásával nem mozdítja el;
 

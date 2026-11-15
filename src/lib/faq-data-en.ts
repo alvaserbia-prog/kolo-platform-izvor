@@ -283,7 +283,7 @@ An expiry is not ruled out forever: a mechanism for POEN to “age”, which wou
       {
         id: 4,
         pitanje: `What is ZRNO and what is it for?`,
-        odgovor: `ZRNO is a record separate from POEN. Where POEN records what you have given the community, ZRNO records your standing in it — and from that standing comes your say in decisions about the rules of the system.
+        odgovor: `ZRNO is a record in the Protocol's ledger, separate from POEN: one of 1,000,000 in total, which you record with POEN at the accounting coefficient. Activated ZRNO gives a vote in decisions about the rules of the system, and free ZRNO you can write off — POEN is then recorded for you at the coefficient. Beyond that ZRNO has no effect.
 
 How it is acquired. You record ZRNO with POEN you already have. How much POEN one ZRNO takes is shown by the coefficient. You can also write ZRNO off.
 
@@ -291,7 +291,7 @@ Who records it. ZRNO is recorded by a participant: a Kolo member or a member wit
 
 How it gives you a vote. Only a Kolo keeper activates (locks) recorded ZRNO, and only active ZRNO carries voting power. Only a Kolo keeper can delegate the vote, and only to another Kolo keeper. The vote does not grow in a straight line: the number of votes is the square root of the number of active ZRNO, so someone with a hundred times more ZRNO has ten times more votes, not a hundred. That way no one can take over decision-making by accumulating.
 
-What ZRNO cannot do. It is not converted into money, it is not re-registered to another user, it is not inherited and no one buys it back. It bears no interest and no dividend, and no one pays you anything on account of it. It shows your standing in the community, not how much it owes you.`,
+What ZRNO cannot do. It is not converted into money, it is not re-registered to another user, it is not inherited and no one buys it back. It bears no interest and no dividend, and no one pays you anything on account of it. It is a record in the ledger, not a claim against the community.`,
       },
       {
         id: 5,
@@ -336,7 +336,7 @@ The system can carry on without us. The code KOLO runs on is public and publishe
         pitanje: `Why a ceiling of 1,000,000 ZRNO if ZRNO cannot be traded? Is there staking or a yield?`,
         odgovor: `Why the ceiling. There are 1,000,000 ZRNO in total and that number can neither be increased nor decreased. That way decision-making cannot be diluted: no one can create new ZRNO later and thereby devalue the vote of those already here. With every recording, the number of ZRNO available in the Protocol falls — but at the same time the number of POEN in circulation falls too, because the POEN used to record the ZRNO returns to the Protocol. That is why recording itself does not shift the coefficient.
 
-ZRNO is not traded. It is not re-registered to another user and it does not leave the Protocol. It records your standing in the common good, from which your vote in the Upper Kolo follows.
+ZRNO is not traded. It is not re-registered to another user and it does not leave the Protocol. It is a record from which, once you activate it, your vote in the Upper Kolo follows.
 
 Locking is not staking. You lock recorded ZRNO only so that your vote can be counted — only active ZRNO carries voting power. Locking brings you no POEN, no interest and no compensation of any kind. The coefficient changes the same whether your ZRNO is locked or free; locking gains you nothing but the vote.
 

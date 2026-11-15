@@ -3,7 +3,7 @@ import { greska } from "@/lib/greska-api";
 import { izvrsiNocnuEmisiju } from "@/lib/protokol/programi";
 import { izvrsiZrnoOperacije } from "@/lib/protokol/zrno";
 import { proveriIAktivirajFazu2 } from "@/lib/protokol/faza-sistema";
-import { azurirajStalnuPonudu, zapisiDnevniSnimak } from "@/lib/protokol/pokazatelji";
+import { zapisiDnevniSnimak } from "@/lib/protokol/pokazatelji";
 import { proveriIEvidentirajKorak } from "@/lib/protokol/osnivacki";
 import { jePonocUSrbiji } from "@/lib/protokol/obracunski-dan";
 import { evidentirajZabelezenoPokroviteljstvo } from "@/lib/protokol/pokrovitelj";
@@ -104,14 +104,13 @@ async function nocniObracun(datum: Date, opcije: { osnivacki: boolean }) {
     // jer obračun zavisi od konačnog stanja Protokola za obračunski period.
     const faza = await proveriIAktivirajFazu2();
 
-    // 4. Pokazatelji zdravlja i koncentracije (`/sistem/zdravlje`): stanje stalne
-    // ponude gazdinstava i dnevni snimak. Posle svega, jer mere konačno stanje
-    // perioda; izolovano — pokazatelj nema dejstvo i ne sme da obori obračun.
+    // 4. Pokazatelji sistema (odluka vlasnika 15.11.2026): dnevni snimak zbirnih
+    // brojeva, javno dostupan kroz `/api/javno/pokazatelji`. Posle svega, jer meri
+    // konačno stanje perioda; izolovano — pokazatelj nema dejstvo i ne sme da obori obračun.
     let pokazatelji: unknown = null;
     try {
-      const ponuda = await azurirajStalnuPonudu();
-      const snimljeno = await zapisiDnevniSnimak(datum);
-      pokazatelji = { ponuda, snimljeno };
+      const snimljenDan = await zapisiDnevniSnimak(datum);
+      pokazatelji = { snimljenDan };
     } catch (e) {
       console.error("[CRON] Greška pri pokazateljima:", e);
       pokazatelji = { error: String(e) };

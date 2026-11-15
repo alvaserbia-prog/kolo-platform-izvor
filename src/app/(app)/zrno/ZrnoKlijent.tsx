@@ -28,7 +28,7 @@ interface Props {
   poenBalans: number;
   koeficijent: number;
   kanalAktivan: boolean;
-  /** Set 4.8.2: položaj ZRNA koji se objašnjava (`zamrznuto` / `bez_potvrde`). */
+  /** Set 4.8.2: ograničenje upisanog ZRNA koje se objašnjava (`zamrznuto` / `bez_potvrde`); prop se zove `polozaj` iz istorijskih razloga. */
   polozaj: "zamrznuto" | "bez_potvrde" | null;
   /** Član bez potvrde: upisom ne postaje čuvar Kola (Pravilnik čl. 22 st. 3, 28 st. 3). */
   jeBezPotvrde: boolean;
