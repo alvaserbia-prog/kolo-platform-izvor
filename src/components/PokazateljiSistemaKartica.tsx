@@ -6,7 +6,9 @@ import { izracunaj, ponudjaca, type Boja, type SirovoStanje } from "@/lib/pokaza
 
 /**
  * Pokazatelji sistema — jedna široka kartica sa četiri bara (odluka vlasnika
- * 15.11.2026). Pun bar = ispunjen cilj; boja po ostvarenosti (`boja()` u pravilima).
+ * 15.11.2026). Krupan broj i bar su OSTVARENOST CILJA (odluka vlasnika 16.11.2026):
+ * pun bar = ispunjen cilj; boja po ostvarenosti (`boja()` u pravilima). Sirova vrednost
+ * i cilj stoje u rečenici ispod, uz brojeve iz kojih su izračunati.
  * Stoji na vrhu `/sistem` i na `/sistem/zdravlje` (Kretanje pokazatelja).
  *
  * 🔴 Samo zbirni brojevi (`SirovoStanje`); pokazatelji se ne sabiraju u jedan broj;
@@ -37,15 +39,18 @@ export default function PokazateljiSistemaKartica({
   const [g, m, d] = dan.split("-");
   const stanje = izracunaj(sirovo);
 
+  // Sirova vrednost i cilj stoje u rečenici, uz brojeve iz kojih su izračunati;
+  // krupno je samo ostvarenost cilja (odluka vlasnika 16.11.2026), da se dva procenta ne pomešaju.
+  const v = Object.fromEntries(stanje.map((p) => [p.sifra, { vrednost: procenat(p.vrednost), cilj: `${p.cilj}%` }]));
   const detalj: Record<string, string> = {
-    PONUDA: t("detalj_PONUDA", { deo: broj(sirovo.korisniciSaPonudom), ukupno: broj(sirovo.korisnici) }),
-    RAZMENE: t("detalj_RAZMENE", { razmene: broj(sirovo.razmene), korisnici: broj(sirovo.korisnici) }),
-    KRUZENJE: t("detalj_KRUZENJE", { razmenjeno: broj(sirovo.razmenjeniPoen), ukupno: broj(sirovo.opticaj) }),
+    PONUDA: t("detalj_PONUDA", { deo: broj(sirovo.korisniciSaPonudom), ukupno: broj(sirovo.korisnici), ...v.PONUDA }),
+    RAZMENE: t("detalj_RAZMENE", { razmene: broj(sirovo.razmene), korisnici: broj(sirovo.korisnici), ...v.RAZMENE }),
+    KRUZENJE: t("detalj_KRUZENJE", { razmenjeno: broj(sirovo.razmenjeniPoen), ukupno: broj(sirovo.opticaj), ...v.KRUZENJE }),
     GLASOVI: !sirovo.faza2
-      ? t("detalj_GLASOVI_faza1")
+      ? t("detalj_GLASOVI_faza1", { cilj: v.GLASOVI.cilj })
       : sirovo.glasoviOstalih === null || sirovo.glasoviOsnivaca === null
         ? t("detalj_GLASOVI_nepoznato")
-        : t("detalj_GLASOVI", { ostali: broj(sirovo.glasoviOstalih), osnivaci: broj(sirovo.glasoviOsnivaca) }),
+        : t("detalj_GLASOVI", { ostali: broj(sirovo.glasoviOstalih), osnivaci: broj(sirovo.glasoviOsnivaca), ...v.GLASOVI }),
   };
 
   return (
@@ -61,27 +66,24 @@ export default function PokazateljiSistemaKartica({
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
               <h3 className="text-sm font-semibold text-kolo-text">{t(`naziv_${p.sifra}`)}</h3>
               <p className="text-sm text-kolo-text">
-                <span className="text-base font-bold">{procenat(p.vrednost)}</span>
-                <span className="text-kolo-muted"> · {t("cilj", { cilj: `${p.cilj}%` })}</span>
+                <span className="text-lg font-bold">{t("procenat_cilja", { procenat: procenat(p.ostvarenost) })}</span>
+                {p.ostvarenost !== null && p.ostvarenost >= 100 && (
+                  <span className="text-kolo-green-700"> · {t("cilj_ispunjen")}</span>
+                )}
               </p>
             </div>
-            <div className="mt-1.5 flex items-center gap-3">
+            <div
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.min(100, Math.round(p.ostvarenost ?? 0))}
+              aria-label={t("procenat_cilja", { procenat: procenat(p.ostvarenost) })}
+              className="mt-1.5 h-3 overflow-hidden rounded-full bg-kolo-bg"
+            >
               <div
-                role="progressbar"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={Math.min(100, Math.round(p.ostvarenost ?? 0))}
-                aria-label={t("ostvareno", { procenat: procenat(p.ostvarenost) })}
-                className="h-3 flex-1 overflow-hidden rounded-full bg-kolo-bg"
-              >
-                <div
-                  className={`h-full rounded-full ${BOJA_BARA[p.boja]}`}
-                  style={{ width: `${Math.min(100, Math.max(0, p.ostvarenost ?? 0))}%` }}
-                />
-              </div>
-              <p className="w-28 shrink-0 text-right text-xs font-medium text-kolo-text">
-                {t("ostvareno", { procenat: procenat(p.ostvarenost) })}
-              </p>
+                className={`h-full rounded-full ${BOJA_BARA[p.boja]}`}
+                style={{ width: `${Math.min(100, Math.max(0, p.ostvarenost ?? 0))}%` }}
+              />
             </div>
             <p className="mt-1 text-xs text-kolo-muted">{detalj[p.sifra]}</p>
           </li>
