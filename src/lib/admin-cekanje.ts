@@ -20,7 +20,7 @@ export interface CekanjePokrovitelja {
   izmene: number;
   /** Potpisana prijava novčanog pokroviteljstva čeka potvrdu uplate. */
   prijave: number;
-  /** Prijava pokroviteljstva dobrima i uslugama čeka pregled (donacije čl. 29 st. 2). */
+  /** Prijava pokroviteljstva dobrima čeka pregled (donacije čl. 29 st. 2). */
   dobra: number;
   /** Prijava partnerstva čeka odluku direktora, odnosno izvršenje čeka potvrdu (donacije čl. 41, 43). */
   partnerstvo: number;

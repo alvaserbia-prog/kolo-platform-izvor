@@ -4,7 +4,7 @@
  * „Razmena" u javnim pokazateljima (naslovna, početna, /sistem) nije zaseban
  * zapis nego prepis POEN-a između dva korisnička zapisa (`TRANSFER`). Bez donjeg
  * praga taj brojač meri i simbolične prepise od jednog POEN-a, pa broj na ekranu
- * prestaje da govori o razmeni dobara i usluga — a to je jedino zbog čega tamo i
+ * prestaje da govori o razmeni dobara — a to je jedino zbog čega tamo i
  * stoji.
  *
  * 🔴 Prag se meri PO PREPISU, ne po zbiru sa istim čovekom: pet prepisa od po

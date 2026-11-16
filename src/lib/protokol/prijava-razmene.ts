@@ -141,7 +141,7 @@ export async function ponistiPrepis(
     },
     naslov: "Prepis je poništen",
     tekst: uMinusu
-      ? `Fondacija je po prijavi poništila prepis od ${prijava.prijavioc.pseudonim} i sa tvog zapisa je vraćeno ${vraceno.toLocaleString("sr-RS")} POEN. Zapis je time otišao u minus i na njemu stoji nadoknada od ${Math.abs(Math.min(0, stanjeNakon)).toLocaleString("sr-RS")} POENA: nije dug i ne može se naplatiti, POENI koji ti pristignu prvo je popunjavaju, a prepis drugome je moguć kad zapis pređe nulu. Razmena dobara i usluga ti nije ograničena. Obrazloženje: ${odluka}`
+      ? `Fondacija je po prijavi poništila prepis od ${prijava.prijavioc.pseudonim} i sa tvog zapisa je vraćeno ${vraceno.toLocaleString("sr-RS")} POEN. Zapis je time otišao u minus i na njemu stoji nadoknada od ${Math.abs(Math.min(0, stanjeNakon)).toLocaleString("sr-RS")} POENA: nije dug i ne može se naplatiti, POENI koji ti pristignu prvo je popunjavaju, a prepis drugome je moguć kad zapis pređe nulu. Razmena dobara ti nije ograničena. Obrazloženje: ${odluka}`
       : `Fondacija je po prijavi poništila prepis od ${prijava.prijavioc.pseudonim}. Sa tvog zapisa je vraćeno ${vraceno.toLocaleString("sr-RS")} POEN. Obrazloženje: ${odluka}`,
     link: "/novcanik",
   });

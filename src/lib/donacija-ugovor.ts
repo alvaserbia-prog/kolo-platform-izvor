@@ -71,7 +71,7 @@ export function generisiUgovorODonaciji(p: UlazUgovoraODonaciji): string {
       : []),
     "",
     "Član 2 — Odsustvo protivčinidbe",
-    "Donacija je bez naknade. Donator donacijom ne pribavlja nijedno dobro ni uslugu, ne stiče potraživanje prema Fondaciji, pravo na povraćaj donacije, pravo na otkup POEN-a niti neposredan uticaj u odlučivanju o pravilima sistema.",
+    "Donacija je bez naknade. Donator donacijom ne pribavlja nijedno dobro, ne stiče potraživanje prema Fondaciji, pravo na povraćaj donacije, pravo na otkup POEN-a niti neposredan uticaj u odlučivanju o pravilima sistema.",
     "Fondacija se donacijom ni na šta ne obavezuje prema Donatoru osim na namensku upotrebu iz člana 1.",
     "",
     "Član 3 — Evidentiranje doprinosa",

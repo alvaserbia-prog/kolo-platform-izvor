@@ -17,7 +17,7 @@ export * from "@/lib/logotip-pokrovitelja-pravila";
  * Logotip pokrovitelja — servisni sloj (Pravilnik o pokroviteljstvu i donacijama
  * čl. 26 st. 2). Čista pravila su u `logotip-pokrovitelja-pravila.ts`.
  *
- * Tok: prijava (novcem ili dobrima i uslugama) šalje fajl na `/api/pokroviteljstvo/
+ * Tok: prijava (novcem ili dobrima) šalje fajl na `/api/pokroviteljstvo/
  * logotip`, dobija javni URL i nosi ga u prijavi. Novčana prijava ga pri potvrdi
  * prenosi na red `Pokrovitelj` (najnoviji potvrđen logotip važi); ugovor o
  * pokroviteljstvu dobrima ga drži sam.

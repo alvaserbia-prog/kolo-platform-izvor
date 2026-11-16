@@ -5,7 +5,7 @@ import { javnaRangListaDobara } from "@/lib/protokol/pokroviteljstvo-dobrima";
 /**
  * GET /api/pokrovitelji — javna rang-lista pokrovitelja u dva odvojena dela
  * (Pravilnik o pokroviteljstvu i donacijama čl. 25 st. 1): `novcani` (novčani
- * doprinos) i `dobra` (vrednost pokroviteljstva dobrima i uslugama). U oba dela
+ * doprinos) i `dobra` (vrednost pokroviteljstva dobrima). U oba dela
  * samo naziv, logotip (čl. 26 st. 2, ako je priložen) i iznos u dinarima.
  *
  * 🔴 Broj POEN-a se ne objavljuje. 🔴 Bez PIB-a, matičnog broja, BPG-a, sedišta i

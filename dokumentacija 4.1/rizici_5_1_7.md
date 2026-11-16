@@ -22,7 +22,7 @@
 
 (1) KOLO sistem je participatorni sistem zajedničkog dobra (član 9 Pravilnika o KOLO sistemu). Nije finansijska usluga, platni servis, investiciona šema, kolektivna investiciona šema, platna institucija ni izdavalac digitalne imovine. Učešće u KOLO sistemu nije investiranje. Pristupanje sistemu ne stvara očekivanje finansijskog prinosa.
 
-(2) Odnos između korisnika i Fondacije je ugovorni odnos uređen Uslovima korišćenja. Fondacija korisniku ne naplaćuje korišćenje Platforme i ne nudi mu dobra ni usluge uz naknadu (član 26 Uslova korišćenja).
+(2) Odnos između korisnika i Fondacije je ugovorni odnos uređen Uslovima korišćenja. Fondacija korisniku ne naplaćuje korišćenje Platforme i ne nudi mu dobra uz naknadu (član 26 Uslova korišćenja).
 
 ### Član 4 — POEN i ZRNO
 
@@ -30,7 +30,7 @@
 
 (2) ZRNO je zapis u evidenciji Protokola, jedan od ukupno 1.000.000, koji učesnik upisuje utroškom evidentiranih POEN-a po obračunskom koeficijentu; aktivirano ZRNO daje glas u Gornjem Kolu, a slobodno se može otpisati uz evidentiranje POEN-a po obračunskom koeficijentu. ZRNO ne predstavlja udeo, akciju, hartiju od vrednosti, jedinicu kolektivnog investiranja, investicioni ugovor ni digitalnu imovinu. ZRNO ne nosi dividendu, kamatu, prinos ni pravo na likvidacioni ostatak (član 21 Pravilnika o KOLO sistemu).
 
-(3) POEN i ZRNO nemaju vrednost van sistema i ne mogu se konvertovati u novac, valutu ni u bilo koje sredstvo sa vrednošću van sistema, neposredno ni posredno, uključujući zamenu za vaučere, poklon kartice ili drugo sredstvo sa spoljnom vrednošću. Vaučer iz pokroviteljstva dobrima i uslugama nema elemente takvog sredstva: ne može se unovčiti, glasi na nalog korisnika koji ga je uzeo i ne prenosi se, glasi na određeno dobro, odnosno uslugu kod jednog davaoca, a obezbeđuje ga davalac ugovorom sa Fondacijom i POEN ne prima (član 11 Pravilnika o KOLO sistemu). Fondacija ne vrši otkup POEN-a niti ZRNA.
+(3) POEN i ZRNO nemaju vrednost van sistema i ne mogu se konvertovati u novac, valutu ni u bilo koje sredstvo sa vrednošću van sistema, neposredno ni posredno, uključujući zamenu za vaučere, poklon kartice ili drugo sredstvo sa spoljnom vrednošću. Vaučer iz pokroviteljstva dobrima nema elemente takvog sredstva: ne može se unovčiti, glasi na nalog korisnika koji ga je uzeo i ne prenosi se, glasi na određeno dobro kod jednog davaoca, a obezbeđuje ga davalac ugovorom sa Fondacijom i POEN ne prima (član 11 Pravilnika o KOLO sistemu). Fondacija ne vrši otkup POEN-a niti ZRNA.
 
 (4) Korisnici nemaju imovinsko pravo nad zapisima POEN-a i ZRNA u evidenciji sistema. Zapis POEN-a je podatak u evidenciji zajedničkog dobra, ne sredstvo u vlasništvu korisnika. Zapis ZRNA je podatak u istoj evidenciji, ne oblik imovinskog prava. Zapisi se ne prenose i ne nasleđuju kao imovinska prava (član 12 Pravilnika o KOLO sistemu).
 
@@ -62,7 +62,7 @@ Osnivački doprinos evidentira se u zapisima zatvorenog kruga lica, do gornje gr
 
 ### Član 9 — Nepovratnost donacija
 
-(1) Dinarska sredstva koja korisnik daje Fondaciji su donacije u smislu važećih propisa. Donacija je nepovratna, bez obzira na dalji razvoj sistema. Nepovratno je i pokroviteljstvo, novcem i dobrima i uslugama (član 13 Pravilnika o KOLO sistemu). Donacija nije depozit: ne vraća se, ne nosi kamatu i Fondacija je ne drži za donatora, nego je troši za ciljeve iz Statuta.
+(1) Dinarska sredstva koja korisnik daje Fondaciji su donacije u smislu važećih propisa. Donacija je nepovratna, bez obzira na dalji razvoj sistema. Nepovratno je i pokroviteljstvo, novcem i dobrima (član 13 Pravilnika o KOLO sistemu). Donacija nije depozit: ne vraća se, ne nosi kamatu i Fondacija je ne drži za donatora, nego je troši za ciljeve iz Statuta.
 
 (2) Donator ne stiče pravo na povraćaj i ne stiče upravljačko pravo u Fondaciji na osnovu donacije. POEN evidentiran po donaciji može se, kao i svaki drugi, utrošiti na upis ZRNA; glas koji proizlazi iz aktiviranog ZRNA ograničen je potvrdom, upisom od najviše 1% sopstvenih evidentiranih POEN-a po obračunskom periodu i glasanjem po kvadratnom korenu (članovi 22, 28 i 44 Pravilnika o KOLO sistemu), a iz POEN-a ni iz ZRNA nema izlaza u novac.
 
@@ -94,7 +94,7 @@ Fondacija može prestati da postoji. U tom slučaju Upravni odbor, u skladu sa S
 
 ### Član 14 — Razmena i negativan zapis
 
-(1) Za ispunjenje, kvalitet i rizik u razmeni dobara i usluga odgovaraju korisnici koji u njoj učestvuju, prema opštim pravilima obligacionog prava. Fondacija razmenu ne zaključuje u ime ni za račun korisnika, za nju ne prima naknadu i nije strana u pravnom odnosu između korisnika koji razmenjuju dobra i usluge (članovi 24 i 37 Uslova korišćenja).
+(1) Za ispunjenje, kvalitet i rizik u razmeni dobara odgovaraju korisnici koji u njoj učestvuju, prema opštim pravilima obligacionog prava. Fondacija razmenu ne zaključuje u ime ni za račun korisnika, za nju ne prima naknadu i nije strana u pravnom odnosu između korisnika koji razmenjuju dobra (članovi 24 i 37 Uslova korišćenja).
 
 (2) Kao u svakom prostoru za oglašavanje, korisnik može biti meta prevare. Niko u ime sistema ne traži novac, lozinku ni kod za prijavu (član 11 Uslova korišćenja); ko to traži, ne postupa u ime sistema.
 
@@ -102,15 +102,15 @@ Fondacija može prestati da postoji. U tom slučaju Upravni odbor, u skladu sa S
 
 ### Član 15 — Poreski rizik
 
-(1) Pozicija sistema je da su POEN i ZRNO evidencija bez imovinske vrednosti i da razmena dobara i usluga unutar sistema premešta postojeće zapise bez stvaranja novčanog toka.
+(1) Pozicija sistema je da su POEN i ZRNO evidencija bez imovinske vrednosti i da razmena dobara unutar sistema premešta postojeće zapise bez stvaranja novčanog toka.
 
-(2) Poreske vlasti mogu zauzeti drugačiji stav. Razmena dobara i usluga unutar sistema može se kvalifikovati kao trampa ili drugi oporezivi događaj u smislu poreskih propisa, uključujući propise o porezu na dohodak građana i porezu na dodatu vrednost. Evidentiranje razmene u POEN-ima ne određuje poresku kvalifikaciju posla između korisnika, a korisnik koji je dužan da izda račun ili fiskalni račun izdaje ga nezavisno od tog evidentiranja (član 22 stav 3 Uslova korišćenja).
+(2) Poreske vlasti mogu zauzeti drugačiji stav. Razmena dobara unutar sistema može se kvalifikovati kao trampa ili drugi oporezivi događaj u smislu poreskih propisa, uključujući propise o porezu na dohodak građana i porezu na dodatu vrednost. Evidentiranje razmene u POEN-ima ne određuje poresku kvalifikaciju posla između korisnika, a korisnik koji je dužan da izda račun ili fiskalni račun izdaje ga nezavisno od tog evidentiranja (član 22 stav 3 Uslova korišćenja).
 
 (3) Isto važi i za POEN evidentiran po osnovu operativnog doprinosa i drugih kanala evidentiranja doprinosa. Pozicija sistema je da se tim upisom ne isplaćuje naknada, nego se beleži učinjen doprinos zajedničkom dobru. Kod operativnog doprinosa Protokol za potvrđeno izvršenje evidentira unapred objavljen predloženi POEN, umanjen po dnevnom limitu, a nedostaju elementi radnog i ugovornog angažovanja: izvršilac se sam prijavljuje i sam određuje način i tempo, nije dužan da zadatak izvrši i može odustati bez posledica, niko ne može zahtevati izvršenje, onaj ko zadatak objavljuje ne stiče isključivo pravo na rezultat, a zapis nije novac ni potraživanje i iz njega nema isplate (članovi 11, 12, 16 i 34 Pravilnika o KOLO sistemu). Poreske vlasti mogu zauzeti drugačiji stav i takav upis kvalifikovati kao prihod korisnika, uključujući prihod ostvaren u nenovčanom obliku.
 
 (4) Fondacija korisniku ni po jednom osnovu ne isplaćuje novac. Upisom POEN-a korisnik ne prima ni novac ni stvar, ništa ne prelazi iz imovine Fondacije u njegovu imovinu, a nastali zapis ne može se unovčiti, ustupiti kao potraživanje niti naplatiti; prepis zapisa drugom korisniku povodom razmene nije ustupanje (član 16 stav 8 Pravilnika o KOLO sistemu).
 
-(5) Izuzetak je preuzimanje dela iz kolektivne nabavke i iskorišćenje vaučera iz raspodele dobara i usluga iz pokroviteljstva, u kojima korisnik prima dobro, odnosno uslugu. Dobro iz nabavke Fondacija ustupa bez naknade i bez protivčinidbe, u ostvarivanju svojih ciljeva; dobro ili uslugu iz vaučera korisnik prima neposredno od davaoca, bez ikakve činidbe prema davaocu ili Fondaciji (Pravilnik o projektima i kolektivnim nabavkama). Korisnik pri tome ne daje ništa ni davaocu ni Fondaciji: poništava mu se broj POEN-a koji ne prima niko, jer se vraća Protokolu, a Fondacija po tom osnovu ništa ne stiče (član 18 Pravilnika o KOLO sistemu). Poreske vlasti mogu i takvo primanje kvalifikovati kao prihod korisnika.
+(5) Izuzetak je preuzimanje dela iz kolektivne nabavke i iskorišćenje vaučera iz raspodele dobara iz pokroviteljstva, u kojima korisnik prima dobro. Dobro iz nabavke Fondacija ustupa bez naknade i bez protivčinidbe, u ostvarivanju svojih ciljeva; dobro iz vaučera korisnik prima neposredno od davaoca, bez ikakve činidbe prema davaocu ili Fondaciji (Pravilnik o projektima i kolektivnim nabavkama). Korisnik pri tome ne daje ništa ni davaocu ni Fondaciji: poništava mu se broj POEN-a koji ne prima niko, jer se vraća Protokolu, a Fondacija po tom osnovu ništa ne stiče (član 18 Pravilnika o KOLO sistemu). Poreske vlasti mogu i takvo primanje kvalifikovati kao prihod korisnika.
 
 (6) Fondacija ne pruža poreski savet i ne može garantovati poreski tretman aktivnosti korisnika u sistemu. Korisnik je odgovoran za sopstvene poreske obaveze koje mogu nastati u vezi sa učešćem u sistemu i preporučuje mu se da se konsultuje sa poreskim savetnikom.
 
@@ -146,7 +146,7 @@ Registracijom na Platformi korisnik izjavljuje:
 
 6) da razume rizike funkcionisanja sistema, uključujući mogućnost tehničkih problema, bezbednosnih incidenata i regulatornih promena, i da Fondacija ne garantuje kontinuitet funkcionisanja sistema;
 
-7) da razume da razmena dobara i usluga unutar sistema može imati poreske implikacije i da je odgovoran za sopstvene poreske obaveze;
+7) da razume da razmena dobara unutar sistema može imati poreske implikacije i da je odgovoran za sopstvene poreske obaveze;
 
 8) da prihvata dostupnost evidencije doprinosa u pseudonimnom obliku kao svojstvo sistema;
 

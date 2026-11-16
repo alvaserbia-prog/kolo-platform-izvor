@@ -1,5 +1,5 @@
 /**
- * Pokroviteljstvo dobrima i uslugama — servisne funkcije (Prisma).
+ * Pokroviteljstvo dobrima — servisne funkcije (Prisma).
  *
  * Osnov: Pravilnik o pokroviteljstvu i donacijama Glava IV (čl. 27–36) i čl. 24;
  * Pravilnik o projektima i kolektivnim nabavkama Glava VII (čl. 29–34) i čl. 35;
@@ -512,7 +512,7 @@ export async function prihvatiPrijavu(
     tip: "pokroviteljstvo_dobra",
     kljuc: "notifikacije.pokroviteljstvo_dobra_prihvaceno",
     naslov: "Prijava prihvaćena — ugovor čeka potpis",
-    tekst: "Fondacija je prihvatila prijavu pokroviteljstva dobrima i uslugama. Ugovor čeka tvoj potpis.",
+    tekst: "Fondacija je prihvatila prijavu pokroviteljstva dobrima. Ugovor čeka tvoj potpis.",
     link: "/vauceri/davalac",
   });
   return null;
@@ -536,7 +536,7 @@ export async function odbijPrijavuDobra(id: string, adminId: string, razlog: str
     tip: "pokroviteljstvo_dobra",
     kljuc: "notifikacije.pokroviteljstvo_dobra_odbijeno",
     parametri: { razlog: r0 },
-    naslov: "Prijava pokroviteljstva dobrima i uslugama odbijena",
+    naslov: "Prijava pokroviteljstva dobrima odbijena",
     tekst: `Prijava je odbijena. Razlog: ${r0}`,
     link: "/vauceri/davalac",
   });
@@ -657,7 +657,7 @@ export async function potpisiUgovorDobra(
       },
     });
     if (r.count === 0) throw new VaucerGreska("Ugovor je već potpisan.", 409);
-    void posaljiAdminAlert("Nova prijava pokroviteljstva dobrima i uslugama (potpisana)", `Davalac: ${u.naziv}`);
+    void posaljiAdminAlert("Nova prijava pokroviteljstva dobrima (potpisana)", `Davalac: ${u.naziv}`);
     return { cekaFondaciju: true as const };
   }
   return realizujUgovorDobra(id, userId, sada, "CEKA_POTPIS", { potpisKodHash: u.potpisKodHash }, requestOrigin);
@@ -754,7 +754,7 @@ async function realizujUgovorDobra(
 
 /**
  * Noćni obračun (donacije čl. 33 st. 1, čl. 34 st. 2; Pravilnik čl. 37 st. 1; set 5.1.2):
- * zabeležen doprinos po ugovoru o pokroviteljstvu dobrima i uslugama zaključenom pre
+ * zabeležen doprinos po ugovoru o pokroviteljstvu dobrima zaključenom pre
  * početka ovog obračunskog perioda evidentira se sada, u zapisu podnosioca prijave.
  * Ugovor raskinut pre evidentiranja nije POTPISAN i ne evidentira se (zabeleženo je
  * poništeno raskidom). Emisija ide jedna po jedna, van transakcije (pravilo 8); red se
@@ -785,7 +785,7 @@ export async function evidentirajZabelezenoPokroviteljstvoDobrima(doTrenutka: Da
         w.id,
         poen,
         TransactionType.EMISIJA_POKROVITELJ_DOBRA,
-        `Evidentiran doprinos po pokroviteljstvu dobrima i uslugama: ${poen.toLocaleString("sr-RS")} POEN`,
+        `Evidentiran doprinos po pokroviteljstvu dobrima: ${poen.toLocaleString("sr-RS")} POEN`,
         { kljuc: "transakcije.pokroviteljstvo_dobra", parametri: { iznos: poen } },
       );
       await prisma.ugovorDobra.update({ where: { id: r.id }, data: { emisijaTxId: transaction.id } });
@@ -799,8 +799,8 @@ export async function evidentirajZabelezenoPokroviteljstvoDobrima(doTrenutka: Da
       tip: "pokroviteljstvo_dobra",
       kljuc: "notifikacije.pokroviteljstvo_dobra_evidentirano",
       parametri: { poen },
-      naslov: "Doprinos pokroviteljstva dobrima i uslugama je evidentiran",
-      tekst: `Zabeležen doprinos po ugovoru o pokroviteljstvu dobrima i uslugama evidentiran je u obračunskom periodu koji je počeo: ${poen.toLocaleString("sr-RS")} POEN.`,
+      naslov: "Doprinos pokroviteljstva dobrima je evidentiran",
+      tekst: `Zabeležen doprinos po ugovoru o pokroviteljstvu dobrima evidentiran je u obračunskom periodu koji je počeo: ${poen.toLocaleString("sr-RS")} POEN.`,
       link: "/novcanik",
     }).catch(() => {});
     // Pokroviteljstvo je trag učešća (dokaz stvarnosti čl. 19). Ne baca.
@@ -1004,7 +1004,7 @@ export async function uzmiVaucer(
  * čl. 33 st. 2; Politika čl. 29 st. 3). Povlači se u svakom trenutku, za svaki
  * vaučer posebno, bez obzira na stanje vaučera.
  *
- * 🔴 Briše se SAMO opis (opis dobra, odnosno usluge i naziv davaoca) iz opisa zapisa
+ * 🔴 Briše se SAMO opis (opis dobra i naziv davaoca) iz opisa zapisa
  * o poništenju i iz ispravke tog poništenja — `description`, `opisKljuc`,
  * `opisParametri`, isto kao pri prestanku statusa (Pravilnik čl. 55 st. 2). ZAPIS
  * OSTAJE: iznos, strane, vreme i vrsta se ne menjaju, nema protivzapisa ni povraćaja.
@@ -1371,7 +1371,7 @@ export async function obradiVaucere(sada = new Date()): Promise<{ isteklo: numbe
 
 /**
  * Gašenje naloga: uzeti, a neiskorišćeni vaučeri se vraćaju u SLOBODAN, da bi
- * dobro, odnosno usluga ipak stigli do nekog člana. Poništenje izvršeno pri
+ * dobro ipak stigli do nekog člana. Poništenje izvršeno pri
  * uzimanju se ne ispravlja — zapis ugašenog naloga se ionako poništava (Pravilnik čl. 33).
  */
 export async function oslobodiPriGasenjuNaloga(userId: string) {
@@ -1533,7 +1533,7 @@ export async function raskiniUgovorDobra(
         toWalletId: PROTOKOL_WALLET_ID,
         iznos: otpis,
         type: TransactionType.OTPIS_POKROVITELJ_DOBRA,
-        description: `Otpis po raskidu ugovora o pokroviteljstvu dobrima i uslugama — ${opis}`,
+        description: `Otpis po raskidu ugovora o pokroviteljstvu dobrima — ${opis}`,
         opisKljuc: "transakcije.pokroviteljstvo_dobra_otpis",
         opisParametri: { opis },
       });
@@ -1555,7 +1555,7 @@ export async function raskiniUgovorDobra(
         tekst:
           `Fondacija je po prigovoru utvrdila da obaveza iz ugovora „${opis}" nije izvršena i ugovor je raskinut. ` +
           `Vaučeri koji nisu iskorišćeni (${uRaskidu.length}) su prestali. Zabeležen doprinos po ugovoru (${u.poenEvidentirano ?? 0} POEN) ` +
-          `nije bio evidentiran i poništen je, bez otpisa. Davalac je upisan na listu zabrane i ne može zaključiti nov ugovor o pokroviteljstvu dobrima i uslugama dok ga Fondacija sa liste ne skine. Obrazloženje: ${razlog}`,
+          `nije bio evidentiran i poništen je, bez otpisa. Davalac je upisan na listu zabrane i ne može zaključiti nov ugovor o pokroviteljstvu dobrima dok ga Fondacija sa liste ne skine. Obrazloženje: ${razlog}`,
         link: "/vauceri/davalac",
       });
     } else await obavesti(u.podnosilacId, {
@@ -1567,7 +1567,7 @@ export async function raskiniUgovorDobra(
         `Fondacija je po prigovoru utvrdila da obaveza iz ugovora „${opis}" nije izvršena i ugovor je raskinut. ` +
         `Vaučeri koji nisu iskorišćeni (${uRaskidu.length}) su prestali i otpisano je ${otpis} POEN.` +
         (uMinusu ? ` Tvoj zapis je sada ${stanje?.balance ?? 0} POEN; POEN koji pristigne prvo popunjava minus.` : "") +
-        ` Davalac je upisan na listu zabrane i ne može zaključiti nov ugovor o pokroviteljstvu dobrima i uslugama dok ga Fondacija sa liste ne skine. Obrazloženje: ${razlog}`,
+        ` Davalac je upisan na listu zabrane i ne može zaključiti nov ugovor o pokroviteljstvu dobrima dok ga Fondacija sa liste ne skine. Obrazloženje: ${razlog}`,
       link: "/vauceri/davalac",
     });
   } catch (e) {
@@ -1653,10 +1653,10 @@ export async function odgovorNaGresku(e: unknown) {
   return greska(e instanceof Error ? e.message : "Greška.", 500);
 }
 
-// ─── Rang-lista pokrovitelja, deo „Dobra i usluge" (donacije čl. 25 st. 1) ───
+// ─── Rang-lista pokrovitelja, deo „Dobra" (donacije čl. 25 st. 1) ───
 
 /**
- * Javna rang-lista pokroviteljstva dobrima i uslugama: zbir vrednosti svih
+ * Javna rang-lista pokroviteljstva dobrima: zbir vrednosti svih
  * potpisanih ugovora (potpisanih, pa i kasnije raskinutih) po davaocu. 🔴 Bira se
  * samo ono što pravilo `rangListaDobara` treba — nikad `poenEvidentirano`,
  * koeficijent, podnosilac ni kontakt — a izlaz nosi samo naziv i iznos u dinarima.

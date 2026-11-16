@@ -16,7 +16,7 @@ import { useDijalog } from "@/components/ui/Dijalog";
 const GUSTO = klaseTd("levo", { gusto: true });
 
 /**
- * Admin → Pokrovitelji → Dobra i usluge (Pravilnik o pokroviteljstvu i donacijama
+ * Admin → Pokrovitelji → Dobra (Pravilnik o pokroviteljstvu i donacijama
  * Glava IV; nabavke Glava VII).
  *
  * Pregled: Fondacija proverava SAMO da je fotografija cenovnika priložena —

@@ -8,7 +8,7 @@ import { jeAdmin } from "@/lib/dozvole";
 
 /**
  * GET /api/admin/pokroviteljstvo/dobra — prijave i ugovori o pokroviteljstvu
- * dobrima i uslugama, sa metapodacima dokaza cene (sam fajl ide kroz zasebnu,
+ * dobrima, sa metapodacima dokaza cene (sam fajl ide kroz zasebnu,
  * takođe administratorsku rutu) i vaučerima.
  *
  * Podnosioca, kontakt davaoca i fotografiju cenovnika vidi samo administratorski

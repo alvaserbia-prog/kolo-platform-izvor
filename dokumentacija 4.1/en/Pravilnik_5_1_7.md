@@ -96,7 +96,9 @@
 
 6) **square-root voting**: the manner of decision-making in the Upper Kolo in which voting power equals the integer value of the square root of the number of active ZRNO;
 
-7) **module**: an extension of the system introduced under Article 49.
+7) **module**: an extension of the system introduced under Article 49;
+
+8) **goods and services**: the Serbian original uses one term, „dobra“, which covers both merchandise (things) and services; where a provision concerns only things, the original says „roba“ (goods), and where it concerns only services, „usluge“ (services).
 
 (7) Terms used in the masculine grammatical gender in the acts of the KOLO system apply equally to persons of male and female gender.
 

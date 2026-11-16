@@ -87,7 +87,7 @@ export type OpisVrste = {
 export const VRSTE_PRIGOVORA: Record<VrstaPrigovora, OpisVrste> = {
   RAZMENA: { predmet: true, rokDana: ROK_RAZMENA_DANA },
   NABAVKA: { predmet: true, rokDana: ROK_NABAVKA_DANA },
-  // Neizvršenje obaveze davaoca iz vaučera dodeljenog u raspodeli dobara i usluga
+  // Neizvršenje obaveze davaoca iz vaučera dodeljenog u raspodeli dobara
   // iz pokroviteljstva (Uslovi čl. 40 st. 2 t. 3; donacije čl. 35). Predmet je id vaučera.
   VAUCER: { predmet: true, rokDana: ROK_VAUCER_POSLE_ISTEKA_DANA },
   // 🟡 Odnosila se na ukinut postupak potvrde postojanja deteta od 60 dana. Ostaje u

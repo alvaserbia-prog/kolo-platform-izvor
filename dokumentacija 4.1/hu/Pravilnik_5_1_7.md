@@ -96,7 +96,9 @@
 
 6) **négyzetgyök szerinti szavazás**: a Felső Kolo döntéshozatali módja, amelyben a szavazati erő az aktív ZRNO-k számából vont négyzetgyök egész értékével egyenlő;
 
-7) **modul**: a rendszer olyan bővítménye, amelyet a 49. cikk szerint vezetnek be.
+7) **modul**: a rendszer olyan bővítménye, amelyet a 49. cikk szerint vezetnek be;
+
+8) **javak és szolgáltatások**: a szerb eredeti egyetlen kifejezést használ – „dobra” –, amely az árukat (dolgokat) és a szolgáltatásokat egyaránt felöleli; ahol a rendelkezés csak dolgokra vonatkozik, az eredetiben „roba” (áru), ahol csak szolgáltatásokra, „usluge” (szolgáltatások) áll.
 
 (7) A KOLO rendszer aktusaiban használt kifejezések a férfiakra és a nőkre egyaránt vonatkoznak.
 

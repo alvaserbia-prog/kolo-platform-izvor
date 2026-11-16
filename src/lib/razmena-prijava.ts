@@ -8,7 +8,7 @@
  * Šta ovo jeste, a šta nije:
  *
  *  - Prepis POEN-a je ažuriranje evidencije između dva zapisa (Pravilnik čl. 17,
- *    20), a za samu razmenu dobara i usluga odgovaraju korisnici po opštim
+ *    20), a za samu razmenu dobara odgovaraju korisnici po opštim
  *    pravilima obligacionog prava; Fondacija i Protokol nisu strana u tom
  *    odnosu (Uslovi čl. 24). Zato prijava NIJE zahtev za povraćaj i ne obara
  *    prepis sama od sebe — ona je evidencija o kojoj Fondacija odlučuje.

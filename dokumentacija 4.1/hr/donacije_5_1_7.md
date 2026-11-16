@@ -6,7 +6,7 @@
 
 ### Članak 1. — Predmet
 
-(1) Ovim se pravilnikom uređuju, u skladu s člancima 36. i 37. Pravilnika o KOLO sustavu, evidentiranje financijskog doprinosa i pokroviteljstva: donacije fizičkih osoba, razine donacija i koeficijent evidencije, upis pokrovitelja i novčano pokroviteljstvo, rang-lista pokrovitelja, partnerstvo, pokroviteljstvo dobrima i uslugama i mjere protiv pranja novca i financiranja terorizma.
+(1) Ovim se pravilnikom uređuju, u skladu s člancima 36. i 37. Pravilnika o KOLO sustavu, evidentiranje financijskog doprinosa i pokroviteljstva: donacije fizičkih osoba, razine donacija i koeficijent evidencije, upis pokrovitelja i novčano pokroviteljstvo, rang-lista pokrovitelja, partnerstvo, pokroviteljstvo dobrima i mjere protiv pranja novca i financiranja terorizma.
 
 (2) Izrazi iz Pravilnika o KOLO sustavu imaju isto značenje u ovom pravilniku.
 
@@ -14,7 +14,7 @@
 
 U ovom se pravilniku koriste i sljedeći izrazi:
 
-1) **koeficijent evidencije donacija**: broj kojim se uvećava evidentirani doprinos pri utvrđivanju broja POEN-a; za donaciju fizičke osobe i za novčano pokroviteljstvo određen je razinom donacija, a za pokroviteljstvo dobrima i uslugama iznosi 1,00, osim za hranu i za usluge u programu raspodjele hrane (članak 22. stavak 4.), odnosno za sirovinu u lancu proizvodnje i distribucije koeficijent iz odluke o lancu (Pravilnik o projektima i kolektivnim nabavama); koeficijent množi mjeru opsega doprinosa pri upisu, a Zaklada po njemu ne prodaje, ne otkupljuje i ne konvertira POEN i ne objavljuje vrijednost POEN-a; nije obračunski koeficijent u smislu Pravilnika o KOLO sustavu;
+1) **koeficijent evidencije donacija**: broj kojim se uvećava evidentirani doprinos pri utvrđivanju broja POEN-a; za donaciju fizičke osobe i za novčano pokroviteljstvo određen je razinom donacija, a za pokroviteljstvo dobrima iznosi 1,00, osim za hranu i za usluge u programu raspodjele hrane (članak 22. stavak 4.), odnosno za sirovinu u lancu proizvodnje i distribucije koeficijent iz odluke o lancu (Pravilnik o projektima i kolektivnim nabavama); koeficijent množi mjeru opsega doprinosa pri upisu, a Zaklada po njemu ne prodaje, ne otkupljuje i ne konvertira POEN i ne objavljuje vrijednost POEN-a; nije obračunski koeficijent u smislu Pravilnika o KOLO sustavu;
 
 2) **razina donacija**: stupanj kumulativne donacije koji određuje koeficijent evidencije donacija fizičke osobe, odnosno stupanj kumulativnog doprinosa pokrovitelja koji određuje koeficijent evidencije novčanog pokroviteljstva (razina pokrovitelja);
 
@@ -26,11 +26,11 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 6) **prijava pokroviteljstva**: zahtjev koji punoljetni korisnik podnosi na Platformi radi pokretanja evidencije doprinosa pokroviteljstva;
 
-7) **pokroviteljstvo dobrima i uslugama**: obveza pravne osobe, obrtnika ili nositelja registriranog poljoprivrednog gospodarstva da bez naknade preda dobra, odnosno pruži usluge osobama koje vaučer uzmu u raspodjeli po Pravilniku o projektima i kolektivnim nabavama;
+7) **pokroviteljstvo dobrima**: obveza pravne osobe, obrtnika ili nositelja registriranog poljoprivrednog gospodarstva da bez naknade preda robu, odnosno pruži usluge osobama koje vaučer uzmu u raspodjeli po Pravilniku o projektima i kolektivnim nabavama;
 
-8) **davatelj**: pravna osoba, obrtnik ili nositelj registriranog poljoprivrednog gospodarstva koji je preuzeo obvezu iz pokroviteljstva dobrima i uslugama;
+8) **davatelj**: pravna osoba, obrtnik ili nositelj registriranog poljoprivrednog gospodarstva koji je preuzeo obvezu iz pokroviteljstva dobrima;
 
-9) **vaučer**: isprava u elektroničkom obliku kojom davatelj imatelju obećava predaju točno određenog dobra, odnosno pružanje točno određene usluge, u utvrđenom roku i na utvrđenom mjestu, odnosno na jednom od utvrđenih mjesta. Vaučer ne glasi na novčani iznos;
+9) **vaučer**: isprava u elektroničkom obliku kojom davatelj imatelju obećava predaju točno određene robe, odnosno pružanje točno određene usluge, u utvrđenom roku i na utvrđenom mjestu, odnosno na jednom od utvrđenih mjesta. Vaučer ne glasi na novčani iznos;
 
 10) **partnerstvo**: oblik pokroviteljstva u kojem pravna osoba, obrtnik ili nositelj registriranog poljoprivrednog gospodarstva Zakladi bez naknade pruža usluge ili ustupa prostor, opremu ili druga sredstva na korištenje, radi zajedničkog dobra (Glava VI.).
 
@@ -116,7 +116,7 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 (1) Koeficijent evidencije izražava uvažavanje doprinosa zajedničkom dobru. Veći ukupni doprinos ima veće značenje za zajednicu.
 
-(2) Po utvrđenju primitka, odnosno kod donacije unaprijed po prihvaćanju potvrde o uplati (članak 6.), Protokol evidentira doprinos razmjerno iznosu donacije, uz koeficijent evidencije razine (članak 8.). Donator od Zaklade ne pribavlja nikakvo dobro ni uslugu i ne stječe potraživanje prema Zakladi, pravo na povrat donacije, pravo na otkup ili konverziju POEN-a ni neposredan utjecaj u odlučivanju o pravilima sustava; doprinos evidentiran po donaciji do glasa vodi samo kao i svaki drugi doprinos, kroz upis i aktiviranje ZRNA. Ugovor o donaciji ne sadrži broj POEN-a i ne obvezuje Zakladu na upis (članak 14. stavak 2.).
+(2) Po utvrđenju primitka, odnosno kod donacije unaprijed po prihvaćanju potvrde o uplati (članak 6.), Protokol evidentira doprinos razmjerno iznosu donacije, uz koeficijent evidencije razine (članak 8.). Donator od Zaklade ne pribavlja nikakvo dobro i ne stječe potraživanje prema Zakladi, pravo na povrat donacije, pravo na otkup ili konverziju POEN-a ni neposredan utjecaj u odlučivanju o pravilima sustava; doprinos evidentiran po donaciji do glasa vodi samo kao i svaki drugi doprinos, kroz upis i aktiviranje ZRNA. Ugovor o donaciji ne sadrži broj POEN-a i ne obvezuje Zakladu na upis (članak 14. stavak 2.).
 
 (3) Donacija ne daje pravo na dobra iz kolektivne nabave, ne osigurava mjesto u redoslijedu za preuzimanje i ne stvara potraživanje prema Zakladi po toj osnovi. Pravo na sudjelovanje u nabavi proizlazi iz odluke kojom se nabava pokreće, a broj POEN-a u zapisu mjerilo je po kojem se utvrđuje prednost (članak 17. stavak 3. Pravilnika o projektima i kolektivnim nabavama).
 
@@ -156,7 +156,7 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 (1) Za svaku donaciju fizičke osobe Zaklada sastavlja ugovor o donaciji i isporučuje ga donatoru kroz Platformu. Ugovor je sklopljen uplatom donacije; potpis donatora ne traži se. Ugovor se sastavlja u elektroničkom obliku u trenutku u kojem Zaklada utvrdi primitak uplate i donaciju prihvati.
 
-(2) Ugovor sadrži iznos donacije, izjavu da je donacija dobrovoljna i bez naknade, izjavu da donator od Zaklade ne pribavlja nikakvo dobro ni uslugu, ne stječe potraživanje prema Zakladi, pravo na povrat donacije, pravo na otkup POEN-a ni neposredan utjecaj u odlučivanju o pravilima sustava, obvezu Zaklade da donaciju upotrijebi isključivo za ostvarivanje ciljeva radi kojih je osnovana, kao i izjavu da se doprinos koji se povodom donacije evidentira po pravilima KOLO sustava ne određuje tim ugovorom, da taj upis nije protučinidba za donaciju i da donator na njega nema potraživanje. Ugovor ne sadrži broj POEN-a, koeficijent evidencije ni razinu; donator ih vidi u evidenciji na Platformi.
+(2) Ugovor sadrži iznos donacije, izjavu da je donacija dobrovoljna i bez naknade, izjavu da donator od Zaklade ne pribavlja nikakvo dobro, ne stječe potraživanje prema Zakladi, pravo na povrat donacije, pravo na otkup POEN-a ni neposredan utjecaj u odlučivanju o pravilima sustava, obvezu Zaklade da donaciju upotrijebi isključivo za ostvarivanje ciljeva radi kojih je osnovana, kao i izjavu da se doprinos koji se povodom donacije evidentira po pravilima KOLO sustava ne određuje tim ugovorom, da taj upis nije protučinidba za donaciju i da donator na njega nema potraživanje. Ugovor ne sadrži broj POEN-a, koeficijent evidencije ni razinu; donator ih vidi u evidenciji na Platformi.
 
 (3) Ugovor ne sadrži izjavu o podrijetlu sredstava. Identifikaciju uplatitelja i provjeru podrijetla sredstava provodi banka preko koje je donacija izvršena (članak 38. točka 3.).
 
@@ -166,13 +166,13 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 ### Članak 15. — Oblici pokroviteljstva
 
-(1) Pokroviteljstvo je donacija novca pravne osobe, obrtnika ili nositelja registriranog poljoprivrednog gospodarstva Zakladi (novčano pokroviteljstvo), odnosno pokroviteljstvo dobrima i uslugama u korist korisnika (Glava IV.) i partnerstvo, u kojem usluge prima Zaklada (Glava VI.).
+(1) Pokroviteljstvo je donacija novca pravne osobe, obrtnika ili nositelja registriranog poljoprivrednog gospodarstva Zakladi (novčano pokroviteljstvo), odnosno pokroviteljstvo dobrima u korist korisnika (Glava IV.) i partnerstvo, u kojem usluge prima Zaklada (Glava VI.).
 
 (2) Donacija pravne osobe za koju nije podnesena prijava pokroviteljstva ne evidentira se ni u čijem zapisu POEN-a (članak 36. stavak 5. Pravilnika o KOLO sustavu).
 
 ### Članak 16. — Upis pokrovitelja u evidenciju
 
-(1) Prije prve prijave pokroviteljstva, novčanog ili dobrima i uslugama, punoljetni korisnik upisuje pravnu osobu, obrtnika ili registrirano poljoprivredno gospodarstvo u evidenciju pokrovitelja, sa svojega korisničkog računa. Pripadnost Kolu nije uvjet za upis ni za prijavu novčanog pokroviteljstva.
+(1) Prije prve prijave pokroviteljstva, novčanog ili dobrima, punoljetni korisnik upisuje pravnu osobu, obrtnika ili registrirano poljoprivredno gospodarstvo u evidenciju pokrovitelja, sa svojega korisničkog računa. Pripadnost Kolu nije uvjet za upis ni za prijavu novčanog pokroviteljstva.
 
 (2) Upis pravne osobe ili obrtnika sadrži:
 
@@ -180,7 +180,7 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 2) adresu elektroničke pošte i broj telefona za kontakt;
 
-3) mjesto i adresu na kojoj se pokrovitelj prikazuje na karti i izjavu kojom traži taj prikaz; kod pokroviteljstva dobrima i uslugama pokrovitelj se prikazuje i na mjestima predaje, odnosno pružanja iz ugovora (članak 28. stavak 2. točka 5.);
+3) mjesto i adresu na kojoj se pokrovitelj prikazuje na karti i izjavu kojom traži taj prikaz; kod pokroviteljstva dobrima pokrovitelj se prikazuje i na mjestima predaje, odnosno pružanja iz ugovora (članak 28. stavak 2. točka 5.);
 
 4) ime i prezime korisnika koji vrši upis i njegov odnos prema pokrovitelju: zakonski zastupnik, obrtnik, vlasnik, jedan od vlasnika, stvarni vlasnik ili osoba koju je ovlastilo nadležno tijelo pokrovitelja;
 
@@ -210,9 +210,9 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 (2) Ista pravna osoba, obrtnik odnosno gospodarstvo upisuje se jednom, a upis vodi korisnik koji ga je izvršio, odnosno osoba koja je sa svojeg računa prihvatila upis koji je pripremila Zaklada (članak 16. stavak 6.). Izmjena naziva, matičnog broja i logotipa ide na ponovnu provjeru Zaklade; podaci za kontakt mijenjaju se bez provjere.
 
-(3) Iz odobrenog upisa korisnik podnosi prijave novčanog pokroviteljstva (članak 19.) i pokroviteljstva dobrima i uslugama (članak 28.). Popis zabrane iz članka 35. vezuje se za upis.
+(3) Iz odobrenog upisa korisnik podnosi prijave novčanog pokroviteljstva (članak 19.) i pokroviteljstva dobrima (članak 28.). Popis zabrane iz članka 35. vezuje se za upis.
 
-(4) Pokrovitelj se na karti prikazuje na adresi iz članka 16. stavka 2. točke 3. dok je upisan, a dok ima vaučere koji vrijede i na mjestima predaje, odnosno pružanja. Korisnik koji vodi upis može ga obrisati ako pokrovitelj nema ugovor o pokroviteljstvu dobrima i uslugama s neiskorištenim vaučerima. Brisanjem prestaju prikaz na karti i ponuda vaučera, a doprinosi dani do brisanja ostaju na rang-listi, s nazivom i logotipom. Na zahtjev korisnika koji je vodio upis pokrovitelj se uklanja i s rang-liste.
+(4) Pokrovitelj se na karti prikazuje na adresi iz članka 16. stavka 2. točke 3. dok je upisan, a dok ima vaučere koji vrijede i na mjestima predaje, odnosno pružanja. Korisnik koji vodi upis može ga obrisati ako pokrovitelj nema ugovor o pokroviteljstvu dobrima s neiskorištenim vaučerima. Brisanjem prestaju prikaz na karti i ponuda vaučera, a doprinosi dani do brisanja ostaju na rang-listi, s nazivom i logotipom. Na zahtjev korisnika koji je vodio upis pokrovitelj se uklanja i s rang-liste.
 
 ### Članak 19. — Prijava novčanog pokroviteljstva
 
@@ -246,7 +246,7 @@ U ovom se pravilniku koriste i sljedeći izrazi:
 
 (1) Novčano pokroviteljstvo evidentira se s koeficijentom evidencije razine pokrovitelja. Razina pokrovitelja utvrđuje se prema tablici iz članka 8. stavka 2., na temelju zbroja kumulativnog doprinosa pokrovitelja i novog doprinosa, bez obzira na pravni oblik pokrovitelja; na razinu pokrovitelja na odgovarajući se način primjenjuju članak 8. stavci 1., 3., 4. i 5. i članak 9. U kumulativni doprinos ulaze i doprinosi čiji je primitak utvrđen prije nego što se razina pokrovitelja počela primjenjivati, a POEN po njima evidentiran ne ispravlja se.
 
-(2) Osim u slučajevima iz stavka 4., pokroviteljstvo dobrima i uslugama evidentira se s koeficijentom evidencije 1,00, bez obzira na vrijednost dobara i usluga, na kumulativni doprinos i razinu pokrovitelja i na pravni oblik davatelja, jer vrijednost dobara i usluga utvrđuje davatelj iz vlastitog cjenika (članak 29.). Broj POEN-a zaokružuje se na najbliži cijeli broj.
+(2) Osim u slučajevima iz stavka 4., pokroviteljstvo dobrima evidentira se s koeficijentom evidencije 1,00, bez obzira na vrijednost dobara, na kumulativni doprinos i razinu pokrovitelja i na pravni oblik davatelja, jer vrijednost dobara utvrđuje davatelj iz vlastitog cjenika (članak 29.). Broj POEN-a zaokružuje se na najbliži cijeli broj.
 
 (3) Kumulativni doprinos pokrovitelja i kumulativna donacija korisnika vode se odvojeno i ne zbrajaju se, i kada se doprinos pokrovitelja evidentira u zapisu korisnika koji donira i osobno; doprinos pokrovitelja ne utječe na razinu donacija tog korisnika, niti njegova osobna donacija na razinu pokrovitelja. Doprinos pokrovitelja evidentira se u zapisu korisnika koji je podnio prijavu (članak 23.). Kumulativni doprinos registriranog poljoprivrednog gospodarstva vodi se za gospodarstvo, odvojeno od osobne donacije njegova nositelja i od kumulativnog doprinosa pravne osobe ili obrtnika s kojim je nositelj povezan.
 
@@ -307,13 +307,13 @@ Davatelj s certifikatom za ekološku proizvodnju nema umanjenja za gnojivo i za�
 
 ### Članak 24. — Porezne obveze pokrovitelja
 
-(1) Porezne obveze koje proizlaze iz novčanog pokroviteljstva i iz pokroviteljstva dobrima i uslugama, uključujući porez na dodanu vrijednost, porez na dobit i druga javna davanja, snosi pokrovitelj, odnosno davatelj, u skladu s važećim propisima.
+(1) Porezne obveze koje proizlaze iz novčanog pokroviteljstva i iz pokroviteljstva dobrima, uključujući porez na dodanu vrijednost, porez na dobit i druga javna davanja, snosi pokrovitelj, odnosno davatelj, u skladu s važećim propisima.
 
 (2) Zaklada ne pruža porezni savjet pokroviteljima. Pokrovitelj je odgovoran za usklađenost svojih donacija s poreznim i drugim propisima.
 
 ### Članak 25. — Rang-lista pokrovitelja
 
-(1) Platforma vodi javnu rang-listu pokrovitelja na temelju kumulativne vrijednosti doprinosa iz registra pokrovitelja. Rang-lista vodi se u dva odvojena dijela: prema novčanom doprinosu i prema vrijednosti pokroviteljstva dobrima i uslugama. U oba dijela objavljuju se naziv pokrovitelja i iznos u dinarima; broj POEN-a ne objavljuje se. U dijelu novčanog doprinosa prikazuju se i pravne osobe, obrtnici i gospodarstva koji su dali donaciju novca bez upisa u evidenciju pokrovitelja (članak 17. stavak 4.), uz oznaku da po toj donaciji POEN nije evidentiran.
+(1) Platforma vodi javnu rang-listu pokrovitelja na temelju kumulativne vrijednosti doprinosa iz registra pokrovitelja. Rang-lista vodi se u dva odvojena dijela: prema novčanom doprinosu i prema vrijednosti pokroviteljstva dobrima. U oba dijela objavljuju se naziv pokrovitelja i iznos u dinarima; broj POEN-a ne objavljuje se. U dijelu novčanog doprinosa prikazuju se i pravne osobe, obrtnici i gospodarstva koji su dali donaciju novca bez upisa u evidenciju pokrovitelja (članak 17. stavak 4.), uz oznaku da po toj donaciji POEN nije evidentiran.
 
 (2) Pokrovitelj se na rang-listi identificira punim registriranim nazivom, skraćenim nazivom ili komercijalnim nazivom pod kojim posluje, prema podatku koji je korisnik unio pri upisu. Adresa sjedišta, matični broj, PIB, broj gospodarstva i zastupnik, odnosno nositelj gospodarstva, ne objavljuju se na rang-listi.
 
@@ -321,29 +321,29 @@ Davatelj s certifikatom za ekološku proizvodnju nema umanjenja za gnojivo i za�
 
 (1) Objavljivanje rang-liste pokrovitelja predstavlja javno priznanje doprinosa i element transparentnosti rada Zaklade. Zaklada smije pokrovitelja javno imenovati i javno mu zahvaliti.
 
-(2) Evidencija pokrovitelja sadrži naziv pokrovitelja i njegov logotip, kada je priložen pri upisu (članak 16.). Naziv i logotip prikazuju se na rang-listi, a kod pokroviteljstva dobrima i uslugama i na vaučerima i uz ponudu vaučera. Na karti se pokrovitelj prikazuje nazivom, logotipom i adresom iz upisa, a kod pokroviteljstva dobrima i uslugama i mjestima predaje, odnosno pružanja, uz ponudu vaučera. Osim toga ne prikazuje se ništa drugo.
+(2) Evidencija pokrovitelja sadrži naziv pokrovitelja i njegov logotip, kada je priložen pri upisu (članak 16.). Naziv i logotip prikazuju se na rang-listi, a kod pokroviteljstva dobrima i na vaučerima i uz ponudu vaučera. Na karti se pokrovitelj prikazuje nazivom, logotipom i adresom iz upisa, a kod pokroviteljstva dobrima i mjestima predaje, odnosno pružanja, uz ponudu vaučera. Osim toga ne prikazuje se ništa drugo.
 
 (3) Pokrovitelj po osnovi doprinosa ne stječe pravo na upućivanje na svoju internetsku stranicu, na oglasni prostor na Platformi, na spominjanje u kampanjama Zaklade niti na bilo koju drugu promotivnu činidbu, i takvu činidbu ne može ugovoriti niti zahtijevati. Javno priznanje akt je Zaklade, a ne protučinidba za doprinos.
 
 (4) Ni donacija ni doprinos pokrovitelja ne daju prednost pri izboru ponude u kolektivnoj nabavi ni u drugom postupku Zaklade. Pokrovitelj koji je i ponuditelj sudjeluje ravnopravno s ostalim ponuditeljima, pod uvjetima Pravilnika o projektima i kolektivnim nabavama.
 
-## IV — Pokroviteljstvo dobrima i uslugama
+## IV — Pokroviteljstvo dobrima
 
 ### Članak 27. — Priroda
 
-(1) Pokroviteljstvo dobrima i uslugama zasniva se ugovorom o donaciji između davatelja i Zaklade, kojim se davatelj obvezuje da bez naknade preda dobra, odnosno pruži usluge osobama koje vaučer uzmu u raspodjeli po Pravilniku o projektima i kolektivnim nabavama.
+(1) Pokroviteljstvo dobrima zasniva se ugovorom o donaciji između davatelja i Zaklade, kojim se davatelj obvezuje da bez naknade preda robu, odnosno pruži usluge osobama koje vaučer uzmu u raspodjeli po Pravilniku o projektima i kolektivnim nabavama.
 
-(2) Osoba kojoj je vaučer izdan stječe vlastito pravo da od davatelja zahtijeva predaju dobra, odnosno pružanje usluge.
+(2) Osoba kojoj je vaučer izdan stječe vlastito pravo da od davatelja zahtijeva predaju robe, odnosno pružanje usluge.
 
-(3) Zaklada ne stječe vlasništvo ni posjed dobara, ne pruža usluge i ne odgovara za ispunjenje obveze davatelja. Za kvalitetu, nedostatke i sigurnost dobra i usluge davatelj odgovara imatelju vaučera neposredno.
+(3) Zaklada ne stječe vlasništvo ni posjed robe, ne pruža usluge i ne odgovara za ispunjenje obveze davatelja. Za kvalitetu, nedostatke i sigurnost dobra davatelj odgovara imatelju vaučera neposredno.
 
 ### Članak 28. — Prijava
 
-(1) Prijavu pokroviteljstva dobrima i uslugama podnosi korisnik koji je davatelja upisao u evidenciju pokrovitelja (članak 16.), iz odobrenog upisa, ili je priprema Zaklada prema članku 16. stavku 6. Podnositelj je zakonski zastupnik, obrtnik ili nositelj gospodarstva čije je ime Zaklada usporedila s registrom (članak 18. stavak 1.), i tada ne mora biti sudionik; osoba koju je pokrovitelj ovlastio, a koja nije upisana u registar, prijavu podnosi samo ako je sudionik. Za registrirano poljoprivredno gospodarstvo to je isključivo njegov nositelj.
+(1) Prijavu pokroviteljstva dobrima podnosi korisnik koji je davatelja upisao u evidenciju pokrovitelja (članak 16.), iz odobrenog upisa, ili je priprema Zaklada prema članku 16. stavku 6. Podnositelj je zakonski zastupnik, obrtnik ili nositelj gospodarstva čije je ime Zaklada usporedila s registrom (članak 18. stavak 1.), i tada ne mora biti sudionik; osoba koju je pokrovitelj ovlastio, a koja nije upisana u registar, prijavu podnosi samo ako je sudionik. Za registrirano poljoprivredno gospodarstvo to je isključivo njegov nositelj.
 
 (2) Prijava sadrži:
 
-1) točan opis dobra, odnosno usluge;
+1) točan opis dobra;
 
 2) broj vaučera;
 
@@ -351,17 +351,17 @@ Davatelj s certifikatom za ekološku proizvodnju nema umanjenja za gnojivo i za�
 
 4) fotografiju cjenika davatelja iz koje je ta cijena vidljiva;
 
-5) mjesto i adresu predaje, odnosno pružanja, a kada se dobro predaje, odnosno usluga pruža na više mjesta, svako mjesto i adresu;
+5) mjesto i adresu predaje, odnosno pružanja, a kada se roba predaje, odnosno usluga pruža na više mjesta, svako mjesto i adresu;
 
 6) kada je predmet hrana: vrstu hrane, opis proizvodnje (vrsta i broj grla, odnosno površina i način proizvodnje), broj stalnih radnika i odgovore o lokalnim sirovinama iz članka 22. stavka 7., na temelju kojih se utvrđuje podrijetlo (članak 22. stavak 5.).
 
-(3) Davatelj u prijavi izjavljuje da ispunjava propise koji vrijede za promet tog dobra, odnosno za pružanje te usluge, a kada je predmet hrana i da su podaci iz stavka 2. točke 6. točni.
+(3) Davatelj u prijavi izjavljuje da ispunjava propise koji vrijede za promet te robe, odnosno za pružanje te usluge, a kada je predmet hrana i da su podaci iz stavka 2. točke 6. točni.
 
 (4) Ime i prezime podnositelja upisuje se u evidenciju identiteta pod uvjetima iz članka 19. stavka 3., kada Zaklada utvrdi da je ugovor sklopljen (članak 33.).
 
 ### Članak 29. — Vrijednost i opseg
 
-(1) Vrijednost pokroviteljstva dobrima i uslugama jednaka je broju vaučera pomnoženom cijenom po jedinici iz prijave. Kada je predmet poljoprivredni proizvod za koji sustav tržišnih informacija ministarstva nadležnog za poljoprivredu u tjednom biltenu objavljuje dominantne cijene po tržnicama, cijena po jedinici je cijena za Republiku Srbiju iz posljednjeg biltena objavljenog prije sklapanja ugovora u kojemu je barem jedna tržnica objavila cijenu za tu kategoriju. Cijena za Republiku Srbiju je aritmetička sredina dominantnih cijena svih tržnica koje su u tom biltenu objavile cijenu za tu kategoriju, zaokružena na cijeli dinar kada je manja od 100 dinara, na deset dinara kada iznosi od 100 do manje od 1.000 dinara, a na sto dinara kada iznosi 1.000 dinara ili više. Uz ugovor i na Platformi navode se broj i datum biltena, adresa na kojoj je objavljen i cijene tržnica iz kojih je sredina izračunata. Ako takve cijene nema, primjenjuje se cijena iz cjenika davatelja.
+(1) Vrijednost pokroviteljstva dobrima jednaka je broju vaučera pomnoženom cijenom po jedinici iz prijave. Kada je predmet poljoprivredni proizvod za koji sustav tržišnih informacija ministarstva nadležnog za poljoprivredu u tjednom biltenu objavljuje dominantne cijene po tržnicama, cijena po jedinici je cijena za Republiku Srbiju iz posljednjeg biltena objavljenog prije sklapanja ugovora u kojemu je barem jedna tržnica objavila cijenu za tu kategoriju. Cijena za Republiku Srbiju je aritmetička sredina dominantnih cijena svih tržnica koje su u tom biltenu objavile cijenu za tu kategoriju, zaokružena na cijeli dinar kada je manja od 100 dinara, na deset dinara kada iznosi od 100 do manje od 1.000 dinara, a na sto dinara kada iznosi 1.000 dinara ili više. Uz ugovor i na Platformi navode se broj i datum biltena, adresa na kojoj je objavljen i cijene tržnica iz kojih je sredina izračunata. Ako takve cijene nema, primjenjuje se cijena iz cjenika davatelja.
 
 (2) Zaklada provjerava je li fotografija cjenika priložena. Zaklada cijenu ne procjenjuje, ne uspoređuje i ne određuje.
 
@@ -373,7 +373,7 @@ Davatelj s certifikatom za ekološku proizvodnju nema umanjenja za gnojivo i za�
 
 ### Članak 30. — Predmet vaučera
 
-(1) Predmet vaučera ne mogu biti dobra i usluge iz članka 23. Uvjeta korištenja, dobra čije je oglašavanje zakonom zabranjeno ili ograničeno (duhanski i srodni proizvodi, jaka alkoholna pića i lijekovi), alkoholna pića ni novac te bonovi ili kartice koji se mogu zamijeniti za novac. Zaklada to provjerava pri pregledu prijave.
+(1) Predmet vaučera ne mogu biti dobra iz članka 23. Uvjeta korištenja, dobra čije je oglašavanje zakonom zabranjeno ili ograničeno (duhanski i srodni proizvodi, jaka alkoholna pića i lijekovi), alkoholna pića ni novac te bonovi ili kartice koji se mogu zamijeniti za novac. Zaklada to provjerava pri pregledu prijave.
 
 (2) Vaučer objavljuje i raspodjeljuje Zaklada, pa se ograničenja iz stavka 1. ne odnose na oglase koje korisnici sami objavljuju na Pijaci.
 
@@ -387,13 +387,13 @@ Davatelj s certifikatom za ekološku proizvodnju nema umanjenja za gnojivo i za�
 
 2) ime i prezime podnositelja i njegov odnos prema davatelju;
 
-3) opis dobra, odnosno usluge, broj vaučera i vrijednost iz članka 29. stavka 1.;
+3) opis dobra, broj vaučera i vrijednost iz članka 29. stavka 1.;
 
 4) rok valjanosti vaučera i mjesto i adresu, odnosno sva mjesta i adrese predaje, odnosno pružanja;
 
 5) izjavu da je donacija dobrovoljna i bez naknade i da davatelj njome ne stječe potraživanje prema Zakladi ni prednost u bilo kojem postupku Zaklade;
 
-6) obvezu davatelja da do isteka roka drži dobra raspoloživima, odnosno osigura termine, i da dobro i uslugu da u istoj kvaliteti kao drugim osobama;
+6) obvezu davatelja da do isteka roka drži dobra raspoloživima, odnosno osigura termine, i da dobro da u istoj kvaliteti kao drugim osobama;
 
 7) pravo imatelja vaučera iz članka 27. stavka 2.;
 
@@ -407,15 +407,15 @@ Davatelj s certifikatom za ekološku proizvodnju nema umanjenja za gnojivo i za�
 
 (2) Sklapanjem ugovora Platforma izdaje vaučere.
 
-(3) Davatelj može na Platformi odrediti sudionike koji u njegovo ime potvrđuju predaju dobra, odnosno pružanje usluge po vaučeru, i to ovlaštenje u svakom trenutku opozvati. Takav sudionik potvrđuje vaučere preko vlastitog korisničkog računa i ne stječe nikakvo drugo ovlaštenje u vezi s ugovorom; za njegove potvrde odgovara davatelj.
+(3) Davatelj može na Platformi odrediti sudionike koji u njegovo ime potvrđuju predaju robe, odnosno pružanje usluge po vaučeru, i to ovlaštenje u svakom trenutku opozvati. Takav sudionik potvrđuje vaučere preko vlastitog korisničkog računa i ne stječe nikakvo drugo ovlaštenje u vezi s ugovorom; za njegove potvrde odgovara davatelj.
 
 ### Članak 33. — Evidentiranje
 
-(1) Kada je ugovor potpisan od obiju strana, odnosno sklopljen (članak 32. stavak 1.), i vaučeri izdani, Zaklada utvrđuje da je pokroviteljstvo dobrima i uslugama ostvareno (članak 37. stavak 1. Pravilnika o KOLO sustavu); doprinos se tada bilježi, a Protokol ga evidentira u zapisu podnositelja prijave u sljedećem obračunskom razdoblju. Ako davatelj obvezu ne izvrši, evidencija se ispravlja po članku 35.
+(1) Kada je ugovor potpisan od obiju strana, odnosno sklopljen (članak 32. stavak 1.), i vaučeri izdani, Zaklada utvrđuje da je pokroviteljstvo dobrima ostvareno (članak 37. stavak 1. Pravilnika o KOLO sustavu); doprinos se tada bilježi, a Protokol ga evidentira u zapisu podnositelja prijave u sljedećem obračunskom razdoblju. Ako davatelj obvezu ne izvrši, evidencija se ispravlja po članku 35.
 
-(2) Broj evidentiranih POEN-a jednak je vrijednosti iz članka 29. stavka 1. pomnoženoj koeficijentom evidencije pokroviteljstva dobrima i uslugama (članak 22. stavci 2. i 4.) i zaokruženoj na najbliži cijeli broj.
+(2) Broj evidentiranih POEN-a jednak je vrijednosti iz članka 29. stavka 1. pomnoženoj koeficijentom evidencije pokroviteljstva dobrima (članak 22. stavci 2. i 4.) i zaokruženoj na najbliži cijeli broj.
 
-(3) Vrijednost pokroviteljstva dobrima i uslugama ne ulazi u kumulativni doprinos pokrovitelja.
+(3) Vrijednost pokroviteljstva dobrima ne ulazi u kumulativni doprinos pokrovitelja.
 
 (4) Evidentiranje je automatski akt Protokola i ne ulazi u zajednički dnevni limit.
 
@@ -423,19 +423,19 @@ Davatelj s certifikatom za ekološku proizvodnju nema umanjenja za gnojivo i za�
 
 (1) Na evidentiranje po ovoj glavi na odgovarajući se način primjenjuje članak 23.
 
-(2) POEN se podnositelju prijave bilježi kada je ugovor sklopljen, jer je tada nastala obveza davatelja prema imateljima vaučera, a evidentira u sljedećem obračunskom razdoblju (članak 33.). Zaklada dobra i usluge ne prima. Imatelj vaučera davatelju ništa ne daje, a POEN koji se u njegovu zapisu poništava pri uzimanju vaučera nitko ne prima, ni davatelj ni Zaklada (članak 33. Pravilnika o projektima i kolektivnim nabavama). Na koeficijent evidencije primjenjuje se članak 2. točka 1.
+(2) POEN se podnositelju prijave bilježi kada je ugovor sklopljen, jer je tada nastala obveza davatelja prema imateljima vaučera, a evidentira u sljedećem obračunskom razdoblju (članak 33.). Zaklada dobra ne prima. Imatelj vaučera davatelju ništa ne daje, a POEN koji se u njegovu zapisu poništava pri uzimanju vaučera nitko ne prima, ni davatelj ni Zaklada (članak 33. Pravilnika o projektima i kolektivnim nabavama). Na koeficijent evidencije primjenjuje se članak 2. točka 1.
 
 ### Članak 35. — Otpis zbog neizvršenja i popis zabrane
 
-(1) Kada Zaklada, po prigovoru imatelja vaučera (članak 40. Uvjeta korištenja), utvrdi da davatelj dobro nije predao, odnosno uslugu nije pružio, a to nije otklonio u roku od 15 dana od poziva Zaklade, ugovor se raskida.
+(1) Kada Zaklada, po prigovoru imatelja vaučera (članak 40. Uvjeta korištenja), utvrdi da davatelj robu nije predao, odnosno uslugu nije pružio, a to nije otklonio u roku od 15 dana od poziva Zaklade, ugovor se raskida.
 
 (2) Podnositelju prijave otpisuje se broj POEN-a evidentiran po ugovoru podijeljen brojem vaučera, za svaki vaučer po tom ugovoru koji do raskida nije iskorišten, bez obzira na to je li izdan korisniku. Otpisani iznos obuhvaća i uvećanje po koeficijentu evidencije s kojim je ugovor evidentiran. Vaučeri po raskinutom ugovoru prestaju, a imateljima izdanih neiskorištenih vaučera poništenje se ispravlja po Pravilniku o projektima i kolektivnim nabavama.
 
 (3) Otpis se izvršava i kada zapis time postane negativan (članak 17. stavak 2. točka 7. Pravilnika o KOLO sustavu). Teret se ne prenosi na drugu osobu. Podnositelj prijave o otpisu dobiva vlastitu obavijest.
 
-(4) Bez raskida otpis se ne provodi: za vaučer koji nije izdan korisniku; za vaučer koji imatelj nije iskoristio do isteka roka; ni kada je dobro predano, odnosno usluga pružena, a imatelj nije zadovoljan kvalitetom; tada imatelj ostvaruje prava prema davatelju iz članka 27.
+(4) Bez raskida otpis se ne provodi: za vaučer koji nije izdan korisniku; za vaučer koji imatelj nije iskoristio do isteka roka; ni kada je roba predana, odnosno usluga pružena, a imatelj nije zadovoljan kvalitetom; tada imatelj ostvaruje prava prema davatelju iz članka 27.
 
-(5) Davatelj čiji je ugovor raskinut upisuje se na popis zabrane i ne može sklopiti novi ugovor o pokroviteljstvu dobrima i uslugama dok ga Zaklada s tog popisa ne skine.
+(5) Davatelj čiji je ugovor raskinut upisuje se na popis zabrane i ne može sklopiti novi ugovor o pokroviteljstvu dobrima dok ga Zaklada s tog popisa ne skine.
 
 (6) Kada Zaklada utvrdi da su podaci o hrani iz članka 28. stavka 2. točke 6. netočni, davatelj se upisuje na popis zabrane iz stavka 5. Ugovor ostaje na snazi i davatelj je dužan predati dobra imateljima vaučera; raskida se samo po stavku 1.
 
@@ -481,7 +481,7 @@ Zaklada primjenjuje sljedeće mjere:
 
 ### Članak 40. — Pojam i predmet partnerstva
 
-(1) Partnerstvo je oblik pokroviteljstva u kojem pravna osoba, obrtnik ili nositelj registriranog poljoprivrednog gospodarstva (partner) Zakladi bez naknade pruža usluge ili ustupa prostor, opremu ili druga sredstva na korištenje, radi zajedničkog dobra. Za razliku od pokroviteljstva dobrima i uslugama, uslugu ne prima imatelj vaučera nego Zaklada.
+(1) Partnerstvo je oblik pokroviteljstva u kojem pravna osoba, obrtnik ili nositelj registriranog poljoprivrednog gospodarstva (partner) Zakladi bez naknade pruža usluge ili ustupa prostor, opremu ili druga sredstva na korištenje, radi zajedničkog dobra. Za razliku od pokroviteljstva dobrima, uslugu ne prima imatelj vaučera nego Zaklada.
 
 (2) Predmet partnerstva može biti svaka usluga ili ustupanje koje Zaklada koristi za rad sustava i za projekte u korist zajednice, osobito knjigovodstvene, pravne, informatičke, tiskarske i prijevozne usluge te ustupanje prostora, skladišta i opreme na korištenje.
 

@@ -5,7 +5,7 @@
  * čl. 19 st. 1, čl. 28 st. 1; Pravilnik o KOLO sistemu čl. 37 st. 2 (set 5.1.2).
  *
  * Tok: na zahtev pokrovitelja superadmin iz dostavljenih podataka priprema upis (i, po
- * želji, prijavu novčanog pokroviteljstva ili pokroviteljstva dobrima i uslugama) za lice iz
+ * želji, prijavu novčanog pokroviteljstva ili pokroviteljstva dobrima) za lice iz
  * upisa koje VEĆ IMA nalog → to lice dobija obaveštenje, sa sopstvenog naloga pregleda
  * pripremljeno i daje izjave iz čl. 17 → prihvatanjem nastaju upis i prijava kao da ih je
  * samo podnelo (`upisiPokrovitelja`, `podnesiNovcanuPrijavu`, `podnesiPrijavu`), upis od tada

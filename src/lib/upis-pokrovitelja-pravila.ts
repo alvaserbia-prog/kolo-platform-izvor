@@ -10,7 +10,7 @@
  *
  * ─── Brane koje se mogu izgubiti bez vidljivog kvara ─────────────────────────
  *
- * 🔴 Prijava pokroviteljstva (novčana i dobrima i uslugama) ide SAMO iz odobrenog
+ * 🔴 Prijava pokroviteljstva (novčana i dobrima) ide SAMO iz odobrenog
  * upisa koji vodi podnosilac (`upisSpremanZaPrijavu`). Podaci o pokrovitelju u
  * prijavi su snimak upisa, ne unos iz obrasca prijave.
  * 🔴 Isti pokrovitelj se upisuje jednom: najviše jedan živ upis po matičnom broju,
@@ -249,7 +249,7 @@ export type UpisZaPrijavu = {
 /**
  * Odnosi upisani u registar (donacije čl. 28 st. 1, set 5.1.2): zakonski zastupnik,
  * preduzetnik i nosilac gazdinstva. Lice sa tim odnosom, čije je ime Fondacija uporedila
- * sa registrom (čl. 18 st. 1), prijavu pokroviteljstva dobrima i uslugama podnosi i kad
+ * sa registrom (čl. 18 st. 1), prijavu pokroviteljstva dobrima podnosi i kad
  * nije učesnik (Uslovi čl. 14 st. 4). Ostali odnosi (vlasnik, stvarni vlasnik, ovlašćeno
  * lice…) nisu upisani u registar kao zastupnik — prijavu dobara podnose samo kao učesnici.
  */
@@ -276,7 +276,7 @@ export const PORUKA_PARTNERSTVO_SAMO_UCESNIK =
   "Prijavu partnerstva podnosi učesnik, a korisnik koji nije u Kolu samo kao zakonski zastupnik, preduzetnik ili nosilac gazdinstva iz odobrenog upisa.";
 
 export const PORUKA_DOBRA_SAMO_UCESNIK =
-  "Prijavu pokroviteljstva dobrima i uslugama podnosi učesnik, a korisnik koji nije u Kolu samo kao zakonski zastupnik, preduzetnik ili nosilac gazdinstva iz odobrenog upisa.";
+  "Prijavu pokroviteljstva dobrima podnosi učesnik, a korisnik koji nije u Kolu samo kao zakonski zastupnik, preduzetnik ili nosilac gazdinstva iz odobrenog upisa.";
 
 /**
  * Sme li korisnik da podnese prijavu iz upisa (čl. 18 st. 3–4, čl. 19 st. 1, čl. 28
@@ -286,7 +286,7 @@ export const PORUKA_DOBRA_SAMO_UCESNIK =
  * Novčano pokroviteljstvo daje pravno lice, preduzetnik ili nosilac registrovanog
  * poljoprivrednog gazdinstva (čl. 15 st. 1, set 4.7.9 — odluka vlasnika 20.10.2026), pa
  * iz svakog odobrenog upisa idu obe vrste prijave. Lista zabrane (čl. 35 st. 5)
- * zatvara samo nov ugovor o pokroviteljstvu dobrima i uslugama.
+ * zatvara samo nov ugovor o pokroviteljstvu dobrima.
  */
 export function upisSpremanZaPrijavu(
   u: UpisZaPrijavu,
@@ -330,7 +330,7 @@ export function upisSpremanZaPrijavu(
  *
  * 🔴 Gazdinstvo ima SOPSTVENI kumulativ (čl. 22 st. 3, set 4.7.9) — ne sabira se ni
  * sa ličnim donacijama nosioca ni sa firmom sa kojom je nosilac povezan. Isti ključ
- * čita i koeficijent za pokroviteljstvo dobrima i uslugama (čl. 33 st. 2), pa
+ * čita i koeficijent za pokroviteljstvo dobrima (čl. 33 st. 2), pa
  * gazdinstvo koje je doniralo novac dobija koeficijent svog novčanog nivoa, a bez
  * novca 1,00. `null` = nema ključa (nepotpun zatečeni zapis) → nema kumulativa.
  */
@@ -471,13 +471,13 @@ export function jeNeiskoriscenVaucer(v: VaucerZaBrisanje, sada: Date): boolean {
 
 /**
  * Sme li se upis (odnosno gazdinstvo koje je i pokrovitelj) obrisati: samo kad nema
- * ugovora o pokroviteljstvu dobrima i uslugama sa neiskorišćenim vaučerima.
+ * ugovora o pokroviteljstvu dobrima sa neiskorišćenim vaučerima.
  */
 export function smeObrisatiUpis(vauceri: VaucerZaBrisanje[], sada: Date): IshodProvere {
   if (vauceri.some((v) => jeNeiskoriscenVaucer(v, sada)))
     return {
       ok: false,
-      razlog: "Brisanje nije moguće dok pokrovitelj ima ugovor o pokroviteljstvu dobrima i uslugama sa neiskorišćenim vaučerima.",
+      razlog: "Brisanje nije moguće dok pokrovitelj ima ugovor o pokroviteljstvu dobrima sa neiskorišćenim vaučerima.",
     };
   return { ok: true };
 }
@@ -529,7 +529,7 @@ export type TackaPredaje = TackaPokrovitelja & { upisId: string };
 
 /**
  * Mesta predaje, odnosno pružanja na mapi (čl. 16 st. 2 t. 3, čl. 18 st. 4, čl. 26 st. 2;
- * set 5.1.2): pokrovitelj dobrima i uslugama prikazuje se i na mestima iz ugovora, dok ima
+ * set 5.1.2): pokrovitelj dobrima prikazuje se i na mestima iz ugovora, dok ima
  * vaučere koji važe. Ugovor ulazi samo ako ima bar jedan neiskorišćen vaučer koji važi
  * (`jeNeiskoriscenVaucer`). Tačka nosi samo naziv, logotip, mesto i adresu predaje —
  * 🔴 ništa drugo. Mesto koje se poklapa sa adresom iz upisa i ponovljena mesta se preskaču.

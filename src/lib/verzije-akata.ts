@@ -48,7 +48,7 @@ export const AKT_USLOVI: Akt = {
   // (obaveze onoga ko nudi), dva nova stava u čl. 21 (dobra čiji je promet
   // ograničen; zabrana za maloletnog korisnika) i nov čl. 22b (odnos prema
   // propisima o zaštiti potrošača).
-  // 4.7.8 — čl. 22a: vaučer iz raspodele dobara i usluga iz pokroviteljstva; čl. 37a:
+  // 4.7.8 — čl. 22a: vaučer iz raspodele dobara iz pokroviteljstva; čl. 37a:
   // prigovor zbog neizvršenja obaveze iz vaučera (vrsta, oznaka, rok).
   // 4.8.0 — čl. 15: verifikovani korisnik je potvrđen jednom važećom verifikacijom
   // (indeks stvarnosti ukinut); čl. 16: pravilo o jednoj potvrdi umesto
@@ -73,8 +73,8 @@ export const AKT_USLOVI: Akt = {
   // 5.1.0 — čl. 21 st. 3 (dinarski iznos kao jednosmerna mera obima doprinosa, bez poricanja)
   // i čl. 28 st. 4 (povreda zabrane prometa POEN-a utvrđuje se po prijavi, prepisi se ne prate).
   // 5.1.5 — čl. 28 st. 3: princip nekonvertibilnosti glasi na POEN i ZRNO, ne na „obračunsku jedinicu”.
-  verzija: "5.1.5",
-  fajl: "uslovi_koriscenja_5_1_5.md",
+  verzija: "5.1.7",
+  fajl: "uslovi_koriscenja_5_1_7.md",
 };
 
 export const AKT_POLITIKA: Akt = {
@@ -92,7 +92,7 @@ export const AKT_POLITIKA: Akt = {
   // 4.6.8 — 4.5, čl. 11 i 13: ime uz javnu donaciju se povlači i briše gašenjem naloga.
   // 4.7.6 — 4.13: adresa gazdinstva se čuva uz prijavu i vidi je samo
   // administratorski tim; pretraga tačke ide Nominatim-u iz pretraživača.
-  // 4.7.8 — 4.5 (pokroviteljstvo dobrima i uslugama), nov 4.15 (vaučeri iz
+  // 4.7.8 — 4.5 (pokroviteljstvo dobrima), nov 4.15 (vaučeri iz
   // raspodele; davalac ne vidi imaoca), čl. 8 i 10.
   // 4.8.0 — 4.2, 4.6 i čl. 6: potvrđenost umesto indeksa stvarnosti; socijalni
   // program traži potvrdu jednog verifikatora; nov 4.16 (preporuke), čl. 6 i 10.
@@ -109,8 +109,8 @@ export const AKT_POLITIKA: Akt = {
   // 5.0.0 — uređena po svrsi (jedan član po obradi, rok uz obradu); Kutija želja,
   // podrška u Gornjem Kolu, spor u zadruzi, prijava smrti, revizijski dnevnik 12 meseci.
   // 5.0.9 — čl. 20 st. 1 (poziv na broj, potvrda o uplati) i čl. 39 (kartično plaćanje uklonjeno).
-  verzija: "5.1.2",
-  fajl: "politika_5_1_2.md",
+  verzija: "5.1.7",
+  fajl: "politika_5_1_7.md",
 };
 
 /**
@@ -128,8 +128,8 @@ export const AKT_RIZICI: Akt = {
   // doprinosa; otpis slobodnog ZRNA može dati i manje POEN-a nego što je utrošeno.
   // 5.1.5 — čl. 4 st. 2 i 4, čl. 5 st. 1, čl. 18 t. 2: ZRNO je zapis po definiciji iz
   // Pravilnika čl. 2 t. 7, ne „obračunska jedinica” ni „evidencija položaja”.
-  verzija: "5.1.5",
-  fajl: "rizici_5_1_5.md",
+  verzija: "5.1.7",
+  fajl: "rizici_5_1_7.md",
 };
 
 /**

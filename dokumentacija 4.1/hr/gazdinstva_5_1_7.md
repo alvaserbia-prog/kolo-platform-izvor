@@ -176,7 +176,7 @@ Svi članovi gospodarstva koji su članovi Kola jednako upravljaju gospodarstvom
 
 (1) Zabilježeni doprinos evidentira se u zapisu člana, za sve članove podjednako, kada su ispunjena oba uvjeta:
 
-1) član je objavio oglas kojim nudi dobro ili uslugu i koji ispunjava sadržajni minimum, u ime gospodarstva ili osobni; uvjet ispunjava i oglas objavljen prije pristupanja, i kada više nije objavljen, osim oglasa uklonjenog zbog povrede Uvjeta korištenja;
+1) član je objavio oglas kojim nudi dobro i koji ispunjava sadržajni minimum, u ime gospodarstva ili osobni; uvjet ispunjava i oglas objavljen prije pristupanja, i kada više nije objavljen, osim oglasa uklonjenog zbog povrede Uvjeta korištenja;
 
 2) član je u Kolu.
 
@@ -224,7 +224,7 @@ Svi članovi gospodarstva koji su članovi Kola jednako upravljaju gospodarstvom
 
 ### Članak 21. — Brisanje gospodarstva
 
-(1) Osoba koja prema članku 12. odgovara za izjavu o točnosti podataka može gospodarstvo obrisati s platforme ako gospodarstvo nema drugih članova i nema ugovor o pokroviteljstvu dobrima i uslugama s neiskorištenim vaučerima.
+(1) Osoba koja prema članku 12. odgovara za izjavu o točnosti podataka može gospodarstvo obrisati s platforme ako gospodarstvo nema drugih članova i nema ugovor o pokroviteljstvu dobrima s neiskorištenim vaučerima.
 
 (2) Prije brisanja osoba se obavještava o posljedicama iz članka 22. stavka 2. i članka 23., uključujući i broj POEN-a koji će joj biti otpisan. Brisanjem se prestaju prikazivati i oglasi u ime gospodarstva.
 

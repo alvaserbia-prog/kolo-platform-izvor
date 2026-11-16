@@ -64,7 +64,7 @@ export default async function NovcanikPage({
   ]);
   // Set 5.0.9: zabeleženo pokroviteljstvo (čeka naredni obračunski period) i privremeno
   // ograničen iznos po poništenju donacije unapred — oba zasebni redovi, nikad uz stanje.
-  // Set 5.1.2: i doprinos po zaključenom ugovoru o pokroviteljstvu dobrima i uslugama (donacije čl. 33).
+  // Set 5.1.2: i doprinos po zaključenom ugovoru o pokroviteljstvu dobrima (donacije čl. 33).
   // Set 5.1.2: i doprinos po potvrđenom izvršenju partnerstva (donacije čl. 43 st. 1).
   const [zabelezenPokr, zabelezenDobra, zabelezenPartnerstvo, ogranicenoIznos] = await Promise.all([
     prisma.pokroviteljBonusEmisija.aggregate({

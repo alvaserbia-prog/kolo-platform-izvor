@@ -38,7 +38,7 @@ export type TackaMape = {
 };
 
 /**
- * Sastavlja tačke mape. Pokrovitelj dobrima i uslugama ima i tačke mesta predaje
+ * Sastavlja tačke mape. Pokrovitelj dobrima ima i tačke mesta predaje
  * (donacije čl. 18 st. 4, set 5.1.2), sa sopstvenim id-jem i `upisId`. Pokrovitelj upisan iz gazdinstva (upis vezan za gazdinstvo
  * koje je na mapi) ne dobija drugu tačku na istom mestu: njegovi vaučeri idu uz
  * tačku gazdinstva.

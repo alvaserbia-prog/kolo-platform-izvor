@@ -6,7 +6,7 @@
 
 ### Članak 1. — Predmet
 
-(1) Ovim se pravilnikom uređuju, u skladu s člankom 47. Pravilnika o KOLO sustavu, sredstva raspoloživa za projekte, kolektivna nabava (prijedlog i izbor predmeta nabave, parametri, ponude i kalkulacija, prijava, redoslijed, preuzimanje i poništenje zapisa POEN-a po iskorištenju), raspodjela vaučera iz pokroviteljstva dobrima i uslugama i program raspodjele hrane.
+(1) Ovim se pravilnikom uređuju, u skladu s člankom 47. Pravilnika o KOLO sustavu, sredstva raspoloživa za projekte, kolektivna nabava (prijedlog i izbor predmeta nabave, parametri, ponude i kalkulacija, prijava, redoslijed, preuzimanje i poništenje zapisa POEN-a po iskorištenju), raspodjela vaučera iz pokroviteljstva dobrima i program raspodjele hrane.
 
 (2) Izrazi iz Pravilnika o KOLO sustavu imaju isto značenje u ovom pravilniku. Vaučer i davatelj imaju značenje utvrđeno Pravilnikom o pokroviteljstvu i donacijama.
 
@@ -14,7 +14,7 @@
 
 (1) U ovom se pravilniku koriste i sljedeći izrazi:
 
-1) **projekt**: raspodjela dobara i usluga u korist zajednice, iz dinarskih sredstava Zaklade izvan njezinih operativnih troškova, iz pokroviteljstva dobrima i uslugama ili iz donacija u programu raspodjele hrane; projekt je i podrška zadruzi iz dinarskih sredstava Zaklade (članak 8.);
+1) **projekt**: raspodjela dobara u korist zajednice, iz dinarskih sredstava Zaklade izvan njezinih operativnih troškova, iz pokroviteljstva dobrima ili iz donacija u programu raspodjele hrane; projekt je i podrška zadruzi iz dinarskih sredstava Zaklade (članak 8.);
 
 2) **kolektivna nabava**: projekt kojim Zaklada dinarskim sredstvima nabavlja dobra od treće osobe, a sudionici ta dobra preuzimaju u jednakim dijelovima uz poništenje zapisa POEN-a po iskorištenju;
 
@@ -270,13 +270,13 @@ Projekt koji nije kolektivna nabava, raspodjela vaučera ni potpora zadruzi po �
 
 (4) Obveza iz ovoga članka obveza je Zaklade prema vlastitom programu. Njome se ne zasniva ugovorni odnos između korisnika i dobavljača ni između korisnika i Zaklade, i korisnik po toj osnovi ne stječe potraživanje prema Zakladi.
 
-## VII — Raspodjela vaučera iz pokroviteljstva dobrima i uslugama
+## VII — Raspodjela vaučera iz pokroviteljstva dobrima
 
 ### Članak 29. — Priroda raspodjele
 
 (1) Raspodjela vaučera projekt je Zaklade kojim sudionici uzimaju vaučere izdane po Glavi IV. Pravilnika o pokroviteljstvu i donacijama, uz poništenje zapisa POEN-a po iskorištenju (članak 18. Pravilnika o KOLO sustavu).
 
-(2) Zaklada u raspodjeli ništa ne nabavlja, ne plaća i ne posjeduje. Dobra predaje, odnosno usluge pruža davatelj, neposredno imatelju vaučera. Na raspodjelu se na odgovarajući način primjenjuje članak 3.
+(2) Zaklada u raspodjeli ništa ne nabavlja, ne plaća i ne posjeduje. Robu predaje, odnosno usluge pruža davatelj, neposredno imatelju vaučera. Na raspodjelu se na odgovarajući način primjenjuje članak 3.
 
 ### Članak 30. — Tko uzima vaučer
 
@@ -290,11 +290,11 @@ Projekt koji nije kolektivna nabava, raspodjela vaučera ni potpora zadruzi po �
 
 (1) Broj POEN-a koji se poništava po vaučeru jednak je broju POEN-a koji bi po ugovoru bio evidentiran bez uvećanja po koeficijentu evidencije, podijeljenom brojem vaučera i zaokruženom na najbliži cijeli broj. Kada je predmet vaučera hrana, broj POEN-a obuhvaća i uvećanje po koeficijentu evidencije hrane (članak 22. stavak 4. Pravilnika o pokroviteljstvu i donacijama).
 
-(2) Broj POEN-a po vaučeru izvodi se iz upisa evidentiranog po ugovoru, u kojem je vrijednost dobara i usluga iz cjenika davatelja uzeta kao mjera opsega doprinosa (članak 16. stavak 4. točka 4. Pravilnika o KOLO sustavu). Dobiva se dijeljenjem toga upisa brojem vaučera (stavak 1.). Zaklada ga ne utvrđuje kao cijenu, uz njega ne objavljuje dinarsku vrijednost, dobro se njime ne plaća, a poništeni POEN nitko ne prima. Vrijednost ugovora objavljuje se u izvješću iz članka 37. stavka 2.
+(2) Broj POEN-a po vaučeru izvodi se iz upisa evidentiranog po ugovoru, u kojem je vrijednost dobara iz cjenika davatelja uzeta kao mjera opsega doprinosa (članak 16. stavak 4. točka 4. Pravilnika o KOLO sustavu). Dobiva se dijeljenjem toga upisa brojem vaučera (stavak 1.). Zaklada ga ne utvrđuje kao cijenu, uz njega ne objavljuje dinarsku vrijednost, dobro se njime ne plaća, a poništeni POEN nitko ne prima. Vrijednost ugovora objavljuje se u izvješću iz članka 37. stavka 2.
 
 ### Članak 32. — Dostupnost vaučera
 
-(1) Vaučeri su dostupni od trenutka izdavanja. Na Platformi se za svaki ugovor prikazuju: opis dobra, odnosno usluge; naziv davatelja, mjesto i adresa, odnosno sva mjesta i adrese predaje, odnosno pružanja; broj preostalih vaučera; broj POEN-a po vaučeru; rok valjanosti.
+(1) Vaučeri su dostupni od trenutka izdavanja. Na Platformi se za svaki ugovor prikazuju: opis dobra; naziv davatelja, mjesto i adresa, odnosno sva mjesta i adrese predaje, odnosno pružanja; broj preostalih vaučera; broj POEN-a po vaučeru; rok valjanosti.
 
 (2) Rok za prijavu i redoslijed ne utvrđuju se; vaučer uzima sudionik koji ga prvi zatraži.
 
@@ -302,9 +302,9 @@ Projekt koji nije kolektivna nabava, raspodjela vaučera ni potpora zadruzi po �
 
 ### Članak 33. — Uzimanje vaučera
 
-(1) Sudionik uzima vaučer na Platformi. Pri uzimanju izjavljuje da nije osoba iz članka 36. Pravilnika o pokroviteljstvu i donacijama i daje izričitu privolu da se zapis o poništenju, s opisom dobra, odnosno usluge i nazivom davatelja, prikazuje uz njegov pseudonim u evidenciji doprinosa (članak 56. Pravilnika o KOLO sustavu), uz izjavu da je svjestan da takav prikaz može otkriti podatke o njemu, uključujući i podatke o zdravlju kada se vaučer odnosi na takvu uslugu. Bez izjave i privole vaučer se ne može uzeti.
+(1) Sudionik uzima vaučer na Platformi. Pri uzimanju izjavljuje da nije osoba iz članka 36. Pravilnika o pokroviteljstvu i donacijama i daje izričitu privolu da se zapis o poništenju, s opisom dobra i nazivom davatelja, prikazuje uz njegov pseudonim u evidenciji doprinosa (članak 56. Pravilnika o KOLO sustavu), uz izjavu da je svjestan da takav prikaz može otkriti podatke o njemu, uključujući i podatke o zdravlju kada se vaučer odnosi na takvu uslugu. Bez izjave i privole vaučer se ne može uzeti.
 
-(2) Sudionik privolu za prikaz može povući u svakom trenutku. Povlačenjem privole opis dobra, odnosno usluge i naziv davatelja brišu se iz opisa zapisa o poništenju i više se ne prikazuju drugim korisnicima; zapis o poništenju ostaje (članak 55. stavak 2. Pravilnika o KOLO sustavu).
+(2) Sudionik privolu za prikaz može povući u svakom trenutku. Povlačenjem privole opis dobra i naziv davatelja brišu se iz opisa zapisa o poništenju i više se ne prikazuju drugim korisnicima; zapis o poništenju ostaje (članak 55. stavak 2. Pravilnika o KOLO sustavu).
 
 (3) Vaučer glasi na račun korisnika koji ga je uzeo, vodi se pod njegovim pseudonimom i ne prenosi se.
 
@@ -312,15 +312,15 @@ Projekt koji nije kolektivna nabava, raspodjela vaučera ni potpora zadruzi po �
 
 ### Članak 34. — Iskorištenje i istek vaučera
 
-(1) Davatelj, odnosno sudionik kojeg je davatelj odredio (članak 32. stavak 3. Pravilnika o pokroviteljstvu i donacijama), pri provjeri vaučera vidi njegov opis, rok valjanosti i pseudonim imatelja te potvrđuje predaju dobra, odnosno pružanje usluge.
+(1) Davatelj, odnosno sudionik kojeg je davatelj odredio (članak 32. stavak 3. Pravilnika o pokroviteljstvu i donacijama), pri provjeri vaučera vidi njegov opis, rok valjanosti i pseudonim imatelja te potvrđuje predaju robe, odnosno pružanje usluge.
 
 (2) Potvrdom je vaučer iskorišten i bilježi se kod davatelja, uz pseudonim imatelja.
 
-(3) Platforma davatelju izdaje potvrdu o predaji po iskorištenim vaučerima. Potvrda sadrži opis dobra, odnosno usluge, broj iskorištenih vaučera i pseudonim imatelja, a ne sadrži POEN.
+(3) Platforma davatelju izdaje potvrdu o predaji po iskorištenim vaučerima. Potvrda sadrži opis dobra, broj iskorištenih vaučera i pseudonim imatelja, a ne sadrži POEN.
 
 (4) Vaučer koji imatelj ne iskoristi do isteka roka valjanosti prestaje, a poništenje izvršeno pri uzimanju ne ispravlja se.
 
-(5) Imatelj vaučera kojem davatelj odbije predaju, odnosno pružanje, ili kod kojeg je vaučer označen kao iskorišten iako dobro nije predano, odnosno usluga nije pružena, podnosi prigovor po članku 40. Uvjeta korištenja.
+(5) Imatelj vaučera kojem davatelj odbije predaju, odnosno pružanje, ili kod kojeg je vaučer označen kao iskorišten iako roba nije predana, odnosno usluga nije pružena, podnosi prigovor po članku 40. Uvjeta korištenja.
 
 ## VIII — Ispravak poništenja i prigovor
 
@@ -348,13 +348,13 @@ Projekt koji nije kolektivna nabava, raspodjela vaučera ni potpora zadruzi po �
 
 (1) Javno su dostupni: registar prijedloga u zbirnom obliku, ishod izbornog glasovanja, kalkulacija u cijelosti, broj potvrđenih dijelova i ukupan broj poništenih POEN-a.
 
-(2) Dinarska strana nabave (sve prikupljene ponude s iznosima i nazivom ponuditelja, izabrani dobavljač, nabavna cijena po jedinici, ukupan dinarski trošak i njegov odnos prema gornjoj granici iz članka 7.) objavljuje se u cijelosti u izvješću o raspolaganju sredstvima Zaklade (članak 7. stavak 5. Pravilnika o KOLO sustavu), odvojeno od kalkulacije, jer broj POEN-a po dijelu nije cijena dobra (članak 17.) i ne smije se čitati kao njezin izraz. Iz dinarske strane ništa se ne izostavlja. U istom izvješću objavljuje se i vrijednost ugovora o pokroviteljstvu dobrima i uslugama.
+(2) Dinarska strana nabave (sve prikupljene ponude s iznosima i nazivom ponuditelja, izabrani dobavljač, nabavna cijena po jedinici, ukupan dinarski trošak i njegov odnos prema gornjoj granici iz članka 7.) objavljuje se u cijelosti u izvješću o raspolaganju sredstvima Zaklade (članak 7. stavak 5. Pravilnika o KOLO sustavu), odvojeno od kalkulacije, jer broj POEN-a po dijelu nije cijena dobra (članak 17.) i ne smije se čitati kao njezin izraz. Iz dinarske strane ništa se ne izostavlja. U istom izvješću objavljuje se i vrijednost ugovora o pokroviteljstvu dobrima.
 
 (3) Sudionicima je dostupan popis korisnika koji su preuzeli dio, s pseudonimom i mjestom u redoslijedu. Broj POEN-a u zapisu korisnika ne objavljuje se uz taj popis.
 
 (4) Podaci o sudjelovanju pojedinog korisnika ne objavljuju se izvan obima iz stavaka 1. i 3.
 
-(5) Zaklada za tekuću kalendarsku godinu javno objavljuje ukupan iznos dinarskih sredstava utrošen na projekte, broj provedenih nabava, broj i vrijednost ugovora o pokroviteljstvu dobrima i uslugama i broj iskorištenih vaučera. Objava ne ograničava broj ni učestalost nabava.
+(5) Zaklada za tekuću kalendarsku godinu javno objavljuje ukupan iznos dinarskih sredstava utrošen na projekte, broj provedenih nabava, broj i vrijednost ugovora o pokroviteljstvu dobrima i broj iskorištenih vaučera. Objava ne ograničava broj ni učestalost nabava.
 
 ## X — Program raspodjele hrane
 
@@ -404,7 +404,7 @@ Projekt koji nije kolektivna nabava, raspodjela vaučera ni potpora zadruzi po �
 
 (2) Broj POEN-a po vaučeru jednak je zbroju doprinosa koji se za tu partiju evidentiraju prema članku 41. i članku 42. stavku 3., podijeljenom brojem vaučera i zaokruženom na najbliži cijeli broj. Zaklada ga ne utvrđuje kao cijenu, uz njega ne objavljuje dinarsku vrijednost, hrana se njime ne plaća, a poništeni POEN nitko ne prima.
 
-(3) Vaučer uzima svaki punoljetni korisnik koji ima dovoljan broj POEN-a; maloljetni korisnik vaučer ne uzima. Korisnik može istodobno imati najviše dva neiskorištena vaučera, računajući zajedno vaučere programa i vaučere iz pokroviteljstva dobrima i uslugama (članak 30. stavak 2.), a iz iste partije najviše jedan; kada ga iskoristi, ili kada vaučer prestane, može uzeti sljedeći (članak 30. stavak 3.).
+(3) Vaučer uzima svaki punoljetni korisnik koji ima dovoljan broj POEN-a; maloljetni korisnik vaučer ne uzima. Korisnik može istodobno imati najviše dva neiskorištena vaučera, računajući zajedno vaučere programa i vaučere iz pokroviteljstva dobrima (članak 30. stavak 2.), a iz iste partije najviše jedan; kada ga iskoristi, ili kada vaučer prestane, može uzeti sljedeći (članak 30. stavak 3.).
 
 (4) Pri uzimanju vaučera poništava se broj POEN-a po vaučeru (članak 18. Pravilnika o KOLO sustavu). Na uzimanje se na odgovarajući način primjenjuje članak 33.
 

@@ -30,7 +30,7 @@ import VauceriPrograma from "@/components/lanac/VauceriPrograma";
 const QRCodeSVG = dynamic(() => import("qrcode.react").then((m) => m.QRCodeSVG), { ssr: false });
 
 /**
- * Vaučeri iz pokroviteljstva dobrima i uslugama (nabavke Glava VII).
+ * Vaučeri iz pokroviteljstva dobrima (nabavke Glava VII).
  *
  * Vaučeri su dostupni od izdavanja; reda i roka za prijavu nema — vaučer uzima
  * korisnik koji ga prvi zatraži (čl. 32). Za uzimanje su obavezne izjava o

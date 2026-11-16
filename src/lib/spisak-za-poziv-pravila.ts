@@ -87,7 +87,7 @@ export function donacijaVodiNaSpisak(u: DonacijaZaSpisak): boolean {
 
 /**
  * Da li pokroviteljstvo vodi podnosioca na spisak (čl. 8 st. 1 t. 3). Samo novac:
- * pokroviteljstvo dobrima i uslugama ne vodi na spisak (st. 3).
+ * pokroviteljstvo dobrima ne vodi na spisak (st. 3).
  */
 export function pokroviteljstvoVodiNaSpisak(p: { novcano: boolean; maloletan: boolean }): boolean {
   return p.novcano && !p.maloletan;

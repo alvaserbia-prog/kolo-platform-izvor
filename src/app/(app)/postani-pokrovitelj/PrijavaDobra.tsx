@@ -19,7 +19,7 @@ import Obavestenje from "@/components/ui/Obavestenje";
 import Polje, { KLASE_UNOSA } from "@/components/ui/Polje";
 
 /**
- * Prijava pokroviteljstva dobrima i uslugama (Pravilnik o pokroviteljstvu i
+ * Prijava pokroviteljstva dobrima (Pravilnik o pokroviteljstvu i
  * donacijama čl. 28) iz ODOBRENOG upisa (čl. 16): samo opis dobra odnosno usluge,
  * broj vaučera, cena, fotografija cenovnika, mesto i adresa predaje (i dodatna mesta,
  * set 5.0.6) i izjava o

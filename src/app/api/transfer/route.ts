@@ -88,13 +88,13 @@ export async function POST(req: NextRequest) {
     );
   }
   // Nadoknada (negativan zapis po čl. 36 Pravilnika o dokazu stvarnosti) ne
-  // sprečava razmenu dobara i usluga, ali POEN-i koji pristignu prvo popunjavaju
+  // sprečava razmenu dobara, ali POEN-i koji pristignu prvo popunjavaju
   // nadoknadu — dok zapis ne pređe nulu nema čime da se prepisuje drugome.
   if (jeNadoknada(posiljac.wallet.balance)) {
     return await greska(
       `Na tvom zapisu stoji nadoknada od ${iznosNadoknade(posiljac.wallet.balance)} POENA. ` +
         `POENI koji ti pristignu prvo je popunjavaju; prepis u tuđi zapis je moguć tek kad zapis pređe nulu. ` +
-        `Razmena dobara i usluga ti nije ograničena.`,
+        `Razmena dobara ti nije ograničena.`,
       400
     );
   }

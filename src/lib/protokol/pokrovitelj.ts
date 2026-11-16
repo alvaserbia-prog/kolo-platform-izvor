@@ -52,8 +52,8 @@ export async function evidentirajDoprinos(params: {
   primalacId: string;
 }) {
   const { pokroviteljId, rsdIznos, tip, evidentiraoId, napomena } = params;
-  // 🔴 Kumulativ je NOVČANI (čl. 21 st. 2; čl. 33 st. 3). Vrednost dobara i usluga
-  // se ne dodaje. Dobra i usluge idu kroz `protokol/pokroviteljstvo-dobrima.ts`.
+  // 🔴 Kumulativ je NOVČANI (čl. 21 st. 2; čl. 33 st. 3). Vrednost dobara
+  // se ne dodaje. Dobra idu kroz `protokol/pokroviteljstvo-dobrima.ts`.
   if (tip !== "NOVAC") throw new Error("U kumulativ pokrovitelja ulazi samo novčani doprinos.");
 
   // Korak 1: DB transakcija
@@ -253,7 +253,7 @@ export function generisiUgovorTekst(p: {
   //
   // Gazdinstvo (čl. 19 st. 4, čl. 20 st. 1): ugovor zaključuje sam nosilac, uz naziv i
   // broj gazdinstva — umesto sedišta, MB, PIB-a i zastupnika (isto kao ugovor o
-  // dobrima i uslugama za gazdinstvo); uplata ide sa računa gazdinstva ili nosioca.
+  // dobrima za gazdinstvo); uplata ide sa računa gazdinstva ili nosioca.
   const datum = new Date().toLocaleDateString("sr-RS");
   const gazdinstvo = p.vrstaDavaoca === "GAZDINSTVO";
   return [
@@ -273,7 +273,7 @@ export function generisiUgovorTekst(p: {
     // 🔴 Član 2 i 3 po donacijama 5.0 čl. 19 st. 4 (shodno čl. 14 st. 2; 26.10.2026):
     // izjava o doprinosu bez broja POEN-a, koeficijenta i nivoa, uz izjavu da ga
     // pokrovitelj ne prima. Brana `donacija-ugovor-bez-poena-izvor.test.ts`.
-    "Član 2. Donacija je dobrovoljna i bez naknade. Donator donacijom ne pribavlja nijedno dobro ni uslugu, ne stiče potraživanje prema Primaocu, pravo na povraćaj donacije, pravo na otkup POEN-a niti neposredan uticaj u odlučivanju o pravilima sistema. Primalac se obavezuje da donaciju upotrebi isključivo za ostvarivanje ciljeva zbog kojih je osnovan.",
+    "Član 2. Donacija je dobrovoljna i bez naknade. Donator donacijom ne pribavlja nijedno dobro, ne stiče potraživanje prema Primaocu, pravo na povraćaj donacije, pravo na otkup POEN-a niti neposredan uticaj u odlučivanju o pravilima sistema. Primalac se obavezuje da donaciju upotrebi isključivo za ostvarivanje ciljeva zbog kojih je osnovan.",
     "Član 3. Doprinos koji se povodom donacije evidentira po pravilima KOLO sistema ne određuje se ovim ugovorom. Taj upis nije protivčinidba za donaciju, Donator na njega nema potraživanje i Donator ga ne prima.",
     "Član 4. Poreske obaveze koje proizlaze iz donacije snosi Donator u skladu sa važećim propisima.",
     // F5-M1 (registar 2026-10): isti način zaključenja kao ugovor o dobrima (donacije čl. 32 st. 1).
@@ -420,7 +420,7 @@ export async function potvrdiPrijavu(prijavaId: string, adminId: string, aprUpor
   }
 
   // Spisak za poziv (dokaz stvarnosti čl. 8 st. 1 t. 3, set 4.8.2): utvrđen prijem
-  // NOVČANOG pokroviteljstva podnosiocu koji je korisnik NUDI spisak. Dobra i usluge
+  // NOVČANOG pokroviteljstva podnosiocu koji je korisnik NUDI spisak. Dobra
   // ne vode na spisak (čl. 8 st. 3). Potvrda pokroviteljstvom je ukinuta: prijem ne
   // verifikuje. 🔴 Pokroviteljstvo i POEN po njemu ne zavise od ovoga (čl. 12 st. 1). Ne baca.
   if (

@@ -27,7 +27,7 @@ const TIP_LABELA: Record<string, string> = {
   ZADRUGA_USTUPANJE: "Zadruga — ustupanje na korišćenje",
   EMISIJA_GAZDINSTVO: "Doprinos gazdinstva",
   OTPIS_GAZDINSTVO: "Otpis doprinosa gazdinstva",
-  EMISIJA_POKROVITELJ_DOBRA: "Pokroviteljstvo dobrima i uslugama",
+  EMISIJA_POKROVITELJ_DOBRA: "Pokroviteljstvo dobrima",
   EMISIJA_PARTNERSTVO: "Partnerstvo",
   PONISTENJE_VAUCER: "Vaučer",
   ISPRAVKA_VAUCER: "Ispravka evidencije — vaučer",

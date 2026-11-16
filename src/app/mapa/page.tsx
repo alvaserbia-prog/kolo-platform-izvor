@@ -29,7 +29,7 @@ export default async function MapaPage() {
   const t = await getTranslations("mapa");
   const tg = await getTranslations("gazdinstva");
 
-  // Pokrovitelj na adresi iz upisa dok je upisan, a pokrovitelj dobrima i uslugama i na
+  // Pokrovitelj na adresi iz upisa dok je upisan, a pokrovitelj dobrima i na
   // mestima predaje dok ima vaučere koji važe (donacije čl. 18 st. 4, set 5.1.2).
   const [gazdinstva, pokrovitelji, mestaPredaje] = await Promise.all([
     gazdinstvaZaMapu(), pokroviteljiZaMapu(), mestaPredajeZaMapu(),

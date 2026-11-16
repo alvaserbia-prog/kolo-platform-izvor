@@ -9,7 +9,7 @@
 
 /**
  * Vrste zapisa čiji opis nosi podatak o ličnosti (Politika čl. 29 st. 3): opis
- * dobra, odnosno usluge i naziv davaoca uz vaučer mogu otkriti podatke o licu,
+ * dobra i naziv davaoca uz vaučer mogu otkriti podatke o licu,
  * uključujući podatke o zdravlju. Pri prestanku statusa imaoca briše se opis
  * (`description`, `opisKljuc`, `opisParametri`); zapis ostaje.
  *

@@ -17,7 +17,7 @@ import { obradiVaucereLanca, obradiNepreuzeteDelove } from "@/lib/protokol/lanac
  *      se obaveštavaju, pa u svakom prolazu jedan krug dodele dodatnih delova; istekom
  *      dopunskog roka nabavka se zatvara, rezervacije se oslobađaju i brišu se predlozi te reči;
  *   6. predlozi stariji od dvanaest meseci se brišu;
- *   7. istekli vaučeri iz pokroviteljstva dobrima i uslugama prestaju (status
+ *   7. istekli vaučeri iz pokroviteljstva dobrima prestaju (status
  *      ISTEKAO). 🔴 Poništenje izvršeno pri uzimanju se NE ispravlja i POEN se ne
  *      vraća (nabavke čl. 34 st. 4) — rezervacije kod vaučera nema od seta 4.7.8.
  *      Raspodela je projekat iste vrste, pa ide istim noćnim poslom;

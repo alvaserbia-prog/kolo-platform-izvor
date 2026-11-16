@@ -170,7 +170,7 @@
 
 ### Članak 12. — Oglasi
 
-(1) Oglas sadrži pseudonim oglašivača, naslov i opis dobra ili usluge, kategoriju, iznos, mjesto (naselje iz šifrarnika), fotografije koje oglašivač sam prilaže i, po izboru oglašivača, broj telefona. Oglas korisnika koji nije u Kolu nosi oznaku da oglašivač nije u Kolu.
+(1) Oglas sadrži pseudonim oglašivača, naslov i opis dobra, kategoriju, iznos, mjesto (naselje iz šifrarnika), fotografije koje oglašivač sam prilaže i, po izboru oglašivača, broj telefona. Oglas korisnika koji nije u Kolu nosi oznaku da oglašivač nije u Kolu.
 
 (2) Oglas je javan: vide ga svi posjetitelji Platforme, uključujući neprijavljene osobe, i indeksiraju ga tražilice. Broj telefona oglašivača dostupan je samo sudionicima.
 
@@ -320,23 +320,23 @@
 
 ### Članak 22. — Pokrovitelji
 
-(1) Pri upisu pokrovitelja u registar pokrovitelja (članak 16. Pravilnika o pokroviteljstvu i donacijama) obrađujemo: naziv, pravni oblik, adresu sjedišta, matični broj i PIB pravne osobe, odnosno obrtnika; adresu elektroničke pošte i broj telefona za kontakt; mjesto i adresu za prikaz na karti i izjavu kojom traži taj prikaz, a kod pokroviteljstva dobrima i uslugama i mjesta predaje, odnosno pružanja vaučera, koja se prikazuju dok vaučeri vrijede; logotip, ako je priložen; ime i prezime korisnika koji vrši upis i njegov odnos prema pokrovitelju, njegove izjave; status upisa i podatak da je Zaklada naziv, pravni oblik, matični broj i zastupnika usporedila s registrom. Za registrirano poljoprivredno gospodarstvo obrađujemo ime i prezime nositelja, naziv i broj gospodarstva i kontaktne podatke.
+(1) Pri upisu pokrovitelja u registar pokrovitelja (članak 16. Pravilnika o pokroviteljstvu i donacijama) obrađujemo: naziv, pravni oblik, adresu sjedišta, matični broj i PIB pravne osobe, odnosno obrtnika; adresu elektroničke pošte i broj telefona za kontakt; mjesto i adresu za prikaz na karti i izjavu kojom traži taj prikaz, a kod pokroviteljstva dobrima i mjesta predaje, odnosno pružanja vaučera, koja se prikazuju dok vaučeri vrijede; logotip, ako je priložen; ime i prezime korisnika koji vrši upis i njegov odnos prema pokrovitelju, njegove izjave; status upisa i podatak da je Zaklada naziv, pravni oblik, matični broj i zastupnika usporedila s registrom. Za registrirano poljoprivredno gospodarstvo obrađujemo ime i prezime nositelja, naziv i broj gospodarstva i kontaktne podatke.
 
 (2) Uz prijavu novčanog pokroviteljstva obrađuju se podaci o doprinosu i veza između pokrovitelja i korisnika u čiji se zapis doprinos evidentira. Ime i prezime podnositelja upisuje se u evidenciju identiteta (članak 24.). Novčano pokroviteljstvo može podnositelja koji je korisnik koji nije u Kolu dovesti na popis za poziv (članak 16.); pokroviteljstvo ne potvrđuje stvarnost.
 
 (3) Na rang-listi pokrovitelja objavljuju se naziv, logotip i iznos doprinosa u dinarima; adresa sjedišta, matični broj, PIB, broj gospodarstva i zastupnik, odnosno nositelj, ne objavljuju se. Na karti se pokrovitelj prikazuje nazivom, logotipom, mjestom i adresom, uz ponudu vaučera.
 
-(4) Svrha obrade: evidencija pokrovitelja i pokroviteljstva, uključujući partnerstvo, u kojem partner usluge pruža Zakladi (Glava VI. Pravilnika o pokroviteljstvu i donacijama), i vođenje financijske evidencije Zaklade. Uz prijavu partnerstva obrađuju se isti podaci kao uz prijavu pokroviteljstva dobrima i uslugama.
+(4) Svrha obrade: evidencija pokrovitelja i pokroviteljstva, uključujući partnerstvo, u kojem partner usluge pruža Zakladi (Glava VI. Pravilnika o pokroviteljstvu i donacijama), i vođenje financijske evidencije Zaklade. Uz prijavu partnerstva obrađuju se isti podaci kao uz prijavu pokroviteljstva dobrima.
 
 (5) Pravna osnova: izvršenje ugovora s pokroviteljem (članak 12. stavak 1. točka 2. ZZPL-a), uključujući prikaz na karti, s adresom, kao dio sudjelovanja zatraženog upisom, o čemu se pri upisu daje izjava; za podatke o korisniku koji vrši upis, odnosno o zastupniku: legitimni interes Zaklade (članak 12. stavak 1. točka 6. ZZPL-a); za računovodstvenu dokumentaciju: zakonska obveza (članak 12. stavak 1. točka 3. ZZPL-a).
 
-(6) Prikaz na karti traje dok je pokrovitelj upisan i prestaje brisanjem upisa, koje je moguće kada pokrovitelj nema ugovor o pokroviteljstvu dobrima i uslugama s neiskorištenim vaučerima. Doprinosi dani do brisanja ostaju na rang-listi, osim ako korisnik koji je vodio upis zatraži da se pokrovitelj ukloni i s nje. Ugovori i registar pokrovitelja čuvaju se 10 godina od nastanka, u skladu s propisima o računovodstvu.
+(6) Prikaz na karti traje dok je pokrovitelj upisan i prestaje brisanjem upisa, koje je moguće kada pokrovitelj nema ugovor o pokroviteljstvu dobrima s neiskorištenim vaučerima. Doprinosi dani do brisanja ostaju na rang-listi, osim ako korisnik koji je vodio upis zatraži da se pokrovitelj ukloni i s nje. Ugovori i registar pokrovitelja čuvaju se 10 godina od nastanka, u skladu s propisima o računovodstvu.
 
-### Članak 23. — Pokroviteljstvo dobrima i uslugama
+### Članak 23. — Pokroviteljstvo dobrima
 
-(1) Uz prijavu pokroviteljstva dobrima i uslugama (članak 28. Pravilnika o pokroviteljstvu i donacijama) obrađujemo: opis dobra, odnosno usluge, broj vaučera, cijenu po jedinici koju davatelj primjenjuje u prometu, fotografiju cjenika, mjesto i adresu predaje, odnosno pružanja, izjavu davatelja o ispunjenosti propisa i podatke o sklapanju ugovora (vrijeme i kontrolni broj teksta). Ime i prezime podnositelja upisuje se u evidenciju identiteta (članak 24.).
+(1) Uz prijavu pokroviteljstva dobrima (članak 28. Pravilnika o pokroviteljstvu i donacijama) obrađujemo: opis dobra, broj vaučera, cijenu po jedinici koju davatelj primjenjuje u prometu, fotografiju cjenika, mjesto i adresu predaje, odnosno pružanja, izjavu davatelja o ispunjenosti propisa i podatke o sklapanju ugovora (vrijeme i kontrolni broj teksta). Ime i prezime podnositelja upisuje se u evidenciju identiteta (članak 24.).
 
-(2) Fotografiju cjenika vidi samo administratorski tim Zaklade. Naziv pokrovitelja i vrijednost pokroviteljstva dobrima i uslugama objavljuju se na rang-listi, a naziv i logotip i na vaučerima i uz ponudu vaučera.
+(2) Fotografiju cjenika vidi samo administratorski tim Zaklade. Naziv pokrovitelja i vrijednost pokroviteljstva dobrima objavljuju se na rang-listi, a naziv i logotip i na vaučerima i uz ponudu vaučera.
 
 (3) Svrha i pravna osnova isti su kao u članku 22.
 
@@ -460,11 +460,11 @@
 
 ### Članak 29. — Vaučeri
 
-(1) U raspodjeli vaučera iz pokroviteljstva dobrima i uslugama (Glava VII. Pravilnika o projektima i kolektivnim nabavama) obrađujemo: izjavu da niste osoba povezana s davateljem, privolu iz stavka 3., vaučer i njegov kod, vrijeme uzimanja, broj POEN-a poništen pri uzimanju, vrijeme iskorištenja i tko ga je potvrdio, kao i prigovor povodom vaučera.
+(1) U raspodjeli vaučera iz pokroviteljstva dobrima (Glava VII. Pravilnika o projektima i kolektivnim nabavama) obrađujemo: izjavu da niste osoba povezana s davateljem, privolu iz stavka 3., vaučer i njegov kod, vrijeme uzimanja, broj POEN-a poništen pri uzimanju, vrijeme iskorištenja i tko ga je potvrdio, kao i prigovor povodom vaučera.
 
 (2) Davatelj i sudionici koje je odredio da u njegovo ime potvrđuju vaučere pri provjeri vide opis vaučera, rok valjanosti i Vaš pseudonim; iskorišten vaučer bilježi se kod davatelja uz Vaš pseudonim. Ako Vas davatelj odredi da u njegovo ime potvrđujete vaučere, obrađuje se podatak o toj ovlasti (tko Vas je odredio, kada i kada je ovlast opozvana) i o vaučerima koje ste potvrdili.
 
-(3) Zapis o poništenju, s opisom dobra, odnosno usluge i nazivom davatelja, prikazuje se uz Vaš pseudonim u evidenciji doprinosa dostupnoj sudionicima, uz izričitu privolu koju dajete pri uzimanju vaučera, jer takav prikaz može otkriti podatke o Vama, uključujući i podatke o zdravlju. Bez privole vaučer se ne može uzeti; uzimanje vaučera je dobrovoljno. Povlačenjem privole opis dobra, odnosno usluge i naziv davatelja brišu se iz opisa zapisa o poništenju, a zapis ostaje u evidenciji doprinosa (članak 33. stavak 2. Pravilnika o projektima i kolektivnim nabavama); povlačenje ne utječe na zakonitost prikaza prije povlačenja.
+(3) Zapis o poništenju, s opisom dobra i nazivom davatelja, prikazuje se uz Vaš pseudonim u evidenciji doprinosa dostupnoj sudionicima, uz izričitu privolu koju dajete pri uzimanju vaučera, jer takav prikaz može otkriti podatke o Vama, uključujući i podatke o zdravlju. Bez privole vaučer se ne može uzeti; uzimanje vaučera je dobrovoljno. Povlačenjem privole opis dobra i naziv davatelja brišu se iz opisa zapisa o poništenju, a zapis ostaje u evidenciji doprinosa (članak 33. stavak 2. Pravilnika o projektima i kolektivnim nabavama); povlačenje ne utječe na zakonitost prikaza prije povlačenja.
 
 (4) Svrha obrade: provedba raspodjele i zaštita prava imatelja vaučera prema davatelju.
 
@@ -610,7 +610,7 @@
 
 11) zadruga koja sudjeluje u sustavu, kao izvor imena i prezimena i pseudonima zadrugara, i osoba koja djeluje u ime zadruge, u opsegu iz članka 26.;
 
-12) davatelj iz pokroviteljstva dobrima i uslugama i sudionici koje je odredio, u opsegu iz članka 29.;
+12) davatelj iz pokroviteljstva dobrima i sudionici koje je odredio, u opsegu iz članka 29.;
 
 13) član Kola koji otvori poziv s popisa za poziv, u opsegu iz članka 16., koji podatke obrađuje po ovlaštenju Zaklade;
 

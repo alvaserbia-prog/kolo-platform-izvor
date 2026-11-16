@@ -207,7 +207,7 @@ export default function NovcanikKartice({ balance, pseudonim, memberHash, platiP
 
         {/* Nadoknada (dokaz stvarnosti čl. 36) stoji ISPOD kartice, kao zaseban red. Nije prikazana
             kao negativno stanje jer nije dug: Fondacija po njoj nema potraživanje i
-            ne može je naplatiti. Razmena dobara i usluga se njome ne ograničava —
+            ne može je naplatiti. Razmena dobara se njome ne ograničava —
             ograničen je samo upis POENA drugome, dok zapis ne pređe nulu. */}
         {/* Privremeno ograničen iznos (donacije čl. 6 st. 7, set 5.0.9): ostaje u zapisu,
             ali se ne prepisuje, ne koristi u projektu i ne upisuje u ZRNO, najduže 7 dana. */}

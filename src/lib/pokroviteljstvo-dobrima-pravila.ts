@@ -1,5 +1,5 @@
 /**
- * Pokroviteljstvo dobrima i uslugama — ČISTA pravila (bez Prisme).
+ * Pokroviteljstvo dobrima — ČISTA pravila (bez Prisme).
  *
  * Osnov: Pravilnik o pokroviteljstvu i donacijama, Glava IV (čl. 27–36);
  * Pravilnik o projektima i kolektivnim nabavkama, Glava VII (čl. 29–34);
@@ -15,11 +15,11 @@
  *
  * ─── Brane koje se mogu izgubiti bez vidljivog kvara ─────────────────────────
  *
- * 🔴 Koeficijent evidencije pokroviteljstva dobrima i uslugama je 1,00 (donacije
+ * 🔴 Koeficijent evidencije pokroviteljstva dobrima je 1,00 (donacije
  * čl. 22 i 33 st. 2, set 5.0.0, izmena 28.10.2026). Do tada je bio nivo koji je pokrovitelj dostigao
  * novčanim doprinosom (O-6), pa je vrednost iz sopstvenog cenovnika davaoca rasla
  * do dvostruke. Snimljeni `UgovorDobra.koeficijent` zatečenih ugovora se ne dira, a
- * otpis po raskidu ide po njemu (čl. 35 st. 2). Vrednost dobara i usluga i dalje
+ * otpis po raskidu ide po njemu (čl. 35 st. 2). Vrednost dobara i dalje
  * NIKAD ne ulazi u novčani kumulativ ni u novčani deo rang-liste (čl. 33 st. 3).
  *
  * 🔴 O-8: broj POEN-a po vaučeru je deo upisa BEZ uvećanja po koeficijentu,
@@ -322,9 +322,9 @@ export function otpisPriRaskidu(poenEvidentirano: number, brojVaucera: number, u
 // ─── Koeficijent i broj POEN-a (čl. 33, nabavke čl. 31) ─────────────────────
 
 /**
- * Čl. 33 st. 2 — koeficijent evidencije pokroviteljstva dobrima i uslugama (čl. 22 st. 2):
+ * Čl. 33 st. 2 — koeficijent evidencije pokroviteljstva dobrima (čl. 22 st. 2):
  * 1,00, osim hrane (čl. 22 st. 4). Ne zavisi od novčanog kumulativa ni od nivoa pokrovitelja
- * ni od pravnog oblika davaoca, jer vrednost dobara i usluga utvrđuje davalac iz sopstvenog
+ * ni od pravnog oblika davaoca, jer vrednost dobara utvrđuje davalac iz sopstvenog
  * cenovnika (čl. 29). 🔴 Od seta 5.0.8 nije više isto što i novac: novčano pokroviteljstvo
  * ide po nivou pokrovitelja (`donacija-pravila.ts`), dobra ostaju na 1,00.
  */
@@ -342,7 +342,7 @@ export function poenZaUgovor(vrednostRsd: number, koeficijent: number): number {
 export const KOEFICIJENT_RASPODELE = 1.0;
 /**
  * Set 5.0.2 (nabavke čl. 31 st. 1) — kad je predmet hrana, broj POEN-a po vaučeru obuhvata
- * koeficijent hrane po poreklu (`hrana-pravila.ts`); za ostala dobra i usluge ostaje bez
+ * koeficijent hrane po poreklu (`hrana-pravila.ts`); za ostala dobra ostaje bez
  * uvećanja.
  */
 /** Tekst porekla u ugovoru (čl. 22 st. 5: Fondacija ga utvrđuje i upisuje u ugovor). Bez koeficijenta. */
@@ -548,7 +548,7 @@ export function potvrdePotpisaOk(p: { procitao: unknown; ovlascen: unknown; sagl
 export type VrstaDavaoca = "FIRMA" | "GAZDINSTVO";
 
 /**
- * Prijava iz odobrenog upisa (čl. 28 st. 2 i 3): samo dobro, odnosno usluga — opis,
+ * Prijava iz odobrenog upisa (čl. 28 st. 2 i 3): samo dobro — opis,
  * broj vaučera, cena, mesto i adresa predaje i izjava o propisima. Podaci o davaocu,
  * odnos, kontakt, izjava o ovlašćenju i potvrda o evidentiranju su u UPISU (čl. 16)
  * i u ugovor ulaze kao njegov snimak.
@@ -618,11 +618,11 @@ export function procitajPredmetDobra(
 ): { ok: true; podaci: PredmetPrijaveDobra } | { ok: false; razlog: string } {
   const tekst = (v: unknown) => (typeof v === "string" ? v.trim().replace(/\s+/g, " ") : "");
   const vrsta = b.vrsta === "DOBRO" || b.vrsta === "USLUGA" ? b.vrsta : null;
-  if (!vrsta) return { ok: false, razlog: "Izaberi da li se daje dobro ili usluga." };
+  if (!vrsta) return { ok: false, razlog: "Izaberi da li se daje dobro." };
 
   const opis = tekst(b.opis);
   if (opis.length < MIN_OPIS || opis.length > MAX_OPIS)
-    return { ok: false, razlog: "Opiši tačno dobro, odnosno uslugu (od 10 do 500 znakova)." };
+    return { ok: false, razlog: "Opiši tačno dobro (od 10 do 500 znakova)." };
 
   const brojVaucera = Number(b.brojVaucera);
   if (!Number.isInteger(brojVaucera) || brojVaucera < 1 || brojVaucera > MAX_VAUCERA_PO_UGOVORU)
@@ -714,7 +714,7 @@ export function kljucDavaoca(p: { vrstaDavaoca: VrstaDavaoca; maticniBroj: strin
 // ─── Ugovor (čl. 31) ─────────────────────────────────────────────────────────
 
 /**
- * Tekst ugovora o donaciji dobara odnosno usluga (čl. 31 st. 2, čl. 32 st. 1).
+ * Tekst ugovora o donaciji dobara (čl. 31 st. 2, čl. 32 st. 1).
  *
  * 🔴 Ugovor NE sadrži odredbe o POEN-u niti o evidentiranju POEN-a (čl. 31 st. 3,
  * O-3). Generiše se jednom, pri prihvatanju prijave, i SNIMA — ne generiše se
@@ -763,7 +763,7 @@ export function generisiUgovorDobraTekst(p: {
     ? `${p.zastupnikImePrezime}, ${odnos} (${p.zastupnikFunkcija})`
     : `${p.zastupnikImePrezime}, ${odnos}`;
   return [
-    "UGOVOR O DONACIJI DOBARA ODNOSNO USLUGA",
+    "UGOVOR O DONACIJI Dobara",
     "(ugovor u korist trećih lica)",
     "",
     `Zaključen dana ${p.datum.toLocaleDateString("sr-RS")} između:`,
@@ -801,13 +801,13 @@ export function generisiUgovorDobraTekst(p: {
   ].join("\n");
 }
 
-// ─── Rang-lista pokrovitelja, deo „Dobra i usluge" (čl. 25 st. 1) ────────────
+// ─── Rang-lista pokrovitelja, deo „Dobra" (čl. 25 st. 1) ────────────
 
 export type StavkaRangListeDobara = { naziv: string; logoUrl: string | null; vrednostRsd: number };
 
 /**
  * Drugi deo rang-liste pokrovitelja (čl. 25 st. 1): zbir vrednosti potpisanih
- * ugovora o pokroviteljstvu dobrima i uslugama po davaocu (pravno lice i
+ * ugovora o pokroviteljstvu dobrima po davaocu (pravno lice i
  * preduzetnik po matičnom broju, gazdinstvo po broju gazdinstva), od većeg ka
  * manjem. Naziv je onaj iz najnovijeg ugovora; gazdinstvo se prikazuje nazivom
  * gazdinstva.

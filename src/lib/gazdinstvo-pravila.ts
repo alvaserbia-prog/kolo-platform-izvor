@@ -76,7 +76,7 @@ export type UslovEvidentiranja = {
    * gazd. čl. 16 st. 1 t. 2. Potvrđenost NIJE uslov.
    */
   verifikovan: boolean;
-  /** Ima objavljen oglas kojim nudi dobro ili uslugu, uz sadržinski minimum. */
+  /** Ima objavljen oglas kojim nudi dobro, uz sadržinski minimum. */
   imaOglas: boolean;
   maloletan: boolean;
   aktivan: boolean;

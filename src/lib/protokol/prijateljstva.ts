@@ -349,7 +349,7 @@ export async function osveziPrijateljstvaDece(roditeljId: string): Promise<numbe
  * (Pravilnik čl. 17 st. 2 t. 3), uz nadoknadu po čl. 36 Pravilnika o dokazu stvarnosti i
  * poništen prepis po prijavi razmene. Minus se ponaša isto kao nadoknada: nije dug,
  * ne naplaćuje se, POEN-i koji pristignu prvo ga popunjavaju, prepis drugome je
- * moguć tek preko nule, a razmena dobara i usluga nije ograničena.
+ * moguć tek preko nule, a razmena dobara nije ograničena.
  *
  * Bez minusa bi postojao ovakav potez: sklopi prijateljstvo, dobij 500, odmah
  * prepiši roditelju, raskini — otpis pada na prazan račun; pa obnovi par i ponovi.

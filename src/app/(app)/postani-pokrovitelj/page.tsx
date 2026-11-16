@@ -169,7 +169,7 @@ export default async function PokroviteljstvoPage() {
       </p>
 
       {/* Novčano pokroviteljstvo ide po nivou pokrovitelja, po tabeli iz čl. 8 nad zbirom
-          pokrovitelja; dobra i usluge 1,00, osim hrane (donacije čl. 22, set 5.0.8). Tabela
+          pokrovitelja; dobra 1,00, osim hrane (donacije čl. 22, set 5.0.8). Tabela
           nivoa se ne prepisuje ovde — živi na ekranu Donacije i čita se iz pravila. */}
       <p className="text-xs text-kolo-muted">{t("nivoi_napomena")}</p>
     </Stranica>

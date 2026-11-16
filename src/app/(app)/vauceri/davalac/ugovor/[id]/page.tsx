@@ -16,7 +16,7 @@ export async function generateMetadata() {
 }
 
 /**
- * Primerak zaključenog ugovora o pokroviteljstvu dobrima i uslugama za štampu
+ * Primerak zaključenog ugovora o pokroviteljstvu dobrima za štampu
  * (donacije čl. 32 st. 1): zaglavlje „Zaključeno elektronski na Platformi KOLO,
  * dana …, u … časova, kontrolni broj …" i SNIMLJEN tekst — nikad se ne generiše
  * ponovo pri čitanju.

@@ -7,7 +7,7 @@
  *  - čl. 29 st. 2: Fondacija može ukloniti sadržaj koji krši Uslove, Pravilnik ili
  *    zakon, ili koji su drugi korisnici prijavili kao problematičan, i pritom
  *    „obaveštava korisnika o uklanjanju uz navođenje razloga".
- *  - čl. 23 st. 5: isto pravilo posebno za zabranjena dobra i usluge.
+ *  - čl. 23 st. 5: isto pravilo posebno za zabranjena dobra.
  *
  * Iz čl. 29 st. 2 sledi ključno pravilo ovog modula: **razlog je obavezan pri
  * svakom uklanjanju** i uvek se šalje vlasniku sadržaja. Uklanjanje bez razloga
@@ -51,7 +51,7 @@ export const PRIJAVA_RAZLOZI: PrijavaRazlogKod[] = [
 
 /** Srpski opis razloga — koristi se u admin panelu, notifikacijama i audit logu. */
 export const RAZLOG_OPIS: Record<PrijavaRazlogKod, string> = {
-  ZABRANJENO_DOBRO: "Zabranjeno dobro ili usluga (Uslovi čl. 23)",
+  ZABRANJENO_DOBRO: "Zabranjeno dobro (Uslovi čl. 23)",
   OBMANA: "Lažan ili obmanjujuć oglas (Uslovi čl. 22)",
   UVREDLJIVO: "Uvredljiv, preteći ili diskriminatorski sadržaj (Uslovi čl. 27)",
   LICNI_PODACI: "Lični podaci trećeg lica (Uslovi čl. 28)",

@@ -58,7 +58,7 @@ Registar sadrži dvadeset osam aktivnih radnji obrade (br. 1–29; radnja br. 15
 | Br. 19 | Zadrugari i osoba koja djeluje u ime zadruge | Privola; za zadružnog administratora ugovor |
 | Br. 20 | Gospodarstva i karta domaćih proizvođača | Ugovor |
 | Br. 21 | Evidencija identiteta | Ugovor; legitimni interes |
-| Br. 22 | Vaučeri iz pokroviteljstva dobrima i uslugama | Ugovor; za prikaz privola, odnosno izričita privola |
+| Br. 22 | Vaučeri iz pokroviteljstva dobrima | Ugovor; za prikaz privola, odnosno izričita privola |
 | Br. 23 | Preporuke | Ugovor |
 | Br. 24 | Popis za poziv i sprječavanje višestrukih računa | Privola; legitimni interes |
 | Br. 25 | Glasovanje i delegiranje u Gornjem Kolu (od Faze 2) | Ugovor; za glas člana Upravnog odbora legitimni interes |
@@ -140,7 +140,7 @@ Rizik se ocjenjuje kao umnožak vjerojatnosti i ozbiljnosti, svake na ljestvici 
 | R19 — Povezivanje imena i pseudonima zadrugara i pristup zadružnog administratora | 2 | 2 | 4 | Ime zadrugara povezano je s pseudonimom, a zadružni administrator vidi ime i broj zadrugara svoje zadruge. Vjerojatnost je niska jer se podatak dostavlja samo uz privolu i ne prikazuje drugima, a zadružni administrator radi samo u svojoj zadruzi; ozbiljnost je niska jer svojstvo zadrugara ne daje ovlast. Mjere: točka 5.14. |
 | R20 — Javna točna lokacija kućanstva povezana s pseudonimima članova | 2 | 3 | 6 | Točka na karti pokazuje ulicu i dio naselja; kod gospodarstva izvan registra to je u pravilu kućna lokacija, a naziv može sadržavati prezime. Mjere: točka 5.15. |
 | R21 — Centralizirana veza pseudonima i imena (evidencija identiteta) | 2 | 3 | 6 | Za upisanu osobu može se utvrditi tko stoji iza cijele evidencije njezina računa; neovlašten pristup bazi ili panelu izložio bi tu vezu za sve upisane. Vjerojatnost je niska jer ime ne izlazi u prikaze drugim korisnicima, osim u slučajevima iz točke 5.16; ozbiljnost je srednja jer veza otkriva cijelu evidenciju računa. Mjere: točka 5.16. |
-| R22 — Prikaz opisa vaučera uz pseudonim u evidenciji i davatelju | 2 | 3 | 6 | Zapis o poništenju nosi opis dobra, odnosno usluge i naziv davatelja uz pseudonim; kod zdravstvene ili slične usluge prikaz otkriva podatak o zdravlju. Vjerojatnost je niska: prikaz jest pravilo, ali se provodi samo uz privolu danu pri uzimanju, a podatak o zdravlju otkriva samo vaučer za zdravstvenu ili sličnu uslugu; ozbiljnost je srednja jer se prikazuju samo vrsta usluge i davatelj. Mjere: točka 5.17. |
+| R22 — Prikaz opisa vaučera uz pseudonim u evidenciji i davatelju | 2 | 3 | 6 | Zapis o poništenju nosi opis dobra i naziv davatelja uz pseudonim; kod zdravstvene ili slične usluge prikaz otkriva podatak o zdravlju. Vjerojatnost je niska: prikaz jest pravilo, ali se provodi samo uz privolu danu pri uzimanju, a podatak o zdravlju otkriva samo vaučer za zdravstvenu ili sličnu uslugu; ozbiljnost je srednja jer se prikazuju samo vrsta usluge i davatelj. Mjere: točka 5.17. |
 | R23 — Broj preporuka shvaćen kao ocjena osobe | 2 | 2 | 4 | Mali broj preporuka može se shvatiti kao nepovoljan sud, a par tko je koga preporučio otkriva vezu dviju osoba. Mjere: točka 5.18. |
 | R24 — Zlouporaba imena i broja telefona s popisa za poziv | 2 | 3 | 6 | Ime i broj korisnika s popisa postaju dostupni članovima Kola, jednom po jednom; član Kola time saznaje tko stoji iza pseudonima i može podatke zloupotrijebiti (neželjeni pozivi, prijevara, otkrivanje identiteta trećima), a uzastopnim otvaranjem prikupiti više podataka. Usporedba s drugim računima može pogrešno označiti imenjaka ili ukućanina. Ozbiljnost je srednja jer ime uz broj nije posebna kategorija podataka; vjerojatnost je niska jer se bilježi tko je podatke otvorio, popis ne vide članovi bez potvrde, podaci se otvaraju klikom dok je poziv otvoren, a usporedba ništa ne blokira. Mjere: točka 5.19. |
 | R25 — Maloljetna osoba predstavljena kao punoljetna u prostoru odraslih | 2 | 3 | 6 | Korisnik piše u Pričaonici i javlja se oglašivačima; dob se ne provjerava, pa maloljetna osoba koja se predstavi kao punoljetna ulazi u razgovore s punoljetnima bez zaštita za maloljetne. Mjere: točka 5.19. |
@@ -179,7 +179,7 @@ Predmet nastaje iz procjene nadzornika nad zapisom koji se već obrađuje. Zatvo
 
 ## 5.7. Mjere za oglase
 
-Za objavu se traži sadržajni minimum o dobru ili usluzi, a ne o osobi; fotografija lica i ime nisu traženi. Broj telefona dostupan je samo sudionicima. Vidljiva oznaka da oglašivač nije u Kolu štiti drugu stranu. Uklanjanje oglasa u svakom trenutku povlači i privolu. Oglas maloljetnog korisnika vidi samo onaj kojem je dostupan po Pravilniku o sudjelovanju djece.
+Za objavu se traži sadržajni minimum o dobru, a ne o osobi; fotografija lica i ime nisu traženi. Broj telefona dostupan je samo sudionicima. Vidljiva oznaka da oglašivač nije u Kolu štiti drugu stranu. Uklanjanje oglasa u svakom trenutku povlači i privolu. Oglas maloljetnog korisnika vidi samo onaj kojem je dostupan po Pravilniku o sudjelovanju djece.
 
 ## 5.8. Mjere za automatizirano odlučivanje
 
@@ -245,7 +245,7 @@ Zatvoren krug slučajeva upisa (članak 31. Pravilnika o KOLO sustavu); prošire
 
 ## 5.17. Mjere za vaučere
 
-Privola prije uzimanja, uz izričito upozorenje da prikaz može otkriti podatke o imatelju, i o zdravlju; bez privole vaučer se ne uzima, a uzimanje je dobrovoljno. Prikaz ide uz pseudonim, nikad uz ime. Zapis vide samo oni kojima je evidencija dostupna. Vaučere potvrđuju samo osobe koje je davatelj odredio. Vaučer je imenski i neprenosiv. Povlačenjem privole opis dobra, odnosno usluge i naziv davatelja brišu se iz opisa zapisa o poništenju, a zapis ostaje. Fotografiju cjenika vidi samo administratorski tim.
+Privola prije uzimanja, uz izričito upozorenje da prikaz može otkriti podatke o imatelju, i o zdravlju; bez privole vaučer se ne uzima, a uzimanje je dobrovoljno. Prikaz ide uz pseudonim, nikad uz ime. Zapis vide samo oni kojima je evidencija dostupna. Vaučere potvrđuju samo osobe koje je davatelj odredio. Vaučer je imenski i neprenosiv. Povlačenjem privole opis dobra i naziv davatelja brišu se iz opisa zapisa o poništenju, a zapis ostaje. Fotografiju cjenika vidi samo administratorski tim.
 
 Program raspodjele hrane obrađuje se u okviru radnji br. 6, 20 i 22, bez novih kategorija podataka: ugovor s gospodarstvom nosi podatke koje već nosi pokroviteljstvo nositelja gospodarstva (ime i prezime nositelja, naziv i broj gospodarstva), zapisnik o primopredaji nosi oznake životinja i masu, a objekt ne dobiva podatke o imateljima vaučera osim pseudonima pri preuzimanju. Otpis po preuzimanju nepreuzetih dijelova (deveta osnova negativnog zapisa) pogađa samo osobu koja je za uslugu na partiji, odnosno kao posljednji partner u lancu proizvodnje i distribucije po tom lancu, dobila doprinos i ograničen je tim doprinosom; ta osoba dobiva vlastitu obavijest.
 

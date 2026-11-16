@@ -48,7 +48,7 @@ export const TIP_PO_USLOVU: Record<UslovPotvrde, TransactionType> = {
 };
 
 /**
- * Dodatni tipovi koji se računaju u isti uslov. Pokroviteljstvo dobrima i uslugama
+ * Dodatni tipovi koji se računaju u isti uslov. Pokroviteljstvo dobrima
  * (donacije Glava IV) je pokroviteljstvo u smislu čl. 15 i ima sopstveni tip
  * emisije, da se brojači ne mešaju sa novcem — ali je isti trag učešća.
  */

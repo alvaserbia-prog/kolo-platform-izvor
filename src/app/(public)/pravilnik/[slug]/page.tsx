@@ -80,7 +80,7 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // čl. 31a: ime donatora samo kad ga potvrđuje izvod; čl. 34: pseudonimizacija;
   // „pravo potvrđivanja" umesto kapaciteta.
   // 4.7.8 — čl. 14 st. 3 t. 8: osmi osnov negativnog zapisa (neizvršenje pokroviteljstva
-  // dobrima i uslugama); čl. 15: kada je takvo pokroviteljstvo primljeno.
+  // dobrima); čl. 15: kada je takvo pokroviteljstvo primljeno.
   // 4.7.9 — čl. 2 i 38 (finansijski doprinos), čl. 2 i 40 (pokrovitelj): nosilac
   // registrovanog poljoprivrednog gazdinstva daje i novčano pokroviteljstvo.
   // 4.8.1 — čl. 16, 28, 32 i 67: neverifikovani korisnik postavlja i potražnju,
@@ -111,8 +111,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 5.1.6 — čl. 17 st. 5: ukupan broj POEN-a uvećava se i evidentiranjem pri otpisu ZRNA
   // (čl. 23 st. 3), a umanjuje i pri upisu ZRNA (čl. 22 st. 5); usklađeno sa čl. 23 i 25.
   "kolo-sistem": {
-    fajl: "Pravilnik_5_1_6.md",
-    verzija: "5.1.6",
+    fajl: "Pravilnik_5_1_7.md",
+    verzija: "5.1.7",
   },
   // 4.4.6 — čl. 12 st. 4 više ne prenosi nadležnost za opšte akte na Gornje Kolo
   // (akt nižeg ranga to ne može po sopstvenom čl. 8 st. 2); nov st. 6.
@@ -143,8 +143,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // 4.8.4 — čl. 4a (ime, mesto i broj uslov za spisak, poređenje i oznaka), nov čl. 4b
   // (utvrđivanje višestrukog naloga), čl. 5 i 18 (verifikator ne jemči jedinstvenost).
   "dokaz-stvarnosti": {
-    fajl: "dokaz_stvarnosti_5_1_2.md",
-    verzija: "5.1.2",
+    fajl: "dokaz_stvarnosti_5_1_7.md",
+    verzija: "5.1.7",
   },
   // 4.4.3 — obrazloženje koeficijenta evidencije (čl. 4) i definicija koeficijenta
   // bez jedinične formulacije „po jednom dinaru" (čl. 2).
@@ -164,7 +164,7 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // pa je po pouci 1 dobila narednu slobodnu šifru.)
   // 4.7.7 — čl. 7: prijavu podnosi zastupnik sa sopstvenog naloga, maloletni ne;
   // čl. 5a: ime u evidenciji identiteta samo kad ga potvrđuje izvod.
-  // 4.7.8 — nova Glava IVa: pokroviteljstvo dobrima i uslugama (ugovor u korist trećih
+  // 4.7.8 — nova Glava IVa: pokroviteljstvo dobrima (ugovor u korist trećih
   // lica, vaučeri, koeficijent dostignut samo novcem, otpis po neizvršenju).
   // 4.7.9 — čl. 1, 6–11 i 13: novčano pokroviteljstvo daje i nosilac registrovanog
   // poljoprivrednog gazdinstva; kumulativ gazdinstva se vodi zasebno (čl. 10).
@@ -173,21 +173,21 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // i novčano pokroviteljstvo potvrđuju stvarnost (dokaz stvarnosti čl. 4a).
   // 4.8.4 — čl. 5b i 13b: bez praga i izjave o poreklu (radi banka), primenu glave
   // prati direktor; čl. 13a (opis strukture), čl. 13f st. 4 (naredni ugovor).
-  // 5.0.0, izmena 28.10.2026 (odluka vlasnika, bez nove šifre) — čl. 2, 22, 33 i 35: pokroviteljstvo (novac i dobra i usluge) uvek sa
+  // 5.0.0, izmena 28.10.2026 (odluka vlasnika, bez nove šifre) — čl. 2, 22, 33 i 35: pokroviteljstvo (novac i dobra) uvek sa
   // koeficijentom 1,00; tabela nivoa važi samo za donaciju fizičkog lica.
   // 5.0.2 — čl. 2, 22 st. 4–7 (koeficijent hrane po poreklu), 28: hrana u pokroviteljstvu dobrima.
   // 5.0.4 — čl. 22 st. 5 i čl. 28: poreklo hrane utvrđuje Fondacija pri prihvatanju prijave; davalac ga ne bira.
   // 5.0.6 — čl. 2 t. 9, čl. 28 st. 2 t. 5 i čl. 31 st. 2 t. 4: više mesta predaje, odnosno pružanja.
   // 5.0.7 — čl. 22 st. 4–8 (koeficijent hrane: mera i lokalne sirovine), 28, 30 (alkohol), 31–33 (podnosilac potpisuje pri prijavi, ugovor zaključen prihvatanjem), 35 st. 6, 40.
   // 5.0.8 — čl. 2 t. 1–2, čl. 22 st. 1–3 i čl. 33 st. 2: novčano pokroviteljstvo po nivou
-  // pokrovitelja (tabela iz čl. 8 nad kumulativnim doprinosom pokrovitelja); dobra i usluge 1,00, osim hrane.
+  // pokrovitelja (tabela iz čl. 8 nad kumulativnim doprinosom pokrovitelja); dobra 1,00, osim hrane.
   // 5.0.9 — čl. 3, 4, 6 (uplata samo sa računa, poziv na broj po donaciji, potvrda o uplati,
   // donacija unapred, ograničenje i otpis kod primalaca), 10 st. 2, 20 st. 2–3; kartica uklonjena.
   // 5.1.3 — čl. 29 st. 1: cena za Republiku Srbiju = aritmetički prosek dominantnih cena pijaca
   // iz poslednjeg biltena sistema tržišnih informacija, zaokružen po stepenima; bilten se navodi.
   "pokroviteljstvo-donacije": {
-    fajl: "donacije_5_1_3.md",
-    verzija: "5.1.3",
+    fajl: "donacije_5_1_7.md",
+    verzija: "5.1.7",
   },
   // 4.4.4 — pravna priroda operativnog doprinosa (čl. 27): nema naručioca, nema
   // naknade, rezultat ide u zajedničko dobro pod licencama iz Glave II. Brisan
@@ -226,8 +226,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   // objavljuje nego dnevni zbir; izostavlja se i iznos, jer se izvodi iz godine
   // rođenja odnosno broja i uzrasta dece i sam bi ih odao.
     // 5.0.3 — čl. 6 st. 2 t. 6 i čl. 9 st. 3: u periodu upisa ZRNA dnevni iznos se ne evidentira.
-    fajl: "programi_podrske_5_1_2.md",
-    verzija: "5.1.2",
+    fajl: "programi_podrske_5_1_7.md",
+    verzija: "5.1.7",
   },
   // Usvojen 4.3.0 — do tada je stajao kao nacrt u `docs/pravilnik-modul-deca.md`.
   // 4.5.2 — postupak potvrde postojanja deteta (R-15, čl. 6 prepisan): izjašnjavaju
@@ -282,8 +282,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
     // 5.1.3 — čl. 40 st. 3: vrednost predatog po ceni za Republiku Srbiju iz donacija čl. 29 st. 1.
     // 5.1.4 — nepreuzeti delovi: čl. 26 (dopunski rok od 3 dana, dodatni delovi po redu),
     // čl. 18, 23, 24; čl. 46 st. 1 (objekat preuzima); čl. 52 st. 3–6 (poslednji partner u lancu).
-    fajl: "projekti_nabavke_5_1_4.md",
-    verzija: "5.1.4",
+    fajl: "projekti_nabavke_5_1_7.md",
+    verzija: "5.1.7",
   },
   // Nov akt uz set 4.7.0 — osnov u čl. 56 Pravilnika o KOLO sistemu. Krug i
   // zadruga su isti kolektivni oblik; zapis, pragovi rasta (svaki jednom), osnovi
@@ -321,8 +321,8 @@ const PRAVILNICI: Record<string, { fajl: string; verzija: string }> = {
   "gazdinstva": {
   // 5.0.4 — čl. 17 st. 4 i čl. 20 st. 1: netačni podaci na osnovu kojih je utvrđeno poreklo.
     // 4.8.4 — U5: isključenje zbog lažne izjave samo za onog ko je lagao ili znao (čl. 12 st. 3).
-    fajl: "gazdinstva_5_1_2.md",
-    verzija: "5.1.2",
+    fajl: "gazdinstva_5_1_7.md",
+    verzija: "5.1.7",
   },
 };
 

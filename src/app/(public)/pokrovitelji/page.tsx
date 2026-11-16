@@ -25,7 +25,7 @@ export default async function PokroviteljiPage() {
   const t = await getTranslations("pokroviteljPage");
 
   // Rang-lista u dva odvojena dela (Pravilnik o pokroviteljstvu i donacijama čl. 25
-  // st. 1): novčani doprinos i vrednost pokroviteljstva dobrima i uslugama. U oba
+  // st. 1): novčani doprinos i vrednost pokroviteljstva dobrima. U oba
   // dela samo naziv (uz logotip, ako ga je pokrovitelj priložio — čl. 26 st. 2) i
   // iznos u dinarima — 🔴 broj POEN-a, adresa, MB, PIB i BPG se ne objavljuju
   // (čl. 25), a logotip nije link (čl. 26 st. 3).

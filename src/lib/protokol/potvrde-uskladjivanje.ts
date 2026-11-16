@@ -324,7 +324,7 @@ export async function uskladiZatecenePotvrde(opcije: {
             ? `Pravilo je izmenjeno: POEN po potvrdi upisuje se kad potvrđeni član ostvari svoj prvi ` +
               `doprinos. Sa tvog zapisa je zato vraćeno ${iznos.toLocaleString("sr-RS")} POENA i tvoj ` +
               `zapis je sada u minusu ${minus.toLocaleString("sr-RS")} POENA. To nije dug i ne ` +
-              `naplaćuje se — POENI koji ti pristignu prvo ga popunjavaju, razmena dobara i usluga ` +
+              `naplaćuje se — POENI koji ti pristignu prvo ga popunjavaju, razmena dobara ` +
               `ti nije ograničena, a prepis drugome je moguć kad zapis pređe nulu. Zabeleženi ` +
               `doprinos ostaje i upisuje se čim uslov bude ispunjen.`
             : `Pravilo je izmenjeno: POEN po potvrdi upisuje se kad potvrđeni član ostvari svoj prvi ` +

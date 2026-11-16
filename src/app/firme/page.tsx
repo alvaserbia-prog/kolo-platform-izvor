@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Firme — spisak firmi koje kroz pokroviteljstvo dobrima i uslugama trenutno
+ * Firme — spisak firmi koje kroz pokroviteljstvo dobrima trenutno
  * nude vaučere (meni „Podrži", odluka vlasnika 20.10.2026). Vaučeri prikazuju
  * ponudu po dobru, ovde je ista ponuda po firmi.
  *

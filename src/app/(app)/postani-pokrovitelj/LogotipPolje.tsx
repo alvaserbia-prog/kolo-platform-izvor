@@ -6,7 +6,7 @@ import LogotipPokrovitelja from "@/components/LogotipPokrovitelja";
 import { LOGOTIP_PRIHVATA, proveriLogotip } from "@/lib/logotip-pokrovitelja-pravila";
 
 /**
- * Polje za logotip u prijavi pokroviteljstva (novcem i dobrima i uslugama) —
+ * Polje za logotip u prijavi pokroviteljstva (novcem i dobrima) —
  * Pravilnik o pokroviteljstvu i donacijama čl. 26 st. 2.
  *
  * Logotip je deo evidencije pokrovitelja (naziv i logotip) i prilaže se kad

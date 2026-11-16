@@ -27,7 +27,7 @@
  *   4. prevođenje punoletnog naloga u maloletni (`OTPIS_PREVOD_U_MALOLETNI`);
  *   5. otpis po usklađivanju zatečenih potvrda (čl. 39 dokaza stvarnosti);
  *   6. otpis po prestanku gazdinstva (`OTPIS_GAZDINSTVO`, Pravilnik čl. 39, gazdinstva čl. 23);
- *   7. otpis po neizvršenju pokroviteljstva dobrima i uslugama
+ *   7. otpis po neizvršenju pokroviteljstva dobrima
  *      (`OTPIS_POKROVITELJ_DOBRA`, donacije čl. 35) — `protokol/pokroviteljstvo-dobrima.ts`;
  *   8. otpis neto prepisa sa ugašenog naloga po utvrđenju višestrukog naloga
  *      (`OTPIS_VISESTRUKI_NALOG`, dokaz stvarnosti čl. 14) — `protokol/visestruki-nalog.ts`;
@@ -77,7 +77,7 @@ export function iznosNadoknade(stanje: number): number {
 /**
  * Koliko korisnik zaista može da uputi drugom.
  *
- * Nadoknada ne sprečava razmenu dobara i usluga, ali POEN-i koji pristignu prvo
+ * Nadoknada ne sprečava razmenu dobara, ali POEN-i koji pristignu prvo
  * popunjavaju nadoknadu — korisnik raspolaže zapisom tek pošto pređe nulu
  * (čl. 36 st. 5). Za negativno stanje raspoloživo je nula, ne negativan broj.
  */

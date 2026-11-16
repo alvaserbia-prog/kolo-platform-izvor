@@ -234,7 +234,7 @@ export async function GET() {
       },
       orderBy: { pozvanAt: "desc" },
     }),
-    // Pokroviteljstvo dobrima i uslugama (donacije Glava IV) — prijava nosi ime
+    // Pokroviteljstvo dobrima (donacije Glava IV) — prijava nosi ime
     // podnosioca, odnos prema davaocu i kontakt davaoca (odnosno ime nosioca
     // gazdinstva i BPG), izjave i potvrdu o evidentiranju (sa snimljenim tekstom),
     // snimljen tekst ugovora, vreme zaključenja i kontrolni broj. Zatečene prijave

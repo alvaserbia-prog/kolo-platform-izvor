@@ -3,7 +3,7 @@
  *
  * Pravilnik o pokroviteljstvu i donacijama čl. 26 st. 2 (set 4.7.8): pokrovitelj
  * može priložiti logotip, koji Fondacija objavljuje uz naziv na rang-listi, a kod
- * pokroviteljstva dobrima i uslugama i na vaučerima i uz ponudu vaučera. Logotip
+ * pokroviteljstva dobrima i na vaučerima i uz ponudu vaučera. Logotip
  * je deo evidencije pokrovitelja (naziv i logotip, ništa drugo) i prilaže se u
  * prijavi, kad saradnja počinje. Nije obavezan.
  *

@@ -286,7 +286,7 @@ async function javiEvidentiran(userId: string, doprinosId: string, iznos: number
       parametri: { iznos: iznos.toLocaleString("sr-RS") },
       naslov: `Evidentiran ti je doprinos od ${iznos.toLocaleString("sr-RS")} POEN`,
       tekst:
-        `Za oglas kojim nudiš dobro ili uslugu evidentiran ti je doprinos sadržaju ` +
+        `Za oglas kojim nudiš dobro evidentiran ti je doprinos sadržaju ` +
         `platforme — ${iznos.toLocaleString("sr-RS")} POEN (Pravilnik čl. 38).`,
       link: "/novcanik",
     });

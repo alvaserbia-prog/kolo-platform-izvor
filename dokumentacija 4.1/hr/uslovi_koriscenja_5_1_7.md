@@ -24,9 +24,9 @@
 
 2) **račun**: osobni korisnički račun na Platformi, stvoren registracijom, koji omogućuje pristup funkcijama sustava prema statusu korisnika;
 
-3) **Pijaca**: dio Platforme namijenjen oglašavanju i dogovaranju razmjene dobara i usluga između korisnika (prostor za razmjenu);
+3) **Pijaca**: dio Platforme namijenjen oglašavanju i dogovaranju razmjene dobara između korisnika (prostor za razmjenu);
 
-4) **oglas**: objava na Pijaci kojom korisnik nudi ili traži dobro ili uslugu;
+4) **oglas**: objava na Pijaci kojom korisnik nudi ili traži dobro; dobra su roba i usluge (članak 2. Pravilnika o KOLO sustavu);
 
 5) **sesija**: razdoblje aktivne uporabe Platforme između prijave i odjave korisnika.
 
@@ -108,19 +108,19 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 (1) Status korisnika ima punoljetni korisnik registriran na Platformi koji nije u Kolu.
 
-(2) Korisnik može pregledavati oglase, razmjenjivati dobra i usluge i postaviti oglas kojim nudi ili traži dobro ili uslugu (članak 18.). Može pisati u zajedničkom prostoru za razgovor (Pričaonica), odgovarati u razgovoru u kojem sudjeluje i sam započeti razgovor s oglašivačem povodom njegova oglasa, najviše tri nova razgovora dnevno. Ne može pristupati kontakt podacima oglašivača niti se mimo oglasa obraćati korisnicima koji ga nisu kontaktirali. Evidenciju i profil drugog korisnika vidi u opsegu iz članka 16.
+(2) Korisnik može pregledavati oglase, razmjenjivati dobra i postaviti oglas kojim nudi ili traži dobro (članak 18.). Može pisati u zajedničkom prostoru za razgovor (Pričaonica), odgovarati u razgovoru u kojem sudjeluje i sam započeti razgovor s oglašivačem povodom njegova oglasa, najviše tri nova razgovora dnevno. Ne može pristupati kontakt podacima oglašivača niti se mimo oglasa obraćati korisnicima koji ga nisu kontaktirali. Evidenciju i profil drugog korisnika vidi u opsegu iz članka 16.
 
 (3) Korisnik prepisuje POEN drugom korisniku i prima prepis.
 
-(4) Korisnik ne može potvrđivati druge korisnike, uvoditi ih u Kolo niti davati preporuke. Ne sudjeluje u zadruzi, programima potpore, kolektivnoj nabavi ni raspodjeli vaučera, osim u programu raspodjele hrane, ne podnosi prijavu pokroviteljstva dobrima i uslugama ni partnerstva osim kao zakonski zastupnik, obrtnik ili nositelj gospodarstva upisan u registar (Pravilnik o pokroviteljstvu i donacijama), ne izvršava operativni doprinos i ne upisuje ZRNO. Doprinos mu se evidentira samo kroz kanal doprinosa prvim oglasom i kroz kanale financijskog doprinosa i pokroviteljstva (članak 28. stavak 2. Pravilnika).
+(4) Korisnik ne može potvrđivati druge korisnike, uvoditi ih u Kolo niti davati preporuke. Ne sudjeluje u zadruzi, programima potpore, kolektivnoj nabavi ni raspodjeli vaučera, osim u programu raspodjele hrane, ne podnosi prijavu pokroviteljstva dobrima ni partnerstva osim kao zakonski zastupnik, obrtnik ili nositelj gospodarstva upisan u registar (Pravilnik o pokroviteljstvu i donacijama), ne izvršava operativni doprinos i ne upisuje ZRNO. Doprinos mu se evidentira samo kroz kanal doprinosa prvim oglasom i kroz kanale financijskog doprinosa i pokroviteljstva (članak 28. stavak 2. Pravilnika).
 
 (5) Korisnik koji ne poznaje nijednog člana Kola može dospjeti na popis za poziv, pod uvjetima Pravilnika o dokazu stvarnosti. Ni dospijeće na popis, ni donacija, pokroviteljstvo ili prijava gospodarstva ne potvrđuju njegovu stvarnost; ona se utvrđuje samo u lancu potvrda.
 
 ### Članak 15. — Sudionici
 
-(1) Član Kola ima pun pristup Platformi: razmjenjuje dobra i usluge, evidentira mu se doprinos u POEN-ima, potvrđuje korisnike i članove bez potvrde koje osobno poznaje, uvodi u Kolo korisnike s popisa za poziv, daje preporuke i sudjeluje u zadruzi, programima potpore i kolektivnoj nabavi.
+(1) Član Kola ima pun pristup Platformi: razmjenjuje dobra, evidentira mu se doprinos u POEN-ima, potvrđuje korisnike i članove bez potvrde koje osobno poznaje, uvodi u Kolo korisnike s popisa za poziv, daje preporuke i sudjeluje u zadruzi, programima potpore i kolektivnoj nabavi.
 
-(2) Član bez potvrde ima prava koja akti vežu uz sudionika: razmjenjuje dobra i usluge, evidentira mu se doprinos u POEN-ima, sudjeluje u zadruzi, programima potpore i kolektivnoj nabavi, ima isti uvid u evidenciju kao član Kola i uvodi u Kolo korisnike koje osobno poznaje. Što ne može i kako postaje član Kola utvrđuje Pravilnik o dokazu stvarnosti.
+(2) Član bez potvrde ima prava koja akti vežu uz sudionika: razmjenjuje dobra, evidentira mu se doprinos u POEN-ima, sudjeluje u zadruzi, programima potpore i kolektivnoj nabavi, ima isti uvid u evidenciju kao član Kola i uvodi u Kolo korisnike koje osobno poznaje. Što ne može i kako postaje član Kola utvrđuje Pravilnik o dokazu stvarnosti.
 
 (3) Čuvar Kola ima sva prava člana Kola, a aktiviranjem ZRNA sudjeluje u Gornjem Kolu, od Faze 2. Posljedice poništenja potvrde, odnosno uvođenja u Kolo, za upisano ZRNO utvrđuje Pravilnik (članak 29.).
 
@@ -146,7 +146,7 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 ### Članak 17. — Namjena i javnost Pijace
 
-(1) Pijaca je dio Platforme namijenjen oglašavanju ponuda i zahtjeva za dobra i usluge te dogovaranju razmjena između korisnika.
+(1) Pijaca je dio Platforme namijenjen oglašavanju ponuda i zahtjeva za dobra te dogovaranju razmjena između korisnika.
 
 (2) Pregled oglasa (sadržaj ponude ili zahtjeva, iznos u POEN-ima, mjesto i pseudonim oglašivača) javan je i dostupan svim posjetiteljima.
 
@@ -154,7 +154,7 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 (4) Pseudonim oglašivača ne povezuje se, za neprijavljene osobe, s evidencijom doprinosa ni profilom korisnika, a za korisnike koji nisu u Kolu samo sa suženim profilom iz članka 16., bez evidencije doprinosa.
 
-(5) Zaklada nije stranka u razmjeni: razmjenu ne sklapa u ime ni za račun korisnika i za nju ne prima naknadu. Pravni odnos nastaje isključivo između korisnika koji razmjenjuju dobra i usluge.
+(5) Zaklada nije stranka u razmjeni: razmjenu ne sklapa u ime ni za račun korisnika i za nju ne prima naknadu. Pravni odnos nastaje isključivo između korisnika koji razmjenjuju dobra.
 
 ### Članak 18. — Oglas i sadržajni minimum
 
@@ -168,9 +168,9 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 ### Članak 19. — Doprinos prvim oglasom i odobrenje
 
-(1) Za prvi oglas kojim nudi dobro ili uslugu i koji ispunjava sadržajni minimum korisniku se evidentira doprinos pod uvjetima iz članka 38. Pravilnika. Oglas se objavljuje odmah, a doprinos se evidentira kada Zaklada odobri oglas; to vrijedi za svakog korisnika, bez obzira na to je li u Kolu.
+(1) Za prvi oglas kojim nudi dobro i koji ispunjava sadržajni minimum korisniku se evidentira doprinos pod uvjetima iz članka 38. Pravilnika. Oglas se objavljuje odmah, a doprinos se evidentira kada Zaklada odobri oglas; to vrijedi za svakog korisnika, bez obzira na to je li u Kolu.
 
-(2) Zaklada odlučuje o odobrenju u razumnom roku, provjerom ispunjava li oglas sadržajni minimum, predstavlja li stvarnu ponudu dobra ili usluge i ne nudi li zabranjeno dobro ili uslugu (članak 23.). Oglas kojim se nudi zabranjeno dobro ili usluga Zaklada ne odobrava, nego ga uklanja uz navođenje razloga.
+(2) Zaklada odlučuje o odobrenju u razumnom roku, provjerom ispunjava li oglas sadržajni minimum, predstavlja li stvarnu ponudu dobra i ne nudi li zabranjeno dobro (članak 23.). Oglas kojim se nudi zabranjeno dobro Zaklada ne odobrava, nego ga uklanja uz navođenje razloga.
 
 (3) Ako doprinos ne bude odobren, korisnik se obavještava uz navođenje razloga; oglas se time ne uklanja, a doprinos se ponovno razmatra povodom dopunjenog ili novog oglasa istog korisnika.
 
@@ -188,25 +188,25 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 (2) Ako korisnik pri određivanju iznosa pođe od vrijednosti izražene u novcu, to je njegova vlastita procjena. Ona vrijedi samo za taj oglas, ne obvezuje drugu stranu i nije odnos koji Zaklada utvrđuje, objavljuje ili primjenjuje.
 
-(3) Zaklada ne utvrđuje vrijednost POEN-a u novcu i ne primjenjuje nijedan odnos po kojem bi se POEN mijenjao za novac ili novac za POEN. Iznos izražen u dinarima ulazi u njezine postupke samo kao mjera opsega doprinosa u novcu, odnosno u dobrima i uslugama, pri njegovu evidentiranju, po pravilima Pravilnika o pokroviteljstvu i donacijama (članak 16. stavak 4. točka 4. Pravilnika o KOLO sustavu). Dinarski iznos mjera je opsega doprinosa kod donacije, pokroviteljstva i predaje hrane, odnosno usluge u programu raspodjele hrane, partnerstva i lanca proizvodnje i distribucije, kao i kod gornje granice osnivačkog doprinosa; ostali kanali imaju iznose propisane u POEN-ima, a broj POEN-a po dijelu u kolektivnoj nabavi ne izvodi se iz cijene dobra.
+(3) Zaklada ne utvrđuje vrijednost POEN-a u novcu i ne primjenjuje nijedan odnos po kojem bi se POEN mijenjao za novac ili novac za POEN. Iznos izražen u dinarima ulazi u njezine postupke samo kao mjera opsega doprinosa u novcu, odnosno u dobrima, pri njegovu evidentiranju, po pravilima Pravilnika o pokroviteljstvu i donacijama (članak 16. stavak 4. točka 4. Pravilnika o KOLO sustavu). Dinarski iznos mjera je opsega doprinosa kod donacije, pokroviteljstva i predaje hrane, odnosno usluge u programu raspodjele hrane, partnerstva i lanca proizvodnje i distribucije, kao i kod gornje granice osnivačkog doprinosa; ostali kanali imaju iznose propisane u POEN-ima, a broj POEN-a po dijelu u kolektivnoj nabavi ne izvodi se iz cijene dobra.
 
-(4) Procjena iz stavka 2. nije jamstvo konvertibilnosti, ne predstavlja tečaj u smislu propisa o platnim uslugama i ne mijenja pravnu prirodu POEN-a utvrđenu Pravilnikom. Zaklada ne jamči da će za POEN biti ponuđena dobra i usluge.
+(4) Procjena iz stavka 2. nije jamstvo konvertibilnosti, ne predstavlja tečaj u smislu propisa o platnim uslugama i ne mijenja pravnu prirodu POEN-a utvrđenu Pravilnikom. Zaklada ne jamči da će za POEN biti ponuđena dobra.
 
 (5) Zaklada ne otkupljuje POEN ni ZRNO i ne osigurava njihovu konverziju u dinare ili drugo sredstvo plaćanja. Ne postoji ugovor o razmjeni dinara za POEN.
 
-(6) Korisnici slobodno određuju iznos za dobra i usluge koje nude. Platforma iznose ne utvrđuje, ne ograničava i ne kontrolira.
+(6) Korisnici slobodno određuju iznos za dobra koja nude. Platforma iznose ne utvrđuje, ne ograničava i ne kontrolira.
 
 ### Članak 22. — Pravila objavljivanja
 
-(1) Korisnik koji objavljuje ponudu ili zahtjev dužan je pružiti točan i jasan opis dobra ili usluge, iznos u POEN-ima po kojem je zaista spreman razmijeniti i sve uvjete relevantne za razmjenu.
+(1) Korisnik koji objavljuje ponudu ili zahtjev dužan je pružiti točan i jasan opis dobra, iznos u POEN-ima po kojem je zaista spreman razmijeniti i sve uvjete relevantne za razmjenu.
 
-(2) Korisnik ne smije objavljivati sadržaj koji je lažan, obmanjujuć ili koji pogrešno predstavlja prirodu, kvalitetu ili količinu dobra ili usluge.
+(2) Korisnik ne smije objavljivati sadržaj koji je lažan, obmanjujuć ili koji pogrešno predstavlja prirodu, kvalitetu ili količinu dobra.
 
-(3) Korisnik koji nudi dobro ili uslugu odgovara za ispunjenje propisa koji se na to dobro ili uslugu odnose, uključujući propise o registraciji djelatnosti, o proizvodnji i prometu, o sigurnosti hrane i porezne propise. Ti propisi vrijede i kada se razmjena dogovara posredstvom Platforme. Evidentiranje POEN-a povodom razmjene ne određuje i ne mijenja poreznu, računovodstvenu ni drugu javnopravnu kvalifikaciju posla između korisnika. Korisnik koji dobro ili uslugu nudi u okviru djelatnosti zbog koje je dužan izdati račun, fiskalizirani račun ili drugu ispravu dužan ju je izdati neovisno o tome je li razmjena evidentirana u POEN-ima. Zaklada ispunjenost tih uvjeta ne provjerava, ne potvrđuje i za nju ne odgovara.
+(3) Korisnik koji nudi dobro odgovara za ispunjenje propisa koji se na to dobro odnose, uključujući propise o registraciji djelatnosti, o proizvodnji i prometu, o sigurnosti hrane i porezne propise. Ti propisi vrijede i kada se razmjena dogovara posredstvom Platforme. Evidentiranje POEN-a povodom razmjene ne određuje i ne mijenja poreznu, računovodstvenu ni drugu javnopravnu kvalifikaciju posla između korisnika. Korisnik koji dobro nudi u okviru djelatnosti zbog koje je dužan izdati račun, fiskalizirani račun ili drugu ispravu dužan ju je izdati neovisno o tome je li razmjena evidentirana u POEN-ima. Zaklada ispunjenost tih uvjeta ne provjerava, ne potvrđuje i za nju ne odgovara.
 
-### Članak 23. — Zabranjena dobra i usluge
+### Članak 23. — Zabranjena dobra
 
-(1) Zabranjeno je nuđenje i razmjena dobara i usluga čiji je promet zabranjen zakonom, uključujući opojne droge i prekursore, oružje i eksplozivne tvari čiji promet nije dopušten, ukradenu robu ili robu za koju postoji sumnja da potječe iz kaznenog djela, osobne dokumente i službene isprave, osobne podatke trećih osoba, sadržaj koji potiče mržnju, nasilje ili diskriminaciju te financijske instrumente ili sheme čiji je cilj zaobilaženje propisa.
+(1) Zabranjeno je nuđenje i razmjena dobara čiji je promet zabranjen zakonom, uključujući opojne droge i prekursore, oružje i eksplozivne tvari čiji promet nije dopušten, ukradenu robu ili robu za koju postoji sumnja da potječe iz kaznenog djela, osobne dokumente i službene isprave, osobne podatke trećih osoba, sadržaj koji potiče mržnju, nasilje ili diskriminaciju te financijske instrumente ili sheme čiji je cilj zaobilaženje propisa.
 
 (2) Zabranjeno je i oglašavanje čiji su predmet POEN ili ZRNO: njihovo nuđenje, traženje, kupnja ili prodaja za novac ili drugu vrijednost izvan sustava (članak 28.).
 
@@ -218,9 +218,9 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 ### Članak 24. — Izvršenje razmjene
 
-(1) Razmjenu dogovaraju korisnici neposredno. Korisnici su slobodni utvrditi uvjete razmjene, uključujući način i rok isporuke dobra ili pružanja usluge.
+(1) Razmjenu dogovaraju korisnici neposredno. Korisnici su slobodni utvrditi uvjete razmjene, uključujući način i rok isporuke robe ili pružanja usluge.
 
-(2) Po dogovoru korisnika razmjena se evidentira prepisom POEN-a (članak 20. Pravilnika): zapis korisnika koji daje dobro ili uslugu uvećava se, a zapis korisnika koji prima umanjuje se za isti iznos. Razmjena nije platna transakcija i prepis ne predstavlja plaćanje u smislu propisa o platnim uslugama.
+(2) Po dogovoru korisnika razmjena se evidentira prepisom POEN-a (članak 20. Pravilnika): zapis korisnika koji daje dobro uvećava se, a zapis korisnika koji prima umanjuje se za isti iznos. Razmjena nije platna transakcija i prepis ne predstavlja plaćanje u smislu propisa o platnim uslugama.
 
 (3) Za ispunjenje, kvalitetu i rizik u razmjeni odgovaraju korisnici koji u njoj sudjeluju, prema općim pravilima obveznog prava.
 
@@ -234,17 +234,17 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 ### Članak 25. — Kolektivna nabava i vaučeri
 
-(1) Kolektivnu nabavu i raspodjelu vaučera iz pokroviteljstva dobrima i uslugama uređuje Pravilnik o projektima i kolektivnim nabavama. U njima sudjeluju sudionici; maloljetni korisnici ne sudjeluju. Sudjelovanje je dobrovoljno.
+(1) Kolektivnu nabavu i raspodjelu vaučera iz pokroviteljstva dobrima uređuje Pravilnik o projektima i kolektivnim nabavama. U njima sudjeluju sudionici; maloljetni korisnici ne sudjeluju. Sudjelovanje je dobrovoljno.
 
 (2) Prema dobavljaču u kolektivnoj nabavi Zaklada je kupac i ugovorna strana; korisnik s dobavljačem ne stupa u ugovorni odnos. Pri preuzimanju dijela poništava se broj POEN-a po dijelu, što je uvjet sudjelovanja; poništeni POEN ne prima nitko, Zaklada ništa ne stječe, a dobro je plaćeno dinarskim sredstvima Zaklade. Preuzimanje ne zasniva tražbinu prema Zakladi.
 
-(3) Dobro po vaučeru predaje, odnosno uslugu pruža davatelj neposredno imatelju vaučera i za njih odgovara imatelju; Zaklada nije strana u tom odnosu.
+(3) Robu po vaučeru predaje, odnosno uslugu pruža davatelj neposredno imatelju vaučera i za njih odgovara imatelju; Zaklada nije strana u tom odnosu.
 
 ### Članak 26. — Odnos prema propisima o zaštiti potrošača
 
-(1) Zaklada prema korisnicima ne nastupa na tržištu: ne nudi im dobra ni usluge uz naknadu, ne naplaćuje korištenje Platforme, razmjenu između korisnika ne sklapa u ime ni za račun korisnika i po osnovi nje ne prima nikakvu naknadu ni drugu vrijednost.
+(1) Zaklada prema korisnicima ne nastupa na tržištu: ne nudi im dobra uz naknadu, ne naplaćuje korištenje Platforme, razmjenu između korisnika ne sklapa u ime ni za račun korisnika i po osnovi nje ne prima nikakvu naknadu ni drugu vrijednost.
 
-(2) Kada dobro ili uslugu nudi osoba koja to čini u okviru djelatnosti, na odnos s korisnikom koji ih pribavlja za vlastite potrebe primjenjuju se propisi o zaštiti potrošača, bez obzira na to što je razmjena dogovorena posredstvom Platforme.
+(2) Kada dobro nudi osoba koja to čini u okviru djelatnosti, na odnos s korisnikom koji ih pribavlja za vlastite potrebe primjenjuju se propisi o zaštiti potrošača, bez obzira na to što je razmjena dogovorena posredstvom Platforme.
 
 (3) Prava iz tih propisa ostvaruju se prema toj osobi. Zaklada nije strana u razmjeni, ne odgovara za njihovo ispunjenje i ne utvrđuje u kojem svojstvu korisnik nastupa.
 
@@ -360,7 +360,7 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 (1) Zaklada odgovara za osiguravanje i održavanje infrastrukture, za zaštitu osobnih podataka u skladu sa zakonom i za primjenu pravila sustava kako su utvrđena aktima KOLO sustava.
 
-(2) Zaklada ne odgovara za ispunjenje obveza korisnika u razmjeni dobara i usluga ni za dostupnost dobara i usluga na Platformi i ne jamči ponudu dobara i usluga za POEN (članak 21. stavak 4.). Zaklada razmjenu ne sklapa u ime ni za račun korisnika i nije stranka u pravnom odnosu između korisnika.
+(2) Zaklada ne odgovara za ispunjenje obveza korisnika u razmjeni dobara ni za dostupnost dobara na Platformi i ne jamči ponudu dobara za POEN (članak 21. stavak 4.). Zaklada razmjenu ne sklapa u ime ni za račun korisnika i nije stranka u pravnom odnosu između korisnika.
 
 (3) Rizike funkcioniranja sustava opisuje Izjava o prihvaćanju rizika. Nijedno ograničenje odgovornosti iz ovih Uvjeta ne isključuje odgovornost Zaklade za štetu koju prouzroči namjerno ili krajnjom nepažnjom.
 
@@ -396,7 +396,7 @@ Punoljetni korisnik može imati status korisnika, člana bez potvrde, člana Kol
 
 2) nedostatak dijela preuzetog u kolektivnoj nabavi, uključujući slučaj u kojem dio nije preuzet iako je označen kao preuzet;
 
-3) neizvršenje obveze davatelja iz vaučera dodijeljenog u raspodjeli dobara i usluga iz pokroviteljstva, uključujući slučaj u kojem je vaučer označen kao iskorišten iako dobro nije predano, odnosno usluga nije pružena;
+3) neizvršenje obveze davatelja iz vaučera dodijeljenog u raspodjeli dobara iz pokroviteljstva, uključujući slučaj u kojem je vaučer označen kao iskorišten iako roba nije predana, odnosno usluga nije pružena;
 
 4) odluku o potvrdi i uvođenju u Kolo, uključujući odluku o lažnoj verifikaciji;
 

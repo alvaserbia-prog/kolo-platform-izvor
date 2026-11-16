@@ -1,5 +1,5 @@
 /**
- * Ikona vaučera — bira se po rečima iz opisa dobra, odnosno usluge. Crtež je u
+ * Ikona vaučera — bira se po rečima iz opisa dobra. Crtež je u
  * `src/components/IkonaVaucera.tsx` (linijski set kao na naslovnoj; emodži se ne koriste).
  *
  * Fotografiju dobra pokrovitelj ne šalje: uz vaučer se od pokrovitelja prikazuju

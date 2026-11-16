@@ -16,9 +16,9 @@ import PosaljiPotvrdu from "@/app/(app)/donacije/PosaljiPotvrdu";
 
 /**
  * Ugovori pokrovitelja (tab „Ugovori"): novčane prijave (donacije čl. 19–20) i ugovori
- * o pokroviteljstvu dobrima i uslugama (čl. 31–32), sa potpisom.
+ * o pokroviteljstvu dobrima (čl. 31–32), sa potpisom.
  *
- * Novčani ugovor se potpisuje potvrdom; ugovor o dobrima i uslugama — ceo snimljen
+ * Novčani ugovor se potpisuje potvrdom; ugovor o dobrima — ceo snimljen
  * tekst, tri potvrde i jednokratni kod na mejl (čl. 32 st. 1); posle potpisa
  * primerak za štampu (`/vauceri/davalac/ugovor/[id]`).
  * 🔴 Uz vrednost ugovora (dinari) se ne prikazuje broj POEN-a.

@@ -7,7 +7,7 @@ import { listaZabrana } from "@/lib/protokol/pokroviteljstvo-dobrima";
 
 /**
  * GET /api/admin/pokroviteljstvo/zabrane — lista zabrane davalaca posle raskida
- * ugovora o pokroviteljstvu dobrima i uslugama (donacije čl. 35 st. 5).
+ * ugovora o pokroviteljstvu dobrima (donacije čl. 35 st. 5).
  */
 export async function GET() {
   const session = await getServerSession(authOptions);

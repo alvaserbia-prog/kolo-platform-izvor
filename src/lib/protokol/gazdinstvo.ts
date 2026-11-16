@@ -1065,7 +1065,7 @@ export async function dajIzjavuOAdresi(userId: string, gazdinstvoId: string) {
 
 /**
  * Brisanje gazdinstva sa platforme (čl. 21) — samo lice koje odgovara za
- * izjavu, i samo kad gazdinstvo nema ugovor o pokroviteljstvu dobrima i uslugama
+ * izjavu, i samo kad gazdinstvo nema ugovor o pokroviteljstvu dobrima
  * sa neiskorišćenim vaučerima.
  *
  *  - Ima li gazdinstvo i druge članove, zahtev ima dejstvo ISTUPANJA tog lica:
@@ -1099,7 +1099,7 @@ export async function obrisiGazdinstvo(userId: string, gazdinstvoId: string) {
   const smem = smeObrisatiUpis(vauceri, sada);
   if (!smem.ok)
     throw new GazdinstvoGreska(
-      "Brisanje nije moguće dok gazdinstvo ima ugovor o pokroviteljstvu dobrima i uslugama sa neiskorišćenim vaučerima.",
+      "Brisanje nije moguće dok gazdinstvo ima ugovor o pokroviteljstvu dobrima sa neiskorišćenim vaučerima.",
       409,
     );
 

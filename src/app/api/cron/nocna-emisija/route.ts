@@ -76,7 +76,7 @@ async function nocniObracun(datum: Date, opcije: { osnivacki: boolean }) {
       }
     }
 
-    // 2a. Set 5.0.9: zabeleženo novčano pokroviteljstvo (od seta 5.1.2 i dobrima i uslugama)
+    // 2a. Set 5.0.9: zabeleženo novčano pokroviteljstvo (od seta 5.1.2 i dobrima)
     // evidentira se u narednom obračunskom periodu (Pravilnik čl. 37 st. 1–2), i to samo na
     // stvarnom kraju perioda;
     // pre provere Faze 2, jer ulazi u ukupan broj. Uz to prestaju istekla ograničenja
@@ -86,7 +86,7 @@ async function nocniObracun(datum: Date, opcije: { osnivacki: boolean }) {
       try {
         pokroviteljstvo = {
           evidentirano: await evidentirajZabelezenoPokroviteljstvo(),
-          // Set 5.1.2 (donacije čl. 33 st. 1): i pokroviteljstvo dobrima i uslugama.
+          // Set 5.1.2 (donacije čl. 33 st. 1): i pokroviteljstvo dobrima.
           evidentiranoDobra: await evidentirajZabelezenoPokroviteljstvoDobrima(),
           // Set 5.1.2 (donacije čl. 43 st. 1, Pravilnik čl. 37 st. 5): i potvrđeno izvršenje partnerstva.
           evidentiranoPartnerstvo: await evidentirajZabelezenoPartnerstvo(),

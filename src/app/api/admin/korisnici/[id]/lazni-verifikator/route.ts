@@ -53,7 +53,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
         kljuc: "notifikacije.nadoknada",
         parametri: { iznos: n.iznos },
         naslov: "Nastala je nadoknada na tvom zapisu",
-        tekst: `Poništenjem verifikacije koju si obavio nastala je nadoknada od ${n.iznos} POENA, jer poništeni POENI nisu bili pokriveni. Nadoknada nije dug i ne može se naplatiti; POENI koji ti pristignu prvo je popunjavaju. Razmena dobara i usluga ti nije ograničena.`,
+        tekst: `Poništenjem verifikacije koju si obavio nastala je nadoknada od ${n.iznos} POENA, jer poništeni POENI nisu bili pokriveni. Nadoknada nije dug i ne može se naplatiti; POENI koji ti pristignu prvo je popunjavaju. Razmena dobara ti nije ograničena.`,
         link: "/novcanik",
       });
     }

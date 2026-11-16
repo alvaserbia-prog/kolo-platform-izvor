@@ -1352,11 +1352,11 @@
     "otvoriDokument": "Open document →",
     "uslovi": {
       "naslov": "Terms of Use of the KOLO Platform",
-      "ver": "5.1.5"
+      "ver": "5.1.7"
     },
     "privatnost": {
       "naslov": "Privacy Policy of the KOLO Platform",
-      "ver": "5.1.2"
+      "ver": "5.1.7"
     },
     "statut": {
       "naslov": "Statute of the KOLO Foundation",
@@ -1364,23 +1364,23 @@
     },
     "dpia": {
       "naslov": "Data Protection Impact Assessment (DPIA)",
-      "ver": "5.1.4"
+      "ver": "5.1.7"
     },
     "radnjeObrade": {
       "naslov": "Records of Processing Activities of Personal Data",
-      "ver": "5.1.2"
+      "ver": "5.1.7"
     },
     "rizici": {
       "naslov": "Risk Acceptance Statement",
-      "ver": "5.1.5"
+      "ver": "5.1.7"
     },
     "whitepaper": {
       "naslov": "KOLO Whitepaper",
-      "ver": "5.1.5"
+      "ver": "5.1.7"
     },
     "pravilnik": {
       "naslov": "KOLO System Rulebooks",
-      "ver": "5.1.6",
+      "ver": "5.1.7",
       "sviPravilnici": "← All rulebooks",
       "pravilnici": "Rulebooks"
     },
@@ -1401,21 +1401,21 @@
       "odluke": "Foundation decisions"
     },
     "meta_uslovi_title": "Terms of Use · KOLO",
-    "meta_uslovi_desc": "Terms of Use of the KOLO Platform, version 5.1.5",
+    "meta_uslovi_desc": "Terms of Use of the KOLO Platform, version 5.1.7",
     "meta_privatnost_title": "Privacy Policy · KOLO",
-    "meta_privatnost_desc": "Privacy Policy of the KOLO Platform, version 5.1.2",
+    "meta_privatnost_desc": "Privacy Policy of the KOLO Platform, version 5.1.7",
     "meta_statut_title": "Statute of the KOLO Foundation · KOLO",
     "meta_statut_desc": "Statute of the KOLO Foundation, version 4.1",
     "meta_dpia_title": "DPIA · KOLO",
-    "meta_dpia_desc": "Data Protection Impact Assessment, version 5.1.4",
+    "meta_dpia_desc": "Data Protection Impact Assessment, version 5.1.7",
     "meta_radnje_title": "Records of Processing Activities · KOLO",
-    "meta_radnje_desc": "Records of Processing Activities of Personal Data, version 5.1.2",
+    "meta_radnje_desc": "Records of Processing Activities of Personal Data, version 5.1.7",
     "meta_rizici_title": "Risk Acceptance Statement · KOLO",
-    "meta_rizici_desc": "Risk acceptance statement for participation in the KOLO system, version 5.1.5",
+    "meta_rizici_desc": "Risk acceptance statement for participation in the KOLO system, version 5.1.7",
     "meta_whitepaper_title": "Whitepaper · KOLO",
-    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.1.5",
+    "meta_whitepaper_desc": "KOLO Whitepaper, version 5.1.7",
     "meta_pravilnik_title": "KOLO System Rulebooks · KOLO",
-    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.1.6",
+    "meta_pravilnik_desc": "Index of KOLO system rulebooks, version 5.1.7",
     "rb": {
       "kolo-sistem": {
         "naziv": "Rulebook on the KOLO System",

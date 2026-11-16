@@ -75,7 +75,7 @@ export interface GodisnjiProjektniPregled {
   godina: number;
   utrosenoRSD: number;   // zbir ProjekatTrosak za tekucu kalendarsku godinu
   brojNabavki: number;   // broj sprovedenih (zavrsenih) nabavki u toj godini
-  /** Nabavke cl. 37 st. 5 — ugovori o pokroviteljstvu dobrima i uslugama zakljuceni u godini. */
+  /** Nabavke cl. 37 st. 5 — ugovori o pokroviteljstvu dobrima zakljuceni u godini. */
   brojUgovoraDobra: number;
   vrednostUgovoraDobraRSD: number;
   /** Nabavke cl. 37 st. 5 — vauceri iskorisceni u godini. */
@@ -85,7 +85,7 @@ export interface GodisnjiProjektniPregled {
 /**
  * Zbirni pregled projekata za tekucu kalendarsku godinu (nabavke cl. 37 st. 5):
  * dinari utroseni na projekte, broj sprovedenih nabavki, broj i vrednost ugovora o
- * pokroviteljstvu dobrima i uslugama i broj iskoriscenih vaucera.
+ * pokroviteljstvu dobrima i broj iskoriscenih vaucera.
  *
  * 🔴 Ovo je EVIDENCIJA OBIMA, ne ogranicenje. Ucestalost nabavki nije ogranicena
  * (odluka vlasnika 2026-09-07) — ali dok se godisnji zbir nigde ne vidi, obimu se
@@ -160,7 +160,7 @@ export interface DinarskaStranaNabavke {
   placenoRSD: number | null;
 }
 
-/** Vrednost ugovora o pokroviteljstvu dobrima i uslugama (nabavke cl. 37 st. 2). */
+/** Vrednost ugovora o pokroviteljstvu dobrima (nabavke cl. 37 st. 2). */
 export interface VrednostUgovoraDobra {
   davalac: string;
   potpisanoAt: string;

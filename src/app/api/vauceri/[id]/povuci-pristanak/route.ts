@@ -8,7 +8,7 @@ import { povuciPristanakPrikaza, odgovorNaGresku } from "@/lib/protokol/pokrovit
  * POST /api/vauceri/[id]/povuci-pristanak — imalac povlači pristanak na prikaz
  * zapisa o poništenju uz pseudonim (nabavke čl. 33 st. 2; Politika čl. 29 st. 3).
  *
- * Opis dobra, odnosno usluge i naziv davaoca brišu se iz opisa zapisa; zapis ostaje.
+ * Opis dobra i naziv davaoca brišu se iz opisa zapisa; zapis ostaje.
  * Povlači samo imalac, za svoj vaučer (proverava servis).
  */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {

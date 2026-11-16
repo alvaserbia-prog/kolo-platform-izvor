@@ -174,7 +174,7 @@ Svi članovi gazdinstva koji su članovi Kola jednako upravljaju gazdinstvom na 
 
 (1) Zabeležen doprinos evidentira se u zapisu člana, za sve članove podjednako, kada su ispunjena oba uslova:
 
-1) član je objavio oglas kojim nudi dobro ili uslugu i koji ispunjava sadržinski minimum, u ime gazdinstva ili lični; uslov ispunjava i oglas objavljen pre pristupanja, i kada više nije objavljen, osim oglasa uklonjenog zbog povrede Uslova korišćenja;
+1) član je objavio oglas kojim nudi dobro i koji ispunjava sadržinski minimum, u ime gazdinstva ili lični; uslov ispunjava i oglas objavljen pre pristupanja, i kada više nije objavljen, osim oglasa uklonjenog zbog povrede Uslova korišćenja;
 
 2) član je u Kolu.
 
@@ -222,7 +222,7 @@ Svi članovi gazdinstva koji su članovi Kola jednako upravljaju gazdinstvom na 
 
 ### Član 21 — Brisanje gazdinstva
 
-(1) Lice koje po članu 12 odgovara za izjavu o tačnosti podataka može gazdinstvo obrisati sa platforme ako gazdinstvo nema drugih članova i nema ugovor o pokroviteljstvu dobrima i uslugama sa neiskorišćenim vaučerima.
+(1) Lice koje po članu 12 odgovara za izjavu o tačnosti podataka može gazdinstvo obrisati sa platforme ako gazdinstvo nema drugih članova i nema ugovor o pokroviteljstvu dobrima sa neiskorišćenim vaučerima.
 
 (2) Pre brisanja lice se obaveštava o posledicama iz člana 22 stav 2 i člana 23, uključujući i broj POEN-a koji će mu biti otpisan. Brisanjem prestaju i da se prikazuju oglasi u ime gazdinstva.
 

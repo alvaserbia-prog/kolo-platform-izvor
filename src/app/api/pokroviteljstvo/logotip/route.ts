@@ -7,7 +7,7 @@ import { sacuvajLogotip, LogotipGreska } from "@/lib/protokol/logotip-pokrovitel
 
 /**
  * POST /api/pokroviteljstvo/logotip — prilaganje logotipa uz prijavu pokroviteljstva
- * (novcem ili dobrima i uslugama; donacije čl. 16 st. 5, 26 st. 2). Multipart, polje
+ * (novcem ili dobrima; donacije čl. 16 st. 5, 26 st. 2). Multipart, polje
  * `logotip`: JPG, PNG ili WebP, najviše 1 MB. Vraća javni URL koji prijava nosi
  * u polju `logoUrl`.
  *

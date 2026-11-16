@@ -21,7 +21,7 @@ import { useDijalog } from "@/components/ui/Dijalog";
  * pravno lice i preduzetnika), beleži da je poređenje izvršeno i upis odobrava ili
  * odbija uz obrazloženje. Isto za izmenu naziva odnosno MB (čl. 18 st. 2). Gazdinstvo
  * se ne poredi sa APR-om. Iz odobrenog upisa korisnik podnosi prijave; prijava
- * dobrima i uslugama se posle toga proverava samo na cenovnik.
+ * dobrima se posle toga proverava samo na cenovnik.
  */
 type Upis = {
   id: string;

@@ -87,10 +87,10 @@ U kolonama „Primaoci / obrađivači“ i „Prenos u treću zemlju“ navodi s
 
 **Radnja obrade br. 6 — Pokroviteljstvo**
 
-| **Svrha obrade** | Upis pokrovitelja u evidenciju, zaključenje i izvršenje ugovora o pokroviteljstvu novcem, odnosno dobrima i uslugama, i ugovora o partnerstvu, rang-lista pokrovitelja, spisak partnera i finansijsko izveštavanje. |
+| **Svrha obrade** | Upis pokrovitelja u evidenciju, zaključenje i izvršenje ugovora o pokroviteljstvu novcem, odnosno dobrima, i ugovora o partnerstvu, rang-lista pokrovitelja, spisak partnera i finansijsko izveštavanje. |
 | --- | --- |
 | **Kategorije lica** | Zastupnici pravnih lica, preduzetnici i nosioci registrovanih poljoprivrednih gazdinstava koji podnose prijavu; korisnici kojima se doprinos evidentira. |
-| **Kategorije podataka** | Naziv, adresa sedišta, matični broj i PIB pokrovitelja, odnosno ime i prezime, naziv i broj gazdinstva nosioca; ime i prezime i funkcija zastupnika; podatak da je Fondacija naziv, matični broj i zastupnika uporedila sa registrom privrednih subjekata; upis pokrovitelja, pravni oblik, kontakt adresa elektronske pošte i broj telefona i status upisa; mesto i adresa za prikaz na mapi, mesta predaje, odnosno pružanja vaučera i izjava kojom pokrovitelj traži taj prikaz; logotip, ako je priložen; podaci o doprinosu i veza pokrovitelja sa korisnikom koji je podneo prijavu; kod novčanog pokroviteljstva poziv na broj i potvrda o uplati, na način iz radnje br. 5. Kod dobara i usluga i: opis, broj vaučera, cena po jedinici, kontakt podaci davaoca, odnos podnosioca prema davaocu, fotografija cenovnika davaoca, izjava o ovlašćenju i potvrda podnosioca da je upoznat sa načinom evidentiranja, vreme zaključenja i kontrolni broj teksta ugovora, rok, mesto, kapacitet i izjava davaoca. Ime i prezime zastupnika upisuje se i u evidenciju identiteta (radnja br. 21). |
+| **Kategorije podataka** | Naziv, adresa sedišta, matični broj i PIB pokrovitelja, odnosno ime i prezime, naziv i broj gazdinstva nosioca; ime i prezime i funkcija zastupnika; podatak da je Fondacija naziv, matični broj i zastupnika uporedila sa registrom privrednih subjekata; upis pokrovitelja, pravni oblik, kontakt adresa elektronske pošte i broj telefona i status upisa; mesto i adresa za prikaz na mapi, mesta predaje, odnosno pružanja vaučera i izjava kojom pokrovitelj traži taj prikaz; logotip, ako je priložen; podaci o doprinosu i veza pokrovitelja sa korisnikom koji je podneo prijavu; kod novčanog pokroviteljstva poziv na broj i potvrda o uplati, na način iz radnje br. 5. Kod dobara i: opis, broj vaučera, cena po jedinici, kontakt podaci davaoca, odnos podnosioca prema davaocu, fotografija cenovnika davaoca, izjava o ovlašćenju i potvrda podnosioca da je upoznat sa načinom evidentiranja, vreme zaključenja i kontrolni broj teksta ugovora, rok, mesto, kapacitet i izjava davaoca. Ime i prezime zastupnika upisuje se i u evidenciju identiteta (radnja br. 21). |
 | **Pravni osnov** | Izvršenje ugovora sa pokroviteljem (član 12 stav 1 tačka 2 ZZPL-a), uključujući prikaz na mapi kao deo učešća zatraženog upisom; za podatke o zastupniku: legitimni interes Fondacije (član 12 stav 1 tačka 6 ZZPL-a); za računovodstvenu dokumentaciju: zakonska obaveza (član 12 stav 1 tačka 3 ZZPL-a). |
 | **Primaoci / obrađivači** | Infrastruktura; logotip kod Cloudflare, Inc. (Cloudflare R2); revizor, kada je propisan. Na rang-listi prikazuju se naziv, logotip i zbir doprinosa, a na vaučerima naziv i logotip; na mapi naziv, logotip, mesto, adresa (uz izjavu) i vaučeri. Fotografiju cenovnika vidi samo administratorski tim. |
 | **Prenos u treću zemlju** | Logotip (Cloudflare R2). |
@@ -125,10 +125,10 @@ U kolonama „Primaoci / obrađivači“ i „Prenos u treću zemlju“ navodi s
 
 **Radnja obrade br. 9 — Oglasi**
 
-| **Svrha obrade** | Objavljivanje ponude i potražnje radi razmene dobara i usluga na Pijaci i uspostavljanje kontakta povodom oglasa. |
+| **Svrha obrade** | Objavljivanje ponude i potražnje radi razmene dobara na Pijaci i uspostavljanje kontakta povodom oglasa. |
 | --- | --- |
 | **Kategorije lica** | Korisnici koji objavljuju oglas. |
-| **Kategorije podataka** | Pseudonim oglašivača, vrsta oglasa, naslov i opis dobra ili usluge, kategorija, iznos ili „po dogovoru“, mesto (naselje iz šifarnika), fotografije koje korisnik prilaže i, po izboru, broj telefona; oznaka da oglašivač nije u Kolu. |
+| **Kategorije podataka** | Pseudonim oglašivača, vrsta oglasa, naslov i opis dobra, kategorija, iznos ili „po dogovoru“, mesto (naselje iz šifarnika), fotografije koje korisnik prilaže i, po izboru, broj telefona; oznaka da oglašivač nije u Kolu. |
 | **Pravni osnov** | Pristanak (član 12 stav 1 tačka 1 ZZPL-a), dat objavom oglasa, uz upozorenje da je oglas javno vidljiv. Povlači se uklanjanjem oglasa, bez posledica po status. |
 | **Primaoci / obrađivači** | Infrastruktura; fotografije kod Cloudflare, Inc. (Cloudflare R2). Oglas je javno dostupan, i neprijavljenim licima, i indeksiraju ga pretraživači. Broj telefona dostupan je samo učesnicima. Oglas maloletnog korisnika prikazuje se samo onima kojima je dostupan po Pravilniku o učešću dece. |
 | **Prenos u treću zemlju** | Fotografije (Cloudflare R2). |
@@ -278,16 +278,16 @@ Radnja je prestala; broj se ne dodeljuje drugoj radnji.
 | **Mere zaštite** | Odvojena evidencija; jedno ime po nalogu: drugačije ime ne prepisuje upisano; ispravka samo po prigovoru; ime se ne upisuje u opis zapisa POEN-a, obaveštenja ni revizijski dnevnik; zatečena imena se ne prenose retroaktivno. |
 | **Napomena** | Upis nije verifikacija i nikad ne potvrđuje stvarnost. Test srazmernosti: ime se ne koristi ni u koju drugu svrhu, ne obrađuje se nijedan podatak iz isprava i briše se prestankom statusa, osim u slučaju iz člana 33 stav 7 Pravilnika o KOLO sistemu (radnja br. 29), pa interes Fondacije preteže; lice može podneti prigovor. |
 
-**Radnja obrade br. 22 — Vaučeri iz pokroviteljstva dobrima i uslugama**
+**Radnja obrade br. 22 — Vaučeri iz pokroviteljstva dobrima**
 
 | **Svrha obrade** | Raspodela vaučera: uzimanje vaučera i poništenje zapisa POEN-a pri uzimanju, prikaz zapisa o poništenju, potvrda iskorišćenja kod davaoca, zaštita prava imaoca prema davaocu i odlučivanje po prigovoru (Glava IV Pravilnika o pokroviteljstvu i donacijama, Glava VII Pravilnika o projektima i kolektivnim nabavkama). |
 | --- | --- |
 | **Kategorije lica** | Učesnici koji uzmu vaučer; lica koja davalac odredi da u njegovo ime potvrđuju vaučere. Maloletni korisnici nisu obuhvaćeni. |
-| **Kategorije podataka** | Izjava imaoca da nije lice povezano sa davaocem i pristanak na prikaz zapisa o poništenju; vaučer i njegov kod; vreme uzimanja; broj POEN-a poništen pri uzimanju; opis dobra, odnosno usluge i naziv davaoca u zapisu o poništenju; vreme iskorišćenja i ko ga je potvrdio; prigovor i odluka; za lice koje je davalac odredio: davalac, vreme određivanja i opoziva i potvrđeni vaučeri. Kada se vaučer odnosi na uslugu iz koje se može zaključiti nešto o zdravlju, opis je podatak o zdravlju. |
+| **Kategorije podataka** | Izjava imaoca da nije lice povezano sa davaocem i pristanak na prikaz zapisa o poništenju; vaučer i njegov kod; vreme uzimanja; broj POEN-a poništen pri uzimanju; opis dobra i naziv davaoca u zapisu o poništenju; vreme iskorišćenja i ko ga je potvrdio; prigovor i odluka; za lice koje je davalac odredio: davalac, vreme određivanja i opoziva i potvrđeni vaučeri. Kada se vaučer odnosi na uslugu iz koje se može zaključiti nešto o zdravlju, opis je podatak o zdravlju. |
 | **Pravni osnov** | Izvršenje ugovora (član 12 stav 1 tačka 2 ZZPL-a); za prikaz zapisa o poništenju sa opisom uz pseudonim i za uvid davaoca u pseudonim imaoca: pristanak (član 12 stav 1 tačka 1 ZZPL-a), odnosno izričit pristanak za podatke o zdravlju (član 17 stav 2 tačka 1 ZZPL-a), dat pri uzimanju vaučera. |
 | **Primaoci / obrađivači** | Infrastruktura. Administratorski tim; davalac i lica koja je odredio (opis, važenje i pseudonim imaoca); učesnici kojima je dostupna evidencija (zapis o poništenju sa opisom i nazivom davaoca uz pseudonim). |
 | **Prenos u treću zemlju** | Samo po zajedničkim odredbama. |
-| **Rok čuvanja** | 10 godina od isteka roka važenja vaučera, uz računovodstvenu dokumentaciju; zapis o poništenju ostaje u evidenciji doprinosa, a povlačenjem pristanka opis dobra, odnosno usluge i naziv davaoca brišu se iz opisa zapisa (član 33 stav 2 Pravilnika o projektima i kolektivnim nabavkama). |
+| **Rok čuvanja** | 10 godina od isteka roka važenja vaučera, uz računovodstvenu dokumentaciju; zapis o poništenju ostaje u evidenciji doprinosa, a povlačenjem pristanka opis dobra i naziv davaoca brišu se iz opisa zapisa (član 33 stav 2 Pravilnika o projektima i kolektivnim nabavkama). |
 | **Mere zaštite** | Pristanak se traži pre uzimanja, uz upozorenje da prikaz može otkriti podatke o imaocu, i o zdravlju; uzimanje je dobrovoljno; vaučer je imenski i neprenosiv; vaučere potvrđuju samo lica koja je davalac odredio. Vaučer se uzima bez reda: nema automatizovanog odlučivanja u smislu člana 38 ZZPL-a; o prigovoru odlučuje čovek. |
 
 **Radnja obrade br. 23 — Preporuke**

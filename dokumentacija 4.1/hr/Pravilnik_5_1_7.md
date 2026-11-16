@@ -90,13 +90,15 @@
 
 3) **operativni doprinos**: aktivnost izvan platforme čiji se doprinos evidentira u POEN-ima nakon potvrde izvršenja;
 
-4) **pokrovitelj**: pravna osoba ili obrtnik koji podržava rad Zaklade doniranjem novca ili ugovorom o pokroviteljstvu dobrima i uslugama u korist korisnika, kao i nositelj registriranog poljoprivrednog gospodarstva koji to čini; pokrovitelj nije korisnik sustava i ne prima POEN ni ZRNO;
+4) **pokrovitelj**: pravna osoba ili obrtnik koji podržava rad Zaklade doniranjem novca ili ugovorom o pokroviteljstvu dobrima u korist korisnika, kao i nositelj registriranog poljoprivrednog gospodarstva koji to čini; pokrovitelj nije korisnik sustava i ne prima POEN ni ZRNO;
 
 5) **zadruga**: zadruga registrirana po Zakonu o zadrugama koja, na temelju ugovora o suradnji, sudjeluje u sustavu u mjestu u kojem djeluje; samostalna je pravna osoba;
 
 6) **glasovanje po kvadratnom korijenu**: način odlučivanja u Gornjem Kolu u kojem je glasačka moć jednaka cjelobrojnoj vrijednosti kvadratnog korijena iz broja aktivnih ZRNA;
 
-7) **modul**: proširenje sustava koje se uvodi po članku 49.
+7) **modul**: proširenje sustava koje se uvodi po članku 49;
+
+8) **dobra**: roba i usluge; kada se odredba odnosi samo na stvari, akt piše „roba“, a kada se odnosi samo na usluge, „usluge“.
 
 (7) Izrazi u aktima KOLO sustava upotrijebljeni u muškom gramatičkom rodu odnose se jednako na osobe muškoga i ženskoga roda.
 
@@ -178,17 +180,17 @@
 
 (2) Zabrana konverzije obuhvaća i posrednu konverziju, uključujući zamjenu POEN-a ili ZRNA za vaučere, poklon-kartice ili druga sredstva s vanjskom vrijednošću, odnosno sredstva koja se mogu unovčiti, prenijeti trećoj osobi ili iskoristiti kod trgovca po izboru imatelja.
 
-(3) Raspodjela vaučera iz pokroviteljstva dobrima i uslugama nije posredna konverzija, jer vaučeru nedostaju elementi sredstva s vanjskom vrijednošću iz stavka 2.:
+(3) Raspodjela vaučera iz pokroviteljstva dobrima nije posredna konverzija, jer vaučeru nedostaju elementi sredstva s vanjskom vrijednošću iz stavka 2.:
 
 1) ne može se unovčiti;
 
 2) glasi na račun korisnika koji ga je uzeo i ne prenosi se;
 
-3) ne koristi se kod trgovca po izboru imatelja, jer glasi na određeno dobro, odnosno uslugu kod jednog davatelja;
+3) ne koristi se kod trgovca po izboru imatelja, jer glasi na određeno dobro kod jednog davatelja;
 
 4) osigurava ga davatelj ugovorom u korist trećih osoba sklopljenim sa Zakladom; davatelj POEN ne prima, a Zaklada u raspodjeli ništa ne posjeduje, ne nabavlja i ne plaća.
 
-(4) Poništenje zapisa pri uzimanju vaučera poništenje je po iskorištenju iz članka 18. i uvjet je sudjelovanja u raspodjeli. Poništeni POEN ne prima nitko, ni Zaklada ni davatelj; Zaklada po toj osnovi ništa ne stječe, a dobro, odnosno uslugu daje davatelj po svom ugovoru sa Zakladom.
+(4) Poništenje zapisa pri uzimanju vaučera poništenje je po iskorištenju iz članka 18. i uvjet je sudjelovanja u raspodjeli. Poništeni POEN ne prima nitko, ni Zaklada ni davatelj; Zaklada po toj osnovi ništa ne stječe, a dobro daje davatelj po svom ugovoru sa Zakladom.
 
 (5) Zaklada ne otkupljuje POEN ni ZRNO i ne osigurava njihovu konverziju u dinare ili drugo sredstvo plaćanja.
 
@@ -202,13 +204,13 @@
 
 ### Članak 13. — Nepovratnost donacija
 
-(1) Donacija novca Zakladi i pokroviteljstvo, novcem te dobrima i uslugama, nepovratni su. Donator po osnovi donacije ne stječe pravo na povrat ni upravljačko pravo u Zakladi. Doprinos evidentiran po donaciji može se, kao i svaki drugi, utrošiti na upis ZRNA; glas koji proizlazi iz aktiviranog ZRNA ograničen je potvrdom (članak 28. stavak 3.), upisom od najviše 1% vlastitih evidentiranih POEN-a po obračunskom razdoblju (članak 22.) i glasovanjem po kvadratnom korijenu (članak 44.), a iz POEN-a ni iz ZRNA nema izlaza u novac (članak 11.).
+(1) Donacija novca Zakladi i pokroviteljstvo, novcem te dobrima, nepovratni su. Donator po osnovi donacije ne stječe pravo na povrat ni upravljačko pravo u Zakladi. Doprinos evidentiran po donaciji može se, kao i svaki drugi, utrošiti na upis ZRNA; glas koji proizlazi iz aktiviranog ZRNA ograničen je potvrdom (članak 28. stavak 3.), upisom od najviše 1% vlastitih evidentiranih POEN-a po obračunskom razdoblju (članak 22.) i glasovanjem po kvadratnom korijenu (članak 44.), a iz POEN-a ni iz ZRNA nema izlaza u novac (članak 11.).
 
 (2) Novac primljen donacijom i pokroviteljstvom Zaklada troši za ciljeve iz Statuta i ne čuva ga kao pokriće ičijeg zapisa (članak 16. stavak 4. točka 7.). Donacija nije depozit: ne vraća se, ne nosi kamatu i Zaklada je ne drži za donatora.
 
 ### Članak 14. — Automatsko evidentiranje
 
-(1) Evidentiranje POEN-a automatski je akt Protokola koji se izvršava prema pravilima sustava. Kada Zaklada utvrdi primitak donacije, Protokol donatoru evidentira doprinos razmjerno iznosu donacije, uz koeficijent razine utvrđen Pravilnikom o pokroviteljstvu i donacijama (članak 36.). Donator donacijom od Zaklade ne pribavlja nijedno dobro ni uslugu i ne stječe potraživanje prema Zakladi, pravo na povrat donacije, otkup ni konverziju evidentiranog doprinosa.
+(1) Evidentiranje POEN-a automatski je akt Protokola koji se izvršava prema pravilima sustava. Kada Zaklada utvrdi primitak donacije, Protokol donatoru evidentira doprinos razmjerno iznosu donacije, uz koeficijent razine utvrđen Pravilnikom o pokroviteljstvu i donacijama (članak 36.). Donator donacijom od Zaklade ne pribavlja nijedno dobro i ne stječe potraživanje prema Zakladi, pravo na povrat donacije, otkup ni konverziju evidentiranog doprinosa.
 
 (2) Ugovor o donaciji ne sadrži broj POEN-a, koeficijent evidencije ni razinu i ne obvezuje Zakladu na upis; sadrži samo izjavu da se doprinos evidentira po pravilima sustava, neovisno o ugovoru, da taj upis nije protučinidba i da donator na njega nema potraživanje.
 
@@ -234,7 +236,7 @@
 
 (3) POEN nema nositelja; postoji isključivo kao zapis u evidenciji Protokola. Iznosi POEN-a izražavaju se cijelim brojevima. POEN ne predstavlja novac, valutu, elektronički novac, platno sredstvo, digitalnu imovinu, financijski instrument ni vrijednosni papir. POEN se ne može konvertirati u sredstvo s vrijednošću izvan sustava.
 
-(4) Odredba stavka 3. nije samo naziv nego posljedica svojstava zapisa. Korisnici POEN prepisuju jedni drugima povodom razmjene dobara i usluga; osim toga, POEN ne ispunjava elemente po kojima se određuje digitalna imovina odnosno virtualna valuta:
+(4) Odredba stavka 3. nije samo naziv nego posljedica svojstava zapisa. Korisnici POEN prepisuju jedni drugima povodom razmjene dobara; osim toga, POEN ne ispunjava elemente po kojima se određuje digitalna imovina odnosno virtualna valuta:
 
 1) ne može se pribaviti kupnjom od Zaklade: Zaklada ga ne prodaje i ne izdaje uz naknadu, a upis POEN-a nije protučinidba ni za jedno davanje;
 
@@ -242,7 +244,7 @@
 
 3) ne otkupljuje se i ne konvertira (članak 11.), pa iz njega ne postoji izlaz u novcu;
 
-4) Zaklada ne utvrđuje njegovu cijenu, ne nudi ga na tržištu i ne objavljuje vrijednost POEN-a izraženu u dinarima ni u bilo kojoj drugoj valuti. Kada se doprinos daje u novcu ili u dobrima i uslugama čija je vrijednost izražena u dinarima, pravila kanala evidentiranja uzimaju taj iznos kao mjeru opsega već učinjenog doprinosa (Pravilnik o pokroviteljstvu i donacijama). Ta mjera nije cijena po kojoj se POEN pribavlja, ne daje pravo na novac ni na drugu vrijednost izvan sustava i ne određuje iznos u POEN-ima u razmjeni među korisnicima. Isto vrijedi za gornju granicu osnivačkog doprinosa, utvrđenu prema procjeni osnivača o radu i sredstvima koje su dali za izradu sustava (Pravilnik o osnivačkom doprinosu). Iz iste mjere, preko upisa, proizlazi i broj POEN-a koji se poništava pri raspodjeli vaučera iz pokroviteljstva dobrima i uslugama (stavak 5.). Iznos u oglasu određuje korisnik sam (Uvjeti korištenja); ako pritom pođe od vrijednosti izražene u novcu, to je njegova procjena koja ne obvezuje ni Zakladu ni drugu stranu;
+4) Zaklada ne utvrđuje njegovu cijenu, ne nudi ga na tržištu i ne objavljuje vrijednost POEN-a izraženu u dinarima ni u bilo kojoj drugoj valuti. Kada se doprinos daje u novcu ili u dobrima čija je vrijednost izražena u dinarima, pravila kanala evidentiranja uzimaju taj iznos kao mjeru opsega već učinjenog doprinosa (Pravilnik o pokroviteljstvu i donacijama). Ta mjera nije cijena po kojoj se POEN pribavlja, ne daje pravo na novac ni na drugu vrijednost izvan sustava i ne određuje iznos u POEN-ima u razmjeni među korisnicima. Isto vrijedi za gornju granicu osnivačkog doprinosa, utvrđenu prema procjeni osnivača o radu i sredstvima koje su dali za izradu sustava (Pravilnik o osnivačkom doprinosu). Iz iste mjere, preko upisa, proizlazi i broj POEN-a koji se poništava pri raspodjeli vaučera iz pokroviteljstva dobrima (stavak 5.). Iznos u oglasu određuje korisnik sam (Uvjeti korištenja); ako pritom pođe od vrijednosti izražene u novcu, to je njegova procjena koja ne obvezuje ni Zakladu ni drugu stranu;
 
 5) ne postoji izvan evidencije Protokola i ne može se prenijeti na zapis koji Protokol ne vodi;
 
@@ -250,7 +252,7 @@
 
 7) iza zapisa ne stoje novčana sredstva: Zaklada ne drži nikakva sredstva kao pokriće POEN-a i ne duguje ih imatelju zapisa; novac primljen donacijom i pokroviteljstvom troši se za ciljeve iz Statuta, a njegovo trošenje ne mijenja nijedan zapis u evidenciji.
 
-(5) Nitko nije dužan primiti POEN. Zaklada POEN ne prima, ne objavljuje cjenik u POEN-ima i ne izražava u njima cijenu nijednog dobra ni usluge. Iznos u POEN-ima pri razmjeni određuju strane same i on ne obvezuje nijednog drugog korisnika. Broj POEN-a koji se poništava pri raspodjeli dobara u projektima Zaklade, uključujući kolektivnu nabavu, raspodjelu vaučera iz pokroviteljstva dobrima i uslugama i program raspodjele hrane, utvrđuje se iz evidentiranog doprinosa po pravilima te raspodjele. On nije cijena dobra ni usluge: Zaklada ga ne utvrđuje kao cijenu i ne objavljuje ga uz dinarsku vrijednost dobra, odnosno usluge, dobro se njime ne plaća, a poništeni POEN ne prima nitko (članak 18.).
+(5) Nitko nije dužan primiti POEN. Zaklada POEN ne prima, ne objavljuje cjenik u POEN-ima i ne izražava u njima cijenu nijednog dobra. Iznos u POEN-ima pri razmjeni određuju strane same i on ne obvezuje nijednog drugog korisnika. Broj POEN-a koji se poništava pri raspodjeli dobara u projektima Zaklade, uključujući kolektivnu nabavu, raspodjelu vaučera iz pokroviteljstva dobrima i program raspodjele hrane, utvrđuje se iz evidentiranog doprinosa po pravilima te raspodjele. On nije cijena dobra: Zaklada ga ne utvrđuje kao cijenu i ne objavljuje ga uz dinarsku vrijednost dobra, dobro se njime ne plaća, a poništeni POEN ne prima nitko (članak 18.).
 
 (6) POEN se ne može pribaviti radi izvršenja razmjene. Doprinos po osnovi donacije ne evidentira se u trenutku uplate: evidentiranje pretpostavlja da Zaklada prethodno utvrdi činjenicu primitka uplate i osobu čijim je sredstvima izvršena (članak 36.).
 
@@ -266,7 +268,7 @@
 
 5) iz zapisa POEN-a nema isplate, otkupa ni konverzije (članak 11.);
 
-6) osoba koja nema zapis u evidenciji Protokola POEN ne prima, a ni davatelj vaučera iz pokroviteljstva dobrima i uslugama ne prima POEN od imatelja vaučera: on izvršava vlastiti ugovor sa Zakladom u korist trećih osoba, a doprinos po tom ugovoru bilježi se pri sklapanju ugovora, a evidentira u sljedećem obračunskom razdoblju u zapisu korisnika koji je podnio prijavu, jer je sklapanjem nastala obveza davatelja (Pravilnik o pokroviteljstvu i donacijama). Osoba koja u programu raspodjele hrane pruža uslugu POEN ne prima od imatelja vaučera; doprinos joj evidentira Protokol (članak 37. stavak 4.).
+6) osoba koja nema zapis u evidenciji Protokola POEN ne prima, a ni davatelj vaučera iz pokroviteljstva dobrima ne prima POEN od imatelja vaučera: on izvršava vlastiti ugovor sa Zakladom u korist trećih osoba, a doprinos po tom ugovoru bilježi se pri sklapanju ugovora, a evidentira u sljedećem obračunskom razdoblju u zapisu korisnika koji je podnio prijavu, jer je sklapanjem nastala obveza davatelja (Pravilnik o pokroviteljstvu i donacijama). Osoba koja u programu raspodjele hrane pruža uslugu POEN ne prima od imatelja vaučera; doprinos joj evidentira Protokol (članak 37. stavak 4.).
 
 (8) Svojstva iz prethodnih stavaka imaju posljedicu i u odnosu na pojam prihoda korisnika. Upisom POEN-a korisnik ne prima ni novac ni stvar; ništa ne prelazi iz imovine Zaklade u imovinu korisnika, a nastali zapis ne može se unovčiti, ustupiti kao potraživanje niti naplatiti. Prepis zapisa drugom korisniku povodom razmjene nije ustupanje: zapis nije potraživanje, nego Protokol ažurira evidenciju. Zaklada po osnovi upisa ne vrši isplatu ni po kojoj osnovi. Ne utvrđuje niti objavljuje vrijednost POEN-a izraženu u novcu; dinarski iznos iz stavka 4. točke 4. služi samo kao mjera opsega učinjenog doprinosa, a iznos izražen u novcu po osnovi upisa Zaklada ne utvrđuje.
 
@@ -288,7 +290,7 @@
 
 6) otpis po prestanku gospodarstva, po svakoj osnovi prestanka, svakom članu gospodarstva u trenutku prestanka, a kod lažne izjave i osobi koja je bila član u razdoblju na koje se izjava odnosi (članak 39. i Pravilnik o gospodarstvima);
 
-7) otpis po neizvršenju pokroviteljstva dobrima i uslugama, korisniku koji je podnio prijavu, za svaki vaučer koji davatelj nije izvršio (Pravilnik o pokroviteljstvu i donacijama, članak 35.);
+7) otpis po neizvršenju pokroviteljstva dobrima, korisniku koji je podnio prijavu, za svaki vaučer koji davatelj nije izvršio (Pravilnik o pokroviteljstvu i donacijama, članak 35.);
 
 8) otpis po utvrđenju višestrukog računa: s računa koji osoba zadržava otpisuje se neto iznos prepisa s računa koji prestaje, a zapisi drugih osoba ne diraju se (Pravilnik o dokazu stvarnosti, članak 14.);
 
@@ -300,11 +302,11 @@
 
 12) prijenos negativnog zapisa na novi račun osobe čiji je status prestao dok joj je zapis bio negativan (članak 33. stavak 7.).
 
-(3) Na negativan zapis po svakoj od dvanaest osnova primjenjuje se isti režim: on nije dug i ne naplaćuje se, POEN-i koji korisniku pristignu najprije ga popunjavaju, prepis u korist drugog korisnika moguć je tek kada zapis prijeđe nulu, a razmjena dobara i usluga nije ograničena. Korisnik čiji zapis postane negativan o tome se uvijek obavještava, uz osnovu i iznos.
+(3) Na negativan zapis po svakoj od dvanaest osnova primjenjuje se isti režim: on nije dug i ne naplaćuje se, POEN-i koji korisniku pristignu najprije ga popunjavaju, prepis u korist drugog korisnika moguć je tek kada zapis prijeđe nulu, a razmjena dobara nije ograničena. Korisnik čiji zapis postane negativan o tome se uvijek obavještava, uz osnovu i iznos.
 
 (4) Druga osnova za negativan zapis ne može se ustanoviti ni ovim pravilnikom bez izmjene ovoga članka, ni bilo kojim drugim aktom.
 
-(5) Razmjena dobara i usluga premješta postojeće zapise POEN-a i ne mijenja njihov ukupan broj u sustavu. Ukupan broj POEN-a uvećava se upisom novih zapisa kroz kanale evidentiranja doprinosa, evidentiranjem POEN-a pri otpisu ZRNA (članak 23. stavak 3.) i ispravkom poništenja izvršenog bez osnove (članak 18.), a umanjuje se poništenjem zapisa po osnovama utvrđenim ovim pravilnikom i umanjenjem pri upisu ZRNA (članak 22. stavak 5.). Druge osnove za uvećanje ukupnog broja POEN-a nema.
+(5) Razmjena dobara premješta postojeće zapise POEN-a i ne mijenja njihov ukupan broj u sustavu. Ukupan broj POEN-a uvećava se upisom novih zapisa kroz kanale evidentiranja doprinosa, evidentiranjem POEN-a pri otpisu ZRNA (članak 23. stavak 3.) i ispravkom poništenja izvršenog bez osnove (članak 18.), a umanjuje se poništenjem zapisa po osnovama utvrđenim ovim pravilnikom i umanjenjem pri upisu ZRNA (članak 22. stavak 5.). Druge osnove za uvećanje ukupnog broja POEN-a nema.
 
 ### Članak 18. — Poništenje po iskorištenju
 
@@ -312,7 +314,7 @@
 
 (2) Poništenje po iskorištenju nije mjera prema korisniku. Ono ne pretpostavlja nepravilnost, ne temelji se na prestanku svojstva korisnika i razlikuje se od poništenja zapisa po članku 33. i od poništenja po Glavi IX. Pravilnika o dokazu stvarnosti.
 
-(3) Poništenje po iskorištenju uvjet je sudjelovanja u projektu. Poništeni POEN ne prima nitko: vraća se Protokolu, a ne Zakladi ni davatelju, i Zaklada po toj osnovi ništa ne stječe. Dobro iz kolektivne nabave plaćeno je dinarskim sredstvima Zaklade, dobro ili uslugu po vaučeru iz pokroviteljstva daje davatelj po svom ugovoru sa Zakladom, a hranu u programu raspodjele hrane Zaklada je primila bez naknade. Poništenje se izvršava protuzapisom u korist Protokola; zbroj svih zapisa i dalje iznosi nula, a ukupan broj evidentiranih POEN-a umanjuje se.
+(3) Poništenje po iskorištenju uvjet je sudjelovanja u projektu. Poništeni POEN ne prima nitko: vraća se Protokolu, a ne Zakladi ni davatelju, i Zaklada po toj osnovi ništa ne stječe. Dobro iz kolektivne nabave plaćeno je dinarskim sredstvima Zaklade, dobro po vaučeru iz pokroviteljstva daje davatelj po svom ugovoru sa Zakladom, a hranu u programu raspodjele hrane Zaklada je primila bez naknade. Poništenje se izvršava protuzapisom u korist Protokola; zbroj svih zapisa i dalje iznosi nula, a ukupan broj evidentiranih POEN-a umanjuje se.
 
 (4) Poništenjem po iskorištenju zapis korisnika ne može prijeći u negativnu vrijednost; poništava se isključivo broj POEN-a koji u zapisu postoji. Ova osnova nije iznimka od zabrane negativnog zapisa iz članka 17. stavka 2.
 
@@ -350,17 +352,17 @@
 
 ### Članak 20. — Prepis i razmjena
 
-(1) Korisnici unutar sustava razmjenjuju dobra i usluge. Razmjena se evidentira prepisom POEN-a: zapis korisnika koji daje dobro ili uslugu uvećava se, a zapis korisnika koji prima umanjuje se za isti iznos.
+(1) Korisnici unutar sustava razmjenjuju dobra. Razmjena se evidentira prepisom POEN-a: zapis korisnika koji daje dobro uvećava se, a zapis korisnika koji prima umanjuje se za isti iznos.
 
 (2) Razmjena nije platna transakcija. Prepis POEN-a nije prijenos monetarne vrijednosti i ne predstavlja plaćanje u smislu propisa o platnim uslugama, jer mu nedostaju elementi iz članka 16. stavka 7. Zaklada razmjenu ne sklapa u ime ni za račun korisnika i za nju ne prima naknadu; Zaklada i Protokol ne odgovaraju za ispunjenje obveza korisnika.
 
 (3) Prepis inicira korisnik, pod uvjetima Uvjeta korištenja i Pravilnika o sudjelovanju djece.
 
-(4) Prepis izvršen radi posla kojim se POEN nudi, kupuje, prodaje ili se posreduje u njegovu prometu za vrijednost izvan sustava zabranjen je i povlači mjere utvrđene Uvjetima korištenja; takav prepis nije razmjena dobara i usluga. Zaklada ne posreduje u zamjenama POEN-a za novac, ne organizira ih i za njih ne odgovara. Prepis POEN-a između korisnika služi razmjeni proizvoda, usluga i znanja te drugim oblicima uzajamnosti u zajednici.
+(4) Prepis izvršen radi posla kojim se POEN nudi, kupuje, prodaje ili se posreduje u njegovu prometu za vrijednost izvan sustava zabranjen je i povlači mjere utvrđene Uvjetima korištenja; takav prepis nije razmjena dobara. Zaklada ne posreduje u zamjenama POEN-a za novac, ne organizira ih i za njih ne odgovara. Prepis POEN-a između korisnika služi razmjeni proizvoda, usluga i znanja te drugim oblicima uzajamnosti u zajednici.
 
 (5) Kada po prigovoru korisnika koji je inicirao prepis Zaklada utvrdi da razmjena nije ispunjena, Protokol ispravlja evidenciju protuzapisom u visini cijelog prepisa, u korist podnositelja, i kada zapis primatelja time postane negativan (članak 17. stavak 2. točka 2.). Ispravak evidencije nije povrat ni isplata: Zaklada po toj osnovi ništa ne isplaćuje i ništa ne prima, ne postaje strana u razmjeni i ne preuzima odgovornost za ispunjenje obveza korisnika. Postupak po prigovoru uređuju Uvjeti korištenja.
 
-(6) Evidentiranje razmjene u POEN-ima ne mijenja poreznu i drugu javnopravnu kvalifikaciju posla između korisnika. Korisnik koji dobro ili uslugu nudi u okviru svoje djelatnosti postupa po propisima koji vrijede za tu djelatnost.
+(6) Evidentiranje razmjene u POEN-ima ne mijenja poreznu i drugu javnopravnu kvalifikaciju posla između korisnika. Korisnik koji dobro nudi u okviru svoje djelatnosti postupa po propisima koji vrijede za tu djelatnost.
 
 (7) Pravila platformskog prostora za oglašavanje (Pijaca), uključujući vidljivost oglasa i pseudonima oglašivača i pristup kontaktnim podacima, uređuju Uvjeti korištenja.
 
@@ -378,7 +380,7 @@
 
 (1) ZRNO se upisuje od Faze 2. (članak 41.), pod istim uvjetima za sve sudionike, uključujući osnivače.
 
-(2) ZRNO se upisuje iz evidentiranog doprinosa u zapisu sudionika, bez obzira na to je li taj doprinos evidentiran kroz kanal iz članka 19. ili je zapis uvećan razmjenom dobara i usluga. Upisom ZRNA član Kola postaje čuvar Kola.
+(2) ZRNO se upisuje iz evidentiranog doprinosa u zapisu sudionika, bez obzira na to je li taj doprinos evidentiran kroz kanal iz članka 19. ili je zapis uvećan razmjenom dobara. Upisom ZRNA član Kola postaje čuvar Kola.
 
 (3) ZRNO upisuje sudionik; korisnik koji nije u Kolu ZRNO ne upisuje. Član bez potvrde upisano ZRNO ne aktivira i upisom ne postaje čuvar Kola dok ne bude potvrđen (članak 28. stavak 3.).
 
@@ -410,7 +412,7 @@ ZRNO se ne prenosi drugom korisniku, ni samo ni zajedno s računom. Za ZRNO ne p
 
 (2) Obračunski koeficijent jednak je količniku ukupnog broja evidentiranih POEN-a i broja ZRNA raspoloživih za upis. Ukupan broj evidentiranih POEN-a čine doprinosi svih sudionika, evidentirani prema istim pravilima, pa koeficijent jednako ovisi o vlastitom i o tuđem doprinosu. Kada se u obračunskom razdoblju evidentira više novih zapisa nego što se poništi, koeficijent raste, a kada je poništenja više, opada. Koeficijent nije predodređen da raste.
 
-(3) Upis i otpis ZRNA ne pomiču obračunski koeficijent. Pri upisu se, uz broj ZRNA raspoloživih u Protokolu, u istom razmjeru umanjuje i ukupan broj evidentiranih POEN-a, jer se POEN-i utrošeni na upis vraćaju Protokolu; pri otpisu se obje veličine uvećavaju po istom odnosu. Čuvar Kola vlastitim upisom ni otpisom ne može pomaknuti koeficijent. Razmjena dobara i usluga između korisnika ne mijenja koeficijent.
+(3) Upis i otpis ZRNA ne pomiču obračunski koeficijent. Pri upisu se, uz broj ZRNA raspoloživih u Protokolu, u istom razmjeru umanjuje i ukupan broj evidentiranih POEN-a, jer se POEN-i utrošeni na upis vraćaju Protokolu; pri otpisu se obje veličine uvećavaju po istom odnosu. Čuvar Kola vlastitim upisom ni otpisom ne može pomaknuti koeficijent. Razmjena dobara između korisnika ne mijenja koeficijent.
 
 (4) Obračunski koeficijent administrativna je veličina. Nije cijena, nije tečaj i nije indeks performansi; ne izražava vrijednost ZRNA ni POEN-a izvan sustava.
 
@@ -424,7 +426,7 @@ Obračunsko razdoblje traje 24 sata, od ponoći do ponoći po vremenu u Srbiji. 
 
 1) nema uloga sredstava: ZRNO se upisuje iz doprinosa već evidentiranog u zapisu sudionika; Zaklada ZRNO ne prodaje, ne nudi i ne utvrđuje mu cijenu, a upis nije protučinidba (članak 24.);
 
-2) nema izlaza iz evidencije: ni ZRNO ni POEN ne otkupljuju se i ne konvertiraju u dinare ni u drugo sredstvo plaćanja, ni neposredno ni posredno, i Zaklada iz evidencije ništa ne isplaćuje (članak 11.); POEN evidentiran otpisom koristi se, kao i svaki drugi, samo u razmjeni dobara i usluga među korisnicima i za sudjelovanje u projektima Zaklade, pa razlika u obračunskom koeficijentu ne može napustiti Protokol;
+2) nema izlaza iz evidencije: ni ZRNO ni POEN ne otkupljuju se i ne konvertiraju u dinare ni u drugo sredstvo plaćanja, ni neposredno ni posredno, i Zaklada iz evidencije ništa ne isplaćuje (članak 11.); POEN evidentiran otpisom koristi se, kao i svaki drugi, samo u razmjeni dobara među korisnicima i za sudjelovanje u projektima Zaklade, pa razlika u obračunskom koeficijentu ne može napustiti Protokol;
 
 3) nema tržišta: ZRNO se ne prenosi, ne nasljeđuje i nema cijenu (članci 12. i 24.), pa se ne može ni prodati;
 
@@ -542,9 +544,9 @@ Obračunsko razdoblje traje 24 sata, od ponoći do ponoći po vremenu u Srbiji. 
 
 ### Članak 37. — Pokroviteljstvo
 
-(1) Pokroviteljstvo se ostvaruje doniranjem novca Zakladi ili ugovorom o pokroviteljstvu dobrima i uslugama u korist korisnika. Pokroviteljstvo dobrima i uslugama smatra se ostvarenim kada je ugovor potpisan i vaučeri izdani; Zaklada dobra i usluge ne prima i ne posjeduje. Doprinos se bilježi kada je ugovor sklopljen, jer je tada nastala obveza davatelja u korist imatelja vaučera, a evidentira se u sljedećem obračunskom razdoblju. Ako davatelj obvezu ne izvrši, evidencija se ispravlja po članku 17. stavku 2. točki 7.
+(1) Pokroviteljstvo se ostvaruje doniranjem novca Zakladi ili ugovorom o pokroviteljstvu dobrima u korist korisnika. Pokroviteljstvo dobrima smatra se ostvarenim kada je ugovor potpisan i vaučeri izdani; Zaklada dobra ne prima i ne posjeduje. Doprinos se bilježi kada je ugovor sklopljen, jer je tada nastala obveza davatelja u korist imatelja vaučera, a evidentira se u sljedećem obračunskom razdoblju. Ako davatelj obvezu ne izvrši, evidencija se ispravlja po članku 17. stavku 2. točki 7.
 
-(2) Doprinos pokroviteljstva evidentira se u zapisu korisnika koji je podnio prijavu pokroviteljstva u ime pokrovitelja. Kada prijavu pripremi Zaklada, ugovor u ime pokrovitelja prihvaća osoba ovlaštena za pokrovitelja, s vlastitog računa, i doprinos se evidentira njoj; osobi koja je prijavu pripremila u ime Zaklade ne evidentira se nikad (Pravilnik o pokroviteljstvu i donacijama). Zaklada utvrđuje primitak novčanog pokroviteljstva, odnosno da je ugovor o pokroviteljstvu dobrima i uslugama sklopljen i cjenik priložen; broj POEN-a određuje Protokol automatski, prema parametrima Pravilnika o pokroviteljstvu i donacijama. Doprinos novčanog pokroviteljstva bilježi se utvrđenjem primitka, a evidentira u sljedećem obračunskom razdoblju; ne evidentira se unaprijed.
+(2) Doprinos pokroviteljstva evidentira se u zapisu korisnika koji je podnio prijavu pokroviteljstva u ime pokrovitelja. Kada prijavu pripremi Zaklada, ugovor u ime pokrovitelja prihvaća osoba ovlaštena za pokrovitelja, s vlastitog računa, i doprinos se evidentira njoj; osobi koja je prijavu pripremila u ime Zaklade ne evidentira se nikad (Pravilnik o pokroviteljstvu i donacijama). Zaklada utvrđuje primitak novčanog pokroviteljstva, odnosno da je ugovor o pokroviteljstvu dobrima sklopljen i cjenik priložen; broj POEN-a određuje Protokol automatski, prema parametrima Pravilnika o pokroviteljstvu i donacijama. Doprinos novčanog pokroviteljstva bilježi se utvrđenjem primitka, a evidentira u sljedećem obračunskom razdoblju; ne evidentira se unaprijed.
 
 (3) Odnos između Zaklade i pokrovitelja uređuje se ugovorom o donaciji. Zaklada vodi evidenciju o vezi između pokrovitelja i korisnika kojemu se evidentira doprinos.
 
@@ -554,7 +556,7 @@ Obračunsko razdoblje traje 24 sata, od ponoći do ponoći po vremenu u Srbiji. 
 
 ### Članak 38. — Doprinos prvim oglasom
 
-(1) Korisniku se evidentira doprinos od 1.000 POEN-a za prvi oglas kojim nudi dobro ili uslugu, a koji ispunjava sadržajni minimum utvrđen Uvjetima korištenja. Ovaj se doprinos evidentira najviše jednom po korisniku, neovisno o broju objavljenih oglasa, bez obzira na to je li korisnik u Kolu.
+(1) Korisniku se evidentira doprinos od 1.000 POEN-a za prvi oglas kojim nudi dobro, a koji ispunjava sadržajni minimum utvrđen Uvjetima korištenja. Ovaj se doprinos evidentira najviše jednom po korisniku, neovisno o broju objavljenih oglasa, bez obzira na to je li korisnik u Kolu.
 
 (2) Oglas se objavljuje odmah; doprinos se u trenutku objave bilježi, a evidentira se u Protokolu kada Zaklada odobri oglas. Bez odobrenja Zaklade doprinos se ne evidentira; potvrda ili uvođenje korisnika u Kolo i prepis u njegovu korist nisu osnova za evidentiranje.
 

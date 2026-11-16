@@ -1,4 +1,4 @@
-// Više mesta — oglas na Pijaci i ugovor o pokroviteljstvu dobrima i uslugama.
+// Više mesta — oglas na Pijaci i ugovor o pokroviteljstvu dobrima.
 //
 // Prvo mesto ostaje u postojećoj koloni (`MarketplaceListing.location`, odnosno
 // `UgovorDobra.mesto`/`adresaPredaje`), a dodatna su u nizovima. Svaki prikaz i
@@ -11,7 +11,7 @@
 export const MAX_MESTA_OGLASA = 3;
 
 /**
- * Ugovor o dobrima i uslugama: najviše pet mesta predaje, odnosno pružanja
+ * Ugovor o dobrima: najviše pet mesta predaje, odnosno pružanja
  * (donacije čl. 28 st. 2 t. 5, set 5.0.6). Broj je tehnička granica obrasca, ne akta.
  */
 export const MAX_MESTA_PREDAJE = 5;

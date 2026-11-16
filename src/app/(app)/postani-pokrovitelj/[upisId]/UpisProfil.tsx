@@ -56,7 +56,7 @@ const TABOVI: Tab[] = ["ugovori", "partnerstvo", "vauceri", "zaposleni", "podaci
  * 🔴 „Doniraj novac" i „Doniraj robu ili usluge" su dostupni samo iz odobrenog
  * upisa (server ponovo proverava u obe rute). Novčano pokroviteljstvo daje pravno
  * lice, preduzetnik ili nosilac registrovanog gazdinstva (čl. 15, set 4.7.9); lista
- * zabrane zatvara samo nov ugovor o pokroviteljstvu dobrima i uslugama (čl. 35 st. 5).
+ * zabrane zatvara samo nov ugovor o pokroviteljstvu dobrima (čl. 35 st. 5).
  */
 export default function UpisProfil({
   upis,

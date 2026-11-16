@@ -144,7 +144,7 @@ enum TransactionType {
   /// Otpis po prestanku gazdinstva — šesti osnov negativnog zapisa
   /// (Pravilnik čl. 17 st. 2 t. 6). Zapis SME u minus.
   OTPIS_GAZDINSTVO
-  /// Pokroviteljstvo dobrima i uslugama (Pravilnik o pokroviteljstvu i donacijama
+  /// Pokroviteljstvo dobrima (Pravilnik o pokroviteljstvu i donacijama
   /// Glava IV, čl. 33). Sopstveni tip, ne `EMISIJA_POKROVITELJ`: brojači putanja
   /// i opticaj ne smeju da mešaju novac i robu (odluka vlasnika, 19.10.2026).
   EMISIJA_POKROVITELJ_DOBRA
@@ -155,7 +155,7 @@ enum TransactionType {
   /// Ispravka poništenja izvršenog bez predaje dobra, odnosno pružanja usluge
   /// (nabavke čl. 35, Pravilnik čl. 18 st. 5). Protokol → korisnik.
   ISPRAVKA_VAUCER
-  /// Otpis po neizvršenju pokroviteljstva dobrima i uslugama — sedmi osnov
+  /// Otpis po neizvršenju pokroviteljstva dobrima — sedmi osnov
   /// negativnog zapisa (Pravilnik čl. 17 st. 2 t. 7; donacije čl. 35). Zapis SME u minus.
   OTPIS_POKROVITELJ_DOBRA
   /// Otpis neto prepisa sa ugašenog naloga na nalog koji ostaje, po utvrđenju
@@ -362,7 +362,7 @@ enum VrstaDonacije {
   USLUGE
 }
 
-/// Pokroviteljstvo dobrima i uslugama (donacije Glava IV).
+/// Pokroviteljstvo dobrima (donacije Glava IV).
 enum VrstaDobraPokrovitelja {
   DOBRO
   USLUGA
@@ -1514,7 +1514,7 @@ enum DoprinosOkidac {
 
 /// Doprinos sadržaju platforme — osmi kanal evidentiranja (Pravilnik čl. 19 t. 8,
 /// čl. 38). Korisniku se jednokratno evidentira 1.000 POEN-a za prvi oglas kojim
-/// nudi dobro ili uslugu i koji ispunjava sadržinski minimum iz Uslova.
+/// nudi dobro i koji ispunjava sadržinski minimum iz Uslova.
 ///
 /// `userId` je @unique — jednokratnost kanala po čoveku obezbeđuje BAZA, ne kod.
 /// Bez toga bi dve paralelne objave oglasa mogle da zabeleže dva doprinosa.
@@ -2404,7 +2404,7 @@ model PokroviteljPrijava {
   @@index([status])
 }
 
-// ─── Pokroviteljstvo dobrima i uslugama (donacije Glava IV) ─────────────────
+// ─── Pokroviteljstvo dobrima (donacije Glava IV) ─────────────────
 //
 // Jedan red = prijava, pa ugovor (ugovor u korist trećih lica, ZOO čl. 149). Fondacija
 // ne stiče svojinu ni državinu dobara; vaučer glasi na tačno određeno dobro odnosno
@@ -2638,7 +2638,7 @@ model Vaucer {
   /// pseudonim (nabavke čl. 33 st. 1): trenutak i SNIMAK prikazanog teksta.
   pristanakPrikazAt    DateTime?
   pristanakPrikazTekst String?
-  /// Povlačenje pristanka na prikaz (nabavke čl. 33 st. 2): opis dobra, odnosno usluge i
+  /// Povlačenje pristanka na prikaz (nabavke čl. 33 st. 2): opis dobra i
   /// naziv davaoca brišu se iz opisa zapisa o poništenju (i ispravke), a zapis ostaje.
   /// `pristanakPrikazAt`/`Tekst` ostaju kao dokaz pristanka za prikaz pre povlačenja.
   pristanakPovucenAt   DateTime?
@@ -2692,7 +2692,7 @@ model DavalacZaposleni {
 }
 
 /// Lista zabrane (donacije čl. 35 st. 5): davalac čiji je ugovor raskinut ne
-/// zaključuje nov ugovor o pokroviteljstvu dobrima i uslugama DOK GA Fondacija ne
+/// zaključuje nov ugovor o pokroviteljstvu dobrima DOK GA Fondacija ne
 /// skine sa liste. Davalac se prepoznaje po matičnom broju (pravno lice,
 /// preduzetnik), odnosno po broju gazdinstva. Skinut red ostaje kao istorija.
 model ZabranaDavaoca {

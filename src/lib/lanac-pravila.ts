@@ -54,7 +54,7 @@ export const VRSTE_HRANE_PROGRAMA: readonly VrstaHrane[] = ["MESO", "MLEKO"];
 
 /**
  * Nabavke čl. 43 st. 3: najviše dva neiskorišćena vaučera UKUPNO — vaučeri programa i lanca
- * zajedno sa vaučerima iz pokroviteljstva dobrima i uslugama (čl. 30 st. 2). Ista konstanta.
+ * zajedno sa vaučerima iz pokroviteljstva dobrima (čl. 30 st. 2). Ista konstanta.
  */
 export const MAX_AKTIVNIH_VAUCERA_UKUPNO = MAX_AKTIVNIH_VAUCERA_PO_CLANU;
 

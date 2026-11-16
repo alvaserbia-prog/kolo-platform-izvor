@@ -550,7 +550,7 @@ export async function pokroviteljiZaMapu(): Promise<TackaPokroviteljaSaVaucerima
 }
 
 /**
- * Mesta predaje, odnosno pružanja pokrovitelja dobrima i uslugama za javnu mapu (čl. 18
+ * Mesta predaje, odnosno pružanja pokrovitelja dobrima za javnu mapu (čl. 18
  * st. 4, čl. 26 st. 2; set 5.1.2): dok ima vaučere koji važe. Uz tačku isti broj slobodnih
  * vaučera kao uz adresu iz upisa. Gazdinstvo se ne spaja — tačka je mesto predaje, ne gazdinstvo.
  */

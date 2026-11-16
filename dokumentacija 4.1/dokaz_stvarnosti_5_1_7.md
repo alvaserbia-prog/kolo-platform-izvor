@@ -40,7 +40,7 @@
 
 (1) Člana bez potvrde potvrđuje:
 
-1) član Kola, odnosno osnivač, koji ga lično zna; razmena dobara i usluga može biti način na koji su se upoznali, ali nije uslov potvrde;
+1) član Kola, odnosno osnivač, koji ga lično zna; razmena dobara može biti način na koji su se upoznali, ali nije uslov potvrde;
 
 2) čuvar Kola posle razgovora telefonom, pod uslovima iz člana 16;
 
@@ -100,7 +100,7 @@
 
 (2) U slučajevima iz tačaka 2 do 4 stava 1 Fondacija, pošto podatke o uplatiocu, podnosiocu odnosno nosiocu uporedi sa nalogom, korisniku nudi spisak, a korisnik se stavlja na spisak za poziv kada sam ostavi podatke iz člana 9. Uplata, pokroviteljstvo i prijava gazdinstva ne potvrđuju stvarnost.
 
-(3) Anonimna donacija, zbir više manjih uplata, uplata za koju je utvrđeno da uplatilac stoji uz drugi nalog i pokroviteljstvo dobrima i uslugama ne dovode na spisak za poziv.
+(3) Anonimna donacija, zbir više manjih uplata, uplata za koju je utvrđeno da uplatilac stoji uz drugi nalog i pokroviteljstvo dobrima ne dovode na spisak za poziv.
 
 (4) Na spisak za poziv dolazi i član bez potvrde koji traži potvrdu posle razgovora telefonom, kada ispuni uslove iz člana 16 stav 1. Član bez potvrde koji je upisao ZRNO dolazi na prvo mesto spiska.
 
@@ -234,7 +234,7 @@
 
 (2) Zabeleženi doprinos upisuje se u Protokolu kada verifikovani ostvari prvi potvrđen doprinos zajedničkom dobru, a to je:
 
-1) prvi oglas kojim nudi dobro ili uslugu, odobren u smislu člana 38 Pravilnika o KOLO sistemu;
+1) prvi oglas kojim nudi dobro, odobren u smislu člana 38 Pravilnika o KOLO sistemu;
 
 2) javna donacija Fondaciji čiji je prijem Fondacija utvrdila po Pravilniku o pokroviteljstvu i donacijama;
 
@@ -462,7 +462,7 @@ Fondacija iz podataka koji se u sistemu već vode (evidencije lanca potvrda i ev
 
 (4) Nadoknada nije dug. Fondacija po osnovu nadoknade nema potraživanje prema korisniku, ne može je naplatiti, ustupiti ni prinudno izvršiti, niti je iskazuje kao imovinu. Dejstvo nadoknade postoji isključivo unutar sistema.
 
-(5) Nadoknada ne sprečava korisnika da razmenjuje dobra i usluge. POEN-i koji korisniku pristignu prvo popunjavaju nadoknadu; korisnik raspolaže zapisom POEN-a tek pošto nadoknada bude izravnata.
+(5) Nadoknada ne sprečava korisnika da razmenjuje dobra. POEN-i koji korisniku pristignu prvo popunjavaju nadoknadu; korisnik raspolaže zapisom POEN-a tek pošto nadoknada bude izravnata.
 
 (6) Nadoknada nije isključenje. Suspenzija i isključenje su zasebne mere koje se izriču po postupku utvrđenom Uslovima korišćenja; nadoknada ih ne zamenjuje, ne podrazumeva i ne isključuje.
 

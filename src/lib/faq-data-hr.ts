@@ -197,7 +197,7 @@ Sam račun se time ne mijenja: lanac potvrda, tvoj položaj u Kolu i evidencija 
       {
         id: 39,
         pitanje: `Je li razmjena na Pijaci prodaja?`,
-        odgovor: `Po Pravilniku KOLO sustava, razmjena dobara i usluga između korisnika na Pijaci nije postavljena kao klasična prodaja. Riječ je o dogovoru dviju strana, jedan daje dobro ili uslugu, drugi mu prepisuje POEN, a POEN nije novac nego evidencija doprinosa zajedničkom dobru.
+        odgovor: `Po Pravilniku KOLO sustava, razmjena dobara između korisnika na Pijaci nije postavljena kao klasična prodaja. Riječ je o dogovoru dviju strana, jedan daje dobro, drugi mu prepisuje POEN, a POEN nije novac nego evidencija doprinosa zajedničkom dobru.
 
 Prijenos POEN-a u toj razmjeni nije plaćanje novcem niti sredstvo plaćanja u smislu propisa o platnim uslugama. Odnosi povodom razmjene (ispunjenje, odgovornost, rizik) uređuju se po općim pravilima obveznog prava; Protokol u razmjeni ne posreduje.
 
@@ -206,11 +206,11 @@ Ako kroz Pijacu obavljaš djelatnost, tvoje porezne i fiskalne obveze po općim 
       {
         id: 60,
         pitanje: `Kako odrediti iznos u oglasu?`,
-        odgovor: `Iznos u POENIMA za svoja dobra i usluge određuješ sam, slobodno. Platforma ga ne utvrđuje, ne ograničava i ne kontrolira, niti itko vrednuje tvoju robu umjesto tebe, ti najbolje znaš što nudiš i koliko vrijedi.
+        odgovor: `Iznos u POENIMA za svoja dobra određuješ sam, slobodno. Platforma ga ne utvrđuje, ne ograničava i ne kontrolira, niti itko vrednuje tvoju robu umjesto tebe, ti najbolje znaš što nudiš i koliko vrijedi.
 
-Službenog omjera nema i Fondacija ga ne objavljuje. Mnogi korisnici polaze od cijene koju to dobro ili uslugu ionako znaju u dinarima — to je tvoja procjena, vrijedi za tvoj oglas i ne obvezuje drugu stranu. Fondacija ne jamči vrijednost POENA niti ga otkupljuje.
+Službenog omjera nema i Fondacija ga ne objavljuje. Mnogi korisnici polaze od cijene koju to dobro ionako znaju u dinarima — to je tvoja procjena, vrijedi za tvoj oglas i ne obvezuje drugu stranu. Fondacija ne jamči vrijednost POENA niti ga otkupljuje.
 
-Traži se poštenje: točan i jasan opis dobra ili usluge, realna količina i realan iznos u POENIMA, i svi uvjeti razmjene. Nije dopušten lažan ili obmanjujući sadržaj koji pogrešno predstavlja prirodu, kvalitetu ili količinu onoga što nudiš.
+Traži se poštenje: točan i jasan opis dobra, realna količina i realan iznos u POENIMA, i svi uvjeti razmjene. Nije dopušten lažan ili obmanjujući sadržaj koji pogrešno predstavlja prirodu, kvalitetu ili količinu onoga što nudiš.
 
 Sve ostalo (isporuku, rok, dodatne uvjete) dogovaraš izravno s drugom stranom.
 
@@ -230,14 +230,14 @@ Napomena: ovo vrijedi za razmjenu na Pijaci. Zadaci zajednice (operativni doprin
 
 Takva se razmjena odvija izvan sustava: ako uz nju ne ažurirate evidenciju POEN-a, ostaje vaš osobni dogovor i nigdje se ne bilježi kao tvoj doprinos.
 
-A baš je tu smisao KOLO sustava: da razmjena koju biste ionako obavili „iz ruke u ruku“ dobije zapis. Kad uz razmjenu ažurirate evidenciju, POEN prijeđe sa zapisa onoga tko je dobro ili uslugu primio na zapis onoga tko ih je dao, i ostaje trag tko je koliko dao zajednici.
+A baš je tu smisao KOLO sustava: da razmjena koju biste ionako obavili „iz ruke u ruku“ dobije zapis. Kad uz razmjenu ažurirate evidenciju, POEN prijeđe sa zapisa onoga tko je dobro primio na zapis onoga tko ih je dao, i ostaje trag tko je koliko dao zajednici.
 
 Za kvalitetu, isporuku i ispunjenje dogovora odgovarate vas dvoje, po općim pravilima. Fondacija i Protokol se u to ne miješaju i za to ne odgovaraju.`,
       },
       {
         id: 21,
         pitanje: `Tko odgovara ako razmjena ne uspije ili roba ima nedostatak?`,
-        odgovor: `Razmjena na Pijaci izravan je odnos dviju strana i privatnopravne je naravi. Za kvalitetu, ispravnost i isporuku odgovaraju korisnici koji razmjenjuju, onaj tko dobro ili uslugu daje i onaj tko ih prima. Fondacija i Protokol nisu strana u razmjeni i ne posreduju u njoj; sve se uređuje po općim pravilima obveznog prava, kao kod svake nabave između dvoje ljudi.
+        odgovor: `Razmjena na Pijaci izravan je odnos dviju strana i privatnopravne je naravi. Za kvalitetu, ispravnost i isporuku odgovaraju korisnici koji razmjenjuju, onaj tko dobro daje i onaj tko ih prima. Fondacija i Protokol nisu strana u razmjeni i ne posreduju u njoj; sve se uređuje po općim pravilima obveznog prava, kao kod svake nabave između dvoje ljudi.
 
 Jamstvo, rok i uvjete dogovaraš izravno s drugom stranom prije razmjene, što jasnije dogovorite stanje robe, rok i što ako nešto ne valja, to lakše rješavate problem kasnije. Ako razmjenjuješ s nekim tko robu ili uslugu nudi u okviru djelatnosti, vrijedi i zakonska zaštita potrošača; između dviju fizičkih osoba vrijede opća pravila obveznog prava.
 
@@ -260,7 +260,7 @@ POEN postoji samo u Protokolu. Zapis se vodi na Protokolu i ne može se iznijeti
 
 POEN nije novac. Nije sredstvo plaćanja, nije elektronički novac, nije digitalna imovina, nije financijski instrument i ne predstavlja dug Fondacije prema tebi. Nema vrijednost izvan sustava: ne mijenja se za novac, ne preprodaje se i Fondacija ga ne otkupljuje.
 
-Ima li onda vrijednost u novcu? Nema tečaj, i Zaklada nijedan odnos POEN-a prema dinaru ne objavljuje. Iznos u oglasu određuješ ti sam. Većina se snađe tako što pođe od cijene koju za to dobro ili uslugu ionako zna — to je tvoja procjena, vrijedi za taj oglas, drugu stranu ne obvezuje i nije tečaj. Zaklada taj račun ne radi umjesto tebe: ne evidentira po njemu doprinos, ne određuje po njemu nijedan iznos iz pravilnika, ne jamči nikakvu vrijednost POEN-a i ne otkupljuje ga.`,
+Ima li onda vrijednost u novcu? Nema tečaj, i Zaklada nijedan odnos POEN-a prema dinaru ne objavljuje. Iznos u oglasu određuješ ti sam. Većina se snađe tako što pođe od cijene koju za to dobro ionako zna — to je tvoja procjena, vrijedi za taj oglas, drugu stranu ne obvezuje i nije tečaj. Zaklada taj račun ne radi umjesto tebe: ne evidentira po njemu doprinos, ne određuje po njemu nijedan iznos iz pravilnika, ne jamči nikakvu vrijednost POEN-a i ne otkupljuje ga.`,
       },
       {
         id: 2,
@@ -417,15 +417,15 @@ Fondacija na zahtjev izdaje potvrdu o donaciji u skladu sa zakonom.`,
       {
         id: 24,
         pitanje: `Što su Pokrovitelji i koja je razlika u odnosu na donaciju?`,
-        odgovor: `Pokrovitelji su tvrtke, obrtnici, udruge i nositelji registriranih poljoprivrednih gospodarstava koji podupiru rad Fondacije novcem ili dobrima i uslugama.
+        odgovor: `Pokrovitelji su tvrtke, obrtnici, udruge i nositelji registriranih poljoprivrednih gospodarstava koji podupiru rad Fondacije novcem ili dobrima.
 
-Pokrovitelj nema vlastiti korisnički račun: POEN se upisuje na račun onoga tko je pokrovitelja upisao i podnio prijavu (zakonskog zastupnika, vlasnika ili ovlaštene osobe), odnosno samog obrtnika ili nositelja gospodarstva. Za novčano pokroviteljstvo nije potrebno biti u Kolu, a prijavu pokroviteljstva dobrima i uslugama podnosi samo sudionik. Upisuje se samo njemu, i kad tvrtka ima više vlasnika. Za novac koeficijent određuje razina pokrovitelja, po istoj tablici kao za osobne donacije (iz pitanja o donacijama), ali nad zbrojem svih novčanih donacija tog pokrovitelja, bez obzira na pravni oblik. Zbroj donacija tvrtke, odnosno gospodarstva, vodi se odvojeno od tvojih osobnih donacija: ne podiže tvoju osobnu razinu, a tvoje osobne donacije ne podižu razinu pokrovitelja. Za dobra i usluge koeficijent je 1,00, jer vrijednost dobara i usluga određuje sam davatelj iz svog cjenika; iznimka je hrana, kod koje koeficijent ovisi o načinu proizvodnje. Najmanja prijava je 10.000 RSD.
+Pokrovitelj nema vlastiti korisnički račun: POEN se upisuje na račun onoga tko je pokrovitelja upisao i podnio prijavu (zakonskog zastupnika, vlasnika ili ovlaštene osobe), odnosno samog obrtnika ili nositelja gospodarstva. Za novčano pokroviteljstvo nije potrebno biti u Kolu, a prijavu pokroviteljstva dobrima podnosi samo sudionik. Upisuje se samo njemu, i kad tvrtka ima više vlasnika. Za novac koeficijent određuje razina pokrovitelja, po istoj tablici kao za osobne donacije (iz pitanja o donacijama), ali nad zbrojem svih novčanih donacija tog pokrovitelja, bez obzira na pravni oblik. Zbroj donacija tvrtke, odnosno gospodarstva, vodi se odvojeno od tvojih osobnih donacija: ne podiže tvoju osobnu razinu, a tvoje osobne donacije ne podižu razinu pokrovitelja. Za dobra koeficijent je 1,00, jer vrijednost dobara određuje sam davatelj iz svog cjenika; iznimka je hrana, kod koje koeficijent ovisi o načinu proizvodnje. Najmanja prijava je 10.000 RSD.
 
 Tvrtka ne može imati korisnički račun i ne dobiva POEN: račun se otvara na čovjeka, a stvarnost čovjeka potvrđuje drugi čovjek. Vlasnik tvrtke može imati svoj račun kao fizička osoba, neovisno o pokroviteljstvu.
 
 Svi pokrovitelji javno su prikazani na stranici Pokrovitelji, radi transparentnosti i javnog priznanja doprinosa.
 
-Pokroviteljstvo dobrima i uslugama donacija je bez naknade. Fondacija ne izdaje račune i ne pruža porezni savjet. Za predaju dobara i pružanje usluga po vaučeru ne izdaje se fiskalni račun ni elektronički račun; pokrovitelj realizaciju dokumentira potvrdom o predaji koju preuzima s platforme. Pokrovitelj koji je obveznik PDV-a dužan je na predana dobra i pružene usluge bez naknade obračunati PDV u skladu s propisima.`,
+Pokroviteljstvo dobrima donacija je bez naknade. Fondacija ne izdaje račune i ne pruža porezni savjet. Za predaju dobara i pružanje usluga po vaučeru ne izdaje se fiskalni račun ni elektronički račun; pokrovitelj realizaciju dokumentira potvrdom o predaji koju preuzima s platforme. Pokrovitelj koji je obveznik PDV-a dužan je na predana dobra i pružene usluge bez naknade obračunati PDV u skladu s propisima.`,
       },
     ],
   },
@@ -666,7 +666,7 @@ Socijalni programi i operativni doprinos dijele zajednički dnevni okvir od 10% 
         pitanje: `Što je doprinos sadržaju platforme?`,
         odgovor: `Doprinos sadržaju platforme Protokol upisuje za dvije stvari.
 
-Prvi oglas: kad objaviš prvi uredan oglas kojim nudiš dobro ili uslugu, upisuje ti se 1.000 POEN, i to kad Fondacija odobri oglas. Ovaj se doprinos upisuje jednom po računu, bez obzira na to koliko oglasa kasnije objaviš.
+Prvi oglas: kad objaviš prvi uredan oglas kojim nudiš dobro, upisuje ti se 1.000 POEN, i to kad Fondacija odobri oglas. Ovaj se doprinos upisuje jednom po računu, bez obzira na to koliko oglasa kasnije objaviš.
 
 Gospodarstvo: kad tvoje gospodarstvo bude odobreno, odnosno kad mu pristupiš, bilježi ti se doprinos gospodarstva (iznos po članu određuje Pravilnik o gospodarstvima, čl. 15.). Upisuje se kad objaviš oglas kojim nešto nudiš i kad uđeš u Kolo, potvrdom ili uvođenjem.
 
@@ -688,7 +688,7 @@ Nema tarife po satu. Uz zadatak stoji predloženi POEN, ali to je težinski orij
 
 Socijalni programi pokrivaju točno određene skupine čije je sudjelovanje u zajednici stalno i razuđeno, pa se ne može evidentirati kroz pojedinačne razmjene: majke i primarne skrbnike, starije, osobe s invaliditetom i one koji se školuju. Nezaposlenost ni siromaštvo nisu među tim skupinama, socijalni programi nisu socijalna pomoć ni naknada, nego način da razuđeno sudjelovanje dobije ravnopravno mjesto u sustavu, a ne oblik podrške zbog financijskog stanja.
 
-Ako si u financijskoj nuždi, put do POEN-a je isti kao za sve: razmjena dobara i usluga s drugima, doprinos za prvi oglas i operativni doprinos, rad za zajedničko dobro kroz objavljene zadatke.
+Ako si u financijskoj nuždi, put do POEN-a je isti kao za sve: razmjena dobara s drugima, doprinos za prvi oglas i operativni doprinos, rad za zajedničko dobro kroz objavljene zadatke.
 
 Nove kvalificirane skupine mogu se dodati kasnije: u prvoj fazi o tome odlučuje Fondacija, a po aktivaciji upravljanja zajednicom. Gornje Kolo. Konkretni budući programi još nisu razrađeni.`,
       },
@@ -903,7 +903,7 @@ Podrobnije o svemu ovome piše Pravilnik o sudjelovanju djece, na stranici Pravi
         pitanje: `Je li itko od regulatora (NBS, Porezna, Povjerenik) potvrdio da je ovo legalno, ili samo Fondacija tako tvrdi?`,
         odgovor: `Ne. Trenutno ne postoji pisano mišljenje regulatora koje potvrđuje legalnost, ni Narodna banka, ni Poreska uprava, ni Poverenik nisu izdali takvu potvrdu.
 
-Ono na čemu sustav počiva nije nečija dozvola, nego vlastita pravna konstrukcija. POEN po pravilima nije novac, valuta, elektronički novac, platno sredstvo, financijski instrument ni digitalna imovina, i ne može se pretvoriti u nešto s vrijednošću izvan sustava. Ažuriranje evidencije POEN-a između korisnika nije platna transakcija u smislu propisa o platnim uslugama. Za samu razmjenu dobara i usluga vrijede opća pravila obveznog prava, a sporovi se vode pred nadležnim sudom. Pravna pozicija sustava, dakle, proizlazi iz toga kako je sustav postavljen, a ne iz vanjske suglasnosti.
+Ono na čemu sustav počiva nije nečija dozvola, nego vlastita pravna konstrukcija. POEN po pravilima nije novac, valuta, elektronički novac, platno sredstvo, financijski instrument ni digitalna imovina, i ne može se pretvoriti u nešto s vrijednošću izvan sustava. Ažuriranje evidencije POEN-a između korisnika nije platna transakcija u smislu propisa o platnim uslugama. Za samu razmjenu dobara vrijede opća pravila obveznog prava, a sporovi se vode pred nadležnim sudom. Pravna pozicija sustava, dakle, proizlazi iz toga kako je sustav postavljen, a ne iz vanjske suglasnosti.
 
 Što se poreza tiče, porezni i fiskalni tretman ovih razmjena ne ukida tvoje postojeće obveze ako obavljaš djelatnost. Fondacija ne pruža porezni savjet, svoje porezne obveze snosiš ti.
 
@@ -942,7 +942,7 @@ Kao i sve ovdje, ovo je pravna konstrukcija sustava, a ne potvrda regulatora, ri
         pitanje: `Redovito prodajem viškove (med, rakija, zimnica) ili pružam obrtničke usluge, treba li mi račun, PDV ili registrirana djelatnost? Tko snosi porez?`,
         odgovor: `KOLO ti ne obračunava porez i ne izdaje fiskalne račune u tvoje ime, ali ti ne ukida obveze koje već imaš po općim propisima.
 
-Razmjena dobara i usluga među korisnicima nije postavljena kao klasična prodaja, a prijenos POEN-a nije plaćanje novcem u smislu propisa o platnim uslugama. POEN je evidencija doprinosa, ne novac. Zato Protokol ažurira evidenciju POEN-a, ali ne vodi tvoje porezne knjige niti izdaje račune.
+Razmjena dobara među korisnicima nije postavljena kao klasična prodaja, a prijenos POEN-a nije plaćanje novcem u smislu propisa o platnim uslugama. POEN je evidencija doprinosa, ne novac. Zato Protokol ažurira evidenciju POEN-a, ali ne vodi tvoje porezne knjige niti izdaje račune.
 
 To, međutim, ne znači da si oslobođen propisa. Ako robu ili uslugu pružaš redovito i u opsegu koji nalikuje djelatnosti, na tebe se primjenjuju opći propisi kao i izvan platforme. Za pojedina dobra (poput alkoholnih pića ili hrane) postoje i posebni propisi o proizvodnji i prometu, i oni vrijede i ovdje.
 

@@ -7,7 +7,7 @@
  * ─── Istorija: prekidači modula su uklonjeni (20.10.2026) ──────────────────
  *
  * Ovde su stajali `KRUG_AKTIVAN`, `POKROVITELJSTVO_AKTIVNO` i `MODUL_DECA_AKTIVAN`.
- * Pokroviteljstvo (novcem i dobrima i uslugama) i Modul Deca su trajno u radu, pa
+ * Pokroviteljstvo (novcem i dobrima) i Modul Deca su trajno u radu, pa
  * se uslovljavanje izgubilo — njihove stranice, rute, navigacija i FAQ više ne
  * zavise ni od čega. Modul Krug je uklonjen: zamenile su ga zadruge, koje rade nad
  * ISTOM tabelom `Krug` (red sa `zadruga = true`) i bez prekidača.
